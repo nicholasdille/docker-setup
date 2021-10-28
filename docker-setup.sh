@@ -58,6 +58,7 @@ if ! apt -qq list --installed docker-ce 2>/dev/null | grep --quiet docker-ce; th
 else
     INSTALLED_DOCKER_VERSION="$(docker --version | cut -d, -f1 | cut -d' ' -f3)"
     if test "$()" == "${INSTALLED_DOCKER_VERSION}"; then
+        log "Update Docker Engine from ${INSTALLED_DOCKER_VERSION} to ${DOCKER_VERSION}"
         ${SUDO} apt-get -y install \
             docker-ce=5:${DOCKER_VERSION}* \
             docker-ce-cli=5:${DOCKER_VERSION}* \
@@ -155,7 +156,9 @@ log "Install regclient ${REGCLIENT_VERSION}"
 curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
 curl -sLo "${TARGET}/bin/regbot"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64"
 curl -sLo "${TARGET}/bin/regsync" "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regsync-linux-amd64"
-chmod +x "${TARGET}/bin/reg{ctl,bot,sync}"
+chmod +x "${TARGET}/bin/regctl"
+chmod +x "${TARGET}/bin/regbot"
+chmod +x "${TARGET}/bin/regsync"
 
 # Kubernetes
 
