@@ -145,6 +145,17 @@ BUILDKIT_VERSION=0.9.1
 log "Install BuildKit ${BUILDKIT_VERSION}"
 curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" | tar -xzC "${TARGET}"
 
+# img
+IMG_VERSION=0.5.11
+log "Install img ${IMG_VERSION}"
+curl -sLo "${TARGET}/bin/img" "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64"
+chmod +x "${TARGET}/bin/img"
+
+# dive
+DIVE_VERSION=0.10.0
+log "Install dive ${DIVE_VERSION}"
+curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz | tar -xzC "${TARGET}/bin" dive
+
 # TODO: portainer
 # https://github.com/portainer/portainer/releases/download/2.9.0/portainer-2.9.0-linux-amd64.tar.gz
 # portainer/portainer
@@ -197,6 +208,24 @@ curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar -x
 log "Install kustomize ${KUSTOMIZE_VERSION}"
 KUSTOMIZE_VERSION=4.4.0
 curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" | tar -xzC "${TRARGET}/bin"
+
+# kapp
+KAPP_VERSION=0.42.0
+log "Install kapp ${KAPP_VERSION}"
+curl -sLo "${TARGET}/bin/kapp" "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64"
+chmod +x "${TARGET}/bin/kapp"
+
+# ytt
+YTT_VERSION=0.37.0
+log "Install ytt ${YTT_VERSION}"
+curl -sLo "${TARGET}/bin/ytt" "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64"
+chmod +x "${TARGET}/bin/ytt"
+
+# arkade
+ARKADE_VERSION=0.8.8
+log "Install arkade ${ARKADE_VERSION}"
+curl -sLo "${TARGET}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"
+chmod +x "${TARGET}/bin/arkade"
 
 # Security
 
