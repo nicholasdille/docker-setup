@@ -57,7 +57,7 @@ if ! apt -qq list --installed docker-ce 2>/dev/null | grep --quiet docker-ce; th
     curl -fL https://get.docker.com | env VERSION=${DOCKER_VERSION} sh
 else
     INSTALLED_DOCKER_VERSION="$(docker --version | cut -d, -f1 | cut -d' ' -f3)"
-    if test "$()" == "${INSTALLED_DOCKER_VERSION}"; then
+    if test "$(echo -e "${DOCKER_VERSION}\n${INSTALLED_DOCKER_VERSION}" | tail -n 1)" == "${INSTALLED_DOCKER_VERSION}"; then
         log "Update Docker Engine from ${INSTALLED_DOCKER_VERSION} to ${DOCKER_VERSION}"
         ${SUDO} apt-get -y install \
             docker-ce=5:${DOCKER_VERSION}* \
