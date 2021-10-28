@@ -140,6 +140,11 @@ log "Install manifest-tool ${MANIFEST_TOOL_VERSION}"
 curl -sLo "${TARGET}/bin/manifest-tool" "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
 chmod +x "${TARGET}/bin/manifest-tool"
 
+# BuildKit
+BUILDKIT_VERSION=0.9.1
+log "Install BuildKit ${BUILDKIT_VERSION}"
+curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz | tar -xzC "${TARGET}"
+
 # TODO: portainer
 # https://github.com/portainer/portainer/releases/download/2.9.0/portainer-2.9.0-linux-amd64.tar.gz
 # portainer/portainer
