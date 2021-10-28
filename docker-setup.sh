@@ -93,7 +93,7 @@ mkdir -p "${TARGET}/libexec/docker/cli-plugins"
 : "${DOCKER_COMPOSE:=v2}"
 DOCKER_COMPOSE_VERSION_V1=1.29.2
 DOCKER_COMPOSE_VERSION_V2=2.0.0
-log "Install docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_VERSION_V1} / ${DOCKER_COMPOSE_VERSION_V2}"
+log "Install docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_VERSION_V1} or ${DOCKER_COMPOSE_VERSION_V2})"
 DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION_V2}/docker-compose-linux-amd64"
 DOCKER_COMPOSE_TARGET="${TARGET}/libexec/docker/cli-plugins/docker-compose"
 if test "${DOCKER_COMPOSE}" == "v1"; then
@@ -107,6 +107,7 @@ if test "${DOCKER_COMPOSE}" == "v2"; then
 #!/bin/bash
 exec ${TARGET}/libexec/docker/cli-plugins/docker-compose copose "$@"
 EOF
+    chmod +x "${TARGET}/bin/docker-compose"
 fi
 
 # docker-scan
@@ -122,7 +123,7 @@ curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSI
 
 # docker-machine
 DOCKER_MACHINE_VERSION=0.16.2
-log "Install ${DOCKER_MACHINE_VERSION}"
+log "Install docker-machine ${DOCKER_MACHINE_VERSION}"
 curl -sLo "${TARGET}/bin/docker-machine" "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64"
 chmod +x "${TARGET}/bin/docker-machine"
 
@@ -151,9 +152,10 @@ curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION
 # regclient
 REGCLIENT_VERSION=0.3.8
 log "Install regclient ${REGCLIENT_VERSION}"
-curl -sLo "${TARGET}/bin/regctl" "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
-curl -sLo "${TARGET}/bin/regctl" "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64"
-curl -sLo "${TARGET}/bin/regctl" "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regsync-linux-amd64"
+curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
+curl -sLo "${TARGET}/bin/regbot"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64"
+curl -sLo "${TARGET}/bin/regsync" "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regsync-linux-amd64"
+chmod +x "${TARGET}/bin/reg{ctl,bot,sync}"
 
 # Kubernetes
 
@@ -161,6 +163,7 @@ curl -sLo "${TARGET}/bin/regctl" "https://github.com/regclient/regclient/release
 KUBECTL_VERSION=1.22.0
 log "Install kubectl ${KUBECTL_VERSION}"
 curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+chmod +x "${TARGET}/bin/kubectl"
 
 # kind
 KIND_VERSION=0.11.1
