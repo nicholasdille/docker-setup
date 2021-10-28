@@ -65,11 +65,6 @@ else
     fi
 fi
 
-# TODO: Update Docker
-if test "$(docker --version | cut -d, -f1 | cut -d' ' -f3)" -gt "${DOCKER_VERSION}"; then
-
-fi
-
 # TODO: Configure dockerd
 #       https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file
 #       - Default address pool? {"default-address-pools": [{"base": "10.222.0.0/16","size": 24}]}
