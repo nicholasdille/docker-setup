@@ -38,14 +38,20 @@
 
   "packageRules": [
     {
-      "matchPackageNames": [
-        "docker/compose"
-      ],
+      "updateTypes": ["patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": [ "docker/compose" ],
       "extractVersion": "^v?(?<version>.+)$"
     },
     {
       "packageNames": [ "kubernetes-sigs/kustomize" ],
       "extractVersion": "^kustomize/v(?<version>.+)$"
+    },
+    {
+      "packageNames": [ "stedolan/jq" ],
+      "extractVersion": "^jq-(?<version>.+)$"
     },
     {
       "packageNames": [
@@ -63,7 +69,6 @@
         "moby/buildkit",
         "moby/moby",
         "oras-project/oras",
-        "portainer/portainer",
         "rancher/k3d",
         "regclient/regclient",
         "vmware-tanzu/carvel-kapp",
