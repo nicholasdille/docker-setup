@@ -52,7 +52,7 @@ function log() {
 # TODO: Support rootless?
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
 # renovate: datasource=github-releases depName=moby/moby
-DOCKER_VERSION=20.10.8
+DOCKER_VERSION=20.10.10
 if ! apt -qq list --installed docker-ce 2>/dev/null | grep --quiet docker-ce; then
     log "Install Docker Engine ${DOCKER_VERSION}"
     curl -fL https://get.docker.com | env VERSION=${DOCKER_VERSION} sh
