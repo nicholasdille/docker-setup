@@ -1,0 +1,76 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+
+  "enabledManagers": [
+    "regex"
+  ],
+
+  "major": {
+    "labels": ["type/renovate", "bump/major"]
+  },
+  "minor": {
+    "labels": ["type/renovate", "bump/minor"]
+  },
+  "patch": {
+    "labels": ["type/renovate", "bump/patch"]
+  },
+  "pin": {
+    "labels": ["type/renovate", "bump/pin"]
+  },
+  "digest": {
+    "labels": ["type/renovate", "bump/digest"]
+  },
+
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^docker-setup.sh$"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ],
+
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "docker/compose"
+      ],
+      "extractVersion": "^v?(?<version>.+)$"
+    },
+    {
+      "packageNames": [ "kubernetes-sigs/kustomize" ],
+      "extractVersion": "^kustomize/v(?<version>.+)$"
+    },
+    {
+      "packageNames": [
+        "alexellis/arkade",
+        "aquasecurity/trivy",
+        "docker/buildx",
+        "docker/hub-tool",
+        "docker/machine",
+        "docker/scan-cli-plugin",
+        "estesp/manifest-tool",
+        "genuinetools/img",
+        "helm/helm",
+        "kubernetes/kubernetes",
+        "kubernetes-sigs/kind",
+        "moby/buildkit",
+        "moby/moby",
+        "oras-project/oras",
+        "portainer/portainer",
+        "rancher/k3d",
+        "regclient/regclient",
+        "vmware-tanzu/carvel-kapp",
+        "vmware-tanzu/carvel-ytt",
+        "wagoodman/dive"
+      ],
+      "extractVersion": "^v(?<version>.+)$"
+    }
+  ]
+}
