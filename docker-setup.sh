@@ -150,7 +150,7 @@ chmod +x "${TARGET}/bin/manifest-tool"
 
 # BuildKit
 # renovate: datasource=github-releases depName=moby/buildkit
-BUILDKIT_VERSION=0.9.1
+BUILDKIT_VERSION=0.9.2
 log "Install BuildKit ${BUILDKIT_VERSION}"
 curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" | tar -xzC "${TARGET}"
 
