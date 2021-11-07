@@ -216,7 +216,7 @@ chmod +x "${TARGET}/bin/k3d"
 
 # helm
 # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=3.7.0
+HELM_VERSION=3.7.1
 log "Install helm ${HELM_VERSION}"
 curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar -xzC "${TARGET}/bin" --strip-components=1 linux-amd64/helm
 
