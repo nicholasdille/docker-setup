@@ -195,7 +195,7 @@ chmod +x "${TARGET}/bin/regsync"
 
 # kubectl
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=1.22.0
+KUBECTL_VERSION=1.22.3
 log "Install kubectl ${KUBECTL_VERSION}"
 curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 chmod +x "${TARGET}/bin/kubectl"
