@@ -182,7 +182,7 @@ curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION
 
 # regclient
 # renovate: datasource=github-releases depName=regclient/regclient
-REGCLIENT_VERSION=0.3.8
+REGCLIENT_VERSION=0.3.9
 log "Install regclient ${REGCLIENT_VERSION}"
 curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
 curl -sLo "${TARGET}/bin/regbot"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64"
