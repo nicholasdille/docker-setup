@@ -191,6 +191,13 @@ chmod +x "${TARGET}/bin/regctl"
 chmod +x "${TARGET}/bin/regbot"
 chmod +x "${TARGET}/bin/regsync"
 
+# cosign
+# renovate: datasource=github-releases depName=sigstore/cosign
+COSIGN_VERSION=1.3.0
+log "Installing cosign ${COSIGN_VERSION}"
+curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION0}/cosign-linux-amd64"
+chmod +x "${TARGET}/bin/cosign"
+
 # Kubernetes
 
 # kubectl
