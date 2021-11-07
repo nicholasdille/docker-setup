@@ -209,7 +209,7 @@ chmod +x "${TARGET}/bin/kind"
 
 # k3d
 # renovate: datasource=github-releases depName=rancher/k3d
-K3D_VERSION=4.4.8
+K3D_VERSION=5.0.3
 log "Install k3d ${K3D_VERSION}"
 curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
 chmod +x "${TARGET}/bin/k3d"
