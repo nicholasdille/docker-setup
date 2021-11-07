@@ -116,7 +116,7 @@ fi
 
 # docker-scan
 # renovate: datasource=github-releases depName=docker/scan-cli-plugin
-DOCKER_SCAN_VERSION=0.8.0
+DOCKER_SCAN_VERSION=0.9.0
 log "Install docker-scan ${DOCKER_SCAN_VERSION}"
 curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
 chmod +x "${TARGET}/libexec/docker/cli-plugins/docker-scan"
