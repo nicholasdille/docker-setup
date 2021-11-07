@@ -254,7 +254,7 @@ chmod +x "${TARGET}/bin/arkade"
 
 # trivy
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=0.19.2
+TRIVY_VERSION=0.20.2
 log "Install trivy ${TRIVY_VERSION}"
 curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" | tar -xzC "${TARGET}/bin" trivy
 
