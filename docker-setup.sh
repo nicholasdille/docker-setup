@@ -63,20 +63,20 @@ curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless
 | tar -xzC "${TARGET}/bin" --strip-components=1 \
     docker-rootless-extras/dockerd-rootless.sh \
     docker-rootless-extras/dockerd-rootless-setuptool.sh
-curl -sLO "/etc/systemd/system/docker.service" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
-curl -sLO "/etc/systemd/system/docker.socket" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
+curl -sLo "/etc/systemd/system/docker.service" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
+curl -sLo "/etc/systemd/system/docker.socket" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
 systemctl daemon-reload
 mkdir -o /etc/default
-curl -sLO "/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+curl -sLo "/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
 mkdir -p /etc/init.d
-curl -sLO "/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+curl -sLo "/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
 chmod +x "/etc/init.d/docker"
 mkdir -p /usr/share/bash-completion/completions
-curl -sLO "/usr/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
+curl -sLo "/usr/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
 mkdir -p /usr/share/fish/vendor_completions.d
-curl -sLO "/usr/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
+curl -sLo "/usr/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
 mkdir -p /usr/share/zsh/vendor-completions
-curl -sLO "/usr/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+curl -sLo "/usr/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
@@ -93,7 +93,7 @@ git -C "${CONTAINERD_DIR}" checkout -q ${CONTAINERD_COMMIT}
 CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags)"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
 | tar -xzC "${TARGET}"
-curl -sLO "/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+curl -sLo "/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 systemctl daemon-reload
 
 # rootlesskit
@@ -113,7 +113,7 @@ source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
 git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
 git -C "${RUNC_DIR}" checkout -q ${RUNC_COMMIT}
 RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags)"
-curl -sLO "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
+curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
 
 # tini
 TINI_DIR="${TEMP}/tini"
@@ -122,7 +122,7 @@ source "${MOBY_DIR}/hack/dockerfile/install/tini.installer"
 git clone -q https://github.com/krallin/tini "${TINI_DIR}"
 git -C "${TINI_DIR}" checkout -q ${TINI_COMMIT}
 TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags)"
-curl -sLO "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
+curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
 
 # Configure Docker Engine
 log "Configure Docker Engine"
