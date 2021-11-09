@@ -30,6 +30,7 @@ if test ${EUID} -ne 0; then
     exit 1
 fi
 
+: "${TARGET:=/usr}"
 TEMP="$(mktemp -d)"
 
 function section() {
@@ -123,9 +124,9 @@ mkdir -p \
     /etc/systemd/system \
     /etc/default \
     /etc/init.d \
-    /usr/share/bash-completion/completions \
-    /usr/share/fish/vendor_completions.d \
-    /usr/share/zsh/vendor-completions
+    "${TARGET}/share/bash-completion/completions" \
+    "${TARGET}/share/fish/vendor_completions.d" \
+    "${TARGET}/share/zsh/vendor-completions"
 task "Install systemd units"
 curl -sLo /etc/systemd/system/docker.service https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
 curl -sLo /etc/systemd/system/docker.socket https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
@@ -135,9 +136,9 @@ curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION
 task "Set executable bits"
 chmod +x /etc/init.d/docker
 task "Install completion"
-curl -sLo /usr/share/bash-completion/completions/docker "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
-curl -sLo /usr/share/fish/vendor_completions.d/docker.fish "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
-curl -sLo /usr/share/zsh/vendor-completions/_docker "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
+curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
+curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 task "Reload systemd"
 systemctl daemon-reload
 
