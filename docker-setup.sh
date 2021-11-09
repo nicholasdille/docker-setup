@@ -49,7 +49,6 @@ if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1";
     fi
 fi
 
-
 # Check for iptables/nftables
 # https://docs.docker.com/network/iptables/
 if ! iptables --version | grep --quiet legacy; then
@@ -79,25 +78,26 @@ curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless
 | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
     docker-rootless-extras/dockerd-rootless.sh \
     docker-rootless-extras/dockerd-rootless-setuptool.sh
-curl -sLo "/etc/systemd/system/docker.service" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
-curl -sLo "/etc/systemd/system/docker.socket" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
+mkdir -p \
+    /etc/systemd/system \
+    /etc/default \
+    /etc/init.d \
+    /usr/share/bash-completion/completions \
+    /usr/share/fish/vendor_completions.d \
+    /usr/share/zsh/vendor-completions
+curl -sLo /etc/systemd/system/docker.service https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
+curl -sLo /etc/systemd/system/docker.socket https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
+curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+chmod +x /etc/init.d/docker
+curl -sLo /usr/share/bash-completion/completions/docker "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
+curl -sLo /usr/share/fish/vendor_completions.d/docker.fish "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
+curl -sLo /usr/share/zsh/vendor-completions/_docker "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 systemctl daemon-reload
-mkdir -p /etc/default
-curl -sLo "/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-mkdir -p /etc/init.d
-curl -sLo "/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
-chmod +x "/etc/init.d/docker"
-mkdir -p /usr/share/bash-completion/completions
-curl -sLo "/usr/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
-mkdir -p /usr/share/fish/vendor_completions.d
-curl -sLo "/usr/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
-mkdir -p /usr/share/zsh/vendor-completions
-curl -sLo "/usr/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 # TODO: manpages?
 
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
-echo "Fetching Docker ${DOCKER_VERSION}"
 git clone -q https://github.com/moby/moby "${MOBY_DIR}"
 git -C "${MOBY_DIR}" checkout -q v${DOCKER_VERSION}
 
@@ -109,8 +109,9 @@ git -C "${CONTAINERD_DIR}" checkout -q ${CONTAINERD_COMMIT}
 CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
 log "Install containerd ${CONTAINERD_VERSION}"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}" --no-same-owner
-curl -sLo "/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+| tar -xzC "${TARGET}/bin" --no-same-owner
+mkdir -o /etc/systemd/system
+curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 systemctl daemon-reload
 
 # rootlesskit
@@ -243,7 +244,7 @@ chmod +x "${TARGET}/bin/manifest-tool"
 BUILDKIT_VERSION=0.9.2
 log "Install BuildKit ${BUILDKIT_VERSION}"
 curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}" --no-same-owner
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
 
 # img
 # renovate: datasource=github-releases depName=genuinetools/img
