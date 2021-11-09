@@ -21,7 +21,10 @@ EOF
 echo -e "\e[39m\e[49m"
 sleep 10
 
-# TODO: Must be run as root or be run with sudo
+if test ${EUID} -ne 0; then
+    echo -e "${RED}ERROR: You must run this script as root or use sudo.${RESET}"
+    exit 1
+fi
 
 TEMP="$(mktemp -d)"
 
