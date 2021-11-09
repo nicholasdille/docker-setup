@@ -443,6 +443,15 @@ task "Install binary"
 curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
 | tar -xzC "${TRARGET}/bin" --no-same-owner
 
+# kompose
+# renovate: datasource=github-releases depName=kubernetes/kompose
+KOMPOSE_VERSION=1.25
+section "kompose ${KOMPOSE_VERSION}"
+task "Install binary"
+curl -sLo "${TARGET}/bin/kompose" "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64"
+task "Set executable bits"
+chmod +x "${TARGET}/bin/kompose"
+
 # kapp
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
 KAPP_VERSION=0.42.0

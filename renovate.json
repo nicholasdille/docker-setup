@@ -64,6 +64,7 @@
         "estesp/manifest-tool",
         "genuinetools/img",
         "helm/helm",
+        "kubernetes/kompose",
         "kubernetes/kubernetes",
         "kubernetes-sigs/kind",
         "mikefarah/yq",
