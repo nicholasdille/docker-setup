@@ -266,7 +266,7 @@ if test "${DOCKER_COMPOSE}" == "v2"; then
     task "Install wrapper for docker-compose"
     cat >"${TARGET}/bin/docker-compose" <<EOF
 #!/bin/bash
-exec ${TARGET}/libexec/docker/cli-plugins/docker-compose copose "$@"
+exec "${TARGET}/libexec/docker/cli-plugins/docker-compose" compose "\$@"
 EOF
     task "Set executable bits"
     chmod +x "${TARGET}/bin/docker-compose"
