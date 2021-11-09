@@ -22,7 +22,33 @@ This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
 EOF
-echo -e "${RESET}Please press Ctrl-C to abort."
+echo -e "${RESET}"
+
+if test "$1" == "--help"; then
+    cat <<EOF
+The following environment variables are processed:
+
+TARGET                   Specifies the target directory for
+                         binaries. Defaults to /usr
+
+CGROUP_VERSION           Specifies which version of cgroup
+                         to use. Defaults to v2
+
+DOCKER_ADDRESS_BASE      Specifies the address pool for networks,
+                         e.g. 192.168.0.0/16
+DOCKER_ADDRESS_SIZE      Specifies the size of each network,
+                         e.g. 24
+
+DOCKER_REGISTRY_MIRROR   Specifies a host to be used as registry
+                         mirror, e.g. https://proxy.my-domain.tld
+
+DOCKER_COMPOSE           Specifies which major version of
+                         docker-compose to use. Defaults to v2
+
+EOF
+    exit
+fi
+echo "Please press Ctrl-C to abort."
 sleep 10
 
 if test ${EUID} -ne 0; then
