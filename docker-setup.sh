@@ -86,11 +86,11 @@ git -C "${MOBY_DIR}" checkout -q v${DOCKER_VERSION}
 
 # containerd
 CONTAINERD_DIR="${TEMP}/containerd"
-echo "Checking containerd"
 source "${MOBY_DIR}/hack/dockerfile/install/containerd.installer"
 git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
 git -C "${CONTAINERD_DIR}" checkout -q ${CONTAINERD_COMMIT}
-CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags)"
+CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
+log "Install containerd ${CONTAINERD_VERSION}"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
 | tar -xzC "${TARGET}"
 curl -sLo "/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
@@ -98,11 +98,11 @@ systemctl daemon-reload
 
 # rootlesskit
 ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
-echo "Checking rootlesskit"
 source "${MOBY_DIR}/hack/dockerfile/install/rootlesskit.installer"
 git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
 git -C "${ROOTLESSKIT_DIR}" checkout -q ${ROOTLESSKIT_COMMIT}
-ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags)"
+ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
+log "Install rootlesskit ${ROOTLESSKIT_VERSION}"
 curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
 | tar -xzC "${TARGET}/bin"
 
@@ -112,16 +112,17 @@ echo "Checking runc"
 source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
 git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
 git -C "${RUNC_DIR}" checkout -q ${RUNC_COMMIT}
-RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags)"
+RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
+log "Install runc ${RUNC_VERSION}"
 curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
 
 # tini
 TINI_DIR="${TEMP}/tini"
-echo "Checking tini"
 source "${MOBY_DIR}/hack/dockerfile/install/tini.installer"
 git clone -q https://github.com/krallin/tini "${TINI_DIR}"
 git -C "${TINI_DIR}" checkout -q ${TINI_COMMIT}
-TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags)"
+TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
+log "Install tini ${TINI_VERSION}"
 curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
 
 # Configure Docker Engine
@@ -190,7 +191,7 @@ chmod +x "${TARGET}/libexec/docker/cli-plugins/docker-scan"
 # renovate: datasource=github-releases depName=rootless-containers/slirp4netns
 SLIRP4NETNS_VERSION=1.1.12
 log "Install slirp4netns ${SLIRP4NETNS_VERSION}"
-curl -sLO "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
+curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
 chmod +x "${TARGET}/bin/slirp4netns"
 
 # hub-tool
