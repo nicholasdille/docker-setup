@@ -323,12 +323,19 @@ curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/di
 | tar -xzC "${TARGET}/bin" --no-same-owner \
     dive
 
-# TODO: portainer
+# portainer
 # renovate: datasource=github-releases depName=portainer/portainer
 PORTAINER_VERSION=2.9.2
-# https://github.com/portainer/portainer/releases/download/2.9.0/portainer-2.9.0-linux-amd64.tar.gz
-# portainer/portainer
-# portainer/public/
+section "portainer ${PORTAINER_VERSION}"
+task "Create directories"
+mkdir -p "${TARGET}/share/portainer"
+task "Download tarball"
+curl -sLo "${TEMP}/portainer.tar.gz" "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz"
+task "Install binary"
+tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/bin" --no-same-owner \
+    portainer/portainer
+tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/share/portainer" --no-same-owner \
+    portainer/public
 
 # oras
 # renovate: datasource=github-releases depName=oras-project/oras
