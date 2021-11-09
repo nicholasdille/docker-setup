@@ -447,7 +447,7 @@ KUSTOMIZE_VERSION=4.4.0
 section "kustomize ${KUSTOMIZE_VERSION}"
 task "Install binary"
 curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
-| tar -xzC "${TRARGET}/bin" --no-same-owner
+| tar -xzC "${TARGET}/bin" --no-same-owner
 
 # kompose
 # renovate: datasource=github-releases depName=kubernetes/kompose
