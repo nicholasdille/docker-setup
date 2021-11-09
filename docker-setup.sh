@@ -71,12 +71,12 @@ fi
 DOCKER_VERSION=20.10.10
 log "Install Docker ${DOCKER_VERSION}"
 curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 \
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
     docker/dockerd \
     docker/docker \
     docker/docker-proxy
 curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 \
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
     docker-rootless-extras/dockerd-rootless.sh \
     docker-rootless-extras/dockerd-rootless-setuptool.sh
 curl -sLo "/etc/systemd/system/docker.service" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
@@ -109,7 +109,7 @@ git -C "${CONTAINERD_DIR}" checkout -q ${CONTAINERD_COMMIT}
 CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
 log "Install containerd ${CONTAINERD_VERSION}"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}"
+| tar -xzC "${TARGET}" --no-same-owner
 curl -sLo "/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 systemctl daemon-reload
 
@@ -121,7 +121,7 @@ git -C "${ROOTLESSKIT_DIR}" checkout -q ${ROOTLESSKIT_COMMIT}
 ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
 log "Install rootlesskit ${ROOTLESSKIT_VERSION}"
 curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
-| tar -xzC "${TARGET}/bin"
+| tar -xzC "${TARGET}/bin" --no-same-owner
 
 # runc
 RUNC_DIR="${TEMP}/runc"
@@ -215,7 +215,7 @@ chmod +x "${TARGET}/bin/slirp4netns"
 HUB_TOOL_VERSION=0.4.3
 log "Install hub-tool ${HUB_TOOL_VERSION}"
 curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
 
 # docker-machine
 # renovate: datasource=github-releases depName=docker/machine
@@ -243,7 +243,7 @@ chmod +x "${TARGET}/bin/manifest-tool"
 BUILDKIT_VERSION=0.9.2
 log "Install BuildKit ${BUILDKIT_VERSION}"
 curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}"
+| tar -xzC "${TARGET}" --no-same-owner
 
 # img
 # renovate: datasource=github-releases depName=genuinetools/img
@@ -257,7 +257,7 @@ chmod +x "${TARGET}/bin/img"
 DIVE_VERSION=0.10.0
 log "Install dive ${DIVE_VERSION}"
 curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz \
-| tar -xzC "${TARGET}/bin" \
+| tar -xzC "${TARGET}/bin" --no-same-owner \
     dive
 
 # TODO: portainer
@@ -272,7 +272,7 @@ PORTAINER_VERSION=2.9.2
 ORAS_VERSION=0.12.0
 log "Install oras ${ORAS_VERSION}"
 curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
-| tar -xzC "${TARGET}/bin" \
+| tar -xzC "${TARGET}/bin" --no-same-owner \
     oras
 
 # regclient
@@ -321,7 +321,7 @@ chmod +x "${TARGET}/bin/k3d"
 HELM_VERSION=3.7.1
 log "Install helm ${HELM_VERSION}"
 curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 \
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
     linux-amd64/helm
 
 # krew
@@ -332,7 +332,7 @@ curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
 log "Install kustomize ${KUSTOMIZE_VERSION}"
 KUSTOMIZE_VERSION=4.4.0
 curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
-| tar -xzC "${TRARGET}/bin"
+| tar -xzC "${TRARGET}/bin" --no-same-owner
 
 # kapp
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
@@ -362,7 +362,7 @@ chmod +x "${TARGET}/bin/arkade"
 TRIVY_VERSION=0.20.2
 log "Install trivy ${TRIVY_VERSION}"
 curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
-| tar -xzC "${TARGET}/bin" \
+| tar -xzC "${TARGET}/bin" --no-same-owner \
     trivy
 
 rm -rf "${TEMP}"
