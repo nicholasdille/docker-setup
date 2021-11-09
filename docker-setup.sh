@@ -69,7 +69,7 @@ fi
 # Install Docker CE
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.10
-# TODO: manpages?
+log "Install Docker ${DOCKER_VERSION}"
 curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
 | tar -xzC "${TARGET}/bin" --strip-components=1 \
     docker/dockerd \
@@ -93,6 +93,7 @@ mkdir -p /usr/share/fish/vendor_completions.d
 curl -sLo "/usr/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
 mkdir -p /usr/share/zsh/vendor-completions
 curl -sLo "/usr/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+# TODO: manpages?
 
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
@@ -124,7 +125,6 @@ curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v
 
 # runc
 RUNC_DIR="${TEMP}/runc"
-echo "Checking runc"
 source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
 git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
 git -C "${RUNC_DIR}" checkout -q ${RUNC_COMMIT}
