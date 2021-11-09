@@ -52,7 +52,7 @@ if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1";
     sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
     task "Update grub"
     update-grub
-    read -p "Reboot to enable cgroup v2 (y/N)"
+    read -r -p "Reboot to enable cgroup v2 (y/N)"
     if test "${REPLY,,}" == "y"; then
         reboot
         exit
@@ -122,9 +122,10 @@ git -C "${MOBY_DIR}" checkout -q v${DOCKER_VERSION}
 
 # containerd
 CONTAINERD_DIR="${TEMP}/containerd"
+# shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/containerd.installer"
 git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
-git -C "${CONTAINERD_DIR}" checkout -q ${CONTAINERD_COMMIT}
+git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
 CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
 section "containerd ${CONTAINERD_VERSION}"
 task "Install binary"
@@ -139,9 +140,10 @@ systemctl daemon-reload
 
 # rootlesskit
 ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
+# shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/rootlesskit.installer"
 git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
-git -C "${ROOTLESSKIT_DIR}" checkout -q ${ROOTLESSKIT_COMMIT}
+git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
 ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
 section "rootlesskit ${ROOTLESSKIT_VERSION}"
 task "Install binary"
@@ -150,9 +152,10 @@ curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v
 
 # runc
 RUNC_DIR="${TEMP}/runc"
+# shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
 git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
-git -C "${RUNC_DIR}" checkout -q ${RUNC_COMMIT}
+git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
 RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
 section "runc ${RUNC_VERSION}"
 task "Install binary"
@@ -162,9 +165,10 @@ chmod +x "${TARGET}/bin/runc"
 
 # tini
 TINI_DIR="${TEMP}/tini"
+# shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/tini.installer"
 git clone -q https://github.com/krallin/tini "${TINI_DIR}"
-git -C "${TINI_DIR}" checkout -q ${TINI_COMMIT}
+git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
 TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
 section "tini ${TINI_VERSION}"
 task "Install binary"
@@ -184,18 +188,21 @@ fi
 if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}"; then
     # Check if address pool already exists
     task "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
-    cat <<< $(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+    # shellcheck disable=SC2094
+    cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
 fi
 if test -n "${DOCKER_REGISTRY_MIRROR}"; then
     # TODO: Check if mirror already exists
     task "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
-    cat <<< $(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+    # shellcheck disable=SC2094
+    cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
 fi
-if ! cat /etc/docker/daemon.json | jq --raw-output '.features.buildkit // false'; then
+if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json; then
     task "Enable BuildKit"
-    cat <<< $(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+    # shellcheck disable=SC2094
+    cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
 fi
 if ${DOCKER_RESTART}; then
@@ -354,7 +361,7 @@ chmod +x "${TARGET}/bin/regsync"
 COSIGN_VERSION=1.3.0
 section "Installing cosign ${COSIGN_VERSION}"
 task "Install binary"
-curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION0}/cosign-linux-amd64"
+curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/cosign"
 
