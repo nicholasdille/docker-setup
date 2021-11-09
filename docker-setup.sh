@@ -1,5 +1,27 @@
 #!/bin/bash
 
+echo -e "\e[93m"
+echo -n "D O C K E R - S E T U P"
+if type figlet >/dev/null 2>&1; then
+    echo -e -n "\r"
+    figlet docker-setup
+fi
+echo
+echo
+cat <<EOF
+                     The container tools installer and updater
+                 https://github.com/nicholasdille/docker-setup
+--------------------------------------------------------------
+
+This script will install Docker Engine as well as useful tools
+from the container ecosystem.
+
+Please press Ctrl-C to abort.
+EOF
+echo -e "\e[39m\e[49m"
+sleep 10
+exit
+
 # TODO: Must be run as root or be run with sudo
 
 TEMP="$(mktemp -d)"
