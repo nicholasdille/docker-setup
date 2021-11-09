@@ -131,7 +131,7 @@ task "Install binary"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
 | tar -xzC "${TARGET}/bin" --no-same-owner
 task "Create directories"
-mkdir -o /etc/systemd/system
+mkdir -p /etc/systemd/system
 task "Install systemd unit"
 curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 task "Reload systemd"
