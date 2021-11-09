@@ -66,6 +66,7 @@
         "helm/helm",
         "kubernetes/kubernetes",
         "kubernetes-sigs/kind",
+        "mikefarah/yq",
         "moby/buildkit",
         "moby/moby",
         "oras-project/oras",

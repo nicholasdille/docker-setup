@@ -22,7 +22,7 @@ chmod +x "${TARGET}/bin/jq"
 
 # yq
 # renovate: datasource=github-releases depName=mikefarah/yq
-YQ_VERSION=v4.14.1
+YQ_VERSION=4.14.1
 log "Install yq ${YQ_VERSION}"
 curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
 chmod +x "${TARGET}/bin/yq"
