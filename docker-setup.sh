@@ -1,14 +1,19 @@
 #!/bin/bash
 
-echo -e "\e[93m"
+RESET="\e[39m\e[49m"
+GREEN="\e[92m"
+YELLOW="\e[93m"
+RED="\e[91m"
+
+echo -e "${YELLOW}"
 echo -n "D O C K E R - S E T U P   (missing figlet)"
 if type figlet >/dev/null 2>&1; then
     echo -e -n "\r"
     figlet docker-setup
 fi
-echo
-echo
 cat <<EOF
+
+
                      The container tools installer and updater
                  https://github.com/nicholasdille/docker-setup
 --------------------------------------------------------------
@@ -16,9 +21,8 @@ cat <<EOF
 This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
-Please press Ctrl-C to abort.
 EOF
-echo -e "\e[39m\e[49m"
+echo -e "${RESET}Please press Ctrl-C to abort."
 sleep 10
 
 if test ${EUID} -ne 0; then
@@ -29,17 +33,17 @@ fi
 TEMP="$(mktemp -d)"
 
 function section() {
+    echo -e "${GREEN}"
     echo
-    echo -e "\e[92m############################################################\e[39m\e[49m"
-    echo -e "\e[92m### $1\e[39m\e[49m"
-    echo -e "\e[92m############################################################\e[39m\e[49m"
+    echo -e "############################################################"
+    echo -e "### $1"
+    echo -e "############################################################"
+    echo -e "${RESET}"
 }
 
 function task() {
     echo "$1"
 }
-
-# Tools
 
 # jq
 # renovate: datasource=github-releases depName=stedolan/jq
@@ -136,7 +140,6 @@ curl -sLo /usr/share/fish/vendor_completions.d/docker.fish "https://github.com/d
 curl -sLo /usr/share/zsh/vendor-completions/_docker "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 task "Reload systemd"
 systemctl daemon-reload
-# TODO: manpages?
 
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
