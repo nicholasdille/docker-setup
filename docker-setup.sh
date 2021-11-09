@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "\e[93m"
-echo -n "D O C K E R - S E T U P"
+echo -n "D O C K E R - S E T U P   (missing figlet)"
 if type figlet >/dev/null 2>&1; then
     echo -e -n "\r"
     figlet docker-setup
@@ -20,7 +20,6 @@ Please press Ctrl-C to abort.
 EOF
 echo -e "\e[39m\e[49m"
 sleep 10
-exit
 
 # TODO: Must be run as root or be run with sudo
 
