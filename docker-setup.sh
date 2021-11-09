@@ -46,6 +46,23 @@ function task() {
     echo "$1"
 }
 
+section "Directories"
+task "Completion"
+mkdir -p \
+    "${TARGET}/share/bash-completion/completions" \
+    "${TARGET}/share/fish/vendor_completions.d" \
+    "${TARGET}/share/zsh/vendor-completions"
+task "Systemd"
+mkdir -p \
+    /etc/systemd/system
+task "Init script"
+mkdir -p \
+    /etc/default \
+    /etc/init.d
+task "Docker CLI plugins"
+mkdir -p \
+    "${TARGET}/libexec/docker/cli-plugins"
+
 # jq
 # renovate: datasource=github-releases depName=stedolan/jq
 JQ_VERSION=1.6
@@ -63,6 +80,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/yq"
+task "Install completion"
+yq shell-completion bash >"${TARGET}/share/bash-completion/completions/yq"
+yq shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/yq.fish"
+yq shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_yq"
 
 : "${CGROUP_VERSION:=v2}"
 CURRENT_CGROUP_VERSION="v1"
@@ -119,14 +140,6 @@ curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless
 | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
     docker-rootless-extras/dockerd-rootless.sh \
     docker-rootless-extras/dockerd-rootless-setuptool.sh
-task "Create directories"
-mkdir -p \
-    /etc/systemd/system \
-    /etc/default \
-    /etc/init.d \
-    "${TARGET}/share/bash-completion/completions" \
-    "${TARGET}/share/fish/vendor_completions.d" \
-    "${TARGET}/share/zsh/vendor-completions"
 task "Install systemd units"
 curl -sLo /etc/systemd/system/docker.service https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
 curl -sLo /etc/systemd/system/docker.socket https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
@@ -159,8 +172,6 @@ section "containerd ${CONTAINERD_VERSION}"
 task "Install binary"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
 | tar -xzC "${TARGET}/bin" --no-same-owner
-task "Create directories"
-mkdir -p /etc/systemd/system
 task "Install systemd unit"
 curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 task "Reload systemd"
@@ -207,8 +218,6 @@ chmod +x "${TARGET}/bin/docker-init"
 # Configure Docker Engine
 section "Configure Docker Engine"
 DOCKER_RESTART=false
-task "Create directories"
-mkdir -p /etc/docker
 if ! test -f /etc/docker/daemon.json; then
     task "Initialize dockerd configuration"
     echo "{}" >/etc/docker/daemon.json
@@ -256,8 +265,6 @@ if test "${DOCKER_COMPOSE}" == "v1"; then
     DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION_V1}/docker-compose-Linux-x86_64"
     DOCKER_COMPOSE_TARGET="${TARGET}/bin/docker-compose"
 fi
-task "Create directories"
-mkdir -p "${TARGET}/libexec/docker/cli-plugins"
 task "Install binary"
 curl -sLo "${DOCKER_COMPOSE_TARGET}" "${DOCKER_COMPOSE_URL}"
 task "Set executable bits"
@@ -390,6 +397,18 @@ task "Set executable bits for regbot"
 chmod +x "${TARGET}/bin/regbot"
 task "Set executable bits for regsync"
 chmod +x "${TARGET}/bin/regsync"
+task "Install completion for regctl"
+regctl shell-completion bash >"${TARGET}/share/bash-completion/completions/regctl"
+regctl shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/regctl.fish"
+regctl shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_regctl"
+task "Install completion for regbot"
+regbot shell-completion bash >"${TARGET}/share/bash-completion/completions/regbot"
+regbot shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/regbot.fish"
+regbot shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_regbot"
+task "Install completion for regsync"
+regsync shell-completion bash >"${TARGET}/share/bash-completion/completions/regsync"
+regsync shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/regsync.fish"
+regsync shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_regsync"
 
 # cosign
 # renovate: datasource=github-releases depName=sigstore/cosign
@@ -399,6 +418,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/cosign"
+task "Install completion"
+cosign shell-completion bash >"${TARGET}/share/bash-completion/completions/cosign"
+cosign shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/cosign.fish"
+cosign shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_cosign"
 
 # Kubernetes
 
@@ -410,6 +433,9 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/kubectl"
+task "Install completion"
+kubectl completion bash >"${TARGET}/share/bash-completion/completions/kubectl"
+kubectl completion zsh >"${TARGET}/share/zsh/vendor-completions/_kubectl"
 
 # kind
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
@@ -419,6 +445,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/kind" "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/kind"
+task "Install completion"
+kind completion bash >"${TARGET}/share/bash-completion/completions/kind"
+kind completion fish >"${TARGET}/share/fish/vendor_completions.d/kind.fish"
+kind completion zsh >"${TARGET}/share/zsh/vendor-completions/_kind"
 
 # k3d
 # renovate: datasource=github-releases depName=rancher/k3d
@@ -428,6 +458,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/k3d"
+task "Install completion"
+k3d completion bash >"${TARGET}/share/bash-completion/completions/k3d"
+k3d completion fish >"${TARGET}/share/fish/vendor_completions.d/k3d.fish"
+k3d completion zsh >"${TARGET}/share/zsh/vendor-completions/_k3d"
 
 # helm
 # renovate: datasource=github-releases depName=helm/helm
@@ -437,6 +471,10 @@ task "Install binary"
 curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
 | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
     linux-amd64/helm
+task "Install completion"
+helm completion bash >"${TARGET}/share/bash-completion/completions/helm"
+helm completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
+helm completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
 
 # krew
 # https://krew.sigs.k8s.io/docs/user-guide/setup/install/
@@ -448,6 +486,10 @@ section "kustomize ${KUSTOMIZE_VERSION}"
 task "Install binary"
 curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
 | tar -xzC "${TARGET}/bin" --no-same-owner
+task "Install completion"
+kustomize completion bash >"${TARGET}/share/bash-completion/completions/kustomize"
+kustomize completion fish >"${TARGET}/share/fish/vendor_completions.d/kustomize.fish"
+kustomize completion zsh >"${TARGET}/share/zsh/vendor-completions/_kustomize"
 
 # kompose
 # renovate: datasource=github-releases depName=kubernetes/kompose
@@ -457,6 +499,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/kompose" "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/kompose"
+task "Install completion"
+kompose completion bash >"${TARGET}/share/bash-completion/completions/kompose"
+kompose completion fish >"${TARGET}/share/fish/vendor_completions.d/kompose.fish"
+kompose completion zsh >"${TARGET}/share/zsh/vendor-completions/_kompose"
 
 # kapp
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
@@ -466,6 +512,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/kapp" "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/kapp"
+task "Install completion"
+kapp completion bash >"${TARGET}/share/bash-completion/completions/kapp"
+kapp completion fish >"${TARGET}/share/fish/vendor_completions.d/kapp.fish"
+kapp completion zsh >"${TARGET}/share/zsh/vendor-completions/_kapp"
 
 # ytt
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-ytt
@@ -475,6 +525,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/ytt" "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/ytt"
+task "Install completion"
+ytt completion bash >"${TARGET}/share/bash-completion/completions/ytt"
+ytt completion fish >"${TARGET}/share/fish/vendor_completions.d/ytt.fish"
+ytt completion zsh >"${TARGET}/share/zsh/vendor-completions/_ytt"
 
 # arkade
 # renovate: datasource=github-releases depName=alexellis/arkade
@@ -484,6 +538,10 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/arkade"
+task "Install completion"
+arkade completion bash >"${TARGET}/share/bash-completion/completions/arkade"
+arkade completion fish >"${TARGET}/share/fish/vendor_completions.d/arkade.fish"
+arkade completion zsh >"${TARGET}/share/zsh/vendor-completions/_arkade"
 
 # Security
 
