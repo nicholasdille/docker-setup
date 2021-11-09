@@ -1,45 +1,8 @@
 #!/bin/bash
 
-# Check for filesystem permissions
-: "${TARGET:=/usr}"
-REQUIRES_SUDO=false
-if test "$(stat "${TARGET}" -c '%u')" == "0"; then
+# TODO: Must be run as root or be run with sudo
 
-    if test "$(id -u)" != "0"; then
-        REQUIRES_SUDO=true
-    fi
-fi
-if $REQUIRES_SUDO && ! sudo -n true 2>&1; then
-    echo "ERROR: Unble to continue because..."
-    echo "       - ...target directory <${TARGET}> is root-owned but..."
-    echo "       - ...you are not root and..."
-    echo "       - ...you do not have sudo configured."
-    # TODO: Switch to rootless Docker?
-    exit 1
-fi
-if ${REQUIRES_SUDO}; then
-    SUDO=sudo
-fi
-
-# Check GitHub rate limit
-# https://docs.github.com/en/rest/reference/rate-limit
-GITHUB_REMAINING_CALLS="$(curl -s https://api.github.com/rate_limit | jq --raw-output '.rate.remaining')"
-if test "${GITHUB_REMAINING_CALLS}" -lt 10; then
-    echo "ERROR: Unable to continue because..."
-    echo "       - ...you have only ${GITHUB_REMAINING_CALLS} GitHub API calls remaining and..."
-    echo "       - ...some tools require one API call to GitHub."
-    exit 1
-fi
-
-# Check for iptables/nftables
-# https://docs.docker.com/network/iptables/
-if ! iptables --version | grep --quiet legacy; then
-    echo "ERROR: Unable to continue because..."
-    echo "       - ...you are using nftables and not iptables..."
-    echo "       - ...to fix this iptables must point to iptables-legacy."
-    echo "       You don't want to run Docker with iptables=false."
-    exit 1
-fi
+TEMP="$(mktemp -d)"
 
 function log() {
     echo
@@ -48,45 +11,147 @@ function log() {
     echo "############################################################"
 }
 
-# Install Docker CE
-# TODO: Support rootless?
-# https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
-# renovate: datasource=github-releases depName=moby/moby
-DOCKER_VERSION=20.10.10
-if ! apt -qq list --installed docker-ce 2>/dev/null | grep --quiet docker-ce; then
-    log "Install Docker Engine ${DOCKER_VERSION}"
-    curl -fL https://get.docker.com | env VERSION=${DOCKER_VERSION} sh
-else
-    INSTALLED_DOCKER_VERSION="$(docker --version | cut -d, -f1 | cut -d' ' -f3)"
-    if test "$(echo -e "${DOCKER_VERSION}\n${INSTALLED_DOCKER_VERSION}" | tail -n 1)" == "${INSTALLED_DOCKER_VERSION}"; then
-        log "Update Docker Engine from ${INSTALLED_DOCKER_VERSION} to ${DOCKER_VERSION}"
-        ${SUDO} apt-get -y install \
-            docker-ce=5:${DOCKER_VERSION}* \
-            docker-ce-cli=5:${DOCKER_VERSION}* \
-            docker-ce-rootless-extras=5:${DOCKER_VERSION}*
+: "${CGROUP_VERSION:=v2}"
+CURRENT_CGROUP_VERSION="v1"
+if test -f /sys/fs/cgroup/cgroup.controllers; then
+    CURRENT_CGROUP_VERSION="v2"
+fi
+if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
+    if test -n "${WSL_DISTRO_NAME}"; then
+        echo "ERROR: Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662."
+        echo "       Please rerun this script with CGROUP_VERSION=v1"
+        exit 1
+    fi
+
+    log "Enabling cgroup v2"
+    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
+    update-grub
+    read -p "Reboot to enable cgroup v2 (y/N)"
+    if test "${REPLY,,}" == "y"; then
+        reboot
+        exit
     fi
 fi
 
-# TODO: Configure dockerd
-#       https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file
-#       - Default address pool? {"default-address-pools": [{"base": "10.222.0.0/16","size": 24}]}
+
+# Check for iptables/nftables
+# https://docs.docker.com/network/iptables/
+if ! iptables --version | grep --quiet legacy; then
+    log "Enabling iptables-legacy"
+    echo "ERROR: Unable to continue because..."
+    echo "       - ...you are using nftables and not iptables..."
+    echo "       - ...to fix this iptables must point to iptables-legacy."
+    echo "       You don't want to run Docker with iptables=false."
+    echo
+    echo "       For Ubuntu:"
+    echo "       $ apt-get update"
+    echo "       $ apt-get -y install --no-install-recommends iptables"
+    echo "       $ update-alternatives --set iptables /usr/sbin/iptables-legacy"
+    exit 1
+fi
+
+# Install Docker CE
+# renovate: datasource=github-releases depName=moby/moby
+DOCKER_VERSION=20.10.10
+# TODO: manpages?
+curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
+| tar -xzC "${TARGET}/bin" --strip-components=1 \
+    docker/dockerd \
+    docker/docker \
+    docker/docker-proxy
+curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
+| tar -xzC "${TARGET}/bin" --strip-components=1 \
+    docker-rootless-extras/dockerd-rootless.sh \
+    docker-rootless-extras/dockerd-rootless-setuptool.sh
+curl -sLO "/etc/systemd/system/docker.service" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
+curl -sLO "/etc/systemd/system/docker.socket" https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
+systemctl daemon-reload
+mkdir -o /etc/default
+curl -sLO "/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+mkdir -p /etc/init.d
+curl -sLO "/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+chmod +x "/etc/init.d/docker"
+mkdir -p /usr/share/bash-completion/completions
+curl -sLO "/usr/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
+mkdir -p /usr/share/fish/vendor_completions.d
+curl -sLO "/usr/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
+mkdir -p /usr/share/zsh/vendor-completions
+curl -sLO "/usr/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+
+# Fetch tested versions of dependencies
+MOBY_DIR="${TEMP}/moby"
+echo "Fetching Docker ${DOCKER_VERSION}"
+git clone -q https://github.com/moby/moby "${MOBY_DIR}"
+git -C "${MOBY_DIR}" checkout -q v${DOCKER_VERSION}
+
+# containerd
+CONTAINERD_DIR="${TEMP}/containerd"
+echo "Checking containerd"
+source "${MOBY_DIR}/hack/dockerfile/install/containerd.installer"
+git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
+git -C "${CONTAINERD_DIR}" checkout -q ${CONTAINERD_COMMIT}
+CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags)"
+curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
+| tar -xzC "${TARGET}"
+curl -sLO "/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+systemctl daemon-reload
+
+# rootlesskit
+ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
+echo "Checking rootlesskit"
+source "${MOBY_DIR}/hack/dockerfile/install/rootlesskit.installer"
+git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
+git -C "${ROOTLESSKIT_DIR}" checkout -q ${ROOTLESSKIT_COMMIT}
+ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags)"
+curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
+| tar -xzC "${TARGET}/bin"
+
+# runc
+RUNC_DIR="${TEMP}/runc"
+echo "Checking runc"
+source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
+git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
+git -C "${RUNC_DIR}" checkout -q ${RUNC_COMMIT}
+RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags)"
+curl -sLO "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
+
+# tini
+TINI_DIR="${TEMP}/tini"
+echo "Checking tini"
+source "${MOBY_DIR}/hack/dockerfile/install/tini.installer"
+git clone -q https://github.com/krallin/tini "${TINI_DIR}"
+git -C "${TINI_DIR}" checkout -q ${TINI_COMMIT}
+TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags)"
+curl -sLO "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
+
+# Configure Docker Engine
 log "Configure Docker Engine"
+DOCKER_RESTART=false
 mkdir -p /etc/docker
 if ! test -f /etc/docker/daemon.json; then
     echo "{}" >/etc/docker/daemon.json
 fi
-if test -n "${DOCKER_REGISTRY_MIRROR}"; then
-    # TODO: Test update
-    cat <<< $(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '. * {"registry-mirrors":["\($mirror)"]}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}"; then
+    # Check if address pool already exists
+    cat <<< $(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+    DOCKER_RESTART=true
 fi
-cat <<< $(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json) >/etc/docker/daemon.json
-# TODO: Restart dockerd
+if test -n "${DOCKER_REGISTRY_MIRROR}"; then
+    # TODO: Check if mirror already exists
+    cat <<< $(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+    DOCKER_RESTART=true
+fi
+if ! cat /etc/docker/daemon.json | jq --raw-output '.features.buildkit // false'; then
+    cat <<< $(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json) >/etc/docker/daemon.json
+    DOCKER_RESTART=true
+fi
+if ${DOCKER_RESTART}; then
+    service docker restart
+fi
 
 # Configure docker CLI
 # https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
 # NOTHING TO BE DONE FOR NOW
-
-# TODO: Use RenovateBot to update pinned versions
 
 mkdir -p "${TARGET}/libexec/docker/cli-plugins"
 
@@ -121,11 +186,19 @@ log "Install docker-scan ${DOCKER_SCAN_VERSION}"
 curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
 chmod +x "${TARGET}/libexec/docker/cli-plugins/docker-scan"
 
+# slirp4netns
+# renovate: datasource=github-releases depName=rootless-containers/slirp4netns
+SLIRP4NETNS_VERSION=1.1.12
+log "Install slirp4netns ${SLIRP4NETNS_VERSION}"
+curl -sLO "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
+chmod +x "${TARGET}/bin/slirp4netns"
+
 # hub-tool
 # renovate: datasource=github-releases depName=docker/hub-tool
 HUB_TOOL_VERSION=0.4.3
 log "Install hub-tool ${HUB_TOOL_VERSION}"
-curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" | tar -xzC "${TARGET}/bin" --strip-components=1
+curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
+| tar -xzC "${TARGET}/bin" --strip-components=1
 
 # docker-machine
 # renovate: datasource=github-releases depName=docker/machine
@@ -152,7 +225,8 @@ chmod +x "${TARGET}/bin/manifest-tool"
 # renovate: datasource=github-releases depName=moby/buildkit
 BUILDKIT_VERSION=0.9.2
 log "Install BuildKit ${BUILDKIT_VERSION}"
-curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" | tar -xzC "${TARGET}"
+curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
+| tar -xzC "${TARGET}"
 
 # img
 # renovate: datasource=github-releases depName=genuinetools/img
@@ -165,7 +239,9 @@ chmod +x "${TARGET}/bin/img"
 # renovate: datasource=github-releases depName=wagoodman/dive
 DIVE_VERSION=0.10.0
 log "Install dive ${DIVE_VERSION}"
-curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz | tar -xzC "${TARGET}/bin" dive
+curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz \
+| tar -xzC "${TARGET}/bin" \
+    dive
 
 # TODO: portainer
 # renovate: datasource=github-releases depName=portainer/portainer
@@ -178,7 +254,9 @@ PORTAINER_VERSION=2.9.2
 # renovate: datasource=github-releases depName=oras-project/oras
 ORAS_VERSION=0.12.0
 log "Install oras ${ORAS_VERSION}"
-curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" | tar -xzC "${TARGET}/bin" oras
+curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
+| tar -xzC "${TARGET}/bin" \
+    oras
 
 # regclient
 # renovate: datasource=github-releases depName=regclient/regclient
@@ -225,7 +303,9 @@ chmod +x "${TARGET}/bin/k3d"
 # renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION=3.7.1
 log "Install helm ${HELM_VERSION}"
-curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar -xzC "${TARGET}/bin" --strip-components=1 linux-amd64/helm
+curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
+| tar -xzC "${TARGET}/bin" --strip-components=1 \
+    linux-amd64/helm
 
 # krew
 # https://krew.sigs.k8s.io/docs/user-guide/setup/install/
@@ -234,7 +314,8 @@ curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar -x
 # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
 log "Install kustomize ${KUSTOMIZE_VERSION}"
 KUSTOMIZE_VERSION=4.4.0
-curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" | tar -xzC "${TRARGET}/bin"
+curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
+| tar -xzC "${TRARGET}/bin"
 
 # kapp
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
@@ -263,7 +344,9 @@ chmod +x "${TARGET}/bin/arkade"
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.20.2
 log "Install trivy ${TRIVY_VERSION}"
-curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" | tar -xzC "${TARGET}/bin" trivy
+curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
+| tar -xzC "${TARGET}/bin" \
+    trivy
 
 # Tools
 
@@ -280,3 +363,5 @@ YQ_VERSION=v4.14.1
 log "Install yq ${YQ_VERSION}"
 curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
 chmod +x "${TARGET}/bin/yq"
+
+rm -rf "${TEMP}"

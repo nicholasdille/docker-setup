@@ -71,6 +71,7 @@
         "oras-project/oras",
         "rancher/k3d",
         "regclient/regclient",
+        "rootless-containers/slirp4netns",
         "sigstore/cosign",
         "vmware-tanzu/carvel-kapp",
         "vmware-tanzu/carvel-ytt",
