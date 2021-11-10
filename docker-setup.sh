@@ -342,7 +342,7 @@ chmod +x "${TARGET}/bin/docker-machine"
 
 # buildx
 # renovate: datasource=github-releases depName=docker/buildx
-BUILDX_VERSION=0.6.3
+BUILDX_VERSION=0.7.0
 section "buildx ${BUILDX_VERSION}"
 task "Install binary"
 curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
