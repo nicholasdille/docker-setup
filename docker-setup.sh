@@ -470,9 +470,9 @@ curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/do
 task "Set executable bits"
 chmod +x "${TARGET}/bin/cosign"
 task "Install completion"
-cosign shell-completion bash >"${TARGET}/share/bash-completion/completions/cosign"
-cosign shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/cosign.fish"
-cosign shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_cosign"
+cosign completion bash >"${TARGET}/share/bash-completion/completions/cosign"
+cosign completion fish >"${TARGET}/share/fish/vendor_completions.d/cosign.fish"
+cosign completion zsh >"${TARGET}/share/zsh/vendor-completions/_cosign"
 
 # Kubernetes
 
