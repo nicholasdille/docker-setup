@@ -73,6 +73,9 @@ function task() {
 }
 
 section "Directories"
+task "Docker"
+mkdir -p \
+    /etc/docker
 task "Completion"
 mkdir -p \
     "${TARGET}/share/bash-completion/completions" \
