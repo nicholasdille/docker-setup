@@ -258,10 +258,6 @@ if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev
     cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
 fi
-if ${DOCKER_RESTART}; then
-    task "Restart dockerd"
-    service docker restart
-fi
 
 # Install Docker CE
 section "Docker ${DOCKER_VERSION}"
