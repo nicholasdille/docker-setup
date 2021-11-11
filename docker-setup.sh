@@ -288,8 +288,13 @@ task "Install completion"
 curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
 curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
 curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+task "Create group"
+groupadd --system docker
 task "Reload systemd"
 systemctl daemon-reload
+task "Start dockerd"
+systemctl enable docker
+systemctl start docker
 # TODO: Add manpages
 
 # Configure docker CLI
