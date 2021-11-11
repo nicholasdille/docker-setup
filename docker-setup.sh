@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o errexit
 
 RESET="\e[39m\e[49m"
 GREEN="\e[92m"
@@ -42,7 +43,7 @@ DOCKER_ADDRESS_SIZE      Specifies the size of each network,
 DOCKER_REGISTRY_MIRROR   Specifies a host to be used as registry
                          mirror, e.g. https://proxy.my-domain.tld
 
-DOCKER_ALLOW_RESTART     XXX
+DOCKER_ALLOW_RESTART     Whether restarting dockerd is acceptable
 
 DOCKER_COMPOSE           Specifies which major version of
                          docker-compose to use. Defaults to v2
@@ -60,7 +61,12 @@ fi
 
 : "${TARGET:=/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
+
 TEMP="$(mktemp -d)"
+function cleanup() {
+    rm -rf "${TEMP}"
+}
+trap cleanup EXIT
 
 function section() {
     echo -e -n "${GREEN}"
@@ -74,6 +80,9 @@ function section() {
 function task() {
     echo "$1"
 }
+
+# renovate: datasource=github-tags depName=golang/go
+GO_VERSION=1.17.3
 
 section "Directories"
 task "Docker"
@@ -184,7 +193,24 @@ task "Install systemd unit"
 curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 task "Reload systemd"
 systemctl daemon-reload
-# TODO: Add manpages
+# TODO: Versioning of golang image
+task "Install manpages"
+docker container run \
+    --interactive \
+    --rm \
+    --volume "${TARGET}/share/man:/opt/man" \
+    --env "CONTAINERD_VERSION=${CONTAINERD_VERSION}" \
+    "golang:${GO_VERSION}" bash -x <<EOF
+mkdir -p /go/src/github.com/containerd/containerd
+cd /go/src/github.com/containerd/containerd
+git clone -q https://github.com/containerd/containerd .
+git checkout -q "v${CONTAINERD_VERSION}"
+go install github.com/cpuguy83/go-md2man@latest
+export GO111MODULE=auto
+make man
+cp -r man/*.5 "/opt/man/man5"
+cp -r man/*.8 "/opt/man/man8"
+EOF
 
 # rootlesskit
 section "rootlesskit"
@@ -216,7 +242,22 @@ task "Install version ${RUNC_VERSION}"
 curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/runc"
-# TODO: Add manpages
+# TODO: Versioning of golang image
+task "Install manpages"
+docker container run \
+    --interactive \
+    --rm \
+    --volume "${TARGET}/share/man:/opt/man" \
+    --env "RUNC_VERSION=${RUNC_VERSION}" \
+    "golang:${GO_VERSION}" bash -x <<EOF
+mkdir -p /go/src/github.com/opencontainers/runc
+cd /go/src/github.com/opencontainers/runc
+git clone -q https://github.com/opencontainers/runc .
+git checkout -q "v${RUNC_VERSION}"
+go install github.com/cpuguy83/go-md2man@latest
+man/md2man-all.sh -q
+cp -r man/man8/ "/opt/man"
+EOF
 
 # tini
 section "docker-init"
@@ -305,7 +346,24 @@ else
     systemctl enable docker
     systemctl start docker
 fi
-# TODO: Add manpages
+task "Install manpages"
+docker container run \
+    --interactive \
+    --rm \
+    --volume "${TARGET}/share/man:/opt/man" \
+    --env "DOCKER_VERSION=${DOCKER_VERSION}" \
+    "golang:${GO_VERSION}" bash -x <<EOF
+mkdir -p /go/src/github.com/docker/cli
+cd /go/src/github.com/docker/cli
+git clone -q https://github.com/docker/cli .
+git checkout -q "v${DOCKER_VERISON}"
+export GO111MODULE=auto
+export DISABLE_WARN_OUTSIDE_CONTAINER=1
+make manpages
+cp -r man/man1 "/opt/man"
+cp -r man/man5 "/opt/man"
+cp -r man/man8 "/opt/man"
+EOF
 
 # Configure docker CLI
 # https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
@@ -355,7 +413,20 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/slirp4netns"
-# TODO: Add manpages
+# TODO: Versioning of golang image
+task "Install manpages"
+docker container run \
+    --interactive \
+    --rm \
+    --volume "${TARGET}/share/man:/opt/man" \
+    --env "SLIRP4NETNS_VERSION=${SLIRP4NETNS_VERSION}" \
+    "golang:${GO_VERSION}" bash -x <<EOF
+mkdir -p /go/src/github.com/rootless-containers/slirp4netns
+cd /go/src/github.com/rootless-containers/slirp4netns
+git clone -q https://github.com/rootless-containers/slirp4netns .
+git checkout -q "v${SLIRP4NETNS_VERSION}"
+cp *.1 /opt/man/man1
+EOF
 
 # hub-tool
 # renovate: datasource=github-releases depName=docker/hub-tool
@@ -613,5 +684,3 @@ task "Install binary"
 curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
 | tar -xzC "${TARGET}/bin" --no-same-owner \
     trivy
-
-rm -rf "${TEMP}"
