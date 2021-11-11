@@ -5,7 +5,7 @@ GREEN="\e[92m"
 YELLOW="\e[93m"
 RED="\e[91m"
 
-echo -e -n "${YELLOW}"
+echo -e "${YELLOW}"
 echo -n "D O C K E R - S E T U P   (missing figlet)"
 if type figlet >/dev/null 2>&1; then
     echo -e -n "\r"
@@ -22,7 +22,7 @@ This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
 EOF
-echo -e -n "${RESET}"
+echo -e "${RESET}"
 
 if test "$1" == "--help"; then
     cat <<EOF
