@@ -42,6 +42,8 @@ DOCKER_ADDRESS_SIZE      Specifies the size of each network,
 DOCKER_REGISTRY_MIRROR   Specifies a host to be used as registry
                          mirror, e.g. https://proxy.my-domain.tld
 
+DOCKER_ALLOW_RESTART     XXX
+
 DOCKER_COMPOSE           Specifies which major version of
                          docker-compose to use. Defaults to v2
 
@@ -57,6 +59,7 @@ if test ${EUID} -ne 0; then
 fi
 
 : "${TARGET:=/usr}"
+: "${DOCKER_ALLOW_RESTART:=true}"
 TEMP="$(mktemp -d)"
 
 function section() {
@@ -289,8 +292,12 @@ groupadd --system --force docker
 task "Reload systemd"
 systemctl daemon-reload
 task "Start dockerd"
-systemctl enable docker
-systemctl start docker
+if systemctl is-active --quiet docker && ${DOCKER_ALLOW_RESTART}; then
+    systemctl restart docker
+else
+    systemctl enable docker
+    systemctl start docker
+fi
 # TODO: Add manpages
 
 # Configure docker CLI
