@@ -482,7 +482,7 @@ kind completion zsh >"${TARGET}/share/zsh/vendor-completions/_kind"
 
 # k3d
 # renovate: datasource=github-releases depName=rancher/k3d
-K3D_VERSION=5.0.3
+K3D_VERSION=5.1.0
 section "k3d ${K3D_VERSION}"
 task "Install binary"
 curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
