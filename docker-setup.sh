@@ -247,6 +247,7 @@ if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}"; then
     # shellcheck disable=SC2094
     cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
+    echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
 fi
 if test -n "${DOCKER_REGISTRY_MIRROR}"; then
     # TODO: Check if mirror already exists
@@ -254,12 +255,14 @@ if test -n "${DOCKER_REGISTRY_MIRROR}"; then
     # shellcheck disable=SC2094
     cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
+    echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
 fi
 if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev/null; then
     task "Enable BuildKit"
     # shellcheck disable=SC2094
     cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
+    echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
 fi
 
 # Install Docker CE
@@ -292,8 +295,12 @@ groupadd --system --force docker
 task "Reload systemd"
 systemctl daemon-reload
 task "Start dockerd"
-if systemctl is-active --quiet docker && ${DOCKER_ALLOW_RESTART}; then
-    systemctl restart docker
+if systemctl is-active --quiet docker; then
+    if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+        systemctl restart docker
+    else
+        echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+    fi
 else
     systemctl enable docker
     systemctl start docker
