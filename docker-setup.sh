@@ -176,7 +176,7 @@ task "Get version"
 CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
 task "Install version ${CONTAINERD_VERSION}"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}/bin" --no-same-owner
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
 task "Install systemd unit"
 curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 task "Reload systemd"
@@ -417,9 +417,9 @@ mkdir -p "${TARGET}/share/portainer"
 task "Download tarball"
 curl -sLo "${TEMP}/portainer.tar.gz" "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz"
 task "Install binary"
-tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/bin" --no-same-owner \
+tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/bin" --strip-components=1 --no-same-owner \
     portainer/portainer
-tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/share/portainer" --no-same-owner \
+tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/share/portainer" --strip-components=1 --no-same-owner \
     portainer/public
 
 # oras
