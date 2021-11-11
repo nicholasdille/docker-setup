@@ -302,7 +302,6 @@ systemctl start docker
 # NOTHING TO BE DONE FOR NOW
 
 # docker-compose v2
-# TODO: Set target directory for non-root
 : "${DOCKER_COMPOSE:=v2}"
 # renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
 DOCKER_COMPOSE_VERSION_V1=1.29.2
