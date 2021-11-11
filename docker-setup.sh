@@ -154,36 +154,8 @@ if ! iptables --version | grep --quiet legacy; then
     exit 1
 fi
 
-# Install Docker CE
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.10
-section "Docker ${DOCKER_VERSION}"
-task "Install binaries"
-curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-    docker/dockerd \
-    docker/docker \
-    docker/docker-proxy
-task "Install rootless scripts"
-curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-    docker-rootless-extras/dockerd-rootless.sh \
-    docker-rootless-extras/dockerd-rootless-setuptool.sh
-task "Install systemd units"
-curl -sLo /etc/systemd/system/docker.service https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
-curl -sLo /etc/systemd/system/docker.socket https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
-task "Install init script"
-curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
-task "Set executable bits"
-chmod +x /etc/init.d/docker
-task "Install completion"
-curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
-curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
-curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
-task "Reload systemd"
-systemctl daemon-reload
-# TODO: Add manpages
 
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
@@ -278,6 +250,35 @@ if ${DOCKER_RESTART}; then
     task "Restart dockerd"
     service docker restart
 fi
+
+# Install Docker CE
+section "Docker ${DOCKER_VERSION}"
+task "Install binaries"
+curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
+    docker/dockerd \
+    docker/docker \
+    docker/docker-proxy
+task "Install rootless scripts"
+curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
+| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
+    docker-rootless-extras/dockerd-rootless.sh \
+    docker-rootless-extras/dockerd-rootless-setuptool.sh
+task "Install systemd units"
+curl -sLo /etc/systemd/system/docker.service https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
+curl -sLo /etc/systemd/system/docker.socket https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
+task "Install init script"
+curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+task "Set executable bits"
+chmod +x /etc/init.d/docker
+task "Install completion"
+curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
+curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
+curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+task "Reload systemd"
+systemctl daemon-reload
+# TODO: Add manpages
 
 # Configure docker CLI
 # https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
