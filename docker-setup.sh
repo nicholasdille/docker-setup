@@ -252,7 +252,7 @@ if test -n "${DOCKER_REGISTRY_MIRROR}"; then
     cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
     DOCKER_RESTART=true
 fi
-if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json; then
+if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev/null; then
     task "Enable BuildKit"
     # shellcheck disable=SC2094
     cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
