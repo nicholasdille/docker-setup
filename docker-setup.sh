@@ -543,7 +543,7 @@ regsync completion zsh >"${TARGET}/share/zsh/vendor-completions/_regsync"
 
 # cosign
 # renovate: datasource=github-releases depName=sigstore/cosign
-COSIGN_VERSION=1.3.0
+COSIGN_VERSION=1.3.1
 section "Installing cosign ${COSIGN_VERSION}"
 task "Install binary"
 curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
