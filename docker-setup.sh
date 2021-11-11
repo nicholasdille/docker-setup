@@ -289,7 +289,7 @@ curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.c
 curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
 curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 task "Create group"
-groupadd --system docker
+groupadd --system --force docker
 task "Reload systemd"
 systemctl daemon-reload
 task "Start dockerd"
