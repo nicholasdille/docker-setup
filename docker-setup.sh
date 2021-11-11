@@ -279,8 +279,8 @@ curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless
     docker-rootless-extras/dockerd-rootless.sh \
     docker-rootless-extras/dockerd-rootless-setuptool.sh
 task "Install systemd units"
-curl -sLo /etc/systemd/system/docker.service https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service
-curl -sLo /etc/systemd/system/docker.socket https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket
+curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
+curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
 task "Install init script"
 curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
 curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
