@@ -180,6 +180,7 @@ curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://githu
 curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
 task "Reload systemd"
 systemctl daemon-reload
+# TODO: Add manpages
 
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
@@ -202,6 +203,7 @@ task "Install systemd unit"
 curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 task "Reload systemd"
 systemctl daemon-reload
+# TODO: Add manpages
 
 # rootlesskit
 ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
@@ -227,6 +229,7 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/runc"
+# TODO: Add manpages
 
 # tini
 TINI_DIR="${TEMP}/tini"
@@ -322,6 +325,7 @@ task "Install binary"
 curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/slirp4netns"
+# TODO: Add manpages
 
 # hub-tool
 # renovate: datasource=github-releases depName=docker/hub-tool
