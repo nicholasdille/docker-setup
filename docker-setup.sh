@@ -156,7 +156,7 @@ fi
 
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.10
-
+section "Dependencies for Docker ${DOCKER_VERSION}"
 # Fetch tested versions of dependencies
 MOBY_DIR="${TEMP}/moby"
 task "Fetch dependency information"
@@ -164,14 +164,17 @@ git clone -q https://github.com/moby/moby "${MOBY_DIR}"
 git -C "${MOBY_DIR}" checkout -q v${DOCKER_VERSION}
 
 # containerd
+section "containerd"
+task "Read commit"
 CONTAINERD_DIR="${TEMP}/containerd"
 # shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/containerd.installer"
+task "Clone"
 git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
 git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
+task "Get version"
 CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
-section "containerd ${CONTAINERD_VERSION}"
-task "Install binary"
+task "Install version ${CONTAINERD_VERSION}"
 curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
 | tar -xzC "${TARGET}/bin" --no-same-owner
 task "Install systemd unit"
@@ -181,40 +184,49 @@ systemctl daemon-reload
 # TODO: Add manpages
 
 # rootlesskit
+section "rootlesskit"
+task "Read commit"
 ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
 # shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/rootlesskit.installer"
+task "Clone"
 git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
 git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
+task "Get version"
 ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
-section "rootlesskit ${ROOTLESSKIT_VERSION}"
-task "Install binary"
+task "Install version ${ROOTLESSKIT_VERSION}"
 curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
 | tar -xzC "${TARGET}/bin" --no-same-owner
 
 # runc
+section "runc"
+task "Read commit"
 RUNC_DIR="${TEMP}/runc"
 # shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
+task "Clone"
 git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
 git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
+task "Get version"
 RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
-section "runc ${RUNC_VERSION}"
-task "Install binary"
+task "Install version ${RUNC_VERSION}"
 curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/runc"
 # TODO: Add manpages
 
 # tini
+section "docker-init"
+task "Read commit"
 TINI_DIR="${TEMP}/tini"
 # shellcheck source=/dev/null
 source "${MOBY_DIR}/hack/dockerfile/install/tini.installer"
+task "Clone"
 git clone -q https://github.com/krallin/tini "${TINI_DIR}"
 git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
+task "Get version"
 TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
-section "tini ${TINI_VERSION}"
-task "Install binary"
+task "Install version ${TINI_VERSION}"
 curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/docker-init"
