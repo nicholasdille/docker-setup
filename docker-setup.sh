@@ -612,7 +612,7 @@ helm completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
 
 # kustomize
 # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION=4.4.0
+KUSTOMIZE_VERSION=4.4.1
 section "kustomize ${KUSTOMIZE_VERSION}"
 task "Install binary"
 curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
