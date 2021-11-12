@@ -193,24 +193,6 @@ task "Install systemd unit"
 curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
 task "Reload systemd"
 systemctl daemon-reload
-# TODO: Versioning of golang image
-task "Install manpages"
-docker container run \
-    --interactive \
-    --rm \
-    --volume "${TARGET}/share/man:/opt/man" \
-    --env "CONTAINERD_VERSION=${CONTAINERD_VERSION}" \
-    "golang:${GO_VERSION}" bash -x <<EOF
-mkdir -p /go/src/github.com/containerd/containerd
-cd /go/src/github.com/containerd/containerd
-git clone -q https://github.com/containerd/containerd .
-git checkout -q "v${CONTAINERD_VERSION}"
-go install github.com/cpuguy83/go-md2man@latest
-export GO111MODULE=auto
-make man
-cp -r man/*.5 "/opt/man/man5"
-cp -r man/*.8 "/opt/man/man8"
-EOF
 
 # rootlesskit
 section "rootlesskit"
@@ -242,22 +224,6 @@ task "Install version ${RUNC_VERSION}"
 curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
 task "Set executable bits"
 chmod +x "${TARGET}/bin/runc"
-# TODO: Versioning of golang image
-task "Install manpages"
-docker container run \
-    --interactive \
-    --rm \
-    --volume "${TARGET}/share/man:/opt/man" \
-    --env "RUNC_VERSION=${RUNC_VERSION}" \
-    "golang:${GO_VERSION}" bash -x <<EOF
-mkdir -p /go/src/github.com/opencontainers/runc
-cd /go/src/github.com/opencontainers/runc
-git clone -q https://github.com/opencontainers/runc .
-git checkout -q "v${RUNC_VERSION}"
-go install github.com/cpuguy83/go-md2man@latest
-man/md2man-all.sh -q
-cp -r man/man8/ "/opt/man"
-EOF
 
 # tini
 section "docker-init"
@@ -346,7 +312,13 @@ else
     systemctl enable docker
     systemctl start docker
 fi
-task "Install manpages"
+
+# Configure docker CLI
+# https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
+# NOTHING TO BE DONE FOR NOW
+
+section "Manpages"
+task "Install manpages for Docker CLI"
 docker container run \
     --interactive \
     --rm \
@@ -364,10 +336,39 @@ cp -r man/man1 "/opt/man"
 cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
+task "Install manpages for containerd"
+docker container run \
+    --interactive \
+    --rm \
+    --volume "${TARGET}/share/man:/opt/man" \
+    --env "CONTAINERD_VERSION=${CONTAINERD_VERSION}" \
+    "golang:${GO_VERSION}" bash -x <<EOF
+mkdir -p /go/src/github.com/containerd/containerd
+cd /go/src/github.com/containerd/containerd
+git clone -q https://github.com/containerd/containerd .
+git checkout -q "v${CONTAINERD_VERSION}"
+go install github.com/cpuguy83/go-md2man@latest
+export GO111MODULE=auto
+make man
+cp -r man/*.5 "/opt/man/man5"
+cp -r man/*.8 "/opt/man/man8"
+EOF
+task "Install manpages for runc"
+docker container run \
+    --interactive \
+    --rm \
+    --volume "${TARGET}/share/man:/opt/man" \
+    --env "RUNC_VERSION=${RUNC_VERSION}" \
+    "golang:${GO_VERSION}" bash -x <<EOF
+mkdir -p /go/src/github.com/opencontainers/runc
+cd /go/src/github.com/opencontainers/runc
+git clone -q https://github.com/opencontainers/runc .
+git checkout -q "v${RUNC_VERSION}"
+go install github.com/cpuguy83/go-md2man@latest
+man/md2man-all.sh -q
+cp -r man/man8/ "/opt/man"
+EOF
 
-# Configure docker CLI
-# https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
-# NOTHING TO BE DONE FOR NOW
 
 # docker-compose v2
 : "${DOCKER_COMPOSE:=v2}"
