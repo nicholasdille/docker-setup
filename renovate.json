@@ -54,6 +54,12 @@
       "extractVersion": "^jq-(?<version>.+)$"
     },
     {
+      "matchPackageNames": [
+        "docker/compose"
+      ],
+      "extractVersion": "^v?(?<version>.+)$"
+    },
+    {
       "packageNames": [
         "alexellis/arkade",
         "aquasecurity/trivy",
