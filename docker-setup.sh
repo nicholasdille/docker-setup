@@ -328,7 +328,7 @@ docker container run \
 mkdir -p /go/src/github.com/docker/cli
 cd /go/src/github.com/docker/cli
 git clone -q https://github.com/docker/cli .
-git checkout -q "v${DOCKER_VERISON}"
+git checkout -q "v${DOCKER_VERSION}"
 export GO111MODULE=auto
 export DISABLE_WARN_OUTSIDE_CONTAINER=1
 make manpages
