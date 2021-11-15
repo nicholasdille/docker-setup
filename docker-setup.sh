@@ -88,7 +88,7 @@ DOCKER_VERSION=20.10.10
 # renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
 DOCKER_COMPOSE_V1_VERSION=1.29.2
 # renovate: datasource=github-releases depName=docker/compose
-DOCKER_COMPOSE_V2_VERSION=2.0.0
+DOCKER_COMPOSE_V2_VERSION=2.1.1
 # renovate: datasource=github-releases depName=docker/scan-cli-plugin
 DOCKER_SCAN_VERSION=0.9.0
 # renovate: datasource=github-releases depName=rootless-containers/slirp4netns
