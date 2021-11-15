@@ -86,9 +86,9 @@ YQ_VERSION=4.14.2
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.10
 # renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
-DOCKER_COMPOSE_VERSION_V1=1.29.2
+DOCKER_COMPOSE_V1_VERSION=1.29.2
 # renovate: datasource=github-releases depName=docker/compose
-DOCKER_COMPOSE_VERSION_V2=2.0.0
+DOCKER_COMPOSE_V2_VERSION=2.0.0
 # renovate: datasource=github-releases depName=docker/scan-cli-plugin
 DOCKER_SCAN_VERSION=0.9.0
 # renovate: datasource=github-releases depName=rootless-containers/slirp4netns
@@ -184,9 +184,9 @@ TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
-    DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_VERSION_V1}"
+    DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V1_VERSION}"
 elif test "${DOCKER_COMPOSE}" == "v2"; then
-    DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_VERSION_V2}"
+    DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V2_VERSION}"
 else
     echo -e "${RED}ERROR: Unknown value for DOCKER_COMPOSE. Supported values are v1 and v2 but got ${DOCKER_COMPOSE}.${RESET}"
     exit 1
@@ -717,11 +717,11 @@ fi
 
 # docker-compose v2
 if ${INSTALL_DOCKER_COMPOSE}; then
-    section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_VERSION_V1} or ${DOCKER_COMPOSE_VERSION_V2})"
-    DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION_V2}/docker-compose-linux-amd64"
+    section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
+    DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-amd64"
     DOCKER_COMPOSE_TARGET="${TARGET}/libexec/docker/cli-plugins/docker-compose"
     if test "${DOCKER_COMPOSE}" == "v1"; then
-        DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION_V1}/docker-compose-Linux-x86_64"
+        DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
         DOCKER_COMPOSE_TARGET="${TARGET}/bin/docker-compose"
     fi
     task "Install binary"
