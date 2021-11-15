@@ -134,7 +134,7 @@ YTT_VERSION=0.37.0
 # renovate: datasource=github-releases depName=alexellis/arkade
 ARKADE_VERSION=0.8.8
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=0.20.2
+TRIVY_VERSION=0.21.0
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
