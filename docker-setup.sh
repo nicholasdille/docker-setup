@@ -176,161 +176,161 @@ INSTALL_DOCKER_COMPOSE="$(
     fi
 )"
 INSTALL_DOCKER_SCAN="$(
-    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-scan" && test "${TARGET}/libexec/docker/cli-plugins/docker-scan scan --version | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
+    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-scan" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-scan scan --version | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_SLIRP4NETNS="$(
-    if test -x "${TARGET}/bin/slirp4netns" && test "${TARGET}/bin/slirp4netns --version)" == "slirp4netns version${SLIRP4NETNS_VERSION}"; then
+    if test -x "${TARGET}/bin/slirp4netns" && test "$(${TARGET}/bin/slirp4netns --version | head -n 1)" == "slirp4netns version ${SLIRP4NETNS_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_HUB_TOOL="$(
-    if test -x "${TARGET}/bin/hub-tool" && test "${TARGET}/bin/hub-tool --version | cut -d, -f1)" == "Docker Hub Tool v0.4.3${HUB_TOOL_VERSION}"; then
+    if test -x "${TARGET}/bin/hub-tool" && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)" == "Docker Hub Tool v${HUB_TOOL_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_DOCKER_MACHINE="$(
-    if test -x "${TARGET}/bin/docker-machine" && test "${TARGET}/bin/docker-machine --version | cut -d, -f1)" == "docker-machine version${DOCKER_MACHINE_VERSION}"; then
+    if test -x "${TARGET}/bin/docker-machine" && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)" == "docker-machine version ${DOCKER_MACHINE_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_BUILDX="$(
-    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-buildx" && test "${TARGET}/libexec/docker/cli-plugins/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
+    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-buildx" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_MANIFEST_TOOL="$(
-    if test -x "${TARGET}/bin/manifest-tool" && test "${TARGET}/bin/manifest-tool --version | cut -d' ' -f1-3)" == "manifest-tool version ${MANIFEST_TOOL_VERSION}"; then
+    if test -x "${TARGET}/bin/manifest-tool" && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f1-3)" == "manifest-tool version ${MANIFEST_TOOL_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_BUILDKIT="$(
-    if test -x "${TARGET}/bin/buildkitd" && test "${TARGET}/bin/buildkitd --version | cut -d' ' -f1-3)" == "buildkitd github.com/moby/buildkit v${BUILDKIT_VERSION}"; then
+    if test -x "${TARGET}/bin/buildkitd" && test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f1-3)" == "buildkitd github.com/moby/buildkit v${BUILDKIT_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_IMG="$(
-    if test -x "${TARGET}/bin/img" && test "${TARGET}/bin/img --version | cut -d, -f1)" == "img version v${IMG_VERSION}"; then
+    if test -x "${TARGET}/bin/img" && test "$(${TARGET}/bin/img --version | cut -d, -f1)" == "img version v${IMG_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_DIVE="$(
-    if test -x "${TARGET}/bin/dive" && test "${TARGET}/bin/dive --version)" == "dive ${DIVE_VERSION}"; then
+    if test -x "${TARGET}/bin/dive" && test "$(${TARGET}/bin/dive --version)" == "dive ${DIVE_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_PORTAINER="$(
-    if test -x "${TARGET}/bin/portainer" && test "${TARGET}/bin/portainer --version)" == "${PORTAINER_VERSION}"; then
+    if test -x "${TARGET}/bin/portainer" && test "$(${TARGET}/bin/portainer --version 2>&1)" == "${PORTAINER_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_ORAS="$(
-    if test -x "${TARGET}/bin/oras" && test "${TARGET}/bin/oras version | head -n 1)" == "Version:        ${ORAS_VERSION}"; then
+    if test -x "${TARGET}/bin/oras" && test "$(${TARGET}/bin/oras version | head -n 1)" == "Version:        ${ORAS_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_REGCLIENT="$(
-    if test -x "${TARGET}/bin/regctl" && test "${TARGET}/bin/regctl version | jq -r .VCSTag)" == "v${REGCLIENT_VERSION}"; then
+    if test -x "${TARGET}/bin/regctl" && test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)" == "v${REGCLIENT_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_COSIGN="$(
-    if test -x "${TARGET}/bin/cosign" && test "${TARGET}/bin/cosign version | grep GitVersion)" == "GitVersion:    v${COSIGN_VERSION}"; then
+    if test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/cosign version | grep GitVersion)" == "GitVersion:    v${COSIGN_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_KUBECTL="$(
-    if test -x "${TARGET}/bin/cosign" && test "${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
+    if test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_KIND="$(
-    if test -x "${TARGET}/bin/kind" && test "${TARGET}/bin/kind version | cut -d' ' -f1-2)" == "kind v${KIND_VERSION}"; then
+    if test -x "${TARGET}/bin/kind" && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)" == "kind v${KIND_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_K3D="$(
-    if test -x "${TARGET}/bin/k3d" && test "${TARGET}/bin/k3d version | head -n 1)" == "k3d version v${K3D_VERSION}"; then
+    if test -x "${TARGET}/bin/k3d" && test "$(${TARGET}/bin/k3d version | head -n 1)" == "k3d version v${K3D_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_HELM="$(
-    if test -x "${TARGET}/bin/helm" && test "${TARGET}/bin/helm version --short | cut -d+ -f1)" == "v${HELM_VERSION}"; then
+    if test -x "${TARGET}/bin/helm" && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)" == "v${HELM_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_KUSTOMIZE="$(
-    if test -x "${TARGET}/bin/kustomize" && test "${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)" == "{kustomize/v${KUSTOMIZE_VERSION}"; then
+    if test -x "${TARGET}/bin/kustomize" && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)" == "{kustomize/v${KUSTOMIZE_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_KOMPOSE="$(
-    if test -x "${TARGET}/bin/kompose" && test "${TARGET}/bin/kompose version | cut -d' ' -f1)" == "${KOMPOSE_VERSION}"; then
+    if test -x "${TARGET}/bin/kompose" && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)" == "${KOMPOSE_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_KAPP="$(
-    if test -x "${TARGET}/bin/kapp" && test "${TARGET}/bin/kapp version | head -n 1)" == "kapp version ${KAPP_VERSION}"; then
+    if test -x "${TARGET}/bin/kapp" && test "$(${TARGET}/bin/kapp version | head -n 1)" == "kapp version ${KAPP_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_YTT="$(
-    if test -x "${TARGET}/bin/ytt" && test "${TARGET}/bin/ytt version)" == "ytt version ${YTT_VERSION}"; then
+    if test -x "${TARGET}/bin/ytt" && test "$(${TARGET}/bin/ytt version)" == "ytt version ${YTT_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_ARKADE="$(
-    if test -x "${TARGET}/bin/arkade" && test "${TARGET}/bin/arkade version | grep "Version")" == "Version: ${ARKADE_VERSION}"; then
+    if test -x "${TARGET}/bin/arkade" && test "$(${TARGET}/bin/arkade version | grep "Version")" == "Version: ${ARKADE_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_TRIVY="$(
-    if test -x "${TARGET}/bin/trivy" && test "${TARGET}/bin/trivy --version)" == "Version: ${TRIVY_VERSION}"; then
+    if test -x "${TARGET}/bin/trivy" && test "$(${TARGET}/bin/trivy --version)" == "Version: ${TRIVY_VERSION}"; then
         echo "false"
     else
         echo "true"
