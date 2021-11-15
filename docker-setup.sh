@@ -136,6 +136,52 @@ ARKADE_VERSION=0.8.8
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.20.2
 
+section "Dependencies for Docker ${DOCKER_VERSION}"
+task "containerd"
+task "+ Read commit"
+curl -sLo "${TEMP}/containerd.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/containerd.installer"
+# shellcheck source=/dev/null
+source "${TEMP}/containerd.installer"
+task "+ Clone repository"
+CONTAINERD_DIR="${TEMP}/containerd"
+git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
+git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
+task "+ Get version for commit"
+CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
+task "rootlesskit"
+task "+ Read commit"
+curl -sLo "${TEMP}/rootlesskit.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/rootlesskit.installer"
+# shellcheck source=/dev/null
+source "${TEMP}/rootlesskit.installer"
+task "+ Clone repository"
+ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
+git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
+git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
+task "+ Get version for commit"
+ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
+task "runc"
+task "+ Read commit"
+curl -sLo "${TEMP}/runc.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/runc.installer"
+# shellcheck source=/dev/null
+source "${TEMP}/runc.installer"
+task "+ Clone repository"
+RUNC_DIR="${TEMP}/runc"
+git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
+git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
+task "+ Get version for commit"
+RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
+task "docker-init"
+task "+ Read commit"
+curl -sLo "${TEMP}/tini.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/tini.installer"
+# shellcheck source=/dev/null
+source "${TEMP}/tini.installer"
+task "+ Clone repository"
+TINI_DIR="${TEMP}/tini"
+git clone -q https://github.com/krallin/tini "${TINI_DIR}"
+git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
+task "+ Get version from commit"
+TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
+
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
     DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_VERSION_V1}"
@@ -162,6 +208,34 @@ INSTALL_YQ="$(
 )"
 INSTALL_DOCKER="$(
     if test -x "${TARGET}/bin/dockerd" && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)" == "Docker version ${DOCKER_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_CONTAINERD="$(
+    if test -x "${TARGET}/bin/containerd" && test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)" == "v${CONTAINERD_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_RUNC="$(
+    if test -x "${TARGET}/bin/runc" && test "$(${TARGET}/bin/runc --version | head -n 1)" == "runc version ${RUNC_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_ROOTLESSKIT="$(
+    if test -x "${TARGET}/bin/rootlesskit" && test "$(${TARGET}/bin/rootlesskit --version)" == "rootlesskit version ${ROOTLESSKIT_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_TINI="$(
+    if test -x "${TARGET}/bin/docker-init" && test "$(${TARGET}/bin/docker-init --version | cut -d' ' -f3)" == "${TINI_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -347,6 +421,11 @@ INSTALL_TRIVY="$(
 section "Status"
 echo -e "jq            : $(if ${INSTALL_JQ};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${JQ_VERSION}${RESET}"
 echo -e "yq            : $(if ${INSTALL_YQ};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YQ_VERSION}${RESET}"
+echo -e "docker        : $(if ${INSTALL_DOCKER};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_VERSION}${RESET}"
+echo -e "containerd    : $(if ${INSTALL_CONTAINERD};     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
+echo -e "rootlesskit   : $(if ${INSTALL_ROOTLESSKIT};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
+echo -e "runc          : $(if ${INSTALL_RUNC};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
+echo -e "docker-init   : $(if ${INSTALL_TINI};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TINI_VERSION}${RESET}"
 echo -e "docker-compose: $(if ${INSTALL_DOCKER_COMPOSE}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
 echo -e "docker-scan   : $(if ${INSTALL_DOCKER_SCAN};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
 echo -e "slirp4netns   : $(if ${INSTALL_SLIRP4NETNS};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
@@ -462,78 +541,43 @@ if ! iptables --version | grep --quiet legacy; then
     exit 1
 fi
 
-section "Dependencies for Docker ${DOCKER_VERSION}"
-# Fetch tested versions of dependencies
-MOBY_DIR="${TEMP}/moby"
-task "Fetch dependency information"
-git clone -q https://github.com/moby/moby "${MOBY_DIR}"
-git -C "${MOBY_DIR}" checkout -q v${DOCKER_VERSION}
-
 # containerd
-section "containerd"
-task "Read commit"
-CONTAINERD_DIR="${TEMP}/containerd"
-# shellcheck source=/dev/null
-source "${MOBY_DIR}/hack/dockerfile/install/containerd.installer"
-task "Clone"
-git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
-git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
-task "Get version"
-CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
-task "Install version ${CONTAINERD_VERSION}"
-curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-task "Install systemd unit"
-curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
-task "Reload systemd"
-systemctl daemon-reload
+if ${INSTALL_CONTAINERD}; then
+    section "containerd ${CONTAINERD_VERSION}"
+    task "Install binaries"
+    curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
+    task "Install systemd unit"
+    curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+    task "Reload systemd"
+    systemctl daemon-reload
+fi
 
 # rootlesskit
-section "rootlesskit"
-task "Read commit"
-ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
-# shellcheck source=/dev/null
-source "${MOBY_DIR}/hack/dockerfile/install/rootlesskit.installer"
-task "Clone"
-git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
-git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
-task "Get version"
-ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
-task "Install version ${ROOTLESSKIT_VERSION}"
-curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
-| tar -xzC "${TARGET}/bin" --no-same-owner
+if ${INSTALL_ROOTLESSKIT}; then
+    section "rootkesskit ${ROOTLESSKIT_VERSION}"
+    task "Install binaries"
+    curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
+fi
 
 # runc
-section "runc"
-task "Read commit"
-RUNC_DIR="${TEMP}/runc"
-# shellcheck source=/dev/null
-source "${MOBY_DIR}/hack/dockerfile/install/runc.installer"
-task "Clone"
-git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
-git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
-task "Get version"
-RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
-task "Install version ${RUNC_VERSION}"
-curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
-task "Set executable bits"
-chmod +x "${TARGET}/bin/runc"
+if ${INSTALL_RUNC}; then
+    section "runc ${RUNC_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/runc"
+fi
 
 # tini
-section "docker-init"
-task "Read commit"
-TINI_DIR="${TEMP}/tini"
-# shellcheck source=/dev/null
-source "${MOBY_DIR}/hack/dockerfile/install/tini.installer"
-task "Clone"
-git clone -q https://github.com/krallin/tini "${TINI_DIR}"
-git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
-task "Get version"
-TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
-task "Install version ${TINI_VERSION}"
-curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
-task "Set executable bits"
-chmod +x "${TARGET}/bin/docker-init"
+if ${INSTALL_TINI}; then
+    section "tini ${TINI_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/docker-init"
+fi
 
 # Configure Docker Engine
 section "Configure Docker Engine"
@@ -634,13 +678,14 @@ cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
 fi
-task "Install manpages for containerd"
-docker container run \
-    --interactive \
-    --rm \
-    --volume "${TARGET}/share/man:/opt/man" \
-    --env "CONTAINERD_VERSION=${CONTAINERD_VERSION}" \
-    "golang:${GO_VERSION}" bash -x <<EOF
+if ${INSTALL_CONTAINERD}; then
+    task "Install manpages for containerd"
+    docker container run \
+        --interactive \
+        --rm \
+        --volume "${TARGET}/share/man:/opt/man" \
+        --env "CONTAINERD_VERSION=${CONTAINERD_VERSION}" \
+        "golang:${GO_VERSION}" bash -x <<EOF
 mkdir -p /go/src/github.com/containerd/containerd
 cd /go/src/github.com/containerd/containerd
 git clone -q https://github.com/containerd/containerd .
@@ -651,13 +696,15 @@ make man
 cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
-task "Install manpages for runc"
-docker container run \
-    --interactive \
-    --rm \
-    --volume "${TARGET}/share/man:/opt/man" \
-    --env "RUNC_VERSION=${RUNC_VERSION}" \
-    "golang:${GO_VERSION}" bash -x <<EOF
+fi
+if ${INSTALL_RUNC}; then
+    task "Install manpages for runc"
+    docker container run \
+        --interactive \
+        --rm \
+        --volume "${TARGET}/share/man:/opt/man" \
+        --env "RUNC_VERSION=${RUNC_VERSION}" \
+        "golang:${GO_VERSION}" bash -x <<EOF
 mkdir -p /go/src/github.com/opencontainers/runc
 cd /go/src/github.com/opencontainers/runc
 git clone -q https://github.com/opencontainers/runc .
@@ -666,6 +713,7 @@ go install github.com/cpuguy83/go-md2man@latest
 man/md2man-all.sh -q
 cp -r man/man8/ "/opt/man"
 EOF
+fi
 
 # docker-compose v2
 if ${INSTALL_DOCKER_COMPOSE}; then
