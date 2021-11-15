@@ -567,44 +567,46 @@ if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev
 fi
 
 # Install Docker CE
-section "Docker ${DOCKER_VERSION}"
-task "Install binaries"
-curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-    docker/dockerd \
-    docker/docker \
-    docker/docker-proxy
-task "Install rootless scripts"
-curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
-| tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-    docker-rootless-extras/dockerd-rootless.sh \
-    docker-rootless-extras/dockerd-rootless-setuptool.sh
-task "Install systemd units"
-curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
-curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
-task "Install init script"
-curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
-task "Set executable bits"
-chmod +x /etc/init.d/docker
-task "Install completion"
-curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
-curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
-curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
-task "Create group"
-groupadd --system --force docker
-task "Reload systemd"
-systemctl daemon-reload
-task "Start dockerd"
-if systemctl is-active --quiet docker; then
-    if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-        systemctl restart docker
+if ${INSTALL_DOCKER}; then
+    section "Docker ${DOCKER_VERSION}"
+    task "Install binaries"
+    curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
+        docker/dockerd \
+        docker/docker \
+        docker/docker-proxy
+    task "Install rootless scripts"
+    curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
+        docker-rootless-extras/dockerd-rootless.sh \
+        docker-rootless-extras/dockerd-rootless-setuptool.sh
+    task "Install systemd units"
+    curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
+    curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
+    task "Install init script"
+    curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+    curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+    task "Set executable bits"
+    chmod +x /etc/init.d/docker
+    task "Install completion"
+    curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
+    curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
+    curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
+    task "Create group"
+    groupadd --system --force docker
+    task "Reload systemd"
+    systemctl daemon-reload
+    task "Start dockerd"
+    if systemctl is-active --quiet docker; then
+        if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+            systemctl restart docker
+        else
+            echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+        fi
     else
-        echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+        systemctl enable docker
+        systemctl start docker
     fi
-else
-    systemctl enable docker
-    systemctl start docker
 fi
 
 # Configure docker CLI
@@ -612,13 +614,14 @@ fi
 # NOTHING TO BE DONE FOR NOW
 
 section "Manpages"
-task "Install manpages for Docker CLI"
-docker container run \
-    --interactive \
-    --rm \
-    --volume "${TARGET}/share/man:/opt/man" \
-    --env "DOCKER_VERSION=${DOCKER_VERSION}" \
-    "golang:${GO_VERSION}" bash -x <<EOF
+if ${INSTALL_DOCKER}; then
+    task "Install manpages for Docker CLI"
+    docker container run \
+        --interactive \
+        --rm \
+        --volume "${TARGET}/share/man:/opt/man" \
+        --env "DOCKER_VERSION=${DOCKER_VERSION}" \
+        "golang:${GO_VERSION}" bash -x <<EOF
 mkdir -p /go/src/github.com/docker/cli
 cd /go/src/github.com/docker/cli
 git clone -q https://github.com/docker/cli .
@@ -630,6 +633,7 @@ cp -r man/man1 "/opt/man"
 cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
+fi
 task "Install manpages for containerd"
 docker container run \
     --interactive \
