@@ -79,7 +79,7 @@ function task() {
 
 # renovate: datasource=github-tags depName=golang/go
 GO_VERSION=1.17.3
-# renovate: datasource=github-releases depName=stedolan/jq
+# renovate: datasource=github-releases depName=stedolan/jq versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
 JQ_VERSION=1.6
 # renovate: datasource=github-releases depName=mikefarah/yq
 YQ_VERSION=4.14.1
@@ -125,7 +125,7 @@ K3D_VERSION=5.1.0
 HELM_VERSION=3.7.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION=4.4.1
-# renovate: datasource=github-releases depName=kubernetes/kompose
+# renovate: datasource=github-releases depName=kubernetes/kompose versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
 KOMPOSE_VERSION=1.25
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
 KAPP_VERSION=0.42.0

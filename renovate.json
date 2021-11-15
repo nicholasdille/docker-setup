@@ -60,8 +60,13 @@
       "extractVersion": "^v?(?<version>.+)$"
     },
     {
+      "matchPackageNames": [
+        "golang/go"
+      ],
+      "extractVersion": "^go(?<version>.+)$"
+    },
+    {
       "packageNames": [
-        "alexellis/arkade",
         "aquasecurity/trivy",
         "docker/buildx",
         "docker/hub-tool",
