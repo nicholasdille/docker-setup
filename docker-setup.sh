@@ -160,6 +160,13 @@ INSTALL_YQ="$(
         echo "true"
     fi
 )"
+INSTALL_DOCKER="$(
+    if test -x "${TARGET}/bin/dockerd" && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)" == "Docker version ${DOCKER_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
 INSTALL_DOCKER_COMPOSE="$(
     if test "${DOCKER_COMPOSE}" == "v1"; then
         if test -x "${TARGET}/bin/docker-compose" && test "$(${TARGET}/bin/docker-compose version)" == "Docker Compose version v${DOCKER_COMPOSE_VERSION}"; then
