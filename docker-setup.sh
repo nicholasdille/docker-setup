@@ -243,13 +243,13 @@ INSTALL_TINI="$(
 )"
 INSTALL_DOCKER_COMPOSE="$(
     if test "${DOCKER_COMPOSE}" == "v1"; then
-        if test -x "${TARGET}/bin/docker-compose" && test "$(${TARGET}/bin/docker-compose version)" == "Docker Compose version v${DOCKER_COMPOSE_VERSION}"; then
+        if test -x "${TARGET}/bin/docker-compose" && test "$(${TARGET}/bin/docker-compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V1_VERSION}"; then
             echo "false"
         else
             echo "true"
         fi
     elif test "${DOCKER_COMPOSE}" == "v2"; then
-        if test -x "${TARGET}/libexec/docker/cli-plugins/docker-compose" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_VERSION}"; then
+        if test -x "${TARGET}/libexec/docker/cli-plugins/docker-compose" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; then
             echo "false"
         else
             echo "true"
@@ -718,7 +718,7 @@ fi
 # docker-compose v2
 if ${INSTALL_DOCKER_COMPOSE}; then
     section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
-    DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-amd64"
+    DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-x86_64"
     DOCKER_COMPOSE_TARGET="${TARGET}/libexec/docker/cli-plugins/docker-compose"
     if test "${DOCKER_COMPOSE}" == "v1"; then
         DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
