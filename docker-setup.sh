@@ -125,7 +125,7 @@ K3D_VERSION=5.1.0
 HELM_VERSION=3.7.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION=4.4.1
-# renovate: datasource=github-releases depName=kubernetes/kompose versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
+# renovate: datasource=github-releases depName=kubernetes/kompose versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
 KOMPOSE_VERSION=1.25
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
 KAPP_VERSION=0.42.0
