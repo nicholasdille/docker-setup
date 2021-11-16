@@ -292,7 +292,7 @@ INSTALL_BUILDX="$(
     fi
 )"
 INSTALL_MANIFEST_TOOL="$(
-    if test -x "${TARGET}/bin/manifest-tool" && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f1-3)" == "manifest-tool version ${MANIFEST_TOOL_VERSION}"; then
+    if test -x "${TARGET}/bin/manifest-tool" && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)" == "${MANIFEST_TOOL_VERSION}"; then
         echo "false"
     else
         echo "true"
