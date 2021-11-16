@@ -404,7 +404,7 @@ INSTALL_YTT="$(
     fi
 )"
 INSTALL_ARKADE="$(
-    if test -x "${TARGET}/bin/arkade" && test "$(${TARGET}/bin/arkade version | grep "Version")" == "Version: ${ARKADE_VERSION}"; then
+    if test -x "${TARGET}/bin/arkade" && test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)" == "${ARKADE_VERSION}"; then
         echo "false"
     else
         echo "true"
