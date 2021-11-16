@@ -852,7 +852,9 @@ fi
 if ${INSTALL_PORTAINER}; then
     section "portainer ${PORTAINER_VERSION}"
     task "Create directories"
-    mkdir -p "${TARGET}/share/portainer"
+    mkdir -p \
+        "${TARGET}/share/portainer" \
+        "${TARGET}/lib/portainer"
     task "Download tarball"
     curl -sLo "${TEMP}/portainer.tar.gz" "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz"
     task "Install binary"
@@ -860,6 +862,39 @@ if ${INSTALL_PORTAINER}; then
         portainer/portainer
     tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/share/portainer" --strip-components=1 --no-same-owner \
         portainer/public
+    task "Install dedicated docker-compose v1"
+    curl -sLo "${TARGET}/share/portainer/docker-compose" "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
+    task "Set executable bits on docker-compose"
+    chmod +x "${TARGET}/share/portainer/docker-compose"
+    task "Install systemd unit"
+    cat >"/etc/systemd/system/portainer.service" <<EOF
+[Unit]
+Description=portainer
+Documentation=https://www.portainer.io/
+After=network.target local-fs.target
+
+[Service]
+ExecStart=${TARGET}/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
+
+Type=exec
+Delegate=yes
+KillMode=process
+Restart=always
+RestartSec=5
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNPROC=infinity
+LimitCORE=infinity
+LimitNOFILE=1048576
+# Comment TasksMax if your systemd version does not supports it.
+# Only systemd 226 and above support this version.
+TasksMax=infinity
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    task "Reload systemd"
+    systemctl daemon-reload
 fi
 
 # oras
