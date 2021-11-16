@@ -136,51 +136,67 @@ ARKADE_VERSION=0.8.9
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.0
 
-section "Dependencies for Docker ${DOCKER_VERSION}"
-task "containerd"
-task "+ Read commit"
-curl -sLo "${TEMP}/containerd.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/containerd.installer"
-# shellcheck source=/dev/null
-source "${TEMP}/containerd.installer"
-task "+ Clone repository"
-CONTAINERD_DIR="${TEMP}/containerd"
-git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
-git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
-task "+ Get version for commit"
-CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
-task "rootlesskit"
-task "+ Read commit"
-curl -sLo "${TEMP}/rootlesskit.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/rootlesskit.installer"
-# shellcheck source=/dev/null
-source "${TEMP}/rootlesskit.installer"
-task "+ Clone repository"
-ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
-git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
-git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
-task "+ Get version for commit"
-ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
-task "runc"
-task "+ Read commit"
-curl -sLo "${TEMP}/runc.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/runc.installer"
-# shellcheck source=/dev/null
-source "${TEMP}/runc.installer"
-task "+ Clone repository"
-RUNC_DIR="${TEMP}/runc"
-git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
-git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
-task "+ Get version for commit"
-RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
-task "docker-init"
-task "+ Read commit"
-curl -sLo "${TEMP}/tini.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/tini.installer"
-# shellcheck source=/dev/null
-source "${TEMP}/tini.installer"
-task "+ Clone repository"
-TINI_DIR="${TEMP}/tini"
-git clone -q https://github.com/krallin/tini "${TINI_DIR}"
-git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
-task "+ Get version from commit"
-TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
+CACHE_DIR="${HOME}/.cache/docker-setup"
+mkdir -p "${CACHE_DIR}"
+if test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
+    source "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
+
+else
+    mkdir -p "${CACHE_DIR}/docker"
+
+    section "Dependencies for Docker ${DOCKER_VERSION}"
+    task "containerd"
+    task "+ Read commit"
+    curl -sLo "${TEMP}/containerd.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/containerd.installer"
+    # shellcheck source=/dev/null
+    source "${TEMP}/containerd.installer"
+    task "+ Clone repository"
+    CONTAINERD_DIR="${TEMP}/containerd"
+    git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
+    git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
+    task "+ Get version for commit"
+    CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
+    echo "CONTAINERD_VERSION=${CONTAINERD_VERSION}" >"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
+
+    task "rootlesskit"
+    task "+ Read commit"
+    curl -sLo "${TEMP}/rootlesskit.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/rootlesskit.installer"
+    # shellcheck source=/dev/null
+    source "${TEMP}/rootlesskit.installer"
+    task "+ Clone repository"
+    ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
+    git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
+    git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
+    task "+ Get version for commit"
+    ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
+    echo "ROOTLESSKIT_VERSION=${ROOTLESSKIT_VERSION}" >>"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
+
+    task "runc"
+    task "+ Read commit"
+    curl -sLo "${TEMP}/runc.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/runc.installer"
+    # shellcheck source=/dev/null
+    source "${TEMP}/runc.installer"
+    task "+ Clone repository"
+    RUNC_DIR="${TEMP}/runc"
+    git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
+    git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
+    task "+ Get version for commit"
+    RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
+    echo "RUNC_VERSION=${RUNC_VERSION}" >>"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
+
+    task "docker-init"
+    task "+ Read commit"
+    curl -sLo "${TEMP}/tini.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/tini.installer"
+    # shellcheck source=/dev/null
+    source "${TEMP}/tini.installer"
+    task "+ Clone repository"
+    TINI_DIR="${TEMP}/tini"
+    git clone -q https://github.com/krallin/tini "${TINI_DIR}"
+    git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
+    task "+ Get version from commit"
+    TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
+    echo "TINI_VERSION=${TINI_VERSION}" >>"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
+fi
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
