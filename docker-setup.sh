@@ -116,7 +116,7 @@ REGCLIENT_VERSION=0.3.9
 # renovate: datasource=github-releases depName=sigstore/cosign
 COSIGN_VERSION=1.3.1
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=1.22.3
+KUBECTL_VERSION=1.22.4
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
 KIND_VERSION=0.11.1
 # renovate: datasource=github-releases depName=rancher/k3d
