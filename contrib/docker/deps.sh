@@ -1,6 +1,6 @@
 #!/bin/bash
 
-local TARGET_FILE=$1
+TARGET_FILE=$1
 if test -z "${TARGET_FILE}"; then
     echo "ERROR: You must specify a target file as the only parameter."
     exit 1
