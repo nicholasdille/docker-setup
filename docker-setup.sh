@@ -107,12 +107,6 @@ for DEPENDENCY in ${DEPENDENCIES[*]}; do
     fi
 done
 
-TEMP="$(mktemp -d)"
-function cleanup() {
-    rm -rf "${TEMP}"
-}
-trap cleanup EXIT
-
 function section() {
     echo -e -n "${GREEN}"
     echo
@@ -187,66 +181,15 @@ TRIVY_VERSION=0.21.0
 
 CACHE_DIR="${HOME}/.cache/docker-setup"
 mkdir -p "${CACHE_DIR}"
-if test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
-    # shellcheck disable=SC1090
-    source "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
-
-else
-    mkdir -p "${CACHE_DIR}/docker"
-
-    section "Dependencies for Docker ${DOCKER_VERSION}"
-    task "containerd"
-    task "+ Read commit"
-    curl -sLo "${TEMP}/containerd.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/containerd.installer"
-    # shellcheck source=/dev/null
-    source "${TEMP}/containerd.installer"
-    task "+ Clone repository"
-    CONTAINERD_DIR="${TEMP}/containerd"
-    git clone -q https://github.com/containerd/containerd "${CONTAINERD_DIR}"
-    git -C "${CONTAINERD_DIR}" checkout -q "${CONTAINERD_COMMIT}"
-    task "+ Get version for commit"
-    CONTAINERD_VERSION="$(git -C "${CONTAINERD_DIR}" describe --tags | sed 's/^v//')"
-    echo "CONTAINERD_VERSION=${CONTAINERD_VERSION}" >"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
-
-    task "rootlesskit"
-    task "+ Read commit"
-    curl -sLo "${TEMP}/rootlesskit.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/rootlesskit.installer"
-    # shellcheck source=/dev/null
-    source "${TEMP}/rootlesskit.installer"
-    task "+ Clone repository"
-    ROOTLESSKIT_DIR="${TEMP}/rootlesskit"
-    git clone -q https://github.com/rootless-containers/rootlesskit "${ROOTLESSKIT_DIR}"
-    git -C "${ROOTLESSKIT_DIR}" checkout -q "${ROOTLESSKIT_COMMIT}"
-    task "+ Get version for commit"
-    ROOTLESSKIT_VERSION="$(git -C "${ROOTLESSKIT_DIR}" describe --tags | sed 's/^v//')"
-    echo "ROOTLESSKIT_VERSION=${ROOTLESSKIT_VERSION}" >>"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
-
-    task "runc"
-    task "+ Read commit"
-    curl -sLo "${TEMP}/runc.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/runc.installer"
-    # shellcheck source=/dev/null
-    source "${TEMP}/runc.installer"
-    task "+ Clone repository"
-    RUNC_DIR="${TEMP}/runc"
-    git clone -q https://github.com/opencontainers/runc "${RUNC_DIR}"
-    git -C "${RUNC_DIR}" checkout -q "${RUNC_COMMIT}"
-    task "+ Get version for commit"
-    RUNC_VERSION="$(git -C "${RUNC_DIR}" describe --tags | sed 's/^v//')"
-    echo "RUNC_VERSION=${RUNC_VERSION}" >>"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
-
-    task "docker-init"
-    task "+ Read commit"
-    curl -sLo "${TEMP}/tini.installer" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/hack/dockerfile/install/tini.installer"
-    # shellcheck source=/dev/null
-    source "${TEMP}/tini.installer"
-    task "+ Clone repository"
-    TINI_DIR="${TEMP}/tini"
-    git clone -q https://github.com/krallin/tini "${TINI_DIR}"
-    git -C "${TINI_DIR}" checkout -q "${TINI_COMMIT}"
-    task "+ Get version from commit"
-    TINI_VERSION="$(git -C "${TINI_DIR}" describe --tags | sed 's/^v//')"
-    echo "TINI_VERSION=${TINI_VERSION}" >>"${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
+if ! test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
+    curl -sfo "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" "https://github.com/nicholasdille/docker-setup/raw/contrib/docker/${DOCKER_VERSION}.sh"
 fi
+if ! test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
+    mkdir -p "${CACHE_DIR}/docker"
+    curl -sL "${DOCKER_SETUP_REPO_RAW}/contrib/docker/deps.sh" | TARGET_FILE="${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" bash
+fi
+# shellcheck disable=SC1090
+source "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
@@ -966,12 +909,13 @@ if ${INSTALL_PORTAINER} || ${REINSTALL}; then
         "${TARGET}/share/portainer" \
         "${TARGET}/lib/portainer"
     task "Download tarball"
-    curl -sLo "${TEMP}/portainer.tar.gz" "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz"
+    curl -sLo "${TARGET}/share/portainer/portainer.tar.gz" "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz"
     task "Install binary"
-    tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/bin" --strip-components=1 --no-same-owner \
+    tar -xzf "${TARGET}/share/portainer/portainer.tar.gz" -C "${TARGET}/bin" --strip-components=1 --no-same-owner \
         portainer/portainer
-    tar -xzf "${TEMP}/portainer.tar.gz" -C "${TARGET}/share/portainer" --strip-components=1 --no-same-owner \
+    tar -xzf "${TARGET}/share/portainer/portainer.tar.gz" -C "${TARGET}/share/portainer" --strip-components=1 --no-same-owner \
         portainer/public
+    rm "${TARGET}/share/portainer/portainer.tar.gz"
     task "Install dedicated docker-compose v1"
     curl -sLo "${TARGET}/share/portainer/docker-compose" "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
     task "Set executable bits on docker-compose"
