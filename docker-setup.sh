@@ -577,7 +577,8 @@ mkdir -p \
     /etc/systemd/system \
     /etc/default \
     /etc/init.d \
-    "${DOCKER_PLUGINS_PATH}"
+    "${DOCKER_PLUGINS_PATH}" \
+    "${TARGET}/libexec/docker/bin"
 
 # jq
 if ${INSTALL_JQ} || ${REINSTALL}; then
@@ -719,15 +720,15 @@ if ${INSTALL_DOCKER} || ${REINSTALL}; then
     section "Docker ${DOCKER_VERSION}"
     task "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
-    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-        docker/dockerd \
-        docker/docker \
-        docker/docker-proxy
+    | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
+    mv "${TARGET}/libexec/docker/bin/dockerd" "${TARGET}/bin"
+    mv "${TARGET}/libexec/docker/bin/docker" "${TARGET}/bin"
+    mv "${TARGET}/libexec/docker/bin/docker-proxy" "${TARGET}/bin"
     task "Install rootless scripts"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
-    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-        docker-rootless-extras/dockerd-rootless.sh \
-        docker-rootless-extras/dockerd-rootless-setuptool.sh
+    | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
+    mv "${TARGET}/libexec/docker/bin/dockerd-rootless.sh" "${TARGET}/bin"
+    mv "${TARGET}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${TARGET}/bin"
     task "Install systemd units"
     curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
     curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
