@@ -58,6 +58,19 @@ fi
 : "${TARGET:=/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
 
+DEPENDENCIES=(
+    "curl"
+    "git"
+    "iptables"
+    "systemctl"
+)
+for DEPENDENCY in ${DEPENDENCIES[*]}; do
+    if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
+        echo "ERROR: Missing ${DEPENDENCY}."
+        exit 1
+    fi
+done
+
 TEMP="$(mktemp -d)"
 function cleanup() {
     rm -rf "${TEMP}"
@@ -543,7 +556,7 @@ fi
 
 # Check for iptables/nftables
 # https://docs.docker.com/network/iptables/
-if ! iptables --version | grep --quiet legacy; then
+if ! iptables --version | grep -q legacy; then
     section "iptables"
     echo "ERROR: Unable to continue because..."
     echo "       - ...you are using nftables and not iptables..."
