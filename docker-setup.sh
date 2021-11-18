@@ -315,7 +315,7 @@ INSTALL_DOCKER_COMPOSE="$(
     fi
 )"
 INSTALL_DOCKER_SCAN="$(
-    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-scan" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-scan scan --version | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
+    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-scan" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-scan scan --version 2>/dev/null | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
         echo "false"
     else
         echo "true"
