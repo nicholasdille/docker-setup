@@ -91,7 +91,6 @@ DEPENDENCIES=(
     "curl"
     "git"
     "iptables"
-    "systemctl"
 )
 for DEPENDENCY in ${DEPENDENCIES[*]}; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
@@ -531,6 +530,36 @@ if test ${EUID} -ne 0; then
     exit 1
 fi
 
+function has_systemd() {
+    INIT="$(readlink -f /sbin/init)"
+    if test "$(basename "${INIT}")" == "systemd"; then
+        return 0
+    else
+        >&2 echo -e "${YELLOW}WARNING: Did not find systemd.${RESET}"
+        return 1
+    fi
+}
+
+function docker_is_running() {
+    if docker version >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function wait_for_docker() {
+    local SLEEP=2
+    local RETRIES=5
+
+    local RETRY=0
+    while ! docker_is_running && test "${RETRY}" == "${RETRIES}"; do
+        sleep "${SLEEP}"
+
+        RETRY=$(( RETRY + 1 ))
+    done
+}
+
 # Create directories
 mkdir -p \
     /etc/docker \
@@ -612,8 +641,12 @@ if ${INSTALL_CONTAINERD}; then
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
     task "Install systemd unit"
     curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
-    task "Reload systemd"
-    systemctl daemon-reload
+    if has_systemd; then
+        task "Reload systemd"
+        systemctl daemon-reload
+    else
+        echo -e "${YELLOW}WARNING: docker-setup does not offer an init script for containerd.${RESET}"
+    fi
 fi
 
 # rootlesskit
@@ -701,19 +734,34 @@ if ${INSTALL_DOCKER}; then
     curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
     task "Create group"
     groupadd --system --force docker
-    task "Reload systemd"
-    systemctl daemon-reload
-    task "Start dockerd"
-    if systemctl is-active --quiet docker; then
-        if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-            systemctl restart docker
+    if has_systemd; then
+        task "Reload systemd"
+        systemctl daemon-reload
+        task "Start dockerd"
+        if systemctl is-active --quiet docker; then
+            if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+                systemctl restart docker
+            else
+                echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+            fi
         else
-            echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+            systemctl enable docker
+            systemctl start docker
         fi
     else
-        systemctl enable docker
-        systemctl start docker
+        if docker_is_running; then
+            if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+                /etc/init.d/docker restart
+            else
+                echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+            fi
+        else
+            /etc/init.d/docker start
+        fi
+        echo -e "${WARNING}WARNING: Init script was installed but you must enable Docker yourself.${RESET}"
     fi
+    task "Wait for Docker daemon to start"
+    wait_for_docker
 fi
 
 # Configure docker CLI
@@ -722,6 +770,10 @@ fi
 
 section "Manpages"
 if ${INSTALL_DOCKER}; then
+    if ! docker_is_running; then
+        echo -e "${RED}ERROR: Docker is not running.${RESET}"
+        exit 1
+    fi
     task "Install manpages for Docker CLI"
     docker container run \
         --interactive \
@@ -742,6 +794,10 @@ cp -r man/man8 "/opt/man"
 EOF
 fi
 if ${INSTALL_CONTAINERD}; then
+    if ! docker_is_running; then
+        echo -e "${RED}ERROR: Docker is not running.${RESET}"
+        exit 1
+    fi
     task "Install manpages for containerd"
     docker container run \
         --interactive \
@@ -761,6 +817,10 @@ cp -r man/*.8 "/opt/man/man8"
 EOF
 fi
 if ${INSTALL_RUNC}; then
+    if ! docker_is_running; then
+        echo -e "${RED}ERROR: Docker is not running.${RESET}"
+        exit 1
+    fi
     task "Install manpages for runc"
     docker container run \
         --interactive \
@@ -940,8 +1000,15 @@ TasksMax=infinity
 [Install]
 WantedBy=multi-user.target
 EOF
-    task "Reload systemd"
-    systemctl daemon-reload
+    if has_systemd; then
+        task "Reload systemd"
+        systemctl daemon-reload
+    else
+        echo -e -n "${YELLOW}"
+        echo "WARNING: docker-setup does not offer an init script for portainer (yet)."
+        echo "         See https://github.com/nicholasdille/docker-setup/issues/38"
+        echo -e -n "${RESET}"
+    fi
 fi
 
 # oras
