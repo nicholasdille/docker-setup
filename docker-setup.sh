@@ -90,6 +90,9 @@ fi
 
 : "${TARGET:=/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
+DOCKER_SETUP_VERSION=main
+DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
+DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
 
 DEPENDENCIES=(
     "curl"
@@ -1004,14 +1007,13 @@ TasksMax=infinity
 [Install]
 WantedBy=multi-user.target
 EOF
+    task "Install init script"
+    curl -sLo "/etc/init.d/portainer" "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
     if has_systemd; then
         task "Reload systemd"
         systemctl daemon-reload
     else
-        echo -e -n "${YELLOW}"
-        echo "WARNING: docker-setup does not offer an init script for portainer (yet)."
-        echo "         See https://github.com/nicholasdille/docker-setup/issues/38"
-        echo -e -n "${RESET}"
+        echo -e "${WARNING}WARNING: Init script was installed but you must enable/start/restart Portainer yourself.${RESET}"
     fi
 fi
 
