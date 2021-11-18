@@ -737,8 +737,8 @@ fi
 # https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
 # NOTHING TO BE DONE FOR NOW
 
-section "Manpages"
 if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
+    section "Manpages for containerd ${CONTAINERD_VERSION}"
     if ! docker_is_running; then
         echo -e "${RED}ERROR: Docker is not running.${RESET}"
         exit 1
@@ -762,6 +762,7 @@ cp -r man/*.8 "/opt/man/man8"
 EOF
 fi
 if ${INSTALL_RUNC} || ${REINSTALL}; then
+    section "Manpages for runc ${RUNC_VERSION}"
     if ! docker_is_running; then
         echo -e "${RED}ERROR: Docker is not running.${RESET}"
         exit 1
