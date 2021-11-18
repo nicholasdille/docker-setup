@@ -84,7 +84,7 @@ JQ_VERSION=1.6
 # renovate: datasource=github-releases depName=mikefarah/yq
 YQ_VERSION=4.14.2
 # renovate: datasource=github-releases depName=moby/moby
-DOCKER_VERSION=20.10.10
+DOCKER_VERSION=20.10.11
 # renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
 DOCKER_COMPOSE_V1_VERSION=1.29.2
 # renovate: datasource=github-releases depName=docker/compose
