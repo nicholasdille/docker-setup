@@ -769,18 +769,6 @@ if ${INSTALL_DOCKER} || ${REINSTALL}; then
     fi
     task "Wait for Docker daemon to start"
     wait_for_docker
-fi
-
-# Configure docker CLI
-# https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
-# NOTHING TO BE DONE FOR NOW
-
-section "Manpages"
-if ${INSTALL_DOCKER} || ${REINSTALL}; then
-    if ! docker_is_running; then
-        echo -e "${RED}ERROR: Docker is not running.${RESET}"
-        exit 1
-    fi
     task "Install manpages for Docker CLI"
     docker container run \
         --interactive \
@@ -800,6 +788,12 @@ cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
 fi
+
+# Configure docker CLI
+# https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
+# NOTHING TO BE DONE FOR NOW
+
+section "Manpages"
 if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
     if ! docker_is_running; then
         echo -e "${RED}ERROR: Docker is not running.${RESET}"
