@@ -90,6 +90,7 @@ fi
 
 : "${TARGET:=/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
+: "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
 DOCKER_SETUP_VERSION=main
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
@@ -314,7 +315,7 @@ INSTALL_DOCKER_COMPOSE="$(
             echo "true"
         fi
     elif test "${DOCKER_COMPOSE}" == "v2"; then
-        if test -x "${TARGET}/libexec/docker/cli-plugins/docker-compose" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; then
+        if test -x "${DOCKER_PLUGINS_PATH}/docker-compose" && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; then
             echo "false"
         else
             echo "true"
@@ -322,7 +323,7 @@ INSTALL_DOCKER_COMPOSE="$(
     fi
 )"
 INSTALL_DOCKER_SCAN="$(
-    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-scan" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-scan scan --version 2>/dev/null | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
+    if test -x "${DOCKER_PLUGINS_PATH}/docker-scan" && test "$(${DOCKER_PLUGINS_PATH}/docker-scan scan --version 2>/dev/null | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -350,7 +351,7 @@ INSTALL_DOCKER_MACHINE="$(
     fi
 )"
 INSTALL_BUILDX="$(
-    if test -x "${TARGET}/libexec/docker/cli-plugins/docker-buildx" && test "$(${TARGET}/libexec/docker/cli-plugins/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
+    if test -x "${DOCKER_PLUGINS_PATH}/docker-buildx" && test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -576,7 +577,7 @@ mkdir -p \
     /etc/systemd/system \
     /etc/default \
     /etc/init.d \
-    "${TARGET}/libexec/docker/cli-plugins"
+    "${DOCKER_PLUGINS_PATH}"
 
 # jq
 if ${INSTALL_JQ} || ${REINSTALL}; then
@@ -843,7 +844,7 @@ fi
 if ${INSTALL_DOCKER_COMPOSE} || ${REINSTALL}; then
     section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
     DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-x86_64"
-    DOCKER_COMPOSE_TARGET="${TARGET}/libexec/docker/cli-plugins/docker-compose"
+    DOCKER_COMPOSE_TARGET="${DOCKER_PLUGINS_PATH}/docker-compose"
     if test "${DOCKER_COMPOSE}" == "v1"; then
         DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
         DOCKER_COMPOSE_TARGET="${TARGET}/bin/docker-compose"
@@ -856,7 +857,7 @@ if ${INSTALL_DOCKER_COMPOSE} || ${REINSTALL}; then
         task "Install wrapper for docker-compose"
         cat >"${TARGET}/bin/docker-compose" <<EOF
 #!/bin/bash
-exec "${TARGET}/libexec/docker/cli-plugins/docker-compose" compose "\$@"
+exec "${DOCKER_PLUGINS_PATH}/docker-compose" compose "\$@"
 EOF
         task "Set executable bits"
         chmod +x "${TARGET}/bin/docker-compose"
@@ -867,9 +868,9 @@ fi
 if ${INSTALL_DOCKER_SCAN} || ${REINSTALL}; then
     section "docker-scan ${DOCKER_SCAN_VERSION}"
     task "Install binary"
-    curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
+    curl -sLo "${DOCKER_PLUGINS_PATH}/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
     task "Set executable bits"
-    chmod +x "${TARGET}/libexec/docker/cli-plugins/docker-scan"
+    chmod +x "${DOCKER_PLUGINS_PATH}/docker-scan"
 fi
 
 # slirp4netns
@@ -916,9 +917,9 @@ fi
 if ${INSTALL_BUILDX} || ${REINSTALL}; then
     section "buildx ${BUILDX_VERSION}"
     task "Install binary"
-    curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
+    curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
     task "Set executable bits"
-    chmod +x "${TARGET}/libexec/docker/cli-plugins/docker-buildx"
+    chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
 fi
 
 # manifest-tool
