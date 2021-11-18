@@ -28,6 +28,7 @@ echo -e -n "${RESET}"
 : "${CHECK_ONLY:=false}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
+: "${REINSTALL:=false}"
 while test "$#" -gt 0; do
     case "$1" in
         --check-only)
@@ -38,6 +39,9 @@ while test "$#" -gt 0; do
             ;;
         --no-wait)
             NO_WAIT=true
+            ;;
+        --reinstall)
+            REINSTALL=true
             ;;
         *)
             ;;
@@ -572,7 +576,7 @@ mkdir -p \
     "${TARGET}/libexec/docker/cli-plugins"
 
 # jq
-if ${INSTALL_JQ}; then
+if ${INSTALL_JQ} || ${REINSTALL}; then
     section "jq ${JQ_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/jq" "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
@@ -581,7 +585,7 @@ if ${INSTALL_JQ}; then
 fi
 
 # yq
-if ${INSTALL_YQ}; then
+if ${INSTALL_YQ} || ${REINSTALL}; then
     section "yq ${YQ_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
@@ -634,7 +638,7 @@ if ! iptables --version | grep -q legacy; then
 fi
 
 # containerd
-if ${INSTALL_CONTAINERD}; then
+if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
     section "containerd ${CONTAINERD_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
@@ -650,7 +654,7 @@ if ${INSTALL_CONTAINERD}; then
 fi
 
 # rootlesskit
-if ${INSTALL_ROOTLESSKIT}; then
+if ${INSTALL_ROOTLESSKIT} || ${REINSTALL}; then
     section "rootkesskit ${ROOTLESSKIT_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
@@ -658,7 +662,7 @@ if ${INSTALL_ROOTLESSKIT}; then
 fi
 
 # runc
-if ${INSTALL_RUNC}; then
+if ${INSTALL_RUNC} || ${REINSTALL}; then
     section "runc ${RUNC_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
@@ -667,7 +671,7 @@ if ${INSTALL_RUNC}; then
 fi
 
 # tini
-if ${INSTALL_TINI}; then
+if ${INSTALL_TINI} || ${REINSTALL}; then
     section "tini ${TINI_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
@@ -707,7 +711,7 @@ if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev
 fi
 
 # Install Docker CE
-if ${INSTALL_DOCKER}; then
+if ${INSTALL_DOCKER} || ${REINSTALL}; then
     section "Docker ${DOCKER_VERSION}"
     task "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
@@ -769,7 +773,7 @@ fi
 # NOTHING TO BE DONE FOR NOW
 
 section "Manpages"
-if ${INSTALL_DOCKER}; then
+if ${INSTALL_DOCKER} || ${REINSTALL}; then
     if ! docker_is_running; then
         echo -e "${RED}ERROR: Docker is not running.${RESET}"
         exit 1
@@ -793,7 +797,7 @@ cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
 fi
-if ${INSTALL_CONTAINERD}; then
+if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
     if ! docker_is_running; then
         echo -e "${RED}ERROR: Docker is not running.${RESET}"
         exit 1
@@ -816,7 +820,7 @@ cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
 fi
-if ${INSTALL_RUNC}; then
+if ${INSTALL_RUNC} || ${REINSTALL}; then
     if ! docker_is_running; then
         echo -e "${RED}ERROR: Docker is not running.${RESET}"
         exit 1
@@ -839,7 +843,7 @@ EOF
 fi
 
 # docker-compose v2
-if ${INSTALL_DOCKER_COMPOSE}; then
+if ${INSTALL_DOCKER_COMPOSE} || ${REINSTALL}; then
     section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
     DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-x86_64"
     DOCKER_COMPOSE_TARGET="${TARGET}/libexec/docker/cli-plugins/docker-compose"
@@ -863,7 +867,7 @@ EOF
 fi
 
 # docker-scan
-if ${INSTALL_DOCKER_SCAN}; then
+if ${INSTALL_DOCKER_SCAN} || ${REINSTALL}; then
     section "docker-scan ${DOCKER_SCAN_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
@@ -872,7 +876,7 @@ if ${INSTALL_DOCKER_SCAN}; then
 fi
 
 # slirp4netns
-if ${INSTALL_SLIRP4NETNS}; then
+if ${INSTALL_SLIRP4NETNS} || ${REINSTALL}; then
     section "slirp4netns ${SLIRP4NETNS_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
@@ -895,7 +899,7 @@ EOF
 fi
 
 # hub-tool
-if ${INSTALL_HUB_TOOL}; then
+if ${INSTALL_HUB_TOOL} || ${REINSTALL}; then
     section "hub-tool ${HUB_TOOL_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
@@ -903,7 +907,7 @@ if ${INSTALL_HUB_TOOL}; then
 fi
 
 # docker-machine
-if ${INSTALL_DOCKER_MACHINE}; then
+if ${INSTALL_DOCKER_MACHINE} || ${REINSTALL}; then
     section "docker-machine ${DOCKER_MACHINE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/docker-machine" "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64"
@@ -912,7 +916,7 @@ if ${INSTALL_DOCKER_MACHINE}; then
 fi
 
 # buildx
-if ${INSTALL_BUILDX}; then
+if ${INSTALL_BUILDX} || ${REINSTALL}; then
     section "buildx ${BUILDX_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/libexec/docker/cli-plugins/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
@@ -921,7 +925,7 @@ if ${INSTALL_BUILDX}; then
 fi
 
 # manifest-tool
-if ${INSTALL_MANIFEST_TOOL}; then
+if ${INSTALL_MANIFEST_TOOL} || ${REINSTALL}; then
     section "manifest-tool ${MANIFEST_TOOL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/manifest-tool" "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
@@ -930,7 +934,7 @@ if ${INSTALL_MANIFEST_TOOL}; then
 fi
 
 # BuildKit
-if ${INSTALL_BUILDKIT}; then
+if ${INSTALL_BUILDKIT} || ${REINSTALL}; then
     section "BuildKit ${BUILDKIT_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
@@ -938,7 +942,7 @@ if ${INSTALL_BUILDKIT}; then
 fi
 
 # img
-if ${INSTALL_IMG}; then
+if ${INSTALL_IMG} || ${REINSTALL}; then
     section "img ${IMG_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/img" "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64"
@@ -947,7 +951,7 @@ if ${INSTALL_IMG}; then
 fi
 
 # dive
-if ${INSTALL_DIVE}; then
+if ${INSTALL_DIVE} || ${REINSTALL}; then
     section "dive ${DIVE_VERSION}"
     task "Install binary"
     curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz \
@@ -956,7 +960,7 @@ if ${INSTALL_DIVE}; then
 fi
 
 # portainer
-if ${INSTALL_PORTAINER}; then
+if ${INSTALL_PORTAINER} || ${REINSTALL}; then
     section "portainer ${PORTAINER_VERSION}"
     task "Create directories"
     mkdir -p \
@@ -1012,7 +1016,7 @@ EOF
 fi
 
 # oras
-if ${INSTALL_ORAS}; then
+if ${INSTALL_ORAS} || ${REINSTALL}; then
     section "oras ${ORAS_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
@@ -1021,7 +1025,7 @@ if ${INSTALL_ORAS}; then
 fi
 
 # regclient
-if ${INSTALL_REGCLIENT}; then
+if ${INSTALL_REGCLIENT} || ${REINSTALL}; then
     section "regclient ${REGCLIENT_VERSION}"
     task "Install regctl"
     curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
@@ -1050,7 +1054,7 @@ if ${INSTALL_REGCLIENT}; then
 fi
 
 # cosign
-if ${INSTALL_COSIGN}; then
+if ${INSTALL_COSIGN} || ${REINSTALL}; then
     section "Installing cosign ${COSIGN_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
@@ -1065,7 +1069,7 @@ fi
 # Kubernetes
 
 # kubectl
-if ${INSTALL_KUBECTL}; then
+if ${INSTALL_KUBECTL} || ${REINSTALL}; then
     section "kubectl ${KUBECTL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
@@ -1077,7 +1081,7 @@ if ${INSTALL_KUBECTL}; then
 fi
 
 # kind
-if ${INSTALL_KIND}; then
+if ${INSTALL_KIND} || ${REINSTALL}; then
     section "kind ${KIND_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kind" "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64"
@@ -1090,7 +1094,7 @@ if ${INSTALL_KIND}; then
 fi
 
 # k3d
-if ${INSTALL_K3D}; then
+if ${INSTALL_K3D} || ${REINSTALL}; then
     section "k3d ${K3D_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
@@ -1103,7 +1107,7 @@ if ${INSTALL_K3D}; then
 fi
 
 # helm
-if ${INSTALL_HELM}; then
+if ${INSTALL_HELM} || ${REINSTALL}; then
     section "helm ${HELM_VERSION}"
     task "Install binary"
     curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
@@ -1119,7 +1123,7 @@ fi
 # https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 
 # kustomize
-if ${INSTALL_KUSTOMIZE}; then
+if ${INSTALL_KUSTOMIZE} || ${REINSTALL}; then
     section "kustomize ${KUSTOMIZE_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
@@ -1131,7 +1135,7 @@ if ${INSTALL_KUSTOMIZE}; then
 fi
 
 # kompose
-if ${INSTALL_KOMPOSE}; then
+if ${INSTALL_KOMPOSE} || ${REINSTALL}; then
     section "kompose ${KOMPOSE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kompose" "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64"
@@ -1144,7 +1148,7 @@ if ${INSTALL_KOMPOSE}; then
 fi
 
 # kapp
-if ${INSTALL_KAPP}; then
+if ${INSTALL_KAPP} || ${REINSTALL}; then
     section "kapp ${KAPP_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kapp" "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64"
@@ -1157,7 +1161,7 @@ if ${INSTALL_KAPP}; then
 fi
 
 # ytt
-if ${INSTALL_YTT}; then
+if ${INSTALL_YTT} || ${REINSTALL}; then
     section "ytt ${YTT_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/ytt" "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64"
@@ -1170,7 +1174,7 @@ if ${INSTALL_YTT}; then
 fi
 
 # arkade
-if ${INSTALL_ARKADE}; then
+if ${INSTALL_ARKADE} || ${REINSTALL}; then
     section "arkade ${ARKADE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"
@@ -1185,7 +1189,7 @@ fi
 # Security
 
 # trivy
-if ${INSTALL_TRIVY}; then
+if ${INSTALL_TRIVY} || ${REINSTALL}; then
     section "trivy ${TRIVY_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
