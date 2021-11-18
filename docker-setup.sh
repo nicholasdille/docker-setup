@@ -182,11 +182,10 @@ TRIVY_VERSION=0.21.0
 CACHE_DIR="${HOME}/.cache/docker-setup"
 mkdir -p "${CACHE_DIR}"
 if ! test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
-    curl -sfo "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" "https://github.com/nicholasdille/docker-setup/raw/contrib/docker/${DOCKER_VERSION}.sh"
-fi
-if ! test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
     mkdir -p "${CACHE_DIR}/docker"
-    curl -sL "${DOCKER_SETUP_REPO_RAW}/contrib/docker/deps.sh" | TARGET_FILE="${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" bash
+    if ! curl -sLfo "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" "${DOCKER_SETUP_REPO_RAW}/contrib/docker/${DOCKER_VERSION}.sh"; then
+        curl -sL "${DOCKER_SETUP_REPO_RAW}/contrib/docker/deps.sh" | TARGET_FILE="${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" bash
+    fi
 fi
 # shellcheck disable=SC1090
 source "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
