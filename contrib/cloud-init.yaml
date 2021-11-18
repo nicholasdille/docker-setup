@@ -1,0 +1,30 @@
+#cloud-config
+
+apt:
+  conf: |
+    APT {
+      Install-Recommends "false";
+      Install-Suggests "false";
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+package_update: true
+package_upgrade: true
+packages:
+- bash
+- curl
+- ca-certificates
+- jq
+- git
+- make
+
+runcmd:
+- sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
+- update-grub
+
+power_state:
+  mode: reboot
+  delay: now
