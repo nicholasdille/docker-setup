@@ -94,7 +94,7 @@ DOCKER_SCAN_VERSION=0.9.0
 # renovate: datasource=github-releases depName=rootless-containers/slirp4netns
 SLIRP4NETNS_VERSION=1.1.12
 # renovate: datasource=github-releases depName=docker/hub-tool
-HUB_TOOL_VERSION=0.4.3
+HUB_TOOL_VERSION=0.4.4
 # renovate: datasource=github-releases depName=docker/machine
 DOCKER_MACHINE_VERSION=0.16.2
 # renovate: datasource=github-releases depName=docker/buildx
