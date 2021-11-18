@@ -102,7 +102,7 @@ BUILDX_VERSION=0.7.0
 # renovate: datasource=github-releases depName=estesp/manifest-tool
 MANIFEST_TOOL_VERSION=1.0.3
 # renovate: datasource=github-releases depName=moby/buildkit
-BUILDKIT_VERSION=0.9.2
+BUILDKIT_VERSION=0.9.3
 # renovate: datasource=github-releases depName=genuinetools/img
 IMG_VERSION=0.5.11
 # renovate: datasource=github-releases depName=wagoodman/dive
