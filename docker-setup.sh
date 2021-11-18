@@ -514,7 +514,7 @@ if ${CHECK_ONLY}; then
     exit
 fi
 
-if ${NO_WAIT}; then
+if ! ${NO_WAIT}; then
     echo "Please press Ctrl-C to abort."
     SECONDS_REMAINING=10
     while test "${SECONDS_REMAINING}" -gt 0; do
