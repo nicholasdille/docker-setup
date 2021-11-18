@@ -25,9 +25,38 @@ from the container ecosystem.
 EOF
 echo -e -n "${RESET}"
 
-if test "$1" == "--help"; then
+: "${CHECK_ONLY:=false}"
+: "${SHOW_HELP:=false}"
+: "${NO_WAIT:=false}"
+while test "$#" -gt 0; do
+    case "$1" in
+        --check-only)
+            CHECK_ONLY=true
+            ;;
+        --help)
+            SHOW_HELP=true
+            ;;
+        --no-wait)
+            NO_WAIT=true
+            ;;
+        *)
+            ;;
+    esac
+
+    shift
+done
+
+if ${SHOW_HELP}; then
     cat <<EOF
+The following command line switches are accepted:
+
+--help                   Show this help
+--check-only             See CHECK_ONLY below
+--no-wait                See NO_WAIT below
+
 The following environment variables are processed:
+
+CHECK_ONLY               Abort after checking versions
 
 NO_WAIT                  Skip wait before installation/update
                          when not empty
@@ -152,6 +181,7 @@ TRIVY_VERSION=0.21.0
 CACHE_DIR="${HOME}/.cache/docker-setup"
 mkdir -p "${CACHE_DIR}"
 if test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
+    # shellcheck disable=SC1090
     source "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
 
 else
@@ -481,7 +511,11 @@ echo -e "arcade        : $(if ${INSTALL_ARKADE};         then echo "${YELLOW}"; 
 echo -e "trivy         : $(if ${INSTALL_TRIVY};          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
 echo
 
-if test -z "${NO_WAIT}"; then
+if ${CHECK_ONLY}; then
+    exit
+fi
+
+if ${NO_WAIT}; then
     echo "Please press Ctrl-C to abort."
     SECONDS_REMAINING=10
     while test "${SECONDS_REMAINING}" -gt 0; do
