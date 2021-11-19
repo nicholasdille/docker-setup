@@ -179,17 +179,6 @@ ARKADE_VERSION=0.8.9
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.0
 
-CACHE_DIR="${HOME}/.cache/docker-setup"
-mkdir -p "${CACHE_DIR}"
-if ! test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
-    mkdir -p "${CACHE_DIR}/docker"
-    if ! curl -sLfo "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" "${DOCKER_SETUP_REPO_RAW}/contrib/docker/${DOCKER_VERSION}.sh"; then
-        curl -sL "${DOCKER_SETUP_REPO_RAW}/contrib/docker/deps.sh" | bash -s "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
-    fi
-fi
-# shellcheck disable=SC1090
-source "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
-
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
     DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V1_VERSION}"
