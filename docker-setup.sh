@@ -184,7 +184,7 @@ mkdir -p "${CACHE_DIR}"
 if ! test -f "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"; then
     mkdir -p "${CACHE_DIR}/docker"
     if ! curl -sLfo "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" "${DOCKER_SETUP_REPO_RAW}/contrib/docker/${DOCKER_VERSION}.sh"; then
-        curl -sL "${DOCKER_SETUP_REPO_RAW}/contrib/docker/deps.sh" | TARGET_FILE="${CACHE_DIR}/docker/${DOCKER_VERSION}.sh" bash
+        curl -sL "${DOCKER_SETUP_REPO_RAW}/contrib/docker/deps.sh" | bash -s "${CACHE_DIR}/docker/${DOCKER_VERSION}.sh"
     fi
 fi
 # shellcheck disable=SC1090
