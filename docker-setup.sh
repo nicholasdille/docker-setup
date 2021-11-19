@@ -128,6 +128,12 @@ JQ_VERSION=1.6
 YQ_VERSION=4.14.2
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.11
+# renovate: datasource=github-releases depName=containerd/containerd
+CONTAINERD_VERSION=1.5.8
+# renovate: datasource=github-releases depName=rootless-containers/rootlesskit
+ROOTLESSKIT_VERSION=0.14.6
+# renovate: datasource=github-releases depName=opencontainers/runc
+RUNC_VERSION=1.0.2
 # renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
 DOCKER_COMPOSE_V1_VERSION=1.29.2
 # renovate: datasource=github-releases depName=docker/compose
@@ -226,13 +232,6 @@ INSTALL_RUNC="$(
 )"
 INSTALL_ROOTLESSKIT="$(
     if test -x "${TARGET}/bin/rootlesskit" && test "$(${TARGET}/bin/rootlesskit --version)" == "rootlesskit version ${ROOTLESSKIT_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi
-)"
-INSTALL_TINI="$(
-    if test -x "${TARGET}/bin/docker-init" && test "$(${TARGET}/bin/docker-init --version | cut -d' ' -f3)" == "${TINI_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -422,7 +421,6 @@ echo -e "docker        : $(if ${INSTALL_DOCKER};         then echo "${YELLOW}"; 
 echo -e "containerd    : $(if ${INSTALL_CONTAINERD};     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
 echo -e "rootlesskit   : $(if ${INSTALL_ROOTLESSKIT};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
 echo -e "runc          : $(if ${INSTALL_RUNC};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
-echo -e "docker-init   : $(if ${INSTALL_TINI};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TINI_VERSION}${RESET}"
 echo -e "docker-compose: $(if ${INSTALL_DOCKER_COMPOSE}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
 echo -e "docker-scan   : $(if ${INSTALL_DOCKER_SCAN};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
 echo -e "slirp4netns   : $(if ${INSTALL_SLIRP4NETNS};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
@@ -573,48 +571,6 @@ if ! iptables --version | grep -q legacy; then
     exit 1
 fi
 
-# containerd
-if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
-    section "containerd ${CONTAINERD_VERSION}"
-    task "Install binaries"
-    curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-    task "Install systemd unit"
-    curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
-    if has_systemd; then
-        task "Reload systemd"
-        systemctl daemon-reload
-    else
-        echo -e "${YELLOW}WARNING: docker-setup does not offer an init script for containerd.${RESET}"
-    fi
-fi
-
-# rootlesskit
-if ${INSTALL_ROOTLESSKIT} || ${REINSTALL}; then
-    section "rootkesskit ${ROOTLESSKIT_VERSION}"
-    task "Install binaries"
-    curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" --no-same-owner
-fi
-
-# runc
-if ${INSTALL_RUNC} || ${REINSTALL}; then
-    section "runc ${RUNC_VERSION}"
-    task "Install binary"
-    curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
-    task "Set executable bits"
-    chmod +x "${TARGET}/bin/runc"
-fi
-
-# tini
-if ${INSTALL_TINI} || ${REINSTALL}; then
-    section "tini ${TINI_VERSION}"
-    task "Install binary"
-    curl -sLo "${TARGET}/bin/docker-init" "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
-    task "Set executable bits"
-    chmod +x "${TARGET}/bin/docker-init"
-fi
-
 # Configure Docker Engine
 section "Configure Docker Engine"
 DOCKER_RESTART=false
@@ -728,12 +684,12 @@ fi
 # https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
 # NOTHING TO BE DONE FOR NOW
 
+# containerd
 if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
-    section "Manpages for containerd ${CONTAINERD_VERSION}"
-    if ! docker_is_running; then
-        echo -e "${RED}ERROR: Docker is not running.${RESET}"
-        exit 1
-    fi
+    section "containerd ${CONTAINERD_VERSION}"
+    task "Install binaries"
+    curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
     task "Install manpages for containerd"
     docker container run \
         --interactive \
@@ -751,13 +707,31 @@ make man
 cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
-fi
-if ${INSTALL_RUNC} || ${REINSTALL}; then
-    section "Manpages for runc ${RUNC_VERSION}"
-    if ! docker_is_running; then
-        echo -e "${RED}ERROR: Docker is not running.${RESET}"
-        exit 1
+    task "Install systemd unit"
+    curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+    if has_systemd; then
+        task "Reload systemd"
+        systemctl daemon-reload
+    else
+        echo -e "${YELLOW}WARNING: docker-setup does not offer an init script for containerd.${RESET}"
     fi
+fi
+
+# rootlesskit
+if ${INSTALL_ROOTLESSKIT} || ${REINSTALL}; then
+    section "rootkesskit ${ROOTLESSKIT_VERSION}"
+    task "Install binaries"
+    curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
+fi
+
+# runc
+if ${INSTALL_RUNC} || ${REINSTALL}; then
+    section "runc ${RUNC_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/runc"
     task "Install manpages for runc"
     docker container run \
         --interactive \

@@ -68,6 +68,7 @@
     {
       "packageNames": [
         "aquasecurity/trivy",
+        "containerd/containerd",
         "docker/buildx",
         "docker/hub-tool",
         "docker/machine",
@@ -81,9 +82,11 @@
         "mikefarah/yq",
         "moby/buildkit",
         "moby/moby",
+        "opencontainers/runc",
         "oras-project/oras",
         "rancher/k3d",
         "regclient/regclient",
+        "rootless-containers/rootlesskit",
         "rootless-containers/slirp4netns",
         "sigstore/cosign",
         "vmware-tanzu/carvel-kapp",
