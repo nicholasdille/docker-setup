@@ -674,9 +674,11 @@ if ${INSTALL_DOCKER} || ${REINSTALL}; then
     task "Install systemd units"
     curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
     curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
+    sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" /etc/systemd/system/docker.service
     task "Install init script"
     curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
     curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+    sed -i -E "s|^export PATH=|export PATH=${TARGET}/libexec/docker/bin:|" /etc/init.d/docker
     task "Set executable bits"
     chmod +x /etc/init.d/docker
     task "Install completion"
