@@ -573,34 +573,6 @@ fi
 
 # Configure Docker Engine
 section "Configure Docker Engine"
-DOCKER_RESTART=false
-if ! test -f /etc/docker/daemon.json; then
-    task "Initialize dockerd configuration"
-    echo "{}" >/etc/docker/daemon.json
-fi
-if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}"; then
-    # Check if address pool already exists
-    task "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
-    # shellcheck disable=SC2094
-    cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-    DOCKER_RESTART=true
-    echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-fi
-if test -n "${DOCKER_REGISTRY_MIRROR}"; then
-    # TODO: Check if mirror already exists
-    task "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
-    # shellcheck disable=SC2094
-    cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-    DOCKER_RESTART=true
-    echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-fi
-if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev/null; then
-    task "Enable BuildKit"
-    # shellcheck disable=SC2094
-    cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-    DOCKER_RESTART=true
-    echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-fi
 
 # Install Docker CE
 if ${INSTALL_DOCKER} || ${REINSTALL}; then
@@ -632,6 +604,34 @@ if ${INSTALL_DOCKER} || ${REINSTALL}; then
     curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
     task "Create group"
     groupadd --system --force docker
+    DOCKER_RESTART=false
+    if ! test -f /etc/docker/daemon.json; then
+        task "Initialize dockerd configuration"
+        echo "{}" >/etc/docker/daemon.json
+    fi
+    if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}"; then
+        # Check if address pool already exists
+        task "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
+    if test -n "${DOCKER_REGISTRY_MIRROR}"; then
+        # TODO: Check if mirror already exists
+        task "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
+    if ! jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev/null; then
+        task "Enable BuildKit"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
     if has_systemd; then
         task "Reload systemd"
         systemctl daemon-reload
