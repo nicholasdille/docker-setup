@@ -78,6 +78,8 @@
         "helm/helm",
         "kubernetes/kompose",
         "kubernetes/kubernetes",
+        "kubernetes-sigs/cluster-api",
+        "kubernetes-sigs/cluster-api-provider-aws",
         "kubernetes-sigs/kind",
         "mikefarah/yq",
         "moby/buildkit",

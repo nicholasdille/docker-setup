@@ -182,6 +182,10 @@ KAPP_VERSION=0.42.0
 YTT_VERSION=0.38.0
 # renovate: datasource=github-releases depName=alexellis/arkade
 ARKADE_VERSION=0.8.10
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api
+CLUSTERCTL_VERSION=1.0.1
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
+CLUSTERAWSADM_VERSION=1.1.0
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.0
 
@@ -406,6 +410,20 @@ INSTALL_ARKADE="$(
         echo "true"
     fi
 )"
+INSTALL_CLUSTERCTL="$(
+    if test -x "${TARGET}/bin/clusterctl" && ${TARGET}/bin/clusterctl version | grep "GitVersion:\"v${CLUSTERCTL_VERSION}\""; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_CLUSTERAWSADM="$(
+    if test -x "${TARGET}/bin/clusterawsadm" && ${TARGET}/bin/clusterawsadm version | grep "GitVersion:\"v1.1.0\""; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
 INSTALL_TRIVY="$(
     if test -x "${TARGET}/bin/trivy" && test "$(${TARGET}/bin/trivy --version)" == "Version: ${TRIVY_VERSION}"; then
         echo "false"
@@ -444,6 +462,8 @@ echo -e "kompose       : $(if ${INSTALL_KOMPOSE};        then echo "${YELLOW}"; 
 echo -e "kapp          : $(if ${INSTALL_KAPP};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
 echo -e "ytt           : $(if ${INSTALL_YTT};            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YTT_VERSION}${RESET}"
 echo -e "arcade        : $(if ${INSTALL_ARKADE};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
+echo -e "clusterctl    : $(if ${INSTALL_CLUSTERCTL};     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
+echo -e "clusterawsadm : $(if ${INSTALL_CLUSTERAWSADM};  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
 echo -e "trivy         : $(if ${INSTALL_TRIVY};          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
 echo
 
@@ -1091,6 +1111,29 @@ if ${INSTALL_ARKADE} || ${REINSTALL}; then
     arkade completion bash >"${TARGET}/share/bash-completion/completions/arkade"
     arkade completion fish >"${TARGET}/share/fish/vendor_completions.d/arkade.fish"
     arkade completion zsh >"${TARGET}/share/zsh/vendor-completions/_arkade"
+fi
+
+# clusterctl
+if ${INSTALL_CLUSTERCTL} || ${REINSTALL}; then
+    section "clusterctl ${CLUSTERCTL_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/clusterctl" "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL_VERSION}/clusterctl-linux-amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/clusterctl"
+    clusterctl completion bash >"${TARGET}/share/bash-completion/completions/clusterctl"
+    clusterctl completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterctl"
+fi
+
+# clusterawsadm
+if ${INSTALL_CLUSTERAWSADM} ||${REINSTALL}; then
+    section "clusterawsadm ${CLUSTERAWSADM_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/clusterawsadm" "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${CLUSTERAWSADM_VERSION}/clusterawsadm-linux-amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/clusterawsadm"
+    clusterawsadm completion bash >"${TARGET}/share/bash-completion/completions/clusterawsadm"
+    clusterawsadm completion fish >"${TARGET}/share/fish/vendor_completions.d/clusterawsadm.fish"
+    clusterawsadm completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterawsadm"
 fi
 
 # Security
