@@ -411,14 +411,14 @@ INSTALL_ARKADE="$(
     fi
 )"
 INSTALL_CLUSTERCTL="$(
-    if test -x "${TARGET}/bin/clusterctl" && ${TARGET}/bin/clusterctl version | grep "GitVersion:\"v${CLUSTERCTL_VERSION}\""; then
+    if test -x "${TARGET}/bin/clusterctl" && test "$(${TARGET}/bin/clusterctl version --output short)" == "v${CLUSTERCTL_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_CLUSTERAWSADM="$(
-    if test -x "${TARGET}/bin/clusterawsadm" && ${TARGET}/bin/clusterawsadm version | grep "GitVersion:\"v1.1.0\""; then
+    if test -x "${TARGET}/bin/clusterawsadm" && test "$(${TARGET}/bin/clusterawsadm version --output short)" == "v${CLUSTERAWSADM_VERSION}"; then
         echo "false"
     else
         echo "true"
