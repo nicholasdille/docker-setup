@@ -164,6 +164,20 @@ ORAS_VERSION=0.12.0
 REGCLIENT_VERSION=0.3.9
 # renovate: datasource=github-releases depName=sigstore/cosign
 COSIGN_VERSION=1.3.1
+# renovate: datasource=github-releases depName=containerd/nerdctl
+NERDCTL_VERSION=0.13.0
+# renovate: datasource=github-releases depName=containernetworking/plugins
+CNI_VERSION=1.0.1
+# renovate: datasource=github-releases depName=AkihiroSuda/cni-isolation
+CNI_ISOLATION_VERSION=0.0.4
+# renovate: datasource=github-releases depName=containerd/stargz-snapshotter
+STARGZ_SNAPSHOTTER_VERSION=0.10.1
+# renovate: datasource=github-releases depName=containerd/imgcrypt
+IMGCRYPT_VERSION=1.1.1
+# renovate: datasource=github-releases depName=containers/fuse-overlayfs
+FUSE_OVERLAYFS_VERSION=1.6
+# renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
+FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.3
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=1.22.4
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
@@ -347,6 +361,55 @@ INSTALL_COSIGN="$(
         echo "true"
     fi
 )"
+INSTALL_NERDCTL="$(
+    if test -x "${TARGET}/bin/nerdctl" && test "$(${TARGET}/bin/nerdctl --version)" == "nerdctl version ${NERDCTL_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_CNI="$(
+    if test -x "${TARGET}/libexec/cni/loopback" && test "$(${TARGET}/libexec/cni/loopback 2>&1)" == "CNI loopback plugin v${CNI_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_CNI_ISOLATION="$(
+    if test -x "${TARGET}/libexec/cni/isolation" && test "$(${TARGET}/libexec/cni/isolation 2>&1)" == "CNI isolation plugin version ${CNI_ISOLATION_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_STARGZ_SNAPSHOTTER="$(
+    if test -x "${TARGET}/bin/containerd-stargz-grpc" && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)" == "v${STARGZ_SNAPSHOTTER_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_IMGCRYPT="$(
+    if test -x "${TARGET}/bin/ctd-decoder" && test "$(${TARGET}/bin/ctd-decoder --version)" == "ctd-decoder version ${IMGCRYPT_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_FUSE_OVERLAYFS="$(
+    if test -x "${TARGET}/bin/fuse-overlayfs" && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)" == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER="$(
+    if test -x "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
 INSTALL_KUBECTL="$(
     if test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
         echo "false"
@@ -433,38 +496,45 @@ INSTALL_TRIVY="$(
 )"
 
 section "Status"
-echo -e "jq            : $(if ${INSTALL_JQ};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${JQ_VERSION}${RESET}"
-echo -e "yq            : $(if ${INSTALL_YQ};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YQ_VERSION}${RESET}"
-echo -e "docker        : $(if ${INSTALL_DOCKER};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_VERSION}${RESET}"
-echo -e "containerd    : $(if ${INSTALL_CONTAINERD};     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
-echo -e "rootlesskit   : $(if ${INSTALL_ROOTLESSKIT};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
-echo -e "runc          : $(if ${INSTALL_RUNC};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
-echo -e "docker-compose: $(if ${INSTALL_DOCKER_COMPOSE}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
-echo -e "docker-scan   : $(if ${INSTALL_DOCKER_SCAN};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
-echo -e "slirp4netns   : $(if ${INSTALL_SLIRP4NETNS};    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
-echo -e "hub-tool      : $(if ${INSTALL_HUB_TOOL};       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HUB_TOOL_VERSION}${RESET}"
-echo -e "docker-machine: $(if ${INSTALL_DOCKER_MACHINE}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_MACHINE_VERSION}${RESET}"
-echo -e "buildx        : $(if ${INSTALL_BUILDX};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDX_VERSION}${RESET}"
-echo -e "manifest-tool : $(if ${INSTALL_MANIFEST_TOOL};  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MANIFEST_TOOL_VERSION}${RESET}"
-echo -e "buildkit      : $(if ${INSTALL_BUILDKIT};       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDKIT_VERSION}${RESET}"
-echo -e "img           : $(if ${INSTALL_IMG};            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMG_VERSION}${RESET}"
-echo -e "dive          : $(if ${INSTALL_DIVE};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DIVE_VERSION}${RESET}"
-echo -e "portainer     : $(if ${INSTALL_PORTAINER};      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTAINER_VERSION}${RESET}"
-echo -e "oras          : $(if ${INSTALL_ORAS};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ORAS_VERSION}${RESET}"
-echo -e "regclient     : $(if ${INSTALL_REGCLIENT};      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${REGCLIENT_VERSION}${RESET}"
-echo -e "cosign        : $(if ${INSTALL_COSIGN};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${COSIGN_VERSION}${RESET}"
-echo -e "kubectl       : $(if ${INSTALL_KUBECTL};        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
-echo -e "kind          : $(if ${INSTALL_KIND};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
-echo -e "k3d           : $(if ${INSTALL_K3D};            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
-echo -e "helm          : $(if ${INSTALL_HELM};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HELM_VERSION}${RESET}"
-echo -e "kustomize     : $(if ${INSTALL_KUSTOMIZE};      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUSTOMIZE_VERSION}${RESET}"
-echo -e "kompose       : $(if ${INSTALL_KOMPOSE};        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KOMPOSE_VERSION}${RESET}"
-echo -e "kapp          : $(if ${INSTALL_KAPP};           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
-echo -e "ytt           : $(if ${INSTALL_YTT};            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YTT_VERSION}${RESET}"
-echo -e "arcade        : $(if ${INSTALL_ARKADE};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
-echo -e "clusterctl    : $(if ${INSTALL_CLUSTERCTL};     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
-echo -e "clusterawsadm : $(if ${INSTALL_CLUSTERAWSADM};  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
-echo -e "trivy         : $(if ${INSTALL_TRIVY};          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
+echo -e "jq                        : $(if ${INSTALL_JQ};                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${JQ_VERSION}${RESET}"
+echo -e "yq                        : $(if ${INSTALL_YQ};                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YQ_VERSION}${RESET}"
+echo -e "docker                    : $(if ${INSTALL_DOCKER};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_VERSION}${RESET}"
+echo -e "containerd                : $(if ${INSTALL_CONTAINERD};                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
+echo -e "rootlesskit               : $(if ${INSTALL_ROOTLESSKIT};                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
+echo -e "runc                      : $(if ${INSTALL_RUNC};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
+echo -e "docker-compose            : $(if ${INSTALL_DOCKER_COMPOSE};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
+echo -e "docker-scan               : $(if ${INSTALL_DOCKER_SCAN};                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
+echo -e "slirp4netns               : $(if ${INSTALL_SLIRP4NETNS};                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
+echo -e "hub-tool                  : $(if ${INSTALL_HUB_TOOL};                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HUB_TOOL_VERSION}${RESET}"
+echo -e "docker-machine            : $(if ${INSTALL_DOCKER_MACHINE};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_MACHINE_VERSION}${RESET}"
+echo -e "buildx                    : $(if ${INSTALL_BUILDX};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDX_VERSION}${RESET}"
+echo -e "manifest-tool             : $(if ${INSTALL_MANIFEST_TOOL};              then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MANIFEST_TOOL_VERSION}${RESET}"
+echo -e "buildkit                  : $(if ${INSTALL_BUILDKIT};                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDKIT_VERSION}${RESET}"
+echo -e "img                       : $(if ${INSTALL_IMG};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMG_VERSION}${RESET}"
+echo -e "dive                      : $(if ${INSTALL_DIVE};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DIVE_VERSION}${RESET}"
+echo -e "portainer                 : $(if ${INSTALL_PORTAINER};                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTAINER_VERSION}${RESET}"
+echo -e "oras                      : $(if ${INSTALL_ORAS};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ORAS_VERSION}${RESET}"
+echo -e "regclient                 : $(if ${INSTALL_REGCLIENT};                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${REGCLIENT_VERSION}${RESET}"
+echo -e "cosign                    : $(if ${INSTALL_COSIGN};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${COSIGN_VERSION}${RESET}"
+echo -e "nerdctl                   : $(if ${INSTALL_NERDCTL};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${NERDCTL_VERSION}${RESET}"
+echo -e "CNI                       : $(if ${INSTALL_CNI};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_VERSION}${RESET}"
+echo -e "CNI isolation             : $(if ${INSTALL_CNI_ISOLATION};              then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_ISOLATION_VERSION}${RESET}"
+echo -e "stargz snapshotter        : $(if ${INSTALL_STARGZ_SNAPSHOTTER};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${STARGZ_SNAPSHOTTER_VERSION}${RESET}"
+echo -e "imgcrypt                  : $(if ${INSTALL_IMGCRYPT};                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMGCRYPT_VERSION}${RESET}"
+echo -e "fuse-overlayfs            : $(if ${INSTALL_FUSE_OVERLAYFS};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_VERSION}${RESET}"
+echo -e "fuse-overlayfs-snapshotter: $(if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}${RESET}"
+echo -e "kubectl                   : $(if ${INSTALL_KUBECTL};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
+echo -e "kind                      : $(if ${INSTALL_KIND};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
+echo -e "k3d                       : $(if ${INSTALL_K3D};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
+echo -e "helm                      : $(if ${INSTALL_HELM};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HELM_VERSION}${RESET}"
+echo -e "kustomize                 : $(if ${INSTALL_KUSTOMIZE};                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUSTOMIZE_VERSION}${RESET}"
+echo -e "kompose                   : $(if ${INSTALL_KOMPOSE};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KOMPOSE_VERSION}${RESET}"
+echo -e "kapp                      : $(if ${INSTALL_KAPP};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
+echo -e "ytt                       : $(if ${INSTALL_YTT};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YTT_VERSION}${RESET}"
+echo -e "arcade                    : $(if ${INSTALL_ARKADE};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
+echo -e "clusterctl                : $(if ${INSTALL_CLUSTERCTL};                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
+echo -e "clusterawsadm             : $(if ${INSTALL_CLUSTERAWSADM};              then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
+echo -e "trivy                     : $(if ${INSTALL_TRIVY};                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
 echo
 
 if ${CHECK_ONLY}; then
@@ -527,7 +597,8 @@ mkdir -p \
     /etc/default \
     /etc/init.d \
     "${DOCKER_PLUGINS_PATH}" \
-    "${TARGET}/libexec/docker/bin"
+    "${TARGET}/libexec/docker/bin" \
+    "${TARGET}/libexec/cni"
 
 # jq
 if ${INSTALL_JQ} || ${REINSTALL}; then
@@ -982,7 +1053,7 @@ fi
 
 # cosign
 if ${INSTALL_COSIGN} || ${REINSTALL}; then
-    section "Installing cosign ${COSIGN_VERSION}"
+    section "cosign ${COSIGN_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
     task "Set executable bits"
@@ -991,6 +1062,69 @@ if ${INSTALL_COSIGN} || ${REINSTALL}; then
     cosign completion bash >"${TARGET}/share/bash-completion/completions/cosign"
     cosign completion fish >"${TARGET}/share/fish/vendor_completions.d/cosign.fish"
     cosign completion zsh >"${TARGET}/share/zsh/vendor-completions/_cosign"
+fi
+
+# nerdctl
+if ${INSTALL_NERDCTL} || ${REINSTALL}; then
+    section "nerdctl ${NERDCTL_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
+fi
+
+# cni
+if ${INSTALL_CNI} || ${REINSTALL}; then
+    section "CNI ${CNI_VERSION}"
+    task "Install binaries"
+    curl -sL "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz" \
+    | tar -xzC "${TARGET}/libexec/cni"
+fi
+
+# CNI isolation
+if ${INSTALL_CNI_ISOLATION} || ${REINSTALL}; then
+    section "CNI isolation ${CNI_ISOLATION_VERSION}"
+    task "Install binaries"
+    curl -sL "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
+    | tar -xzC "${TARGET}/libexec/cni"
+fi
+
+# stargz-snapshotter
+if ${INSTALL_STARGZ_SNAPSHOTTER} || ${REINSTALL}; then
+    section "stargz-snapshotter ${STARGZ_SNAPSHOTTER_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
+fi
+
+# imgcrypt
+if ${INSTALL_IMGCRYPT} || ${REINSTALL}; then
+    section "imgcrypt ${IMGCRYPT_VERSION}"
+    task "Install binary"
+    docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
+mkdir -p /go/src/github.com/containerd/imgcrypt
+cd /go/src/github.com/containerd/imgcrypt
+git clone -q https://github.com/containerd/imgcrypt .
+git checkout -q "v${IMGCRYPT_VERSION}"
+make
+make install "DESTDIR=/target"
+EOF
+fi
+
+# fuse-overlayfs
+if ${INSTALL_FUSE_OVERLAYFS} || ${REINSTALL}; then
+    section "fuse-overlayfs ${FUSE_OVERLAYFS_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/fuse-overlayfs" "https://github.com/containers/fuse-overlayfs/releases/download/v${FUSE_OVERLAYFS_VERSION}/fuse-overlayfs-x86_64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/fuse-overlayfs"
+fi
+
+# fuse-overlayfs-snapshotter
+if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER} || ${REINSTALL}; then
+    section "fuse-overlayfs-snapshotter ${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
 fi
 
 # Kubernetes

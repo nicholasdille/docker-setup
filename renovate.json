@@ -67,8 +67,14 @@
     },
     {
       "packageNames": [
+        "AkihiroSuda/cni-isolation",
         "aquasecurity/trivy",
         "containerd/containerd",
+        "containers/fuse-overlayfs",
+        "containerd/fuse-overlayfs-snapshotter",
+        "containerd/nerdctl",
+        "containerd/stargz-snapshotter",
+        "containernetworking/plugins",
         "docker/buildx",
         "docker/hub-tool",
         "docker/machine",
