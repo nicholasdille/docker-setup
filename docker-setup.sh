@@ -181,7 +181,7 @@ KAPP_VERSION=0.42.0
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-ytt
 YTT_VERSION=0.38.0
 # renovate: datasource=github-releases depName=alexellis/arkade
-ARKADE_VERSION=0.8.9
+ARKADE_VERSION=0.8.10
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.0
 
