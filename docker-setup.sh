@@ -177,7 +177,7 @@ IMGCRYPT_VERSION=1.1.1
 # renovate: datasource=github-releases depName=containers/fuse-overlayfs
 FUSE_OVERLAYFS_VERSION=1.6
 # renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
-FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.3
+FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=1.22.4
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
