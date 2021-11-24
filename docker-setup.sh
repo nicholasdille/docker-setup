@@ -125,7 +125,7 @@ GO_VERSION=1.17.3
 # renovate: datasource=github-releases depName=stedolan/jq versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
 JQ_VERSION=1.6
 # renovate: datasource=github-releases depName=mikefarah/yq
-YQ_VERSION=4.14.2
+YQ_VERSION=4.15.1
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.11
 # renovate: datasource=github-releases depName=containerd/containerd
