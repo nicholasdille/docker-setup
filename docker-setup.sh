@@ -147,7 +147,7 @@ HUB_TOOL_VERSION=0.4.4
 # renovate: datasource=github-releases depName=docker/machine
 DOCKER_MACHINE_VERSION=0.16.2
 # renovate: datasource=github-releases depName=docker/buildx
-BUILDX_VERSION=0.7.0
+BUILDX_VERSION=0.7.1
 # renovate: datasource=github-releases depName=estesp/manifest-tool
 MANIFEST_TOOL_VERSION=1.0.3
 # renovate: datasource=github-releases depName=moby/buildkit
