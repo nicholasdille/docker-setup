@@ -201,7 +201,7 @@ CLUSTERCTL_VERSION=1.0.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
 CLUSTERAWSADM_VERSION=1.1.0
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=0.21.0
+TRIVY_VERSION=0.21.1
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
