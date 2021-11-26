@@ -662,9 +662,6 @@ if ! iptables --version | grep -q legacy; then
     exit 1
 fi
 
-# Configure Docker Engine
-section "Configure Docker Engine"
-
 # Install Docker CE
 if ${INSTALL_DOCKER} || ${REINSTALL}; then
     section "Docker ${DOCKER_VERSION}"
