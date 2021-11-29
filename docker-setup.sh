@@ -100,7 +100,7 @@ DEPENDENCIES=(
     "git"
     "iptables"
 )
-for DEPENDENCY in ${DEPENDENCIES[*]}; do
+for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
         echo "ERROR: Missing ${DEPENDENCY}."
         exit 1
