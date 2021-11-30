@@ -181,13 +181,13 @@ FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 # renovate: datasource=github-releases depName=nicholasdille/podman-static
 PODMAN_VERSION=3.4.2
 # renovate: datasource=github-releases depName=nicholasdille/conmon-static
-CONMON_VERSION=3.4.2
+CONMON_VERSION=2.0.30
 # renovate: datasource=github-releases depName=nicholasdille/buildah-static
-BUILDAH_VERSION=3.4.2
+BUILDAH_VERSION=1.23.1
 # renovate: datasource=github-releases depName=nicholasdille/crun-static
-CRUN_VERSION=3.4.2
+CRUN_VERSION=1.3
 # renovate: datasource=github-releases depName=nicholasdille/skopeo-static
-SKOPEO_VERSION=3.4.2
+SKOPEO_VERSION=1.5.2
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=1.22.4
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
