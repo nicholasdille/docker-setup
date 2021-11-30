@@ -434,27 +434,27 @@ INSTALL_CONMON="$(
         echo "true"
     fi
 )"
-#INSTALL_BUILDAH="$(
-#    if test -x "${TARGET}/bin/conmon" && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
-#        echo "false"
-#    else
-#        echo "true"
-#    fi
-#)"
-#INSTALL_CRUN="$(
-#    if test -x "${TARGET}/bin/conmon" && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
-#        echo "false"
-#    else
-#        echo "true"
-#    fi
-#)"
-#INSTALL_SKOPEO="$(
-#    if test -x "${TARGET}/bin/skopeo" && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)" == "${SKOPEO_VERSION}"; then
-#        echo "false"
-#    else
-#        echo "true"
-#    fi
-#)"
+INSTALL_BUILDAH="$(
+    if test -x "${TARGET}/bin/buildah" && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_CRUN="$(
+    if test -x "${TARGET}/bin/crun" && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
+INSTALL_SKOPEO="$(
+    if test -x "${TARGET}/bin/skopeo" && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)" == "${SKOPEO_VERSION}"; then
+        echo "false"
+    else
+        echo "true"
+    fi
+)"
 INSTALL_KUBECTL="$(
     if test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
         echo "false"
@@ -570,9 +570,9 @@ echo -e "fuse-overlayfs            : $(if ${INSTALL_FUSE_OVERLAYFS};            
 echo -e "fuse-overlayfs-snapshotter: $(if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}${RESET}"
 echo -e "podman                    : $(if ${INSTALL_PODMAN};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PODMAN_VERSION}${RESET}"
 echo -e "conmon                    : $(if ${INSTALL_CONMON};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONMON_VERSION}${RESET}"
-#echo -e "buildah                   : $(if ${INSTALL_BUILDAH};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
+echo -e "buildah                   : $(if ${INSTALL_BUILDAH};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
 #echo -e "crun                      : $(if ${INSTALL_CRUN};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CRUN_VERSION}${RESET}"
-#echo -e "skopeo                    : $(if ${INSTALL_SKOPEO};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SKOPEO_VERSION}${RESET}"
+echo -e "skopeo                    : $(if ${INSTALL_SKOPEO};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SKOPEO_VERSION}${RESET}"
 echo -e "kubectl                   : $(if ${INSTALL_KUBECTL};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
 echo -e "kind                      : $(if ${INSTALL_KIND};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
 echo -e "k3d                       : $(if ${INSTALL_K3D};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
@@ -1180,7 +1180,6 @@ if ${INSTALL_CONMON} || ${REINSTALL}; then
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz" \
     | tar -xzC "${TARGET}"
-    # TODO: manpages
 fi
 
 # podman
@@ -1193,34 +1192,28 @@ if ${INSTALL_PODMAN} || ${REINSTALL}; then
 fi
 
 # buildah
-#if ${INSTALL_BUILDAH} || ${REINSTALL}; then
-#    section "buildah ${BUILDAH_VERSION}"
-#    task "Install binary"
-#    curl -sLo "${TARGET}/bin/buildah" "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah"
-#    task "Set executable bits"
-#    chmod +x "${TARGET}/bin/buildah"
-#    # TODO: manpages
-#fi
+if ${INSTALL_BUILDAH} || ${REINSTALL}; then
+    section "buildah ${BUILDAH_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
+    | tar -xzC "${TARGET}"
+fi
 
 # crun
 #if ${INSTALL_CRUN} || ${REINSTALL}; then
 #    section "crun ${CRUN_VERSION}"
 #    task "Install binary"
-#    curl -sLo "${TARGET}/bin/crun" "https://github.com/nicholasdille/buildah-static/releases/download/v${CRUN_VERSION}/crun"
-#    task "Set executable bits"
-#    chmod +x "${TARGET}/bin/crun"
-#    # TODO: manpages
+#    curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
+#    | tar -xzC "${TARGET}"
 #fi
 
 # skopeo
-#if ${INSTALL_SKOPEO} || ${REINSTALL}; then
-#    section "skopeo ${SKOPEO_VERSION}"
-#    task "Install binary"
-#    curl -sLo "${TARGET}/bin/skopeo" "https://github.com/nicholasdille/buildah-static/releases/download/v${SKOPEO_VERSION}/skopeo"
-#    task "Set executable bits"
-#    chmod +x "${TARGET}/bin/skopeo"
-#    # TODO: manpages
-#fi
+if ${INSTALL_SKOPEO} || ${REINSTALL}; then
+    section "skopeo ${SKOPEO_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz" \
+    | tar -xzC "${TARGET}"
+fi
 
 # Kubernetes
 
