@@ -386,7 +386,8 @@ INSTALL_CNI="$(
     fi
 )"
 INSTALL_CNI_ISOLATION="$(
-    if test -x "${TARGET}/libexec/cni/isolation" && test "$(${TARGET}/libexec/cni/isolation 2>&1)" == "CNI isolation plugin version ${CNI_ISOLATION_VERSION}"; then
+    #if test -x "${TARGET}/libexec/cni/isolation" && test "$(${TARGET}/libexec/cni/isolation 2>&1)" == "CNI isolation plugin version ${CNI_ISOLATION_VERSION}"; then
+    if test -f "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -400,7 +401,8 @@ INSTALL_STARGZ_SNAPSHOTTER="$(
     fi
 )"
 INSTALL_IMGCRYPT="$(
-    if test -x "${TARGET}/bin/ctd-decoder" && test "$(${TARGET}/bin/ctd-decoder --version)" == "ctd-decoder version ${IMGCRYPT_VERSION}"; then
+    #if test -x "${TARGET}/bin/ctd-decoder" && test "$(${TARGET}/bin/ctd-decoder --version)" == "ctd-decoder version ${IMGCRYPT_VERSION}"; then
+    if test -f "/var/cache/docker-setup/imgcrypt/${IMGCRYPT_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -639,6 +641,7 @@ function wait_for_docker() {
 
 # Create directories
 mkdir -p \
+    /var/cache/docker-setup \
     /etc/docker \
     "${TARGET}/share/bash-completion/completions" \
     "${TARGET}/share/fish/vendor_completions.d" \
@@ -1133,6 +1136,8 @@ if ${INSTALL_CNI_ISOLATION} || ${REINSTALL}; then
     task "Install binaries"
     curl -sL "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
     | tar -xzC "${TARGET}/libexec/cni"
+    mkdir -p /var/cache/docker-setup/cni-isolation
+    touch "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"
 fi
 
 # stargz-snapshotter
@@ -1155,6 +1160,8 @@ git checkout -q "v${IMGCRYPT_VERSION}"
 make
 make install "DESTDIR=/target"
 EOF
+    mkdir -p /var/cache/docker-setup/imgcrypt
+    touch "/var/cache/docker-setup/imgcrypt/${IMGCRYPT_VERSION}"
 fi
 
 # fuse-overlayfs
