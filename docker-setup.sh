@@ -813,6 +813,8 @@ cd /go/src/github.com/docker/cli
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCKER_VERSION}" https://github.com/docker/cli .
 export GO111MODULE=auto
 export DISABLE_WARN_OUTSIDE_CONTAINER=1
+sed -i -E 's|^(\s+)(log.Printf\("WARN:)|\1//\2|' man/generate.go
+sed -i -E 's|^(\s+)"log"||' man/generate.go
 make manpages
 cp -r man/man1 "/opt/man"
 cp -r man/man5 "/opt/man"
