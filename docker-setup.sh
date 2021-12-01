@@ -173,7 +173,7 @@ CNI_ISOLATION_VERSION=0.0.4
 # renovate: datasource=github-releases depName=containerd/stargz-snapshotter
 STARGZ_SNAPSHOTTER_VERSION=0.10.1
 # renovate: datasource=github-tags depName=containerd/imgcrypt
-IMGCRYPT_VERSION=1.1.1
+IMGCRYPT_VERSION=1.1.2
 # renovate: datasource=github-releases depName=containers/fuse-overlayfs
 FUSE_OVERLAYFS_VERSION=1.6
 # renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
