@@ -810,8 +810,7 @@ if ${INSTALL_DOCKER} || ${REINSTALL}; then
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/docker/cli
 cd /go/src/github.com/docker/cli
-git clone -q https://github.com/docker/cli .
-git checkout -q "v${DOCKER_VERSION}"
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCKER_VERSION}" https://github.com/docker/cli .
 export GO111MODULE=auto
 export DISABLE_WARN_OUTSIDE_CONTAINER=1
 make manpages
@@ -840,8 +839,7 @@ if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/containerd/containerd
 cd /go/src/github.com/containerd/containerd
-git clone -q https://github.com/containerd/containerd .
-git checkout -q "v${CONTAINERD_VERSION}"
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${CONTAINERD_VERSION}" https://github.com/containerd/containerd .
 go install github.com/cpuguy83/go-md2man@latest
 export GO111MODULE=auto
 make man
@@ -882,8 +880,7 @@ if ${INSTALL_RUNC} || ${REINSTALL}; then
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/opencontainers/runc
 cd /go/src/github.com/opencontainers/runc
-git clone -q https://github.com/opencontainers/runc .
-git checkout -q "v${RUNC_VERSION}"
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${RUNC_VERSION}" https://github.com/opencontainers/runc .
 go install github.com/cpuguy83/go-md2man@latest
 man/md2man-all.sh -q
 cp -r man/man8/ "/opt/man"
@@ -940,8 +937,7 @@ if ${INSTALL_SLIRP4NETNS} || ${REINSTALL}; then
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/rootless-containers/slirp4netns
 cd /go/src/github.com/rootless-containers/slirp4netns
-git clone -q https://github.com/rootless-containers/slirp4netns .
-git checkout -q "v${SLIRP4NETNS_VERSION}"
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NETNS_VERSION}" https://github.com/rootless-containers/slirp4netns .
 cp *.1 /opt/man/man1
 EOF
 fi
@@ -1155,8 +1151,7 @@ if ${INSTALL_IMGCRYPT} || ${REINSTALL}; then
     docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
 mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
-git clone -q https://github.com/containerd/imgcrypt .
-git checkout -q "v${IMGCRYPT_VERSION}"
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
 make
 make install "DESTDIR=/target"
 EOF
