@@ -968,6 +968,8 @@ if ${INSTALL_BUILDX} || ${REINSTALL}; then
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
     task "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
+    task "Enable multi-platform builds"
+    docker run --privileged --rm tonistiigi/binfmt --install all
 fi
 
 # manifest-tool
