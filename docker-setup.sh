@@ -1156,6 +1156,8 @@ if ${INSTALL_IMGCRYPT} || ${REINSTALL}; then
 mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
+sed -i -E 's/ -v / /' Makefile
+sed -i -E 's/ --dirty='.m' / /' Makefile
 make
 make install "DESTDIR=/target"
 EOF
