@@ -401,8 +401,7 @@ INSTALL_STARGZ_SNAPSHOTTER="$(
     fi
 )"
 INSTALL_IMGCRYPT="$(
-    #if test -x "${TARGET}/bin/ctd-decoder" && test "$(${TARGET}/bin/ctd-decoder --version)" == "ctd-decoder version ${IMGCRYPT_VERSION}"; then
-    if test -f "/var/cache/docker-setup/imgcrypt/${IMGCRYPT_VERSION}"; then
+    if test -x "${TARGET}/bin/ctr-enc" && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)" == "v${IMGCRYPT_VERSION}"; then
         echo "false"
     else
         echo "true"
@@ -1157,12 +1156,10 @@ mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
 sed -i -E 's/ -v / /' Makefile
-sed -i -E 's/ --dirty='.m' / /' Makefile
+sed -i -E "s/ --dirty='.m' / /" Makefile
 make
-make install "DESTDIR=/target"
+make install DESTDIR=/target
 EOF
-    mkdir -p /var/cache/docker-setup/imgcrypt
-    touch "/var/cache/docker-setup/imgcrypt/${IMGCRYPT_VERSION}"
 fi
 
 # fuse-overlayfs
