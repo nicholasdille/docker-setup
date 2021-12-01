@@ -435,14 +435,14 @@ INSTALL_CONMON="$(
     fi
 )"
 INSTALL_BUILDAH="$(
-    if test -x "${TARGET}/bin/buildah" && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
+    if test -x "${TARGET}/bin/buildah" && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)" == "${BUILDAH_VERSION}"; then
         echo "false"
     else
         echo "true"
     fi
 )"
 INSTALL_CRUN="$(
-    if test -x "${TARGET}/bin/crun" && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
+    if test -x "${TARGET}/bin/crun" && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)" == "${CRUN_VERSION}"; then
         echo "false"
     else
         echo "true"
