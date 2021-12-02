@@ -572,7 +572,7 @@ echo -e "fuse-overlayfs-snapshotter: $(if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER};
 echo -e "podman                    : $(if ${INSTALL_PODMAN};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PODMAN_VERSION}${RESET}"
 echo -e "conmon                    : $(if ${INSTALL_CONMON};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONMON_VERSION}${RESET}"
 echo -e "buildah                   : $(if ${INSTALL_BUILDAH};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
-#echo -e "crun                      : $(if ${INSTALL_CRUN};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CRUN_VERSION}${RESET}"
+echo -e "crun                      : $(if ${INSTALL_CRUN};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CRUN_VERSION}${RESET}"
 echo -e "skopeo                    : $(if ${INSTALL_SKOPEO};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SKOPEO_VERSION}${RESET}"
 echo -e "kubectl                   : $(if ${INSTALL_KUBECTL};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
 echo -e "kind                      : $(if ${INSTALL_KIND};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
@@ -1205,12 +1205,12 @@ if ${INSTALL_BUILDAH} || ${REINSTALL}; then
 fi
 
 # crun
-#if ${INSTALL_CRUN} || ${REINSTALL}; then
-#    section "crun ${CRUN_VERSION}"
-#    task "Install binary"
-#    curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
-#    | tar -xzC "${TARGET}"
-#fi
+if ${INSTALL_CRUN} || ${REINSTALL}; then
+    section "crun ${CRUN_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
+    | tar -xzC "${TARGET}"
+fi
 
 # skopeo
 if ${INSTALL_SKOPEO} || ${REINSTALL}; then
