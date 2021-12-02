@@ -29,6 +29,7 @@ echo -e -n "${RESET}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
 : "${REINSTALL:=false}"
+tools=()
 while test "$#" -gt 0; do
     case "$1" in
         --check-only)
@@ -44,6 +45,7 @@ while test "$#" -gt 0; do
             REINSTALL=true
             ;;
         *)
+            tools+=("$1")
             ;;
     esac
 
@@ -91,6 +93,7 @@ fi
 : "${TARGET:=/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
 : "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
+: "${DOCKER_SETUP_CACHE:=/var/cache/docker-setup}"
 DOCKER_SETUP_VERSION=main
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
@@ -105,6 +108,11 @@ for DEPENDENCY in "${DEPENDENCIES[@]}"; do
         echo "ERROR: Missing ${DEPENDENCY}."
         exit 1
     fi
+done
+
+mkdir -p "${DOCKER_SETUP_CACHE}/reinstall"
+for tool in "${tools[@]}"; do
+    touch "${DOCKER_SETUP_CACHE}/reinstall/${tool}"
 done
 
 function section() {
@@ -224,321 +232,321 @@ else
 fi
 
 INSTALL_JQ="$(
-    if test -x "${TARGET}/bin/jq" && test "$(${TARGET}/bin/jq --version)" == "jq-${JQ_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/jq && test -x "${TARGET}/bin/jq" && test "$(${TARGET}/bin/jq --version)" == "jq-${JQ_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/jq"
 )"
 INSTALL_YQ="$(
-    if test -x "${TARGET}/bin/yq" && test "$(${TARGET}/bin/yq --version)" == "yq (https://github.com/mikefarah/yq/) version ${YQ_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/yq && test -x "${TARGET}/bin/yq" && test "$(${TARGET}/bin/yq --version)" == "yq (https://github.com/mikefarah/yq/) version ${YQ_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/yq"
 )"
 INSTALL_DOCKER="$(
-    if test -x "${TARGET}/bin/dockerd" && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)" == "Docker version ${DOCKER_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/docker && test -x "${TARGET}/bin/dockerd" && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)" == "Docker version ${DOCKER_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/docker"
 )"
 INSTALL_CONTAINERD="$(
-    if test -x "${TARGET}/bin/containerd" && test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)" == "v${CONTAINERD_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/containerd && test -x "${TARGET}/bin/containerd" && test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)" == "v${CONTAINERD_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/containerd"
 )"
 INSTALL_RUNC="$(
-    if test -x "${TARGET}/bin/runc" && test "$(${TARGET}/bin/runc --version | head -n 1)" == "runc version ${RUNC_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/runc && test -x "${TARGET}/bin/runc" && test "$(${TARGET}/bin/runc --version | head -n 1)" == "runc version ${RUNC_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/runc"
 )"
 INSTALL_ROOTLESSKIT="$(
-    if test -x "${TARGET}/bin/rootlesskit" && test "$(${TARGET}/bin/rootlesskit --version)" == "rootlesskit version ${ROOTLESSKIT_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/rootlesskit && test -x "${TARGET}/bin/rootlesskit" && test "$(${TARGET}/bin/rootlesskit --version)" == "rootlesskit version ${ROOTLESSKIT_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/rootlesskit"
 )"
 INSTALL_DOCKER_COMPOSE="$(
     if test "${DOCKER_COMPOSE}" == "v1"; then
-        if test -x "${TARGET}/bin/docker-compose" && test "$(${TARGET}/bin/docker-compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V1_VERSION}"; then
+        if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/docker-compose && test -x "${TARGET}/bin/docker-compose" && test "$(${TARGET}/bin/docker-compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V1_VERSION}"; then
             echo "false"
         else
             echo "true"
         fi
     elif test "${DOCKER_COMPOSE}" == "v2"; then
-        if test -x "${DOCKER_PLUGINS_PATH}/docker-compose" && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; then
+        if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/docker-compose && test -x "${DOCKER_PLUGINS_PATH}/docker-compose" && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; then
             echo "false"
         else
             echo "true"
         fi
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/docker-compose"
 )"
 INSTALL_DOCKER_SCAN="$(
-    if test -x "${DOCKER_PLUGINS_PATH}/docker-scan" && test "$(${DOCKER_PLUGINS_PATH}/docker-scan scan --version 2>/dev/null | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/docker-scan && test -x "${DOCKER_PLUGINS_PATH}/docker-scan" && test "$(${DOCKER_PLUGINS_PATH}/docker-scan scan --version 2>/dev/null | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/docker-scan"
 )"
 INSTALL_SLIRP4NETNS="$(
-    if test -x "${TARGET}/bin/slirp4netns" && test "$(${TARGET}/bin/slirp4netns --version | head -n 1)" == "slirp4netns version ${SLIRP4NETNS_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/slirp4netns && test -x "${TARGET}/bin/slirp4netns" && test "$(${TARGET}/bin/slirp4netns --version | head -n 1)" == "slirp4netns version ${SLIRP4NETNS_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/slirp4netns"
 )"
 INSTALL_HUB_TOOL="$(
-    if test -x "${TARGET}/bin/hub-tool" && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)" == "Docker Hub Tool v${HUB_TOOL_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/hub-tool && test -x "${TARGET}/bin/hub-tool" && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)" == "Docker Hub Tool v${HUB_TOOL_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/hub-tool"
 )"
 INSTALL_DOCKER_MACHINE="$(
-    if test -x "${TARGET}/bin/docker-machine" && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)" == "docker-machine version ${DOCKER_MACHINE_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/docker-machine && test -x "${TARGET}/bin/docker-machine" && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)" == "docker-machine version ${DOCKER_MACHINE_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/docker-machine"
 )"
 INSTALL_BUILDX="$(
-    if test -x "${DOCKER_PLUGINS_PATH}/docker-buildx" && test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/buildx && test -x "${DOCKER_PLUGINS_PATH}/docker-buildx" && test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/buildx"
 )"
 INSTALL_MANIFEST_TOOL="$(
-    if test -x "${TARGET}/bin/manifest-tool" && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)" == "${MANIFEST_TOOL_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/manifest-tool && test -x "${TARGET}/bin/manifest-tool" && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)" == "${MANIFEST_TOOL_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/manifest-tool"
 )"
 INSTALL_BUILDKIT="$(
-    if test -x "${TARGET}/bin/buildkitd" && test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f1-3)" == "buildkitd github.com/moby/buildkit v${BUILDKIT_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/buildkit && test -x "${TARGET}/bin/buildkitd" && test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f1-3)" == "buildkitd github.com/moby/buildkit v${BUILDKIT_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/buildkit"
 )"
 INSTALL_IMG="$(
-    if test -x "${TARGET}/bin/img" && test "$(${TARGET}/bin/img --version | cut -d, -f1)" == "img version v${IMG_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/img && test -x "${TARGET}/bin/img" && test "$(${TARGET}/bin/img --version | cut -d, -f1)" == "img version v${IMG_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/img"
 )"
 INSTALL_DIVE="$(
-    if test -x "${TARGET}/bin/dive" && test "$(${TARGET}/bin/dive --version)" == "dive ${DIVE_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/dive && test -x "${TARGET}/bin/dive" && test "$(${TARGET}/bin/dive --version)" == "dive ${DIVE_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/dive"
 )"
 INSTALL_PORTAINER="$(
-    if test -x "${TARGET}/bin/portainer" && test "$(${TARGET}/bin/portainer --version 2>&1)" == "${PORTAINER_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/portainer && test -x "${TARGET}/bin/portainer" && test "$(${TARGET}/bin/portainer --version 2>&1)" == "${PORTAINER_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/portainer"
 )"
 INSTALL_ORAS="$(
-    if test -x "${TARGET}/bin/oras" && test "$(${TARGET}/bin/oras version | head -n 1)" == "Version:        ${ORAS_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/oras && test -x "${TARGET}/bin/oras" && test "$(${TARGET}/bin/oras version | head -n 1)" == "Version:        ${ORAS_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/oras"
 )"
 INSTALL_REGCLIENT="$(
-    if test -x "${TARGET}/bin/regctl" && test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)" == "v${REGCLIENT_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/regclient && test -x "${TARGET}/bin/regctl" && test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)" == "v${REGCLIENT_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/regclient"
 )"
 INSTALL_COSIGN="$(
-    if test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/cosign version | grep GitVersion)" == "GitVersion:    v${COSIGN_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/cosign && test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/cosign version | grep GitVersion)" == "GitVersion:    v${COSIGN_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/cosign"
 )"
 INSTALL_NERDCTL="$(
-    if test -x "${TARGET}/bin/nerdctl" && test "$(${TARGET}/bin/nerdctl --version)" == "nerdctl version ${NERDCTL_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/nerdctl && test -x "${TARGET}/bin/nerdctl" && test "$(${TARGET}/bin/nerdctl --version)" == "nerdctl version ${NERDCTL_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/nerdctl"
 )"
 INSTALL_CNI="$(
-    if test -x "${TARGET}/libexec/cni/loopback" && test "$(${TARGET}/libexec/cni/loopback 2>&1)" == "CNI loopback plugin v${CNI_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/cni && test -x "${TARGET}/libexec/cni/loopback" && test "$(${TARGET}/libexec/cni/loopback 2>&1)" == "CNI loopback plugin v${CNI_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/cni"
 )"
 INSTALL_CNI_ISOLATION="$(
     #if test -x "${TARGET}/libexec/cni/isolation" && test "$(${TARGET}/libexec/cni/isolation 2>&1)" == "CNI isolation plugin version ${CNI_ISOLATION_VERSION}"; then
-    if test -f "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/cni-isolation && test -f "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/cni-isolation"
 )"
 INSTALL_STARGZ_SNAPSHOTTER="$(
-    if test -x "${TARGET}/bin/containerd-stargz-grpc" && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)" == "v${STARGZ_SNAPSHOTTER_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/stargz-snapshotter && test -x "${TARGET}/bin/containerd-stargz-grpc" && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)" == "v${STARGZ_SNAPSHOTTER_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/stargz-snapshotter"
 )"
 INSTALL_IMGCRYPT="$(
-    if test -x "${TARGET}/bin/ctr-enc" && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)" == "v${IMGCRYPT_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/imgcrypt && test -x "${TARGET}/bin/ctr-enc" && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)" == "v${IMGCRYPT_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/imgcrypt"
 )"
 INSTALL_FUSE_OVERLAYFS="$(
-    if test -x "${TARGET}/bin/fuse-overlayfs" && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)" == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/fuse-overlayfs && test -x "${TARGET}/bin/fuse-overlayfs" && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)" == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/fuse-overlayfs"
 )"
 INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER="$(
-    if test -x "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/fuse-overlayfs-snapshotter && test -x "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/fuse-overlayfs-snapshotter"
 )"
 INSTALL_PODMAN="$(
-    if test -x "${TARGET}/bin/podman" && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)" == "${PODMAN_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/podman && test -x "${TARGET}/bin/podman" && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)" == "${PODMAN_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/podman"
 )"
 INSTALL_CONMON="$(
-    if test -x "${TARGET}/bin/conmon" && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/conmon && test -x "${TARGET}/bin/conmon" && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/conmon"
 )"
 INSTALL_BUILDAH="$(
-    if test -x "${TARGET}/bin/buildah" && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)" == "${BUILDAH_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/buildah && test -x "${TARGET}/bin/buildah" && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)" == "${BUILDAH_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/buildah"
 )"
 INSTALL_CRUN="$(
-    if test -x "${TARGET}/bin/crun" && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)" == "${CRUN_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/crun && test -x "${TARGET}/bin/crun" && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)" == "${CRUN_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/crun"
 )"
 INSTALL_SKOPEO="$(
-    if test -x "${TARGET}/bin/skopeo" && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)" == "${SKOPEO_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/skopeo && test -x "${TARGET}/bin/skopeo" && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)" == "${SKOPEO_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/skopeo"
 )"
 INSTALL_KUBECTL="$(
-    if test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/kubectl && test -x "${TARGET}/bin/kubectl" && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/kubectl"
 )"
 INSTALL_KIND="$(
-    if test -x "${TARGET}/bin/kind" && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)" == "kind v${KIND_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/kind && test -x "${TARGET}/bin/kind" && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)" == "kind v${KIND_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/kind"
 )"
 INSTALL_K3D="$(
-    if test -x "${TARGET}/bin/k3d" && test "$(${TARGET}/bin/k3d version | head -n 1)" == "k3d version v${K3D_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/k3d && test -x "${TARGET}/bin/k3d" && test "$(${TARGET}/bin/k3d version | head -n 1)" == "k3d version v${K3D_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/k3d"
 )"
 INSTALL_HELM="$(
-    if test -x "${TARGET}/bin/helm" && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)" == "v${HELM_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/helm && test -x "${TARGET}/bin/helm" && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)" == "v${HELM_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/helm"
 )"
 INSTALL_KUSTOMIZE="$(
-    if test -x "${TARGET}/bin/kustomize" && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)" == "{kustomize/v${KUSTOMIZE_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/kustomize && test -x "${TARGET}/bin/kustomize" && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)" == "{kustomize/v${KUSTOMIZE_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/kustomize"
 )"
 INSTALL_KOMPOSE="$(
-    if test -x "${TARGET}/bin/kompose" && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)" == "${KOMPOSE_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/kompose && test -x "${TARGET}/bin/kompose" && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)" == "${KOMPOSE_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/kompose"
 )"
 INSTALL_KAPP="$(
-    if test -x "${TARGET}/bin/kapp" && test "$(${TARGET}/bin/kapp version | head -n 1)" == "kapp version ${KAPP_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/kapp && test -x "${TARGET}/bin/kapp" && test "$(${TARGET}/bin/kapp version | head -n 1)" == "kapp version ${KAPP_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/kapp"
 )"
 INSTALL_YTT="$(
-    if test -x "${TARGET}/bin/ytt" && test "$(${TARGET}/bin/ytt version)" == "ytt version ${YTT_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/ytt && test -x "${TARGET}/bin/ytt" && test "$(${TARGET}/bin/ytt version)" == "ytt version ${YTT_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/ytt"
 )"
 INSTALL_ARKADE="$(
-    if test -x "${TARGET}/bin/arkade" && test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)" == "${ARKADE_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/arkade && test -x "${TARGET}/bin/arkade" && test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)" == "${ARKADE_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/arkade"
 )"
 INSTALL_CLUSTERCTL="$(
-    if test -x "${TARGET}/bin/clusterctl" && test "$(${TARGET}/bin/clusterctl version --output short)" == "v${CLUSTERCTL_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/clusterctl && test -x "${TARGET}/bin/clusterctl" && test "$(${TARGET}/bin/clusterctl version --output short)" == "v${CLUSTERCTL_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/clusterctl"
 )"
 INSTALL_CLUSTERAWSADM="$(
-    if test -x "${TARGET}/bin/clusterawsadm" && test "$(${TARGET}/bin/clusterawsadm version --output short)" == "v${CLUSTERAWSADM_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/clusterawsadm && test -x "${TARGET}/bin/clusterawsadm" && test "$(${TARGET}/bin/clusterawsadm version --output short)" == "v${CLUSTERAWSADM_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/clusterawsadm"
 )"
 INSTALL_TRIVY="$(
-    if test -x "${TARGET}/bin/trivy" && test "$(${TARGET}/bin/trivy --version)" == "Version: ${TRIVY_VERSION}"; then
+    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/reinstall/trivy && test -x "${TARGET}/bin/trivy" && test "$(${TARGET}/bin/trivy --version)" == "Version: ${TRIVY_VERSION}"; then
         echo "false"
     else
         echo "true"
-    fi
+    fi; rm -f "${DOCKER_SETUP_CACHE}/reinstall/trivy"
 )"
 
 section "Status"
@@ -640,7 +648,6 @@ function wait_for_docker() {
 
 # Create directories
 mkdir -p \
-    /var/cache/docker-setup \
     /etc/docker \
     "${TARGET}/share/bash-completion/completions" \
     "${TARGET}/share/fish/vendor_completions.d" \
@@ -653,7 +660,7 @@ mkdir -p \
     "${TARGET}/libexec/cni"
 
 # jq
-if ${INSTALL_JQ} || ${REINSTALL}; then
+if ${INSTALL_JQ}; then
     section "jq ${JQ_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/jq" "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
@@ -662,7 +669,7 @@ if ${INSTALL_JQ} || ${REINSTALL}; then
 fi
 
 # yq
-if ${INSTALL_YQ} || ${REINSTALL}; then
+if ${INSTALL_YQ}; then
     section "yq ${YQ_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
@@ -715,7 +722,7 @@ if ! iptables --version | grep -q legacy; then
 fi
 
 # Install Docker CE
-if ${INSTALL_DOCKER} || ${REINSTALL}; then
+if ${INSTALL_DOCKER}; then
     section "Docker ${DOCKER_VERSION}"
     task "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
@@ -826,7 +833,7 @@ fi
 # NOTHING TO BE DONE FOR NOW
 
 # containerd
-if ${INSTALL_CONTAINERD} || ${REINSTALL}; then
+if ${INSTALL_CONTAINERD}; then
     section "containerd ${CONTAINERD_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
@@ -858,7 +865,7 @@ EOF
 fi
 
 # rootlesskit
-if ${INSTALL_ROOTLESSKIT} || ${REINSTALL}; then
+if ${INSTALL_ROOTLESSKIT}; then
     section "rootkesskit ${ROOTLESSKIT_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
@@ -866,7 +873,7 @@ if ${INSTALL_ROOTLESSKIT} || ${REINSTALL}; then
 fi
 
 # runc
-if ${INSTALL_RUNC} || ${REINSTALL}; then
+if ${INSTALL_RUNC}; then
     section "runc ${RUNC_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
@@ -889,7 +896,7 @@ EOF
 fi
 
 # docker-compose v2
-if ${INSTALL_DOCKER_COMPOSE} || ${REINSTALL}; then
+if ${INSTALL_DOCKER_COMPOSE}; then
     section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
     DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-x86_64"
     DOCKER_COMPOSE_TARGET="${DOCKER_PLUGINS_PATH}/docker-compose"
@@ -913,7 +920,7 @@ EOF
 fi
 
 # docker-scan
-if ${INSTALL_DOCKER_SCAN} || ${REINSTALL}; then
+if ${INSTALL_DOCKER_SCAN}; then
     section "docker-scan ${DOCKER_SCAN_VERSION}"
     task "Install binary"
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
@@ -922,7 +929,7 @@ if ${INSTALL_DOCKER_SCAN} || ${REINSTALL}; then
 fi
 
 # slirp4netns
-if ${INSTALL_SLIRP4NETNS} || ${REINSTALL}; then
+if ${INSTALL_SLIRP4NETNS}; then
     section "slirp4netns ${SLIRP4NETNS_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
@@ -944,7 +951,7 @@ EOF
 fi
 
 # hub-tool
-if ${INSTALL_HUB_TOOL} || ${REINSTALL}; then
+if ${INSTALL_HUB_TOOL}; then
     section "hub-tool ${HUB_TOOL_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
@@ -952,7 +959,7 @@ if ${INSTALL_HUB_TOOL} || ${REINSTALL}; then
 fi
 
 # docker-machine
-if ${INSTALL_DOCKER_MACHINE} || ${REINSTALL}; then
+if ${INSTALL_DOCKER_MACHINE}; then
     section "docker-machine ${DOCKER_MACHINE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/docker-machine" "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64"
@@ -961,7 +968,7 @@ if ${INSTALL_DOCKER_MACHINE} || ${REINSTALL}; then
 fi
 
 # buildx
-if ${INSTALL_BUILDX} || ${REINSTALL}; then
+if ${INSTALL_BUILDX}; then
     section "buildx ${BUILDX_VERSION}"
     task "Install binary"
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
@@ -972,7 +979,7 @@ if ${INSTALL_BUILDX} || ${REINSTALL}; then
 fi
 
 # manifest-tool
-if ${INSTALL_MANIFEST_TOOL} || ${REINSTALL}; then
+if ${INSTALL_MANIFEST_TOOL}; then
     section "manifest-tool ${MANIFEST_TOOL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/manifest-tool" "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
@@ -981,7 +988,7 @@ if ${INSTALL_MANIFEST_TOOL} || ${REINSTALL}; then
 fi
 
 # BuildKit
-if ${INSTALL_BUILDKIT} || ${REINSTALL}; then
+if ${INSTALL_BUILDKIT}; then
     section "BuildKit ${BUILDKIT_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
@@ -989,7 +996,7 @@ if ${INSTALL_BUILDKIT} || ${REINSTALL}; then
 fi
 
 # img
-if ${INSTALL_IMG} || ${REINSTALL}; then
+if ${INSTALL_IMG}; then
     section "img ${IMG_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/img" "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64"
@@ -998,7 +1005,7 @@ if ${INSTALL_IMG} || ${REINSTALL}; then
 fi
 
 # dive
-if ${INSTALL_DIVE} || ${REINSTALL}; then
+if ${INSTALL_DIVE}; then
     section "dive ${DIVE_VERSION}"
     task "Install binary"
     curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz \
@@ -1007,7 +1014,7 @@ if ${INSTALL_DIVE} || ${REINSTALL}; then
 fi
 
 # portainer
-if ${INSTALL_PORTAINER} || ${REINSTALL}; then
+if ${INSTALL_PORTAINER}; then
     section "portainer ${PORTAINER_VERSION}"
     task "Create directories"
     mkdir -p \
@@ -1063,7 +1070,7 @@ EOF
 fi
 
 # oras
-if ${INSTALL_ORAS} || ${REINSTALL}; then
+if ${INSTALL_ORAS}; then
     section "oras ${ORAS_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
@@ -1072,7 +1079,7 @@ if ${INSTALL_ORAS} || ${REINSTALL}; then
 fi
 
 # regclient
-if ${INSTALL_REGCLIENT} || ${REINSTALL}; then
+if ${INSTALL_REGCLIENT}; then
     section "regclient ${REGCLIENT_VERSION}"
     task "Install regctl"
     curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
@@ -1101,7 +1108,7 @@ if ${INSTALL_REGCLIENT} || ${REINSTALL}; then
 fi
 
 # cosign
-if ${INSTALL_COSIGN} || ${REINSTALL}; then
+if ${INSTALL_COSIGN}; then
     section "cosign ${COSIGN_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
@@ -1114,7 +1121,7 @@ if ${INSTALL_COSIGN} || ${REINSTALL}; then
 fi
 
 # nerdctl
-if ${INSTALL_NERDCTL} || ${REINSTALL}; then
+if ${INSTALL_NERDCTL}; then
     section "nerdctl ${NERDCTL_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz" \
@@ -1122,7 +1129,7 @@ if ${INSTALL_NERDCTL} || ${REINSTALL}; then
 fi
 
 # cni
-if ${INSTALL_CNI} || ${REINSTALL}; then
+if ${INSTALL_CNI}; then
     section "CNI ${CNI_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz" \
@@ -1130,7 +1137,7 @@ if ${INSTALL_CNI} || ${REINSTALL}; then
 fi
 
 # CNI isolation
-if ${INSTALL_CNI_ISOLATION} || ${REINSTALL}; then
+if ${INSTALL_CNI_ISOLATION}; then
     section "CNI isolation ${CNI_ISOLATION_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
@@ -1140,7 +1147,7 @@ if ${INSTALL_CNI_ISOLATION} || ${REINSTALL}; then
 fi
 
 # stargz-snapshotter
-if ${INSTALL_STARGZ_SNAPSHOTTER} || ${REINSTALL}; then
+if ${INSTALL_STARGZ_SNAPSHOTTER}; then
     section "stargz-snapshotter ${STARGZ_SNAPSHOTTER_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
@@ -1148,7 +1155,7 @@ if ${INSTALL_STARGZ_SNAPSHOTTER} || ${REINSTALL}; then
 fi
 
 # imgcrypt
-if ${INSTALL_IMGCRYPT} || ${REINSTALL}; then
+if ${INSTALL_IMGCRYPT}; then
     section "imgcrypt ${IMGCRYPT_VERSION}"
     task "Install binary"
     docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
@@ -1163,7 +1170,7 @@ EOF
 fi
 
 # fuse-overlayfs
-if ${INSTALL_FUSE_OVERLAYFS} || ${REINSTALL}; then
+if ${INSTALL_FUSE_OVERLAYFS}; then
     section "fuse-overlayfs ${FUSE_OVERLAYFS_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/fuse-overlayfs" "https://github.com/containers/fuse-overlayfs/releases/download/v${FUSE_OVERLAYFS_VERSION}/fuse-overlayfs-x86_64"
@@ -1172,7 +1179,7 @@ if ${INSTALL_FUSE_OVERLAYFS} || ${REINSTALL}; then
 fi
 
 # fuse-overlayfs-snapshotter
-if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER} || ${REINSTALL}; then
+if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER}; then
     section "fuse-overlayfs-snapshotter ${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
@@ -1180,7 +1187,7 @@ if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER} || ${REINSTALL}; then
 fi
 
 # conmon
-if ${INSTALL_CONMON} || ${REINSTALL}; then
+if ${INSTALL_CONMON}; then
     section "conmon ${CONMON_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz" \
@@ -1188,7 +1195,7 @@ if ${INSTALL_CONMON} || ${REINSTALL}; then
 fi
 
 # podman
-if ${INSTALL_PODMAN} || ${REINSTALL}; then
+if ${INSTALL_PODMAN}; then
     section "podman ${PODMAN_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
@@ -1208,7 +1215,7 @@ if ${INSTALL_PODMAN} || ${REINSTALL}; then
 fi
 
 # buildah
-if ${INSTALL_BUILDAH} || ${REINSTALL}; then
+if ${INSTALL_BUILDAH}; then
     section "buildah ${BUILDAH_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
@@ -1216,7 +1223,7 @@ if ${INSTALL_BUILDAH} || ${REINSTALL}; then
 fi
 
 # crun
-if ${INSTALL_CRUN} || ${REINSTALL}; then
+if ${INSTALL_CRUN}; then
     section "crun ${CRUN_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
@@ -1224,7 +1231,7 @@ if ${INSTALL_CRUN} || ${REINSTALL}; then
 fi
 
 # skopeo
-if ${INSTALL_SKOPEO} || ${REINSTALL}; then
+if ${INSTALL_SKOPEO}; then
     section "skopeo ${SKOPEO_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz" \
@@ -1234,7 +1241,7 @@ fi
 # Kubernetes
 
 # kubectl
-if ${INSTALL_KUBECTL} || ${REINSTALL}; then
+if ${INSTALL_KUBECTL}; then
     section "kubectl ${KUBECTL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
@@ -1246,7 +1253,7 @@ if ${INSTALL_KUBECTL} || ${REINSTALL}; then
 fi
 
 # kind
-if ${INSTALL_KIND} || ${REINSTALL}; then
+if ${INSTALL_KIND}; then
     section "kind ${KIND_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kind" "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64"
@@ -1259,7 +1266,7 @@ if ${INSTALL_KIND} || ${REINSTALL}; then
 fi
 
 # k3d
-if ${INSTALL_K3D} || ${REINSTALL}; then
+if ${INSTALL_K3D}; then
     section "k3d ${K3D_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
@@ -1272,7 +1279,7 @@ if ${INSTALL_K3D} || ${REINSTALL}; then
 fi
 
 # helm
-if ${INSTALL_HELM} || ${REINSTALL}; then
+if ${INSTALL_HELM}; then
     section "helm ${HELM_VERSION}"
     task "Install binary"
     curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
@@ -1288,7 +1295,7 @@ fi
 # https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 
 # kustomize
-if ${INSTALL_KUSTOMIZE} || ${REINSTALL}; then
+if ${INSTALL_KUSTOMIZE}; then
     section "kustomize ${KUSTOMIZE_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
@@ -1300,7 +1307,7 @@ if ${INSTALL_KUSTOMIZE} || ${REINSTALL}; then
 fi
 
 # kompose
-if ${INSTALL_KOMPOSE} || ${REINSTALL}; then
+if ${INSTALL_KOMPOSE}; then
     section "kompose ${KOMPOSE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kompose" "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64"
@@ -1313,7 +1320,7 @@ if ${INSTALL_KOMPOSE} || ${REINSTALL}; then
 fi
 
 # kapp
-if ${INSTALL_KAPP} || ${REINSTALL}; then
+if ${INSTALL_KAPP}; then
     section "kapp ${KAPP_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kapp" "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64"
@@ -1326,7 +1333,7 @@ if ${INSTALL_KAPP} || ${REINSTALL}; then
 fi
 
 # ytt
-if ${INSTALL_YTT} || ${REINSTALL}; then
+if ${INSTALL_YTT}; then
     section "ytt ${YTT_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/ytt" "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64"
@@ -1339,7 +1346,7 @@ if ${INSTALL_YTT} || ${REINSTALL}; then
 fi
 
 # arkade
-if ${INSTALL_ARKADE} || ${REINSTALL}; then
+if ${INSTALL_ARKADE}; then
     section "arkade ${ARKADE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"
@@ -1352,7 +1359,7 @@ if ${INSTALL_ARKADE} || ${REINSTALL}; then
 fi
 
 # clusterctl
-if ${INSTALL_CLUSTERCTL} || ${REINSTALL}; then
+if ${INSTALL_CLUSTERCTL}; then
     section "clusterctl ${CLUSTERCTL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/clusterctl" "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL_VERSION}/clusterctl-linux-amd64"
@@ -1377,7 +1384,7 @@ fi
 # Security
 
 # trivy
-if ${INSTALL_TRIVY} || ${REINSTALL}; then
+if ${INSTALL_TRIVY}; then
     section "trivy ${TRIVY_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
