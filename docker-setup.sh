@@ -213,6 +213,8 @@ KIND_VERSION=0.11.1
 K3D_VERSION=5.1.0
 # renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION=3.7.1
+# renovate: datasource=github-releases depName=kubernetes-sigs/krew
+KREW_VERSION=0.4.2
 # renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION=4.4.1
 # renovate: datasource=github-releases depName=kubernetes/kompose versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
@@ -287,6 +289,7 @@ function kubectl_matches_version()                    { is_executable "${TARGET}
 function kind_matches_version()                       { is_executable "${TARGET}/bin/kind"                           && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)"                                             == "kind v${KIND_VERSION}"; }
 function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1)"                                                    == "k3d version v${K3D_VERSION}"; }
 function helm_matches_version()                       { is_executable "${TARGET}/bin/helm"                           && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                         == "v${HELM_VERSION}"; }
+function krew_matches_version()                       { is_executable "${TARGET}/bin/krew"                           && test "$(${TARGET}/bin/version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)"              == "v${KREW_VERSION}"; }
 function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"                      == "{kustomize/v${KUSTOMIZE_VERSION}"; }
 function kompose_matches_version()                    { is_executable "${TARGET}/bin/kompose"                        && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                            == "${KOMPOSE_VERSION}"; }
 function kapp_matches_version()                       { is_executable "${TARGET}/bin/kapp"                           && test "$(${TARGET}/bin/kapp version | head -n 1)"                                                   == "kapp version ${KAPP_VERSION}"; }
@@ -332,6 +335,7 @@ function install_kubectl()                    { install_requested "kubectl"     
 function install_kind()                       { install_requested "kind"                       || ! kind_matches_version; }
 function install_k3d()                        { install_requested "k3d"                        || ! k3d_matches_version; }
 function install_helm()                       { install_requested "helm"                       || ! helm_matches_version; }
+function install_krew()                       { install_requested "krew"                       || ! krew_matches_version; }
 function install_kustomize()                  { install_requested "kustomize"                  || ! kustomize_matches_version; }
 function install_kompose()                    { install_requested "kompose"                    || ! kompose_matches_version; }
 function install_kapp()                       { install_requested "kapp"                       || ! kapp_matches_version; }
@@ -378,6 +382,7 @@ echo -e "kubectl                   : $(if install_kubectl;                      
 echo -e "kind                      : $(if install_kind;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
 echo -e "k3d                       : $(if install_k3d;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
 echo -e "helm                      : $(if install_helm;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HELM_VERSION}${RESET}"
+echo -e "krew                      : $(if install_krew;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KREW_VERSION}${RESET}"
 echo -e "kustomize                 : $(if install_kustomize;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUSTOMIZE_VERSION}${RESET}"
 echo -e "kompose                   : $(if install_kompose;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KOMPOSE_VERSION}${RESET}"
 echo -e "kapp                      : $(if install_kapp;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
@@ -1084,7 +1089,15 @@ if install_helm; then
 fi
 
 # krew
-# https://krew.sigs.k8s.io/docs/user-guide/setup/install/
+if install_krew; then
+    section "krew ${KREW_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" ./krew-linux_amd64
+    krew completion bash >"${TARGET}/share/bash-completion/completions/krew"
+    krew completion fish >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
+    krew completion zsh >"${TARGET}/share/zsh/vendor-completions/_krew"
+fi
 
 # kustomize
 if install_kustomize; then
