@@ -600,7 +600,7 @@ if ! ${NO_WAIT}; then
         SECONDS_REMAINING=$(( SECONDS_REMAINING - 1 ))
         sleep 1
     done
-    echo -e -n "\r                                             "
+    echo -e "\r                                             "
 fi
 
 if test ${EUID} -ne 0; then
