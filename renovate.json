@@ -81,6 +81,7 @@
         "docker/scan-cli-plugin",
         "estesp/manifest-tool",
         "genuinetools/img",
+        "getporter/porter",
         "helm/helm",
         "kubernetes/kompose",
         "kubernetes/kubernetes",

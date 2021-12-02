@@ -195,6 +195,8 @@ IMGCRYPT_VERSION=1.1.2
 FUSE_OVERLAYFS_VERSION=1.6
 # renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
+# renovate: datasource=github-releases depName=getporter/porter
+PORTER_VERSION=0.38.8
 # renovate: datasource=github-releases depName=nicholasdille/podman-static
 PODMAN_VERSION=3.4.2
 # renovate: datasource=github-releases depName=nicholasdille/conmon-static
@@ -280,6 +282,7 @@ function stargz_snapshotter_matches_version()         { is_executable "${TARGET}
 function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                          == "v${IMGCRYPT_VERSION}"; }
 function fuse_overlayfs_matches_version()             { is_executable "${TARGET}/bin/fuse-overlayfs"                 && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)"                                       == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; }
 function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
+function porter_matches_version()                     { is_executable "${TARGET}/bin/porter"                         && test "$(${TARGET}/bin/porter --version | cut -d' ' -f2)"                                           == "v${PORTER_VERSION}"; }
 function podman_matches_version()                     { is_executable "${TARGET}/bin/podman"                         && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                           == "${PODMAN_VERSION}"; }
 function conmon_matches_version()                     { is_executable "${TARGET}/bin/conmon"                         && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"                   == "${CONMON_VERSION}"; }
 function buildah_matches_version()                    { is_executable "${TARGET}/bin/buildah"                        && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)"                                          == "${BUILDAH_VERSION}"; }
@@ -326,6 +329,7 @@ function install_stargz_snapshotter()         { install_requested "stargz-snapsh
 function install_imgcrypt()                   { install_requested "imgcrypt"                   || ! imgcrypt_matches_version; }
 function install_fuse_overlayfs()             { install_requested "fuse-overlayfs"             || ! fuse_overlayfs_matches_version; }
 function install_fuse_overlayfs_snapshotter() { install_requested "fuse-overlayfs-snapshotter" || ! fuse_overlayfs_snapshotter_matches_version; }
+function install_porter()                     { install_requested "porter"                     || ! porter_matches_version; }
 function install_podman()                     { install_requested "podman"                     || ! podman_matches_version; }
 function install_conmon()                     { install_requested "conmon"                     || ! conmon_matches_version; }
 function install_buildah()                    { install_requested "buildah"                    || ! buildah_matches_version; }
@@ -373,6 +377,7 @@ echo -e "stargz-snapshotter        : $(if install_stargz_snapshotter;           
 echo -e "imgcrypt                  : $(if install_imgcrypt;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMGCRYPT_VERSION}${RESET}"
 echo -e "fuse-overlayfs            : $(if install_fuse_overlayfs;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_VERSION}${RESET}"
 echo -e "fuse-overlayfs-snapshotter: $(if install_fuse_overlayfs_snapshotter;    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}${RESET}"
+echo -e "porter                    : $(if install_porter;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTER_VERSION}${RESET}"
 echo -e "podman                    : $(if install_podman;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PODMAN_VERSION}${RESET}"
 echo -e "conmon                    : $(if install_conmon;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONMON_VERSION}${RESET}"
 echo -e "buildah                   : $(if install_buildah;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
@@ -981,6 +986,25 @@ if install_fuse_overlayfs_snapshotter; then
     task "Install binary"
     curl -sL "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
+fi
+
+# porter
+if install_porter; then
+    section "porter ${PORTER_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/porter" "https://github.com/getporter/porter/releases/download/v${PORTER_VERSION}/porter-linux-amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/porter"
+    task "Install mixins"
+    porter mixin install exec
+    porter mixin install cowsay
+    porter mixin install docker
+    porter mixin install docker-compose
+    porter mixin install kubernetes
+    porter mixin install kustomize
+    porter mixin install helm3
+    task "Install plugins"
+    porter plugins install kubernetes
 fi
 
 # conmon
