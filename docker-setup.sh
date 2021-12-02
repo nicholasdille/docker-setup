@@ -1037,6 +1037,26 @@ fi
 
 # Kubernetes
 
+# krew
+if install_krew; then
+    section "krew ${KREW_VERSION}"
+    task "Install binary"
+    curl -sL "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" ./krew-linux_amd64
+    mv "${TARGET}/bin/krew-linux_amd64" "${TARGET}/bin/krew"
+    task "Add to path"
+    cat >/etc/profile.d/krew.sh <<"EOF"
+export PATH="${HOME}/.krew/bin:${PATH}"
+EOF
+    source /etc/profile.d/krew.sh
+    task "Install krew for current user"
+    krew install krew
+    task "Install completion"
+    krew completion bash 2>/dev/null >"${TARGET}/share/bash-completion/completions/krew"
+    krew completion fish 2>/dev/null >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
+    krew completion zsh 2>/dev/null >"${TARGET}/share/zsh/vendor-completions/_krew"
+fi
+
 # kubectl
 if install_kubectl; then
     section "kubectl ${KUBECTL_VERSION}"
@@ -1047,6 +1067,78 @@ if install_kubectl; then
     task "Install completion"
     kubectl completion bash >"${TARGET}/share/bash-completion/completions/kubectl"
     kubectl completion zsh >"${TARGET}/share/zsh/vendor-completions/_kubectl"
+    task "Install plugins for current user"
+    kubectl krew install <<EOF
+access-matrix
+advise-policy
+advise-psp
+assert
+blame
+bulk-action
+cert-manager
+cilium
+cyclonus
+debug-shell
+deprecations
+df-pv
+doctor
+edit-status
+emit-event
+evict-pod
+exec-as
+exec-cronjob
+fields
+flame
+fleet
+fuzzy
+gadget
+get-all
+graph
+grep
+hns
+images
+janitor
+konfig
+kubesec-scan
+kurt
+lineage
+modify-secret
+mtail
+node-shell
+outdated
+pexec
+pod-dive
+pod-inspect
+pod-lens
+rbac-lookup
+rbac-tool
+rbac-view
+reliably
+resource-capacity
+resource-snapshot
+rolesum
+score
+skew
+slice
+sniff
+socks5-proxy
+spy
+sshd
+starboard
+status
+strace
+sudo
+support-bundle
+tap
+trace
+tree
+tunnel
+view-allocations
+view-utilization
+viewnode
+who-can
+whoami
+EOF
 fi
 
 # kind
