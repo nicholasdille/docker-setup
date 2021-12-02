@@ -138,7 +138,7 @@ function task() {
 }
 
 # renovate: datasource=github-tags depName=golang/go
-GO_VERSION=1.17.3
+GO_VERSION=1.17.4
 # renovate: datasource=github-releases depName=stedolan/jq versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
 JQ_VERSION=1.6
 # renovate: datasource=github-releases depName=mikefarah/yq
