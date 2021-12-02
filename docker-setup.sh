@@ -54,11 +54,14 @@ done
 
 if ${SHOW_HELP}; then
     cat <<EOF
+Usage: docker-setup.sh [<options>] [<tool>[ <tool>]]
+
 The following command line switches are accepted:
 
 --help                   Show this help
 --check-only             See CHECK_ONLY below
 --no-wait                See NO_WAIT below
+--reinstall              See REINSTALL below
 
 The following environment variables are processed:
 
@@ -66,6 +69,8 @@ CHECK_ONLY               Abort after checking versions
 
 NO_WAIT                  Skip wait before installation/update
                          when not empty
+
+REINSTALL                Reinstall all tools
 
 TARGET                   Specifies the target directory for
                          binaries. Defaults to /usr
@@ -85,6 +90,15 @@ DOCKER_ALLOW_RESTART     Whether restarting dockerd is acceptable
 
 DOCKER_COMPOSE           Specifies which major version of
                          docker-compose to use. Defaults to v2
+
+DOCKER_PLUGINS_PATH      Where to store Docker CLI plugins.
+                         Defaults to ${TARGET}/libexec/docker/cli-plugins
+
+DOCKER_SETUP_CACHE       Where to cache data. Defaults to
+                         /var/cache/docker-setup
+
+Tools specified on the command line will be reinstalled regardless
+of --reinstall and REINSTALL.
 
 EOF
     exit
