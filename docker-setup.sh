@@ -1193,7 +1193,18 @@ if ${INSTALL_PODMAN} || ${REINSTALL}; then
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
     | tar -xzC "${TARGET}"
-    # TODO: configuration
+    task "Install configuration"
+    mkdir -p /etc/containers/registries.{,conf}.d
+    files=(
+        registries.conf.d/00-shortnames.conf
+        registries.d/default.yaml
+        policy.json
+        registries.json
+        storage.json
+    )
+    for file in "${files[@]}"; do
+        curl -sLo "/etc/containers/${file}" "${DOCKER_SETUP_REPO_RAW}/contrib/podman/${file}"
+    done
 fi
 
 # buildah
