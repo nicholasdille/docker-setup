@@ -1094,9 +1094,18 @@ if install_krew; then
     task "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" ./krew-linux_amd64
-    krew completion bash >"${TARGET}/share/bash-completion/completions/krew"
-    krew completion fish >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
-    krew completion zsh >"${TARGET}/share/zsh/vendor-completions/_krew"
+    mv "${TARGET}/bin/krew-linux_amd64" "${TARGET}/bin/krew"
+    task "Add to path"
+    cat >/etc/profile.d/krew.sh <<"EOF"
+export PATH="${HOME}/.krew/bin:${PATH}"
+EOF
+    source /etc/profile.d/krew.sh
+    task "Install krew for current user"
+    krew install krew
+    task "Install completion"
+    krew completion bash 2>/dev/null >"${TARGET}/share/bash-completion/completions/krew"
+    krew completion fish 2>/dev/null >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
+    krew completion zsh 2>/dev/null >"${TARGET}/share/zsh/vendor-completions/_krew"
 fi
 
 # kustomize
