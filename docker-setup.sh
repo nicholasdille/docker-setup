@@ -124,11 +124,6 @@ for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     fi
 done
 
-mkdir -p "${DOCKER_SETUP_CACHE}/install"
-for tool in "${tools[@]}"; do
-    touch "${DOCKER_SETUP_CACHE}/install/${tool}"
-done
-
 function section() {
     echo -e -n "${GREEN}"
     echo
@@ -245,369 +240,152 @@ else
     exit 1
 fi
 
-INSTALL_JQ="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/jq" && test -x "${TARGET}/bin/jq" && test "$(${TARGET}/bin/jq --version)" == "jq-${JQ_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/jq"
-)"
-INSTALL_YQ="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/yq" && test -x "${TARGET}/bin/yq" && test "$(${TARGET}/bin/yq --version)" == "yq (https://github.com/mikefarah/yq/) version ${YQ_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/yq"
-)"
-INSTALL_DOCKER="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/docker" && test -x "${TARGET}/bin/dockerd" && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)" == "Docker version ${DOCKER_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/docker"
-)"
-INSTALL_CONTAINERD="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/containerd" && test -x "${TARGET}/bin/containerd" && test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)" == "v${CONTAINERD_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/containerd"
-)"
-INSTALL_RUNC="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/runc" && test -x "${TARGET}/bin/runc" && test "$(${TARGET}/bin/runc --version | head -n 1)" == "runc version ${RUNC_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/runc"
-)"
-INSTALL_ROOTLESSKIT="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/rootlesskit" && test -x "${TARGET}/bin/rootlesskit" && test "$(${TARGET}/bin/rootlesskit --version)" == "rootlesskit version ${ROOTLESSKIT_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/rootlesskit"
-)"
-INSTALL_DOCKER_COMPOSE="$(
-    if test "${DOCKER_COMPOSE}" == "v1"; then
-        if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/docker-compose" && test -x "${TARGET}/bin/docker-compose" && test "$(${TARGET}/bin/docker-compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V1_VERSION}"; then
-            echo "false"
-        else
-            echo "true"
-        fi
-    elif test "${DOCKER_COMPOSE}" == "v2"; then
-        if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/docker-compose" && test -x "${DOCKER_PLUGINS_PATH}/docker-compose" && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)" == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; then
-            echo "false"
-        else
-            echo "true"
-        fi
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/docker-compose"
-)"
-INSTALL_DOCKER_SCAN="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/docker-scan" && test -x "${DOCKER_PLUGINS_PATH}/docker-scan" && test "$(${DOCKER_PLUGINS_PATH}/docker-scan scan --version 2>/dev/null | head -n 1)" == "Version:    ${DOCKER_SCAN_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/docker-scan"
-)"
-INSTALL_SLIRP4NETNS="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/slirp4netns" && test -x "${TARGET}/bin/slirp4netns" && test "$(${TARGET}/bin/slirp4netns --version | head -n 1)" == "slirp4netns version ${SLIRP4NETNS_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/slirp4netns"
-)"
-INSTALL_HUB_TOOL="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/hub-tool" && test -x "${TARGET}/bin/hub-tool" && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)" == "Docker Hub Tool v${HUB_TOOL_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/hub-tool"
-)"
-INSTALL_DOCKER_MACHINE="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/docker-machine" && test -x "${TARGET}/bin/docker-machine" && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)" == "docker-machine version ${DOCKER_MACHINE_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/docker-machine"
-)"
-INSTALL_BUILDX="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/buildx" && test -x "${DOCKER_PLUGINS_PATH}/docker-buildx" && test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f1,2)" == "github.com/docker/buildx v${BUILDX_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/buildx"
-)"
-INSTALL_MANIFEST_TOOL="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/manifest-tool" && test -x "${TARGET}/bin/manifest-tool" && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)" == "${MANIFEST_TOOL_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/manifest-tool"
-)"
-INSTALL_BUILDKIT="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/buildkit" && test -x "${TARGET}/bin/buildkitd" && test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f1-3)" == "buildkitd github.com/moby/buildkit v${BUILDKIT_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/buildkit"
-)"
-INSTALL_IMG="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/im"g && test -x "${TARGET}/bin/img" && test "$(${TARGET}/bin/img --version | cut -d, -f1)" == "img version v${IMG_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/img"
-)"
-INSTALL_DIVE="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/dive" && test -x "${TARGET}/bin/dive" && test "$(${TARGET}/bin/dive --version)" == "dive ${DIVE_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/dive"
-)"
-INSTALL_PORTAINER="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/portainer" && test -x "${TARGET}/bin/portainer" && test "$(${TARGET}/bin/portainer --version 2>&1)" == "${PORTAINER_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/portainer"
-)"
-INSTALL_ORAS="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/oras" && test -x "${TARGET}/bin/oras" && test "$(${TARGET}/bin/oras version | head -n 1)" == "Version:        ${ORAS_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/oras"
-)"
-INSTALL_REGCLIENT="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/regclient" && test -x "${TARGET}/bin/regctl" && test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)" == "v${REGCLIENT_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/regclient"
-)"
-INSTALL_COSIGN="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/cosign" && test -x "${TARGET}/bin/cosign" && test "$(${TARGET}/bin/cosign version | grep GitVersion)" == "GitVersion:    v${COSIGN_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/cosign"
-)"
-INSTALL_NERDCTL="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/nerdctl" && test -x "${TARGET}/bin/nerdctl" && test "$(${TARGET}/bin/nerdctl --version)" == "nerdctl version ${NERDCTL_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/nerdctl"
-)"
-INSTALL_CNI="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/cni" && test -x "${TARGET}/libexec/cni/loopback" && test "$(${TARGET}/libexec/cni/loopback 2>&1)" == "CNI loopback plugin v${CNI_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/cni"
-)"
-INSTALL_CNI_ISOLATION="$(
-    #if test -x "${TARGET}/libexec/cni/isolation" && test "$(${TARGET}/libexec/cni/isolation 2>&1)" == "CNI isolation plugin version ${CNI_ISOLATION_VERSION}"; then
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/cni-isolation" && test -f "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/cni-isolation"
-)"
-INSTALL_STARGZ_SNAPSHOTTER="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/stargz-snapshotter" && test -x "${TARGET}/bin/containerd-stargz-grpc" && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)" == "v${STARGZ_SNAPSHOTTER_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/stargz-snapshotter"
-)"
-INSTALL_IMGCRYPT="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/imgcrypt" && test -x "${TARGET}/bin/ctr-enc" && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)" == "v${IMGCRYPT_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/imgcrypt"
-)"
-INSTALL_FUSE_OVERLAYFS="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/fuse-overlayfs" && test -x "${TARGET}/bin/fuse-overlayfs" && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)" == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/fuse-overlayfs"
-)"
-INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER="$(
-    if ! ${REINSTALL} && ! test -f ${DOCKER_SETUP_CACHE}/install/fuse-overlayfs-snapshotter && test -x "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/fuse-overlayfs-snapshotter"
-)"
-INSTALL_PODMAN="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/podman" && test -x "${TARGET}/bin/podman" && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)" == "${PODMAN_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/podman"
-)"
-INSTALL_CONMON="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/conmon" && test -x "${TARGET}/bin/conmon" && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)" == "${CONMON_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/conmon"
-)"
-INSTALL_BUILDAH="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/buildah" && test -x "${TARGET}/bin/buildah" && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)" == "${BUILDAH_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/buildah"
-)"
-INSTALL_CRUN="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/crun" && test -x "${TARGET}/bin/crun" && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)" == "${CRUN_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/crun"
-)"
-INSTALL_SKOPEO="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/skopeo" && test -x "${TARGET}/bin/skopeo" && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)" == "${SKOPEO_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/skopeo"
-)"
-INSTALL_KUBECTL="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/kubectl" && test -x "${TARGET}/bin/kubectl" && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/kubectl"
-)"
-INSTALL_KIND="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/kind" && test -x "${TARGET}/bin/kind" && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)" == "kind v${KIND_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/kind"
-)"
-INSTALL_K3D="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/k3d" && test -x "${TARGET}/bin/k3d" && test "$(${TARGET}/bin/k3d version | head -n 1)" == "k3d version v${K3D_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/k3d"
-)"
-INSTALL_HELM="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/helm" && test -x "${TARGET}/bin/helm" && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)" == "v${HELM_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/helm"
-)"
-INSTALL_KUSTOMIZE="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/kustomize" && test -x "${TARGET}/bin/kustomize" && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)" == "{kustomize/v${KUSTOMIZE_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/kustomize"
-)"
-INSTALL_KOMPOSE="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/kompose" && test -x "${TARGET}/bin/kompose" && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)" == "${KOMPOSE_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/kompose"
-)"
-INSTALL_KAPP="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/kapp" && test -x "${TARGET}/bin/kapp" && test "$(${TARGET}/bin/kapp version | head -n 1)" == "kapp version ${KAPP_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/kapp"
-)"
-INSTALL_YTT="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/ytt" && test -x "${TARGET}/bin/ytt" && test "$(${TARGET}/bin/ytt version)" == "ytt version ${YTT_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/ytt"
-)"
-INSTALL_ARKADE="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/arkade" && test -x "${TARGET}/bin/arkade" && test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)" == "${ARKADE_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/arkade"
-)"
-INSTALL_CLUSTERCTL="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/clusterctl" && test -x "${TARGET}/bin/clusterctl" && test "$(${TARGET}/bin/clusterctl version --output short)" == "v${CLUSTERCTL_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/clusterctl"
-)"
-INSTALL_CLUSTERAWSADM="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/clusterawsadm" && test -x "${TARGET}/bin/clusterawsadm" && test "$(${TARGET}/bin/clusterawsadm version --output short)" == "v${CLUSTERAWSADM_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/clusterawsadm"
-)"
-INSTALL_TRIVY="$(
-    if ! ${REINSTALL} && ! test -f "${DOCKER_SETUP_CACHE}/install/trivy" && test -x "${TARGET}/bin/trivy" && test "$(${TARGET}/bin/trivy --version)" == "Version: ${TRIVY_VERSION}"; then
-        echo "false"
-    else
-        echo "true"
-    fi; rm -f "${DOCKER_SETUP_CACHE}/install/trivy"
-)"
+function install_requested() {
+    local tool=$1
+    ${REINSTALL} || printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"
+}
+
+function is_executable() {
+    local file=$1
+    test -f "${file}" && test -x "${file}"           
+}           
+           
+function jq_matches_version()                         { is_executable "${TARGET}/bin/jq"                             && test "$(${TARGET}/bin/jq --version)"                                                               == "jq-${JQ_VERSION}"; }
+function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             && test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                               == "${YQ_VERSION}"; }
+function docker_matches_version()                     { is_executable "${TARGET}/bin/dockerd"                        && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)"                                            == "Docker version ${DOCKER_VERSION}"; }
+function containerd_matches_version()                 { is_executable "${TARGET}/bin/containerd"                     && test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)"                                       == "v${CONTAINERD_VERSION}"; }
+function runc_matches_version()                       { is_executable "${TARGET}/bin/runc"                           && test "$(${TARGET}/bin/runc --version | head -n 1)"                                                 == "runc version ${RUNC_VERSION}"; }
+function rootlesskit_matches_version()                { is_executable "${TARGET}/bin/rootlesskit"                    && test "$(${TARGET}/bin/rootlesskit --version)"                                                      == "rootlesskit version ${ROOTLESSKIT_VERSION}"; }
+function docker_compose_v1_matches_version()          { is_executable "${TARGET}/bin/docker-compose"                 && test "$(${TARGET}/bin/docker-compose version)"                                                     == "Docker Compose version v${DOCKER_COMPOSE_V1_VERSION}"; }
+function docker_compose_v2_matches_version()          { is_executable "${DOCKER_PLUGINS_PATH}/docker-compose"        && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)"                                    == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; }
+function docker_scan_matches_version()                { is_executable "${DOCKER_PLUGINS_PATH}/docker-scan"           && test "$(${DOCKER_PLUGINS_PATH}/docker-scan scan --version 2>/dev/null | head -n 1)"                == "Version:    ${DOCKER_SCAN_VERSION}"; }
+function slirp4netns_matches_version()                { is_executable "${TARGET}/bin/slirp4netns"                    && test "$(${TARGET}/bin/slirp4netns --version | head -n 1)"                                          == "slirp4netns version ${SLIRP4NETNS_VERSION}"; }
+function hub_tool_matches_version()                   { is_executable "${TARGET}/bin/hub-tool"                       && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)"                                           == "Docker Hub Tool v${HUB_TOOL_VERSION}"; }
+function docker_machine_matches_version()             { is_executable "${TARGET}/bin/docker-machine"                 && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)"                                     == "docker-machine version ${DOCKER_MACHINE_VERSION}"; }
+function buildx_matches_version()                     { is_executable "${DOCKER_PLUGINS_PATH}/docker-buildx"         && test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f1,2)"                           == "github.com/docker/buildx v${BUILDX_VERSION}"; }
+function manifest_tool_matches_version()              { is_executable "${TARGET}/bin/manifest-tool"                  && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                                    == "${MANIFEST_TOOL_VERSION}"; }
+function buildkit_matches_version()                   { is_executable "${TARGET}/bin/buildkitd"                      && test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f1-3)"                                      == "buildkitd github.com/moby/buildkit v${BUILDKIT_VERSION}"; }
+function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1)"                                                == "img version v${IMG_VERSION}"; }
+function dive_matches_version()                       { is_executable "${TARGET}/bin/dive"                           && test "$(${TARGET}/bin/dive --version)"                                                             == "dive ${DIVE_VERSION}"; }
+function portainer_matches_version()                  { is_executable "${TARGET}/bin/portainer"                      && test "$(${TARGET}/bin/portainer --version 2>&1)"                                                   == "${PORTAINER_VERSION}"; }
+function oras_matches_version()                       { is_executable "${TARGET}/bin/oras"                           && test "$(${TARGET}/bin/oras version | head -n 1)"                                                   == "Version:        ${ORAS_VERSION}"; }
+function regclient_matches_version()                  { is_executable "${TARGET}/bin/regctl"                         && test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)"                                             == "v${REGCLIENT_VERSION}"; }
+function cosign_matches_version()                     { is_executable "${TARGET}/bin/cosign"                         && test "$(${TARGET}/bin/cosign version | grep GitVersion)"                                           == "GitVersion:    v${COSIGN_VERSION}"; }
+function nerdctl_matches_version()                    { is_executable "${TARGET}/bin/nerdctl"                        && test "$(${TARGET}/bin/nerdctl --version)"                                                          == "nerdctl version ${NERDCTL_VERSION}"; }
+function cni_matches_version()                        { is_executable "${TARGET}/libexec/cni/loopback"               && test "$(${TARGET}/libexec/cni/loopback 2>&1)"                                                      == "CNI loopback plugin v${CNI_VERSION}"; }
+function cni_isolation_matches_version()              { is_executable "${TARGET}/libexec/cni/isolation"              && test -f "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"; }
+function stargz_snapshotter_matches_version()         { is_executable "${TARGET}/bin/containerd-stargz-grpc"         && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                            == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
+function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                          == "v${IMGCRYPT_VERSION}"; }
+function fuse_overlayfs_matches_version()             { is_executable "${TARGET}/bin/fuse-overlayfs"                 && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)"                                       == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; }
+function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
+function podman_matches_version()                     { is_executable "${TARGET}/bin/podman"                         && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                           == "${PODMAN_VERSION}"; }
+function conmon_matches_version()                     { is_executable "${TARGET}/bin/conmon"                         && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"                   == "${CONMON_VERSION}"; }
+function buildah_matches_version()                    { is_executable "${TARGET}/bin/buildah"                        && test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)"                                          == "${BUILDAH_VERSION}"; }
+function crun_matches_version()                       { is_executable "${TARGET}/bin/crun"                           && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"                       == "${CRUN_VERSION}"; }
+function skopeo_matches_version()                     { is_executable "${TARGET}/bin/skopeo"                         && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)"                                           == "${SKOPEO_VERSION}"; }
+function kubectl_matches_version()                    { is_executable "${TARGET}/bin/kubectl"                        && test "$(${TARGET}/bin/kubectl version --client --output json | jq -r '.clientVersion.gitVersion')" == "v${KUBECTL_VERSION}"; }
+function kind_matches_version()                       { is_executable "${TARGET}/bin/kind"                           && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)"                                             == "kind v${KIND_VERSION}"; }
+function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1)"                                                    == "k3d version v${K3D_VERSION}"; }
+function helm_matches_version()                       { is_executable "${TARGET}/bin/helm"                           && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                         == "v${HELM_VERSION}"; }
+function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"                      == "{kustomize/v${KUSTOMIZE_VERSION}"; }
+function kompose_matches_version()                    { is_executable "${TARGET}/bin/kompose"                        && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                            == "${KOMPOSE_VERSION}"; }
+function kapp_matches_version()                       { is_executable "${TARGET}/bin/kapp"                           && test "$(${TARGET}/bin/kapp version | head -n 1)"                                                   == "kapp version ${KAPP_VERSION}"; }
+function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            && test "$(${TARGET}/bin/ytt version)"                                                                == "ytt version ${YTT_VERSION}"; }
+function arkade_matches_version()                     { is_executable "${TARGET}/bin/arkade"                         && test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)"                            == "${ARKADE_VERSION}"; }
+function clusterctl_matches_version()                 { is_executable "${TARGET}/bin/clusterctl"                     && test "$(${TARGET}/bin/clusterctl version --output short)"                                          == "v${CLUSTERCTL_VERSION}"; }
+function clusterawsadm_matches_version()              { is_executable "${TARGET}/bin/clusterawsadm"                  && test "$(${TARGET}/bin/clusterawsadm version --output short)"                                       == "v${CLUSTERAWSADM_VERSION}"; }
+function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                            == "Version: ${TRIVY_VERSION}"; }
+
+function install_jq()                         { install_requested "jq"                         || ! jq_matches_version; }
+function install_yq()                         { install_requested "yq"                         || ! yq_matches_version; }
+function install_docker()                     { install_requested "docker"                     || ! docker_matches_version; }
+function install_containerd()                 { install_requested "containerd"                 || ! containerd_matches_version; }
+function install_runc()                       { install_requested "runc"                       || ! runc_matches_version; }
+function install_rootlesskit()                { install_requested "rootlesskit"                || ! rootlesskit_matches_version; }
+function install_docker_compose()             { install_requested "docker-compose"             || ! eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
+function install_docker_scan()                { install_requested "docker-scan"                || ! docker_scan_matches_version; }
+function install_slirp4netns()                { install_requested "slirp4netns"                || ! slirp4netns_matches_version; }
+function install_hub_tool()                   { install_requested "hub-tool"                   || ! hub_tool_matches_version; }
+function install_docker_machine()             { install_requested "docker-machine"             || ! docker_machine_matches_version; }
+function install_buildx()                     { install_requested "buildx"                     || ! buildx_matches_version; }
+function install_manifest_tool()              { install_requested "manifest-tool"              || ! manifest_tool_matches_version; }
+function install_buildkit()                   { install_requested "buildkit"                   || ! buildkit_matches_version; }
+function install_img()                        { install_requested "img"                        || ! img_matches_version; }
+function install_dive()                       { install_requested "dive"                       || ! dive_matches_version; }
+function install_portainer()                  { install_requested "portainer"                  || ! portainer_matches_version; }
+function install_oras()                       { install_requested "oras"                       || ! oras_matches_version; }
+function install_regclient()                  { install_requested "regclient"                  || ! regclient_matches_version; }
+function install_cosign()                     { install_requested "cosign"                     || ! cosign_matches_version; }
+function install_nerdctl()                    { install_requested "nerdctl"                    || ! nerdctl_matches_version; }
+function install_cni()                        { install_requested "cni"                        || ! cni_matches_version; }
+function install_cni_isolaton()               { install_requested "cni-isolation"              || ! cni_isolation_matches_version; }
+function install_stargz_snapshotter()         { install_requested "stargz-snapshotter"         || ! stargz_snapshotter_matches_version; }
+function install_imgcrypt()                   { install_requested "imgcrypt"                   || ! imgcrypt_matches_version; }
+function install_fuse_overlayfs()             { install_requested "fuse-overlayfs"             || ! fuse_overlayfs_matches_version; }
+function install_fuse_overlayfs_snapshotter() { install_requested "fuse-overlayfs-snapshotter" || ! fuse_overlayfs_snapshotter_matches_version; }
+function install_podman()                     { install_requested "podman"                     || ! podman_matches_version; }
+function install_conmon()                     { install_requested "conmon"                     || ! conmon_matches_version; }
+function install_buildah()                    { install_requested "buildah"                    || ! buildah_matches_version; }
+function install_crun()                       { install_requested "crun"                       || ! crun_matches_version; }
+function install_skopeo()                     { install_requested "skopeo"                     || ! skopeo_matches_version; }
+function install_kubectl()                    { install_requested "kubectl"                    || ! kubectl_matches_version; }
+function install_kind()                       { install_requested "kind"                       || ! kind_matches_version; }
+function install_k3d()                        { install_requested "k3d"                        || ! k3d_matches_version; }
+function install_helm()                       { install_requested "helm"                       || ! helm_matches_version; }
+function install_kustomize()                  { install_requested "kustomize"                  || ! kustomize_matches_version; }
+function install_kompose()                    { install_requested "kompose"                    || ! kompose_matches_version; }
+function install_kapp()                       { install_requested "kapp"                       || ! kapp_matches_version; }
+function install_ytt()                        { install_requested "ytt"                        || ! ytt_matches_version; }
+function install_arkade()                     { install_requested "arkade"                     || ! arkade_matches_version; }
+function install_clusterctl()                 { install_requested "clusterctl"                 || ! clusterctl_matches_version; }
+function install_clusterawsadm()              { install_requested "clusterawsadm"              || ! clusterawsadm_matches_version; }
+function install_trivy()                      { install_requested "trivy"                      || ! trivy_matches_version; }
 
 section "Status"
-echo -e "jq                        : $(if ${INSTALL_JQ};                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${JQ_VERSION}${RESET}"
-echo -e "yq                        : $(if ${INSTALL_YQ};                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YQ_VERSION}${RESET}"
-echo -e "docker                    : $(if ${INSTALL_DOCKER};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_VERSION}${RESET}"
-echo -e "containerd                : $(if ${INSTALL_CONTAINERD};                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
-echo -e "rootlesskit               : $(if ${INSTALL_ROOTLESSKIT};                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
-echo -e "runc                      : $(if ${INSTALL_RUNC};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
-echo -e "docker-compose            : $(if ${INSTALL_DOCKER_COMPOSE};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
-echo -e "docker-scan               : $(if ${INSTALL_DOCKER_SCAN};                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
-echo -e "slirp4netns               : $(if ${INSTALL_SLIRP4NETNS};                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
-echo -e "hub-tool                  : $(if ${INSTALL_HUB_TOOL};                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HUB_TOOL_VERSION}${RESET}"
-echo -e "docker-machine            : $(if ${INSTALL_DOCKER_MACHINE};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_MACHINE_VERSION}${RESET}"
-echo -e "buildx                    : $(if ${INSTALL_BUILDX};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDX_VERSION}${RESET}"
-echo -e "manifest-tool             : $(if ${INSTALL_MANIFEST_TOOL};              then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MANIFEST_TOOL_VERSION}${RESET}"
-echo -e "buildkit                  : $(if ${INSTALL_BUILDKIT};                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDKIT_VERSION}${RESET}"
-echo -e "img                       : $(if ${INSTALL_IMG};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMG_VERSION}${RESET}"
-echo -e "dive                      : $(if ${INSTALL_DIVE};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DIVE_VERSION}${RESET}"
-echo -e "portainer                 : $(if ${INSTALL_PORTAINER};                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTAINER_VERSION}${RESET}"
-echo -e "oras                      : $(if ${INSTALL_ORAS};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ORAS_VERSION}${RESET}"
-echo -e "regclient                 : $(if ${INSTALL_REGCLIENT};                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${REGCLIENT_VERSION}${RESET}"
-echo -e "cosign                    : $(if ${INSTALL_COSIGN};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${COSIGN_VERSION}${RESET}"
-echo -e "nerdctl                   : $(if ${INSTALL_NERDCTL};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${NERDCTL_VERSION}${RESET}"
-echo -e "cni                       : $(if ${INSTALL_CNI};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_VERSION}${RESET}"
-echo -e "cni-isolation             : $(if ${INSTALL_CNI_ISOLATION};              then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_ISOLATION_VERSION}${RESET}"
-echo -e "stargz-snapshotter        : $(if ${INSTALL_STARGZ_SNAPSHOTTER};         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${STARGZ_SNAPSHOTTER_VERSION}${RESET}"
-echo -e "imgcrypt                  : $(if ${INSTALL_IMGCRYPT};                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMGCRYPT_VERSION}${RESET}"
-echo -e "fuse-overlayfs            : $(if ${INSTALL_FUSE_OVERLAYFS};             then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_VERSION}${RESET}"
-echo -e "fuse-overlayfs-snapshotter: $(if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}${RESET}"
-echo -e "podman                    : $(if ${INSTALL_PODMAN};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PODMAN_VERSION}${RESET}"
-echo -e "conmon                    : $(if ${INSTALL_CONMON};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONMON_VERSION}${RESET}"
-echo -e "buildah                   : $(if ${INSTALL_BUILDAH};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
-echo -e "crun                      : $(if ${INSTALL_CRUN};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CRUN_VERSION}${RESET}"
-echo -e "skopeo                    : $(if ${INSTALL_SKOPEO};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SKOPEO_VERSION}${RESET}"
-echo -e "kubectl                   : $(if ${INSTALL_KUBECTL};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
-echo -e "kind                      : $(if ${INSTALL_KIND};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
-echo -e "k3d                       : $(if ${INSTALL_K3D};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
-echo -e "helm                      : $(if ${INSTALL_HELM};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HELM_VERSION}${RESET}"
-echo -e "kustomize                 : $(if ${INSTALL_KUSTOMIZE};                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUSTOMIZE_VERSION}${RESET}"
-echo -e "kompose                   : $(if ${INSTALL_KOMPOSE};                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KOMPOSE_VERSION}${RESET}"
-echo -e "kapp                      : $(if ${INSTALL_KAPP};                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
-echo -e "ytt                       : $(if ${INSTALL_YTT};                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YTT_VERSION}${RESET}"
-echo -e "arcade                    : $(if ${INSTALL_ARKADE};                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
-echo -e "clusterctl                : $(if ${INSTALL_CLUSTERCTL};                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
-echo -e "clusterawsadm             : $(if ${INSTALL_CLUSTERAWSADM};              then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
-echo -e "trivy                     : $(if ${INSTALL_TRIVY};                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
+echo -e "jq                        : $(if install_jq;                            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${JQ_VERSION}${RESET}"
+echo -e "yq                        : $(if install_yq;                            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YQ_VERSION}${RESET}"
+echo -e "docker                    : $(if install_docker;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_VERSION}${RESET}"
+echo -e "containerd                : $(if install_containerd;                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
+echo -e "rootlesskit               : $(if install_rootlesskit;                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
+echo -e "runc                      : $(if install_runc;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
+echo -e "docker-compose            : $(if install_docker_compose;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
+echo -e "docker-scan               : $(if install_docker_scan;                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
+echo -e "slirp4netns               : $(if install_slirp4netns;                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
+echo -e "hub-tool                  : $(if install_hub_tool;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HUB_TOOL_VERSION}${RESET}"
+echo -e "docker-machine            : $(if install_docker_machine;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_MACHINE_VERSION}${RESET}"
+echo -e "buildx                    : $(if install_buildx;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDX_VERSION}${RESET}"
+echo -e "manifest-tool             : $(if install_manifest_tool;                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MANIFEST_TOOL_VERSION}${RESET}"
+echo -e "buildkit                  : $(if install_buildkit;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDKIT_VERSION}${RESET}"
+echo -e "img                       : $(if install_img;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMG_VERSION}${RESET}"
+echo -e "dive                      : $(if install_dive;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DIVE_VERSION}${RESET}"
+echo -e "portainer                 : $(if install_portainer;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTAINER_VERSION}${RESET}"
+echo -e "oras                      : $(if install_oras;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ORAS_VERSION}${RESET}"
+echo -e "regclient                 : $(if install_regclient;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${REGCLIENT_VERSION}${RESET}"
+echo -e "cosign                    : $(if install_cosign;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${COSIGN_VERSION}${RESET}"
+echo -e "nerdctl                   : $(if install_nerdctl;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${NERDCTL_VERSION}${RESET}"
+echo -e "cni                       : $(if install_cni;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_VERSION}${RESET}"
+echo -e "cni-isolation             : $(if install_cni_isolaton;                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_ISOLATION_VERSION}${RESET}"
+echo -e "stargz-snapshotter        : $(if install_stargz_snapshotter;            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${STARGZ_SNAPSHOTTER_VERSION}${RESET}"
+echo -e "imgcrypt                  : $(if install_imgcrypt;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMGCRYPT_VERSION}${RESET}"
+echo -e "fuse-overlayfs            : $(if install_fuse_overlayfs;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_VERSION}${RESET}"
+echo -e "fuse-overlayfs-snapshotter: $(if install_fuse_overlayfs_snapshotter;    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}${RESET}"
+echo -e "podman                    : $(if install_podman;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PODMAN_VERSION}${RESET}"
+echo -e "conmon                    : $(if install_conmon;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONMON_VERSION}${RESET}"
+echo -e "buildah                   : $(if install_buildah;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
+echo -e "crun                      : $(if install_crun;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CRUN_VERSION}${RESET}"
+echo -e "skopeo                    : $(if install_skopeo;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SKOPEO_VERSION}${RESET}"
+echo -e "kubectl                   : $(if install_kubectl;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
+echo -e "kind                      : $(if install_kind;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
+echo -e "k3d                       : $(if install_k3d;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
+echo -e "helm                      : $(if install_helm;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HELM_VERSION}${RESET}"
+echo -e "kustomize                 : $(if install_kustomize;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUSTOMIZE_VERSION}${RESET}"
+echo -e "kompose                   : $(if install_kompose;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KOMPOSE_VERSION}${RESET}"
+echo -e "kapp                      : $(if install_kapp;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
+echo -e "ytt                       : $(if install_ytt;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YTT_VERSION}${RESET}"
+echo -e "arkade                    : $(if install_arkade;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
+echo -e "clusterctl                : $(if install_clusterctl;                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
+echo -e "clusterawsadm             : $(if install_clusterawsadm;                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
+echo -e "trivy                     : $(if install_trivy;                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
 echo
 
 if ${CHECK_ONLY}; then
@@ -674,7 +452,7 @@ mkdir -p \
     "${TARGET}/libexec/cni"
 
 # jq
-if ${INSTALL_JQ}; then
+if install_jq; then
     section "jq ${JQ_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/jq" "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
@@ -683,7 +461,7 @@ if ${INSTALL_JQ}; then
 fi
 
 # yq
-if ${INSTALL_YQ}; then
+if install_yq; then
     section "yq ${YQ_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
@@ -736,7 +514,7 @@ if ! iptables --version | grep -q legacy; then
 fi
 
 # Install Docker CE
-if ${INSTALL_DOCKER}; then
+if install_docker; then
     section "Docker ${DOCKER_VERSION}"
     task "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
@@ -847,7 +625,7 @@ fi
 # NOTHING TO BE DONE FOR NOW
 
 # containerd
-if ${INSTALL_CONTAINERD}; then
+if install_containerd; then
     section "containerd ${CONTAINERD_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
@@ -879,7 +657,7 @@ EOF
 fi
 
 # rootlesskit
-if ${INSTALL_ROOTLESSKIT}; then
+if install_rootlesskit; then
     section "rootkesskit ${ROOTLESSKIT_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
@@ -887,7 +665,7 @@ if ${INSTALL_ROOTLESSKIT}; then
 fi
 
 # runc
-if ${INSTALL_RUNC}; then
+if install_runc; then
     section "runc ${RUNC_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
@@ -910,7 +688,7 @@ EOF
 fi
 
 # docker-compose v2
-if ${INSTALL_DOCKER_COMPOSE}; then
+if install_docker_compose; then
     section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
     DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-x86_64"
     DOCKER_COMPOSE_TARGET="${DOCKER_PLUGINS_PATH}/docker-compose"
@@ -934,7 +712,7 @@ EOF
 fi
 
 # docker-scan
-if ${INSTALL_DOCKER_SCAN}; then
+if install_docker_scan; then
     section "docker-scan ${DOCKER_SCAN_VERSION}"
     task "Install binary"
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
@@ -943,7 +721,7 @@ if ${INSTALL_DOCKER_SCAN}; then
 fi
 
 # slirp4netns
-if ${INSTALL_SLIRP4NETNS}; then
+if install_slirp4netns; then
     section "slirp4netns ${SLIRP4NETNS_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
@@ -965,7 +743,7 @@ EOF
 fi
 
 # hub-tool
-if ${INSTALL_HUB_TOOL}; then
+if install_hub_tool; then
     section "hub-tool ${HUB_TOOL_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
@@ -973,7 +751,7 @@ if ${INSTALL_HUB_TOOL}; then
 fi
 
 # docker-machine
-if ${INSTALL_DOCKER_MACHINE}; then
+if install_docker_machine; then
     section "docker-machine ${DOCKER_MACHINE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/docker-machine" "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64"
@@ -982,7 +760,7 @@ if ${INSTALL_DOCKER_MACHINE}; then
 fi
 
 # buildx
-if ${INSTALL_BUILDX}; then
+if install_buildx; then
     section "buildx ${BUILDX_VERSION}"
     task "Install binary"
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
@@ -993,7 +771,7 @@ if ${INSTALL_BUILDX}; then
 fi
 
 # manifest-tool
-if ${INSTALL_MANIFEST_TOOL}; then
+if install_manifest_tool; then
     section "manifest-tool ${MANIFEST_TOOL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/manifest-tool" "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
@@ -1002,7 +780,7 @@ if ${INSTALL_MANIFEST_TOOL}; then
 fi
 
 # BuildKit
-if ${INSTALL_BUILDKIT}; then
+if install_buildkit; then
     section "BuildKit ${BUILDKIT_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
@@ -1010,7 +788,7 @@ if ${INSTALL_BUILDKIT}; then
 fi
 
 # img
-if ${INSTALL_IMG}; then
+if install_img; then
     section "img ${IMG_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/img" "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64"
@@ -1019,7 +797,7 @@ if ${INSTALL_IMG}; then
 fi
 
 # dive
-if ${INSTALL_DIVE}; then
+if install_dive; then
     section "dive ${DIVE_VERSION}"
     task "Install binary"
     curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz \
@@ -1028,7 +806,7 @@ if ${INSTALL_DIVE}; then
 fi
 
 # portainer
-if ${INSTALL_PORTAINER}; then
+if install_portainer; then
     section "portainer ${PORTAINER_VERSION}"
     task "Create directories"
     mkdir -p \
@@ -1084,7 +862,7 @@ EOF
 fi
 
 # oras
-if ${INSTALL_ORAS}; then
+if install_oras; then
     section "oras ${ORAS_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
@@ -1093,7 +871,7 @@ if ${INSTALL_ORAS}; then
 fi
 
 # regclient
-if ${INSTALL_REGCLIENT}; then
+if install_regclient; then
     section "regclient ${REGCLIENT_VERSION}"
     task "Install regctl"
     curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
@@ -1122,7 +900,7 @@ if ${INSTALL_REGCLIENT}; then
 fi
 
 # cosign
-if ${INSTALL_COSIGN}; then
+if install_cosign; then
     section "cosign ${COSIGN_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
@@ -1135,7 +913,7 @@ if ${INSTALL_COSIGN}; then
 fi
 
 # nerdctl
-if ${INSTALL_NERDCTL}; then
+if install_nerdctl; then
     section "nerdctl ${NERDCTL_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz" \
@@ -1143,7 +921,7 @@ if ${INSTALL_NERDCTL}; then
 fi
 
 # cni
-if ${INSTALL_CNI}; then
+if install_cni; then
     section "CNI ${CNI_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz" \
@@ -1151,7 +929,7 @@ if ${INSTALL_CNI}; then
 fi
 
 # CNI isolation
-if ${INSTALL_CNI_ISOLATION}; then
+if install_cni_isolaton; then
     section "CNI isolation ${CNI_ISOLATION_VERSION}"
     task "Install binaries"
     curl -sL "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
@@ -1161,7 +939,7 @@ if ${INSTALL_CNI_ISOLATION}; then
 fi
 
 # stargz-snapshotter
-if ${INSTALL_STARGZ_SNAPSHOTTER}; then
+if install_stargz_snapshotter; then
     section "stargz-snapshotter ${STARGZ_SNAPSHOTTER_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
@@ -1169,7 +947,7 @@ if ${INSTALL_STARGZ_SNAPSHOTTER}; then
 fi
 
 # imgcrypt
-if ${INSTALL_IMGCRYPT}; then
+if install_imgcrypt; then
     section "imgcrypt ${IMGCRYPT_VERSION}"
     task "Install binary"
     docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
@@ -1184,7 +962,7 @@ EOF
 fi
 
 # fuse-overlayfs
-if ${INSTALL_FUSE_OVERLAYFS}; then
+if install_fuse_overlayfs; then
     section "fuse-overlayfs ${FUSE_OVERLAYFS_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/fuse-overlayfs" "https://github.com/containers/fuse-overlayfs/releases/download/v${FUSE_OVERLAYFS_VERSION}/fuse-overlayfs-x86_64"
@@ -1193,7 +971,7 @@ if ${INSTALL_FUSE_OVERLAYFS}; then
 fi
 
 # fuse-overlayfs-snapshotter
-if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER}; then
+if install_fuse_overlayfs_snapshotter; then
     section "fuse-overlayfs-snapshotter ${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
@@ -1201,7 +979,7 @@ if ${INSTALL_FUSE_OVERLAYFS_SNAPSHOTTER}; then
 fi
 
 # conmon
-if ${INSTALL_CONMON}; then
+if install_conmon; then
     section "conmon ${CONMON_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz" \
@@ -1209,7 +987,7 @@ if ${INSTALL_CONMON}; then
 fi
 
 # podman
-if ${INSTALL_PODMAN}; then
+if install_podman; then
     section "podman ${PODMAN_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
@@ -1229,7 +1007,7 @@ if ${INSTALL_PODMAN}; then
 fi
 
 # buildah
-if ${INSTALL_BUILDAH}; then
+if install_buildah; then
     section "buildah ${BUILDAH_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
@@ -1237,7 +1015,7 @@ if ${INSTALL_BUILDAH}; then
 fi
 
 # crun
-if ${INSTALL_CRUN}; then
+if install_crun; then
     section "crun ${CRUN_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
@@ -1245,7 +1023,7 @@ if ${INSTALL_CRUN}; then
 fi
 
 # skopeo
-if ${INSTALL_SKOPEO}; then
+if install_skopeo; then
     section "skopeo ${SKOPEO_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz" \
@@ -1255,7 +1033,7 @@ fi
 # Kubernetes
 
 # kubectl
-if ${INSTALL_KUBECTL}; then
+if install_kubectl; then
     section "kubectl ${KUBECTL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
@@ -1267,7 +1045,7 @@ if ${INSTALL_KUBECTL}; then
 fi
 
 # kind
-if ${INSTALL_KIND}; then
+if install_kind; then
     section "kind ${KIND_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kind" "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64"
@@ -1280,7 +1058,7 @@ if ${INSTALL_KIND}; then
 fi
 
 # k3d
-if ${INSTALL_K3D}; then
+if install_k3d; then
     section "k3d ${K3D_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
@@ -1293,7 +1071,7 @@ if ${INSTALL_K3D}; then
 fi
 
 # helm
-if ${INSTALL_HELM}; then
+if install_helm; then
     section "helm ${HELM_VERSION}"
     task "Install binary"
     curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
@@ -1309,7 +1087,7 @@ fi
 # https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 
 # kustomize
-if ${INSTALL_KUSTOMIZE}; then
+if install_kustomize; then
     section "kustomize ${KUSTOMIZE_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
@@ -1321,7 +1099,7 @@ if ${INSTALL_KUSTOMIZE}; then
 fi
 
 # kompose
-if ${INSTALL_KOMPOSE}; then
+if install_kompose; then
     section "kompose ${KOMPOSE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kompose" "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64"
@@ -1334,7 +1112,7 @@ if ${INSTALL_KOMPOSE}; then
 fi
 
 # kapp
-if ${INSTALL_KAPP}; then
+if install_kapp; then
     section "kapp ${KAPP_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/kapp" "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64"
@@ -1347,7 +1125,7 @@ if ${INSTALL_KAPP}; then
 fi
 
 # ytt
-if ${INSTALL_YTT}; then
+if install_ytt; then
     section "ytt ${YTT_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/ytt" "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64"
@@ -1360,7 +1138,7 @@ if ${INSTALL_YTT}; then
 fi
 
 # arkade
-if ${INSTALL_ARKADE}; then
+if install_arkade; then
     section "arkade ${ARKADE_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"
@@ -1373,7 +1151,7 @@ if ${INSTALL_ARKADE}; then
 fi
 
 # clusterctl
-if ${INSTALL_CLUSTERCTL}; then
+if install_clusterctl; then
     section "clusterctl ${CLUSTERCTL_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/clusterctl" "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL_VERSION}/clusterctl-linux-amd64"
@@ -1384,7 +1162,7 @@ if ${INSTALL_CLUSTERCTL}; then
 fi
 
 # clusterawsadm
-if ${INSTALL_CLUSTERAWSADM} ||${REINSTALL}; then
+if install_clusterawsadm; then
     section "clusterawsadm ${CLUSTERAWSADM_VERSION}"
     task "Install binary"
     curl -sLo "${TARGET}/bin/clusterawsadm" "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${CLUSTERAWSADM_VERSION}/clusterawsadm-linux-amd64"
@@ -1398,7 +1176,7 @@ fi
 # Security
 
 # trivy
-if ${INSTALL_TRIVY}; then
+if install_trivy; then
     section "trivy ${TRIVY_VERSION}"
     task "Install binary"
     curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
