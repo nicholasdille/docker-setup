@@ -1178,26 +1178,20 @@ if install_helm; then
     helm completion bash >"${TARGET}/share/bash-completion/completions/helm"
     helm completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
     helm completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
-fi
-
-# krew
-if install_krew; then
-    section "krew ${KREW_VERSION}"
-    task "Install binary"
-    curl -sL "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" ./krew-linux_amd64
-    mv "${TARGET}/bin/krew-linux_amd64" "${TARGET}/bin/krew"
-    task "Add to path"
-    cat >/etc/profile.d/krew.sh <<"EOF"
-export PATH="${HOME}/.krew/bin:${PATH}"
-EOF
-    source /etc/profile.d/krew.sh
-    task "Install krew for current user"
-    krew install krew
-    task "Install completion"
-    krew completion bash 2>/dev/null >"${TARGET}/share/bash-completion/completions/krew"
-    krew completion fish 2>/dev/null >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
-    krew completion zsh 2>/dev/null >"${TARGET}/share/zsh/vendor-completions/_krew"
+    task "Install plugins for current user"
+    helm plugin install https://github.com/mstrzele/helm-edit
+    helm plugin install https://github.com/databus23/helm-diff
+    helm plugin install https://github.com/aslafy-z/helm-git
+    helm plugin install https://github.com/sstarcher/helm-release
+    helm plugin install https://github.com/maorfr/helm-backup
+    helm plugin install https://github.com/technosophos/helm-keybase
+    helm plugin install https://github.com/technosophos/helm-gpg
+    helm plugin install https://github.com/cloudogu/helm-sudo
+    helm plugin install https://github.com/bloodorangeio/helm-oci-mirror
+    helm plugin install https://github.com/UniKnow/helm-outdated
+    helm plugin install https://github.com/rimusz/helm-chartify
+    helm plugin install https://github.com/random-dwi/helm-doc
+    helm plugin install https://github.com/sapcc/helm-outdated-dependencies
 fi
 
 # kustomize
