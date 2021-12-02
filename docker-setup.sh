@@ -1091,6 +1091,9 @@ if install_kubectl; then
     task "Install completion"
     kubectl completion bash >"${TARGET}/share/bash-completion/completions/kubectl"
     kubectl completion zsh >"${TARGET}/share/zsh/vendor-completions/_kubectl"
+    task "Install kubectl-convert"
+    curl -sLo "${TARGET}/bin/kubectl-convert" "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert"
+    chmod +x "${TARGET}/bin/kubectl-convert"
     task "Install plugins for current user"
     kubectl krew install <<EOF
 access-matrix
