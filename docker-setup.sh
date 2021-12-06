@@ -1098,6 +1098,11 @@ if install_kubectl; then
     task "Install completion"
     kubectl completion bash >"${TARGET}/share/bash-completion/completions/kubectl"
     kubectl completion zsh >"${TARGET}/share/zsh/vendor-completions/_kubectl"
+    task "Add alias k"
+    cat >/etc/profile.d/kubectl.sh <<EOF
+alias k=kubectl
+complete -F __start_kubectl k
+EOF
     task "Install kubectl-convert"
     curl -sLo "${TARGET}/bin/kubectl-convert" "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert"
     chmod +x "${TARGET}/bin/kubectl-convert"
