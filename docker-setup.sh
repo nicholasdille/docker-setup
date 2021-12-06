@@ -1007,12 +1007,9 @@ if install_porter; then
     chmod +x "${TARGET}/bin/porter"
     task "Install mixins"
     porter mixin install exec
-    porter mixin install cowsay
     porter mixin install docker
     porter mixin install docker-compose
     porter mixin install kubernetes
-    porter mixin install kustomize
-    porter mixin install helm3
     task "Install plugins"
     porter plugins install kubernetes
 fi
