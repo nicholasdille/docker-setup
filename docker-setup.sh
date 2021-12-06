@@ -1032,7 +1032,7 @@ if install_podman; then
     curl -sL "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
     | tar -xzC "${TARGET}"
     task "Install configuration"
-    mkdir -p /etc/containers/registries.{,conf}.d
+    mkdir -p /etc/containers/registries{,.conf}.d
     files=(
         registries.conf.d/00-shortnames.conf
         registries.d/default.yaml
