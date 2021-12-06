@@ -75,6 +75,7 @@
         "containerd/nerdctl",
         "containerd/stargz-snapshotter",
         "containernetworking/plugins",
+        "danielb42/kubeswitch",
         "docker/buildx",
         "docker/hub-tool",
         "docker/machine",
