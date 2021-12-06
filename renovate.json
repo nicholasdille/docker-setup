@@ -89,6 +89,7 @@
         "kubernetes-sigs/cluster-api-provider-aws",
         "kubernetes-sigs/kind",
         "kubernetes-sigs/krew",
+        "kubernetes/minikube",
         "mikefarah/yq",
         "moby/buildkit",
         "moby/moby",

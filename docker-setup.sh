@@ -231,6 +231,8 @@ ARKADE_VERSION=0.8.11
 CLUSTERCTL_VERSION=1.0.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
 CLUSTERAWSADM_VERSION=1.1.0
+# renovate: datasource=gitlab-releases depName=kubernetes/minikube
+MINIKUBE_VERSION=1.24.0
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.1
 
@@ -300,6 +302,7 @@ function ytt_matches_version()                        { is_executable "${TARGET}
 function arkade_matches_version()                     { is_executable "${TARGET}/bin/arkade"                         && test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)"                            == "${ARKADE_VERSION}"; }
 function clusterctl_matches_version()                 { is_executable "${TARGET}/bin/clusterctl"                     && test "$(${TARGET}/bin/clusterctl version --output short)"                                          == "v${CLUSTERCTL_VERSION}"; }
 function clusterawsadm_matches_version()              { is_executable "${TARGET}/bin/clusterawsadm"                  && test "$(${TARGET}/bin/clusterawsadm version --output short)"                                       == "v${CLUSTERAWSADM_VERSION}"; }
+function minikube_matches_version()                   { is_executable "${TARGET}/bin/minikube"                       && test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"     == "v${MINIKUBE_VERSION}"; }
 function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                            == "Version: ${TRIVY_VERSION}"; }
 
 function install_jq()                         { install_requested "jq"                         || ! jq_matches_version; }
@@ -347,6 +350,7 @@ function install_ytt()                        { install_requested "ytt"         
 function install_arkade()                     { install_requested "arkade"                     || ! arkade_matches_version; }
 function install_clusterctl()                 { install_requested "clusterctl"                 || ! clusterctl_matches_version; }
 function install_clusterawsadm()              { install_requested "clusterawsadm"              || ! clusterawsadm_matches_version; }
+function install_minikube()                   { install_requested "minikube"                   || ! minikube_matches_version; }
 function install_trivy()                      { install_requested "trivy"                      || ! trivy_matches_version; }
 
 section "Status"
@@ -395,6 +399,7 @@ echo -e "ytt                       : $(if install_ytt;                          
 echo -e "arkade                    : $(if install_arkade;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
 echo -e "clusterctl                : $(if install_clusterctl;                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
 echo -e "clusterawsadm             : $(if install_clusterawsadm;                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
+echo -e "minikube                  : $(if install_minikube;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MINIKUBE_VERSION}${RESET}"
 echo -e "trivy                     : $(if install_trivy;                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
 echo
 
@@ -1306,6 +1311,18 @@ if install_clusterawsadm; then
     clusterawsadm completion bash >"${TARGET}/share/bash-completion/completions/clusterawsadm"
     clusterawsadm completion fish >"${TARGET}/share/fish/vendor_completions.d/clusterawsadm.fish"
     clusterawsadm completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterawsadm"
+fi
+
+# minikube
+if install_minikube; then
+    section "minikube ${MINIKUBE_VERSION}"
+    task "Install binary"
+    curl -sLo "${TARGET}/bin/minikube" "https://github.com/kubernetes/minikube/releases/download/v${MINIKUBE_VERSION}/minikube-linux-amd64"
+    task "Set executable bits"
+    chmod +x "${TARGET}/bin/minikube"
+    minikube completion bash >"${TARGET}/share/bash-completion/completions/minikube"
+    minikube completion fish >"${TARGET}/share/fish/vendor_completions.d/minikube.fish"
+    minikube completion zsh >"${TARGET}/share/zsh/vendor-completions/_minikube"
 fi
 
 # Security
