@@ -150,7 +150,7 @@ CONTAINERD_VERSION=1.5.8
 # renovate: datasource=github-releases depName=rootless-containers/rootlesskit
 ROOTLESSKIT_VERSION=0.14.6
 # renovate: datasource=github-releases depName=opencontainers/runc
-RUNC_VERSION=1.0.2
+RUNC_VERSION=1.0.3
 # renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
 DOCKER_COMPOSE_V1_VERSION=1.29.2
 # renovate: datasource=github-releases depName=docker/compose
