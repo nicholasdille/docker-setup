@@ -208,7 +208,7 @@ CRUN_VERSION=1.3
 # renovate: datasource=github-releases depName=nicholasdille/skopeo-static
 SKOPEO_VERSION=1.5.2
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=1.22.4
+KUBECTL_VERSION=1.23.0
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
 KIND_VERSION=0.11.1
 # renovate: datasource=github-releases depName=rancher/k3d
