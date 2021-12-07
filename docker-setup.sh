@@ -222,7 +222,7 @@ KUSTOMIZE_VERSION=4.4.1
 # renovate: datasource=github-releases depName=kubernetes/kompose versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
 KOMPOSE_VERSION=1.26.0
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
-KAPP_VERSION=0.42.0
+KAPP_VERSION=0.43.0
 # renovate: datasource=github-releases depName=vmware-tanzu/carvel-ytt
 YTT_VERSION=0.38.0
 # renovate: datasource=github-releases depName=alexellis/arkade
