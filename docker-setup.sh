@@ -236,7 +236,7 @@ MINIKUBE_VERSION=1.24.0
 # renovate: datasource=gitlab-releases depName=danielb42/kubeswitch
 KUBESWITCH_VERSION=1.4.0
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=0.21.1
+TRIVY_VERSION=0.21.2
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
