@@ -180,7 +180,7 @@ ORAS_VERSION=0.12.0
 # renovate: datasource=github-releases depName=regclient/regclient
 REGCLIENT_VERSION=0.3.9
 # renovate: datasource=github-releases depName=sigstore/cosign
-COSIGN_VERSION=1.3.1
+COSIGN_VERSION=1.4.0
 # renovate: datasource=github-releases depName=containerd/nerdctl
 NERDCTL_VERSION=0.14.0
 # renovate: datasource=github-releases depName=containernetworking/plugins
