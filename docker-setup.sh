@@ -212,7 +212,7 @@ KUBECTL_VERSION=1.23.0
 # renovate: datasource=github-releases depName=kubernetes-sigs/kind
 KIND_VERSION=0.11.1
 # renovate: datasource=github-releases depName=rancher/k3d
-K3D_VERSION=5.2.0
+K3D_VERSION=5.2.1
 # renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION=3.7.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/krew
