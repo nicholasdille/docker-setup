@@ -156,7 +156,7 @@ DOCKER_COMPOSE_V1_VERSION=1.29.2
 # renovate: datasource=github-releases depName=docker/compose
 DOCKER_COMPOSE_V2_VERSION=2.2.2
 # renovate: datasource=github-releases depName=docker/scan-cli-plugin
-DOCKER_SCAN_VERSION=0.9.0
+DOCKER_SCAN_VERSION=0.10.0
 # renovate: datasource=github-releases depName=rootless-containers/slirp4netns
 SLIRP4NETNS_VERSION=1.1.12
 # renovate: datasource=github-releases depName=docker/hub-tool
