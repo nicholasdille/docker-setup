@@ -1028,6 +1028,11 @@ if install_podman; then
     task "Install binary"
     curl -sL "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
     | tar -xzC "${TARGET}"
+    task "Install systemd unit"
+    curl -sLo "/etc/systemd/system/podman.service" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service"
+    curl -sLo "/etc/systemd/system/podman.socket" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket"
+    curl -sLo "${TARGET}/lib/tmpfiles.d/podman-docker.conf" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf"
+    systemctl daemon-reload
     task "Install configuration"
     mkdir -p /etc/containers/registries{,.conf}.d
     files=(
