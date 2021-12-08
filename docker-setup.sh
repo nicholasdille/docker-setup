@@ -174,7 +174,7 @@ IMG_VERSION=0.5.11
 # renovate: datasource=github-releases depName=wagoodman/dive
 DIVE_VERSION=0.10.0
 # renovate: datasource=github-releases depName=portainer/portainer
-PORTAINER_VERSION=2.9.3
+PORTAINER_VERSION=2.11.0
 # renovate: datasource=github-releases depName=oras-project/oras
 ORAS_VERSION=0.12.0
 # renovate: datasource=github-releases depName=regclient/regclient
