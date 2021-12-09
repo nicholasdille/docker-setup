@@ -1084,6 +1084,7 @@ if install_krew; then
     cat >/etc/profile.d/krew.sh <<"EOF"
 export PATH="${HOME}/.krew/bin:${PATH}"
 EOF
+    # shellcheck source=/dev/null
     source /etc/profile.d/krew.sh
     task "Install krew for current user"
     krew install krew
