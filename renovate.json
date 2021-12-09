@@ -27,7 +27,8 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "^docker-setup.sh$"
+        "^docker-setup.sh$",
+        "^.github/workflows/release.yml$"
       ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
@@ -84,6 +85,7 @@
         "genuinetools/img",
         "getporter/porter",
         "helm/helm",
+        "koalaman/shellcheck",
         "kubernetes/kompose",
         "kubernetes/kubernetes",
         "kubernetes-sigs/cluster-api",
