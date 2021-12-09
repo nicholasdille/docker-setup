@@ -1222,20 +1222,6 @@ if install_helm; then
     helm completion bash >"${TARGET}/share/bash-completion/completions/helm"
     helm completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
     helm completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
-    task "Install plugins for current user"
-    helm plugin install https://github.com/mstrzele/helm-edit
-    helm plugin install https://github.com/databus23/helm-diff
-    helm plugin install https://github.com/aslafy-z/helm-git
-    helm plugin install https://github.com/sstarcher/helm-release
-    helm plugin install https://github.com/maorfr/helm-backup
-    helm plugin install https://github.com/technosophos/helm-keybase
-    helm plugin install https://github.com/technosophos/helm-gpg
-    helm plugin install https://github.com/cloudogu/helm-sudo
-    helm plugin install https://github.com/bloodorangeio/helm-oci-mirror
-    helm plugin install https://github.com/UniKnow/helm-outdated
-    helm plugin install https://github.com/rimusz/helm-chartify
-    helm plugin install https://github.com/random-dwi/helm-doc
-    helm plugin install https://github.com/sapcc/helm-outdated-dependencies
 fi
 
 # kustomize
