@@ -38,7 +38,7 @@
 
   "packageRules": [
     {
-      "updateTypes": ["patch", "pin", "digest"],
+      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
       "automerge": true
     },
     {
