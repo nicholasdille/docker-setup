@@ -198,9 +198,9 @@ FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 # renovate: datasource=github-releases depName=getporter/porter
 PORTER_VERSION=0.38.8
 # renovate: datasource=github-releases depName=nicholasdille/podman-static
-PODMAN_VERSION=v3.4.4
+PODMAN_VERSION=3.4.4
 # renovate: datasource=github-releases depName=nicholasdille/conmon-static
-CONMON_VERSION=v2.0.31
+CONMON_VERSION=2.0.31
 # renovate: datasource=github-releases depName=nicholasdille/buildah-static
 BUILDAH_VERSION=1.23.1
 # renovate: datasource=github-releases depName=nicholasdille/crun-static
