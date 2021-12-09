@@ -32,7 +32,7 @@
       ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s",
-        "^.*?_VERSION=(?<currentValue>.*)\\s+#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?$"
+        "^.+_VERSION=(?<currentValue>.*)\\s#\\srenovate:\\sdatasource=(?<datasource>.*?)\\sdepName=(?<depName>.*?)(\\sversioning=(?<versioning>.*?))?$"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
