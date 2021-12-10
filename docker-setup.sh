@@ -226,7 +226,7 @@ ARKADE_VERSION=0.8.11
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api
 CLUSTERCTL_VERSION=1.0.2
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
-CLUSTERAWSADM_VERSION=1.1.0
+CLUSTERAWSADM_VERSION=1.2.0
 # renovate: datasource=gitlab-releases depName=kubernetes/minikube
 MINIKUBE_VERSION=1.24.0
 # renovate: datasource=gitlab-releases depName=danielb42/kubeswitch
