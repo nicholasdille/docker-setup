@@ -132,7 +132,7 @@ tools+=(docker containerd rootlesskit runc docker-compose docker-scan slirp4netn
 tools+=(trivy img dive portainer oras regclient cosign nerdctl cni cni-isolation porter)
 tools+=(stargz-snapshotter imgcrypt fuse-overlayfs fuse-overlayfs-snapshotter)
 tools+=(podman conmon buildah crun skopeo)
-tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl clusterawsadm minikube kubeswitch k3s)
+tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl clusterawsadm minikube kubeswitch k3s crictl)
 
 GO_VERSION=1.17.5
 JQ_VERSION=1.6
@@ -184,6 +184,7 @@ CLUSTERAWSADM_VERSION=1.2.0
 MINIKUBE_VERSION=1.24.0
 KUBESWITCH_VERSION=1.4.0
 K3S_VERSION=1.22.4+k3s1
+CRICTL_VERSION=1.22.0
 TRIVY_VERSION=0.21.2
 
 : "${DOCKER_COMPOSE:=v2}"
@@ -257,6 +258,7 @@ function clusterawsadm_matches_version()              { is_executable "${TARGET}
 function minikube_matches_version()                   { is_executable "${TARGET}/bin/minikube"                       && test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function k3s_matches_version()                        { is_executable "${TARGET}/bin/k3s"                            && test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
+function crictl_matches_version()                     { is_executable "${TARGET}/bin/crictl"                         && test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
 function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                    == "Version: ${TRIVY_VERSION}"; }
 
 function required-jq()                         { user_requested "jq"                         || ! jq_matches_version; }
@@ -307,6 +309,7 @@ function required-clusterawsadm()              { user_requested "clusterawsadm" 
 function required-minikube()                   { user_requested "minikube"                   || ! minikube_matches_version; }
 function required-kubeswitch()                 { user_requested "kubeswitch"                 || ! kubeswitch_matches_version; }
 function required-k3s()                        { user_requested "k3s"                        || ! k3s_matches_version; }
+function required-crictl()                     { user_requested "crictl"                     || ! crictl_matches_version; }
 function required-trivy()                      { user_requested "trivy"                      || ! trivy_matches_version; }
 
 INTERACTIVE_OUTPUT=true
@@ -873,7 +876,7 @@ function install-cni-isolation() {
     echo "CNI isolation ${CNI_ISOLATION_VERSION}"
     progress cni-isolation "Install binaries"
     curl -sL "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
-    | tar -xzC "${TARGET}/libexec/cni"
+    | tar -xzC "${TARGET}/libexec/cni" --no-same-owner
     mkdir -p "${DOCKER_SETUP_CACHE}/cni-isolation"
     touch "${DOCKER_SETUP_CACHE}/cni-isolation/${CNI_ISOLATION_VERSION}"
 }
@@ -934,7 +937,7 @@ function install-conmon() {
     echo "conmon ${CONMON_VERSION}"
     progress conmon "Install binary"
     curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz" \
-    | tar -xzC "${TARGET}"
+    | tar -xzC "${TARGET}" --no-same-owner
 }
 
 function install-podman() {
@@ -965,28 +968,28 @@ function install-builah() {
     echo "buildah ${BUILDAH_VERSION}"
     progress buildah "Install binary"
     curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
-    | tar -xzC "${TARGET}"
+    | tar -xzC "${TARGET}" --no-same-owner
 }
 
 function install-crun() {
     echo "crun ${CRUN_VERSION}"
     progress crun "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
-    | tar -xzC "${TARGET}"
+    | tar -xzC "${TARGET}" --no-same-owner
 }
 
 function install-skopeo() {
     echo "skopeo ${SKOPEO_VERSION}"
     progress skopeo "Install binary"
     curl -sL "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz" \
-    | tar -xzC "${TARGET}"
+    | tar -xzC "${TARGET}" --no-same-owner
 }
 
 function install-krew() {
     echo "krew ${KREW_VERSION}"
     progress krew "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" ./krew-linux_amd64
+    | tar -xzC "${TARGET}/bin" --no-same-owner ./krew-linux_amd64
     mv "${TARGET}/bin/krew-linux_amd64" "${TARGET}/bin/krew"
     progress krew "Add to path"
     cat >/etc/profile.d/krew.sh <<"EOF"
@@ -1273,6 +1276,13 @@ EOF
         progress k3s "Reload systemd"
         systemctl daemon-reload
     fi
+}
+
+function install-crictl() {
+    echo "crictl ${CRICTL_VERSION}"
+    progress crictl "Install binary"
+    curl -sL "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CRICTL_VERSION}/crictl-v${CRICTL_VERSION}-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
 }
 
 function install-trivy() {

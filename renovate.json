@@ -388,6 +388,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CRICTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kubernetes-sigs/cri-tools",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "TRIVY_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "aquasecurity/trivy",
       "datasourceTemplate": "github-releases",
