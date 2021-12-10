@@ -230,9 +230,9 @@ ARKADE_VERSION=0.8.11
 CLUSTERCTL_VERSION=1.0.2
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
 CLUSTERAWSADM_VERSION=1.1.0
-# renovate: datasource=gitlab-releases depName=kubernetes/minikube
+# renovate: datasource=github-releases depName=kubernetes/minikube
 MINIKUBE_VERSION=1.24.0
-# renovate: datasource=gitlab-releases depName=danielb42/kubeswitch
+# renovate: datasource=github-releases depName=danielb42/kubeswitch
 KUBESWITCH_VERSION=1.4.0
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.2
