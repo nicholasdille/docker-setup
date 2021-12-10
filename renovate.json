@@ -68,11 +68,18 @@
       "extractVersion": "^go(?<version>.+)$"
     },
     {
+      "matchPackageNames": [
+        "containers/fuse-overlayfs",
+        "nicholasdille/crun-static"
+      ],
+      "versioning": "loose",
+      "extractVersion": "regex:^v(?<version>\\d+\\.\\d+(\\.\\d+)?)$"
+    },
+    {
       "packageNames": [
         "AkihiroSuda/cni-isolation",
         "aquasecurity/trivy",
         "containerd/containerd",
-        "containers/fuse-overlayfs",
         "containerd/fuse-overlayfs-snapshotter",
         "containerd/nerdctl",
         "containerd/stargz-snapshotter",
@@ -100,7 +107,6 @@
         "nicholasdille/podman-static",
         "nicholasdille/conmon-static",
         "nicholasdille/buildah-static",
-        "nicholasdille/crun-static",
         "nicholasdille/skopeo-static",
         "opencontainers/runc",
         "oras-project/oras",
