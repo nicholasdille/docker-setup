@@ -136,7 +136,6 @@ tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl 
 
 GO_VERSION=1.17.5
 JQ_VERSION=1.6
-# renovate: datasource=github-releases depName=mikefarah/yq
 YQ_VERSION=4.16.1
 # renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.11

@@ -50,6 +50,12 @@
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^jq-(?<version>.+?)$",
       "versioningTemplate": "^(?<major>\\d+?)\\.(?<minor>\\d+?)(\\.(?<patch>\\d+?))?$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mikefarah/yq",
+      "datasourceTemplate": "github-releases"
     }
   ],
 
@@ -106,7 +112,6 @@
         "kubernetes-sigs/kind",
         "kubernetes-sigs/krew",
         "kubernetes/minikube",
-        "mikefarah/yq",
         "moby/buildkit",
         "moby/moby",
         "nicholasdille/podman-static",
