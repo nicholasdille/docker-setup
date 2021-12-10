@@ -31,6 +31,7 @@ echo -e -n "${RESET}"
 : "${REINSTALL:=false}"
 : "${NO_SPINNER:=false}"
 : "${SIMPLE_OUTPUT:=false}"
+: "${SHOW_VERSION:=false}"
 requested_tools=()
 while test "$#" -gt 0; do
     case "$1" in
@@ -51,6 +52,9 @@ while test "$#" -gt 0; do
             ;;
         --simple-output)
             SIMPLE_OUTPUT=true
+            ;;
+        --version)
+            SHOW_VERSION=true
             ;;
         *)
             requested_tools+=("$1")
@@ -118,6 +122,11 @@ fi
 DOCKER_SETUP_VERSION=main
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
+
+if ${SHOW_VERSION}; then
+    echo "docker-setup version ${DOCKER_SETUP_VERSION}"
+    exit
+fi
 
 DEPENDENCIES=(curl git iptables tput)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
