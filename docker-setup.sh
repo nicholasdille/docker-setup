@@ -29,7 +29,9 @@ echo -e -n "${RESET}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
 : "${REINSTALL:=false}"
-tools=()
+: "${NO_SPINNER:=false}"
+: "${SIMPLE_OUTPUT:=false}"
+requested_tools=()
 while test "$#" -gt 0; do
     case "$1" in
         --check-only)
@@ -44,8 +46,14 @@ while test "$#" -gt 0; do
         --reinstall)
             REINSTALL=true
             ;;
+        --no-spinner)
+            NO_SPINNER=true
+            ;;
+        --simple-output)
+            SIMPLE_OUTPUT=true
+            ;;
         *)
-            tools+=("$1")
+            requested_tools+=("$1")
             ;;
     esac
 
@@ -94,9 +102,6 @@ DOCKER_COMPOSE           Specifies which major version of
 DOCKER_PLUGINS_PATH      Where to store Docker CLI plugins.
                          Defaults to ${TARGET}/libexec/docker/cli-plugins
 
-DOCKER_SETUP_CACHE       Where to cache data. Defaults to
-                         /var/cache/docker-setup
-
 Tools specified on the command line will be reinstalled regardless
 of --reinstall and REINSTALL.
 
@@ -107,16 +112,14 @@ fi
 : "${TARGET:=/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
 : "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
+: "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
 : "${DOCKER_SETUP_CACHE:=/var/cache/docker-setup}"
+: "${DOCKER_SETUP_PROGRESS:=${DOCKER_SETUP_CACHE}/progress}"
 DOCKER_SETUP_VERSION=main
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
 
-DEPENDENCIES=(
-    "curl"
-    "git"
-    "iptables"
-)
+DEPENDENCIES=(curl git iptables tput)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
         echo "ERROR: Missing ${DEPENDENCY}."
@@ -124,18 +127,12 @@ for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     fi
 done
 
-function section() {
-    echo -e -n "${GREEN}"
-    echo
-    echo -e "############################################################"
-    echo -e "### $1"
-    echo -e "############################################################"
-    echo -e -n "${RESET}"
-}
-
-function task() {
-    echo "$1"
-}
+tools=(jq yq)
+tools+=(docker containerd rootlesskit runc docker-compose docker-scan slirp4netns hub-tool docker-machine buildx manifest-tool buildkit)
+tools+=(trivy img dive portainer oras regclient cosign nerdctl cni cni-isolation porter)
+tools+=(stargz-snapshotter imgcrypt fuse-overlayfs fuse-overlayfs-snapshotter)
+tools+=(podman conmon buildah crun skopeo)
+tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl clusterawsadm minikube kubeswitch)
 
 GO_VERSION=1.17.5
 # renovate: datasource=github-releases depName=stedolan/jq versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
@@ -192,7 +189,7 @@ STARGZ_SNAPSHOTTER_VERSION=0.10.1
 IMGCRYPT_VERSION=1.1.2
 # renovate: datasource=github-releases depName=containers/fuse-overlayfs
 FUSE_OVERLAYFS_VERSION=1.6
-# renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
+# renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 # renovate: datasource=github-releases depName=getporter/porter
 PORTER_VERSION=0.38.8
@@ -204,7 +201,7 @@ CONMON_VERSION=2.0.31
 BUILDAH_VERSION=1.23.1
 # renovate: datasource=github-releases depName=nicholasdille/crun-static
 CRUN_VERSION=1.3
-# renovate: datasource=github-releases depName=nicholasdille/skopeo-static versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
+# renovate: datasource=github-releases depName=nicholasdille/skopeo-static
 SKOPEO_VERSION=1.5.2
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=1.23.0
@@ -230,33 +227,35 @@ ARKADE_VERSION=0.8.11
 CLUSTERCTL_VERSION=1.0.2
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
 CLUSTERAWSADM_VERSION=1.1.0
-# renovate: datasource=github-releases depName=kubernetes/minikube
+# renovate: datasource=gitlab-releases depName=kubernetes/minikube
 MINIKUBE_VERSION=1.24.0
-# renovate: datasource=github-releases depName=danielb42/kubeswitch
+# renovate: datasource=gitlab-releases depName=danielb42/kubeswitch
 KUBESWITCH_VERSION=1.4.0
 # renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.2
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
+    # shellcheck disable=SC2034
     DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V1_VERSION}"
 elif test "${DOCKER_COMPOSE}" == "v2"; then
+    # shellcheck disable=SC2034
     DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V2_VERSION}"
 else
     echo -e "${RED}ERROR: Unknown value for DOCKER_COMPOSE. Supported values are v1 and v2 but got ${DOCKER_COMPOSE}.${RESET}"
     exit 1
 fi
 
-function install_requested() {
+function user_requested() {
     local tool=$1
-    ${REINSTALL} || printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"
+    ${REINSTALL} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"
 }
 
 function is_executable() {
     local file=$1
-    test -f "${file}" && test -x "${file}"           
-}           
-           
+    test -f "${file}" && test -x "${file}"
+}
+
 function jq_matches_version()                         { is_executable "${TARGET}/bin/jq"                             && test "$(${TARGET}/bin/jq --version)"                                                                == "jq-${JQ_VERSION}"; }
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             && test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                                == "${YQ_VERSION}"; }
 function docker_matches_version()                     { is_executable "${TARGET}/bin/dockerd"                        && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)"                                             == "Docker version ${DOCKER_VERSION}"; }
@@ -307,104 +306,88 @@ function minikube_matches_version()                   { is_executable "${TARGET}
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "/var/cache/docker-setup/kubeswitch/${KUBESWITCH_VERSION}"; }
 function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                             == "Version: ${TRIVY_VERSION}"; }
 
-function install_jq()                         { install_requested "jq"                         || ! jq_matches_version; }
-function install_yq()                         { install_requested "yq"                         || ! yq_matches_version; }
-function install_docker()                     { install_requested "docker"                     || ! docker_matches_version; }
-function install_containerd()                 { install_requested "containerd"                 || ! containerd_matches_version; }
-function install_runc()                       { install_requested "runc"                       || ! runc_matches_version; }
-function install_rootlesskit()                { install_requested "rootlesskit"                || ! rootlesskit_matches_version; }
-function install_docker_compose()             { install_requested "docker-compose"             || ! eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
-function install_docker_scan()                { install_requested "docker-scan"                || ! docker_scan_matches_version; }
-function install_slirp4netns()                { install_requested "slirp4netns"                || ! slirp4netns_matches_version; }
-function install_hub_tool()                   { install_requested "hub-tool"                   || ! hub_tool_matches_version; }
-function install_docker_machine()             { install_requested "docker-machine"             || ! docker_machine_matches_version; }
-function install_buildx()                     { install_requested "buildx"                     || ! buildx_matches_version; }
-function install_manifest_tool()              { install_requested "manifest-tool"              || ! manifest_tool_matches_version; }
-function install_buildkit()                   { install_requested "buildkit"                   || ! buildkit_matches_version; }
-function install_img()                        { install_requested "img"                        || ! img_matches_version; }
-function install_dive()                       { install_requested "dive"                       || ! dive_matches_version; }
-function install_portainer()                  { install_requested "portainer"                  || ! portainer_matches_version; }
-function install_oras()                       { install_requested "oras"                       || ! oras_matches_version; }
-function install_regclient()                  { install_requested "regclient"                  || ! regclient_matches_version; }
-function install_cosign()                     { install_requested "cosign"                     || ! cosign_matches_version; }
-function install_nerdctl()                    { install_requested "nerdctl"                    || ! nerdctl_matches_version; }
-function install_cni()                        { install_requested "cni"                        || ! cni_matches_version; }
-function install_cni_isolaton()               { install_requested "cni-isolation"              || ! cni_isolation_matches_version; }
-function install_stargz_snapshotter()         { install_requested "stargz-snapshotter"         || ! stargz_snapshotter_matches_version; }
-function install_imgcrypt()                   { install_requested "imgcrypt"                   || ! imgcrypt_matches_version; }
-function install_fuse_overlayfs()             { install_requested "fuse-overlayfs"             || ! fuse_overlayfs_matches_version; }
-function install_fuse_overlayfs_snapshotter() { install_requested "fuse-overlayfs-snapshotter" || ! fuse_overlayfs_snapshotter_matches_version; }
-function install_porter()                     { install_requested "porter"                     || ! porter_matches_version; }
-function install_podman()                     { install_requested "podman"                     || ! podman_matches_version; }
-function install_conmon()                     { install_requested "conmon"                     || ! conmon_matches_version; }
-function install_buildah()                    { install_requested "buildah"                    || ! buildah_matches_version; }
-function install_crun()                       { install_requested "crun"                       || ! crun_matches_version; }
-function install_skopeo()                     { install_requested "skopeo"                     || ! skopeo_matches_version; }
-function install_kubectl()                    { install_requested "kubectl"                    || ! kubectl_matches_version; }
-function install_kind()                       { install_requested "kind"                       || ! kind_matches_version; }
-function install_k3d()                        { install_requested "k3d"                        || ! k3d_matches_version; }
-function install_helm()                       { install_requested "helm"                       || ! helm_matches_version; }
-function install_krew()                       { install_requested "krew"                       || ! krew_matches_version; }
-function install_kustomize()                  { install_requested "kustomize"                  || ! kustomize_matches_version; }
-function install_kompose()                    { install_requested "kompose"                    || ! kompose_matches_version; }
-function install_kapp()                       { install_requested "kapp"                       || ! kapp_matches_version; }
-function install_ytt()                        { install_requested "ytt"                        || ! ytt_matches_version; }
-function install_arkade()                     { install_requested "arkade"                     || ! arkade_matches_version; }
-function install_clusterctl()                 { install_requested "clusterctl"                 || ! clusterctl_matches_version; }
-function install_clusterawsadm()              { install_requested "clusterawsadm"              || ! clusterawsadm_matches_version; }
-function install_minikube()                   { install_requested "minikube"                   || ! minikube_matches_version; }
-function install_kubeswitch()                 { install_requested "kubeswitch"                 || ! kubeswitch_matches_version; }
-function install_trivy()                      { install_requested "trivy"                      || ! trivy_matches_version; }
+function required-jq()                         { user_requested "jq"                         || ! jq_matches_version; }
+function required-yq()                         { user_requested "yq"                         || ! yq_matches_version; }
+function required-docker()                     { user_requested "docker"                     || ! docker_matches_version; }
+function required-containerd()                 { user_requested "containerd"                 || ! containerd_matches_version; }
+function required-runc()                       { user_requested "runc"                       || ! runc_matches_version; }
+function required-rootlesskit()                { user_requested "rootlesskit"                || ! rootlesskit_matches_version; }
+function required-docker-compose()             { user_requested "docker-compose"             || ! eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
+function required-docker-scan()                { user_requested "docker-scan"                || ! docker_scan_matches_version; }
+function required-slirp4netns()                { user_requested "slirp4netns"                || ! slirp4netns_matches_version; }
+function required-hub-tool()                   { user_requested "hub-tool"                   || ! hub_tool_matches_version; }
+function required-docker-machine()             { user_requested "docker-machine"             || ! docker_machine_matches_version; }
+function required-buildx()                     { user_requested "buildx"                     || ! buildx_matches_version; }
+function required-manifest-tool()              { user_requested "manifest-tool"              || ! manifest_tool_matches_version; }
+function required-buildkit()                   { user_requested "buildkit"                   || ! buildkit_matches_version; }
+function required-img()                        { user_requested "img"                        || ! img_matches_version; }
+function required-dive()                       { user_requested "dive"                       || ! dive_matches_version; }
+function required-portainer()                  { user_requested "portainer"                  || ! portainer_matches_version; }
+function required-oras()                       { user_requested "oras"                       || ! oras_matches_version; }
+function required-regclient()                  { user_requested "regclient"                  || ! regclient_matches_version; }
+function required-cosign()                     { user_requested "cosign"                     || ! cosign_matches_version; }
+function required-nerdctl()                    { user_requested "nerdctl"                    || ! nerdctl_matches_version; }
+function required-cni()                        { user_requested "cni"                        || ! cni_matches_version; }
+function required-cni-isolation()              { user_requested "cni-isolation"              || ! cni_isolation_matches_version; }
+function required-stargz-snapshotter()         { user_requested "stargz-snapshotter"         || ! stargz_snapshotter_matches_version; }
+function required-imgcrypt()                   { user_requested "imgcrypt"                   || ! imgcrypt_matches_version; }
+function required-fuse-overlayfs()             { user_requested "fuse-overlayfs"             || ! fuse_overlayfs_matches_version; }
+function required-fuse-overlayfs-snapshotter() { user_requested "fuse-overlayfs-snapshotter" || ! fuse_overlayfs_snapshotter_matches_version; }
+function required-porter()                     { user_requested "porter"                     || ! porter_matches_version; }
+function required-podman()                     { user_requested "podman"                     || ! podman_matches_version; }
+function required-conmon()                     { user_requested "conmon"                     || ! conmon_matches_version; }
+function required-buildah()                    { user_requested "buildah"                    || ! buildah_matches_version; }
+function required-crun()                       { user_requested "crun"                       || ! crun_matches_version; }
+function required-skopeo()                     { user_requested "skopeo"                     || ! skopeo_matches_version; }
+function required-kubectl()                    { user_requested "kubectl"                    || ! kubectl_matches_version; }
+function required-kind()                       { user_requested "kind"                       || ! kind_matches_version; }
+function required-k3d()                        { user_requested "k3d"                        || ! k3d_matches_version; }
+function required-helm()                       { user_requested "helm"                       || ! helm_matches_version; }
+function required-krew()                       { user_requested "krew"                       || ! krew_matches_version; }
+function required-kustomize()                  { user_requested "kustomize"                  || ! kustomize_matches_version; }
+function required-kompose()                    { user_requested "kompose"                    || ! kompose_matches_version; }
+function required-kapp()                       { user_requested "kapp"                       || ! kapp_matches_version; }
+function required-ytt()                        { user_requested "ytt"                        || ! ytt_matches_version; }
+function required-arkade()                     { user_requested "arkade"                     || ! arkade_matches_version; }
+function required-clusterctl()                 { user_requested "clusterctl"                 || ! clusterctl_matches_version; }
+function required-clusterawsadm()              { user_requested "clusterawsadm"              || ! clusterawsadm_matches_version; }
+function required-minikube()                   { user_requested "minikube"                   || ! minikube_matches_version; }
+function required-kubeswitch()                 { user_requested "kubeswitch"                 || ! kubeswitch_matches_version; }
+function required-trivy()                      { user_requested "trivy"                      || ! trivy_matches_version; }
 
-section "Status"
-echo -e "jq                        : $(if install_jq;                            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${JQ_VERSION}${RESET}"
-echo -e "yq                        : $(if install_yq;                            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YQ_VERSION}${RESET}"
-echo -e "docker                    : $(if install_docker;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_VERSION}${RESET}"
-echo -e "containerd                : $(if install_containerd;                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONTAINERD_VERSION}${RESET}"
-echo -e "rootlesskit               : $(if install_rootlesskit;                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ROOTLESSKIT_VERSION}${RESET}"
-echo -e "runc                      : $(if install_runc;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${RUNC_VERSION}${RESET}"
-echo -e "docker-compose            : $(if install_docker_compose;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_COMPOSE_VERSION}${RESET}"
-echo -e "docker-scan               : $(if install_docker_scan;                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_SCAN_VERSION}${RESET}"
-echo -e "slirp4netns               : $(if install_slirp4netns;                   then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SLIRP4NETNS_VERSION}${RESET}"
-echo -e "hub-tool                  : $(if install_hub_tool;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HUB_TOOL_VERSION}${RESET}"
-echo -e "docker-machine            : $(if install_docker_machine;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DOCKER_MACHINE_VERSION}${RESET}"
-echo -e "buildx                    : $(if install_buildx;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDX_VERSION}${RESET}"
-echo -e "manifest-tool             : $(if install_manifest_tool;                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MANIFEST_TOOL_VERSION}${RESET}"
-echo -e "buildkit                  : $(if install_buildkit;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDKIT_VERSION}${RESET}"
-echo -e "img                       : $(if install_img;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMG_VERSION}${RESET}"
-echo -e "dive                      : $(if install_dive;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${DIVE_VERSION}${RESET}"
-echo -e "portainer                 : $(if install_portainer;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTAINER_VERSION}${RESET}"
-echo -e "oras                      : $(if install_oras;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ORAS_VERSION}${RESET}"
-echo -e "regclient                 : $(if install_regclient;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${REGCLIENT_VERSION}${RESET}"
-echo -e "cosign                    : $(if install_cosign;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${COSIGN_VERSION}${RESET}"
-echo -e "nerdctl                   : $(if install_nerdctl;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${NERDCTL_VERSION}${RESET}"
-echo -e "cni                       : $(if install_cni;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_VERSION}${RESET}"
-echo -e "cni-isolation             : $(if install_cni_isolaton;                  then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CNI_ISOLATION_VERSION}${RESET}"
-echo -e "stargz-snapshotter        : $(if install_stargz_snapshotter;            then echo "${YELLOW}"; else echo "${GREEN}"; fi)${STARGZ_SNAPSHOTTER_VERSION}${RESET}"
-echo -e "imgcrypt                  : $(if install_imgcrypt;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${IMGCRYPT_VERSION}${RESET}"
-echo -e "fuse-overlayfs            : $(if install_fuse_overlayfs;                then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_VERSION}${RESET}"
-echo -e "fuse-overlayfs-snapshotter: $(if install_fuse_overlayfs_snapshotter;    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}${RESET}"
-echo -e "porter                    : $(if install_porter;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PORTER_VERSION}${RESET}"
-echo -e "podman                    : $(if install_podman;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${PODMAN_VERSION}${RESET}"
-echo -e "conmon                    : $(if install_conmon;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CONMON_VERSION}${RESET}"
-echo -e "buildah                   : $(if install_buildah;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${BUILDAH_VERSION}${RESET}"
-echo -e "crun                      : $(if install_crun;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CRUN_VERSION}${RESET}"
-echo -e "skopeo                    : $(if install_skopeo;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${SKOPEO_VERSION}${RESET}"
-echo -e "kubectl                   : $(if install_kubectl;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBECTL_VERSION}${RESET}"
-echo -e "kind                      : $(if install_kind;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KIND_VERSION}${RESET}"
-echo -e "k3d                       : $(if install_k3d;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${K3D_VERSION}${RESET}"
-echo -e "helm                      : $(if install_helm;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${HELM_VERSION}${RESET}"
-echo -e "krew                      : $(if install_krew;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KREW_VERSION}${RESET}"
-echo -e "kustomize                 : $(if install_kustomize;                     then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUSTOMIZE_VERSION}${RESET}"
-echo -e "kompose                   : $(if install_kompose;                       then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KOMPOSE_VERSION}${RESET}"
-echo -e "kapp                      : $(if install_kapp;                          then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KAPP_VERSION}${RESET}"
-echo -e "ytt                       : $(if install_ytt;                           then echo "${YELLOW}"; else echo "${GREEN}"; fi)${YTT_VERSION}${RESET}"
-echo -e "arkade                    : $(if install_arkade;                        then echo "${YELLOW}"; else echo "${GREEN}"; fi)${ARKADE_VERSION}${RESET}"
-echo -e "clusterctl                : $(if install_clusterctl;                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERCTL_VERSION}${RESET}"
-echo -e "clusterawsadm             : $(if install_clusterawsadm;                 then echo "${YELLOW}"; else echo "${GREEN}"; fi)${CLUSTERAWSADM_VERSION}${RESET}"
-echo -e "minikube                  : $(if install_minikube;                      then echo "${YELLOW}"; else echo "${GREEN}"; fi)${MINIKUBE_VERSION}${RESET}"
-echo -e "kubeswitch                : $(if install_kubeswitch;                    then echo "${YELLOW}"; else echo "${GREEN}"; fi)${KUBESWITCH_VERSION}${RESET}"
-echo -e "trivy                     : $(if install_trivy;                         then echo "${YELLOW}"; else echo "${GREEN}"; fi)${TRIVY_VERSION}${RESET}"
+INTERACTIVE_OUTPUT=true
+if test "$(tput lines)" -lt "${#tools[@]}" || ${SIMPLE_OUTPUT}; then
+    INTERACTIVE_OUTPUT=false
+fi
+
+function progress() {
+    local tool="$1"
+    local message="$2"
+    echo "${message}"
+    echo "${message}" | head -n 1 | tr -d '\n' >"${DOCKER_SETUP_PROGRESS}/${tool}"
+}
+
+declare -A tool_required
+max_length=0
+for tool in "${tools[@]}"; do
+    tool_required[${tool}]=$(if eval "required-${tool}"; then echo "true"; else echo "false"; fi)
+
+    if test "${#tool}" -gt "${max_length}"; then
+        max_length=${#tool}
+    fi
+done
+declare -A tool_spaces
+declare -A tool_version
+declare -A tool_color
+for tool in "${tools[@]}"; do
+    VAR_NAME="${tool^^}_VERSION"
+    VERSION="${VAR_NAME//-/_}"
+    tool_version[${tool}]="${!VERSION}"
+    tool_spaces[${tool}]=$(printf ' %.0s' $(seq 0 $(("${max_length}" - "${#tool}")) ))
+    tool_color[${tool}]=$(if ${tool_required[${tool}]}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)
+
+    echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
+done
 echo
 
 if ${CHECK_ONLY}; then
@@ -459,6 +442,9 @@ function wait_for_docker() {
 
 # Create directories
 mkdir -p \
+    ${DOCKER_SETUP_LOGS} \
+    ${DOCKER_SETUP_CACHE} \
+    ${DOCKER_SETUP_PROGRESS} \
     /etc/docker \
     "${TARGET}/share/bash-completion/completions" \
     "${TARGET}/share/fish/vendor_completions.d" \
@@ -470,27 +456,25 @@ mkdir -p \
     "${TARGET}/libexec/docker/bin" \
     "${TARGET}/libexec/cni"
 
-# jq
-if install_jq; then
-    section "jq ${JQ_VERSION}"
-    task "Install binary"
+function install-jq() {
+    echo "jq ${JQ_VERSION}"
+    progress jq "Install binary"
     curl -sLo "${TARGET}/bin/jq" "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
-    task "Set executable bits"
+    progress jq "Set executable bits"
     chmod +x "${TARGET}/bin/jq"
-fi
+}
 
-# yq
-if install_yq; then
-    section "yq ${YQ_VERSION}"
-    task "Install binary"
+function install-yq() {
+    echo "yq ${YQ_VERSION}"
+    progress yq "Install binary"
     curl -sLo "${TARGET}/bin/yq" "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
-    task "Set executable bits"
+    progress yq "Set executable bits"
     chmod +x "${TARGET}/bin/yq"
-    task "Install completion"
+    progress yq "Install completion"
     yq shell-completion bash >"${TARGET}/share/bash-completion/completions/yq"
     yq shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/yq.fish"
     yq shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_yq"
-fi
+}
 
 : "${CGROUP_VERSION:=v2}"
 CURRENT_CGROUP_VERSION="v1"
@@ -504,10 +488,10 @@ if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1";
         exit 1
     fi
 
-    section "cgroup v2"
-    task "Configure grub"
+    echo "cgroup v2"
+    echo "Configure grub"
     sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
-    task "Update grub"
+    echo "Update grub"
     update-grub
     read -r -p "Reboot to enable cgroup v2 (y/N)"
     if test "${REPLY,,}" == "y"; then
@@ -519,7 +503,7 @@ fi
 # Check for iptables/nftables
 # https://docs.docker.com/network/iptables/
 if ! iptables --version | grep -q legacy; then
-    section "iptables"
+    echo "iptables"
     echo "ERROR: Unable to continue because..."
     echo "       - ...you are using nftables and not iptables..."
     echo "       - ...to fix this iptables must point to iptables-legacy."
@@ -532,44 +516,44 @@ if ! iptables --version | grep -q legacy; then
     exit 1
 fi
 
-# Install Docker CE
-if install_docker; then
-    section "Docker ${DOCKER_VERSION}"
-    task "Install binaries"
+function install-docker() {
+    echo "Docker ${DOCKER_VERSION}"
+    progress docker "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
     | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
     mv "${TARGET}/libexec/docker/bin/dockerd" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/docker" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/docker-proxy" "${TARGET}/bin"
-    task "Install rootless scripts"
+    progress docker "Install rootless scripts"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
     | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless.sh" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${TARGET}/bin"
-    task "Install systemd units"
+    progress docker "Install systemd units"
     curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
     curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
     sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" /etc/systemd/system/docker.service
-    task "Install init script"
+    progress docker "Install init script"
     curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
     curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
     sed -i -E "s|^export PATH=|export PATH=${TARGET}/libexec/docker/bin:|" /etc/init.d/docker
-    task "Set executable bits"
+    progress docker "Set executable bits"
     chmod +x /etc/init.d/docker
-    task "Install completion"
+    progress docker "Install completion"
     curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
     curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
     curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
-    task "Create group"
+    progress docker "Create group"
     groupadd --system --force docker
     DOCKER_RESTART=false
+    progress docker "Configure daemon"
     if ! test -f /etc/docker/daemon.json; then
-        task "Initialize dockerd configuration"
+        echo "Initialize dockerd configuration"
         echo "{}" >/etc/docker/daemon.json
     fi
     if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}"; then
         # Check if address pool already exists
-        task "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
+        echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
         # shellcheck disable=SC2094
         cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
@@ -577,48 +561,51 @@ if install_docker; then
     fi
     if test -n "${DOCKER_REGISTRY_MIRROR}"; then
         # TODO: Check if mirror already exists
-        task "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
+        echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
         # shellcheck disable=SC2094
         cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
     if test "$(jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json >/dev/null)" == "false"; then
-        task "Enable BuildKit"
+        echo "Enable BuildKit"
         # shellcheck disable=SC2094
         cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
     if has_systemd; then
-        task "Reload systemd"
+        progress docker "Reload systemd"
         systemctl daemon-reload
-        task "Start dockerd"
         if systemctl is-active --quiet docker; then
             if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+                progress docker "Restart dockerd"
                 systemctl restart docker
             else
                 echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
             fi
         else
+            progress docker "Start dockerd"
             systemctl enable docker
             systemctl start docker
         fi
     else
         if docker_is_running; then
             if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+                progress docker "Restart dockerd"
                 /etc/init.d/docker restart
             else
                 echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
             fi
         else
+            progress docker "Start dockerd"
             /etc/init.d/docker start
         fi
         echo -e "${WARNING}WARNING: Init script was installed but you must enable Docker yourself.${RESET}"
     fi
-    task "Wait for Docker daemon to start"
+    progress docker "Wait for Docker daemon to start"
     wait_for_docker
-    task "Install manpages for Docker CLI"
+    progress docker "Install manpages for Docker CLI"
     docker container run \
         --interactive \
         --rm \
@@ -637,19 +624,15 @@ cp -r man/man1 "/opt/man"
 cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
-fi
+}
 
-# Configure docker CLI
-# https://docs.docker.com/engine/reference/commandline/cli/#docker-cli-configuration-file-configjson-properties
-# NOTHING TO BE DONE FOR NOW
-
-# containerd
-if install_containerd; then
-    section "containerd ${CONTAINERD_VERSION}"
-    task "Install binaries"
+function install-containerd() {
+    echo "containerd ${CONTAINERD_VERSION}"
+    progress containerd "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-    task "Install manpages for containerd"
+    progress containerd "Install manpages for containerd"
+    wait_for_docker
     docker container run \
         --interactive \
         --rm \
@@ -665,32 +648,31 @@ make man
 cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
-    task "Install systemd unit"
+    progress containerd "Install systemd unit"
     curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
     if has_systemd; then
-        task "Reload systemd"
+        progress containerd "Reload systemd"
         systemctl daemon-reload
     else
         echo -e "${YELLOW}WARNING: docker-setup does not offer an init script for containerd.${RESET}"
     fi
-fi
+}
 
-# rootlesskit
-if install_rootlesskit; then
-    section "rootkesskit ${ROOTLESSKIT_VERSION}"
-    task "Install binaries"
+function install-rootlesskit() {
+    echo "rootlesskit ${ROOTLESSKIT_VERSION}"
+    progress rootlesskit "Install binaries"
     curl -sL "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
-fi
+}
 
-# runc
-if install_runc; then
-    section "runc ${RUNC_VERSION}"
-    task "Install binary"
+function install-runc() {
+    echo "runc ${RUNC_VERSION}"
+    progress runc "Install binary"
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
-    task "Set executable bits"
+    progress runc "Set executable bits"
     chmod +x "${TARGET}/bin/runc"
-    task "Install manpages for runc"
+    progress runc "Install manpages for runc"
+    wait_for_docker
     docker container run \
         --interactive \
         --rm \
@@ -704,50 +686,48 @@ go install github.com/cpuguy83/go-md2man@latest
 man/md2man-all.sh -q
 cp -r man/man8/ "/opt/man"
 EOF
-fi
+}
 
-# docker-compose v2
-if install_docker_compose; then
-    section "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
+function install-docker-compose() {
+    echo "docker-compose ${DOCKER_COMPOSE} (${DOCKER_COMPOSE_V1_VERSION} or ${DOCKER_COMPOSE_V2_VERSION})"
     DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_V2_VERSION}/docker-compose-linux-x86_64"
     DOCKER_COMPOSE_TARGET="${DOCKER_PLUGINS_PATH}/docker-compose"
     if test "${DOCKER_COMPOSE}" == "v1"; then
         DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
         DOCKER_COMPOSE_TARGET="${TARGET}/bin/docker-compose"
     fi
-    task "Install binary"
+    progress docker-compose "Install binary"
     curl -sLo "${DOCKER_COMPOSE_TARGET}" "${DOCKER_COMPOSE_URL}"
-    task "Set executable bits"
+    progress docker-compose "Set executable bits"
     chmod +x "${DOCKER_COMPOSE_TARGET}"
     if test "${DOCKER_COMPOSE}" == "v2"; then
-        task "Install wrapper for docker-compose"
+        progress docker-compose "Install wrapper for docker-compose"
         cat >"${TARGET}/bin/docker-compose" <<EOF
 #!/bin/bash
 exec "${DOCKER_PLUGINS_PATH}/docker-compose" compose "\$@"
 EOF
-        task "Set executable bits"
+        progress docker-compose "Set executable bits"
         chmod +x "${TARGET}/bin/docker-compose"
     fi
-fi
+}
 
-# docker-scan
-if install_docker_scan; then
-    section "docker-scan ${DOCKER_SCAN_VERSION}"
-    task "Install binary"
+function install-docker-scan() {
+    echo "docker-scan ${DOCKER_SCAN_VERSION}"
+    progress docker-scan "Install binary"
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-scan" "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64"
-    task "Set executable bits"
+    progress docker-scan "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-scan"
-fi
+}
 
-# slirp4netns
-if install_slirp4netns; then
-    section "slirp4netns ${SLIRP4NETNS_VERSION}"
-    task "Install binary"
+function install-slirp4netns() {
+    echo "slirp4netns ${SLIRP4NETNS_VERSION}"
+    progress slirp4netns "Install binary"
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
-    task "Set executable bits"
+    progress slirp4netns "Set executable bits"
     chmod +x "${TARGET}/bin/slirp4netns"
     # TODO: Versioning of golang image
-    task "Install manpages"
+    progress slirp4netns "Install manpages"
+    wait_for_docker
     docker container run \
         --interactive \
         --rm \
@@ -759,91 +739,84 @@ cd /go/src/github.com/rootless-containers/slirp4netns
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NETNS_VERSION}" https://github.com/rootless-containers/slirp4netns .
 cp *.1 /opt/man/man1
 EOF
-fi
+}
 
-# hub-tool
-if install_hub_tool; then
-    section "hub-tool ${HUB_TOOL_VERSION}"
-    task "Install binary"
+function install-hub-tool() {
+    echo "hub-tool ${HUB_TOOL_VERSION}"
+    progress hub-tool "Install binary"
     curl -sL "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-fi
+}
 
-# docker-machine
-if install_docker_machine; then
-    section "docker-machine ${DOCKER_MACHINE_VERSION}"
-    task "Install binary"
+function install-docker-machine() {
+    echo "docker-machine ${DOCKER_MACHINE_VERSION}"
+    progress docker-machine "Install binary"
     curl -sLo "${TARGET}/bin/docker-machine" "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64"
-    task "Set executable bits"
+    progress docker-machine "Set executable bits"
     chmod +x "${TARGET}/bin/docker-machine"
-fi
+}
 
-# buildx
-if install_buildx; then
-    section "buildx ${BUILDX_VERSION}"
-    task "Install binary"
+function install-buildx() {
+    echo "buildx ${BUILDX_VERSION}"
+    progress buildx "Install binary"
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
-    task "Set executable bits"
+    progress buildx "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
-    task "Enable multi-platform builds"
+    progress buildx "Enable multi-platform builds"
+    wait_for_docker
     docker run --privileged --rm tonistiigi/binfmt --install all
-fi
+}
 
-# manifest-tool
-if install_manifest_tool; then
-    section "manifest-tool ${MANIFEST_TOOL_VERSION}"
-    task "Install binary"
+function install-manifest-tool() {
+    echo "manifest-tool ${MANIFEST_TOOL_VERSION}"
+    progress manifest-tool "Install binary"
     curl -sLo "${TARGET}/bin/manifest-tool" "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
-    task "Set executable bits"
+    progress manifest-tool "Set executable bits"
     chmod +x "${TARGET}/bin/manifest-tool"
-fi
+}
 
-# BuildKit
-if install_buildkit; then
-    section "BuildKit ${BUILDKIT_VERSION}"
-    task "Install binary"
+function install-buildkit() {
+    echo "BuildKit ${BUILDKIT_VERSION}"
+    progress buildkit "Install binary"
     curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-fi
+}
 
-# img
-if install_img; then
-    section "img ${IMG_VERSION}"
-    task "Install binary"
+function install-img() {
+    echo "img ${IMG_VERSION}"
+    progress img "Install binary"
     curl -sLo "${TARGET}/bin/img" "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64"
-    task "Set executable bits"
+    progress img "Set executable bits"
     chmod +x "${TARGET}/bin/img"
-fi
+}
 
-# dive
-if install_dive; then
-    section "dive ${DIVE_VERSION}"
-    task "Install binary"
+function install-dive() {
+    echo "dive ${DIVE_VERSION}"
+    progress dive "Install binary"
     curl -sL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         dive
-fi
+}
 
-# portainer
-if install_portainer; then
-    section "portainer ${PORTAINER_VERSION}"
-    task "Create directories"
+function install-portainer() {
+    echo "portainer ${PORTAINER_VERSION}"
+    progress portainer "Create directories"
     mkdir -p \
         "${TARGET}/share/portainer" \
         "${TARGET}/lib/portainer"
-    task "Download tarball"
+    progress portainer "Download tarball"
     curl -sLo "${TARGET}/share/portainer/portainer.tar.gz" "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz"
-    task "Install binary"
+    progress portainer "Install binary"
     tar -xzf "${TARGET}/share/portainer/portainer.tar.gz" -C "${TARGET}/bin" --strip-components=1 --no-same-owner \
         portainer/portainer
     tar -xzf "${TARGET}/share/portainer/portainer.tar.gz" -C "${TARGET}/share/portainer" --strip-components=1 --no-same-owner \
         portainer/public
     rm "${TARGET}/share/portainer/portainer.tar.gz"
-    task "Install dedicated docker-compose v1"
+    progress portainer "Install dedicated docker-compose v1"
     curl -sLo "${TARGET}/share/portainer/docker-compose" "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64"
-    task "Set executable bits on docker-compose"
+    progress portainer "Set executable bits on docker-compose"
     chmod +x "${TARGET}/share/portainer/docker-compose"
-    task "Install systemd unit"
+    progress portainer "Install systemd unit"
     cat >"/etc/systemd/system/portainer.service" <<EOF
 [Unit]
 Description=portainer
@@ -870,105 +843,98 @@ TasksMax=infinity
 [Install]
 WantedBy=multi-user.target
 EOF
-    task "Install init script"
+    progress portainer "Install init script"
     curl -sLo "/etc/init.d/portainer" "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
     if has_systemd; then
-        task "Reload systemd"
+        progress portainer "Reload systemd"
         systemctl daemon-reload
     else
         echo -e "${WARNING}WARNING: Init script was installed but you must enable/start/restart Portainer yourself.${RESET}"
     fi
-fi
+}
 
-# oras
-if install_oras; then
-    section "oras ${ORAS_VERSION}"
-    task "Install binary"
+function install-oras() {
+    echo "oras ${ORAS_VERSION}"
+    progress oras "Install binary"
     curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         oras
-fi
+}
 
-# regclient
-if install_regclient; then
-    section "regclient ${REGCLIENT_VERSION}"
-    task "Install regctl"
+function install-regclient() {
+    echo "regclient ${REGCLIENT_VERSION}"
+    progress regclient "Install regctl"
     curl -sLo "${TARGET}/bin/regctl"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
-    task "Install regbot"
+    progress regclient "Install regbot"
     curl -sLo "${TARGET}/bin/regbot"  "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64"
-    task "Install regsync"
+    progress regclient "Install regsync"
     curl -sLo "${TARGET}/bin/regsync" "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regsync-linux-amd64"
-    task "Set executable bits for regctl"
+    progress regclient "Set executable bits for regctl"
     chmod +x "${TARGET}/bin/regctl"
-    task "Set executable bits for regbot"
+    progress regclient "Set executable bits for regbot"
     chmod +x "${TARGET}/bin/regbot"
-    task "Set executable bits for regsync"
+    progress regclient "Set executable bits for regsync"
     chmod +x "${TARGET}/bin/regsync"
-    task "Install completion for regctl"
+    progress regclient "Install completion for regctl"
     regctl completion bash >"${TARGET}/share/bash-completion/completions/regctl"
     regctl completion fish >"${TARGET}/share/fish/vendor_completions.d/regctl.fish"
     regctl completion zsh >"${TARGET}/share/zsh/vendor-completions/_regctl"
-    task "Install completion for regbot"
+    progress regclient "Install completion for regbot"
     regbot completion bash >"${TARGET}/share/bash-completion/completions/regbot"
     regbot completion fish >"${TARGET}/share/fish/vendor_completions.d/regbot.fish"
     regbot completion zsh >"${TARGET}/share/zsh/vendor-completions/_regbot"
-    task "Install completion for regsync"
+    progress regclient "Install completion for regsync"
     regsync completion bash >"${TARGET}/share/bash-completion/completions/regsync"
     regsync completion fish >"${TARGET}/share/fish/vendor_completions.d/regsync.fish"
     regsync completion zsh >"${TARGET}/share/zsh/vendor-completions/_regsync"
-fi
+}
 
-# cosign
-if install_cosign; then
-    section "cosign ${COSIGN_VERSION}"
-    task "Install binary"
+function install-cosign() {
+    echo "cosign ${COSIGN_VERSION}"
+    progress cosign "Install binary"
     curl -sLo "${TARGET}/bin/cosign" "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
-    task "Set executable bits"
+    progress cosign "Set executable bits"
     chmod +x "${TARGET}/bin/cosign"
-    task "Install completion"
+    progress cosign "Install completion"
     cosign completion bash >"${TARGET}/share/bash-completion/completions/cosign"
     cosign completion fish >"${TARGET}/share/fish/vendor_completions.d/cosign.fish"
     cosign completion zsh >"${TARGET}/share/zsh/vendor-completions/_cosign"
-fi
+}
 
-# nerdctl
-if install_nerdctl; then
-    section "nerdctl ${NERDCTL_VERSION}"
-    task "Install binary"
+function install-nerdctl() {
+    echo "nerdctl ${NERDCTL_VERSION}"
+    progress nerdctl "Install binary"
     curl -sL "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
-fi
+}
 
-# cni
-if install_cni; then
-    section "CNI ${CNI_VERSION}"
-    task "Install binaries"
+function install-cni() {
+    echo "CNI ${CNI_VERSION}"
+    progress cni "Install binaries"
     curl -sL "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz" \
     | tar -xzC "${TARGET}/libexec/cni"
-fi
+}
 
-# CNI isolation
-if install_cni_isolaton; then
-    section "CNI isolation ${CNI_ISOLATION_VERSION}"
-    task "Install binaries"
+function install-cni-isolation() {
+    echo "CNI isolation ${CNI_ISOLATION_VERSION}"
+    progress cni-isolation "Install binaries"
     curl -sL "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
     | tar -xzC "${TARGET}/libexec/cni"
     mkdir -p /var/cache/docker-setup/cni-isolation
     touch "/var/cache/docker-setup/cni-isolation/${CNI_ISOLATION_VERSION}"
-fi
+}
 
-# stargz-snapshotter
-if install_stargz_snapshotter; then
-    section "stargz-snapshotter ${STARGZ_SNAPSHOTTER_VERSION}"
-    task "Install binary"
+function install-stargz-snapshotter() {
+    echo "stargz-snapshotter ${STARGZ_SNAPSHOTTER_VERSION}"
+    progress stargz-snapshotter "Install binary"
     curl -sL "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
-fi
+}
 
-# imgcrypt
-if install_imgcrypt; then
-    section "imgcrypt ${IMGCRYPT_VERSION}"
-    task "Install binary"
+function install-imgcrypt() {
+    echo "imgcrypt ${IMGCRYPT_VERSION}"
+    progress imgcrypt "Install binary"
+    wait_for_docker
     docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
 mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
@@ -978,61 +944,56 @@ sed -i -E "s/ --dirty='.m' / /" Makefile
 make
 make install DESTDIR=/target
 EOF
-fi
+}
 
-# fuse-overlayfs
-if install_fuse_overlayfs; then
-    section "fuse-overlayfs ${FUSE_OVERLAYFS_VERSION}"
-    task "Install binary"
+function install-fuse-overlayfs() {
+    echo "fuse-overlayfs ${FUSE_OVERLAYFS_VERSION}"
+    progress fuse-overlayfs "Install binary"
     curl -sLo "${TARGET}/bin/fuse-overlayfs" "https://github.com/containers/fuse-overlayfs/releases/download/v${FUSE_OVERLAYFS_VERSION}/fuse-overlayfs-x86_64"
-    task "Set executable bits"
+    progress fuse-overlayfs "Set executable bits"
     chmod +x "${TARGET}/bin/fuse-overlayfs"
-fi
+}
 
-# fuse-overlayfs-snapshotter
-if install_fuse_overlayfs_snapshotter; then
-    section "fuse-overlayfs-snapshotter ${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"
-    task "Install binary"
+function install-fuse-overlayfs-snapshotter() {
+    echo "fuse-overlayfs-snapshotter ${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"
+    progress fuse-overlayfs-snapshotter "Install binary"
     curl -sL "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
-fi
+}
 
-# porter
-if install_porter; then
-    section "porter ${PORTER_VERSION}"
-    task "Install binary"
+function install-porter() {
+    echo "porter ${PORTER_VERSION}"
+    progress porter "Install binary"
     curl -sLo "${TARGET}/bin/porter" "https://github.com/getporter/porter/releases/download/v${PORTER_VERSION}/porter-linux-amd64"
-    task "Set executable bits"
+    progress porter "Set executable bits"
     chmod +x "${TARGET}/bin/porter"
-    task "Install mixins"
+    progress porter "Install mixins"
     porter mixin install exec
     porter mixin install docker
     porter mixin install docker-compose
     porter mixin install kubernetes
-    task "Install plugins"
+    progress porter "Install plugins"
     porter plugins install kubernetes
-fi
+}
 
-# conmon
-if install_conmon; then
-    section "conmon ${CONMON_VERSION}"
-    task "Install binary"
+function install-conmon() {
+    echo "conmon ${CONMON_VERSION}"
+    progress conmon "Install binary"
     curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz" \
     | tar -xzC "${TARGET}"
-fi
+}
 
-# podman
-if install_podman; then
-    section "podman ${PODMAN_VERSION}"
-    task "Install binary"
+function install-podman() {
+    echo "podman ${PODMAN_VERSION}"
+    progress podman "Install binary"
     curl -sL "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
     | tar -xzC "${TARGET}"
-    task "Install systemd unit"
+    progress podman "Install systemd unit"
     curl -sLo "/etc/systemd/system/podman.service" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service"
     curl -sLo "/etc/systemd/system/podman.socket" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket"
     curl -sLo "${TARGET}/lib/tmpfiles.d/podman-docker.conf" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf"
     systemctl daemon-reload
-    task "Install configuration"
+    progress podman "Install configuration"
     mkdir -p /etc/containers/registries{,.conf}.d
     files=(
         registries.conf.d/00-shortnames.conf
@@ -1044,74 +1005,67 @@ if install_podman; then
     for file in "${files[@]}"; do
         curl -sLo "/etc/containers/${file}" "${DOCKER_SETUP_REPO_RAW}/contrib/podman/${file}"
     done
-fi
+}
 
-# buildah
-if install_buildah; then
-    section "buildah ${BUILDAH_VERSION}"
-    task "Install binary"
+function install-builah() {
+    echo "buildah ${BUILDAH_VERSION}"
+    progress buildah "Install binary"
     curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
     | tar -xzC "${TARGET}"
-fi
+}
 
-# crun
-if install_crun; then
-    section "crun ${CRUN_VERSION}"
-    task "Install binary"
+function install-crun() {
+    echo "crun ${CRUN_VERSION}"
+    progress crun "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
     | tar -xzC "${TARGET}"
-fi
+}
 
-# skopeo
-if install_skopeo; then
-    section "skopeo ${SKOPEO_VERSION}"
-    task "Install binary"
+function install-skopeo() {
+    echo "skopeo ${SKOPEO_VERSION}"
+    progress skopeo "Install binary"
     curl -sL "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz" \
     | tar -xzC "${TARGET}"
-fi
+}
 
-# Kubernetes
-
-# krew
-if install_krew; then
-    section "krew ${KREW_VERSION}"
-    task "Install binary"
+function install-krew() {
+    echo "krew ${KREW_VERSION}"
+    progress krew "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" ./krew-linux_amd64
     mv "${TARGET}/bin/krew-linux_amd64" "${TARGET}/bin/krew"
-    task "Add to path"
+    progress krew "Add to path"
     cat >/etc/profile.d/krew.sh <<"EOF"
 export PATH="${HOME}/.krew/bin:${PATH}"
 EOF
     # shellcheck source=/dev/null
     source /etc/profile.d/krew.sh
-    task "Install krew for current user"
+    progress krew "Install krew for current user"
     krew install krew
-    task "Install completion"
+    progress krew "Install completion"
     krew completion bash 2>/dev/null >"${TARGET}/share/bash-completion/completions/krew"
     krew completion fish 2>/dev/null >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
     krew completion zsh 2>/dev/null >"${TARGET}/share/zsh/vendor-completions/_krew"
-fi
+}
 
-# kubectl
-if install_kubectl; then
-    section "kubectl ${KUBECTL_VERSION}"
-    task "Install binary"
+function install-kubectl() {
+    echo "kubectl ${KUBECTL_VERSION}"
+    progress kubectl "Install binary"
     curl -sLo "${TARGET}/bin/kubectl" "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
-    task "Set executable bits"
+    progress kubectl "Set executable bits"
     chmod +x "${TARGET}/bin/kubectl"
-    task "Install completion"
+    progress kubectl "Install completion"
     kubectl completion bash >"${TARGET}/share/bash-completion/completions/kubectl"
     kubectl completion zsh >"${TARGET}/share/zsh/vendor-completions/_kubectl"
-    task "Add alias k"
+    progress kubectl "Add alias k"
     cat >/etc/profile.d/kubectl.sh <<EOF
 alias k=kubectl
 complete -F __start_kubectl k
 EOF
-    task "Install kubectl-convert"
+    progress kubectl "Install kubectl-convert"
     curl -sLo "${TARGET}/bin/kubectl-convert" "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert"
     chmod +x "${TARGET}/bin/kubectl-convert"
-    task "Install plugins for current user"
+    progress kubectl "Install plugins for current user"
     kubectl krew install <<EOF
 access-matrix
 advise-policy
@@ -1183,168 +1137,227 @@ viewnode
 who-can
 whoami
 EOF
-fi
+}
 
-# kind
-if install_kind; then
-    section "kind ${KIND_VERSION}"
-    task "Install binary"
+function install-kind() {
+    echo "kind ${KIND_VERSION}"
+    progress kind "Install binary"
     curl -sLo "${TARGET}/bin/kind" "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64"
-    task "Set executable bits"
+    progress kind "Set executable bits"
     chmod +x "${TARGET}/bin/kind"
-    task "Install completion"
+    progress kind "Install completion"
     kind completion bash >"${TARGET}/share/bash-completion/completions/kind"
     kind completion fish >"${TARGET}/share/fish/vendor_completions.d/kind.fish"
     kind completion zsh >"${TARGET}/share/zsh/vendor-completions/_kind"
-fi
+}
 
-# k3d
-if install_k3d; then
-    section "k3d ${K3D_VERSION}"
-    task "Install binary"
+function install-k3d() {
+    echo "k3d ${K3D_VERSION}"
+    progress k3d "Install binary"
     curl -sLo "${TARGET}/bin/k3d" "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64"
-    task "Set executable bits"
+    progress k3d "Set executable bits"
     chmod +x "${TARGET}/bin/k3d"
-    task "Install completion"
+    progress k3d "Install completion"
     k3d completion bash >"${TARGET}/share/bash-completion/completions/k3d"
     k3d completion fish >"${TARGET}/share/fish/vendor_completions.d/k3d.fish"
     k3d completion zsh >"${TARGET}/share/zsh/vendor-completions/_k3d"
-fi
+}
 
-# helm
-if install_helm; then
-    section "helm ${HELM_VERSION}"
-    task "Install binary"
+function install-helm() {
+    echo "helm ${HELM_VERSION}"
+    progress helm "Install binary"
     curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
         linux-amd64/helm
-    task "Install completion"
+    progress helm "Install completion"
     helm completion bash >"${TARGET}/share/bash-completion/completions/helm"
     helm completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
     helm completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
-fi
+}
 
-# kustomize
-if install_kustomize; then
-    section "kustomize ${KUSTOMIZE_VERSION}"
-    task "Install binary"
+function install-kustomize() {
+    echo "kustomize ${KUSTOMIZE_VERSION}"
+    progress kustomize "Install binary"
     curl -sL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
-    task "Install completion"
+    progress kustomize "Install completion"
     kustomize completion bash >"${TARGET}/share/bash-completion/completions/kustomize"
     kustomize completion fish >"${TARGET}/share/fish/vendor_completions.d/kustomize.fish"
     kustomize completion zsh >"${TARGET}/share/zsh/vendor-completions/_kustomize"
-fi
+}
 
-# kompose
-if install_kompose; then
-    section "kompose ${KOMPOSE_VERSION}"
-    task "Install binary"
+function install-kompose() {
+    echo "kompose ${KOMPOSE_VERSION}"
+    progress kompose "Install binary"
     curl -sLo "${TARGET}/bin/kompose" "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64"
-    task "Set executable bits"
+    progress kompose "Set executable bits"
     chmod +x "${TARGET}/bin/kompose"
-    task "Install completion"
+    progress kompose "Install completion"
     kompose completion bash >"${TARGET}/share/bash-completion/completions/kompose"
     kompose completion fish >"${TARGET}/share/fish/vendor_completions.d/kompose.fish"
     kompose completion zsh >"${TARGET}/share/zsh/vendor-completions/_kompose"
-fi
+}
 
-# kapp
-if install_kapp; then
-    section "kapp ${KAPP_VERSION}"
-    task "Install binary"
+function install-kapp() {
+    echo "kapp ${KAPP_VERSION}"
+    progress kapp "Install binary"
     curl -sLo "${TARGET}/bin/kapp" "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64"
-    task "Set executable bits"
+    progress kapp "Set executable bits"
     chmod +x "${TARGET}/bin/kapp"
-    task "Install completion"
+    progress kapp "Install completion"
     kapp completion bash >"${TARGET}/share/bash-completion/completions/kapp"
     kapp completion fish >"${TARGET}/share/fish/vendor_completions.d/kapp.fish"
     kapp completion zsh >"${TARGET}/share/zsh/vendor-completions/_kapp"
-fi
+}
 
-# ytt
-if install_ytt; then
-    section "ytt ${YTT_VERSION}"
-    task "Install binary"
+function install-ytt() {
+    echo "ytt ${YTT_VERSION}"
+    progress ytt "Install binary"
     curl -sLo "${TARGET}/bin/ytt" "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64"
-    task "Set executable bits"
+    progress ytt "Set executable bits"
     chmod +x "${TARGET}/bin/ytt"
-    task "Install completion"
+    progress ytt "Install completion"
     ytt completion bash >"${TARGET}/share/bash-completion/completions/ytt"
     ytt completion fish >"${TARGET}/share/fish/vendor_completions.d/ytt.fish"
     ytt completion zsh >"${TARGET}/share/zsh/vendor-completions/_ytt"
-fi
+}
 
-# arkade
-if install_arkade; then
-    section "arkade ${ARKADE_VERSION}"
-    task "Install binary"
+function install-arkade() {
+    echo "arkade ${ARKADE_VERSION}"
+    progress arkade "Install binary"
     curl -sLo "${TARGET}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade"
-    task "Set executable bits"
+    progress arkade "Set executable bits"
     chmod +x "${TARGET}/bin/arkade"
-    task "Install completion"
+    progress arkade "Install completion"
     arkade completion bash >"${TARGET}/share/bash-completion/completions/arkade"
     arkade completion fish >"${TARGET}/share/fish/vendor_completions.d/arkade.fish"
     arkade completion zsh >"${TARGET}/share/zsh/vendor-completions/_arkade"
-fi
+}
 
-# clusterctl
-if install_clusterctl; then
-    section "clusterctl ${CLUSTERCTL_VERSION}"
-    task "Install binary"
+function install-clusterctl() {
+    echo "clusterctl ${CLUSTERCTL_VERSION}"
+    progress clusterctl "Install binary"
     curl -sLo "${TARGET}/bin/clusterctl" "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL_VERSION}/clusterctl-linux-amd64"
-    task "Set executable bits"
+    progress clusterctl "Set executable bits"
     chmod +x "${TARGET}/bin/clusterctl"
-    task "Install completion"
+    progress clusterctl "Install completion"
     clusterctl completion bash >"${TARGET}/share/bash-completion/completions/clusterctl"
     clusterctl completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterctl"
-fi
+}
 
-# clusterawsadm
-if install_clusterawsadm; then
-    section "clusterawsadm ${CLUSTERAWSADM_VERSION}"
-    task "Install binary"
+function install-clusterawsadm() {
+    echo "clusterawsadm ${CLUSTERAWSADM_VERSION}"
+    progress clusterawsadm "Install binary"
     curl -sLo "${TARGET}/bin/clusterawsadm" "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${CLUSTERAWSADM_VERSION}/clusterawsadm-linux-amd64"
-    task "Set executable bits"
+    progress clusterawsadm "Set executable bits"
     chmod +x "${TARGET}/bin/clusterawsadm"
-    task "Install completion"
+    progress clusterawsadm "Install completion"
     clusterawsadm completion bash >"${TARGET}/share/bash-completion/completions/clusterawsadm"
     clusterawsadm completion fish >"${TARGET}/share/fish/vendor_completions.d/clusterawsadm.fish"
     clusterawsadm completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterawsadm"
-fi
+}
 
-# minikube
-if install_minikube; then
-    section "minikube ${MINIKUBE_VERSION}"
-    task "Install binary"
+function install-minikube() {
+    echo "minikube ${MINIKUBE_VERSION}"
+    progress minikube "Install binary"
     curl -sLo "${TARGET}/bin/minikube" "https://github.com/kubernetes/minikube/releases/download/v${MINIKUBE_VERSION}/minikube-linux-amd64"
-    task "Set executable bits"
+    progress minikube "Set executable bits"
     chmod +x "${TARGET}/bin/minikube"
-    task "Install completion"
+    progress minikube "Install completion"
     minikube completion bash >"${TARGET}/share/bash-completion/completions/minikube"
     minikube completion fish >"${TARGET}/share/fish/vendor_completions.d/minikube.fish"
     minikube completion zsh >"${TARGET}/share/zsh/vendor-completions/_minikube"
-fi
+}
 
-# kubeswitch
-if install_kubeswitch; then
-    section "kubeswitch ${KUBESWITCH_VERSION}"
-    task "Install binary"
+function install-kubeswitch() {
+    echo "kubeswitch ${KUBESWITCH_VERSION}"
+    progress kubeswitch "Install binary"
     curl -sL "https://github.com/danielb42/kubeswitch/releases/download/v${KUBESWITCH_VERSION}/kubeswitch_linux_amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" kubeswitch
-    task "Set executable bits"
+    progress kubeswitch "Set executable bits"
     chmod +x "${TARGET}/bin/kubeswitch"
     mkdir -p /var/cache/docker-setup/kubeswitch
     touch "/var/cache/docker-setup/kubeswitch/${KUBESWITCH_VERSION}"
-fi
+}
 
-# Security
-
-# trivy
-if install_trivy; then
-    section "trivy ${TRIVY_VERSION}"
-    task "Install binary"
+function install-trivy() {
+    echo "trivy ${TRIVY_VERSION}"
+    progress trivy "Install binary"
     curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         trivy
-fi
+}
+
+declare -A child_pids
+for tool in "${tools[@]}"; do
+    if ${tool_required[${tool}]}; then
+        {
+            echo "============================================================"
+            date +"%Y-%m-%d %H:%M:%S %Z"
+            echo "------------------------------------------------------------"
+        } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
+
+        eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1 &"
+        child_pids[${tool}]=$!
+    fi
+done
+
+${INTERACTIVE_OUTPUT} && tput clear
+tput civis
+
+function cleanup() {
+    tput cnorm
+    cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r CHILD; do
+        kill "${CHILD}"
+    done
+    rm -rf "${DOCKER_SETUP_PROGRESS}"
+}
+trap cleanup EXIT
+
+spinner_chars=("|" "/" "-" "\\")
+spinner_count="${#spinner_chars[@]}"
+spinner_index=0
+last_update=false
+while true; do
+    if ${INTERACTIVE_OUTPUT}; then
+        tput home
+
+        for tool in "${tools[@]}"; do
+            echo -e -n "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
+
+            if test -d "/proc/${child_pids[${tool}]}"; then
+                if test -f "${DOCKER_SETUP_PROGRESS}/${tool}"; then
+                    echo -e -n " ("
+                    cat "${DOCKER_SETUP_PROGRESS}/${tool}"
+                    echo -e -n ")"
+                fi
+
+            else
+                tool_color[${tool}]=${GREEN}
+            fi
+
+            tput el
+            echo
+        done
+
+    elif ${last_update}; then
+        exit
+
+    else
+        echo -e -n "\rInstalling... "
+        if ! ${NO_SPINNER}; then
+            echo -e -n "${spinner_chars[$(( ${spinner_index} % ${spinner_count} ))]}"
+        fi
+    fi
+
+    if test "$(ps -eo ppid= | grep -Fwc $$)" -eq 1; then
+        if ! ${INTERACTIVE_OUTPUT}; then
+            echo -e -n "\r"
+            tput el
+        fi
+        last_update=true
+    fi
+
+    sleep 0.1
+    spinner_index=$(( ${spinner_index} + 1 ))
+done
