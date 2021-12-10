@@ -137,99 +137,52 @@ tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl 
 GO_VERSION=1.17.5
 JQ_VERSION=1.6
 YQ_VERSION=4.16.1
-# renovate: datasource=github-releases depName=moby/moby
 DOCKER_VERSION=20.10.11
-# renovate: datasource=github-releases depName=containerd/containerd
 CONTAINERD_VERSION=1.5.8
-# renovate: datasource=github-releases depName=rootless-containers/rootlesskit
 ROOTLESSKIT_VERSION=0.14.6
-# renovate: datasource=github-releases depName=opencontainers/runc
 RUNC_VERSION=1.0.3
-# renovate: datasource=github-releases depName=docker/compose versioning=regex:^(?<major>1)\.(?<minor>\d+)\.(?<patch>\d+)$
 DOCKER_COMPOSE_V1_VERSION=1.29.2
-# renovate: datasource=github-releases depName=docker/compose
 DOCKER_COMPOSE_V2_VERSION=2.2.2
-# renovate: datasource=github-releases depName=docker/scan-cli-plugin
 DOCKER_SCAN_VERSION=0.10.0
-# renovate: datasource=github-releases depName=rootless-containers/slirp4netns
 SLIRP4NETNS_VERSION=1.1.12
-# renovate: datasource=github-releases depName=docker/hub-tool
 HUB_TOOL_VERSION=0.4.4
-# renovate: datasource=github-releases depName=docker/machine
 DOCKER_MACHINE_VERSION=0.16.2
-# renovate: datasource=github-releases depName=docker/buildx
 BUILDX_VERSION=0.7.1
-# renovate: datasource=github-releases depName=estesp/manifest-tool
 MANIFEST_TOOL_VERSION=1.0.3
-# renovate: datasource=github-releases depName=moby/buildkit
 BUILDKIT_VERSION=0.9.3
-# renovate: datasource=github-releases depName=genuinetools/img
 IMG_VERSION=0.5.11
-# renovate: datasource=github-releases depName=wagoodman/dive
 DIVE_VERSION=0.10.0
-# renovate: datasource=github-releases depName=portainer/portainer
 PORTAINER_VERSION=2.11.0
-# renovate: datasource=github-releases depName=oras-project/oras
 ORAS_VERSION=0.12.0
-# renovate: datasource=github-releases depName=regclient/regclient
 REGCLIENT_VERSION=0.3.9
-# renovate: datasource=github-releases depName=sigstore/cosign
 COSIGN_VERSION=1.4.1
-# renovate: datasource=github-releases depName=containerd/nerdctl
 NERDCTL_VERSION=0.14.0
-# renovate: datasource=github-releases depName=containernetworking/plugins
 CNI_VERSION=1.0.1
-# renovate: datasource=github-releases depName=AkihiroSuda/cni-isolation
 CNI_ISOLATION_VERSION=0.0.4
-# renovate: datasource=github-releases depName=containerd/stargz-snapshotter
 STARGZ_SNAPSHOTTER_VERSION=0.10.1
-# renovate: datasource=github-tags depName=containerd/imgcrypt
 IMGCRYPT_VERSION=1.1.2
-# renovate: datasource=github-releases depName=containers/fuse-overlayfs
 FUSE_OVERLAYFS_VERSION=1.6
-# renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
-# renovate: datasource=github-releases depName=getporter/porter
 PORTER_VERSION=0.38.8
-# renovate: datasource=github-releases depName=nicholasdille/podman-static
 PODMAN_VERSION=3.4.4
-# renovate: datasource=github-releases depName=nicholasdille/conmon-static
 CONMON_VERSION=2.0.31
-# renovate: datasource=github-releases depName=nicholasdille/buildah-static
 BUILDAH_VERSION=1.23.1
-# renovate: datasource=github-releases depName=nicholasdille/crun-static
 CRUN_VERSION=1.3
-# renovate: datasource=github-releases depName=nicholasdille/skopeo-static
 SKOPEO_VERSION=1.5.2
-# renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=1.23.0
-# renovate: datasource=github-releases depName=kubernetes-sigs/kind
 KIND_VERSION=0.11.1
-# renovate: datasource=github-releases depName=rancher/k3d
 K3D_VERSION=5.2.1
-# renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION=3.7.2
-# renovate: datasource=github-releases depName=kubernetes-sigs/krew
 KREW_VERSION=0.4.2
-# renovate: datasource=github-releases depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION=4.4.1
-# renovate: datasource=github-releases depName=kubernetes/kompose versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
 KOMPOSE_VERSION=1.26.0
-# renovate: datasource=github-releases depName=vmware-tanzu/carvel-kapp
 KAPP_VERSION=0.43.0
-# renovate: datasource=github-releases depName=vmware-tanzu/carvel-ytt
 YTT_VERSION=0.38.0
-# renovate: datasource=github-releases depName=alexellis/arkade
 ARKADE_VERSION=0.8.11
-# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api
 CLUSTERCTL_VERSION=1.0.2
-# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-provider-aws
 CLUSTERAWSADM_VERSION=1.2.0
-# renovate: datasource=gitlab-releases depName=kubernetes/minikube
 MINIKUBE_VERSION=1.24.0
-# renovate: datasource=gitlab-releases depName=danielb42/kubeswitch
 KUBESWITCH_VERSION=1.4.0
-# renovate: datasource=github-releases depName=aquasecurity/trivy
 TRIVY_VERSION=0.21.2
 
 : "${DOCKER_COMPOSE:=v2}"
