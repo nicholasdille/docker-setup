@@ -500,24 +500,22 @@ if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1";
     fi
 fi
 
-# Check for iptables/nftables
-# https://docs.docker.com/network/iptables/
-if ! iptables --version | grep -q legacy; then
-    echo "iptables"
-    echo "ERROR: Unable to continue because..."
-    echo "       - ...you are using nftables and not iptables..."
-    echo "       - ...to fix this iptables must point to iptables-legacy."
-    echo "       You don't want to run Docker with iptables=false."
-    echo
-    echo "       For Ubuntu:"
-    echo "       $ apt-get update"
-    echo "       $ apt-get -y install --no-install-recommends iptables"
-    echo "       $ update-alternatives --set iptables /usr/sbin/iptables-legacy"
-    exit 1
-fi
-
 function install-docker() {
     echo "Docker ${DOCKER_VERSION}"
+    progress docker "Check for iptables/nftables"
+    if ! iptables --version | grep -q legacy; then
+        echo "iptables"
+        echo "ERROR: Unable to continue because..."
+        echo "       - ...you are using nftables and not iptables..."
+        echo "       - ...to fix this iptables must point to iptables-legacy."
+        echo "       You don't want to run Docker with iptables=false."
+        echo
+        echo "       For Ubuntu:"
+        echo "       $ apt-get update"
+        echo "       $ apt-get -y install --no-install-recommends iptables"
+        echo "       $ update-alternatives --set iptables /usr/sbin/iptables-legacy"
+        exit 1
+    fi
     progress docker "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
     | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
