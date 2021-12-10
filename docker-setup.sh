@@ -559,7 +559,7 @@ function install-docker() {
         --interactive \
         --rm \
         --volume "${TARGET}/share/man:/opt/man" \
-        --env "DOCKER_VERSION=${DOCKER_VERSION}" \
+        --env DOCKER_VERSION \
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/docker/cli
 cd /go/src/github.com/docker/cli
@@ -586,7 +586,7 @@ function install-containerd() {
         --interactive \
         --rm \
         --volume "${TARGET}/share/man:/opt/man" \
-        --env "CONTAINERD_VERSION=${CONTAINERD_VERSION}" \
+        --env CONTAINERD_VERSION \
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/containerd/containerd
 cd /go/src/github.com/containerd/containerd
@@ -626,7 +626,7 @@ function install-runc() {
         --interactive \
         --rm \
         --volume "${TARGET}/share/man:/opt/man" \
-        --env "RUNC_VERSION=${RUNC_VERSION}" \
+        --env RUNC_VERSION \
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/opencontainers/runc
 cd /go/src/github.com/opencontainers/runc
@@ -681,7 +681,7 @@ function install-slirp4netns() {
         --interactive \
         --rm \
         --volume "${TARGET}/share/man:/opt/man" \
-        --env "SLIRP4NETNS_VERSION=${SLIRP4NETNS_VERSION}" \
+        --env SLIRP4NETNS_VERSION \
         "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/rootless-containers/slirp4netns
 cd /go/src/github.com/rootless-containers/slirp4netns
