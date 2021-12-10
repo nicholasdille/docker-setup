@@ -1235,7 +1235,7 @@ function install-kubeswitch() {
 function install-k3s() {
     echo "k3s ${K3S_VERSION}"
     progress k3s "Install binary"
-    curl -sLo "${TARGET}/bin/k3s" "https://github.com/k3s-io/k3s/releases/download/v1.22.4%2Bk3s1/k3s"
+    curl -sLo "${TARGET}/bin/k3s" "https://github.com/k3s-io/k3s/releases/download/v${K3S_VERSION}/k3s"
     progress k3s "Set executable bits"
     chmod +x "${TARGET}/bin/k3s"
     progress k3s "Install systemd unit"
