@@ -7,13 +7,13 @@ YELLOW="\e[93m"
 RED="\e[91m"
 
 echo -e "${YELLOW}"
-echo -n "D O C K E R - S E T U P   (missing figlet)"
-if type figlet >/dev/null 2>&1; then
-    echo -e -n "\r"
-    figlet docker-setup
-fi
-cat <<EOF
-
+cat <<"EOF"
+     _            _                           _
+  __| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
+ / _` |/ _ \ / __| |/ / _ \ '__|____/ __|/ _ \ __| | | | '_ \
+| (_| | (_) | (__|   <  __/ | |_____\__ \  __/ |_| |_| | |_) |
+ \__,_|\___/ \___|_|\_\___|_|       |___/\___|\__|\__,_| .__/
+                                                       |_|
 
                      The container tools installer and updater
                  https://github.com/nicholasdille/docker-setup
