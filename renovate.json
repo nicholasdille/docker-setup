@@ -164,8 +164,7 @@
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "PORTAINER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "portainer/portainer",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
@@ -318,7 +317,7 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KREW_VERSION=(?<currentValue>.*?)\n" ],
+      "matchStrings": [ "KUSTOMIZE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
@@ -349,8 +348,7 @@
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "alexellis/arkade",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
