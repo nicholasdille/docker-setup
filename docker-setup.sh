@@ -1346,7 +1346,7 @@ while true; do
     else
         echo -e -n "\rInstalling... "
         if ! ${NO_SPINNER}; then
-            echo -e -n "${spinner_chars[$(( ${spinner_index} % ${spinner_count} ))]}"
+            echo -e -n "${spinner_chars[$(( spinner_index % spinner_count ))]}"
         fi
     fi
 
@@ -1359,5 +1359,5 @@ while true; do
     fi
 
     sleep 0.1
-    spinner_index=$(( ${spinner_index} + 1 ))
+    spinner_index=$(( spinner_index + 1 ))
 done
