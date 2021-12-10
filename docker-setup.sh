@@ -132,7 +132,7 @@ tools+=(docker containerd rootlesskit runc docker-compose docker-scan slirp4netn
 tools+=(trivy img dive portainer oras regclient cosign nerdctl cni cni-isolation porter)
 tools+=(stargz-snapshotter imgcrypt fuse-overlayfs fuse-overlayfs-snapshotter)
 tools+=(podman conmon buildah crun skopeo)
-tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl clusterawsadm minikube kubeswitch)
+tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl clusterawsadm minikube kubeswitch k3s)
 
 GO_VERSION=1.17.5
 JQ_VERSION=1.6
@@ -183,6 +183,7 @@ CLUSTERCTL_VERSION=1.0.2
 CLUSTERAWSADM_VERSION=1.2.0
 MINIKUBE_VERSION=1.24.0
 KUBESWITCH_VERSION=1.4.0
+K3S_VERSION=1.22.4+k3s1
 TRIVY_VERSION=0.21.2
 
 : "${DOCKER_COMPOSE:=v2}"
@@ -255,6 +256,7 @@ function clusterctl_matches_version()                 { is_executable "${TARGET}
 function clusterawsadm_matches_version()              { is_executable "${TARGET}/bin/clusterawsadm"                  && test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
 function minikube_matches_version()                   { is_executable "${TARGET}/bin/minikube"                       && test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
+function k3s_matches_version()                        { is_executable "${TARGET}/bin/k3s"                            && test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
 function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                    == "Version: ${TRIVY_VERSION}"; }
 
 function required-jq()                         { user_requested "jq"                         || ! jq_matches_version; }
@@ -304,6 +306,7 @@ function required-clusterctl()                 { user_requested "clusterctl"    
 function required-clusterawsadm()              { user_requested "clusterawsadm"              || ! clusterawsadm_matches_version; }
 function required-minikube()                   { user_requested "minikube"                   || ! minikube_matches_version; }
 function required-kubeswitch()                 { user_requested "kubeswitch"                 || ! kubeswitch_matches_version; }
+function required-k3s()                        { user_requested "k3s"                        || ! k3s_matches_version; }
 function required-trivy()                      { user_requested "trivy"                      || ! trivy_matches_version; }
 
 INTERACTIVE_OUTPUT=true
@@ -1225,10 +1228,51 @@ function install-kubeswitch() {
     progress kubeswitch "Install binary"
     curl -sL "https://github.com/danielb42/kubeswitch/releases/download/v${KUBESWITCH_VERSION}/kubeswitch_linux_amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" kubeswitch
-    progress kubeswitch "Set executable bits"
-    chmod +x "${TARGET}/bin/kubeswitch"
     mkdir -p "${DOCKER_SETUP_CACHE}/kubeswitch"
     touch "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"
+}
+
+function install-k3s() {
+    echo "k3s ${K3S_VERSION}"
+    progress k3s "Install binary"
+    curl -sLo "${TARGET}/bin/k3s" "https://github.com/k3s-io/k3s/releases/download/v1.22.4%2Bk3s1/k3s"
+    progress k3s "Set executable bits"
+    chmod +x "${TARGET}/bin/k3s"
+    progress k3s "Install systemd unit"
+    cat >"/etc/systemd/system/k3s.service" <<EOF
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=${TARGET}/bin/k3s
+EOF
+    if has_systemd; then
+        progress k3s "Reload systemd"
+        systemctl daemon-reload
+    fi
 }
 
 function install-trivy() {

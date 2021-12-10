@@ -380,6 +380,14 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "K3S_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "k3s-io/k3s",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "TRIVY_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "aquasecurity/trivy",
       "datasourceTemplate": "github-releases",
