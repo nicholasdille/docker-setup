@@ -39,7 +39,7 @@
       "matchStrings": [ "GO_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "golang/go",
       "datasourceTemplate": "github-tags",
-      "versioningTemplate": "^go(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+      "versioningTemplate": "^go(?<major>\\d+?)\\.(?<minor>\\d+?)\\.(?<patch>\\d+?)$"
     }
   ],
 
