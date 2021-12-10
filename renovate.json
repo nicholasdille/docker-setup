@@ -67,10 +67,6 @@
       "extractVersion": "^kustomize/v(?<version>.+)$"
     },
     {
-      "packageNames": [ "stedolan/jq" ],
-      "extractVersion": "^jq-(?<version>.+)$"
-    },
-    {
       "matchPackageNames": [
         "docker/compose"
       ],
