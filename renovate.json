@@ -40,7 +40,7 @@
       "matchStrings": [ "GO_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "golang/go",
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "regex:^go(?<version>.+?)$"
+      "extractVersionTemplate": "^go(?<version>.+?)$"
     }
   ],
 
