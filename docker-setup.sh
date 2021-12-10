@@ -137,7 +137,7 @@ function task() {
     echo "$1"
 }
 
-GO_VERSION=1.17.5 # renovate: datasource=github-tags depName=golang/go
+GO_VERSION=1.17.5
 # renovate: datasource=github-releases depName=stedolan/jq versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
 JQ_VERSION=1.6
 # renovate: datasource=github-releases depName=mikefarah/yq

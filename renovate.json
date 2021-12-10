@@ -27,14 +27,19 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "^docker-setup.sh$",
         "^.github/workflows/release.yml$"
       ],
       "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s",
-        "^.*_VERSION=(?<currentValue>.*)\\s#\\srenovate:\\sdatasource=(?<datasource>.*?)\\sdepName=(?<depName>.*?)(\\sversioning=(?<versioning>.*?))?$"
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "^GO_VERSION=(?<currentValue>.*)$" ],
+      "depNameTemplate": "golang/go",
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "^go(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ],
 
@@ -60,12 +65,6 @@
         "docker/compose"
       ],
       "extractVersion": "^v?(?<version>.+)$"
-    },
-    {
-      "matchPackageNames": [
-        "golang/go"
-      ],
-      "extractVersion": "^go(?<version>.+)$"
     },
     {
       "matchPackageNames": [
