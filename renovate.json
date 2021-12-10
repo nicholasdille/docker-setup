@@ -42,6 +42,14 @@
       "depNameTemplate": "golang/go",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^go(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "JQ_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "stedolan/jq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^jq-(?<version>.+)$",
+      "versioningTemplate": "^(?<major>\\d+)\\.(?<minor>\\d+)?$"
     }
   ],
 

@@ -135,7 +135,6 @@ tools+=(podman conmon buildah crun skopeo)
 tools+=(kubectl kind k3d helm krew kustomize kompose kapp ytt arkade clusterctl clusterawsadm minikube kubeswitch)
 
 GO_VERSION=1.17.4
-# renovate: datasource=github-releases depName=stedolan/jq versioning=regex:^(?<major>\d+)\.(?<minor>\d+)?$
 JQ_VERSION=1.6
 # renovate: datasource=github-releases depName=mikefarah/yq
 YQ_VERSION=4.16.1
