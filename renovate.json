@@ -73,7 +73,7 @@
         "nicholasdille/crun-static"
       ],
       "versioning": "loose",
-      "extractVersion": "regex:^v(?<version>\\d+\\.\\d+(\\.\\d+)?)$"
+      "extractVersion": "regex:^v(?<version>.+?)$"
     },
     {
       "packageNames": [
