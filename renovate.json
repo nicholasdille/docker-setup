@@ -27,6 +27,7 @@
   "regexManagers": [
     {
       "fileMatch": [
+        "^docker-setup.sh$",
         "^.github/workflows/release.yml$"
       ],
       "matchStrings": [
