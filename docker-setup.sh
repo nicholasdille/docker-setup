@@ -1324,7 +1324,10 @@ spinner_count="${#spinner_chars[@]}"
 spinner_index=0
 last_update=false
 while true; do
-    if ${INTERACTIVE_OUTPUT}; then
+    if ${last_update}; then
+        exit
+
+    elif ${INTERACTIVE_OUTPUT}; then
         tput home
 
         for tool in "${tools[@]}"; do
@@ -1345,9 +1348,6 @@ while true; do
             echo
         done
 
-    elif ${last_update}; then
-        exit
-
     else
         echo -e -n "\rInstalling... "
         if ! ${NO_SPINNER}; then
@@ -1355,7 +1355,7 @@ while true; do
         fi
     fi
 
-    if test "$(ps -eo ppid= | grep -Fwc $$)" -eq 1; then
+    if test "$(pgrep -cP $$)" -eq 0; then
         if ! ${INTERACTIVE_OUTPUT}; then
             echo -e -n "\r"
             tput el
