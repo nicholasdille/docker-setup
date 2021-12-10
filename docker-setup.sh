@@ -192,7 +192,7 @@ STARGZ_SNAPSHOTTER_VERSION=0.10.1
 IMGCRYPT_VERSION=1.1.2
 # renovate: datasource=github-releases depName=containers/fuse-overlayfs
 FUSE_OVERLAYFS_VERSION=1.6
-# renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter
+# renovate: datasource=github-releases depName=containerd/fuse-overlayfs-snapshotter versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 # renovate: datasource=github-releases depName=getporter/porter
 PORTER_VERSION=0.38.8
@@ -204,7 +204,7 @@ CONMON_VERSION=2.0.31
 BUILDAH_VERSION=1.23.1
 # renovate: datasource=github-releases depName=nicholasdille/crun-static
 CRUN_VERSION=1.3
-# renovate: datasource=github-releases depName=nicholasdille/skopeo-static
+# renovate: datasource=github-releases depName=nicholasdille/skopeo-static versioning=regex:^(?<major>\d+)\.(?<minor>\d+)(\.(?<patch>\d+))?$
 SKOPEO_VERSION=1.5.2
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=1.23.0
