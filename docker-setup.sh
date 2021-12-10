@@ -866,7 +866,7 @@ function install-cni() {
     echo "CNI ${CNI_VERSION}"
     progress cni "Install binaries"
     curl -sL "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz" \
-    | tar -xzC "${TARGET}/libexec/cni"
+    | tar -xzC "${TARGET}/libexec/cni" --no-same-owner
 }
 
 function install-cni-isolation() {
@@ -1227,7 +1227,7 @@ function install-kubeswitch() {
     echo "kubeswitch ${KUBESWITCH_VERSION}"
     progress kubeswitch "Install binary"
     curl -sL "https://github.com/danielb42/kubeswitch/releases/download/v${KUBESWITCH_VERSION}/kubeswitch_linux_amd64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" kubeswitch
+    | tar -xzC "${TARGET}/bin" --no-same-owner kubeswitch
     mkdir -p "${DOCKER_SETUP_CACHE}/kubeswitch"
     touch "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"
 }
