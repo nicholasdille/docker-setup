@@ -88,7 +88,7 @@
       "matchStrings": [ "DOCKER_COMPOSE_V1_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
-      "versioningTemplate": "loose"
+      "versioningTemplate": "^(?<major>1?)\\.(?<minor>\\d+?)\\.(?<patch>\\d+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
