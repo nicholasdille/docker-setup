@@ -59,7 +59,7 @@
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "DOCKER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "moby/moby",
-      "datasourceTemplate": "github-releases",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
