@@ -3,6 +3,7 @@ RUN apt-get update \
  && apt-get -y install --no-install-recommends \
         curl \
         ca-certificates \
-        iptables
+        iptables \
+        git
 COPY test/test.sh /
 COPY docker-setup.sh /

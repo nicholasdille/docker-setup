@@ -7,6 +7,7 @@ RUN apk add --update-cache --no-cache \
         iptables \
         shadow \
         openrc \
+        git \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
 COPY test/test.sh /

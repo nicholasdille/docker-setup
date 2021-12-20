@@ -155,7 +155,7 @@ if ${SHOW_VERSION}; then
     exit
 fi
 
-DEPENDENCIES=(curl)
+DEPENDENCIES=(curl git)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
         echo -e "${RED}ERROR: Missing ${DEPENDENCY}.${RESET}"
