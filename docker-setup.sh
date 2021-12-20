@@ -468,6 +468,10 @@ function is_alpine() {
 function is_wsl() {
     if test -n "${WSL_DISTRO}"; then
         return 0
+
+    elif uname -a | grep -q -- -microsoft-; then
+        return 0
+        
     else
         return 1
     fi
