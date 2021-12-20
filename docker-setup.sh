@@ -465,18 +465,6 @@ function is_alpine() {
     esac
 }
 
-function is_wsl() {
-    if test -n "${WSL_DISTRO}"; then
-        return 0
-
-    elif uname -a | grep -q -- -microsoft-; then
-        return 0
-        
-    else
-        return 1
-    fi
-}
-
 function is_container() {
     if grep -q "/docker/" /proc/1/cgroup; then
         return 0
