@@ -345,6 +345,10 @@ function required-crictl()                     { user_requested "crictl"        
 function required-trivy()                      { user_requested "trivy"                      || ! trivy_matches_version; }
 
 INTERACTIVE_OUTPUT=true
+if test -p /dev/stdout; then
+    SIMPLE_OUTPUT=true
+    NO_SPINNER=true
+fi
 if test "$(tput lines)" -lt "${#tools[@]}" || ${SIMPLE_OUTPUT}; then
     INTERACTIVE_OUTPUT=false
 fi
