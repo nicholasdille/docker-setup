@@ -86,6 +86,7 @@ The following command line switches are accepted:
 --check-only             See CHECK_ONLY below
 --no-wait                See NO_WAIT below
 --reinstall              See REINSTALL below
+--no-color               See NO_COLOR below
 
 The following environment variables are processed:
 
@@ -95,6 +96,8 @@ NO_WAIT                  Skip wait before installation/update
                          when not empty
 
 REINSTALL                Reinstall all tools
+
+NO_COLOR                 Disable colored output. Defaults to false
 
 TARGET                   Specifies the target directory for
                          binaries. Defaults to /usr
