@@ -1,3 +1,4 @@
 FROM opensuse/tumbleweed:latest
 #
 COPY test.sh /
+COPY docker-setup.sh /

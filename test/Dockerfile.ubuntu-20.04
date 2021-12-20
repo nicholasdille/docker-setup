@@ -5,3 +5,4 @@ RUN apt-get update \
         ca-certificates \
         iptables
 COPY test.sh /
+COPY docker-setup.sh /

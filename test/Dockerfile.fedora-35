@@ -6,3 +6,4 @@ RUN dnf install -y \
         iptables-legacy \
         initscripts
 COPY test.sh /
+COPY docker-setup.sh /

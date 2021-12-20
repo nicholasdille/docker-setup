@@ -9,4 +9,5 @@ RUN apk add --update-cache --no-cache \
         openrc \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
-COPY test.sh /
+COPY test/test.sh /
+COPY docker-setup.sh /

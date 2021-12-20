@@ -1,3 +1,4 @@
 FROM rockylinux:8
 #
 COPY test.sh /
+COPY docker-setup.sh /
