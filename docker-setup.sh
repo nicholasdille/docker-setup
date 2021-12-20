@@ -71,6 +71,7 @@ Usage: docker-setup.sh [<options>] [<tool>[ <tool>]]
 The following command line switches are accepted:
 
 --help                   Show this help
+--version                Display version
 --check-only             See CHECK_ONLY below
 --no-wait                See NO_WAIT below
 --reinstall              See REINSTALL below
