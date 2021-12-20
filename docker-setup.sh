@@ -1450,6 +1450,9 @@ spinner_chars=("|" "/" "-" "\\")
 spinner_count="${#spinner_chars[@]}"
 spinner_index=0
 last_update=false
+if ${NO_SPINNER}; then
+    echo "Installing..."
+fi
 while true; do
     if ${last_update}; then
         exit
@@ -1475,11 +1478,8 @@ while true; do
             echo
         done
 
-    else
-        echo -e -n "\rInstalling... "
-        if ! ${NO_SPINNER}; then
-            echo -e -n "${spinner_chars[$(( spinner_index % spinner_count ))]}"
-        fi
+    elif ! ${NO_SPINNER}; then
+        echo -e -n "\rInstalling... ${spinner_chars[$(( spinner_index % spinner_count ))]}"
     fi
 
     if test "$(pgrep -cP $$)" -eq 0; then
