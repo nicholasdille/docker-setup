@@ -240,7 +240,7 @@ fi
 
 function user_requested() {
     local tool=$1
-    ${REINSTALL} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"
+    ${REINSTALL} || test ${#requested_tools[@]} -eq 0 || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"
 }
 
 function is_executable() {
