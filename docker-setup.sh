@@ -508,6 +508,7 @@ mkdir -p \
     ${DOCKER_SETUP_LOGS} \
     ${DOCKER_SETUP_CACHE} \
     ${DOCKER_SETUP_PROGRESS} \
+    ${DOCKER_SETUP_CACHE}/errors \
     /etc/docker \
     "${TARGET}/share/bash-completion/completions" \
     "${TARGET}/share/fish/vendor_completions.d" \
@@ -1435,7 +1436,7 @@ for tool in "${tools[@]}"; do
             echo "------------------------------------------------------------"
         } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
 
-        eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1 &"
+        eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1 || touch \"${DOCKER_SETUP_CACHE}/errors/${tool}\" &"
         child_pids[${tool}]=$!
     fi
 done
@@ -1448,7 +1449,7 @@ function cleanup() {
     cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r CHILD; do
         kill "${CHILD}"
     done
-    rm -rf "${DOCKER_SETUP_PROGRESS}"
+    rm -rf "${DOCKER_SETUP_PROGRESS}" "${DOCKER_SETUP_CACHE}/errors"
 }
 trap cleanup EXIT
 
@@ -1461,7 +1462,14 @@ if ${NO_SPINNER}; then
 fi
 while true; do
     if ${last_update}; then
-        exit
+        exit_code=0
+        # shellcheck disable=SC2044
+        for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
+            tool="$(basename "${error}")"
+            echo -e "${RED}ERROR: Failed to install ${tool}.${RESET}"
+            exit_code=1
+        done
+        exit "${exit_code}"
 
     elif ${INTERACTIVE_OUTPUT}; then
         tput home
