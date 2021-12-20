@@ -5,6 +5,7 @@ set -o errexit
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
 : "${REINSTALL:=false}"
+: "${ONLY_INSTALL:=false}"
 : "${NO_SPINNER:=false}"
 : "${SIMPLE_OUTPUT:=false}"
 : "${SHOW_VERSION:=false}"
@@ -23,6 +24,9 @@ while test "$#" -gt 0; do
             ;;
         --reinstall)
             REINSTALL=true
+            ;;
+        --only-install)
+            ONLY_INSTALL=true
             ;;
         --no-spinner)
             NO_SPINNER=true
@@ -366,23 +370,30 @@ function progress() {
 declare -A tool_required
 max_length=0
 for tool in "${tools[@]}"; do
-    tool_required[${tool}]=$(if eval "required-${tool}"; then echo "true"; else echo "false"; fi)
+    if user_requested "${tool}"; then
+        tool_required[${tool}]=$(if eval "required-${tool}"; then echo "true"; else echo "false"; fi)
 
-    if test "${#tool}" -gt "${max_length}"; then
-        max_length=${#tool}
+        if test "${#tool}" -gt "${max_length}"; then
+            max_length=${#tool}
+        fi
+
+    else
+        tool_required[${tool}]=false
     fi
 done
 declare -A tool_spaces
 declare -A tool_version
 declare -A tool_color
 for tool in "${tools[@]}"; do
-    VAR_NAME="${tool^^}_VERSION"
-    VERSION="${VAR_NAME//-/_}"
-    tool_version[${tool}]="${!VERSION}"
-    tool_spaces[${tool}]=$(printf ' %.0s' $(seq 0 $(("${max_length}" - "${#tool}")) ))
-    tool_color[${tool}]=$(if ${tool_required[${tool}]}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)
+    if ${tool_required[${tool}]}; then
+        VAR_NAME="${tool^^}_VERSION"
+        VERSION="${VAR_NAME//-/_}"
+        tool_version[${tool}]="${!VERSION}"
+        tool_spaces[${tool}]=$(printf ' %.0s' $(seq 0 $(("${max_length}" - "${#tool}")) ))
+        tool_color[${tool}]=$(if ${tool_required[${tool}]}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)
 
-    echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
+        echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
+    fi
 done
 echo
 
@@ -1455,21 +1466,23 @@ while true; do
         tput home
 
         for tool in "${tools[@]}"; do
-            echo -e -n "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
+            if ${tool_required[${tool}]}; then
+                echo -e -n "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
 
-            if test -d "/proc/${child_pids[${tool}]}"; then
-                if test -f "${DOCKER_SETUP_PROGRESS}/${tool}"; then
-                    echo -e -n " ("
-                    cat "${DOCKER_SETUP_PROGRESS}/${tool}"
-                    echo -e -n ")"
+                if test -d "/proc/${child_pids[${tool}]}"; then
+                    if test -f "${DOCKER_SETUP_PROGRESS}/${tool}"; then
+                        echo -e -n " ("
+                        cat "${DOCKER_SETUP_PROGRESS}/${tool}"
+                        echo -e -n ")"
+                    fi
+
+                else
+                    tool_color[${tool}]=${GREEN}
                 fi
 
-            else
-                tool_color[${tool}]=${GREEN}
+                tput el
+                echo
             fi
-
-            tput el
-            echo
         done
 
     elif ! ${NO_SPINNER}; then
