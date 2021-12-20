@@ -608,6 +608,7 @@ function install-docker() {
         progress docker "Install init script for redhat"
         curl -sLo /etc/sysconfig/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
         curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
+        # shellcheck disable=SC1083
         sed -i -E "s|(^prog=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" /etc/init.d/docker
     elif is_alpine; then
         progress docker "Install openrc script for alpine"
