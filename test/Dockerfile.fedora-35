@@ -5,5 +5,5 @@ RUN dnf install -y \
         procps-ng \
         iptables-legacy \
         initscripts
-COPY test.sh /
+COPY test/test.sh /
 COPY docker-setup.sh /

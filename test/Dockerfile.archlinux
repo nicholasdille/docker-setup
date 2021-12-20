@@ -1,4 +1,4 @@
 FROM archlinux:latest
 #
-COPY test.sh /
+COPY test/test.sh /
 COPY docker-setup.sh /

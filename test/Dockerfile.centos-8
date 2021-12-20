@@ -5,5 +5,5 @@ RUN yum install -y \
         initscripts \
         iptables
 # iptables-legacy
-COPY test.sh /
+COPY test/test.sh /
 COPY docker-setup.sh /
