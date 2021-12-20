@@ -570,17 +570,25 @@ function install-docker() {
     progress docker "Check for iptables/nftables"
     if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
         echo "iptables"
-        echo -e "${RED}ERROR: Unable to continue because...${RESET}"
-        echo -e "${RED}       - ...you are missing ipables OR...${RESET}"
-        echo -e "${RED}       - ...you are using nftables and not iptables...${RESET}"
-        echo -e "${RED}       To fix this, iptables must point to iptables-legacy.${RESET}"
-        echo -e "${RED}       (You don't want to run Docker with iptables=false.)${RESET}"
+        echo -e "${YELLOW}WARNING: Unable to continue because...${RESET}"
+        echo -e "${YELLOW}         - ...you are missing ipables OR...${RESET}"
+        echo -e "${YELLOW}         - ...you are using nftables and not iptables...${RESET}"
+        echo -e "${YELLOW}         To fix this, iptables must point to iptables-legacy.${RESET}"
         echo
-        echo -e "${RED}       For Ubuntu:${RESET}"
-        echo -e "${RED}       $ apt-get update${RESET}"
-        echo -e "${RED}       $ apt-get -y install --no-install-recommends iptables${RESET}"
-        echo -e "${RED}       $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
-        exit 1
+        echo -e "${YELLOW}         You don't want to run Docker with iptables=false:${RESET}"
+        echo -e "${YELLOW}         https://docs.docker.com/network/iptables/${RESET}"
+        echo
+        echo -e "${YELLOW}         For Ubuntu:${RESET}"
+        echo -e "${YELLOW}         $ apt-get update${RESET}"
+        echo -e "${YELLOW}         $ apt-get -y install --no-install-recommends iptables${RESET}"
+        echo -e "${YELLOW}         $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
+
+        local lsb_dist
+        lsb_dist="$(get_distribution)"
+        if test "${lsb_dist,,}" == "centos"; then
+            echo -e "${RED}ERROR: CentOS does not support iptables-legacy.${RESET}"
+            exit 1
+        fi
     fi
     progress docker "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
