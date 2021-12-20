@@ -576,7 +576,7 @@ function install-docker() {
         echo -e "${YELLOW}         To fix this, iptables must point to iptables-legacy.${RESET}"
         echo
         echo -e "${YELLOW}         You don't want to run Docker with iptables=false:${RESET}"
-        echo -e "${YELLOW}         https://docs.docker.com/network/iptables/${RESET}"
+        echo -e "${YELLOW}         https://docs.docker.com/network/iptables ${RESET}"
         echo
         echo -e "${YELLOW}         For Ubuntu:${RESET}"
         echo -e "${YELLOW}         $ apt-get update${RESET}"
