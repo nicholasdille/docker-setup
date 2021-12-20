@@ -1166,6 +1166,10 @@ EOF
     progress kubectl "Install kubectl-convert"
     curl -sLo "${TARGET}/bin/kubectl-convert" "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert"
     chmod +x "${TARGET}/bin/kubectl-convert"
+    progress kubectl "Waiting for krew"
+    while ! type krew >/dev/null 2>&1; do
+        sleep 10
+    done
     progress kubectl "Install plugins for current user"
     kubectl krew install <<EOF
 access-matrix
