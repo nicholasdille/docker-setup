@@ -1,0 +1,3 @@
+FROM rockylinux:8
+#
+COPY test.sh /

@@ -151,13 +151,21 @@ if ${SHOW_VERSION}; then
     exit
 fi
 
-DEPENDENCIES=(curl git iptables tput)
+DEPENDENCIES=(curl)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
         echo -e "${RED}ERROR: Missing ${DEPENDENCY}.${RESET}"
         exit 1
     fi
 done
+if ! type tput >/dev/null 2>&1; then
+    function tput() {
+        if test "$1" == "lines"; then
+            echo 0
+        fi
+    }
+    SIMPLE_OUTPUT=true
+fi
 
 tools=(jq yq)
 tools+=(docker containerd rootlesskit runc docker-compose docker-scan slirp4netns hub-tool docker-machine buildx manifest-tool buildkit)
@@ -403,9 +411,73 @@ if test ${EUID} -ne 0; then
     exit 1
 fi
 
+get_distribution() {
+	local lsb_dist=""
+	if test -r /etc/os-release; then
+        # shellcheck disable=SC1091
+		lsb_dist="$(source /etc/os-release && echo "$ID")"
+	fi
+	echo "${lsb_dist}"
+}
+
+function is_debian() {
+    local lsb_dist
+    lsb_dist=$(get_distribution)
+    case "${lsb_dist}" in
+        ubuntu|debian|raspbian)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_redhat() {
+    local lsb_dist
+    lsb_dist=$(get_distribution)
+    case "${lsb_dist}" in
+        centos|rhel|sles|fedora)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_alpine() {
+    local lsb_dist
+    lsb_dist=$(get_distribution)
+    case "${lsb_dist}" in
+        alpine)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_wsl() {
+    if test -n "${WSL_DISTRO}"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function is_container() {
+    if grep -q "/docker/" /proc/1/cgroup; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function has_systemd() {
     INIT="$(readlink -f /sbin/init)"
-    if test "$(basename "${INIT}")" == "systemd"; then
+    if test "$(basename "${INIT}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
         return 0
     else
         >&2 echo -e "${YELLOW}WARNING: Did not find systemd.${RESET}"
@@ -444,6 +516,8 @@ mkdir -p \
     "${TARGET}/share/zsh/vendor-completions" \
     /etc/systemd/system \
     /etc/default \
+    /etc/sysconfig \
+    /etc/conf.d \
     /etc/init.d \
     "${DOCKER_PLUGINS_PATH}" \
     "${TARGET}/libexec/docker/bin" \
@@ -474,7 +548,7 @@ CURRENT_CGROUP_VERSION="v1"
 if test -f /sys/fs/cgroup/cgroup.controllers; then
     CURRENT_CGROUP_VERSION="v2"
 fi
-if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
+if type update-grub >/dev/null 2>&1 && test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
     if test -n "${WSL_DISTRO_NAME}"; then
         echo -e "${RED}ERROR: Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${RESET}"
         echo -e "${RED}       Please rerun this script with CGROUP_VERSION=v1${RESET}"
@@ -496,12 +570,13 @@ fi
 function install-docker() {
     echo "Docker ${DOCKER_VERSION}"
     progress docker "Check for iptables/nftables"
-    if ! iptables --version | grep -q legacy; then
+    if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
         echo "iptables"
         echo -e "${RED}ERROR: Unable to continue because...${RESET}"
+        echo -e "${RED}       - ...you are missing ipables OR...${RESET}"
         echo -e "${RED}       - ...you are using nftables and not iptables...${RESET}"
-        echo -e "${RED}       - ...to fix this iptables must point to iptables-legacy.${RESET}"
-        echo -e "${RED}       You don't want to run Docker with iptables=false.${RESET}"
+        echo -e "${RED}       To fix this, iptables must point to iptables-legacy.${RESET}"
+        echo -e "${RED}       (You don't want to run Docker with iptables=false.)${RESET}"
         echo
         echo -e "${RED}       For Ubuntu:${RESET}"
         echo -e "${RED}       $ apt-get update${RESET}"
@@ -524,9 +599,26 @@ function install-docker() {
     curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
     curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
     sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" /etc/systemd/system/docker.service
-    progress docker "Install init script"
-    curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-    curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+    if is_debian; then
+        progress docker "Install init script for debian"
+        curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+        curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+        sed -i -E "s|^(export PATH=)|\1${TARGET}/libexec/docker/bin:|" /etc/init.d/docker
+    elif is_redhat; then
+        progress docker "Install init script for redhat"
+        curl -sLo /etc/sysconfig/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
+        curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
+        sed -i -E "s|(^prog=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" /etc/init.d/docker
+    elif is_alpine; then
+        progress docker "Install openrc script for alpine"
+        curl -sLo /etc/conf.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
+        curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
+        # shellcheck disable=1083
+        sed -i -E "s|^(command=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" /etc/init.d/docker
+        # TODO: touch /run/openrc/softlevel
+    else
+        echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
+    fi
     sed -i -E "s|^export PATH=|export PATH=${TARGET}/libexec/docker/bin:|" /etc/init.d/docker
     progress docker "Set executable bits"
     chmod +x /etc/init.d/docker
@@ -834,7 +926,8 @@ TasksMax=infinity
 WantedBy=multi-user.target
 EOF
     progress portainer "Install init script"
-    curl -sLo "/etc/init.d/portainer" "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
+    curl -sLo /etc/init.d/portainer "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
+    chmod +x /etc/init.d/portainer
     if has_systemd; then
         progress portainer "Reload systemd"
         systemctl daemon-reload

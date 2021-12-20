@@ -1,0 +1,7 @@
+FROM ubuntu:20.04
+RUN apt-get update \
+ && apt-get -y install --no-install-recommends \
+        curl \
+        ca-certificates \
+        iptables
+COPY test.sh /

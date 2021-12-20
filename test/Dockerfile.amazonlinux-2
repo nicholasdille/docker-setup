@@ -1,0 +1,3 @@
+FROM amazonlinux:2
+# yum
+COPY test.sh /

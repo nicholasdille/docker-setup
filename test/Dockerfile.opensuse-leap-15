@@ -1,0 +1,3 @@
+FROM opensuse/leap:15
+#
+COPY test.sh /
