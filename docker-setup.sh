@@ -1483,6 +1483,7 @@ while true; do
             echo -e "${RED}ERROR: Failed to install ${tool}.${RESET}"
             exit_code=1
         done
+        echo "Finished installation."
         exit "${exit_code}"
 
     elif ${INTERACTIVE_OUTPUT}; then
