@@ -86,6 +86,8 @@ The following command line switches are accepted:
 --check-only             See CHECK_ONLY below
 --no-wait                See NO_WAIT below
 --reinstall              See REINSTALL below
+--simple-output          See SIMPLE_OUTPUT below
+--no-spinner             See NO_SPINNER below
 --no-color               See NO_COLOR below
 
 The following environment variables are processed:
@@ -96,6 +98,12 @@ NO_WAIT                  Skip wait before installation/update
                          when not empty
 
 REINSTALL                Reinstall all tools
+
+SIMPLE_OUTPUT            Do not display progress per tool. Defaults
+                         to false
+
+NO_SPINNER               Disable spinner in simple output. Defaults
+                         to false
 
 NO_COLOR                 Disable colored output. Defaults to false
 
