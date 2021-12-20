@@ -1,30 +1,6 @@
 #!/bin/bash
 set -o errexit
 
-RESET="\e[39m\e[49m"
-GREEN="\e[92m"
-YELLOW="\e[93m"
-RED="\e[91m"
-
-echo -e "${YELLOW}"
-cat <<"EOF"
-     _            _                           _
-  __| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
- / _` |/ _ \ / __| |/ / _ \ '__|____/ __|/ _ \ __| | | | '_ \
-| (_| | (_) | (__|   <  __/ | |_____\__ \  __/ |_| |_| | |_) |
- \__,_|\___/ \___|_|\_\___|_|       |___/\___|\__|\__,_| .__/
-                                                       |_|
-
-                     The container tools installer and updater
-                 https://github.com/nicholasdille/docker-setup
---------------------------------------------------------------
-
-This script will install Docker Engine as well as useful tools
-from the container ecosystem.
-
-EOF
-echo -e -n "${RESET}"
-
 : "${CHECK_ONLY:=false}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
@@ -32,6 +8,7 @@ echo -e -n "${RESET}"
 : "${NO_SPINNER:=false}"
 : "${SIMPLE_OUTPUT:=false}"
 : "${SHOW_VERSION:=false}"
+: "${NO_COLOR:=false}"
 requested_tools=()
 while test "$#" -gt 0; do
     case "$1" in
@@ -53,6 +30,9 @@ while test "$#" -gt 0; do
         --simple-output)
             SIMPLE_OUTPUT=true
             ;;
+        --no-color)
+            NO_COLOR=true
+            ;;
         --version)
             SHOW_VERSION=true
             ;;
@@ -63,6 +43,37 @@ while test "$#" -gt 0; do
 
     shift
 done
+
+RESET="\e[39m\e[49m"
+GREEN="\e[92m"
+YELLOW="\e[93m"
+RED="\e[91m"
+if ${NO_COLOR} || test -p /dev/stdout; then
+    RESET=""
+    GREEN=""
+    YELLOW=""
+    RED=""
+fi
+
+
+echo -e "${YELLOW}"
+cat <<"EOF"
+     _            _                           _
+  __| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
+ / _` |/ _ \ / __| |/ / _ \ '__|____/ __|/ _ \ __| | | | '_ \
+| (_| | (_) | (__|   <  __/ | |_____\__ \  __/ |_| |_| | |_) |
+ \__,_|\___/ \___|_|\_\___|_|       |___/\___|\__|\__,_| .__/
+                                                       |_|
+
+                     The container tools installer and updater
+                 https://github.com/nicholasdille/docker-setup
+--------------------------------------------------------------
+
+This script will install Docker Engine as well as useful tools
+from the container ecosystem.
+
+EOF
+echo -e -n "${RESET}"
 
 if ${SHOW_HELP}; then
     cat <<EOF
@@ -132,7 +143,7 @@ fi
 DEPENDENCIES=(curl git iptables tput)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
-        echo "ERROR: Missing ${DEPENDENCY}."
+        echo -e "${RED}ERROR: Missing ${DEPENDENCY}.${RESET}"
         exit 1
     fi
 done
@@ -450,8 +461,8 @@ if test -f /sys/fs/cgroup/cgroup.controllers; then
 fi
 if test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
     if test -n "${WSL_DISTRO_NAME}"; then
-        echo "ERROR: Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662."
-        echo "       Please rerun this script with CGROUP_VERSION=v1"
+        echo -e "${RED}ERROR: Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${RESET}"
+        echo -e "${RED}       Please rerun this script with CGROUP_VERSION=v1${RESET}"
         exit 1
     fi
 
@@ -472,15 +483,15 @@ function install-docker() {
     progress docker "Check for iptables/nftables"
     if ! iptables --version | grep -q legacy; then
         echo "iptables"
-        echo "ERROR: Unable to continue because..."
-        echo "       - ...you are using nftables and not iptables..."
-        echo "       - ...to fix this iptables must point to iptables-legacy."
-        echo "       You don't want to run Docker with iptables=false."
+        echo -e "${RED}ERROR: Unable to continue because...${RESET}"
+        echo -e "${RED}       - ...you are using nftables and not iptables...${RESET}"
+        echo -e "${RED}       - ...to fix this iptables must point to iptables-legacy.${RESET}"
+        echo -e "${RED}       You don't want to run Docker with iptables=false.${RESET}"
         echo
-        echo "       For Ubuntu:"
-        echo "       $ apt-get update"
-        echo "       $ apt-get -y install --no-install-recommends iptables"
-        echo "       $ update-alternatives --set iptables /usr/sbin/iptables-legacy"
+        echo -e "${RED}       For Ubuntu:${RESET}"
+        echo -e "${RED}       $ apt-get update${RESET}"
+        echo -e "${RED}       $ apt-get -y install --no-install-recommends iptables${RESET}"
+        echo -e "${RED}       $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
         exit 1
     fi
     progress docker "Install binaries"
