@@ -492,15 +492,20 @@ function docker_is_running() {
 }
 
 function wait_for_docker() {
-    local SLEEP=2
-    local RETRIES=5
+    local SLEEP=10
+    local RETRIES=6
 
     local RETRY=0
-    while ! docker_is_running && test "${RETRY}" -lt "${RETRIES}"; do
+    while ! docker_is_running && test "${RETRY}" -le "${RETRIES}"; do
         sleep "${SLEEP}"
 
         RETRY=$(( RETRY + 1 ))
     done
+
+    if ! docker_is_running; then
+        echo -e "${RED}ERROR: Failed to wait for Docker daemon to start after $(( RETRY * SLEEP )) seconds.${RESET}"
+        exit 1
+    fi
 }
 
 # Create directories
@@ -720,8 +725,9 @@ function install-containerd() {
     progress containerd "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-    progress containerd "Install manpages for containerd"
+    progress containerd "Wait for Docker daemon to start"
     wait_for_docker
+    progress containerd "Install manpages for containerd"
     docker container run \
         --interactive \
         --rm \
@@ -760,8 +766,9 @@ function install-runc() {
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
     progress runc "Set executable bits"
     chmod +x "${TARGET}/bin/runc"
-    progress runc "Install manpages for runc"
+    progress runc "Wait for Docker daemon to start"
     wait_for_docker
+    progress runc "Install manpages for runc"
     docker container run \
         --interactive \
         --rm \
@@ -816,8 +823,9 @@ function install-slirp4netns() {
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
     progress slirp4netns "Set executable bits"
     chmod +x "${TARGET}/bin/slirp4netns"
-    progress slirp4netns "Install manpages"
+    progress slirp4netns "Wait for Docker daemon to start"
     wait_for_docker
+    progress slirp4netns "Install manpages"
     docker container run \
         --interactive \
         --rm \
@@ -852,8 +860,9 @@ function install-buildx() {
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
     progress buildx "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
-    progress buildx "Enable multi-platform builds"
+    progress buildx "Wait for Docker daemon to start"
     wait_for_docker
+    progress buildx "Enable multi-platform builds"
     docker run --privileged --rm tonistiigi/binfmt --install all
 }
 
@@ -1024,8 +1033,9 @@ function install-stargz-snapshotter() {
 
 function install-imgcrypt() {
     echo "imgcrypt ${IMGCRYPT_VERSION}"
-    progress imgcrypt "Install binary"
+    progress imgcrypt "Wait for Docker daemon to start"
     wait_for_docker
+    progress imgcrypt "Install binary"
     docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
 mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
