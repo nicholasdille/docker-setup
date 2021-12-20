@@ -1,9 +1,11 @@
 FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
         curl \
         ca-certificates \
         iptables \
-        git
+        git \
+        tzdata
 COPY test/test.sh /
 COPY docker-setup.sh /

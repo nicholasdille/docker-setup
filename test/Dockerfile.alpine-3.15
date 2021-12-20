@@ -8,6 +8,7 @@ RUN apk add --update-cache --no-cache \
         shadow \
         openrc \
         git \
+        tzdata \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
 COPY test/test.sh /

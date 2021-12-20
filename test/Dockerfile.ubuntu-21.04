@@ -1,10 +1,12 @@
 FROM ubuntu:21.04
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
         curl \
         ca-certificates \
         iptables \
         git \
+        tzdata \
  && update-alternatives --set iptables /usr/sbin/iptables-legacy
 COPY test/test.sh /
 COPY docker-setup.sh /
