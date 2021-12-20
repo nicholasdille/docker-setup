@@ -1108,7 +1108,7 @@ function install-podman() {
     done
 }
 
-function install-builah() {
+function install-buildah() {
     echo "buildah ${BUILDAH_VERSION}"
     progress buildah "Install binary"
     curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
