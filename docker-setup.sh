@@ -504,7 +504,7 @@ function wait_for_docker() {
     local RETRIES=5
 
     local RETRY=0
-    while ! docker_is_running && test "${RETRY}" == "${RETRIES}"; do
+    while ! docker_is_running && test "${RETRY}" -lt "${RETRIES}"; do
         sleep "${SLEEP}"
 
         RETRY=$(( RETRY + 1 ))
