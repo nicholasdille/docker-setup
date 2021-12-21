@@ -175,7 +175,7 @@ tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
 
 GO_VERSION=1.17.5
 JQ_VERSION=1.6
-YQ_VERSION=4.16.1
+YQ_VERSION=4.16.2
 DOCKER_VERSION=20.10.12
 CONTAINERD_VERSION=1.5.8
 ROOTLESSKIT_VERSION=0.14.6
