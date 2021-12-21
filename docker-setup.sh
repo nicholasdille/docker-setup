@@ -390,6 +390,7 @@ for tool in "${tools[@]}"; do
         tool_required[${tool}]=false
     fi
 done
+length_bar="$(printf ' %.0s' $(seq 1 "${max_length}"))"
 declare -A tool_spaces
 declare -A tool_version
 declare -A tool_color
@@ -398,7 +399,7 @@ for tool in "${tools[@]}"; do
         VAR_NAME="${tool^^}_VERSION"
         VERSION="${VAR_NAME//-/_}"
         tool_version[${tool}]="${!VERSION}"
-        tool_spaces[${tool}]=$(printf ' %.0s' $(seq 0 $(("${max_length}" - "${#tool}")) ))
+        tool_spaces[${tool}]="${length_bar:${#tool}}"
         tool_color[${tool}]=$(if ${tool_required[${tool}]}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)
 
         echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
