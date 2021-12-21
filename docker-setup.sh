@@ -1139,10 +1139,6 @@ function install-krew() {
     cat >/etc/profile.d/krew.sh <<"EOF"
 export PATH="${HOME}/.krew/bin:${PATH}"
 EOF
-    # shellcheck source=/dev/null
-    source /etc/profile.d/krew.sh
-    progress krew "Install krew for current user"
-    krew install krew
     progress krew "Install completion"
     krew completion bash 2>/dev/null >"${TARGET}/share/bash-completion/completions/krew"
     krew completion fish 2>/dev/null >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
@@ -1170,8 +1166,10 @@ EOF
     while ! type krew >/dev/null 2>&1; do
         sleep 10
     done
+    progress krew "Install krew for current user"
     # shellcheck source=/dev/null
     source /etc/profile.d/krew.sh
+    krew install krew
     progress kubectl "Install plugins for current user"
     krew install <<EOF
 access-matrix
