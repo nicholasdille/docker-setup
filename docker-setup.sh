@@ -154,12 +154,13 @@ fi
 : "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
 : "${DOCKER_SETUP_CACHE:=/var/cache/docker-setup}"
 : "${DOCKER_SETUP_PROGRESS:=${DOCKER_SETUP_CACHE}/progress}"
-DOCKER_SETUP_VERSION=main
+DOCKER_SETUP_VERSION=dev
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
 
+echo -e "${YELLOW}docker-setup version ${DOCKER_SETUP_VERSION}${RESET}"
+echo
 if ${SHOW_VERSION}; then
-    echo "docker-setup version ${DOCKER_SETUP_VERSION}"
     exit
 fi
 
