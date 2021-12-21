@@ -1170,6 +1170,8 @@ EOF
     while ! type krew >/dev/null 2>&1; do
         sleep 10
     done
+    # shellcheck source=/dev/null
+    source /etc/profile.d/krew.sh
     progress kubectl "Install plugins for current user"
     kubectl krew install <<EOF
 access-matrix
