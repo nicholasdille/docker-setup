@@ -1449,6 +1449,15 @@ function install-trivy() {
         trivy
 }
 
+function children_are_running() {
+    for CHILD in "${child_pids[@]}"; do
+        if test -d "/proc/${CHILD}"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 declare -A child_pids
 for tool in "${tools[@]}"; do
     if ${tool_required[${tool}]}; then
@@ -1462,6 +1471,7 @@ for tool in "${tools[@]}"; do
         child_pids[${tool}]=$!
     fi
 done
+child_pid_count=${#child_pids[@]}
 
 ${INTERACTIVE_OUTPUT} && tput clear
 tput civis
@@ -1536,7 +1546,7 @@ while true; do
         fi
     fi
 
-    if test "$(pgrep -cP $$)" -eq 0; then
+    if ! children_are_running; then
         if ! ${INTERACTIVE_OUTPUT}; then
             echo -e -n "\r"
             tput el
