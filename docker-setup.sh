@@ -300,56 +300,56 @@ function trivy_matches_version()                      { is_executable "${TARGET}
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             && test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            && test "$(${TARGET}/bin/ytt version)"                                                        == "ytt version ${YTT_VERSION}"; }
 
-function required-arkade()                     { user_requested "${tool}" || ! arkade_matches_version; }
-function required-buildah()                    { user_requested "${tool}" || ! buildah_matches_version; }
-function required-buildkit()                   { user_requested "${tool}" || ! buildkit_matches_version; }
-function required-buildx()                     { user_requested "${tool}" || ! buildx_matches_version; }
-function required-clusterawsadm()              { user_requested "${tool}" || ! clusterawsadm_matches_version; }
-function required-clusterctl()                 { user_requested "${tool}" || ! clusterctl_matches_version; }
-function required-cni()                        { user_requested "${tool}" || ! cni_matches_version; }
-function required-cni-isolation()              { user_requested "${tool}" || ! cni_isolation_matches_version; }
-function required-conmon()                     { user_requested "${tool}" || ! conmon_matches_version; }
-function required-containerd()                 { user_requested "${tool}" || ! containerd_matches_version; }
-function required-cosign()                     { user_requested "${tool}" || ! cosign_matches_version; }
-function required-crictl()                     { user_requested "${tool}" || ! crictl_matches_version; }
-function required-crun()                       { user_requested "${tool}" || ! crun_matches_version; }
-function required-dive()                       { user_requested "${tool}" || ! dive_matches_version; }
-function required-docker()                     { user_requested "${tool}" || ! docker_matches_version; }
-function required-docker-compose()             { user_requested "${tool}" || ! eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
-function required-docker-machine()             { user_requested "${tool}" || ! docker_machine_matches_version; }
-function required-docker-scan()                { user_requested "${tool}" || ! docker_scan_matches_version; }
-function required-fuse-overlayfs()             { user_requested "${tool}" || ! fuse_overlayfs_matches_version; }
-function required-fuse-overlayfs-snapshotter() { user_requested "${tool}" || ! fuse_overlayfs_snapshotter_matches_version; }
-function required-helm()                       { user_requested "${tool}" || ! helm_matches_version; }
-function required-hub-tool()                   { user_requested "${tool}" || ! hub_tool_matches_version; }
-function required-img()                        { user_requested "${tool}" || ! img_matches_version; }
-function required-imgcrypt()                   { user_requested "${tool}" || ! imgcrypt_matches_version; }
-function required-jq()                         { user_requested "${tool}" || ! jq_matches_version; }
-function required-k3d()                        { user_requested "${tool}" || ! k3d_matches_version; }
-function required-k3s()                        { user_requested "${tool}" || ! k3s_matches_version; }
-function required-kind()                       { user_requested "${tool}" || ! kind_matches_version; }
-function required-kompose()                    { user_requested "${tool}" || ! kompose_matches_version; }
-function required-krew()                       { user_requested "${tool}" || ! krew_matches_version; }
-function required-kubectl()                    { user_requested "${tool}" || ! kubectl_matches_version; }
-function required-kubeswitch()                 { user_requested "${tool}" || ! kubeswitch_matches_version; }
-function required-kustomize()                  { user_requested "${tool}" || ! kustomize_matches_version; }
-function required-kapp()                       { user_requested "${tool}" || ! kapp_matches_version; }
-function required-manifest-tool()              { user_requested "${tool}" || ! manifest_tool_matches_version; }
-function required-minikube()                   { user_requested "${tool}" || ! minikube_matches_version; }
-function required-nerdctl()                    { user_requested "${tool}" || ! nerdctl_matches_version; }
-function required-oras()                       { user_requested "${tool}" || ! oras_matches_version; }
-function required-podman()                     { user_requested "${tool}" || ! podman_matches_version; }
-function required-portainer()                  { user_requested "${tool}" || ! portainer_matches_version; }
-function required-porter()                     { user_requested "${tool}" || ! porter_matches_version; }
-function required-regclient()                  { user_requested "${tool}" || ! regclient_matches_version; }
-function required-rootlesskit()                { user_requested "${tool}" || ! rootlesskit_matches_version; }
-function required-runc()                       { user_requested "${tool}" || ! runc_matches_version; }
-function required-skopeo()                     { user_requested "${tool}" || ! skopeo_matches_version; }
-function required-slirp4netns()                { user_requested "${tool}" || ! slirp4netns_matches_version; }
-function required-stargz-snapshotter()         { user_requested "${tool}" || ! stargz_snapshotter_matches_version; }
-function required-trivy()                      { user_requested "${tool}" || ! trivy_matches_version; }
-function required-yq()                         { user_requested "${tool}" || ! yq_matches_version; }
-function required-ytt()                        { user_requested "${tool}" || ! ytt_matches_version; }
+function required-arkade()                     { ! arkade_matches_version; }
+function required-buildah()                    { ! buildah_matches_version; }
+function required-buildkit()                   { ! buildkit_matches_version; }
+function required-buildx()                     { ! buildx_matches_version; }
+function required-clusterawsadm()              { ! clusterawsadm_matches_version; }
+function required-clusterctl()                 { ! clusterctl_matches_version; }
+function required-cni()                        { ! cni_matches_version; }
+function required-cni-isolation()              { ! cni_isolation_matches_version; }
+function required-conmon()                     { ! conmon_matches_version; }
+function required-containerd()                 { ! containerd_matches_version; }
+function required-cosign()                     { ! cosign_matches_version; }
+function required-crictl()                     { ! crictl_matches_version; }
+function required-crun()                       { ! crun_matches_version; }
+function required-dive()                       { ! dive_matches_version; }
+function required-docker()                     { ! docker_matches_version; }
+function required-docker-compose()             { ! eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
+function required-docker-machine()             { ! docker_machine_matches_version; }
+function required-docker-scan()                { ! docker_scan_matches_version; }
+function required-fuse-overlayfs()             { ! fuse_overlayfs_matches_version; }
+function required-fuse-overlayfs-snapshotter() { ! fuse_overlayfs_snapshotter_matches_version; }
+function required-helm()                       { ! helm_matches_version; }
+function required-hub-tool()                   { ! hub_tool_matches_version; }
+function required-img()                        { ! img_matches_version; }
+function required-imgcrypt()                   { ! imgcrypt_matches_version; }
+function required-jq()                         { ! jq_matches_version; }
+function required-k3d()                        { ! k3d_matches_version; }
+function required-k3s()                        { ! k3s_matches_version; }
+function required-kapp()                       { ! kapp_matches_version; }
+function required-kind()                       { ! kind_matches_version; }
+function required-kompose()                    { ! kompose_matches_version; }
+function required-kubectl()                    { ! kubectl_matches_version; }
+function required-kubeswitch()                 { ! kubeswitch_matches_version; }
+function required-kustomize()                  { ! kustomize_matches_version; }
+function required-krew()                       { ! krew_matches_version; }
+function required-manifest-tool()              { ! manifest_tool_matches_version; }
+function required-minikube()                   { ! minikube_matches_version; }
+function required-nerdctl()                    { ! nerdctl_matches_version; }
+function required-oras()                       { ! oras_matches_version; }
+function required-podman()                     { ! podman_matches_version; }
+function required-portainer()                  { ! portainer_matches_version; }
+function required-porter()                     { ! porter_matches_version; }
+function required-regclient()                  { ! regclient_matches_version; }
+function required-rootlesskit()                { ! rootlesskit_matches_version; }
+function required-runc()                       { ! runc_matches_version; }
+function required-skopeo()                     { ! skopeo_matches_version; }
+function required-slirp4netns()                { ! slirp4netns_matches_version; }
+function required-stargz-snapshotter()         { ! stargz_snapshotter_matches_version; }
+function required-trivy()                      { ! trivy_matches_version; }
+function required-yq()                         { ! yq_matches_version; }
+function required-ytt()                        { ! ytt_matches_version; }
 
 INTERACTIVE_OUTPUT=true
 if test -p /dev/stdout; then
@@ -385,7 +385,7 @@ declare -A tool_spaces
 declare -A tool_version
 declare -A tool_color
 for tool in "${tools[@]}"; do
-    if ${tool_required[${tool}]}; then
+    if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
         VAR_NAME="${tool^^}_VERSION"
         VERSION="${VAR_NAME//-/_}"
         tool_version[${tool}]="${!VERSION}"
@@ -1492,7 +1492,7 @@ while true; do
         tput home
 
         for tool in "${tools[@]}"; do
-            if ${tool_required[${tool}]}; then
+            if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
                 echo -e -n "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
 
                 if test -d "/proc/${child_pids[${tool}]}"; then
