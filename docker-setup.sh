@@ -1173,7 +1173,7 @@ EOF
     # shellcheck source=/dev/null
     source /etc/profile.d/krew.sh
     progress kubectl "Install plugins for current user"
-    kubectl krew install <<EOF
+    krew install <<EOF
 access-matrix
 advise-policy
 advise-psp
