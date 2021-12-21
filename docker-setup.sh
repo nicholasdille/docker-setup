@@ -6,8 +6,9 @@ set -o errexit
 : "${NO_WAIT:=false}"
 : "${REINSTALL:=false}"
 : "${ONLY_INSTALL:=false}"
-: "${NO_SPINNER:=false}"
 : "${SIMPLE_OUTPUT:=false}"
+: "${NO_SPINNER:=false}"
+: "${NO_PROGRESSBAR:=false}"
 : "${SHOW_VERSION:=false}"
 : "${NO_COLOR:=false}"
 requested_tools=()
@@ -28,11 +29,14 @@ while test "$#" -gt 0; do
         --only-install)
             ONLY_INSTALL=true
             ;;
+        --simple-output)
+            SIMPLE_OUTPUT=true
+            ;;
         --no-spinner)
             NO_SPINNER=true
             ;;
-        --simple-output)
-            SIMPLE_OUTPUT=true
+        --no-progressbar)
+            NO_PROGRESSBAR=true
             ;;
         --no-color)
             NO_COLOR=true
@@ -92,6 +96,7 @@ The following command line switches are accepted:
 --reinstall              See REINSTALL below
 --simple-output          See SIMPLE_OUTPUT below
 --no-spinner             See NO_SPINNER below
+--no-progressbar         See NO_PROGRESSBAR below
 --no-color               See NO_COLOR below
 
 The following environment variables are processed:
@@ -108,6 +113,9 @@ SIMPLE_OUTPUT            Do not display progress per tool. Defaults
 
 NO_SPINNER               Disable spinner in simple output. Defaults
                          to false
+
+NO_PROGRESSBAR           Disable progress bar in simple output when
+                         no spinner is requested. Defaults to false
 
 NO_COLOR                 Disable colored output. Defaults to false
 
@@ -1471,9 +1479,9 @@ spinner_chars=("|" "/" "-" "\\")
 spinner_count="${#spinner_chars[@]}"
 spinner_index=0
 last_update=false
-if ${NO_SPINNER}; then
-    echo "Installing..."
-fi
+width=$(tput cols || echo "40")
+done_bar=$(printf '#%.0s' $(seq 0 "${width}"))
+todo_bar=$(printf ' %.0s' $(seq 0 "${width}"))
 while true; do
     if ${last_update}; then
         exit_code=0
@@ -1509,8 +1517,23 @@ while true; do
             fi
         done
 
-    elif ! ${NO_SPINNER}; then
-        echo -e -n "\rInstalling... ${spinner_chars[$(( spinner_index % spinner_count ))]}"
+    else
+        if ! ${NO_PROGRESSBAR}; then
+            todo="$(pgrep -cP $$)"
+            done=$((child_pid_count - todo))
+
+            done_chars="${done_bar:0:${done}}"
+            todo_chars="${todo_bar:0:${todo}}"
+            percent=$((done * 100 / child_pid_count))
+
+            echo -e -n "\rRunning ${todo}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
+
+        elif ! ${NO_SPINNER}; then
+            echo -e -n "\rInstalling... ${spinner_chars[$(( spinner_index % spinner_count ))]}"
+
+        else
+            echo "Installing..."
+        fi
     fi
 
     if test "$(pgrep -cP $$)" -eq 0; then
