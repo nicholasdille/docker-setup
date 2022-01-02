@@ -394,13 +394,20 @@ length_bar="$(printf ' %.0s' $(seq 1 "${max_length}"))"
 declare -A tool_spaces
 declare -A tool_version
 declare -A tool_color
+check_only_exit_code=0
 for tool in "${tools[@]}"; do
     if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
         VAR_NAME="${tool^^}_VERSION"
         VERSION="${VAR_NAME//-/_}"
         tool_version[${tool}]="${!VERSION}"
         tool_spaces[${tool}]="${length_bar:${#tool}}"
-        tool_color[${tool}]=$(if ${tool_required[${tool}]}; then echo "${YELLOW}"; else echo "${GREEN}"; fi)
+
+        if ${tool_required[${tool}]}; then
+            tool_color[${tool}]="${YELLOW}"
+            check_only_exit_code=1
+        else
+            tool_color[${tool}]="${GREEN}"
+        fi
 
         echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
     fi
@@ -408,7 +415,7 @@ done
 echo
 
 if ${CHECK_ONLY}; then
-    exit
+    exit "${check_only_exit_code}"
 fi
 
 if ! ${NO_WAIT}; then
