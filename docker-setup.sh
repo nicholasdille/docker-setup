@@ -6,8 +6,6 @@ set -o errexit
 : "${NO_WAIT:=false}"
 : "${REINSTALL:=false}"
 : "${ONLY_INSTALL:=false}"
-: "${SIMPLE_OUTPUT:=false}"
-: "${NO_SPINNER:=false}"
 : "${NO_PROGRESSBAR:=false}"
 : "${SHOW_VERSION:=false}"
 : "${NO_COLOR:=false}"
@@ -28,12 +26,6 @@ while test "$#" -gt 0; do
             ;;
         --only-install)
             ONLY_INSTALL=true
-            ;;
-        --simple-output)
-            SIMPLE_OUTPUT=true
-            ;;
-        --no-spinner)
-            NO_SPINNER=true
             ;;
         --no-progressbar)
             NO_PROGRESSBAR=true
@@ -94,8 +86,6 @@ The following command line switches are accepted:
 --check-only             See CHECK_ONLY below
 --no-wait                See NO_WAIT below
 --reinstall              See REINSTALL below
---simple-output          See SIMPLE_OUTPUT below
---no-spinner             See NO_SPINNER below
 --no-progressbar         See NO_PROGRESSBAR below
 --no-color               See NO_COLOR below
 
@@ -108,14 +98,7 @@ NO_WAIT                  Skip wait before installation/update
 
 REINSTALL                Reinstall all tools
 
-SIMPLE_OUTPUT            Do not display progress per tool. Defaults
-                         to false
-
-NO_SPINNER               Disable spinner in simple output. Defaults
-                         to false
-
-NO_PROGRESSBAR           Disable progress bar in simple output when
-                         no spinner is requested. Defaults to false
+NO_PROGRESSBAR           Disable progress bar. Defaults to false
 
 NO_COLOR                 Disable colored output. Defaults to false
 
@@ -177,7 +160,6 @@ if ! type tput >/dev/null 2>&1; then
             echo 0
         fi
     }
-    SIMPLE_OUTPUT=true
 fi
 
 tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation conmon containerd cosign crictl crun dive docker docker-compose docker-machine docker-scan fuse-overlayfs fuse-overlayfs-snapshotter helm hub-tool img imgcrypt jq k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize manifest-tool minikube nerdctl oras portainer porter podman regclient rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt)
@@ -359,15 +341,6 @@ function required-stargz-snapshotter()         { ! stargz_snapshotter_matches_ve
 function required-trivy()                      { ! trivy_matches_version; }
 function required-yq()                         { ! yq_matches_version; }
 function required-ytt()                        { ! ytt_matches_version; }
-
-INTERACTIVE_OUTPUT=true
-if test -p /dev/stdout; then
-    SIMPLE_OUTPUT=true
-    NO_SPINNER=true
-fi
-if test "$(tput lines)" -lt "${#tools[@]}" || ${SIMPLE_OUTPUT}; then
-    INTERACTIVE_OUTPUT=false
-fi
 
 function progress() {
     local tool="$1"
@@ -1482,7 +1455,6 @@ for tool in "${tools[@]}"; do
 done
 child_pid_count=${#child_pids[@]}
 
-${INTERACTIVE_OUTPUT} && tput clear
 tput civis
 
 function cleanup() {
@@ -1494,9 +1466,6 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-spinner_chars=("|" "/" "-" "\\")
-spinner_count="${#spinner_chars[@]}"
-spinner_index=0
 last_update=false
 width=$(tput cols || echo "40")
 done_bar=$(printf '#%.0s' $(seq 0 "${width}"))
@@ -1513,29 +1482,6 @@ while true; do
         echo "Finished installation."
         exit "${exit_code}"
 
-    elif ${INTERACTIVE_OUTPUT}; then
-        tput home
-
-        for tool in "${tools[@]}"; do
-            if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
-                echo -e -n "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
-
-                if test -d "/proc/${child_pids[${tool}]}"; then
-                    if test -f "${DOCKER_SETUP_PROGRESS}/${tool}"; then
-                        echo -e -n " ("
-                        cat "${DOCKER_SETUP_PROGRESS}/${tool}"
-                        echo -e -n ")"
-                    fi
-
-                else
-                    tool_color[${tool}]=${GREEN}
-                fi
-
-                tput el
-                echo
-            fi
-        done
-
     else
         if ! ${NO_PROGRESSBAR}; then
             todo="$(pgrep -cP $$)"
@@ -1547,22 +1493,16 @@ while true; do
 
             echo -e -n "\rRunning ${todo}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
 
-        elif ! ${NO_SPINNER}; then
-            echo -e -n "\rInstalling... ${spinner_chars[$(( spinner_index % spinner_count ))]}"
-
         else
             echo "Installing..."
         fi
     fi
 
     if ! children_are_running; then
-        if ! ${INTERACTIVE_OUTPUT}; then
-            echo -e -n "\r"
-            tput el
-        fi
+        echo -e -n "\r"
+        tput el
         last_update=true
     fi
 
     sleep 0.1
-    spinner_index=$(( spinner_index + 1 ))
 done
