@@ -1444,9 +1444,24 @@ function children_are_running() {
     return 1
 }
 
+function process_exists() {
+    test -d "/proc/${CHILD}"
+}
+
+function count_sub_processes() {
+    local count=0
+    for CHILD in "${child_pids[@]}"; do
+        if process_exists "${CHILD}"; then
+            count=$((count + 1))
+        fi
+    done
+    echo "${count}"
+}
+
 declare -A child_pids
 for tool in "${tools[@]}"; do
-    if ${tool_required[${tool}]}; then
+    #if ${tool_required[${tool}]}; then
+    if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
         {
             echo "============================================================"
             date +"%Y-%m-%d %H:%M:%S %Z"
@@ -1471,12 +1486,31 @@ function cleanup() {
 trap cleanup EXIT
 
 last_update=false
-width=$(tput cols || echo "40")
+cols=$(tput cols || echo "60")
+width=$((cols - 20))
 done_bar=$(printf '#%.0s' $(seq 0 "${width}"))
 todo_bar=$(printf ' %.0s' $(seq 0 "${width}"))
+if ${NO_PROGRESSBAR}; then
+    echo "Installing..."
+fi
 while true; do
+    if ! ${NO_PROGRESSBAR}; then
+        todo="$(count_sub_processes)"
+        done=$((child_pid_count - todo))
+
+        done_length=$((width * done / child_pid_count))
+        todo_length=$((width - done_length))
+
+        todo_chars="${todo_bar:0:${todo_length}}"
+        done_chars="${done_bar:0:${done_length}}"
+        percent=$((done * 100 / child_pid_count))
+
+        echo -e -n "\rDone ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
+    fi
+
     if ${last_update}; then
         exit_code=0
+        echo
         # shellcheck disable=SC2044
         for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
             tool="$(basename "${error}")"
@@ -1485,26 +1519,9 @@ while true; do
         done
         echo "Finished installation."
         exit "${exit_code}"
-
-    else
-        if ! ${NO_PROGRESSBAR}; then
-            todo="$(pgrep -cP $$)"
-            done=$((child_pid_count - todo))
-
-            done_chars="${done_bar:0:${done}}"
-            todo_chars="${todo_bar:0:${todo}}"
-            percent=$((done * 100 / child_pid_count))
-
-            echo -e -n "\rRunning ${todo}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
-
-        else
-            echo "Installing..."
-        fi
     fi
 
     if ! children_are_running; then
-        echo -e -n "\r"
-        tput el
         last_update=true
     fi
 
