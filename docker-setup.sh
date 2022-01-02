@@ -54,7 +54,8 @@ if ${NO_COLOR} || test -p /dev/stdout; then
     YELLOW=""
     RED=""
 fi
-
+CHECK_MARK="\xE2\x9C\x93" # ✗ \u2713 (https://www.compart.com/de/unicode/U+2713)
+CROSS_MARK="\xE2\x9C\x97" # ✓ \u2717 (https://www.compart.com/de/unicode/U+2717)
 
 echo -e "${YELLOW}"
 cat <<"EOF"
@@ -367,6 +368,7 @@ length_bar="$(printf ' %.0s' $(seq 1 "${max_length}"))"
 declare -A tool_spaces
 declare -A tool_version
 declare -A tool_color
+declare -A tool_sign
 check_only_exit_code=0
 for tool in "${tools[@]}"; do
     if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
@@ -377,12 +379,14 @@ for tool in "${tools[@]}"; do
 
         if ${tool_required[${tool}]}; then
             tool_color[${tool}]="${YELLOW}"
+            tool_sign[${tool}]="${CROSS_MARK}"
             check_only_exit_code=1
         else
             tool_color[${tool}]="${GREEN}"
+            tool_sign[${tool}]="${CHECK_MARK}"
         fi
 
-        echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]}${RESET}"
+        echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]} ${tool_sign[${tool}]}${RESET}"
     fi
 done
 echo
