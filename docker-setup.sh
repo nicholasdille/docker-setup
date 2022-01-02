@@ -54,8 +54,8 @@ if ${NO_COLOR} || test -p /dev/stdout; then
     YELLOW=""
     RED=""
 fi
-CHECK_MARK="✗" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
-CROSS_MARK="✓" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
+CHECK_MARK="✓" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
+CROSS_MARK="✗" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
 
 echo -e "${YELLOW}"
 cat <<"EOF"
