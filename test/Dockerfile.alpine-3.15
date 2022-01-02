@@ -10,6 +10,8 @@ RUN apk add --update-cache --no-cache \
         git \
         tzdata \
         libc6-compat \
+        libbsd \
+        gcompat \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
 COPY test/test.sh /
