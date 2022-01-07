@@ -165,7 +165,7 @@ fi
 
 tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation conmon containerd cosign crictl crun dive docker docker-compose docker-machine docker-scan fuse-overlayfs fuse-overlayfs-snapshotter helm hub-tool img imgcrypt jq k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize manifest-tool minikube nerdctl oras portainer porter podman regclient rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt)
 
-GO_VERSION=1.17.5
+GO_VERSION=1.17.6
 JQ_VERSION=1.6
 YQ_VERSION=4.16.2
 DOCKER_VERSION=20.10.12
