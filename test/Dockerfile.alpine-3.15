@@ -12,6 +12,7 @@ RUN apk add --update-cache --no-cache \
         libc6-compat \
         libbsd \
         gcompat \
+        libgcc
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
 COPY test/test.sh /
