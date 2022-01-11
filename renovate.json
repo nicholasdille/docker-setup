@@ -400,6 +400,13 @@
       "depNameTemplate": "aquasecurity/trivy",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "GVISOR_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "google/gvisor",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^release-(?<version>.+?)\\.0$"
     }
   ],
 
