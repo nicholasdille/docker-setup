@@ -407,6 +407,12 @@
       "depNameTemplate": "google/gvisor",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^release-(?<version>.+?)\\.0$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "JWT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mike-engel/jwt-cli",
+      "datasourceTemplate": "github-releases"
     }
   ],
 

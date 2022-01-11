@@ -163,7 +163,7 @@ if ! type tput >/dev/null 2>&1; then
     }
 fi
 
-tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation conmon containerd cosign crictl crun dive docker docker-compose docker-machine docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img imgcrypt jq k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize manifest-tool minikube nerdctl oras portainer porter podman regclient rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt)
+tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation conmon containerd cosign crictl crun dive docker docker-compose docker-machine docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize manifest-tool minikube nerdctl oras portainer porter podman regclient rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt)
 
 GO_VERSION=1.17.6
 JQ_VERSION=1.6
@@ -218,6 +218,7 @@ K3S_VERSION=1.23.1+k3s1
 CRICTL_VERSION=1.22.0
 TRIVY_VERSION=0.22.0
 GVISOR_VERSION=20220103
+JWT_VERSION=5.0.0
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
@@ -268,6 +269,7 @@ function hub_tool_matches_version()                   { is_executable "${TARGET}
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1)"                                        == "img version v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
 function jq_matches_version()                         { is_executable "${TARGET}/bin/jq"                             && test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
+function jwt_matches_version()                        { is_executable "${TARGET}/bin/jwt"                            && test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
 function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1)"                                            == "k3d version v${K3D_VERSION}"; }
 function k3s_matches_version()                        { is_executable "${TARGET}/bin/k3s"                            && test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
 function kind_matches_version()                       { is_executable "${TARGET}/bin/kind"                           && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)"                                     == "kind v${KIND_VERSION}"; }
@@ -320,6 +322,7 @@ function required-hub-tool()                   { ! hub_tool_matches_version; }
 function required-img()                        { ! img_matches_version; }
 function required-imgcrypt()                   { ! imgcrypt_matches_version; }
 function required-jq()                         { ! jq_matches_version; }
+function required-jwt()                        { ! jwt_matches_version; }
 function required-k3d()                        { ! k3d_matches_version; }
 function required-k3s()                        { ! k3s_matches_version; }
 function required-kapp()                       { ! kapp_matches_version; }
@@ -1446,6 +1449,14 @@ function install-gvisor() {
     progress gvisor "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
+}
+
+function install-jwt() {
+    echo "jwt ${JWT_VERSION}"
+    progress jwt "Install binary"
+    curl -sL "https://github.com/mike-engel/jwt-cli/releases/download/${JWT_VERSION}/jwt-linux.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        jwt
 }
 
 function children_are_running() {
