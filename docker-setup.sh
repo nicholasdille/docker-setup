@@ -163,7 +163,7 @@ if ! type tput >/dev/null 2>&1; then
     }
 fi
 
-tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation conmon containerd cosign crictl crun dive docker docker-compose docker-machine docker-scan fuse-overlayfs fuse-overlayfs-snapshotter helm hub-tool img imgcrypt jq k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize manifest-tool minikube nerdctl oras portainer porter podman regclient rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt)
+tools=(arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation conmon containerd cosign crictl crun dive docker docker-compose docker-machine docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img imgcrypt jq k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize manifest-tool minikube nerdctl oras portainer porter podman regclient rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt)
 
 GO_VERSION=1.17.6
 JQ_VERSION=1.6
@@ -217,6 +217,7 @@ KUBESWITCH_VERSION=1.4.0
 K3S_VERSION=1.23.1+k3s1
 CRICTL_VERSION=1.22.0
 TRIVY_VERSION=0.22.0
+GVISOR_VERSION=20220103
 
 : "${DOCKER_COMPOSE:=v2}"
 if test "${DOCKER_COMPOSE}" == "v1"; then
@@ -261,6 +262,7 @@ function docker_machine_matches_version()             { is_executable "${TARGET}
 function docker_scan_matches_version()                { is_executable "${DOCKER_PLUGINS_PATH}/docker-scan"           && test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
 function fuse_overlayfs_matches_version()             { is_executable "${TARGET}/bin/fuse-overlayfs"                 && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)"                               == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; }
 function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
+function gvisor_matches_version()                     { is_executable "${TARGET}/bin/runsc"                          && test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
 function helm_matches_version()                       { is_executable "${TARGET}/bin/helm"                           && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
 function hub_tool_matches_version()                   { is_executable "${TARGET}/bin/hub-tool"                       && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)"                                   == "Docker Hub Tool v${HUB_TOOL_VERSION}"; }
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1)"                                        == "img version v${IMG_VERSION}"; }
@@ -312,6 +314,7 @@ function required-docker-machine()             { ! docker_machine_matches_versio
 function required-docker-scan()                { ! docker_scan_matches_version; }
 function required-fuse-overlayfs()             { ! fuse_overlayfs_matches_version; }
 function required-fuse-overlayfs-snapshotter() { ! fuse_overlayfs_snapshotter_matches_version; }
+function required-gvisor()                     { ! gvisor_matches_version; }
 function required-helm()                       { ! helm_matches_version; }
 function required-hub-tool()                   { ! hub_tool_matches_version; }
 function required-img()                        { ! img_matches_version; }
@@ -1433,6 +1436,16 @@ function install-trivy() {
     curl -sL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         trivy
+}
+
+function install-gvisor() {
+    echo "gvisor ${GVISOR_VERSION}"
+    progress gvisor "Install binaries"
+    curl -sLo "${TARGET}/bin/runsc"                    "https://storage.googleapis.com/gvisor/releases/release/${GVISOR_VERSION}/x86_64/runsc"
+    curl -sLo "${TARGET}/bin/containerd-shim-runsc-v1" "https://storage.googleapis.com/gvisor/releases/release/${GVISOR_VERSION}/x86_64/containerd-shim-runsc-v1"
+    progress gvisor "Set executable bits"
+    chmod +x "${TARGET}/bin/runsc"
+    chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
 }
 
 function children_are_running() {
