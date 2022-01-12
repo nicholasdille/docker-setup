@@ -1545,7 +1545,7 @@ while true; do
         # shellcheck disable=SC2044
         for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
             tool="$(basename "${error}")"
-            echo -e "${RED}ERROR: Failed to install ${tool}.${RESET}"
+            echo -e "${RED}ERROR: Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
             exit_code=1
         done
         echo "Finished installation."
