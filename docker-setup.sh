@@ -952,32 +952,7 @@ function install-portainer() {
     progress portainer "Set executable bits on docker-compose"
     chmod +x "${TARGET}/share/portainer/docker-compose"
     progress portainer "Install systemd unit"
-    cat >"/etc/systemd/system/portainer.service" <<EOF
-[Unit]
-Description=portainer
-Documentation=https://www.portainer.io/
-After=network.target local-fs.target
-
-[Service]
-ExecStart=${TARGET}/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
-
-Type=exec
-Delegate=yes
-KillMode=process
-Restart=always
-RestartSec=5
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNPROC=infinity
-LimitCORE=infinity
-LimitNOFILE=1048576
-# Comment TasksMax if your systemd version does not supports it.
-# Only systemd 226 and above support this version.
-TasksMax=infinity
-
-[Install]
-WantedBy=multi-user.target
-EOF
+    curl -sLo /etc/systemd/system/portainer.service "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer.service"
     progress portainer "Install init script"
     curl -sLo /etc/init.d/portainer "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
     chmod +x /etc/init.d/portainer
