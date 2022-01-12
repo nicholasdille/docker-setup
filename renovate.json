@@ -388,6 +388,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "SOPS_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mozilla/sops",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "STARGZ_SNAPSHOTTER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "containerd/stargz-snapshotter",
       "datasourceTemplate": "github-releases",
