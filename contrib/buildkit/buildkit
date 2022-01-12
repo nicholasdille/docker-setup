@@ -22,7 +22,7 @@ export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 BASE=buildkit
 
 # modify these in /etc/default/$BASE (/etc/default/buildkit)
-BUILDKIT=/usr/bin/buildkitd
+BUILDKIT=${TARGET}/bin/buildkitd
 # This is the pid file created/managed by start-stop-daemon
 BUILDKIT_SSD_PIDFILE=/var/run/$BASE-ssd.pid
 BUILDKIT_LOGFILE=/var/log/$BASE.log

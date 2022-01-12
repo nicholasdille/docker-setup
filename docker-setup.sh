@@ -776,6 +776,7 @@ cp -r man/*.8 "/opt/man/man8"
 EOF
     progress containerd "Install systemd unit"
     curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${TARGET}/bin/containerd|" /etc/systemd/system/containerd.service
     if has_systemd; then
         progress containerd "Reload systemd"
         systemctl daemon-reload
@@ -913,9 +914,10 @@ function install-buildkit() {
     progress buildkit "Install systemd units"
     curl -sLo /etc/systemd/system/buildkit.service "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.service"
     curl -sLo /etc/systemd/system/buildkit.socket "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket"
-    sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=/usr/bin/buildkitd|" /etc/systemd/system/buildkit.service
+    sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" /etc/systemd/system/buildkit.service
     progress portainer "Install init script"
     curl -sLo /etc/init.d/buildkit "${DOCKER_SETUP_REPO_RAW}/contrib/buildkit/buildkit"
+    sed -i "s|\${TARGET}|${TARGET}|" /etc/init.d/buildkit
     chmod +x /etc/init.d/buildkit
     if has_systemd; then
         progress buildkit "Reload systemd"
@@ -977,6 +979,7 @@ function install-portainer() {
     chmod +x "${TARGET}/share/portainer/docker-compose"
     progress portainer "Install systemd unit"
     curl -sLo /etc/systemd/system/portainer.service "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer.service"
+    sed -i "s|\${TARGET}|${TARGET}|g" /etc/systemd/system/portainer.service
     progress portainer "Install init script"
     curl -sLo /etc/init.d/portainer "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
     chmod +x /etc/init.d/portainer
@@ -1127,6 +1130,7 @@ function install-podman() {
     progress podman "Install systemd unit"
     curl -sLo "/etc/systemd/system/podman.service" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service"
     curl -sLo "/etc/systemd/system/podman.socket" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket"
+    sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${TARGET}/bin/podman|" /etc/systemd/system/podman.service
     curl -sLo "${TARGET}/lib/tmpfiles.d/podman-docker.conf" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf"
     systemctl daemon-reload
     progress podman "Install configuration"
@@ -1425,36 +1429,8 @@ function install-k3s() {
     progress k3s "Set executable bits"
     chmod +x "${TARGET}/bin/k3s"
     progress k3s "Install systemd unit"
-    cat >"/etc/systemd/system/k3s.service" <<EOF
-[Unit]
-Description=Lightweight Kubernetes
-Documentation=https://k3s.io
-Wants=network-online.target
-After=network-online.target
-
-[Install]
-WantedBy=multi-user.target
-
-[Service]
-Type=notify
-EnvironmentFile=-/etc/default/%N
-EnvironmentFile=-/etc/sysconfig/%N
-KillMode=process
-Delegate=yes
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNOFILE=1048576
-LimitNPROC=infinity
-LimitCORE=infinity
-TasksMax=infinity
-TimeoutStartSec=0
-Restart=always
-RestartSec=5s
-ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
-ExecStartPre=-/sbin/modprobe br_netfilter
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=${TARGET}/bin/k3s
-EOF
+    curl -sLo /etc/init.d/k3s "${DOCKER_SETUP_REPO_RAW}/contrib/k3s/k3s.service"
+    sed -i "s|\${TARGET}|${TARGET}|g" /etc/systemd/system/k3s.service
     if has_systemd; then
         progress k3s "Reload systemd"
         systemctl daemon-reload
