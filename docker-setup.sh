@@ -556,7 +556,7 @@ function install-yq() {
 
 : "${CGROUP_VERSION:=v2}"
 CURRENT_CGROUP_VERSION="v1"
-if test -f /sys/fs/cgroup/cgroup.controllers; then
+if test "$(stat -fc %T /sys/fs/cgroup/)" == "cgroup2fs"; then
     CURRENT_CGROUP_VERSION="v2"
 fi
 if type update-grub >/dev/null 2>&1 && test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
