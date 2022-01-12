@@ -125,11 +125,41 @@ DOCKER_COMPOSE           Specifies which major version of
 DOCKER_PLUGINS_PATH      Where to store Docker CLI plugins.
                          Defaults to ${TARGET}/libexec/docker/cli-plugins
 
-Tools specified on the command line will be reinstalled regardless
-of --reinstall and REINSTALL.
+If --only-install/ONLY_INSTALL are supplied, tools specified on the
+command line will be reinstalled regardless of --reinstall/REINSTALL.
 
 EOF
     exit
+fi
+
+tools=(
+    arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
+    conmon containerd cosign crictl crun dive docker docker-compose docker-machine
+    docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img
+    imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize
+    manifest-tool minikube nerdctl oras portainer porter podman regclient
+    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
+)
+
+unknown_tools=()
+for tool in "${requested_tools[@]}"; do
+    if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
+        unknown_tools+=( ${tool} )
+    fi
+done
+if test "${#unknown_tools[@]}" -gt 0; then
+    echo -e "${RED}ERROR: The following tools were specified but are not supported:${RESET}"
+    for tool in "${unknown_tools[@]}"; do
+        echo -e "${RED}       - ${tool}${RESET}"
+    done
+    echo
+    exit 1
+fi
+
+if ! ${ONLY_INSTALL} && test "${#requested_tools[@]}" -gt 0; then
+    echo -e "${RED}ERROR: You must specify --only-install/ONLY_INSTALL if specifying tools on the command line.${RESET}"
+    echo
+    exit 1
 fi
 
 : "${TARGET:=/usr}"
@@ -162,15 +192,6 @@ if ! type tput >/dev/null 2>&1; then
         fi
     }
 fi
-
-tools=(
-    arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crictl crun dive docker docker-compose docker-machine
-    docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img
-    imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize
-    manifest-tool minikube nerdctl oras portainer porter podman regclient
-    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
-)
 
 ARKADE_VERSION=0.8.11
 BUILDAH_VERSION=1.23.1
