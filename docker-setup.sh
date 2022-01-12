@@ -169,7 +169,7 @@ tools=(
     docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img
     imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize
     manifest-tool minikube nerdctl oras portainer porter podman regclient
-    rootlesskit runc skopeo slirp4netns stargz-snapshotter trivy yq ytt
+    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
 )
 
 ARKADE_VERSION=0.8.11
@@ -222,6 +222,7 @@ ROOTLESSKIT_VERSION=0.14.6
 RUNC_VERSION=1.0.3
 SKOPEO_VERSION=1.5.2
 SLIRP4NETNS_VERSION=1.1.12
+SOPS_VERSION=3.7.1
 STARGZ_SNAPSHOTTER_VERSION=0.10.1
 TRIVY_VERSION=0.22.0
 YTT_VERSION=0.38.0
@@ -298,6 +299,7 @@ function rootlesskit_matches_version()                { is_executable "${TARGET}
 function runc_matches_version()                       { is_executable "${TARGET}/bin/runc"                           && test "$(${TARGET}/bin/runc --version | head -n 1)"                                         == "runc version ${RUNC_VERSION}"; }
 function skopeo_matches_version()                     { is_executable "${TARGET}/bin/skopeo"                         && test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)"                                   == "${SKOPEO_VERSION}"; }
 function slirp4netns_matches_version()                { is_executable "${TARGET}/bin/slirp4netns"                    && test "$(${TARGET}/bin/slirp4netns --version | head -n 1)"                                  == "slirp4netns version ${SLIRP4NETNS_VERSION}"; }
+function sops_matches_version()                       { is_executable "${TARGET}/bin/sops"                           && test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
 function stargz_snapshotter_matches_version()         { is_executable "${TARGET}/bin/containerd-stargz-grpc"         && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
 function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                    == "Version: ${TRIVY_VERSION}"; }
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             && test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
@@ -351,6 +353,7 @@ function required-rootlesskit()                { ! rootlesskit_matches_version; 
 function required-runc()                       { ! runc_matches_version; }
 function required-skopeo()                     { ! skopeo_matches_version; }
 function required-slirp4netns()                { ! slirp4netns_matches_version; }
+function required-sops()                       { ! sops_matches_version; }
 function required-stargz-snapshotter()         { ! stargz_snapshotter_matches_version; }
 function required-trivy()                      { ! trivy_matches_version; }
 function required-yq()                         { ! yq_matches_version; }
@@ -1468,6 +1471,14 @@ function install-jwt() {
     curl -sL "https://github.com/mike-engel/jwt-cli/releases/download/${JWT_VERSION}/jwt-linux.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         jwt
+}
+
+function install-sops() {
+    echo "sops ${SOPS_VERSION}"
+    progress sops "Install binary"
+    curl -sLo "${TARGET}/bin/sops" "https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux"
+    progress sops "Set executable bits"
+    chmod +x "${TARGET}/bin/sops"
 }
 
 function children_are_running() {
