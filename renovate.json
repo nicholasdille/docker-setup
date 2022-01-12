@@ -35,31 +35,64 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "GO_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "golang/go",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^go(?<version>.+?)$"
+      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "alexellis/arkade",
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "JQ_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "stedolan/jq",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^jq-(?<version>.+?)$",
-      "versioningTemplate": "loose"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "mikefarah/yq",
+      "matchStrings": [ "BUILDAH_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/buildah-static",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "moby/moby",
-      "datasourceTemplate": "github-tags",
+      "matchStrings": [ "BUILDKIT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "moby/buildkit",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "BUILDX_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "docker/buildx",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CLUSTERAWSADM_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kubernetes-sigs/cluster-api-provider-aws",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CLUSTERCTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kubernetes-sigs/cluster-api",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CNI_ISOLATION_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "AkihiroSuda/cni-isolation",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CNI_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "containernetworking/plugins",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CONMON_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/conmon-static",
+      "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
@@ -71,15 +104,30 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "ROOTLESSKIT_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "rootless-containers/rootlesskit",
+      "matchStrings": [ "COSIGN_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "sigstore/cosign",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "RUNC_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "opencontainers/runc",
+      "matchStrings": [ "CRICTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kubernetes-sigs/cri-tools",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CRUN_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/crun-static",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "DIVE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "wagoodman/dive",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -100,27 +148,6 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_SCAN_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "docker/scan-cli-plugin",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "SLIRP4NETNS_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "rootless-containers/slirp4netns",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "HUB_TOOL_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "docker/hub-tool",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "DOCKER_MACHINE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "docker/machine",
       "datasourceTemplate": "github-releases",
@@ -128,98 +155,15 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "BUILDX_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "docker/buildx",
-      "datasourceTemplate": "github-releases",
+      "matchStrings": [ "DOCKER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "moby/moby",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "MANIFEST_TOOL_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "estesp/manifest-tool",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "BUILDKIT_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "moby/buildkit",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "IMG_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "genuinetools/img",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DIVE_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "wagoodman/dive",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "PORTAINER_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "portainer/portainer",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "ORAS_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "oras-project/oras",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "regclient/regclient",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "COSIGN_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "sigstore/cosign",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "NERDCTL_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "containerd/nerdctl",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CNI_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "containernetworking/plugins",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CNI_ISOLATION_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "AkihiroSuda/cni-isolation",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "STARGZ_SNAPSHOTTER_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "containerd/stargz-snapshotter",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "IMGCRYPT_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "containerd/imgcrypt",
+      "matchStrings": [ "DOCKER_SCAN_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "docker/scan-cli-plugin",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -240,51 +184,79 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "PORTER_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "getporter/porter",
+      "matchStrings": [ "GO_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "golang/go",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^go(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "GVISOR_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "google/gvisor",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^release-(?<version>.+?)\\.0$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "HELM_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "PODMAN_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "nicholasdille/podman-static",
+      "matchStrings": [ "HUB_TOOL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "docker/hub-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CONMON_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "nicholasdille/conmon-static",
+      "matchStrings": [ "IMGCRYPT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "containerd/imgcrypt",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "BUILDAH_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "nicholasdille/buildah-static",
+      "matchStrings": [ "IMG_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "genuinetools/img",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CRUN_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "nicholasdille/crun-static",
+      "matchStrings": [ "JQ_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "stedolan/jq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^jq-(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "JWT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mike-engel/jwt-cli",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "K3D_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "rancher/k3d",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "K3S_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "SKOPEO_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "nicholasdille/skopeo-static",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KUBECTL_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "kubernetes/kubernetes",
+      "matchStrings": [ "KAPP_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "vmware-tanzu/carvel-kapp",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -297,15 +269,23 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "K3D_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "rancher/k3d",
+      "matchStrings": [ "KOMPOSE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kubernetes/kompose",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KUBECTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "HELM_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "helm/helm",
+      "matchStrings": [ "KUBESWITCH_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "danielb42/kubeswitch",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -325,43 +305,8 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KOMPOSE_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "kubernetes/kompose",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "versioningTemplate": "loose"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KAPP_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "vmware-tanzu/carvel-kapp",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "YTT_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "vmware-tanzu/carvel-ytt",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "alexellis/arkade",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CLUSTERCTL_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "kubernetes-sigs/cluster-api",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CLUSTERAWSADM_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "kubernetes-sigs/cluster-api-provider-aws",
+      "matchStrings": [ "MANIFEST_TOOL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -374,23 +319,77 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KUBESWITCH_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "danielb42/kubeswitch",
+      "matchStrings": [ "NERDCTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "containerd/nerdctl",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "K3S_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "k3s-io/k3s",
+      "matchStrings": [ "ORAS_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "oras-project/oras",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "versioningTemplate": "loose"
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CRICTL_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "kubernetes-sigs/cri-tools",
+      "matchStrings": [ "PODMAN_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/podman-static",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "PORTAINER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "portainer/portainer",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "PORTER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "getporter/porter",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "regclient/regclient",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "ROOTLESSKIT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "rootless-containers/rootlesskit",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "RUNC_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "opencontainers/runc",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "SKOPEO_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/skopeo-static",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "SLIRP4NETNS_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "rootless-containers/slirp4netns",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "STARGZ_SNAPSHOTTER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "containerd/stargz-snapshotter",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -403,16 +402,17 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "GVISOR_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "google/gvisor",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^release-(?<version>.+?)\\.0$"
+      "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mikefarah/yq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "JWT_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "mike-engel/jwt-cli",
-      "datasourceTemplate": "github-releases"
+      "matchStrings": [ "YTT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "vmware-tanzu/carvel-ytt",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     }
   ],
 
