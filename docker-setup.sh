@@ -1503,7 +1503,6 @@ function count_sub_processes() {
 
 declare -A child_pids
 for tool in "${tools[@]}"; do
-    #if ${tool_required[${tool}]}; then
     if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
         {
             echo "============================================================"
