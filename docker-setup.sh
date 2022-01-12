@@ -886,6 +886,35 @@ function install-buildkit() {
     progress buildkit "Install binary"
     curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
+    progress buildkit "Install systemd units"
+    curl -sLo /etc/systemd/system/buildkit.service "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.service"
+    curl -sLo /etc/systemd/system/buildkit.socket "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket"
+    sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=/usr/bin/buildkitd|" /etc/systemd/system/buildkit.service
+    progress portainer "Install init script"
+    curl -sLo /etc/init.d/buildkit "${DOCKER_SETUP_REPO_RAW}/contrib/buildkit/buildkit"
+    chmod +x /etc/init.d/buildkit
+    if has_systemd; then
+        progress buildkit "Reload systemd"
+        systemctl daemon-reload
+        if systemctl is-active --quiet buildkit; then
+            progress buildkit "Restart buildkitd"
+            systemctl restart buildkit
+        else
+            progress buildkit "Start buildkitd"
+            systemctl enable buildkit
+            systemctl start buildkit
+        fi
+
+    else
+        if ps -C buildkitd >/dev/null 2>&1; then
+            progress buildkit "Restart buildkitd"
+            /etc/init.d/buildkit restart
+        else
+            progress buildkit "Start buildkitd"
+            /etc/init.d/buildkit start
+        fi
+        echo -e "${WARNING}WARNING: Init script was installed but you must enable BuildKit yourself.${RESET}"
+    fi
 }
 
 function install-img() {
