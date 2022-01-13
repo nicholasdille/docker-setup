@@ -291,6 +291,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KUBECTL_RESOURCES_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "howardjohn/kubectl-resources",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KUBESWITCH_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "danielb42/kubeswitch",
       "datasourceTemplate": "github-releases",

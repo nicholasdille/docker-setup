@@ -228,6 +228,7 @@ KIND_VERSION=0.11.1
 KOMPOSE_VERSION=1.26.1
 KREW_VERSION=0.4.2
 KUBECTL_VERSION=1.23.1
+KUBECTL_RESOURCES_VERSION=0.2.0
 KUBESWITCH_VERSION=1.4.0
 KUSTOMIZE_VERSION=4.4.1
 MINIKUBE_VERSION=1.24.0
@@ -302,6 +303,7 @@ function kind_matches_version()                       { is_executable "${TARGET}
 function kompose_matches_version()                    { is_executable "${TARGET}/bin/kompose"                        && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
 function krew_matches_version()                       { is_executable "${TARGET}/bin/krew"                           && test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
 function kubectl_matches_version()                    { is_executable "${TARGET}/bin/kubectl"                        && test "$(${TARGET}/bin/kubectl version --client --short)"  == "Client Version: v${KUBECTL_VERSION}"; }
+function kubectl_resources_matches_version()          { is_executable "${TARGET}/bin/kubectl-resources"              && test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
 function kapp_matches_version()                       { is_executable "${TARGET}/bin/kapp"                           && test "$(${TARGET}/bin/kapp version | head -n 1)"                                           == "kapp version ${KAPP_VERSION}"; }
@@ -1440,6 +1442,13 @@ function install-sops() {
     curl -sLo "${TARGET}/bin/sops" "https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux"
     progress sops "Set executable bits"
     chmod +x "${TARGET}/bin/sops"
+}
+
+function install-kubectl-resources() {
+    echo "kubectl-resources ${KUBECTL_RESOURCES_VERSION}"
+    progress sops "Install binary"
+    curl -sL "https://github.com/howardjohn/kubectl-resources/releases/download/v${KUBECTL_RESOURCES_VERSION}/kubectl-resources_${KUBECTL_RESOURCES_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xz kubectl-resources
 }
 
 function children_are_running() {
