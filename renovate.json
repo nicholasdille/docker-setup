@@ -291,6 +291,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KUBECTL_BUILD_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "vmware-tanzu/buildkit-cli-for-kubectl",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KUBECTL_FREE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "makocchi-git/kubectl-free",
       "datasourceTemplate": "github-releases",
