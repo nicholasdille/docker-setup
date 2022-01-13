@@ -144,7 +144,7 @@ tools=(
 unknown_tools=()
 for tool in "${requested_tools[@]}"; do
     if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
-        unknown_tools+=( ${tool} )
+        unknown_tools+=( "${tool}" )
     fi
 done
 if test "${#unknown_tools[@]}" -gt 0; then
