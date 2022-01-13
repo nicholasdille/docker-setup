@@ -1529,6 +1529,9 @@ trap cleanup EXIT
 
 last_update=false
 cols=$(tput cols || echo "60")
+if test -z "${cols}" || test "${cols}" -le 0; then  
+    cols=60
+fi
 width=$((cols - 20))
 done_bar=$(printf '#%.0s' $(seq 0 "${width}"))
 todo_bar=$(printf ' %.0s' $(seq 0 "${width}"))
