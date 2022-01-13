@@ -171,7 +171,7 @@ if ${SHOW_VERSION}; then
     exit
 fi
 
-DEPENDENCIES=(curl git)
+DEPENDENCIES=(curl git unzip)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
         echo -e "${RED}ERROR: Missing ${DEPENDENCY}.${RESET}"
@@ -372,7 +372,7 @@ for tool in "${tools[@]}"; do
     line_length=$(( line_length + item_length ))
     echo -e -n "${tool_color[${tool}]}${item}   ${RESET}"
 done
-echo -e "\n\n"
+echo -e "\n"
 
 if ${CHECK_ONLY}; then
     exit "${check_only_exit_code}"
@@ -1450,15 +1450,17 @@ function install-kubectl-resources() {
     echo "kubectl-resources ${KUBECTL_RESOURCES_VERSION}"
     progress sops "Install binary"
     curl -sL "https://github.com/howardjohn/kubectl-resources/releases/download/v${KUBECTL_RESOURCES_VERSION}/kubectl-resources_${KUBECTL_RESOURCES_VERSION}_Linux_x86_64.tar.gz" \
-    | tar -xz kubectl-resources
+    | tar -xzC "${TARGET}/bin" kubectl-resources
+    mkdir -p "${DOCKER_SETUP_CACHE}/kubectl-resources"
+    touch "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"
 }
 
 function install-kubectl-free() {
     echo "kubectl-free ${KUBECTL_FREE_VERSION}"
     progress kubectl-free "Install binary"
-    curl -sLo "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" "https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" \
+    curl -sLo "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" "https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
     unzip -o -d "/tmp" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
-    cp "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64/kubectl-free" "${TARGET}/bin/"
+    cp -fv "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64/kubectl-free" "${TARGET}/bin/"
     rm -rf "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
 }
 

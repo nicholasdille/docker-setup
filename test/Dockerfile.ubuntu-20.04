@@ -6,6 +6,7 @@ RUN apt-get update \
         ca-certificates \
         iptables \
         git \
-        tzdata
+        tzdata \
+        unzip
 COPY test/test.sh /
 COPY docker-setup.sh /
