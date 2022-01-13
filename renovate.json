@@ -291,6 +291,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KUBECTL_FREE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "makocchi-git/kubectl-free",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KUBECTL_RESOURCES_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "howardjohn/kubectl-resources",
       "datasourceTemplate": "github-releases",

@@ -129,9 +129,9 @@ tools=(
     conmon containerd cosign crictl crun dive docker docker-compose docker-machine
     docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm
     hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl
-    kubectl-resources kubeswitch kustomize manifest-tool minikube nerdctl oras
-    portainer porter podman regclient rootlesskit runc skopeo slirp4netns sops
-    stargz-snapshotter trivy yq ytt
+    kubectl-free kubectl-resources kubeswitch kustomize manifest-tool minikube
+    nerdctl oras portainer porter podman regclient rootlesskit runc skopeo
+    slirp4netns sops stargz-snapshotter trivy yq ytt
 )
 
 unknown_tools=()
@@ -228,6 +228,7 @@ KIND_VERSION=0.11.1
 KOMPOSE_VERSION=1.26.1
 KREW_VERSION=0.4.2
 KUBECTL_VERSION=1.23.1
+KUBECTL_FREE_VERSION=0.2.0
 KUBECTL_RESOURCES_VERSION=0.2.0
 KUBESWITCH_VERSION=1.4.0
 KUSTOMIZE_VERSION=4.4.1
@@ -303,6 +304,7 @@ function kind_matches_version()                       { is_executable "${TARGET}
 function kompose_matches_version()                    { is_executable "${TARGET}/bin/kompose"                        && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
 function krew_matches_version()                       { is_executable "${TARGET}/bin/krew"                           && test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
 function kubectl_matches_version()                    { is_executable "${TARGET}/bin/kubectl"                        && test "$(${TARGET}/bin/kubectl version --client --short)"  == "Client Version: v${KUBECTL_VERSION}"; }
+function kubectl_free_matches_version()               { is_executable "${TARGET}/bin/kubectl-free"                   && test "$(${TARGET}/bin/kubectl-free --version | cut -d' ' -f2 | tr -d ',')"                 == "${KUBECTL_FREE_VERSION}"; }
 function kubectl_resources_matches_version()          { is_executable "${TARGET}/bin/kubectl-resources"              && test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
@@ -1449,6 +1451,15 @@ function install-kubectl-resources() {
     progress sops "Install binary"
     curl -sL "https://github.com/howardjohn/kubectl-resources/releases/download/v${KUBECTL_RESOURCES_VERSION}/kubectl-resources_${KUBECTL_RESOURCES_VERSION}_Linux_x86_64.tar.gz" \
     | tar -xz kubectl-resources
+}
+
+function install-kubectl-free() {
+    echo "kubectl-free ${KUBECTL_FREE_VERSION}"
+    progress kubectl-free "Install binary"
+    curl -sLo "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" "https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" \
+    unzip -o -d "/tmp" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
+    cp "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64/kubectl-free" "${TARGET}/bin/"
+    rm -rf "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
 }
 
 function children_are_running() {
