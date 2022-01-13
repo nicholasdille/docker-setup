@@ -126,12 +126,12 @@ fi
 
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crictl crun dive docker docker-compose docker-machine
-    docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm
-    hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl
-    kubectl-free kubectl-resources kubeswitch kustomize manifest-tool minikube
-    nerdctl oras portainer porter podman regclient rootlesskit runc skopeo
-    slirp4netns sops stargz-snapshotter trivy yq ytt
+    conmon containerd cosign crictl crun dive docker docker-compose
+    docker-machine docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter
+    gvisor helm hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew
+    kubectl kubectl-build kubectl-free kubectl-resources kubeswitch kustomize
+    manifest-tool minikube nerdctl oras portainer porter podman regclient
+    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
 )
 
 unknown_tools=()
@@ -228,6 +228,7 @@ KIND_VERSION=0.11.1
 KOMPOSE_VERSION=1.26.1
 KREW_VERSION=0.4.2
 KUBECTL_VERSION=1.23.1
+KUBECTL_BUILD_VERSION=0.1.5
 KUBECTL_FREE_VERSION=0.2.0
 KUBECTL_RESOURCES_VERSION=0.2.0
 KUBESWITCH_VERSION=1.4.0
@@ -304,6 +305,7 @@ function kind_matches_version()                       { is_executable "${TARGET}
 function kompose_matches_version()                    { is_executable "${TARGET}/bin/kompose"                        && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
 function krew_matches_version()                       { is_executable "${TARGET}/bin/krew"                           && test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
 function kubectl_matches_version()                    { is_executable "${TARGET}/bin/kubectl"                        && test "$(${TARGET}/bin/kubectl version --client --short)"  == "Client Version: v${KUBECTL_VERSION}"; }
+function kubectl_build_matches_version()              { is_executable "${TARGET}/bin/kubectl-buildkit"               && test -f "${DOCKER_SETUP_CACHE}/kubectl-build/${KUBECTL_BUILD_VERSION}"; }
 function kubectl_free_matches_version()               { is_executable "${TARGET}/bin/kubectl-free"                   && test "$(${TARGET}/bin/kubectl-free --version | cut -d' ' -f2 | tr -d ',')"                 == "${KUBECTL_FREE_VERSION}"; }
 function kubectl_resources_matches_version()          { is_executable "${TARGET}/bin/kubectl-resources"              && test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
@@ -1448,9 +1450,10 @@ function install-sops() {
 
 function install-kubectl-resources() {
     echo "kubectl-resources ${KUBECTL_RESOURCES_VERSION}"
-    progress sops "Install binary"
+    progress kubectl-resources "Install binary"
     curl -sL "https://github.com/howardjohn/kubectl-resources/releases/download/v${KUBECTL_RESOURCES_VERSION}/kubectl-resources_${KUBECTL_RESOURCES_VERSION}_Linux_x86_64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" kubectl-resources
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        kubectl-resources
     mkdir -p "${DOCKER_SETUP_CACHE}/kubectl-resources"
     touch "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"
 }
@@ -1462,6 +1465,15 @@ function install-kubectl-free() {
     unzip -o -d "/tmp" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
     cp -fv "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64/kubectl-free" "${TARGET}/bin/"
     rm -rf "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
+}
+
+function install-kubectl-build() {
+    echo "kubectl-build ${KUBECTL_BUILD_VERSION}"
+    progress kubectl-build "Install binary"
+    curl -sL "https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${KUBECTL_BUILD_VERSION}/linux-v${KUBECTL_BUILD_VERSION}.tgz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
+    mkdir -p "${DOCKER_SETUP_CACHE}/kubectl-build"
+    touch "${DOCKER_SETUP_CACHE}/kubectl-build/${KUBECTL_BUILD_VERSION}"
 }
 
 function children_are_running() {
