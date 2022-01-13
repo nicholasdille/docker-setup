@@ -241,6 +241,7 @@ PORTER_VERSION=0.38.8
 REGCLIENT_VERSION=0.3.10
 ROOTLESSKIT_VERSION=0.14.6
 RUNC_VERSION=1.0.3
+RUST_VERSION=1.57.0
 SKOPEO_VERSION=1.5.2
 SLIRP4NETNS_VERSION=1.1.12
 SOPS_VERSION=3.7.1
@@ -1411,10 +1412,17 @@ function install-gvisor() {
 
 function install-jwt() {
     echo "jwt ${JWT_VERSION}"
+    progress jwt "Wait for Docker daemon to start"
+    wait_for_docker
     progress jwt "Install binary"
-    curl -sL "https://github.com/mike-engel/jwt-cli/releases/download/${JWT_VERSION}/jwt-linux.tar.gz" \
-    | tar -xzC "${TARGET}/bin" --no-same-owner \
-        jwt
+    docker run --interactive --rm --volume "${TARGET}:/target" --env JWT_VERSION "rust:${RUST_VERSION}" <<EOF
+mkdir -p /go/src/github.com/mike-engel/jwt-cli
+cd /go/src/github.com/mike-engel/jwt-cli
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSION}" https://github.com/mike-engel/jwt-cli .
+export RUSTFLAGS='-C target-feature=+crt-static'
+cargo build --release --target x86_64-unknown-linux-gnu
+cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
+EOF
 }
 
 function install-sops() {

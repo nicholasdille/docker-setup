@@ -374,6 +374,12 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "RUST_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "rust-lang/rust",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "SKOPEO_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "nicholasdille/skopeo-static",
       "datasourceTemplate": "github-releases",
