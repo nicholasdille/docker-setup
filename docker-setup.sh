@@ -127,10 +127,11 @@ fi
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crictl crun dive docker docker-compose docker-machine
-    docker-scan fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool img
-    imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch kustomize
-    manifest-tool minikube nerdctl oras portainer porter podman regclient
-    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
+    docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm
+    hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch
+    kustomize manifest-tool minikube nerdctl oras portainer porter podman
+    regclient rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq
+    ytt
 )
 
 unknown_tools=()
@@ -209,6 +210,7 @@ DOCKER_COMPOSE_V2_VERSION=2.2.3
 DOCKER_MACHINE_VERSION=0.16.2
 DOCKER_SCAN_VERSION=0.16.0
 DOCKER_VERSION=20.10.12
+DOCUUM_VERSION=0.20.4
 FUSE_OVERLAYFS_VERSION=1.8
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 HELM_VERSION=3.7.2
@@ -284,6 +286,7 @@ function docker_compose_v1_matches_version()          { is_executable "${TARGET}
 function docker_compose_v2_matches_version()          { is_executable "${DOCKER_PLUGINS_PATH}/docker-compose"        && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)"                            == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; }
 function docker_machine_matches_version()             { is_executable "${TARGET}/bin/docker-machine"                 && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)"                             == "docker-machine version ${DOCKER_MACHINE_VERSION}"; }
 function docker_scan_matches_version()                { is_executable "${DOCKER_PLUGINS_PATH}/docker-scan"           && test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
+function docuum_matches_version()                     { is_executable "${TARGET}/bin/docuum"                         && test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)" == "${DOCUUM_VERSION}"; }
 function fuse_overlayfs_matches_version()             { is_executable "${TARGET}/bin/fuse-overlayfs"                 && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)"                               == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; }
 function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
 function gvisor_matches_version()                     { is_executable "${TARGET}/bin/runsc"                          && test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
@@ -1413,6 +1416,21 @@ git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSIO
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
 cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
+EOF
+}
+
+function install-docuum() {
+    echo "jwt ${DOCUUM_VERSION}"
+    progress docuum "Wait for Docker daemon to start"
+    wait_for_docker
+    progress docuum "Install binary"
+    docker run --interactive --rm --volume "${TARGET}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
+mkdir -p /go/src/github.com/stepchowfun/docuum
+cd /go/src/github.com/stepchowfun/docuum
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCUUM_VERSION}" https://github.com/stepchowfun/docuum .
+export RUSTFLAGS='-C target-feature=+crt-static'
+cargo build --release --target x86_64-unknown-linux-gnu
+cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
 EOF
 }
 
