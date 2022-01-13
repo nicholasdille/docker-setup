@@ -1,6 +1,7 @@
 #!/bin/bash
 set -o errexit
 
+unknown_parameters=()
 : "${CHECK_ONLY:=false}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
@@ -36,6 +37,9 @@ while test "$#" -gt 0; do
         --version)
             SHOW_VERSION=true
             ;;
+        --*)
+            unknown_parameters+=("$1")
+            ;;
         *)
             requested_tools+=("$1")
             ;;
@@ -57,7 +61,6 @@ fi
 CHECK_MARK="✓" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
 CROSS_MARK="✗" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
 
-echo -e "${YELLOW}"
 cat <<"EOF"
      _            _                           _
   __| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
@@ -74,59 +77,48 @@ This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
 EOF
-echo -e -n "${RESET}"
+
+if test "${#unknown_parameters[@]}" -gt 0; then
+    echo -e "${RED}ERROR: Unknown parameter(s): ${unknown_parameters[*]}.${RESET}"
+    echo
+    SHOW_HELP=true
+fi
 
 if ${SHOW_HELP}; then
     cat <<EOF
 Usage: docker-setup.sh [<options>] [<tool>[ <tool>]]
 
-The following command line switches are accepted:
+The following command line switches and environment variables
+are accepted:
 
---help                   Show this help
---version                Display version
---check-only             See CHECK_ONLY below
---no-wait                See NO_WAIT below
---reinstall              See REINSTALL below
---no-progressbar         See NO_PROGRESSBAR below
---no-color               See NO_COLOR below
+--help, SHOW_HELP                  Show this help
+--version, SHOW_VERSION            Display version
+--check-only, CHECK_ONLY           Abort after checking versions
+--no-wait, NO_WAIT                 Skip wait before installation
+--reinstall, REINSTALL             Reinstall all tools
+--only-install, ONLY_INSTALL       Only install specified tools
+--no-progressbar, NO_PROGRESSBAR   Disable progress bar
+--no-color, NO_COLOR               Disable colored output
+
+The above environment variables can be true or false.
 
 The following environment variables are processed:
 
-CHECK_ONLY               Abort after checking versions
-
-NO_WAIT                  Skip wait before installation/update
-                         when not empty
-
-REINSTALL                Reinstall all tools
-
-NO_PROGRESSBAR           Disable progress bar. Defaults to false
-
-NO_COLOR                 Disable colored output. Defaults to false
-
 TARGET                   Specifies the target directory for
                          binaries. Defaults to /usr
-
 CGROUP_VERSION           Specifies which version of cgroup
                          to use. Defaults to v2
-
 DOCKER_ADDRESS_BASE      Specifies the address pool for networks,
                          e.g. 192.168.0.0/16
 DOCKER_ADDRESS_SIZE      Specifies the size of each network,
                          e.g. 24
-
 DOCKER_REGISTRY_MIRROR   Specifies a host to be used as registry
                          mirror, e.g. https://proxy.my-domain.tld
-
 DOCKER_ALLOW_RESTART     Whether restarting dockerd is acceptable
-
 DOCKER_COMPOSE           Specifies which major version of
                          docker-compose to use. Defaults to v2
-
 DOCKER_PLUGINS_PATH      Where to store Docker CLI plugins.
                          Defaults to ${TARGET}/libexec/docker/cli-plugins
-
-If --only-install/ONLY_INSTALL are supplied, tools specified on the
-command line will be reinstalled regardless of --reinstall/REINSTALL.
 
 EOF
     exit
@@ -172,7 +164,7 @@ DOCKER_SETUP_VERSION="master"
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
 
-echo -e "${YELLOW}docker-setup version $(if test "${DOCKER_SETUP_VERSION}" == "master"; then echo "${RED}"; fi)${DOCKER_SETUP_VERSION}${RESET}"
+echo -e "docker-setup version $(if test "${DOCKER_SETUP_VERSION}" == "master"; then echo "${RED}"; fi)${DOCKER_SETUP_VERSION}${RESET}"
 echo
 if ${SHOW_VERSION}; then
     exit
@@ -191,6 +183,11 @@ if ! type tput >/dev/null 2>&1; then
             echo 0
         fi
     }
+fi
+
+display_cols=$(tput cols || echo "65")
+if test -z "${display_cols}" || test "${display_cols}" -le 0; then  
+    display_cols=65
 fi
 
 ARKADE_VERSION=0.8.11
@@ -262,11 +259,6 @@ else
     exit 1
 fi
 
-function user_requested() {
-    local tool=$1
-    ${REINSTALL} || test ${#requested_tools[@]} -eq 0 || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"
-}
-
 function is_executable() {
     local file=$1
     test -f "${file}" && test -x "${file}"
@@ -300,7 +292,7 @@ function hub_tool_matches_version()                   { is_executable "${TARGET}
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1)"                                        == "img version v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
 function jq_matches_version()                         { is_executable "${TARGET}/bin/jq"                             && test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
-function jwt_matches_version()                        { is_executable "${TARGET}/bin/jwt"                            && test "$(${TARGET}/bin/jwt --version 2>&1 | grep "^jwt" | cut -d' ' -f2)"                   == "${JWT_VERSION}"; }
+function jwt_matches_version()                        { is_executable "${TARGET}/bin/jwt"                            && test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
 function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1)"                                            == "k3d version v${K3D_VERSION}"; }
 function k3s_matches_version()                        { is_executable "${TARGET}/bin/k3s"                            && test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
 function kind_matches_version()                       { is_executable "${TARGET}/bin/kind"                           && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2)"                                     == "kind v${KIND_VERSION}"; }
@@ -335,46 +327,45 @@ function progress() {
     echo "${message}" | head -n 1 | tr -d '\n' >"${DOCKER_SETUP_PROGRESS}/${tool}"
 }
 
+echo "docker-setup includes ${#tools[*]} tools:"
+declare -A tool_version
 declare -A tool_required
-max_length=0
 for tool in "${tools[@]}"; do
-    if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
-        tool_required[${tool}]=$(if eval "${tool//-/_}_matches_version"; then echo "false"; else echo "true"; fi)
+    VAR_NAME="${tool^^}_VERSION"
+    VERSION="${VAR_NAME//-/_}"
+    tool_version[${tool}]="${!VERSION}"
 
-        if test "${#tool}" -gt "${max_length}"; then
-            max_length=${#tool}
-        fi
+    if ${REINSTALL} || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) || ! eval "${tool//-/_}_matches_version"; then
+        tool_required[${tool}]=true
 
     else
         tool_required[${tool}]=false
     fi
 done
-length_bar="$(printf ' %.0s' $(seq 1 "${max_length}"))"
-declare -A tool_spaces
-declare -A tool_version
 declare -A tool_color
 declare -A tool_sign
 check_only_exit_code=0
+line_length=0
 for tool in "${tools[@]}"; do
-    if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
-        VAR_NAME="${tool^^}_VERSION"
-        VERSION="${VAR_NAME//-/_}"
-        tool_version[${tool}]="${!VERSION}"
-        tool_spaces[${tool}]="${length_bar:${#tool}}"
-
-        if ${tool_required[${tool}]}; then
-            tool_color[${tool}]="${YELLOW}"
-            tool_sign[${tool}]="${CROSS_MARK}"
-            check_only_exit_code=1
-        else
-            tool_color[${tool}]="${GREEN}"
-            tool_sign[${tool}]="${CHECK_MARK}"
-        fi
-
-        echo -e "${tool}${tool_spaces[${tool}]}:${tool_color[${tool}]} ${tool_version[${tool}]} ${tool_sign[${tool}]}${RESET}"
+    if ${tool_required[${tool}]}; then
+        tool_color[${tool}]="${YELLOW}"
+        tool_sign[${tool}]="${CROSS_MARK}"
+        check_only_exit_code=1
+    else
+        tool_color[${tool}]="${GREEN}"
+        tool_sign[${tool}]="${CHECK_MARK}"
     fi
+
+    item="${tool} ${tool_version[${tool}]} ${tool_sign[${tool}]}"
+    item_length=$(( ${#item} + 3 ))
+    if test "$(( line_length + item_length ))" -gt "${display_cols}"; then
+        echo
+        line_length=0
+    fi
+    line_length=$(( line_length + item_length ))
+    echo -e -n "${tool_color[${tool}]}${item}   ${RESET}"
 done
-echo
+echo -e "\n\n"
 
 if ${CHECK_ONLY}; then
     exit "${check_only_exit_code}"
@@ -472,7 +463,7 @@ function docker_is_running() {
 
 function wait_for_docker() {
     local SLEEP=10
-    local RETRIES=6
+    local RETRIES=60
 
     local RETRY=0
     while ! docker_is_running && test "${RETRY}" -le "${RETRIES}"; do
@@ -1458,7 +1449,7 @@ function count_sub_processes() {
 
 declare -A child_pids
 for tool in "${tools[@]}"; do
-    if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
+    if ${REINSTALL} || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) || ! eval "${tool//-/_}_matches_version"; then
         {
             echo "============================================================"
             date +"%Y-%m-%d %H:%M:%S %Z"
@@ -1482,14 +1473,16 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-last_update=false
-cols=$(tput cols || echo "60")
-if test -z "${cols}" || test "${cols}" -le 0; then  
-    cols=60
+if test "${child_pid_count}" == 0; then
+    echo "Everything is up-to-date."
+    exit
 fi
-width=$((cols - 20))
-done_bar=$(printf '#%.0s' $(seq 0 "${width}"))
-todo_bar=$(printf ' %.0s' $(seq 0 "${width}"))
+
+last_update=false
+info_around_progress_bar="Installed xxx/yyy [] zzz%"
+progress_bar_width=$((display_cols - ${#info_around_progress_bar}))
+done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
+todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
 if ${NO_PROGRESSBAR}; then
     echo "Installing..."
 fi
@@ -1498,14 +1491,14 @@ while true; do
         todo="$(count_sub_processes)"
         done=$((child_pid_count - todo))
 
-        done_length=$((width * done / child_pid_count))
-        todo_length=$((width - done_length))
+        done_length=$((progress_bar_width * done / child_pid_count))
+        todo_length=$((progress_bar_width - done_length))
 
         todo_chars="${todo_bar:0:${todo_length}}"
         done_chars="${done_bar:0:${done_length}}"
         percent=$((done * 100 / child_pid_count))
 
-        echo -e -n "\rDone ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
+        echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
     fi
 
     if ${last_update}; then
