@@ -169,6 +169,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "DOCUUM_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "stepchowfun/docuum",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "FUSE_OVERLAYFS_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "containers/fuse-overlayfs",
       "datasourceTemplate": "github-releases",
