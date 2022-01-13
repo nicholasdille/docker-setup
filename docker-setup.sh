@@ -128,10 +128,10 @@ tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crictl crun dive docker docker-compose docker-machine
     docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm
-    hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl kubeswitch
-    kustomize manifest-tool minikube nerdctl oras portainer porter podman
-    regclient rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq
-    ytt
+    hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew kubectl
+    kubectl-resources kubeswitch kustomize manifest-tool minikube nerdctl oras
+    portainer porter podman regclient rootlesskit runc skopeo slirp4netns sops
+    stargz-snapshotter trivy yq ytt
 )
 
 unknown_tools=()
