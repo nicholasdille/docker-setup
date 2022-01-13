@@ -286,6 +286,7 @@ function crictl_matches_version()                     { is_executable "${TARGET}
 function crun_matches_version()                       { is_executable "${TARGET}/bin/crun"                           && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
 function dive_matches_version()                       { is_executable "${TARGET}/bin/dive"                           && test "$(${TARGET}/bin/dive --version)"                                                     == "dive ${DIVE_VERSION}"; }
 function docker_matches_version()                     { is_executable "${TARGET}/bin/dockerd"                        && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1)"                                    == "Docker version ${DOCKER_VERSION}"; }
+function docker_compose_matches_version()             { eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
 function docker_compose_v1_matches_version()          { is_executable "${TARGET}/bin/docker-compose"                 && test "$(${TARGET}/bin/docker-compose version)"                                             == "Docker Compose version v${DOCKER_COMPOSE_V1_VERSION}"; }
 function docker_compose_v2_matches_version()          { is_executable "${DOCKER_PLUGINS_PATH}/docker-compose"        && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)"                            == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; }
 function docker_machine_matches_version()             { is_executable "${TARGET}/bin/docker-machine"                 && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)"                             == "docker-machine version ${DOCKER_MACHINE_VERSION}"; }
@@ -326,60 +327,6 @@ function trivy_matches_version()                      { is_executable "${TARGET}
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             && test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            && test "$(${TARGET}/bin/ytt version)"                                                        == "ytt version ${YTT_VERSION}"; }
 
-function required-arkade()                     { ! arkade_matches_version; }
-function required-buildah()                    { ! buildah_matches_version; }
-function required-buildkit()                   { ! buildkit_matches_version; }
-function required-buildx()                     { ! buildx_matches_version; }
-function required-clusterawsadm()              { ! clusterawsadm_matches_version; }
-function required-clusterctl()                 { ! clusterctl_matches_version; }
-function required-cni()                        { ! cni_matches_version; }
-function required-cni-isolation()              { ! cni_isolation_matches_version; }
-function required-conmon()                     { ! conmon_matches_version; }
-function required-containerd()                 { ! containerd_matches_version; }
-function required-cosign()                     { ! cosign_matches_version; }
-function required-crictl()                     { ! crictl_matches_version; }
-function required-crun()                       { ! crun_matches_version; }
-function required-dive()                       { ! dive_matches_version; }
-function required-docker()                     { ! docker_matches_version; }
-function required-docker-compose()             { ! eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
-function required-docker-machine()             { ! docker_machine_matches_version; }
-function required-docker-scan()                { ! docker_scan_matches_version; }
-function required-fuse-overlayfs()             { ! fuse_overlayfs_matches_version; }
-function required-fuse-overlayfs-snapshotter() { ! fuse_overlayfs_snapshotter_matches_version; }
-function required-gvisor()                     { ! gvisor_matches_version; }
-function required-helm()                       { ! helm_matches_version; }
-function required-hub-tool()                   { ! hub_tool_matches_version; }
-function required-img()                        { ! img_matches_version; }
-function required-imgcrypt()                   { ! imgcrypt_matches_version; }
-function required-jq()                         { ! jq_matches_version; }
-function required-jwt()                        { ! jwt_matches_version; }
-function required-k3d()                        { ! k3d_matches_version; }
-function required-k3s()                        { ! k3s_matches_version; }
-function required-kapp()                       { ! kapp_matches_version; }
-function required-kind()                       { ! kind_matches_version; }
-function required-kompose()                    { ! kompose_matches_version; }
-function required-kubectl()                    { ! kubectl_matches_version; }
-function required-kubeswitch()                 { ! kubeswitch_matches_version; }
-function required-kustomize()                  { ! kustomize_matches_version; }
-function required-krew()                       { ! krew_matches_version; }
-function required-manifest-tool()              { ! manifest_tool_matches_version; }
-function required-minikube()                   { ! minikube_matches_version; }
-function required-nerdctl()                    { ! nerdctl_matches_version; }
-function required-oras()                       { ! oras_matches_version; }
-function required-podman()                     { ! podman_matches_version; }
-function required-portainer()                  { ! portainer_matches_version; }
-function required-porter()                     { ! porter_matches_version; }
-function required-regclient()                  { ! regclient_matches_version; }
-function required-rootlesskit()                { ! rootlesskit_matches_version; }
-function required-runc()                       { ! runc_matches_version; }
-function required-skopeo()                     { ! skopeo_matches_version; }
-function required-slirp4netns()                { ! slirp4netns_matches_version; }
-function required-sops()                       { ! sops_matches_version; }
-function required-stargz-snapshotter()         { ! stargz_snapshotter_matches_version; }
-function required-trivy()                      { ! trivy_matches_version; }
-function required-yq()                         { ! yq_matches_version; }
-function required-ytt()                        { ! ytt_matches_version; }
-
 function progress() {
     local tool="$1"
     local message="$2"
@@ -391,7 +338,7 @@ declare -A tool_required
 max_length=0
 for tool in "${tools[@]}"; do
     if ! ${ONLY_INSTALL} || user_requested "${tool}"; then
-        tool_required[${tool}]=$(if eval "required-${tool}"; then echo "true"; else echo "false"; fi)
+        tool_required[${tool}]=$(if eval "${tool//-/_}_matches_version"; then echo "false"; else echo "true"; fi)
 
         if test "${#tool}" -gt "${max_length}"; then
             max_length=${#tool}
