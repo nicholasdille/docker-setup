@@ -192,9 +192,9 @@
     {
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "GO_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "golang/go",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^go(?<version>.+?)$"
+      "depNameTemplate": "golang",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
@@ -403,8 +403,9 @@
     {
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "RUST_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate": "rust-lang/rust",
-      "datasourceTemplate": "github-releases"
+      "depNameTemplate": "rust",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
