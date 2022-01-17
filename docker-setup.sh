@@ -1591,7 +1591,7 @@ function install-umoci() {
     echo "umoci ${UMOCI_VERSION}"
     progress umoci "Install binary"
     curl -sLo "${TARGET}/bin/umoci" "https://github.com/opencontainers/umoci/releases/download/v${UMOCI_VERSION}/umoci.amd64"
-    progress firectl "Set executable bits"
+    progress umoci "Set executable bits"
     chmod +x "${TARGET}/bin/umoci"
 }
 
