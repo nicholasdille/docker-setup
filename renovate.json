@@ -133,6 +133,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CTOP_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "bcicen/ctop",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "DIVE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "wagoodman/dive",
       "datasourceTemplate": "github-releases",
@@ -178,6 +185,13 @@
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "DOCUUM_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "stepchowfun/docuum",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "DRY_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "moncho/dry",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -303,6 +317,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "K9S_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "derailed/k9s",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KAPP_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "vmware-tanzu/carvel-kapp",
       "datasourceTemplate": "github-releases",
@@ -386,6 +407,21 @@
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "LAZYDOCKER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "jesseduffield/lazydocker",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "LAZYGIT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "jesseduffield/lazygit",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
