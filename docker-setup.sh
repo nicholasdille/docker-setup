@@ -126,7 +126,7 @@ fi
 
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crictl crun dive docker docker-compose
+    conmon containerd cosign crane crictl crun dive docker docker-compose
     docker-machine docker-scan docuum firecracker firectl footloose
     fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
     imgcrypt ipfs jq jwt k3d k3s kapp kind kompose krew kubectl kubectl-build
@@ -203,6 +203,7 @@ CNI_VERSION=1.0.1
 CONMON_VERSION=2.0.32
 CONTAINERD_VERSION=1.5.9
 COSIGN_VERSION=1.4.1
+CRANE_VERSION=0.8.0
 CRICTL_VERSION=1.22.0
 CRUN_VERSION=1.4.1
 DIVE_VERSION=0.10.0
@@ -287,6 +288,7 @@ function cni_isolation_matches_version()              { is_executable "${TARGET}
 function conmon_matches_version()                     { is_executable "${TARGET}/bin/conmon"                         && test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"           == "${CONMON_VERSION}"; }
 function containerd_matches_version()                 { is_executable "${TARGET}/bin/containerd"                     && test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)"                               == "v${CONTAINERD_VERSION}"; }
 function cosign_matches_version()                     { is_executable "${TARGET}/bin/cosign"                         && test "$(${TARGET}/bin/cosign version | grep GitVersion)"                                   == "GitVersion:    v${COSIGN_VERSION}"; }
+function crane_matches_version()                      { is_executable "${TARGET}/bin/crane"                          && test "$(${TARGET}/bin/crane version)"                                                      == "${CRANE_VERSION}"; }
 function crictl_matches_version()                     { is_executable "${TARGET}/bin/crictl"                         && test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
 function crun_matches_version()                       { is_executable "${TARGET}/bin/crun"                           && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
 function dive_matches_version()                       { is_executable "${TARGET}/bin/dive"                           && test "$(${TARGET}/bin/dive --version)"                                                     == "dive ${DIVE_VERSION}"; }
@@ -1573,6 +1575,14 @@ function install-footloose() {
     curl -sLo "${TARGET}/bin/footloose" "https://github.com/weaveworks/footloose/releases/download/${FOOTLOOSE_VERSION}/footloose-${FOOTLOOSE_VERSION}-linux-x86_64"
     progress firectl "Set executable bits"
     chmod +x "${TARGET}/bin/footloose"
+}
+
+function install-crane() {
+    echo "crane ${CRANE_VERSION}"
+    progress crane "Install binary"
+    curl -sL "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        crane
 }
 
 function children_are_running() {

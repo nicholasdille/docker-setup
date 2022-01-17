@@ -118,6 +118,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CRANE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "google/go-containerregistry",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "CRUN_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "nicholasdille/crun-static",
       "datasourceTemplate": "github-releases",
