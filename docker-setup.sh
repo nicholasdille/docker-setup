@@ -132,7 +132,7 @@ tools=(
     imgcrypt ipfs jq jwt k3d k3s kapp kind kompose krew kubectl kubectl-build
     kubectl-free kubectl-resources kubefire kubeswitch kustomize manifest-tool
     minikube nerdctl oras portainer porter podman regclient rootlesskit runc
-    skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
+    skopeo slirp4netns sops stargz-snapshotter umoci trivy yq ytt
 )
 
 unknown_tools=()
@@ -257,6 +257,7 @@ SLIRP4NETNS_VERSION=1.1.12
 SOPS_VERSION=3.7.1
 STARGZ_SNAPSHOTTER_VERSION=0.10.1
 TRIVY_VERSION=0.22.0
+UMOCI_VERSION=0.4.7
 YTT_VERSION=0.38.0
 YQ_VERSION=4.16.2
 
@@ -341,6 +342,7 @@ function slirp4netns_matches_version()                { is_executable "${TARGET}
 function sops_matches_version()                       { is_executable "${TARGET}/bin/sops"                           && test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
 function stargz_snapshotter_matches_version()         { is_executable "${TARGET}/bin/containerd-stargz-grpc"         && test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
 function trivy_matches_version()                      { is_executable "${TARGET}/bin/trivy"                          && test "$(${TARGET}/bin/trivy --version)"                                                    == "Version: ${TRIVY_VERSION}"; }
+function umoci_matches_version()                      { is_executable "${TARGET}/bin/umoci"                          && test "$(${TARGET}/bin/umoci --version | cut -d' ' -f3)"                                    == "${UMOCI_VERSION}"; }
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             && test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            && test "$(${TARGET}/bin/ytt version)"                                                        == "ytt version ${YTT_VERSION}"; }
 
@@ -1583,6 +1585,14 @@ function install-crane() {
     curl -sL "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         crane
+}
+
+function install-umoci() {
+    echo "umoci ${UMOCI_VERSION}"
+    progress umoci "Install binary"
+    curl -sLo "${TARGET}/bin/umoci" "https://github.com/opencontainers/umoci/releases/download/v${UMOCI_VERSION}/umoci.amd64"
+    progress firectl "Set executable bits"
+    chmod +x "${TARGET}/bin/umoci"
 }
 
 function children_are_running() {

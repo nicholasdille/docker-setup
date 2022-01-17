@@ -492,6 +492,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "UMOCI_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "opencontainers/umoci",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mikefarah/yq",
       "datasourceTemplate": "github-releases",
