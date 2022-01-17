@@ -1268,6 +1268,32 @@ function install-helm() {
     helm completion bash >"${TARGET}/share/bash-completion/completions/helm"
     helm completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
     helm completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
+    progress helm "Install plugins"
+    plugins=(
+        https://github.com/mstrzele/helm-edit
+        https://github.com/databus23/helm-diff
+        https://github.com/aslafy-z/helm-git
+        https://github.com/sstarcher/helm-release
+        https://github.com/maorfr/helm-backup
+        https://github.com/technosophos/helm-keybase
+        https://github.com/technosophos/helm-gpg
+        https://github.com/cloudogu/helm-sudo
+        https://github.com/bloodorangeio/helm-oci-mirror
+        https://github.com/UniKnow/helm-outdated
+        https://github.com/rimusz/helm-chartify
+        https://github.com/random-dwi/helm-doc
+        https://github.com/sapcc/helm-outdated-dependencies
+        https://github.com/jkroepke/helm-secrets
+    )
+    for url in "${plugins[@]}"; do
+        directory="$(basename "${url}")"
+        if test -d "${HOME}/.local/share/helm/plugins/${directory}"; then
+            name="${directory//helm-/}"
+            helm plugin update "${name}"
+        else
+            helm plugin install "${url}"
+        fi
+    done
 }
 
 function install-kustomize() {
