@@ -1565,7 +1565,7 @@ function install-kubefire() {
     progress kubefire "Install binary"
     curl -sLo "${TARGET}/bin/kubefire" "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/kubefire-linux-amd64"
     curl -sLo "${TARGET}/libexec/cni/host-local-rev" "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/host-local-rev-linux-amd64"
-    progress firectl "Set executable bits"
+    progress kubefire "Set executable bits"
     chmod +x \
         "${TARGET}/bin/kubefire" \
         "${TARGET}/libexec/cni/host-local-rev"
@@ -1575,7 +1575,7 @@ function install-footloose() {
     echo "footloose ${FOOTLOOSE_VERSION}"
     progress footloose "Install binary"
     curl -sLo "${TARGET}/bin/footloose" "https://github.com/weaveworks/footloose/releases/download/${FOOTLOOSE_VERSION}/footloose-${FOOTLOOSE_VERSION}-linux-x86_64"
-    progress firectl "Set executable bits"
+    progress footloose "Set executable bits"
     chmod +x "${TARGET}/bin/footloose"
 }
 
