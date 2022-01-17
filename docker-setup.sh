@@ -370,12 +370,15 @@ for tool in "${tools[@]}"; do
 done
 declare -A tool_color
 declare -A tool_sign
+declare tool_outdated
 check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
     if ${tool_required[${tool}]}; then
         tool_color[${tool}]="${YELLOW}"
         tool_sign[${tool}]="${CROSS_MARK}"
+
+        tool_outdated+=("${tool}")
         check_only_exit_code=1
     else
         tool_color[${tool}]="${GREEN}"
@@ -394,6 +397,12 @@ done
 echo -e "\n"
 
 if ${CHECK_ONLY}; then
+    if test "${#tool_outdated[@]}" -gt 0; then
+        echo -e "${RED}ERROR: The following tools are outdated:${RESET}"
+        for tool in "${tool_outdated[@]}"; do
+            echo -e "${RED}       - ${tool}${RESET}"
+        done
+    fi
     exit "${check_only_exit_code}"
 fi
 
