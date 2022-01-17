@@ -1284,6 +1284,7 @@ function install-helm() {
         https://github.com/random-dwi/helm-doc
         https://github.com/sapcc/helm-outdated-dependencies
         https://github.com/jkroepke/helm-secrets
+        https://github.com/sigstore/helm-sigstore
     )
     for url in "${plugins[@]}"; do
         directory="$(basename "${url}")"
