@@ -128,10 +128,11 @@ tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crictl crun dive docker docker-compose
     docker-machine docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter
-    gvisor helm hub-tool img imgcrypt jq jwt k3d k3s kapp kind kompose krew
-    kubectl kubectl-build kubectl-free kubectl-resources kubeswitch kustomize
-    manifest-tool minikube nerdctl oras portainer porter podman regclient
-    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
+    gvisor helm hub-tool img imgcrypt ipfs jq jwt k3d k3s kapp kind kompose
+    krew kubectl kubectl-build kubectl-free kubectl-resources kubeswitch
+    kustomize manifest-tool minikube nerdctl oras portainer porter podman
+    regclient rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy
+    yq ytt
 )
 
 unknown_tools=()
@@ -216,6 +217,7 @@ FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 HELM_VERSION=3.7.2
 IMG_VERSION=0.5.11
 IMGCRYPT_VERSION=1.1.2
+IPFS_VERSION=0.11.0
 JWT_VERSION=5.0.1
 JQ_VERSION=1.6
 GO_VERSION=1.17.6
@@ -297,6 +299,7 @@ function helm_matches_version()                       { is_executable "${TARGET}
 function hub_tool_matches_version()                   { is_executable "${TARGET}/bin/hub-tool"                       && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)"                                   == "Docker Hub Tool v${HUB_TOOL_VERSION}"; }
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1)"                                        == "img version v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
+function ipfs_matches_version()                       { is_executable "${TARGET}/bin/ipfs"                           && test "$(${TARGET}/bin/ipfs version --number)"                                              == "${IPFS_VERSION}"; }
 function jq_matches_version()                         { is_executable "${TARGET}/bin/jq"                             && test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
 function jwt_matches_version()                        { is_executable "${TARGET}/bin/jwt"                            && test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
 function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1)"                                            == "k3d version v${K3D_VERSION}"; }
@@ -1474,6 +1477,14 @@ function install-kubectl-build() {
     | tar -xzC "${TARGET}/bin" --no-same-owner
     mkdir -p "${DOCKER_SETUP_CACHE}/kubectl-build"
     touch "${DOCKER_SETUP_CACHE}/kubectl-build/${KUBECTL_BUILD_VERSION}"
+}
+
+function install-ipfs() {
+    echo "ipfs ${IPFS_VERSION}"
+    progress ipfs "Install binary"
+    curl -sL "https://github.com/ipfs/go-ipfs/releases/download/v${IPFS_VERSION}/go-ipfs_v${IPFS_VERSION}_linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 -no-same-owner \
+        go-ipfs/ipfs
 }
 
 function children_are_running() {
