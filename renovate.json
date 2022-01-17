@@ -360,6 +360,14 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KUBELETCTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "cyberark/kubeletctl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KUBESWITCH_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "danielb42/kubeswitch",
       "datasourceTemplate": "github-releases",

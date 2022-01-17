@@ -130,9 +130,9 @@ tools=(
     docker-machine docker-scan docuum firecracker firectl footloose
     fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
     imgcrypt ipfs jq jwt k3d k3s kapp kind kompose krew kubectl kubectl-build
-    kubectl-free kubectl-resources kubefire kubeswitch kustomize manifest-tool
-    minikube nerdctl oras portainer porter podman regclient rootlesskit runc
-    skopeo slirp4netns sops stargz-snapshotter umoci trivy yq ytt
+    kubectl-free kubectl-resources kubefire kubeletctl kubeswitch kustomize
+    manifest-tool minikube nerdctl oras portainer porter podman regclient
+    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
 )
 
 unknown_tools=()
@@ -239,6 +239,7 @@ KUBECTL_BUILD_VERSION=0.1.5
 KUBECTL_FREE_VERSION=0.2.0
 KUBECTL_RESOURCES_VERSION=0.2.0
 KUBEFIRE_VERSION=0.3.6
+KUBELETCTL_VERSION=1.8
 KUBESWITCH_VERSION=1.4.0
 KUSTOMIZE_VERSION=4.4.1
 MINIKUBE_VERSION=1.24.0
@@ -324,6 +325,7 @@ function kubectl_build_matches_version()              { is_executable "${TARGET}
 function kubectl_free_matches_version()               { is_executable "${TARGET}/bin/kubectl-free"                   && test "$(${TARGET}/bin/kubectl-free --version | cut -d' ' -f2 | tr -d ',')"                 == "${KUBECTL_FREE_VERSION}"; }
 function kubectl_resources_matches_version()          { is_executable "${TARGET}/bin/kubectl-resources"              && test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
 function kubefire_matches_version()                   { is_executable "${TARGET}/bin/kubefire"                       && test "$(${TARGET}/bin/kubefire version | grep "^Version:" | cut -d' ' -f2)"                == "v${KUBEFIRE_VERSION}"; }
+function kubeletctl_matches_version()                 { is_executable "${TARGET}/bin/kubeletctl"                     && test "$(${TARGET}/bin/kubeletctl version | grep "^Version:" | cut -d' ' -f2)"              == "v${KUBELETCTL_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
 function kapp_matches_version()                       { is_executable "${TARGET}/bin/kapp"                           && test "$(${TARGET}/bin/kapp version | head -n 1)"                                           == "kapp version ${KAPP_VERSION}"; }
@@ -1565,7 +1567,7 @@ function install-kubefire() {
     progress kubefire "Install binary"
     curl -sLo "${TARGET}/bin/kubefire" "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/kubefire-linux-amd64"
     curl -sLo "${TARGET}/libexec/cni/host-local-rev" "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/host-local-rev-linux-amd64"
-    progress firectl "Set executable bits"
+    progress kubefire "Set executable bits"
     chmod +x \
         "${TARGET}/bin/kubefire" \
         "${TARGET}/libexec/cni/host-local-rev"
@@ -1575,7 +1577,7 @@ function install-footloose() {
     echo "footloose ${FOOTLOOSE_VERSION}"
     progress footloose "Install binary"
     curl -sLo "${TARGET}/bin/footloose" "https://github.com/weaveworks/footloose/releases/download/${FOOTLOOSE_VERSION}/footloose-${FOOTLOOSE_VERSION}-linux-x86_64"
-    progress firectl "Set executable bits"
+    progress footloose "Set executable bits"
     chmod +x "${TARGET}/bin/footloose"
 }
 
@@ -1593,6 +1595,14 @@ function install-umoci() {
     curl -sLo "${TARGET}/bin/umoci" "https://github.com/opencontainers/umoci/releases/download/v${UMOCI_VERSION}/umoci.amd64"
     progress firectl "Set executable bits"
     chmod +x "${TARGET}/bin/umoci"
+}
+
+function install-kubeletctl() {
+    echo "kubeletctl ${KUBELETCTL_VERSION}"
+    progress kubeletctl "Install binary"
+    curl -sLo "${TARGET}/bin/kubeletctl" "https://github.com/cyberark/kubeletctl/releases/download/v${KUBELETCTL_VERSION}/kubeletctl_linux_amd64"
+    progress kubeletctl "Set executable bits"
+    chmod +x "${TARGET}/bin/kubeletctl"
 }
 
 function children_are_running() {
