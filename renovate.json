@@ -176,6 +176,26 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "FIRECRACKER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "firecracker-microvm/firecracker",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "FIRECTL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "firecracker-microvm/firectl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "FOOTLOOSE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "weaveworks/footloose",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "FUSE_OVERLAYFS_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "containers/fuse-overlayfs",
       "datasourceTemplate": "github-releases",
@@ -202,6 +222,13 @@
       "depNameTemplate": "google/gvisor",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^release-(?<version>.+?)\\.0$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "IGNITE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "weaveworks/ignite",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
@@ -314,6 +341,13 @@
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KUBECTL_RESOURCES_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "howardjohn/kubectl-resources",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KUBEFIRE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "innobead/kubefire",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },

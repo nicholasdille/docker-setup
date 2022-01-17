@@ -127,12 +127,12 @@ fi
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crictl crun dive docker docker-compose
-    docker-machine docker-scan docuum fuse-overlayfs fuse-overlayfs-snapshotter
-    gvisor helm hub-tool img imgcrypt ipfs jq jwt k3d k3s kapp kind kompose
-    krew kubectl kubectl-build kubectl-free kubectl-resources kubeswitch
-    kustomize manifest-tool minikube nerdctl oras portainer porter podman
-    regclient rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy
-    yq ytt
+    docker-machine docker-scan docuum firecracker firectl footloose
+    fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
+    imgcrypt ipfs jq jwt k3d k3s kapp kind kompose krew kubectl kubectl-build
+    kubectl-free kubectl-resources kubefire kubeswitch kustomize manifest-tool
+    minikube nerdctl oras portainer porter podman regclient rootlesskit runc
+    skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
 )
 
 unknown_tools=()
@@ -212,9 +212,13 @@ DOCKER_MACHINE_VERSION=0.16.2
 DOCKER_SCAN_VERSION=0.16.0
 DOCKER_VERSION=20.10.12
 DOCUUM_VERSION=0.20.4
+FIRECRACKER_VERSION=0.25.2
+FIRECTL_VERSION=0.1.0
+FOOTLOOSE_VERSION=0.6.3
 FUSE_OVERLAYFS_VERSION=1.8
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 HELM_VERSION=3.7.2
+IGNITE_VERSION=0.10.0
 IMG_VERSION=0.5.11
 IMGCRYPT_VERSION=1.1.2
 IPFS_VERSION=0.11.0
@@ -233,6 +237,7 @@ KUBECTL_VERSION=1.23.1
 KUBECTL_BUILD_VERSION=0.1.5
 KUBECTL_FREE_VERSION=0.2.0
 KUBECTL_RESOURCES_VERSION=0.2.0
+KUBEFIRE_VERSION=0.3.6
 KUBESWITCH_VERSION=1.4.0
 KUSTOMIZE_VERSION=4.4.1
 MINIKUBE_VERSION=1.24.0
@@ -291,10 +296,14 @@ function docker_compose_v1_matches_version()          { is_executable "${TARGET}
 function docker_compose_v2_matches_version()          { is_executable "${DOCKER_PLUGINS_PATH}/docker-compose"        && test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version)"                            == "Docker Compose version v${DOCKER_COMPOSE_V2_VERSION}"; }
 function docker_machine_matches_version()             { is_executable "${TARGET}/bin/docker-machine"                 && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1)"                             == "docker-machine version ${DOCKER_MACHINE_VERSION}"; }
 function docker_scan_matches_version()                { is_executable "${DOCKER_PLUGINS_PATH}/docker-scan"           && test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
-function docuum_matches_version()                     { is_executable "${TARGET}/bin/docuum"                         && test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)" == "${DOCUUM_VERSION}"; }
+function docuum_matches_version()                     { is_executable "${TARGET}/bin/docuum"                         && test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
+function firecracker_matches_version()                { is_executable "${TARGET}/bin/firecracker"                    && test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
+function firectl_matches_version()                    { is_executable "${TARGET}/bin/firectl"                        && test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
+function footloose_matches_version()                  { is_executable "${TARGET}/bin/footloose"                      && test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
 function fuse_overlayfs_matches_version()             { is_executable "${TARGET}/bin/fuse-overlayfs"                 && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1)"                               == "fuse-overlayfs: version ${FUSE_OVERLAYFS_VERSION}"; }
 function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
 function gvisor_matches_version()                     { is_executable "${TARGET}/bin/runsc"                          && test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
+function ignite_matches_version()                     { is_executable "${TARGET}/bin/ignite"                         && test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
 function helm_matches_version()                       { is_executable "${TARGET}/bin/helm"                           && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
 function hub_tool_matches_version()                   { is_executable "${TARGET}/bin/hub-tool"                       && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1)"                                   == "Docker Hub Tool v${HUB_TOOL_VERSION}"; }
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1)"                                        == "img version v${IMG_VERSION}"; }
@@ -311,6 +320,7 @@ function kubectl_matches_version()                    { is_executable "${TARGET}
 function kubectl_build_matches_version()              { is_executable "${TARGET}/bin/kubectl-buildkit"               && test -f "${DOCKER_SETUP_CACHE}/kubectl-build/${KUBECTL_BUILD_VERSION}"; }
 function kubectl_free_matches_version()               { is_executable "${TARGET}/bin/kubectl-free"                   && test "$(${TARGET}/bin/kubectl-free --version | cut -d' ' -f2 | tr -d ',')"                 == "${KUBECTL_FREE_VERSION}"; }
 function kubectl_resources_matches_version()          { is_executable "${TARGET}/bin/kubectl-resources"              && test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
+function kubefire_matches_version()                   { is_executable "${TARGET}/bin/kubefire"                       && test "$(${TARGET}/bin/kubefire version | grep "^Version:" | cut -d' ' -f2)"                == "v${KUBEFIRE_VERSION}"; }
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
 function kapp_matches_version()                       { is_executable "${TARGET}/bin/kapp"                           && test "$(${TARGET}/bin/kapp version | head -n 1)"                                           == "kapp version ${KAPP_VERSION}"; }
@@ -1512,6 +1522,57 @@ function install-ipfs() {
     curl -sL "https://github.com/ipfs/go-ipfs/releases/download/v${IPFS_VERSION}/go-ipfs_v${IPFS_VERSION}_linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
         go-ipfs/ipfs
+}
+
+function install-firecracker() {
+    echo "firecracker ${FIRECRACKER_VERSION}"
+    progress firecracker "Install binary"
+    curl -sL "https://github.com/firecracker-microvm/firecracker/releases/download/v${FIRECRACKER_VERSION}/firecracker-v${FIRECRACKER_VERSION}-x86_64.tgz" \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
+        release-v${FIRECRACKER_VERSION}-x86_64/firecracker-v${FIRECRACKER_VERSION}-x86_64 \
+        release-v${FIRECRACKER_VERSION}-x86_64/jailer-v${FIRECRACKER_VERSION}-x86_64 \
+        release-v${FIRECRACKER_VERSION}-x86_64/seccompiler-bin-v${FIRECRACKER_VERSION}-x86_64
+    mv "${TARGET}/bin/firecracker-v${FIRECRACKER_VERSION}-x86_64"     "${TARGET}/bin/firecracker"
+    mv "${TARGET}/bin/jailer-v${FIRECRACKER_VERSION}-x86_64"          "${TARGET}/bin/jailer"
+    mv "${TARGET}/bin/seccompiler-bin-v${FIRECRACKER_VERSION}-x86_64" "${TARGET}/bin/seccompiler-bin"
+}
+
+function install-firectl() {
+    echo "firectl ${FIRECTL_VERSION}"
+    progress firectl "Install binary"
+    curl -sLo "${TARGET}/bin/firectl" "https://firectl-release.s3.amazonaws.com/firectl-v${FIRECTL_VERSION}"
+    progress firectl "Set executable bits"
+    chmod +x "${TARGET}/bin/firectl"
+}
+
+function install-ignite() {
+    echo "ignite ${IGNITE_VERSION}"
+    progress firectl "Install binaries"
+    curl -sLo "${TARGET}/bin/ignite"  "https://github.com/weaveworks/ignite/releases/download/v${IGNITE_VERSION}/ignite-amd64"
+    curl -sLo "${TARGET}/bin/ignited" "https://github.com/weaveworks/ignite/releases/download/v${IGNITE_VERSION}/ignited-amd64"
+    progress firectl "Set executable bits"
+    chmod +x \
+        "${TARGET}/bin/ignite" \
+        "${TARGET}/bin/ignited"
+}
+
+function install-kubefire() {
+    echo "kubefire ${KUBEFIRE_VERSION}"
+    progress kubefire "Install binary"
+    curl -sLo "${TARGET}/bin/kubefire" "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/kubefire-linux-amd64"
+    curl -sLo "${TARGET}/libexec/cni/host-local-rev" "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/host-local-rev-linux-amd64"
+    progress firectl "Set executable bits"
+    chmod +x \
+        "${TARGET}/bin/kubefire" \
+        "${TARGET}/libexec/cni/host-local-rev"
+}
+
+function install-footloose() {
+    echo "footloose ${FOOTLOOSE_VERSION}"
+    progress footloose "Install binary"
+    curl -sLo "${TARGET}/bin/footloose" "https://github.com/weaveworks/footloose/releases/download/${FOOTLOOSE_VERSION}/footloose-${FOOTLOOSE_VERSION}-linux-x86_64"
+    progress firectl "Set executable bits"
+    chmod +x "${TARGET}/bin/footloose"
 }
 
 function children_are_running() {
