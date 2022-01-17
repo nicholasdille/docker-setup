@@ -1483,7 +1483,7 @@ function install-ipfs() {
     echo "ipfs ${IPFS_VERSION}"
     progress ipfs "Install binary"
     curl -sL "https://github.com/ipfs/go-ipfs/releases/download/v${IPFS_VERSION}/go-ipfs_v${IPFS_VERSION}_linux-amd64.tar.gz" \
-    | tar -xzC "${TARGET}/bin" --strip-components=1 -no-same-owner \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
         go-ipfs/ipfs
 }
 
