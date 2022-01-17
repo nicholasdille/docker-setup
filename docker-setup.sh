@@ -126,13 +126,14 @@ fi
 
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crane crictl crun dive docker docker-compose
-    docker-machine docker-scan docuum firecracker firectl footloose
+    conmon containerd cosign crane crictl crun ctop dive docker docker-compose
+    docker-machine docker-scan docuum dry firecracker firectl footloose
     fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
-    imgcrypt ipfs jq jwt k3d k3s kapp kind kompose krew kubectl kubectl-build
-    kubectl-free kubectl-resources kubefire kubeletctl kubeswitch kustomize
-    manifest-tool minikube nerdctl oras portainer porter podman regclient
-    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter trivy yq ytt
+    imgcrypt ipfs jq jwt k3d k3s k9s kapp kind kompose krew kubectl
+    kubectl-build kubectl-free kubectl-resources kubeletctl kubefire kubeswitch
+    kustomize lazydocker lazygit manifest-tool minikube nerdctl oras portainer
+    porter podman regclient rootlesskit runc skopeo slirp4netns sops
+    stargz-snapshotter umoci trivy yq ytt
 )
 
 unknown_tools=()
@@ -206,6 +207,7 @@ COSIGN_VERSION=1.4.1
 CRANE_VERSION=0.8.0
 CRICTL_VERSION=1.23.0
 CRUN_VERSION=1.4.1
+CTOP_VERSION=0.7.6
 DIVE_VERSION=0.10.0
 DOCKER_COMPOSE_V1_VERSION=1.29.2
 DOCKER_COMPOSE_V2_VERSION=2.2.3
@@ -213,6 +215,7 @@ DOCKER_MACHINE_VERSION=0.16.2
 DOCKER_SCAN_VERSION=0.16.0
 DOCKER_VERSION=20.10.12
 DOCUUM_VERSION=0.20.4
+DRY_VERSION=0.11.1
 FIRECRACKER_VERSION=0.25.2
 FIRECTL_VERSION=0.1.0
 FOOTLOOSE_VERSION=0.6.3
@@ -230,6 +233,7 @@ GVISOR_VERSION=20220103
 HUB_TOOL_VERSION=0.4.4
 K3D_VERSION=5.2.2
 K3S_VERSION=1.23.1+k3s2
+K9S_VERSION=0.25.18
 KAPP_VERSION=0.44.0
 KIND_VERSION=0.11.1
 KOMPOSE_VERSION=1.26.1
@@ -242,6 +246,8 @@ KUBEFIRE_VERSION=0.3.6
 KUBELETCTL_VERSION=1.8
 KUBESWITCH_VERSION=1.4.0
 KUSTOMIZE_VERSION=4.4.1
+LAZYDOCKER_VERSION=0.12
+LAZYGIT_VERSION=0.32.2
 MINIKUBE_VERSION=1.24.0
 MANIFEST_TOOL_VERSION=1.0.3
 NERDCTL_VERSION=0.16.0
@@ -293,6 +299,7 @@ function cosign_matches_version()                     { is_executable "${TARGET}
 function crane_matches_version()                      { is_executable "${TARGET}/bin/crane"                          && test "$(${TARGET}/bin/crane version)"                                                      == "${CRANE_VERSION}"; }
 function crictl_matches_version()                     { is_executable "${TARGET}/bin/crictl"                         && test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
 function crun_matches_version()                       { is_executable "${TARGET}/bin/crun"                           && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
+function ctop_matches_version()                       { is_executable "${TARGET}/bin/ctop"                           && test "$(${TARGET}/bin/ctop -v | cut -d, -f1 | cut -d' ' -f3)"                              == "${CTOP_VERSION}"; }
 function dive_matches_version()                       { is_executable "${TARGET}/bin/dive"                           && test "$(${TARGET}/bin/dive --version | cut -d' ' -f2)"                                     == "${DIVE_VERSION}"; }
 function docker_matches_version()                     { is_executable "${TARGET}/bin/dockerd"                        && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1 | cut -d' ' -f3)"                    == "${DOCKER_VERSION}"; }
 function docker_compose_matches_version()             { eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
@@ -301,6 +308,7 @@ function docker_compose_v2_matches_version()          { is_executable "${DOCKER_
 function docker_machine_matches_version()             { is_executable "${TARGET}/bin/docker-machine"                 && test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1 | cut -d' ' -f3)"             == "${DOCKER_MACHINE_VERSION}"; }
 function docker_scan_matches_version()                { is_executable "${DOCKER_PLUGINS_PATH}/docker-scan"           && test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
 function docuum_matches_version()                     { is_executable "${TARGET}/bin/docuum"                         && test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
+function dry_matches_version()                        { is_executable "${TARGET}/bin/dry"                            && test "$(${TARGET}/bin/dry --version | cut -d, -f1 | cut -d' ' -f3)"                        == "${DRY_VERSION}"; }
 function firecracker_matches_version()                { is_executable "${TARGET}/bin/firecracker"                    && test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
 function firectl_matches_version()                    { is_executable "${TARGET}/bin/firectl"                        && test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
 function footloose_matches_version()                  { is_executable "${TARGET}/bin/footloose"                      && test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
@@ -317,6 +325,7 @@ function jq_matches_version()                         { is_executable "${TARGET}
 function jwt_matches_version()                        { is_executable "${TARGET}/bin/jwt"                            && test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
 function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1 | cut -d' ' -f3)"                            == "v${K3D_VERSION}"; }
 function k3s_matches_version()                        { is_executable "${TARGET}/bin/k3s"                            && test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
+function k9s_matches_version()                        { is_executable "${TARGET}/bin/k9s"                            && test "$(${TARGET}/bin/k9s version | grep Version | tr -s ' ' | cut -d' ' -f2)"             == "v${K9S_VERSION}"; }
 function kind_matches_version()                       { is_executable "${TARGET}/bin/kind"                           && test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
 function kompose_matches_version()                    { is_executable "${TARGET}/bin/kompose"                        && test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
 function krew_matches_version()                       { is_executable "${TARGET}/bin/krew"                           && test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
@@ -329,6 +338,8 @@ function kubeletctl_matches_version()                 { is_executable "${TARGET}
 function kubeswitch_matches_version()                 { is_executable "${TARGET}/bin/kubeswitch"                     && test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function kustomize_matches_version()                  { is_executable "${TARGET}/bin/kustomize"                      && test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
 function kapp_matches_version()                       { is_executable "${TARGET}/bin/kapp"                           && test "$(${TARGET}/bin/kapp version | head -n 1 | cut -d' ' -f3)"                           == "${KAPP_VERSION}"; }
+function lazydocker_matches_version()                 { is_executable "${TARGET}/bin/lazydocker"                     && test "$(${TARGET}/bin/lazydocker --version | grep Version | cut -d' ' -f2)"                == "${LAZYDOCKER_VERSION}"; }
+function lazygit_matches_version()                    { is_executable "${TARGET}/bin/lazygit"                        && test "$(${TARGET}/bin/lazygit --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,)"          == "${LAZYGIT_VERSION}"; }
 function manifest_tool_matches_version()              { is_executable "${TARGET}/bin/manifest-tool"                  && test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
 function minikube_matches_version()                   { is_executable "${TARGET}/bin/minikube"                       && test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function nerdctl_matches_version()                    { is_executable "${TARGET}/bin/nerdctl"                        && test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
@@ -1612,6 +1623,46 @@ function install-kubeletctl() {
     curl -sLo "${TARGET}/bin/kubeletctl" "https://github.com/cyberark/kubeletctl/releases/download/v${KUBELETCTL_VERSION}/kubeletctl_linux_amd64"
     progress kubeletctl "Set executable bits"
     chmod +x "${TARGET}/bin/kubeletctl"
+}
+
+function install-lazydocker() {
+    echo "lazydocker ${LAZYDOCKER_VERSION}"
+    progress lazydocker "Install binary"
+    curl -sL "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        lazydocker
+}
+
+function install-k9s() {
+    echo "k9s ${K9S_VERSION}"
+    progress k9s "Install binary"
+    curl -sL "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        k9s
+}
+
+function install-lazygit() {
+    echo "lazygit ${LAZYGIT_VERSION}"
+    progress lazygit "Install binary"
+    curl -sL "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        lazygit
+}
+
+function install-ctop() {
+    echo "ctop ${CTOP_VERSION}"
+    progress ctop "Install binary"
+    curl -sLo "${TARGET}/bin/ctop" "https://github.com/bcicen/ctop/releases/download/${CTOP_VERSION}/ctop-${CTOP_VERSION}-linux-amd64"
+    progress ctop "Set executable bits"
+    chmod +x "${TARGET}/bin/ctop"
+}
+
+function install-dry() {
+    echo "dry ${DRY_VERSION}"
+    progress dry "Install binary"
+    curl -sLo "${TARGET}/bin/dry" "https://github.com/moncho/dry/releases/download/v${DRY_VERSION}/dry-linux-amd64"
+    progress dry "Set executable bits"
+    chmod +x "${TARGET}/bin/dry"
 }
 
 function children_are_running() {
