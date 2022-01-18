@@ -266,6 +266,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "HELMFILE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "roboll/helmfile",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "HUB_TOOL_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "docker/hub-tool",
       "datasourceTemplate": "github-releases",
