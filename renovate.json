@@ -302,6 +302,12 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "JP_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "jmespath/jp",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "JWT_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mike-engel/jwt-cli",
       "datasourceTemplate": "github-releases"
