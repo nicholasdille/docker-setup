@@ -197,6 +197,12 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "DUFFLE_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "cnabio/duffle",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "FIRECRACKER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "firecracker-microvm/firecracker",
       "datasourceTemplate": "github-releases",
