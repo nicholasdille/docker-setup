@@ -1545,6 +1545,8 @@ function install-ipfs() {
     curl -sL "https://github.com/ipfs/go-ipfs/releases/download/v${IPFS_VERSION}/go-ipfs_v${IPFS_VERSION}_linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
         go-ipfs/ipfs
+    echo "Install completion"
+    ipfs commands completion >"${TARGET}/share/bash-completion/completions/ipfs"
 }
 
 function install-firecracker() {
@@ -1577,6 +1579,9 @@ function install-ignite() {
     chmod +x \
         "${TARGET}/bin/ignite" \
         "${TARGET}/bin/ignited"
+    echo "Install completion"
+    ignite completion >"${TARGET}/share/bash-completion/completions/ignite"
+    ignited completion >"${TARGET}/share/bash-completion/completions/ignited"
 }
 
 function install-kubefire() {
@@ -1604,6 +1609,10 @@ function install-crane() {
     curl -sL "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         crane
+    echo "Install completion"
+    crane completion bash >"${TARGET}/share/bash-completion/completions/crane"
+    crane completion fish >"${TARGET}/share/fish/vendor_completions.d/crane.fish"
+    crane completion zsh >"${TARGET}/share/zsh/vendor-completions/_crane"
 }
 
 function install-umoci() {
