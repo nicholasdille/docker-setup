@@ -1610,7 +1610,6 @@ function install-ignite() {
         "${TARGET}/bin/ignited"
     echo "Install completion"
     ignite completion >"${TARGET}/share/bash-completion/completions/ignite"
-    ignited completion >"${TARGET}/share/bash-completion/completions/ignited"
 }
 
 function install-kubefire() {
