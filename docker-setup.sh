@@ -129,7 +129,7 @@ tools=(
     conmon containerd cosign crane crictl crun ctop dive docker docker-compose
     docker-machine docker-scan docuum dry duffle firecracker firectl footloose
     fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
-    imgcrypt ipfs jq jwt k3d k3s k9s kapp kind kompose krew kubectl
+    imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind kompose krew kubectl
     kubectl-build kubectl-free kubectl-resources kubeletctl kubefire kubeswitch
     kustomize lazydocker lazygit manifest-tool minikube nerdctl oras portainer
     porter podman regclient rootlesskit runc skopeo slirp4netns sops
@@ -226,6 +226,7 @@ IGNITE_VERSION=0.10.0
 IMG_VERSION=0.5.11
 IMGCRYPT_VERSION=1.1.2
 IPFS_VERSION=0.11.0
+JP_VERSION=0.2.1
 JWT_VERSION=5.0.1
 JQ_VERSION=1.6
 GO_VERSION=1.17.6
@@ -322,6 +323,7 @@ function hub_tool_matches_version()                   { is_executable "${TARGET}
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1 | cut -d' ' -f3)"                        == "v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
 function ipfs_matches_version()                       { is_executable "${TARGET}/bin/ipfs"                           && test "$(${TARGET}/bin/ipfs version --number)"                                              == "${IPFS_VERSION}"; }
+function jp_matches_version()                         { is_executable "${TARGET}/bin/jp"                             && test "$(${TARGET}/bin/jp --version | cut -d' ' -f3)"                                       == "${JP_VERSION}"; }
 function jq_matches_version()                         { is_executable "${TARGET}/bin/jq"                             && test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
 function jwt_matches_version()                        { is_executable "${TARGET}/bin/jwt"                            && test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
 function k3d_matches_version()                        { is_executable "${TARGET}/bin/k3d"                            && test "$(${TARGET}/bin/k3d version | head -n 1 | cut -d' ' -f3)"                            == "v${K3D_VERSION}"; }
@@ -1664,6 +1666,14 @@ function install-duffle() {
     curl -sLo "${TARGET}/bin/duffle" "https://github.com/cnabio/duffle/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/duffle"
+}
+
+function install-jp() {
+    echo "jp ${JP_VERSION}"
+    echo "Install binary"
+    curl -sLo "${TARGET}/bin/jp" "https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/jp"
 }
 
 function children_are_running() {
