@@ -128,12 +128,12 @@ tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crane crictl crun ctop dive docker docker-compose
     docker-machine docker-scan docuum dry duffle firecracker firectl footloose
-    fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
-    imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind kompose krew kubectl
-    kubectl-build kubectl-free kubectl-resources kubeletctl kubefire kubeswitch
-    kustomize lazydocker lazygit manifest-tool minikube nerdctl oras portainer
-    porter podman qemu regclient rootlesskit runc skopeo slirp4netns sops
-    stargz-snapshotter umoci trivy yq ytt
+    fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm helmfile hub-tool
+    ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind kompose krew
+    kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
+    kubeswitch kustomize lazydocker lazygit manifest-tool minikube nerdctl oras
+    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
+    sops stargz-snapshotter umoci trivy yq ytt
 )
 
 unknown_tools=()
@@ -222,6 +222,7 @@ FOOTLOOSE_VERSION=0.6.3
 FUSE_OVERLAYFS_VERSION=1.8.1
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 HELM_VERSION=3.7.2
+HELMFILE_VERSION=0.143.0
 IGNITE_VERSION=0.10.0
 IMG_VERSION=0.5.11
 IMGCRYPT_VERSION=1.1.2
@@ -320,6 +321,7 @@ function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}
 function gvisor_matches_version()                     { is_executable "${TARGET}/bin/runsc"                          && test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
 function ignite_matches_version()                     { is_executable "${TARGET}/bin/ignite"                         && test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
 function helm_matches_version()                       { is_executable "${TARGET}/bin/helm"                           && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
+function helmfile_matches_version()                   { is_executable "${TARGET}/bin/helmfile"                       && test "$(${TARGET}/bin/helmfile --version | cut -d' ' -f3)"                                 == "v${HELMFILE_VERSION}"; }
 function hub_tool_matches_version()                   { is_executable "${TARGET}/bin/hub-tool"                       && test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1 | cut -d' ' -f4)"                   == "v${HUB_TOOL_VERSION}"; }
 function img_matches_version()                        { is_executable "${TARGET}/bin/img"                            && test "$(${TARGET}/bin/img --version | cut -d, -f1 | cut -d' ' -f3)"                        == "v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   { is_executable "${TARGET}/bin/ctr-enc"                        && test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
@@ -1720,6 +1722,17 @@ function install-qemu() {
     echo "Install binary"
     curl -sL "https://github.com/nicholasdille/qemu-static/releases/download/v${QEMU_VERSION}/qemu.tar.gz" \
     | tar -xzC "${TARGET}" --strip-components=2 --no-same-owner
+}
+
+function install-helmfile() {
+    echo "helmfile ${HELMFILE_VERSION}"
+    echo "Install binary"
+    curl -sLo "${TARGET}/bin/helmfile" "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/helmfile"
+    echo "Install completion"
+    curl -sLo "${TARGET}/share/bash-completion/completions/helmfile" "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_bash_autocomplete"
+    curl -sLo "${TARGET}/share/zsh/vendor-completions/_helmfile" "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_zsh_autocomplete"
 }
 
 function children_are_running() {
