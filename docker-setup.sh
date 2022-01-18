@@ -669,13 +669,6 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
-    if ! "$(jq --raw-output '.runtimes | keys | any(. == "runc")' /etc/docker/daemon.json)"; then
-        echo "Add runtime to Docker"
-        # shellcheck disable=SC2094
-        cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"runc":{"path":"\($target)/libexec/docker/bin/runc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-    fi
     if ! "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)"; then
         echo "Set default runtime"
         # shellcheck disable=SC2094
