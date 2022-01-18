@@ -127,7 +127,7 @@ fi
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crane crictl crun ctop dive docker docker-compose
-    docker-machine docker-scan docuum dry firecracker firectl footloose
+    docker-machine docker-scan docuum dry duffle firecracker firectl footloose
     fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm hub-tool ignite img
     imgcrypt ipfs jq jwt k3d k3s k9s kapp kind kompose krew kubectl
     kubectl-build kubectl-free kubectl-resources kubeletctl kubefire kubeswitch
@@ -215,6 +215,7 @@ DOCKER_SCAN_VERSION=0.16.0
 DOCKER_VERSION=20.10.12
 DOCUUM_VERSION=0.20.4
 DRY_VERSION=0.11.1
+DUFFLE_VERSION=0.3.5-beta.1
 FIRECRACKER_VERSION=0.25.2
 FIRECTL_VERSION=0.1.0
 FOOTLOOSE_VERSION=0.6.3
@@ -308,6 +309,7 @@ function docker_machine_matches_version()             { is_executable "${TARGET}
 function docker_scan_matches_version()                { is_executable "${DOCKER_PLUGINS_PATH}/docker-scan"           && test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
 function docuum_matches_version()                     { is_executable "${TARGET}/bin/docuum"                         && test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
 function dry_matches_version()                        { is_executable "${TARGET}/bin/dry"                            && test "$(${TARGET}/bin/dry --version | cut -d, -f1 | cut -d' ' -f3)"                        == "${DRY_VERSION}"; }
+function duffle_matches_version()                     { is_executable "${TARGET}/bin/duffle"                         && test "$(${TARGET}/bin/duffle version)"                                                     == "${DUFFLE_VERSION}"; }
 function firecracker_matches_version()                { is_executable "${TARGET}/bin/firecracker"                    && test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
 function firectl_matches_version()                    { is_executable "${TARGET}/bin/firectl"                        && test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
 function footloose_matches_version()                  { is_executable "${TARGET}/bin/footloose"                      && test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
@@ -1654,6 +1656,14 @@ function install-dry() {
     curl -sLo "${TARGET}/bin/dry" "https://github.com/moncho/dry/releases/download/v${DRY_VERSION}/dry-linux-amd64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/dry"
+}
+
+function install-duffle() {
+    echo "duffle ${DUFFLE_VERSION}"
+    echo "Install binary"
+    curl -sLo "${TARGET}/bin/duffle" "https://github.com/cnabio/duffle/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/duffle"
 }
 
 function children_are_running() {
