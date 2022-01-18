@@ -132,7 +132,7 @@ tools=(
     imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind kompose krew kubectl
     kubectl-build kubectl-free kubectl-resources kubeletctl kubefire kubeswitch
     kustomize lazydocker lazygit manifest-tool minikube nerdctl oras portainer
-    porter podman regclient rootlesskit runc skopeo slirp4netns sops
+    porter podman qemu regclient rootlesskit runc skopeo slirp4netns sops
     stargz-snapshotter umoci trivy yq ytt
 )
 
@@ -256,6 +256,7 @@ ORAS_VERSION=0.12.0
 PODMAN_VERSION=3.4.4
 PORTAINER_VERSION=2.11.0
 PORTER_VERSION=0.38.8
+QEMU_VERSION=6.2.0
 REGCLIENT_VERSION=0.3.10
 ROOTLESSKIT_VERSION=0.14.6
 RUNC_VERSION=1.1.0
@@ -350,6 +351,7 @@ function oras_matches_version()                       { is_executable "${TARGET}
 function podman_matches_version()                     { is_executable "${TARGET}/bin/podman"                         && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
 function portainer_matches_version()                  { is_executable "${TARGET}/bin/portainer"                      && test "$(${TARGET}/bin/portainer --version 2>&1)"                                           == "${PORTAINER_VERSION}"; }
 function porter_matches_version()                     { is_executable "${TARGET}/bin/porter"                         && test "$(${TARGET}/bin/porter --version | cut -d' ' -f2)"                                   == "v${PORTER_VERSION}"; }
+function qemu_matches_version()                       { is_executable "${TARGET}/bin/qemu-img"                       && test "$(${TARGET}/bin/qemu-img --version | grep qemu-img | cut -d' ' -f3)"                 == "${QEMU_VERSION}"; }
 function regclient_matches_version()                  { is_executable "${TARGET}/bin/regctl"                         && test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)"                                     == "v${REGCLIENT_VERSION}"; }
 function rootlesskit_matches_version()                { is_executable "${TARGET}/bin/rootlesskit"                    && test "$(${TARGET}/bin/rootlesskit --version | cut -d' ' -f3)"                              == "${ROOTLESSKIT_VERSION}"; }
 function runc_matches_version()                       { is_executable "${TARGET}/bin/runc"                           && test "$(${TARGET}/bin/runc --version | head -n 1 | cut -d' ' -f3)"                         == "${RUNC_VERSION}"; }
@@ -1674,6 +1676,13 @@ function install-jp() {
     curl -sLo "${TARGET}/bin/jp" "https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/jp"
+}
+
+function install-qemu() {
+    echo "qemu ${QEMU_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/nicholasdille/qemu-static/releases/download/v${QEMU_VERSION}/qemu.tar.gz" \
+    | tar -xzC "${TARGET}" --strip-components=2 --no-same-owner
 }
 
 function children_are_running() {
