@@ -662,6 +662,28 @@ function install-docker() {
         echo "Initialize dockerd configuration"
         echo "{}" >/etc/docker/daemon.json
     fi
+    if ! "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)"; then
+        echo "Configuring native cgroup driver"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
+    if ! "$(jq --raw-output '.runtimes | keys | any(. == "runc")' /etc/docker/daemon.json)"; then
+        echo "Add runtime to Docker"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"runc":{"path":"\($target)/libexec/docker/bin/runc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
+    if ! "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)"; then
+        echo "Set default runtime"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq '. * {"default-runtime": "runc"}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
+    # default-runtime
     if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)"; then
         echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
         # shellcheck disable=SC2094
@@ -669,7 +691,7 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
-    if test -n "${DOCKER_REGISTRY_MIRROR}" && "$(jq --arg mirror "foo2" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)"; then
+    if test -n "${DOCKER_REGISTRY_MIRROR}" && "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)"; then
         echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
         # shellcheck disable=SC2094
         cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
@@ -1143,6 +1165,13 @@ function install-crun() {
     echo "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
     | tar -xzC "${TARGET}" --no-same-owner
+    if ! "$(jq --raw-output '.runtimes | keys | any(. == "crun")' /etc/docker/daemon.json)"; then
+        echo "Add runtime to Docker"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\($target)/bin/crun"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
 }
 
 function install-skopeo() {
@@ -1471,6 +1500,13 @@ function install-gvisor() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
+    if ! "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' /etc/docker/daemon.json)"; then
+        echo "Add runtime to Docker"
+        # shellcheck disable=SC2094
+        cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\($target)/bin/runsc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        DOCKER_RESTART=true
+        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
 }
 
 function install-jwt() {
