@@ -485,6 +485,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "QEMU_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/qemu-static",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "regclient/regclient",
       "datasourceTemplate": "github-releases",
