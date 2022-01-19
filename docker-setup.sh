@@ -693,7 +693,7 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
-    if "$(jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json)"; then
+    if ! test "$(jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json)" == true; then
         echo "Enable BuildKit"
         # shellcheck disable=SC2094
         cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
