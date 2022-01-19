@@ -700,6 +700,8 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
+    echo "Contents of daemon.json"
+    cat /etc/docker/daemon.json
     echo "Check if daemon.json is valid JSON"
     if ! jq --exit-status '.' /etc/docker/daemon.json; then
         echo "${RED}ERROR: /etc/docker/daemon.json is not valid JSON.${RESET}"
