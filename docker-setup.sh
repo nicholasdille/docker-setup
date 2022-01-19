@@ -521,7 +521,7 @@ function wait_for_docker() {
     done
 
     if ! docker_is_running; then
-        echo -e "${RED}ERROR: Failed to wait for Docker daemon to start after $(( RETRY * SLEEP )) seconds.${RESET}"
+        echo -e "${RED}ERROR: Failed to wait for Docker daemon to start after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
         exit 1
     fi
 }
@@ -664,14 +664,14 @@ function install-docker() {
         echo "Initialize dockerd configuration"
         echo "{}" >/etc/docker/daemon.json
     fi
-    if ! "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)"; then
+    if ! test "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)" == "true"; then
         echo "Configuring native cgroup driver"
         # shellcheck disable=SC2094
-        cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
-    if ! "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)"; then
+    if ! test "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)" == true; then
         echo "Set default runtime"
         # shellcheck disable=SC2094
         cat <<< "$(jq '. * {"default-runtime": "runc"}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
@@ -679,17 +679,17 @@ function install-docker() {
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
     # default-runtime
-    if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)"; then
+    if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)" == "true"; then
         echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
         # shellcheck disable=SC2094
-        cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
-    if test -n "${DOCKER_REGISTRY_MIRROR}" && "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)"; then
+    if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)" == "true"; then
         echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
         # shellcheck disable=SC2094
-        cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+        cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
@@ -699,6 +699,11 @@ function install-docker() {
         cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+    fi
+    echo "Check if daemon.json is valid JSON"
+    if ! jq --exit-status '.' /etc/docker/daemon.json; then
+        echo "${RED}ERROR: /etc/docker/daemon.json is not valid JSON.${RESET}"
+        exit 1
     fi
     if has_systemd; then
         echo "Reload systemd"
