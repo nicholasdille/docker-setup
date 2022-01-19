@@ -1786,9 +1786,8 @@ function cleanup() {
     done
     rm -rf "${DOCKER_SETUP_CACHE}/errors"
     find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r file; do
-        echo "Merging into daemon.json: ${file}"
-        cat "${file}"
-        mv "${file}" /var/log/
+        bash "${file}"
+        rm "${file}"
     done
 }
 trap cleanup EXIT
