@@ -664,6 +664,8 @@ function install-docker() {
         echo "Initialize dockerd configuration"
         echo "{}" >/etc/docker/daemon.json
     fi
+    echo "Contents of daemon.json"
+    cat /etc/docker/daemon.json
     if ! test "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)" == "true"; then
         echo "Configuring native cgroup driver"
         # shellcheck disable=SC2094
@@ -671,6 +673,8 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
+    echo "Contents of daemon.json"
+    cat /etc/docker/daemon.json
     if ! test "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)" == true; then
         echo "Set default runtime"
         # shellcheck disable=SC2094
@@ -678,7 +682,8 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
-    # default-runtime
+    echo "Contents of daemon.json"
+    cat /etc/docker/daemon.json
     if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)" == "true"; then
         echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
         # shellcheck disable=SC2094
@@ -686,6 +691,8 @@ function install-docker() {
         DOCKER_RESTART=true
         echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
     fi
+    echo "Contents of daemon.json"
+    cat /etc/docker/daemon.json
     if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)" == "true"; then
         echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
         # shellcheck disable=SC2094
