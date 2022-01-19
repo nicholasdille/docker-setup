@@ -709,10 +709,7 @@ function install-docker() {
         systemctl daemon-reload
         if systemctl is-active --quiet docker; then
             if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-                echo "Restart dockerd"
-                systemctl restart docker
-            else
-                echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
         else
             echo "Start dockerd"
@@ -722,10 +719,7 @@ function install-docker() {
     else
         if docker_is_running; then
             if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-                echo "Restart dockerd"
-                /etc/init.d/docker restart
-            else
-                echo -e "${YELLOW}WARNING: Please restart dockerd (systemctl restart docker).${RESET}"
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
         else
             echo "Start dockerd"
@@ -1170,6 +1164,7 @@ function install-crun() {
         cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
 cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
 EOF
+        touch "${DOCKER_SETUP_CACHE}/docker_restart"
     fi
 }
 
@@ -1505,6 +1500,7 @@ function install-gvisor() {
         cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
 cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
 EOF
+        touch "${DOCKER_SETUP_CACHE}/docker_restart"
     fi
 }
 
@@ -1785,10 +1781,6 @@ function cleanup() {
         kill "${CHILD}"
     done
     rm -rf "${DOCKER_SETUP_CACHE}/errors"
-    find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r file; do
-        bash "${file}"
-        rm "${file}"
-    done
 }
 trap cleanup EXIT
 
@@ -1798,6 +1790,7 @@ if test "${child_pid_count}" == 0; then
 fi
 
 last_update=false
+exit_code=0
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
 progress_bar_width=$((display_cols - ${#info_around_progress_bar}))
 done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
@@ -1821,7 +1814,6 @@ while true; do
     fi
 
     if ${last_update}; then
-        exit_code=0
         echo
         # shellcheck disable=SC2044
         for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
@@ -1829,8 +1821,8 @@ while true; do
             echo -e "${RED}ERROR: Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
             exit_code=1
         done
-        echo "Finished installation."
-        exit "${exit_code}"
+
+        break
     fi
 
     if ! children_are_running; then
@@ -1839,3 +1831,23 @@ while true; do
 
     sleep 0.1
 done
+
+find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r file; do
+    bash "${file}"
+    rm "${file}"
+done
+if test -f "${DOCKER_SETUP_CACHE}/docker_restart"; then
+    echo
+    if has_systemd; then
+        echo "Restart dockerd using systemd"
+        systemctl restart docker
+    else
+        echo "Restart dockerd using init script"
+        /etc/init.d/docker restart
+    fi
+    rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
+fi
+
+echo
+echo "Finished installation."
+exit "${exit_code}"
