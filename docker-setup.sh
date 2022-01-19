@@ -1174,12 +1174,12 @@ function install-crun() {
     echo "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
     | tar -xzC "${TARGET}" --no-same-owner
-    if ! "$(jq --raw-output '.runtimes | keys | any(. == "crun")' /etc/docker/daemon.json)"; then
+    if ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' /etc/docker/daemon.json)" == "true"; then
         echo "Add runtime to Docker"
         # shellcheck disable=SC2094
-        cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\($target)/bin/crun"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
+cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\($target)/bin/crun"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+EOF
     fi
 }
 
@@ -1509,12 +1509,12 @@ function install-gvisor() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
-    if ! "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' /etc/docker/daemon.json)"; then
+    if ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' /etc/docker/daemon.json)" == "true"; then
         echo "Add runtime to Docker"
         # shellcheck disable=SC2094
-        cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\($target)/bin/runsc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
+cat <<< "$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\($target)/bin/runsc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+EOF
     fi
 }
 
@@ -1795,6 +1795,10 @@ function cleanup() {
         kill "${CHILD}"
     done
     rm -rf "${DOCKER_SETUP_CACHE}/errors"
+    find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r file; do
+        echo "Merging into daemon.json: ${file}"
+        cat "${file}"
+    done
 }
 trap cleanup EXIT
 
