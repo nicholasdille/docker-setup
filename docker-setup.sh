@@ -773,6 +773,12 @@ make man
 cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
+    if ! test -f /etc/containerd/config.toml; then
+        echo "Adding default configuration"
+        mkdir -p /etc/containerd
+        "${TARGET}/bin/containerd" config default >/etc/containerd/config.toml
+        sed -i "" /etc/containerd/config.toml
+    fi
     echo "Install systemd unit"
     curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
     sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${TARGET}/bin/containerd|" /etc/systemd/system/containerd.service
