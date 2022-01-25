@@ -1075,7 +1075,7 @@ function install-stargz-snapshotter() {
     curl -sL "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
     echo "Add configuration to containerd"
-    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
+    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
 dasel put object --file /etc/containerd/config.toml --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
 EOF
     echo "Install systemd units"
@@ -1612,7 +1612,7 @@ function install-ipfs() {
     IPFS_PATH=/var/lib/ipfs ipfs config Addresses.API "/ip4/127.0.0.1/tcp/5888"
     IPFS_PATH=/var/lib/ipfs ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
     echo "Add configuration to containerd"
-    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
+    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-ipfs.sh" <<EOF
 dasel put bool --file /etc/containerd/config.toml --parser toml .ipfs true
 EOF
     echo "Install systemd units"
@@ -1888,6 +1888,12 @@ find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r fil
     bash "${file}"
     rm "${file}"
 done
+
+find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh | while read -r file; do
+    bash "${file}"
+    rm "${file}"
+done
+
 if test -f "${DOCKER_SETUP_CACHE}/docker_restart"; then
     echo
     if has_systemd; then
