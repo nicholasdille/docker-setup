@@ -126,14 +126,14 @@ fi
 
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crane crictl crun ctop dive docker docker-compose
-    docker-machine docker-scan docuum dry duffle firecracker firectl footloose
-    fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm helmfile hub-tool
-    ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind kompose krew
-    kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
-    kubeswitch kustomize lazydocker lazygit manifest-tool minikube nerdctl oras
-    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
-    sops stargz-snapshotter umoci trivy yq ytt
+    conmon containerd cosign crane crictl crun ctop dasel dive docker
+    docker-compose docker-machine docker-scan docuum dry duffle firecracker
+    firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm
+    helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind
+    kompose krew kubectl kubectl-build kubectl-free kubectl-resources
+    kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
+    minikube nerdctl oras portainer porter podman qemu regclient rootlesskit
+    runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq ytt
 )
 
 unknown_tools=()
@@ -207,6 +207,7 @@ CRANE_VERSION=0.8.0
 CRICTL_VERSION=1.23.0
 CRUN_VERSION=1.4.1
 CTOP_VERSION=0.7.6
+DASEL_VERSION=1.22.1
 DIVE_VERSION=0.10.0
 DOCKER_COMPOSE_V1_VERSION=1.29.2
 DOCKER_COMPOSE_V2_VERSION=2.2.3
@@ -303,6 +304,7 @@ function crane_matches_version()                      { is_executable "${TARGET}
 function crictl_matches_version()                     { is_executable "${TARGET}/bin/crictl"                         && test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
 function crun_matches_version()                       { is_executable "${TARGET}/bin/crun"                           && test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
 function ctop_matches_version()                       { is_executable "${TARGET}/bin/ctop"                           && test "$(${TARGET}/bin/ctop -v | cut -d, -f1 | cut -d' ' -f3)"                              == "${CTOP_VERSION}"; }
+function dasel_matches_version()                      { is_executable "${TARGET}/bin/dasel"                          && test "$(${TARGET}/bin/dasel --version | cut -d' ' -f3)"                                    == "v${DASEL_VERSION}"; }
 function dive_matches_version()                       { is_executable "${TARGET}/bin/dive"                           && test "$(${TARGET}/bin/dive --version | cut -d' ' -f2)"                                     == "${DIVE_VERSION}"; }
 function docker_matches_version()                     { is_executable "${TARGET}/bin/dockerd"                        && test "$(${TARGET}/bin/dockerd --version | cut -d, -f1 | cut -d' ' -f3)"                    == "${DOCKER_VERSION}"; }
 function docker_compose_matches_version()             { eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
@@ -1739,6 +1741,14 @@ function install-helmfile() {
     echo "Install completion"
     curl -sLo "${TARGET}/share/bash-completion/completions/helmfile" "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_bash_autocomplete"
     curl -sLo "${TARGET}/share/zsh/vendor-completions/_helmfile" "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_zsh_autocomplete"
+}
+
+function install-dasel() {
+    echo "dasel ${DASEL_VERSION}"
+    echo "Install binary"
+    curl -sLo "${TARGET}/bin/dasel" "https://github.com/TomWright/dasel/releases/download/v${DASEL_VERSION}/dasel_linux_amd64"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/dasel"
 }
 
 function children_are_running() {
