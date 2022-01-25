@@ -1074,6 +1074,17 @@ function install-stargz-snapshotter() {
     echo "Install binary"
     curl -sL "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
+    echo "Add configuration to containerd"
+    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
+dasel put object --file /etc/containerd/config.toml --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
+EOF
+    echo "Install systemd units"
+    curl -sLo /etc/systemd/system/stargz-snapshotter.service "${DOCKER_SETUP_REPO_RAW}/contrib/stargz-snapshotter/stargz-snapshotter.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${TARGET}/bin/containerd-stargz-grpc|" /etc/systemd/system/stargz-snapshotter.service
+    if has_systemd; then
+        echo "Reload systemd"
+        systemctl daemon-reload
+    fi
 }
 
 function install-imgcrypt() {
@@ -1105,6 +1116,17 @@ function install-fuse-overlayfs-snapshotter() {
     echo "Install binary"
     curl -sL "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner
+    echo "Add configuration to containerd"
+    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
+dasel put object --file /etc/containerd/config.toml --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
+EOF
+    echo "Install systemd units"
+    curl -sLo /etc/systemd/system/fuse-overlayfs-snapshotter.service "${DOCKER_SETUP_REPO_RAW}/contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${TARGET}/bin/containerd-fuse-overlayfs-grpc|" /etc/systemd/system/fuse-overlayfs-snapshotter.service
+    if has_systemd; then
+        echo "Reload systemd"
+        systemctl daemon-reload
+    fi
 }
 
 function install-porter() {
@@ -1586,6 +1608,20 @@ function install-ipfs() {
         go-ipfs/ipfs
     echo "Install completion"
     ipfs commands completion >"${TARGET}/share/bash-completion/completions/ipfs"
+    IPFS_PATH=/var/lib/ipfs ipfs init
+    IPFS_PATH=/var/lib/ipfs ipfs config Addresses.API "/ip4/127.0.0.1/tcp/5888"
+    IPFS_PATH=/var/lib/ipfs ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
+    echo "Add configuration to containerd"
+    cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
+dasel put bool --file /etc/containerd/config.toml --parser toml .ipfs true
+EOF
+    echo "Install systemd units"
+    curl -sLo /etc/systemd/system/ipfs.service "${DOCKER_SETUP_REPO_RAW}/contrib/ipfs/ipfs.service"
+    sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${TARGET}/bin/ipfs|" /etc/systemd/system/ipfs.service
+    if has_systemd; then
+        echo "Reload systemd"
+        systemctl daemon-reload
+    fi
 }
 
 function install-firecracker() {
