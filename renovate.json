@@ -140,6 +140,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "DASEL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "TomWright/dasel",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "DIVE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "wagoodman/dive",
       "datasourceTemplate": "github-releases",
