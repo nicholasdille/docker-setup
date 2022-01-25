@@ -1,0 +1,15 @@
+[Unit]
+Description=stargz snapshotter
+PartOf=containerd
+
+[Service]
+Environment=IPFS_PATH=${XDG_DATA_HOME}/ipfs
+ExecStart=/usr/local/bin/containerd-stargz-grpc -address "${XDG_RUNTIME_DIR}/containerd-stargz-grpc/containerd-stargz-grpc.sock" -root "${XDG_DATA_HOME}/containerd-stargz-grpc" -config "${XDG_CONFIG_HOME}/containerd-stargz-grpc/config.toml"
+ExecReload=/bin/kill -s HUP \$MAINPID
+RestartSec=2
+Restart=always
+Type=simple
+KillMode=mixed
+
+[Install]
+WantedBy=default.target
