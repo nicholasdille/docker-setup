@@ -193,7 +193,7 @@ if test -z "${display_cols}" || test "${display_cols}" -le 0; then
 fi
 
 ARKADE_VERSION=0.8.12
-BUILDAH_VERSION=1.23.1
+BUILDAH_VERSION=1.23.2
 BUILDKIT_VERSION=0.9.3
 BUILDX_VERSION=0.7.1
 CLUSTERAWSADM_VERSION=1.2.0
