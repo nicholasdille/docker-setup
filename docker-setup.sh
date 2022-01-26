@@ -1804,12 +1804,10 @@ function install-patat() {
     echo "patat ${PATAT_VERSION}"
     echo "Install binary"
     curl -sL "https://github.com/jaspervdj/patat/releases/download/v${PATAT_VERSION}/patat-v${PATAT_VERSION}-linux-x86_64.tar.gz" \
-    | tee >(
-            tar -xzC "${TARGET}/share/man/man1" --strip-components=1 --no-same-owner \
-                patat-v${PATAT_VERSION}-linux-x86_64/patat.1
-        ) \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
-        patat-v${PATAT_VERSION}-linux-x86_64/patat
+        patat-v${PATAT_VERSION}-linux-x86_64/patat \
+        patat-v${PATAT_VERSION}-linux-x86_64/patat.1
+    mv "${TARGET}/bin/patat.1" "${TARGET}/share/man/man1/"
 }
 
 function children_are_running() {
