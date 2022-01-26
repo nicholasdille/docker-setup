@@ -128,12 +128,13 @@ tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crane crictl crun ctop dasel dive docker
     docker-compose docker-machine docker-scan docuum dry duffle firecracker
-    firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter gvisor helm
-    helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp kind
-    kompose krew kubectl kubectl-build kubectl-free kubectl-resources
+    firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter glow gvisor
+    helm helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp
+    kind kompose krew kubectl kubectl-build kubectl-free kubectl-resources
     kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
-    minikube nerdctl oras portainer porter podman qemu regclient rootlesskit
-    runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq ytt
+    minikube nerdctl oras patat portainer porter podman qemu regclient
+    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq
+    ytt
 )
 
 unknown_tools=()
@@ -222,6 +223,7 @@ FIRECTL_VERSION=0.1.0
 FOOTLOOSE_VERSION=0.6.3
 FUSE_OVERLAYFS_VERSION=1.8.1
 FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
+GLOW_VERSION=1.4.1
 GO_VERSION=1.17.6
 GVISOR_VERSION=20220103
 HELM_VERSION=3.8.0
@@ -255,6 +257,7 @@ MINIKUBE_VERSION=1.25.1
 MANIFEST_TOOL_VERSION=1.0.3
 NERDCTL_VERSION=0.16.0
 ORAS_VERSION=0.12.0
+PATAT_VERSION=0.8.7.0
 PODMAN_VERSION=3.4.4
 PORTAINER_VERSION=2.11.0
 PORTER_VERSION=0.38.8
@@ -320,6 +323,7 @@ function firectl_matches_version()                    { is_executable "${TARGET}
 function footloose_matches_version()                  { is_executable "${TARGET}/bin/footloose"                      && test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
 function fuse_overlayfs_matches_version()             { is_executable "${TARGET}/bin/fuse-overlayfs"                 && test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1 | cut -d' ' -f3)"               == "${FUSE_OVERLAYFS_VERSION}"; }
 function fuse_overlayfs_snapshotter_matches_version() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc" && "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
+function glow_matches_version()                       { is_executable "${TARGET}/bin/glow"                           && test "$(${TARGET}/bin/glow --version | cut -d' ' -f3)"                                     == "v${GLOW_VERSION}"; }
 function gvisor_matches_version()                     { is_executable "${TARGET}/bin/runsc"                          && test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
 function ignite_matches_version()                     { is_executable "${TARGET}/bin/ignite"                         && test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
 function helm_matches_version()                       { is_executable "${TARGET}/bin/helm"                           && test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
@@ -352,6 +356,7 @@ function manifest_tool_matches_version()              { is_executable "${TARGET}
 function minikube_matches_version()                   { is_executable "${TARGET}/bin/minikube"                       && test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function nerdctl_matches_version()                    { is_executable "${TARGET}/bin/nerdctl"                        && test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
 function oras_matches_version()                       { is_executable "${TARGET}/bin/oras"                           && test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
+function patat_matches_version()                      { is_executable "${TARGET}/bin/patat"                          && test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}"; }
 function podman_matches_version()                     { is_executable "${TARGET}/bin/podman"                         && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
 function portainer_matches_version()                  { is_executable "${TARGET}/bin/portainer"                      && test "$(${TARGET}/bin/portainer --version 2>&1)"                                           == "${PORTAINER_VERSION}"; }
 function porter_matches_version()                     { is_executable "${TARGET}/bin/porter"                         && test "$(${TARGET}/bin/porter --version | cut -d' ' -f2)"                                   == "v${PORTER_VERSION}"; }
@@ -1785,6 +1790,26 @@ function install-dasel() {
     curl -sLo "${TARGET}/bin/dasel" "https://github.com/TomWright/dasel/releases/download/v${DASEL_VERSION}/dasel_linux_amd64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/dasel"
+}
+
+function install-glow() {
+    echo "glow ${GLOW_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/charmbracelet/glow/releases/download/v${GLOW_VERSION}/glow_${GLOW_VERSION}_linux_x86_64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        glow
+}
+
+function install-patat() {
+    echo "patat ${PATAT_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/jaspervdj/patat/releases/download/v${PATAT_VERSION}/patat-v${PATAT_VERSION}-linux-x86_64.tar.gz" \
+    | tee >(
+            tar -xzC "${TARGET}/share/man/man1" --strip-components=1 --no-same-owner \
+                patat-v${PATAT_VERSION}-linux-x86_64/patat.1
+        ) \
+    | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner \
+        patat-v${PATAT_VERSION}-linux-x86_64/patat
 }
 
 function children_are_running() {
