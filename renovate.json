@@ -245,6 +245,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "GLOW_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "charmbracelet/glow",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "GO_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "golang",
       "datasourceTemplate": "docker",
@@ -476,6 +483,14 @@
       "depNameTemplate": "oras-project/oras",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "PATAT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "jaspervdj/patat",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
