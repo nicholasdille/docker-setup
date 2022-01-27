@@ -442,6 +442,12 @@ if test ${EUID} -ne 0; then
     exit 1
 fi
 
+function tool_will_be_installed() {
+    local tool=$1
+
+    printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"
+}
+
 function get_distribution() {
 	local lsb_dist=""
 	if test -r /etc/os-release; then
@@ -762,15 +768,16 @@ function install-containerd() {
     echo "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install manpages for containerd"
-    docker container run \
-        --interactive \
-        --rm \
-        --volume "${TARGET}/share/man:/opt/man" \
-        --env CONTAINERD_VERSION \
-        "golang:${GO_VERSION}" bash <<EOF
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install manpages for containerd"
+        docker container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}/share/man:/opt/man" \
+            --env CONTAINERD_VERSION \
+            "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/containerd/containerd
 cd /go/src/github.com/containerd/containerd
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${CONTAINERD_VERSION}" https://github.com/containerd/containerd .
@@ -780,6 +787,9 @@ make man
 cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
+    else
+        echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
+    fi
     if ! test -f /etc/containerd/config.toml; then
         echo "Adding default configuration"
         mkdir -p /etc/containerd
@@ -810,15 +820,16 @@ function install-runc() {
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runc"
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install manpages for runc"
-    docker container run \
-        --interactive \
-        --rm \
-        --volume "${TARGET}/share/man:/opt/man" \
-        --env RUNC_VERSION \
-        "golang:${GO_VERSION}" bash <<EOF
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install manpages for runc"
+        docker container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}/share/man:/opt/man" \
+            --env RUNC_VERSION \
+            "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/opencontainers/runc
 cd /go/src/github.com/opencontainers/runc
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${RUNC_VERSION}" https://github.com/opencontainers/runc .
@@ -826,6 +837,9 @@ go install github.com/cpuguy83/go-md2man@latest
 man/md2man-all.sh -q
 cp -r man/man8/ "/opt/man"
 EOF
+    else
+        echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
+    fi
 }
 
 function install-docker-compose() {
@@ -867,20 +881,24 @@ function install-slirp4netns() {
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/slirp4netns"
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install manpages"
-    docker container run \
-        --interactive \
-        --rm \
-        --volume "${TARGET}/share/man:/opt/man" \
-        --env SLIRP4NETNS_VERSION \
-        "golang:${GO_VERSION}" bash <<EOF
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install manpages"
+        docker container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}/share/man:/opt/man" \
+            --env SLIRP4NETNS_VERSION \
+            "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/rootless-containers/slirp4netns
 cd /go/src/github.com/rootless-containers/slirp4netns
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NETNS_VERSION}" https://github.com/rootless-containers/slirp4netns .
 cp *.1 /opt/man/man1
 EOF
+    else
+        echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
+    fi
 }
 
 function install-hub-tool() {
@@ -904,10 +922,12 @@ function install-buildx() {
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
     echo "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Enable multi-platform builds"
-    docker container run --privileged --rm tonistiigi/binfmt --install all
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Enable multi-platform builds"
+        docker container run --privileged --rm tonistiigi/binfmt --install all
+    fi
 }
 
 function install-manifest-tool() {
@@ -1094,10 +1114,11 @@ EOF
 
 function install-imgcrypt() {
     echo "imgcrypt ${IMGCRYPT_VERSION}"
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install binary"
-    docker container run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        docker container run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
 mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
@@ -1106,6 +1127,10 @@ sed -i -E "s/ --dirty='.m' / /" Makefile
 make
 make install DESTDIR=/target
 EOF
+    else
+        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        false
+    fi
 }
 
 function install-fuse-overlayfs() {
@@ -1541,10 +1566,11 @@ EOF
 
 function install-jwt() {
     echo "jwt ${JWT_VERSION}"
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install binary"
-    docker container run --interactive --rm --volume "${TARGET}:/target" --env JWT_VERSION "rust:${RUST_VERSION}" <<EOF
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        docker container run --interactive --rm --volume "${TARGET}:/target" --env JWT_VERSION "rust:${RUST_VERSION}" <<EOF
 mkdir -p /go/src/github.com/mike-engel/jwt-cli
 cd /go/src/github.com/mike-engel/jwt-cli
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSION}" https://github.com/mike-engel/jwt-cli .
@@ -1552,14 +1578,19 @@ export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
 cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
 EOF
+    else
+        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        false
+    fi
 }
 
 function install-docuum() {
     echo "jwt ${DOCUUM_VERSION}"
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install binary"
-    docker container run --interactive --rm --volume "${TARGET}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        docker container run --interactive --rm --volume "${TARGET}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
 mkdir -p /go/src/github.com/stepchowfun/docuum
 cd /go/src/github.com/stepchowfun/docuum
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCUUM_VERSION}" https://github.com/stepchowfun/docuum .
@@ -1567,6 +1598,10 @@ export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
 cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
 EOF
+    else
+        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        false
+    fi
 }
 
 function install-sops() {
