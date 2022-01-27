@@ -10,6 +10,8 @@ declare -a unknown_parameters
 : "${NO_PROGRESSBAR:=false}"
 : "${SHOW_VERSION:=false}"
 : "${NO_COLOR:=false}"
+: "${NO_DEPS:=false}"
+: "${PLAN:=false}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -33,6 +35,12 @@ while test "$#" -gt 0; do
             ;;
         --no-color)
             NO_COLOR=true
+            ;;
+        --no-deps)
+            NO_DEPS=true
+            ;;
+        --plan)
+            PLAN=true
             ;;
         --version)
             SHOW_VERSION=true
@@ -99,6 +107,8 @@ are accepted:
 --only, ONLY                       Only install specified tools
 --no-progressbar, NO_PROGRESSBAR   Disable progress bar
 --no-color, NO_COLOR               Disable colored output
+--no-deps, NO_DEPS                 Do not enfore installation of dependencies
+--plan, PLAN                       Show planned installations
 
 The above environment variables can be true or false.
 
@@ -124,6 +134,8 @@ EOF
     exit
 fi
 
+declare -a tools
+declare -A tool_deps
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd cosign crane crictl crun ctop dasel dive docker
@@ -136,6 +148,9 @@ tools=(
     rootlesskit runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq
     ytt
 )
+tool_deps["jwt"]="docker"
+tool_deps["docuum"]="docker"
+tool_deps["imgcrypt"]="docker"
 
 declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
@@ -385,6 +400,16 @@ for tool in "${tools[@]}"; do
     VAR_NAME="${tool^^}_VERSION"
     VERSION="${VAR_NAME//-/_}"
     tool_version[${tool}]="${!VERSION}"
+
+    if ! ${NO_DEPS}; then
+        if test -n "${tool_deps[${tool}]}"; then
+            for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+                if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
+                    tool_install+=("${dep}")
+                fi
+            done
+        fi
+    fi
 
     if  ${REINSTALL} \
         || ( ${ONLY} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
@@ -1871,6 +1896,17 @@ function count_sub_processes() {
 }
 
 declare -A child_pids
+if ${PLAN}; then
+    #echo -e -n "${YELLOW}"
+    echo "The following tools will be installed:"
+    echo
+    for tool in "${tool_install[@]}"; do
+        echo -n "${tool}  "
+    done    
+    #echo -e -n "${RESET}"
+    echo -e -n "\n\n"
+    exit
+fi
 for tool in "${tool_install[@]}"; do
     {
         echo "============================================================"
