@@ -741,7 +741,7 @@ function install-docker() {
         echo "Initialize dockerd configuration"
         echo "{}" >/etc/docker/daemon.json
     fi
-    if ! type jq >/dev/null 2>&1 && tool_will_be_installed "jq"; then
+    if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
         echo "Waiting for jq"
         wait_for_tool "jq"
 
@@ -1292,7 +1292,7 @@ function install-crun() {
     echo "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
     | tar -xzC "${TARGET}" --no-same-owner
-    if ! type jq >/dev/null 2>&1 && tool_will_be_installed "jq"; then
+    if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
         echo "Waiting for jq"
         wait_for_tool "jq"
 
@@ -1640,7 +1640,7 @@ function install-gvisor() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
-    if ! type jq >/dev/null 2>&1 && tool_will_be_installed "jq"; then
+    if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
         echo "Waiting for jq"
         wait_for_tool "jq"
 
