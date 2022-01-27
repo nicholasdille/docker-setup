@@ -356,7 +356,7 @@ function manifest_tool_matches_version()              { is_executable "${TARGET}
 function minikube_matches_version()                   { is_executable "${TARGET}/bin/minikube"                       && test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function nerdctl_matches_version()                    { is_executable "${TARGET}/bin/nerdctl"                        && test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
 function oras_matches_version()                       { is_executable "${TARGET}/bin/oras"                           && test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
-function patat_matches_version()                      { is_executable "${TARGET}/bin/patat"                          && test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}"; }
+function patat_matches_version()                      { is_executable "${TARGET}/bin/patat"                          && test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}" || test -f "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"; }
 function podman_matches_version()                     { is_executable "${TARGET}/bin/podman"                         && test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
 function portainer_matches_version()                  { is_executable "${TARGET}/bin/portainer"                      && test "$(${TARGET}/bin/portainer --version 2>&1)"                                           == "${PORTAINER_VERSION}"; }
 function porter_matches_version()                     { is_executable "${TARGET}/bin/porter"                         && test "$(${TARGET}/bin/porter --version | cut -d' ' -f2)"                                   == "v${PORTER_VERSION}"; }
@@ -1808,6 +1808,8 @@ function install-patat() {
         patat-v${PATAT_VERSION}-linux-x86_64/patat \
         patat-v${PATAT_VERSION}-linux-x86_64/patat.1
     mv "${TARGET}/bin/patat.1" "${TARGET}/share/man/man1/"
+    mkdir -p "${DOCKER_SETUP_CACHE}/patat"
+    touch "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"
 }
 
 function children_are_running() {
