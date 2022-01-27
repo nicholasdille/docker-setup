@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-unknown_parameters=()
+declare -a unknown_parameters
 : "${CHECK_ONLY:=false}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
@@ -10,7 +10,7 @@ unknown_parameters=()
 : "${NO_PROGRESSBAR:=false}"
 : "${SHOW_VERSION:=false}"
 : "${NO_COLOR:=false}"
-requested_tools=()
+declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
         --check-only)
@@ -137,7 +137,7 @@ tools=(
     ytt
 )
 
-unknown_tools=()
+declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
     if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
         unknown_tools+=( "${tool}" )
@@ -376,28 +376,24 @@ function ytt_matches_version()                        { is_executable "${TARGET}
 echo "docker-setup includes ${#tools[*]} tools:"
 declare -A tool_version
 declare -A tool_required
+declare -a tool_install
+declare -A tool_color
+declare -A tool_sign
+declare -a tool_outdated
+check_only_exit_code=0
+line_length=0
 for tool in "${tools[@]}"; do
     VAR_NAME="${tool^^}_VERSION"
     VERSION="${VAR_NAME//-/_}"
     tool_version[${tool}]="${!VERSION}"
 
-    # shellcheck disable=SC2015
     if  ${REINSTALL} \
         || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
-        || ! eval "${tool//-/_}_matches_version"; then
-        tool_required[${tool}]=true
-
-    else
-        tool_required[${tool}]=false
+        || ( ! ${ONLY_INSTALL} && ! eval "${tool//-/_}_matches_version" ); then
+        tool_install+=("${tool}")
     fi
-done
-declare -A tool_color
-declare -A tool_sign
-declare tool_outdated
-check_only_exit_code=0
-line_length=0
-for tool in "${tools[@]}"; do
-    if ${tool_required[${tool}]}; then
+
+    if ! eval "${tool//-/_}_matches_version"; then
         tool_color[${tool}]="${YELLOW}"
         tool_sign[${tool}]="${CROSS_MARK}"
 
@@ -1841,19 +1837,15 @@ function count_sub_processes() {
 }
 
 declare -A child_pids
-for tool in "${tools[@]}"; do
-    if  ${REINSTALL} \
-        || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
-        || ( ! ${ONLY_INSTALL} && ! eval "${tool//-/_}_matches_version" ); then
-        {
-            echo "============================================================"
-            date +"%Y-%m-%d %H:%M:%S %Z"
-            echo "------------------------------------------------------------"
-        } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
+for tool in "${tool_install[@]}"; do
+    {
+        echo "============================================================"
+        date +"%Y-%m-%d %H:%M:%S %Z"
+        echo "------------------------------------------------------------"
+    } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
 
-        eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1 || touch \"${DOCKER_SETUP_CACHE}/errors/${tool}\" &"
-        child_pids[${tool}]=$!
-    fi
+    eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1 || touch \"${DOCKER_SETUP_CACHE}/errors/${tool}\" &"
+    child_pids[${tool}]=$!
 done
 child_pid_count=${#child_pids[@]}
 
