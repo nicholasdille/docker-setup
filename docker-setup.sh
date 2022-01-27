@@ -1906,15 +1906,13 @@ function count_sub_processes() {
 }
 
 declare -A child_pids
+echo "The following tools will be installed:"
+echo
+for tool in "${tool_install[@]}"; do
+    echo -n "${tool}  "
+done    
+echo -e -n "\n\n"
 if ${PLAN}; then
-    #echo -e -n "${YELLOW}"
-    echo "The following tools will be installed:"
-    echo
-    for tool in "${tool_install[@]}"; do
-        echo -n "${tool}  "
-    done    
-    #echo -e -n "${RESET}"
-    echo -e -n "\n\n"
     exit
 fi
 for tool in "${tool_install[@]}"; do
