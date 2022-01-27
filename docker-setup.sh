@@ -381,7 +381,9 @@ for tool in "${tools[@]}"; do
     VERSION="${VAR_NAME//-/_}"
     tool_version[${tool}]="${!VERSION}"
 
-    if ${REINSTALL} || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) || ! eval "${tool//-/_}_matches_version"; then
+    if  ${REINSTALL} \
+        || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
+        || ! eval "${tool//-/_}_matches_version"; then
         tool_required[${tool}]=true
 
     else
@@ -419,9 +421,11 @@ echo -e "\n"
 if ${CHECK_ONLY}; then
     if test "${#tool_outdated[@]}" -gt 0; then
         echo -e "${RED}ERROR: The following tools are outdated:${RESET}"
+        echo
         for tool in "${tool_outdated[@]}"; do
-            echo -e "${RED}       - ${tool}${RESET}"
+            echo -e -n "${RED}${tool}  ${RESET}"
         done
+        echo
     fi
     exit "${check_only_exit_code}"
 fi
@@ -1837,7 +1841,9 @@ function count_sub_processes() {
 
 declare -A child_pids
 for tool in "${tools[@]}"; do
-    if ${REINSTALL} || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) || ! eval "${tool//-/_}_matches_version"; then
+    if  ${REINSTALL} \
+        || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
+        || ( ! ${ONLY_INSTALL} && ! eval "${tool//-/_}_matches_version" ); then
         {
             echo "============================================================"
             date +"%Y-%m-%d %H:%M:%S %Z"
