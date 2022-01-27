@@ -912,7 +912,7 @@ function install-buildx() {
     echo "Wait for Docker daemon to start"
     wait_for_docker
     echo "Enable multi-platform builds"
-    docker run --privileged --rm tonistiigi/binfmt --install all
+    docker container run --privileged --rm tonistiigi/binfmt --install all
 }
 
 function install-manifest-tool() {
@@ -1102,7 +1102,7 @@ function install-imgcrypt() {
     echo "Wait for Docker daemon to start"
     wait_for_docker
     echo "Install binary"
-    docker run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
+    docker container run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
 mkdir -p /go/src/github.com/containerd/imgcrypt
 cd /go/src/github.com/containerd/imgcrypt
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
@@ -1549,7 +1549,7 @@ function install-jwt() {
     echo "Wait for Docker daemon to start"
     wait_for_docker
     echo "Install binary"
-    docker run --interactive --rm --volume "${TARGET}:/target" --env JWT_VERSION "rust:${RUST_VERSION}" <<EOF
+    docker container run --interactive --rm --volume "${TARGET}:/target" --env JWT_VERSION "rust:${RUST_VERSION}" <<EOF
 mkdir -p /go/src/github.com/mike-engel/jwt-cli
 cd /go/src/github.com/mike-engel/jwt-cli
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSION}" https://github.com/mike-engel/jwt-cli .
@@ -1564,7 +1564,7 @@ function install-docuum() {
     echo "Wait for Docker daemon to start"
     wait_for_docker
     echo "Install binary"
-    docker run --interactive --rm --volume "${TARGET}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
+    docker container run --interactive --rm --volume "${TARGET}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
 mkdir -p /go/src/github.com/stepchowfun/docuum
 cd /go/src/github.com/stepchowfun/docuum
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCUUM_VERSION}" https://github.com/stepchowfun/docuum .
