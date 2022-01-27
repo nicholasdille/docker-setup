@@ -149,9 +149,11 @@ tools=(
     ytt
 )
 tool_deps["crun"]="jq"
+tool_deps["ctop"]="docker"
 tool_deps["dive"]="docker"
 tool_deps["docker"]="jq"
 tool_deps["docuum"]="docker"
+tool_deps["dry"]="docker"
 tool_deps["fuse-overlayfs-snapshotter"]="containerd"
 tool_deps["gvisor"]="jq"
 tool_deps["ignite"]="containerd"
@@ -159,6 +161,7 @@ tool_deps["ipfs"]="containerd"
 tool_deps["imgcrypt"]="containerd docker"
 tool_deps["jwt"]="docker"
 tool_deps["kubectl"]="krew"
+tool_deps["lazydocker"]="docker"
 tool_deps["portainer"]="docker"
 tool_deps["stargz-snapshotter"]="containerd"
 
