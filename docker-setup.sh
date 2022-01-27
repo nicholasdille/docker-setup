@@ -442,7 +442,7 @@ if test ${EUID} -ne 0; then
     exit 1
 fi
 
-get_distribution() {
+function get_distribution() {
 	local lsb_dist=""
 	if test -r /etc/os-release; then
         # shellcheck disable=SC1091
