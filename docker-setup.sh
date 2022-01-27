@@ -162,6 +162,7 @@ tool_deps["imgcrypt"]="containerd docker"
 tool_deps["jwt"]="docker"
 tool_deps["kubectl"]="krew"
 tool_deps["lazydocker"]="docker"
+tool_deps["podman"]="conmon"
 tool_deps["portainer"]="docker"
 tool_deps["stargz-snapshotter"]="containerd"
 
@@ -486,6 +487,31 @@ function tool_will_be_installed() {
     printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"
 }
 
+function has_tool() {
+    local tool=$1
+
+    type "${tool}" >/dev/null 2>&1
+}
+
+function wait_for_tool() {
+    local tool=$1
+    
+    local SLEEP=10
+    local RETRIES=60
+
+    local RETRY=0
+    while ! has_tool "${tool}" && test "${RETRY}" -le "${RETRIES}"; do
+        sleep "${SLEEP}"
+
+        RETRY=$(( RETRY + 1 ))
+    done
+
+    if ! has_tool "${tool}"; then
+        echo -e "${RED}ERROR: Failed to wait for ${tool} after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
+        exit 1
+    fi
+}
+
 function get_distribution() {
 	local lsb_dist=""
 	if test -r /etc/os-release; then
@@ -715,44 +741,54 @@ function install-docker() {
         echo "Initialize dockerd configuration"
         echo "{}" >/etc/docker/daemon.json
     fi
-    if ! test "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)" == "true"; then
-        echo "Configuring native cgroup driver"
-        # shellcheck disable=SC2094
-        cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-    fi
-    if ! test "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)" == true; then
-        echo "Set default runtime"
-        # shellcheck disable=SC2094
-        cat <<< "$(jq '. * {"default-runtime": "runc"}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-    fi
-    if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)" == "true"; then
-        echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
-        # shellcheck disable=SC2094
-        cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-    fi
-    if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)" == "true"; then
-        echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
-        # shellcheck disable=SC2094
-        cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-    fi
-    if ! test "$(jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json)" == true; then
-        echo "Enable BuildKit"
-        # shellcheck disable=SC2094
-        cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
-        DOCKER_RESTART=true
-        echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
-    fi
-    echo "Check if daemon.json is valid JSON"
-    if ! jq --exit-status '.' /etc/docker/daemon.json; then
-        echo "${RED}ERROR: /etc/docker/daemon.json is not valid JSON.${RESET}"
+    if ! type jq >/dev/null 2>&1 && tool_will_be_installed "jq"; then
+        echo "Waiting for jq"
+        wait_for_tool "jq"
+
+        if ! test "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)" == "true"; then
+            echo "Configuring native cgroup driver"
+            # shellcheck disable=SC2094
+            cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            DOCKER_RESTART=true
+            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        fi
+        if ! test "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)" == true; then
+            echo "Set default runtime"
+            # shellcheck disable=SC2094
+            cat <<< "$(jq '. * {"default-runtime": "runc"}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            DOCKER_RESTART=true
+            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        fi
+        if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)" == "true"; then
+            echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
+            # shellcheck disable=SC2094
+            cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            DOCKER_RESTART=true
+            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        fi
+        if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)" == "true"; then
+            echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
+            # shellcheck disable=SC2094
+            cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            DOCKER_RESTART=true
+            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        fi
+        if ! test "$(jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json)" == true; then
+            echo "Enable BuildKit"
+            # shellcheck disable=SC2094
+            cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            DOCKER_RESTART=true
+            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
+        fi
+        echo "Check if daemon.json is valid JSON"
+        if ! jq --exit-status '.' /etc/docker/daemon.json; then
+            echo "${RED}ERROR: /etc/docker/daemon.json is not valid JSON.${RESET}"
+            exit 1
+        fi
+
+    else
+        echo -e "${RED}ERROR: Unable to configure Docker daemon because jq is missing and will not be installed.${RESET}"
+        false
         exit 1
     fi
     if has_systemd; then
@@ -1256,13 +1292,22 @@ function install-crun() {
     echo "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
     | tar -xzC "${TARGET}" --no-same-owner
-    if ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' /etc/docker/daemon.json)" == "true"; then
-        echo "Add runtime to Docker"
-        # shellcheck disable=SC2094
-        cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
+    if ! type jq >/dev/null 2>&1 && tool_will_be_installed "jq"; then
+        echo "Waiting for jq"
+        wait_for_tool "jq"
+
+        if ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' /etc/docker/daemon.json)" == "true"; then
+            echo "Add runtime to Docker"
+            # shellcheck disable=SC2094
+            cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
 cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
 EOF
-        touch "${DOCKER_SETUP_CACHE}/docker_restart"
+            touch "${DOCKER_SETUP_CACHE}/docker_restart"
+        fi
+
+    else
+        echo -e "${RED}ERROR: Unable to configure Docker daemon for crun because jq is missing and will not be installed.${RESET}"
+        false
     fi
 }
 
@@ -1306,16 +1351,15 @@ EOF
     echo "Install kubectl-convert"
     curl -sLo "${TARGET}/bin/kubectl-convert" "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert"
     chmod +x "${TARGET}/bin/kubectl-convert"
-    echo "Waiting for krew"
-    while ! type krew >/dev/null 2>&1; do
-        sleep 10
-    done
-    echo "Install krew for current user"
-    # shellcheck source=/dev/null
-    source /etc/profile.d/krew.sh
-    krew install krew
-    echo "Install plugins for current user"
-    krew install <<EOF
+    if tool_will_be_installed "krew"; then
+        echo "Waiting for krew"
+        wait_for_tool "krew"
+        echo "Install krew for current user"
+        # shellcheck source=/dev/null
+        source /etc/profile.d/krew.sh
+        krew install krew
+        echo "Install plugins for current user"
+        krew install <<EOF
 access-matrix
 advise-policy
 advise-psp
@@ -1386,6 +1430,10 @@ viewnode
 who-can
 whoami
 EOF
+    else
+        echo "${YELLOW}WARNING: kubectl is missing krew. Plugins will not be installed.${RESET}"
+        false
+    fi
 }
 
 function install-kind() {
@@ -1592,13 +1640,22 @@ function install-gvisor() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
-    if ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' /etc/docker/daemon.json)" == "true"; then
-        echo "Add runtime to Docker"
-        # shellcheck disable=SC2094
-        cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
+    if ! type jq >/dev/null 2>&1 && tool_will_be_installed "jq"; then
+        echo "Waiting for jq"
+        wait_for_tool "jq"
+
+        if ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' /etc/docker/daemon.json)" == "true"; then
+            echo "Add runtime to Docker"
+            # shellcheck disable=SC2094
+            cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
 cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
 EOF
-        touch "${DOCKER_SETUP_CACHE}/docker_restart"
+            touch "${DOCKER_SETUP_CACHE}/docker_restart"
+        fi
+
+    else
+        echo -e "${RED}ERROR: Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${RESET}"
+        false
     fi
 }
 
@@ -1616,6 +1673,7 @@ export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
 cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
 EOF
+
     else
         echo "${RED}ERROR: Docker is required to install.${RESET}"
         false
@@ -1636,6 +1694,7 @@ export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
 cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
 EOF
+
     else
         echo "${RED}ERROR: Docker is required to install.${RESET}"
         false
