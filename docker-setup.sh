@@ -402,44 +402,59 @@ function umoci_matches_version()                      { is_executable "${TARGET}
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             &&   test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            &&   test "$(${TARGET}/bin/ytt version | cut -d' ' -f3)"                                        == "${YTT_VERSION}"; }
 
-echo "docker-setup includes ${#tools[*]} tools:"
+echo -e "docker-setup includes ${#tools[*]} tools (${GREEN}done${RESET}, ${YELLOW}planned${RESET}, ${RED}ignored${RESET}):"
 declare -A tool_version
 declare -a tool_install
 declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
-check_only_exit_code=0
-line_length=0
 for tool in "${tools[@]}"; do
     VAR_NAME="${tool^^}_VERSION"
     VERSION="${VAR_NAME//-/_}"
     tool_version[${tool}]="${!VERSION}"
 
-    if ! ${NO_DEPS}; then
-        if test -n "${tool_deps[${tool}]}"; then
-            for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-                if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
-                    tool_install+=("${dep}")
-                fi
-            done
-        fi
-    fi
-
     if  ${REINSTALL} \
         || ( ${ONLY} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
         || ( ! ${ONLY} && ! eval "${tool//-/_}_matches_version" ); then
+
+        if ! ${NO_DEPS}; then
+            if test -n "${tool_deps[${tool}]}"; then
+                for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+                    if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
+                        tool_install+=("${dep}")
+                    fi
+                done
+            fi
+        fi
+
         tool_install+=("${tool}")
     fi
-
+done
+check_only_exit_code=0
+line_length=0
+for tool in "${tools[@]}"; do
     if ! eval "${tool//-/_}_matches_version"; then
-        tool_color[${tool}]="${YELLOW}"
-        tool_sign[${tool}]="${CROSS_MARK}"
-
         tool_outdated+=("${tool}")
         check_only_exit_code=1
+
+        if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+            tool_color[${tool}]="${YELLOW}"
+            tool_sign[${tool}]="${CROSS_MARK}"
+
+        else
+            tool_color[${tool}]="${RED}"
+            tool_sign[${tool}]="${CROSS_MARK}"
+        fi
+
     else
-        tool_color[${tool}]="${GREEN}"
-        tool_sign[${tool}]="${CHECK_MARK}"
+        if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+            tool_color[${tool}]="${YELLOW}"
+            tool_sign[${tool}]="${CHECK_MARK}"
+
+        else
+            tool_color[${tool}]="${GREEN}"
+            tool_sign[${tool}]="${CHECK_MARK}"
+        fi
     fi
 
     item="${tool} ${tool_version[${tool}]} ${tool_sign[${tool}]}"
@@ -1968,12 +1983,6 @@ function count_sub_processes() {
 }
 
 declare -A child_pids
-echo "The following tools will be installed:"
-echo
-for tool in "${tool_install[@]}"; do
-    echo -n "${tool}  "
-done    
-echo -e -n "\n\n"
 if ${PLAN}; then
     exit
 fi
