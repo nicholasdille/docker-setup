@@ -2,4 +2,4 @@
 set -o errexit
 
 bash /docker-setup.sh --no-wait --no-progressbar
-bash /docker-setup.sh --check-only
+bash /docker-setup.sh --check

@@ -2,19 +2,19 @@
 set -o errexit
 
 declare -a unknown_parameters
-: "${CHECK_ONLY:=false}"
+: "${CHECK:=false}"
 : "${SHOW_HELP:=false}"
 : "${NO_WAIT:=false}"
 : "${REINSTALL:=false}"
-: "${ONLY_INSTALL:=false}"
+: "${ONLY:=false}"
 : "${NO_PROGRESSBAR:=false}"
 : "${SHOW_VERSION:=false}"
 : "${NO_COLOR:=false}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
-        --check-only)
-            CHECK_ONLY=true
+        --check)
+            CHECK=true
             ;;
         --help)
             SHOW_HELP=true
@@ -25,8 +25,8 @@ while test "$#" -gt 0; do
         --reinstall)
             REINSTALL=true
             ;;
-        --only-install)
-            ONLY_INSTALL=true
+        --only)
+            ONLY=true
             ;;
         --no-progressbar)
             NO_PROGRESSBAR=true
@@ -93,10 +93,10 @@ are accepted:
 
 --help, SHOW_HELP                  Show this help
 --version, SHOW_VERSION            Display version
---check-only, CHECK_ONLY           Abort after checking versions
+--check, CHECK                     Abort after checking versions
 --no-wait, NO_WAIT                 Skip wait before installation
 --reinstall, REINSTALL             Reinstall all tools
---only-install, ONLY_INSTALL       Only install specified tools
+--only, ONLY                       Only install specified tools
 --no-progressbar, NO_PROGRESSBAR   Disable progress bar
 --no-color, NO_COLOR               Disable colored output
 
@@ -152,8 +152,8 @@ if test "${#unknown_tools[@]}" -gt 0; then
     exit 1
 fi
 
-if ! ${ONLY_INSTALL} && test "${#requested_tools[@]}" -gt 0; then
-    echo -e "${RED}ERROR: You must specify --only-install/ONLY_INSTALL if specifying tools on the command line.${RESET}"
+if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
+    echo -e "${RED}ERROR: You must specify --only/ONLY if specifying tools on the command line.${RESET}"
     echo
     exit 1
 fi
@@ -388,8 +388,8 @@ for tool in "${tools[@]}"; do
     tool_version[${tool}]="${!VERSION}"
 
     if  ${REINSTALL} \
-        || ( ${ONLY_INSTALL} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
-        || ( ! ${ONLY_INSTALL} && ! eval "${tool//-/_}_matches_version" ); then
+        || ( ${ONLY} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
+        || ( ! ${ONLY} && ! eval "${tool//-/_}_matches_version" ); then
         tool_install+=("${tool}")
     fi
 
@@ -415,7 +415,7 @@ for tool in "${tools[@]}"; do
 done
 echo -e "\n"
 
-if ${CHECK_ONLY}; then
+if ${CHECK}; then
     if test "${#tool_outdated[@]}" -gt 0; then
         echo -e "${RED}ERROR: The following tools are outdated:${RESET}"
         echo
