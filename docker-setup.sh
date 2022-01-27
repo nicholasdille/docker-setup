@@ -375,7 +375,6 @@ function ytt_matches_version()                        { is_executable "${TARGET}
 
 echo "docker-setup includes ${#tools[*]} tools:"
 declare -A tool_version
-declare -A tool_required
 declare -a tool_install
 declare -A tool_color
 declare -A tool_sign
