@@ -148,9 +148,19 @@ tools=(
     rootlesskit runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq
     ytt
 )
-tool_deps["jwt"]="docker"
+tool_deps["crun"]="jq"
+tool_deps["dive"]="docker"
+tool_deps["docker"]="jq"
 tool_deps["docuum"]="docker"
-tool_deps["imgcrypt"]="docker"
+tool_deps["fuse-overlayfs-snapshotter"]="containerd"
+tool_deps["gvisor"]="jq"
+tool_deps["ignite"]="containerd"
+tool_deps["ipfs"]="containerd"
+tool_deps["imgcrypt"]="containerd docker"
+tool_deps["jwt"]="docker"
+tool_deps["kubectl"]="krew"
+tool_deps["portainer"]="docker"
+tool_deps["stargz-snapshotter"]="containerd"
 
 declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
