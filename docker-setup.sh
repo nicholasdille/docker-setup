@@ -402,7 +402,7 @@ function umoci_matches_version()                      { is_executable "${TARGET}
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             &&   test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            &&   test "$(${TARGET}/bin/ytt version | cut -d' ' -f3)"                                        == "${YTT_VERSION}"; }
 
-echo -e "docker-setup includes ${#tools[*]} tools (${GREEN}done${RESET}, ${YELLOW}planned${RESET}, ${RED}ignored${RESET}):"
+echo -e "docker-setup includes ${#tools[*]} tools (${GREEN}installed${RESET}, ${YELLOW}planned${RESET}, ${RED}skipped${RESET}):"
 declare -A tool_version
 declare -a tool_install
 declare -A tool_color
