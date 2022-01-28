@@ -267,6 +267,7 @@ IGNITE_VERSION=0.10.0
 IMG_VERSION=0.5.11
 IMGCRYPT_VERSION=1.1.2
 IPFS_VERSION=0.11.0
+IPTABLES_VERSION=1.8.7
 JP_VERSION=0.2.1
 JWT_VERSION=5.0.2
 JQ_VERSION=1.6
@@ -581,6 +582,41 @@ function is_alpine() {
     esac
 }
 
+function get_centos_version() {
+	local lsb_version_id=""
+	if test -r /etc/os-release; then
+        # shellcheck disable=SC1091
+		lsb_version_id="$(source /etc/os-release && echo "$VERSION_ID")"
+	fi
+	echo "${lsb_version_id}"
+}
+
+function is_centos_7() {
+    local lsb_version_id
+    lsb_version_id="$(get_centos_version)"
+    case "${lsb_version_id}" in
+        7)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_centos_8() {
+    local lsb_version_id
+    lsb_version_id="$(get_centos_version)"
+    case "${lsb_version_id}" in
+        8)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 function is_container() {
     if grep -q "/docker/" /proc/1/cgroup; then
         return 0
@@ -707,8 +743,11 @@ function install-docker() {
         local lsb_dist
         lsb_dist="$(get_distribution)"
         if test "${lsb_dist,,}" == "centos"; then
-            echo -e "${RED}ERROR: CentOS does not support iptables-legacy.${RESET}"
-            exit 1
+            echo -e "${RED}WARNING: CentOS does not support iptables-legacy.${RESET}"
+            if ! install-iptables; then
+                echo -e "${RED}ERROR: Unable to install iptables-legacy.${RESET}"
+                exit 1
+            fi
         fi
     fi
     echo "Install binaries"
@@ -1977,6 +2016,23 @@ function install-patat() {
     mv "${TARGET}/bin/patat.1" "${TARGET}/share/man/man1/"
     mkdir -p "${DOCKER_SETUP_CACHE}/patat"
     touch "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"
+}
+
+function install-iptables() {
+    echo "iptables ${IPTABLES_VERSION}"
+    echo "Install binary"
+    if is_centos_7; then
+        curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
+        | tar -xzC "${TARGET}" --no-same-owner
+
+    elif is_centos_8; then
+        curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
+        | tar -xzC "${TARGET}" --no-same-owner
+
+    else
+        echo -e "${RED}ERROR: Unknown version of CentOS ($(get_centos_version))${RESET}"
+        return 1
+    fi
 }
 
 function children_are_running() {

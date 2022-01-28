@@ -315,6 +315,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "IPTABLES_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "nicholasdille/centos-iptables-legacy",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "JQ_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "stedolan/jq",
       "datasourceTemplate": "github-releases",

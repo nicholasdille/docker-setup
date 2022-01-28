@@ -1,0 +1,9 @@
+FROM centos:8
+RUN yum install -y \
+        curl \
+        ca-certificates \
+        git \
+        tzdata \
+        unzip
+COPY test/test.sh /
+COPY docker-setup.sh /
