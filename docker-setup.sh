@@ -883,7 +883,7 @@ EOF
         echo "Adding default configuration"
         mkdir -p /etc/containerd
         "${TARGET}/bin/containerd" config default >/etc/containerd/config.toml
-        sed -i "" /etc/containerd/config.toml
+        sed -i "s|/opt/cni/bin|${TARGET}/libexec/cni|" /etc/containerd/config.toml
     fi
     echo "Install systemd unit"
     curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
