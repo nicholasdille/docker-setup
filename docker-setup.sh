@@ -12,6 +12,7 @@ declare -a unknown_parameters
 : "${NO_COLOR:=false}"
 : "${NO_DEPS:=false}"
 : "${PLAN:=false}"
+: "${SKIP_DOCS:=false}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -41,6 +42,9 @@ while test "$#" -gt 0; do
             ;;
         --plan)
             PLAN=true
+            ;;
+        --skip-docs)
+            SKIP_DOCS=true
             ;;
         --version)
             SHOW_VERSION=true
@@ -109,6 +113,8 @@ are accepted:
 --no-color, NO_COLOR               Disable colored output
 --no-deps, NO_DEPS                 Do not enfore installation of dependencies
 --plan, PLAN                       Show planned installations
+--skip-docs, SKIP_DOCS             Do not install documentation for faster
+                                   installation
 
 The above environment variables can be true or false.
 
@@ -829,15 +835,19 @@ function install-docker() {
         fi
         echo -e "${WARNING}WARNING: Init script was installed but you must enable Docker yourself.${RESET}"
     fi
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    echo "Install manpages for Docker CLI"
-    docker container run \
-        --interactive \
-        --rm \
-        --volume "${TARGET}/share/man:/opt/man" \
-        --env DOCKER_VERSION \
-        "golang:${GO_VERSION}" bash <<EOF
+    if ${SKIP_DOCS}; then
+        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+
+    else
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install manpages for Docker CLI"
+        docker container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}/share/man:/opt/man" \
+            --env DOCKER_VERSION \
+            "golang:${GO_VERSION}" bash <<EOF
 mkdir -p /go/src/github.com/docker/cli
 cd /go/src/github.com/docker/cli
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCKER_VERSION}" https://github.com/docker/cli .
@@ -850,6 +860,7 @@ cp -r man/man1 "/opt/man"
 cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
+    fi
 }
 
 function install-containerd() {
@@ -857,7 +868,10 @@ function install-containerd() {
     echo "Install binaries"
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
-    if tool_will_be_installed "docker"; then
+    if ${SKIP_DOCS}; then
+        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+    
+    elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install manpages for containerd"
@@ -909,7 +923,10 @@ function install-runc() {
     curl -sLo "${TARGET}/bin/runc" "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runc"
-    if tool_will_be_installed "docker"; then
+    if ${SKIP_DOCS}; then
+        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+    
+    elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install manpages for runc"
@@ -970,7 +987,10 @@ function install-slirp4netns() {
     curl -sLo "${TARGET}/bin/slirp4netns" "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/slirp4netns"
-    if tool_will_be_installed "docker"; then
+    if ${SKIP_DOCS}; then
+        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+        
+    elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install manpages"
