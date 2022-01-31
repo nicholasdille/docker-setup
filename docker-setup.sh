@@ -728,7 +728,6 @@ function install-docker() {
     echo "Docker ${DOCKER_VERSION}"
     echo "Check for iptables/nftables"
     if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
-        echo "iptables"
         echo -e "${YELLOW}WARNING: Unable to continue because...${RESET}"
         echo -e "${YELLOW}         - ...you are missing ipables OR...${RESET}"
         echo -e "${YELLOW}         - ...you are using nftables and not iptables...${RESET}"
@@ -2027,9 +2026,9 @@ function install-iptables() {
         curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
         | tar -xzC "${TARGET}" --no-same-owner
 
-    elif is_centos_8; then
-        curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
-        | tar -xzC "${TARGET}" --no-same-owner
+    #elif is_centos_8; then
+    #    curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
+    #    | tar -xzC "${TARGET}" --no-same-owner
 
     else
         echo -e "${RED}ERROR: Unknown version of CentOS ($(get_centos_version))${RESET}"
