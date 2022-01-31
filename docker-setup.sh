@@ -434,7 +434,9 @@ for tool in "${tools[@]}"; do
             fi
         fi
 
-        tool_install+=("${tool}")
+        if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+            tool_install+=("${tool}")
+        fi
     fi
 done
 check_only_exit_code=0
@@ -2060,6 +2062,7 @@ function count_sub_processes() {
 
 declare -A child_pids
 if ${PLAN}; then
+    echo "${tool_install[@]}"
     exit
 fi
 for tool in "${tool_install[@]}"; do
