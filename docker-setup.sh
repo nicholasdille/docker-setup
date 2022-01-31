@@ -193,7 +193,8 @@ if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
     exit 1
 fi
 
-: "${TARGET:=/usr}"
+: "${PREFIX:=}"
+: "${TARGET:=${PREFIX}/usr}"
 : "${DOCKER_ALLOW_RESTART:=true}"
 : "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
 : "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
@@ -535,9 +536,9 @@ function wait_for_tool() {
 
 function get_distribution() {
 	local lsb_dist=""
-	if test -r /etc/os-release; then
+	if test -r "${PREFIX}/etc/os-release"; then
         # shellcheck disable=SC1091
-		lsb_dist="$(source /etc/os-release && echo "$ID")"
+		lsb_dist="$(source "${PREFIX}/etc/os-release" && echo "$ID")"
 	fi
 	echo "${lsb_dist}"
 }
@@ -590,6 +591,7 @@ function is_container() {
 }
 
 function has_systemd() {
+    # TODO
     INIT="$(readlink -f /sbin/init)"
     if test "$(basename "${INIT}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
         return 0
@@ -626,18 +628,18 @@ function wait_for_docker() {
 
 # Create directories
 mkdir -p \
-    ${DOCKER_SETUP_LOGS} \
-    ${DOCKER_SETUP_CACHE} \
-    ${DOCKER_SETUP_CACHE}/errors \
-    /etc/docker \
+    "${DOCKER_SETUP_LOGS}" \
+    "${DOCKER_SETUP_CACHE}" \
+    "${DOCKER_SETUP_CACHE}/errors" \
+    "${PREFIX}/etc/docker" \
     "${TARGET}/share/bash-completion/completions" \
     "${TARGET}/share/fish/vendor_completions.d" \
     "${TARGET}/share/zsh/vendor-completions" \
-    /etc/systemd/system \
-    /etc/default \
-    /etc/sysconfig \
-    /etc/conf.d \
-    /etc/init.d \
+    "${PREFIX}/etc/systemd/system" \
+    "${PREFIX}/etc/default" \
+    "${PREFIX}/etc/sysconfig" \
+    "${PREFIX}/etc/conf.d" \
+    "${PREFIX}/etc/init.d" \
     "${DOCKER_PLUGINS_PATH}" \
     "${TARGET}/libexec/docker/bin" \
     "${TARGET}/libexec/cni"
@@ -676,7 +678,7 @@ if type update-grub >/dev/null 2>&1 && test "${CGROUP_VERSION}" == "v2" && test 
 
     echo "cgroup v2"
     echo "Configure grub"
-    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' /etc/default/grub
+    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' "${PREFIX}/etc/default/grub"
     echo "Update grub"
     update-grub
     read -r -p "Reboot to enable cgroup v2 (y/N)"
@@ -723,33 +725,33 @@ function install-docker() {
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless.sh" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${TARGET}/bin"
     echo "Install systemd units"
-    curl -sLo /etc/systemd/system/docker.service "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
-    curl -sLo /etc/systemd/system/docker.socket "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
-    sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" /etc/systemd/system/docker.service
+    curl -sLo "${PREFIX}/etc/systemd/system/docker.service" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
+    curl -sLo "${PREFIX}/etc/systemd/system/docker.socket" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
+    sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
     if is_debian; then
         echo "Install init script for debian"
-        curl -sLo /etc/default/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-        curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
-        sed -i -E "s|^(export PATH=)|\1${TARGET}/libexec/docker/bin:|" /etc/init.d/docker
+        curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+        curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+        sed -i -E "s|^(export PATH=)|\1${TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
     elif is_redhat; then
         echo "Install init script for redhat"
-        curl -sLo /etc/sysconfig/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
-        curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
+        curl -sLo "${PREFIX}/etc/sysconfig/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
+        curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
         # shellcheck disable=SC1083
-        sed -i -E "s|(^prog=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" /etc/init.d/docker
+        sed -i -E "s|(^prog=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
     elif is_alpine; then
         echo "Install openrc script for alpine"
-        curl -sLo /etc/conf.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
-        curl -sLo /etc/init.d/docker "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
+        curl -sLo "${PREFIX}/etc/conf.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
+        curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
         # shellcheck disable=1083
-        sed -i -E "s|^(command=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" /etc/init.d/docker
+        sed -i -E "s|^(command=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
         openrc
     else
         echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
     fi
-    sed -i -E "s|^export PATH=|export PATH=${TARGET}/libexec/docker/bin:|" /etc/init.d/docker
+    sed -i -E "s|^export PATH=|export PATH=${TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
     echo "Set executable bits"
-    chmod +x /etc/init.d/docker
+    chmod +x "${PREFIX}/etc/init.d/docker"
     echo "Install completion"
     curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
     curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
@@ -758,52 +760,52 @@ function install-docker() {
     groupadd --system --force docker
     DOCKER_RESTART=false
     echo "Configure daemon"
-    if ! test -f /etc/docker/daemon.json; then
+    if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
         echo "Initialize dockerd configuration"
-        echo "{}" >/etc/docker/daemon.json
+        echo "{}" >"${PREFIX}/etc/docker/daemon.json"
     fi
     if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
         echo "Waiting for jq"
         wait_for_tool "jq"
 
-        if ! test "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' /etc/docker/daemon.json)" == "true"; then
+        if ! test "$(jq '."exec-opts" | any(. | startswith("native.cgroupdriver="))' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Configuring native cgroup driver"
             # shellcheck disable=SC2094
-            cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
             echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
-        if ! test "$(jq '. | keys | any(. == "default-runtime")' /etc/docker/daemon.json)" == true; then
+        if ! test "$(jq '. | keys | any(. == "default-runtime")' "${PREFIX}/etc/docker/daemon.json")" == true; then
             echo "Set default runtime"
             # shellcheck disable=SC2094
-            cat <<< "$(jq '. * {"default-runtime": "runc"}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            cat <<< "$(jq '. * {"default-runtime": "runc"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
             echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
-        if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' /etc/docker/daemon.json)" == "true"; then
+        if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$(jq --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
             # shellcheck disable=SC2094
-            cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            cat <<< "$(jq --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
             echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
-        if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' /etc/docker/daemon.json)" == "true"; then
+        if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$(jq --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" | any(. == $mirror)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
             # shellcheck disable=SC2094
-            cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            cat <<< "$(jq --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
             echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
-        if ! test "$(jq --raw-output '.features.buildkit // false' /etc/docker/daemon.json)" == true; then
+        if ! test "$(jq --raw-output '.features.buildkit // false' "${PREFIX}/etc/docker/daemon.json")" == true; then
             echo "Enable BuildKit"
             # shellcheck disable=SC2094
-            cat <<< "$(jq '. * {"features":{"buildkit":true}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+            cat <<< "$(jq '. * {"features":{"buildkit":true}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
             echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
         echo "Check if daemon.json is valid JSON"
-        if ! jq --exit-status '.' /etc/docker/daemon.json; then
-            echo "${RED}ERROR: /etc/docker/daemon.json is not valid JSON.${RESET}"
+        if ! jq --exit-status '.' "${PREFIX}/etc/docker/daemon.json"; then
+            echo "${RED}ERROR: "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
             exit 1
         fi
 
@@ -831,7 +833,7 @@ function install-docker() {
             fi
         else
             echo "Start dockerd"
-            /etc/init.d/docker start
+            "${PREFIX}/etc/init.d/docker" start
         fi
         echo -e "${WARNING}WARNING: Init script was installed but you must enable Docker yourself.${RESET}"
     fi
@@ -893,15 +895,15 @@ EOF
     else
         echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
     fi
-    if ! test -f /etc/containerd/config.toml; then
+    if ! test -f "${PREFIX}/etc/containerd/config.toml"; then
         echo "Adding default configuration"
-        mkdir -p /etc/containerd
-        "${TARGET}/bin/containerd" config default >/etc/containerd/config.toml
-        sed -i "s|/opt/cni/bin|${TARGET}/libexec/cni|" /etc/containerd/config.toml
+        mkdir -p "${PREFIX}/etc/containerd"
+        "${TARGET}/bin/containerd" config default >"${PREFIX}/etc/containerd/config.toml"
+        sed -i "s|/opt/cni/bin|${TARGET}/libexec/cni|" "${PREFIX}/etc/containerd/config.toml"
     fi
     echo "Install systemd unit"
-    curl -sLo /etc/systemd/system/containerd.service "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
-    sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${TARGET}/bin/containerd|" /etc/systemd/system/containerd.service
+    curl -sLo "${PREFIX}/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${TARGET}/bin/containerd|" "${PREFIX}/etc/systemd/system/containerd.service"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -1053,13 +1055,13 @@ function install-buildkit() {
     curl -sL "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
     echo "Install systemd units"
-    curl -sLo /etc/systemd/system/buildkit.service "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.service"
-    curl -sLo /etc/systemd/system/buildkit.socket "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket"
-    sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" /etc/systemd/system/buildkit.service
+    curl -sLo "${PREFIX}/etc/systemd/system/buildkit.service" "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.service"
+    curl -sLo "${PREFIX}/etc/systemd/system/buildkit.socket" "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket"
+    sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
     echo "Install init script"
-    curl -sLo /etc/init.d/buildkit "${DOCKER_SETUP_REPO_RAW}/contrib/buildkit/buildkit"
-    sed -i "s|\${TARGET}|${TARGET}|" /etc/init.d/buildkit
-    chmod +x /etc/init.d/buildkit
+    curl -sLo "${PREFIX}/etc/init.d/buildkit" "${DOCKER_SETUP_REPO_RAW}/contrib/buildkit/buildkit"
+    sed -i "s|\${TARGET}|${TARGET}|" "${PREFIX}/etc/init.d/buildkit"
+    chmod +x "${PREFIX}/etc/init.d/buildkit"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -1075,10 +1077,10 @@ function install-buildkit() {
     else
         if ps -C buildkitd >/dev/null 2>&1; then
             echo "Restart buildkitd"
-            /etc/init.d/buildkit restart
+            "${PREFIX}/etc/init.d/buildkit" restart
         else
             echo "Start buildkitd"
-            /etc/init.d/buildkit start
+            "${PREFIX}/etc/init.d/buildkit" start
         fi
         echo -e "${WARNING}WARNING: Init script was installed but you must enable BuildKit yourself.${RESET}"
     fi
@@ -1119,11 +1121,11 @@ function install-portainer() {
     echo "Set executable bits on docker-compose"
     chmod +x "${TARGET}/share/portainer/docker-compose"
     echo "Install systemd unit"
-    curl -sLo /etc/systemd/system/portainer.service "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer.service"
-    sed -i "s|\${TARGET}|${TARGET}|g" /etc/systemd/system/portainer.service
+    curl -sLo "${PREFIX}/etc/systemd/system/portainer.service" "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer.service"
+    sed -i "s|\${TARGET}|${TARGET}|g" "${PREFIX}/etc/systemd/system/portainer.service"
     echo "Install init script"
-    curl -sLo /etc/init.d/portainer "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
-    chmod +x /etc/init.d/portainer
+    curl -sLo "${PREFIX}/etc/init.d/portainer" "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer"
+    chmod +x "${PREFIX}/etc/init.d/portainer"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -1210,11 +1212,11 @@ function install-stargz-snapshotter() {
     | tar -xzC "${TARGET}/bin" --no-same-owner
     echo "Add configuration to containerd"
     cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
-dasel put object --file /etc/containerd/config.toml --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
+dasel put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
 EOF
     echo "Install systemd units"
-    curl -sLo /etc/systemd/system/stargz-snapshotter.service "${DOCKER_SETUP_REPO_RAW}/contrib/stargz-snapshotter/stargz-snapshotter.service"
-    sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${TARGET}/bin/containerd-stargz-grpc|" /etc/systemd/system/stargz-snapshotter.service
+    curl -sLo "${PREFIX}/etc/systemd/system/stargz-snapshotter.service" "${DOCKER_SETUP_REPO_RAW}/contrib/stargz-snapshotter/stargz-snapshotter.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${TARGET}/bin/containerd-stargz-grpc|" "${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -1257,11 +1259,11 @@ function install-fuse-overlayfs-snapshotter() {
     | tar -xzC "${TARGET}/bin" --no-same-owner
     echo "Add configuration to containerd"
     cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
-dasel put object --file /etc/containerd/config.toml --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
+dasel put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
 EOF
     echo "Install systemd units"
-    curl -sLo /etc/systemd/system/fuse-overlayfs-snapshotter.service "${DOCKER_SETUP_REPO_RAW}/contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service"
-    sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${TARGET}/bin/containerd-fuse-overlayfs-grpc|" /etc/systemd/system/fuse-overlayfs-snapshotter.service
+    curl -sLo "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service" "${DOCKER_SETUP_REPO_RAW}/contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${TARGET}/bin/containerd-fuse-overlayfs-grpc|" "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -1298,11 +1300,11 @@ function install-podman() {
     echo "Install systemd unit"
     curl -sLo "/etc/systemd/system/podman.service" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service"
     curl -sLo "/etc/systemd/system/podman.socket" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket"
-    sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${TARGET}/bin/podman|" /etc/systemd/system/podman.service
+    sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${TARGET}/bin/podman|" "${PREFIX}/etc/systemd/system/podman.service"
     curl -sLo "${TARGET}/lib/tmpfiles.d/podman-docker.conf" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf"
     systemctl daemon-reload
     echo "Install configuration"
-    mkdir -p /etc/containers/registries{,.conf}.d
+    mkdir -p "${PREFIX}/etc/containers/registries{,.conf}.d"
     files=(
         registries.conf.d/00-shortnames.conf
         registries.d/default.yaml
@@ -1311,7 +1313,7 @@ function install-podman() {
         storage.json
     )
     for file in "${files[@]}"; do
-        curl -sLo "/etc/containers/${file}" "${DOCKER_SETUP_REPO_RAW}/contrib/podman/${file}"
+        curl -sLo "${PREFIX}/etc/containers/${file}" "${DOCKER_SETUP_REPO_RAW}/contrib/podman/${file}"
     done
 }
 
@@ -1331,11 +1333,11 @@ function install-crun() {
         echo "Waiting for jq"
         wait_for_tool "jq"
 
-        if ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' /etc/docker/daemon.json)" == "true"; then
+        if ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add runtime to Docker"
             # shellcheck disable=SC2094
             cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
-cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' "${PREFIX}/etc/docker/daemon.json")" >/etc/docker/daemon.json
 EOF
             touch "${DOCKER_SETUP_CACHE}/docker_restart"
         fi
@@ -1391,7 +1393,7 @@ EOF
         wait_for_tool "krew"
         echo "Install krew for current user"
         # shellcheck source=/dev/null
-        source /etc/profile.d/krew.sh
+        source "${PREFIX}/etc/profile.d/krew.sh"
         krew install krew
         echo "Install plugins for current user"
         krew install <<EOF
@@ -1644,8 +1646,8 @@ function install-k3s() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/k3s"
     echo "Install systemd unit"
-    curl -sLo /etc/init.d/k3s "${DOCKER_SETUP_REPO_RAW}/contrib/k3s/k3s.service"
-    sed -i "s|\${TARGET}|${TARGET}|g" /etc/systemd/system/k3s.service
+    curl -sLo "${PREFIX}/etc/init.d/k3s" "${DOCKER_SETUP_REPO_RAW}/contrib/k3s/k3s.service"
+    sed -i "s|\${TARGET}|${TARGET}|g" "${PREFIX}/etc/systemd/system/k3s.service"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -1679,11 +1681,11 @@ function install-gvisor() {
         echo "Waiting for jq"
         wait_for_tool "jq"
 
-        if ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' /etc/docker/daemon.json)" == "true"; then
+        if ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add runtime to Docker"
             # shellcheck disable=SC2094
             cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
-cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' /etc/docker/daemon.json)" >/etc/docker/daemon.json
+cat <<< "\$(jq --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' "${PREFIX}/etc/docker/daemon.json")" >/etc/docker/daemon.json
 EOF
             touch "${DOCKER_SETUP_CACHE}/docker_restart"
         fi
@@ -1785,11 +1787,11 @@ function install-ipfs() {
     IPFS_PATH=/var/lib/ipfs ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
     echo "Add configuration to containerd"
     cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-ipfs.sh" <<EOF
-dasel put bool --file /etc/containerd/config.toml --parser toml .ipfs true
+dasel put bool --file "${PREFIX}/etc/containerd/config.toml" --parser toml .ipfs true
 EOF
     echo "Install systemd units"
-    curl -sLo /etc/systemd/system/ipfs.service "${DOCKER_SETUP_REPO_RAW}/contrib/ipfs/ipfs.service"
-    sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${TARGET}/bin/ipfs|" /etc/systemd/system/ipfs.service
+    curl -sLo "${PREFIX}/etc/systemd/system/ipfs.service" "${DOCKER_SETUP_REPO_RAW}/contrib/ipfs/ipfs.service"
+    sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${TARGET}/bin/ipfs|" "${PREFIX}/etc/systemd/system/ipfs.service"
     if has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
@@ -2094,7 +2096,7 @@ if test -f "${DOCKER_SETUP_CACHE}/docker_restart"; then
         systemctl restart docker
     else
         echo "Restart dockerd using init script"
-        /etc/init.d/docker restart
+        "${PREFIX}/etc/init.d/docker" restart
     fi
     rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
 fi
