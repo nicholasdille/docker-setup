@@ -751,6 +751,7 @@ function install-docker() {
             fi
         fi
     fi
+    echo "Docker ${DOCKER_VERSION}"
     echo "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
     | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
