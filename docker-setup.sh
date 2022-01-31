@@ -2133,11 +2133,13 @@ while true; do
     sleep 0.1
 done
 
+echo "Merging configuration changes for Docker"
 find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r file; do
     bash "${file}"
     rm "${file}"
 done
 
+echo "Merging configuration changes for containerd"
 find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh | while read -r file; do
     bash "${file}"
     rm "${file}"
