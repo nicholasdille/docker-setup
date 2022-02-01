@@ -174,7 +174,7 @@ tool_deps["stargz-snapshotter"]="containerd"
 
 declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
-    if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
+    if test -n "${tool}" && ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
         unknown_tools+=( "${tool}" )
     fi
 done
@@ -226,7 +226,7 @@ if ! type tput >/dev/null 2>&1; then
 fi
 
 display_cols=$(tput cols || echo "65")
-if test -z "${display_cols}" || test "${display_cols}" -le 0; then  
+if test -z "${display_cols}" || test "${display_cols}" -le 0; then
     display_cols=65
 fi
 
@@ -529,7 +529,7 @@ function has_tool() {
 function wait_for_tool() {
     local tool=$1
     local path=$2
-    
+
     local SLEEP=10
     local RETRIES=60
 
@@ -955,7 +955,7 @@ function install-containerd() {
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
-    
+
     elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
@@ -1012,7 +1012,7 @@ function install-runc() {
     chmod +x "${TARGET}/bin/runc"
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
-    
+
     elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
@@ -1076,7 +1076,7 @@ function install-slirp4netns() {
     chmod +x "${TARGET}/bin/slirp4netns"
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
-        
+
     elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
