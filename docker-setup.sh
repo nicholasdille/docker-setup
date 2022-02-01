@@ -1303,7 +1303,7 @@ function install-stargz-snapshotter() {
     | tar -xzC "${TARGET}/bin" --no-same-owner
     echo "Add configuration to containerd"
     cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
-dasel put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
+"${TARGET}/bin/dasel" put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
 EOF
     echo "Install systemd units"
     get_contrib "${PREFIX}/etc/systemd/system/stargz-snapshotter.service" "stargz-snapshotter/stargz-snapshotter.service"
@@ -1352,7 +1352,7 @@ function install-fuse-overlayfs-snapshotter() {
     | tar -xzC "${TARGET}/bin" --no-same-owner
     echo "Add configuration to containerd"
     cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
-dasel put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
+"${TARGET}/bin/dasel" put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
 EOF
     echo "Install systemd units"
     get_contrib "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service" "fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service"
@@ -1892,7 +1892,7 @@ function install-ipfs() {
     IPFS_PATH=/var/lib/ipfs ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
     echo "Add configuration to containerd"
     cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-ipfs.sh" <<EOF
-dasel put bool --file "${PREFIX}/etc/containerd/config.toml" --parser toml .ipfs true
+"${TARGET}/bin/dasel" put bool --file "${PREFIX}/etc/containerd/config.toml" --parser toml .ipfs true
 EOF
     echo "Install systemd units"
     get_contrib "${PREFIX}/etc/systemd/system/ipfs.service" "ipfs/ipfs.service"
