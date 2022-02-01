@@ -53,7 +53,9 @@ while test "$#" -gt 0; do
             unknown_parameters+=("$1")
             ;;
         *)
-            requested_tools+=("$1")
+            if test -n "$1"; then
+                requested_tools+=("$1")
+            fi
             ;;
     esac
 
@@ -174,7 +176,7 @@ tool_deps["stargz-snapshotter"]="containerd"
 
 declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
-    if test -n "${tool}" && ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
+    if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
         unknown_tools+=( "${tool}" )
     fi
 done
