@@ -2129,6 +2129,11 @@ while true; do
         break
     fi
 
+    if is_centos_7; then
+        ps faux
+        sleep 5
+    fi
+
     if ! children_are_running; then
         last_update=true
     fi
