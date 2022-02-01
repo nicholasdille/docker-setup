@@ -2060,11 +2060,6 @@ function count_sub_processes() {
     echo "${count}"
 }
 
-if is_centos_7 && ! curl -sLo /dev/null "${DOCKER_SETUP_REPO_BASE}/releases/latest/download/docker-setup.sh"; then
-    echo "${RED}ERROR: Unable to curl.${RESET}"
-    exit 1
-fi
-
 declare -A child_pids
 if ${PLAN}; then
     echo "${tool_install[@]}"
