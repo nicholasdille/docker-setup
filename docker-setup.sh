@@ -1435,7 +1435,7 @@ EOF
         source /etc/profile.d/krew.sh
         krew install krew
         echo "Install plugins for current user"
-        krew install <<EOF
+        krew install <<EOF || true
 access-matrix
 advise-policy
 advise-psp
