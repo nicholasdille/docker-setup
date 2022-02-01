@@ -1,6 +1,5 @@
 .git
 .github
-contrib
 test/Dockerfile*
 LICENSE
 README.md
