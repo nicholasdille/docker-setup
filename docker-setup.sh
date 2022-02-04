@@ -481,6 +481,11 @@ for tool in "${tools[@]}"; do
 done
 echo -e "\n"
 
+if ${SKIP_DOCS}; then
+    echo -e "${YELLOW}INFO: Some documentation is skipped to reduce the installation time.${RESET}"
+    echo
+fi
+
 if ${CHECK}; then
     if test "${#tool_outdated[@]}" -gt 0; then
         echo -e "${RED}ERROR: The following tools are outdated:${RESET}"
