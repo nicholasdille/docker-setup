@@ -197,7 +197,7 @@ if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
 fi
 
 : "${PREFIX:=}"
-: "${TARGET:=${PREFIX}/usr}"
+: "${TARGET:=${PREFIX}/usr/local}"
 : "${DOCKER_ALLOW_RESTART:=true}"
 : "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
 : "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
