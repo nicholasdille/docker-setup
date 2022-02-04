@@ -122,6 +122,7 @@ The above environment variables can be true or false.
 
 The following environment variables are processed:
 
+PREFIX                   Install into a subdirectory
 TARGET                   Specifies the target directory for
                          binaries. Defaults to /usr
 CGROUP_VERSION           Specifies which version of cgroup
