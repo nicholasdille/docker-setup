@@ -416,7 +416,9 @@ function umoci_matches_version()                      { is_executable "${TARGET}
 function yq_matches_version()                         { is_executable "${TARGET}/bin/yq"                             &&   test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { is_executable "${TARGET}/bin/ytt"                            &&   test "$(${TARGET}/bin/ytt version | cut -d' ' -f3)"                                        == "${YTT_VERSION}"; }
 
-echo -e "docker-setup includes ${#tools[*]} tools (${GREEN}installed${RESET}, ${YELLOW}planned${RESET}, ${RED}skipped${RESET}):"
+echo -e "docker-setup includes ${#tools[*]} tools:"
+echo -e "(${GREEN}installed${RESET}, ${YELLOW}planned${RESET}, ${GREY}skipped${RESET}, up-to-date ${GREEN}${CHECK_MARK}${RESET}, outdated ${RED}${CROSS_MARK}${RESET})"
+echo
 declare -A tool_version
 declare -a tool_install
 declare -A tool_color
@@ -455,25 +457,25 @@ for tool in "${tools[@]}"; do
 
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_color[${tool}]="${YELLOW}"
-            tool_sign[${tool}]="${CROSS_MARK}"
+            tool_sign[${tool}]="${RED}${CROSS_MARK}"
 
         else
             tool_color[${tool}]="${RED}"
-            tool_sign[${tool}]="${CROSS_MARK}"
+            tool_sign[${tool}]="${RED}${CROSS_MARK}"
         fi
 
     else
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_color[${tool}]="${YELLOW}"
-            tool_sign[${tool}]="${CHECK_MARK}"
+            tool_sign[${tool}]="${GREEN}${CHECK_MARK}"
 
         else
             tool_color[${tool}]="${GREEN}"
-            tool_sign[${tool}]="${CHECK_MARK}"
+            tool_sign[${tool}]="${GREEN}${CHECK_MARK}"
         fi
     fi
 
-    if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+    if ${ONLY} && ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
         tool_color[${tool}]="${GREY}"
     fi
 
