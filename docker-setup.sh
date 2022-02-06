@@ -939,6 +939,8 @@ function install-docker() {
             echo -e "${WARNING}WARNING: Init script was installed but you must enable Docker yourself.${RESET}"
         fi
     fi
+    echo "Wait for Docker daemon to start"
+    wait_for_docker
     if ! docker_is_running; then
         echo "${RED}ERROR: Failed to start Docker.${RESET}"
         exit 1
@@ -947,8 +949,6 @@ function install-docker() {
         echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
 
     else
-        echo "Wait for Docker daemon to start"
-        wait_for_docker
         echo "Install manpages for Docker CLI"
         "${TARGET}/bin/docker" container run \
             --interactive \
