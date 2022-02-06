@@ -199,7 +199,8 @@ if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
 fi
 
 : "${PREFIX:=}"
-: "${TARGET:=${PREFIX}/usr/local}"
+: "${RELATIVE_TARGET:=/usr/local}"
+: "${TARGET:=${PREFIX}${RELATIVE_TARGET}}"
 : "${DOCKER_ALLOW_RESTART:=true}"
 : "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
 : "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
@@ -489,6 +490,11 @@ for tool in "${tools[@]}"; do
     echo -e -n "${tool_color[${tool}]}${item}   ${RESET}"
 done
 echo -e "\n"
+
+if test -n "${PREFIX}"; then
+    echo -e "${YELLOW}INFO: Installation into ${PREFIX}. Will skip daemon start.${RESET}"
+    echo
+fi
 
 if ${SKIP_DOCS}; then
     echo -e "${YELLOW}INFO: Some documentation is skipped to reduce the installation time.${RESET}"
@@ -819,28 +825,28 @@ function install-docker() {
     echo "Install systemd units"
     curl -sLo "${PREFIX}/etc/systemd/system/docker.service" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
     curl -sLo "${PREFIX}/etc/systemd/system/docker.socket" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
-    sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
-    sed -i -E "s|/usr/bin/dockerd|${TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
+    sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
+    sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
     if is_debian; then
         echo "Install init script for debian"
         curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
-        sed -i -E "s|^(export PATH=)|\1${TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
     elif is_redhat; then
         echo "Install init script for redhat"
         curl -sLo "${PREFIX}/etc/sysconfig/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
         # shellcheck disable=SC1083
-        sed -i -E "s|(^prog=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|/usr/bin/dockerd|${TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
     elif is_alpine; then
         echo "Install openrc script for alpine"
         curl -sLo "${PREFIX}/etc/conf.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
         # shellcheck disable=1083
-        sed -i -E "s|^(command=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|/usr/bin/dockerd|dockerd|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|/usr/bin/dockerd|dockerd|" "${RELATIVE_TARGET}/etc/init.d/docker"
         openrc
     else
         echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
@@ -1005,11 +1011,11 @@ EOF
         echo "Adding default configuration"
         mkdir -p "${PREFIX}/etc/containerd"
         "${TARGET}/bin/containerd" config default >"${PREFIX}/etc/containerd/config.toml"
-        sed -i "s|/opt/cni/bin|${TARGET}/libexec/cni|" "${PREFIX}/etc/containerd/config.toml"
+        sed -i "s|/opt/cni/bin|${RELATIVE_TARGET}/libexec/cni|" "${PREFIX}/etc/containerd/config.toml"
     fi
     echo "Install systemd unit"
     curl -sLo "${PREFIX}/etc/systemd/system/containerd.service" "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service"
-    sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${TARGET}/bin/containerd|" "${PREFIX}/etc/systemd/system/containerd.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${RELATIVE_TARGET}/bin/containerd|" "${PREFIX}/etc/systemd/system/containerd.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             echo "Reload systemd"
@@ -1168,7 +1174,7 @@ function install-buildkit() {
     sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
     echo "Install init script"
     get_contrib "${PREFIX}/etc/init.d/buildkit" "buildkit/buildkit"
-    sed -i "s|\${TARGET}|${TARGET}|" "${PREFIX}/etc/init.d/buildkit"
+    sed -i "s|\${TARGET}|${RELATIVE_TARGET}|" "${PREFIX}/etc/init.d/buildkit"
     chmod +x "${PREFIX}/etc/init.d/buildkit"
     if test -z "${PREFIX}";then
         if has_systemd; then
@@ -1232,7 +1238,7 @@ function install-portainer() {
     chmod +x "${TARGET}/share/portainer/docker-compose"
     echo "Install systemd unit"
     get_contrib "${PREFIX}/etc/systemd/system/portainer.service" "portainer/portainer.service"
-    sed -i "s|\${TARGET}|${TARGET}|g" "${PREFIX}/etc/systemd/system/portainer.service"
+    sed -i "s|\${TARGET}|${RELATIVE_TARGET}|g" "${PREFIX}/etc/systemd/system/portainer.service"
     echo "Install init script"
     get_contrib "${PREFIX}/etc/init.d/portainer" "portainer/portainer"
     chmod +x "${PREFIX}/etc/init.d/portainer"
@@ -1328,7 +1334,7 @@ function install-stargz-snapshotter() {
 EOF
     echo "Install systemd units"
     get_contrib "${PREFIX}/etc/systemd/system/stargz-snapshotter.service" "stargz-snapshotter/stargz-snapshotter.service"
-    sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${TARGET}/bin/containerd-stargz-grpc|" "${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-stargz-grpc|" "${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             echo "Reload systemd"
@@ -1377,7 +1383,7 @@ function install-fuse-overlayfs-snapshotter() {
 EOF
     echo "Install systemd units"
     get_contrib "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service" "fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service"
-    sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${TARGET}/bin/containerd-fuse-overlayfs-grpc|" "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
+    sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-fuse-overlayfs-grpc|" "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             echo "Reload systemd"
@@ -1418,7 +1424,7 @@ function install-podman() {
     echo "Install systemd unit"
     curl -sLo "/etc/systemd/system/podman.service" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service"
     curl -sLo "/etc/systemd/system/podman.socket" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket"
-    sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${TARGET}/bin/podman|" "${PREFIX}/etc/systemd/system/podman.service"
+    sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${RELATIVE_TARGET}/bin/podman|" "${PREFIX}/etc/systemd/system/podman.service"
     curl -sLo "${TARGET}/lib/tmpfiles.d/podman-docker.conf" "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf"
     if test -z "${PREFIX}"; then
         if has_systemd; then
@@ -1771,7 +1777,7 @@ function install-k3s() {
     chmod +x "${TARGET}/bin/k3s"
     echo "Install systemd unit"
     get_contrib "${PREFIX}/etc/init.d/k3s" "k3s/k3s.service"
-    sed -i "s|\${TARGET}|${TARGET}|g" "${PREFIX}/etc/systemd/system/k3s.service"
+    sed -i "s|\${TARGET}|${RELATIVE_TARGET}|g" "${PREFIX}/etc/systemd/system/k3s.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             echo "Reload systemd"
@@ -1917,7 +1923,7 @@ function install-ipfs() {
 EOF
     echo "Install systemd units"
     get_contrib "${PREFIX}/etc/systemd/system/ipfs.service" "ipfs/ipfs.service"
-    sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${TARGET}/bin/ipfs|" "${PREFIX}/etc/systemd/system/ipfs.service"
+    sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${RELATIVE_TARGET}/bin/ipfs|" "${PREFIX}/etc/systemd/system/ipfs.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             echo "Reload systemd"
