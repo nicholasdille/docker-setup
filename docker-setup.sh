@@ -2121,7 +2121,8 @@ function children_are_running() {
 }
 
 function process_exists() {
-    test -d "/proc/${CHILD}"
+    local pid=$1
+    test -d "/proc/${pid}"
 }
 
 function count_sub_processes() {
@@ -2146,7 +2147,7 @@ for tool in "${tool_install[@]}"; do
         echo "------------------------------------------------------------"
     } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
 
-    eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1 || touch \"${DOCKER_SETUP_CACHE}/errors/${tool}\" &"
+    (eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1") || touch "${DOCKER_SETUP_CACHE}/errors/${tool}" &
     child_pids[${tool}]=$!
 done
 child_pid_count=${#child_pids[@]}
