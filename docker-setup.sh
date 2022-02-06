@@ -2214,7 +2214,7 @@ while true; do
         break
     fi
 
-    if ! children_are_running; then
+    if ! children_are_running || test -f "${DOCKER_SETUP_CACHE}/errors/${tool}.log"; then
         last_update=true
     fi
 
