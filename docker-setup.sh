@@ -41,6 +41,7 @@ while test "$#" -gt 0; do
             NO_DEPS=true
             ;;
         --plan)
+            NO_WAIT=true
             PLAN=true
             ;;
         --skip-docs)
@@ -2139,7 +2140,6 @@ function count_sub_processes() {
 
 declare -A child_pids
 if ${PLAN}; then
-    echo "${tool_install[@]}"
     exit
 fi
 for tool in "${tool_install[@]}"; do
