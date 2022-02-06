@@ -67,6 +67,7 @@ RESET="\e[39m\e[49m"
 GREEN="\e[92m"
 YELLOW="\e[93m"
 RED="\e[91m"
+GREY="\e[90m"
 if ${NO_COLOR} || test -p /dev/stdout; then
     RESET=""
     GREEN=""
@@ -470,6 +471,10 @@ for tool in "${tools[@]}"; do
             tool_color[${tool}]="${GREEN}"
             tool_sign[${tool}]="${CHECK_MARK}"
         fi
+    fi
+
+    if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+        tool_color[${tool}]="${GREY}"
     fi
 
     item="${tool} ${tool_version[${tool}]} ${tool_sign[${tool}]}"
