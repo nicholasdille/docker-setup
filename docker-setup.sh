@@ -2225,17 +2225,25 @@ while true; do
     sleep 0.1
 done
 
-echo "Merging configuration changes for Docker"
-find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh | while read -r file; do
-    bash "${file}"
-    rm "${file}"
-done
+DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
+if test -n "${DOCKER_JSON_PATCHES}"; then
+    echo
+    echo "Merging configuration changes for Docker"
+    echo "${DOCKER_JSON_PATCHES}" | while read -r file; do
+        bash "${file}"
+        rm "${file}"
+    done
+fi
 
-echo "Merging configuration changes for containerd"
-find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh | while read -r file; do
-    bash "${file}"
-    rm "${file}"
-done
+CONTAINERD_CONFIG_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh)"
+if test -n "${CONTAINERD_CONFIG_PATCHES}"; then
+    echo
+    echo "Merging configuration changes for containerd"
+    echo "${CONTAINERD_CONFIG_PATCHES}" | while read -r file; do
+        bash "${file}"
+        rm "${file}"
+    done
+fi
 
 if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
     echo
