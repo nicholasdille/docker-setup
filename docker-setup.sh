@@ -820,7 +820,7 @@ function install-docker() {
     curl -sLo "${PREFIX}/etc/systemd/system/docker.service" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
     curl -sLo "${PREFIX}/etc/systemd/system/docker.socket" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
     sed -i "/^\[Service\]/a Environment=PATH=${TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
-    sed -i -E "s|/usr/bin/dockerd|${TARGET}/bin/docker|" "${PREFIX}/etc/systemd/system/docker.service"
+    sed -i -E "s|/usr/bin/dockerd|${TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
     if is_debian; then
         echo "Install init script for debian"
         curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
@@ -833,7 +833,7 @@ function install-docker() {
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
         # shellcheck disable=SC1083
         sed -i -E "s|(^prog=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|/usr/bin/dockerd|${TARGET}/bin/docker|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|/usr/bin/dockerd|${TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
     elif is_alpine; then
         echo "Install openrc script for alpine"
         curl -sLo "${PREFIX}/etc/conf.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
