@@ -817,6 +817,7 @@ function install-docker() {
         curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
         sed -i -E "s|^(export PATH=)|\1${TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
     elif is_redhat; then
         echo "Install init script for redhat"
         curl -sLo "${PREFIX}/etc/sysconfig/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
@@ -829,6 +830,7 @@ function install-docker() {
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
         # shellcheck disable=1083
         sed -i -E "s|^(command=)|export PATH="${TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|/usr/bin/dockerd|dockerd|" "${PREFIX}/etc/init.d/docker"
         openrc
     else
         echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
