@@ -435,21 +435,27 @@ for tool in "${tools[@]}"; do
         || ( ${ONLY} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
         || ( ! ${ONLY} && ! eval "${tool//-/_}_matches_version" ); then
 
-        if ! ${NO_DEPS}; then
-            if test -n "${tool_deps[${tool}]}"; then
-                for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-                    if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
-                        tool_install+=("${dep}")
-                    fi
-                done
-            fi
-        fi
-
         if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_install+=("${tool}")
         fi
     fi
 done
+if ! ${NO_DEPS}; then
+    i=0
+    while test "${i}" -lt "${#tool_install[@]}"; do
+        tool="${tool_install[$i]}"
+
+        if test -n "${tool_deps[${tool}]}"; then
+            for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+                if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
+                    tool_install+=("${dep}")
+                fi
+            done
+        fi
+
+        i=$(( i + 1 ))
+    done
+fi
 check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
