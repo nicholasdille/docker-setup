@@ -680,7 +680,7 @@ function docker_is_running() {
 
 function wait_for_docker() {
     local SLEEP=10
-    local RETRIES=60
+    local RETRIES=12
 
     local RETRY=0
     while ! docker_is_running && test "${RETRY}" -le "${RETRIES}"; do
