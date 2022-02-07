@@ -454,8 +454,11 @@ check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
     if ! eval "${tool//-/_}_matches_version"; then
-        tool_outdated+=("${tool}")
-        check_only_exit_code=1
+
+        if ! ${ONLY} || printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+            tool_outdated+=("${tool}")
+            check_only_exit_code=1
+        fi
 
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_color[${tool}]="${YELLOW}"
@@ -509,7 +512,7 @@ if ${CHECK}; then
         for tool in "${tool_outdated[@]}"; do
             echo -e -n "${RED}${tool}  ${RESET}"
         done
-        echo
+        echo -e -n "\n\n"
     fi
     exit "${check_only_exit_code}"
 fi
