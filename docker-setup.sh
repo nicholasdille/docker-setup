@@ -1185,7 +1185,7 @@ function install-buildkit() {
     sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
     echo "Install init script"
     get_contrib "${PREFIX}/etc/init.d/buildkit" "buildkit/buildkit"
-    sed -i "s|\${TARGET}|${RELATIVE_TARGET}|" "${PREFIX}/etc/init.d/buildkit"
+    sed -i "s|/usr/local/bin/buildkitd|${RELATIVE_TARGET}/bin/buildkitd|" "${PREFIX}/etc/init.d/buildkit"
     chmod +x "${PREFIX}/etc/init.d/buildkit"
     if test -z "${PREFIX}";then
         if has_systemd; then
@@ -1249,9 +1249,10 @@ function install-portainer() {
     chmod +x "${TARGET}/share/portainer/docker-compose"
     echo "Install systemd unit"
     get_contrib "${PREFIX}/etc/systemd/system/portainer.service" "portainer/portainer.service"
-    sed -i "s|\${TARGET}|${RELATIVE_TARGET}|g" "${PREFIX}/etc/systemd/system/portainer.service"
+    sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${PREFIX}/etc/systemd/system/portainer.service"
     echo "Install init script"
     get_contrib "${PREFIX}/etc/init.d/portainer" "portainer/portainer"
+    sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${PREFIX}/etc/init.d/portainer"
     chmod +x "${PREFIX}/etc/init.d/portainer"
     if test -z "${PREFIX}"; then
         if has_systemd; then
@@ -1788,7 +1789,7 @@ function install-k3s() {
     chmod +x "${TARGET}/bin/k3s"
     echo "Install systemd unit"
     get_contrib "${PREFIX}/etc/init.d/k3s" "k3s/k3s.service"
-    sed -i "s|\${TARGET}|${RELATIVE_TARGET}|g" "${PREFIX}/etc/systemd/system/k3s.service"
+    sed -i "s|/usr/local/bin/k3s|${RELATIVE_TARGET}/bin/k3s|g" "${PREFIX}/etc/systemd/system/k3s.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             echo "Reload systemd"

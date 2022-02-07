@@ -22,7 +22,7 @@ export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 BASE=portainer
 
 # modify these in /etc/default/$BASE (/etc/default/portainer)
-PORTAINER=/usr/bin/portainer
+PORTAINER=/usr/local/bin/portainer
 # This is the pid file created/managed by start-stop-daemon
 PORTAINER_SSD_PIDFILE=/var/run/$BASE-ssd.pid
 PORTAINER_LOGFILE=/var/log/$BASE.log

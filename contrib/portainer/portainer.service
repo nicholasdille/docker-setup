@@ -4,7 +4,7 @@ Documentation=https://www.portainer.io/
 After=network.target local-fs.target
 
 [Service]
-ExecStart=${TARGET}/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
+ExecStart=/usr/local/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
 
 Type=exec
 Delegate=yes
