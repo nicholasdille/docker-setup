@@ -426,29 +426,15 @@ declare -a tool_install
 declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
-for tool in "${tools[@]}"; do
-    VAR_NAME="${tool^^}_VERSION"
-    VERSION="${VAR_NAME//-/_}"
-    tool_version[${tool}]="${!VERSION}"
-
-    if  ${REINSTALL} \
-        || ( ${ONLY} && printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$" ) \
-        || ( ! ${ONLY} && ! eval "${tool//-/_}_matches_version" ); then
-
-        if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
-            tool_install+=("${tool}")
-        fi
-    fi
-done
 if ! ${NO_DEPS}; then
     i=0
-    while test "${i}" -lt "${#tool_install[@]}"; do
-        tool="${tool_install[$i]}"
+    while test "${i}" -lt "${#requested_tools[@]}"; do
+        tool="${requested_tools[$i]}"
 
         if test -n "${tool_deps[${tool}]}"; then
             for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-                if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
-                    tool_install+=("${dep}")
+                if ! printf "%s\n" "${requested_tools[@]}" | grep -q "^${dep}$"; then
+                    requested_tools+=("${dep}")
                 fi
             done
         fi
@@ -456,6 +442,17 @@ if ! ${NO_DEPS}; then
         i=$(( i + 1 ))
     done
 fi
+for tool in "${tools[@]}"; do
+    VAR_NAME="${tool^^}_VERSION"
+    VERSION="${VAR_NAME//-/_}"
+    tool_version[${tool}]="${!VERSION}"
+
+    if ! ${ONLY} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
+        if ! eval "${tool//-/_}_matches_version" || ${REINSTALL}; then
+            tool_install+=("${tool}")
+        fi
+    fi
+done
 check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
