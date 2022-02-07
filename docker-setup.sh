@@ -846,7 +846,8 @@ function install-docker() {
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
         # shellcheck disable=1083
         sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|/usr/bin/dockerd|dockerd|" "${RELATIVE_TARGET}/etc/init.d/docker"
+        sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+        sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/conf.d/docker"
         openrc
     else
         echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
