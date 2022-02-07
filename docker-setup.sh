@@ -1968,7 +1968,8 @@ function install-ignite() {
         "${TARGET}/bin/ignite" \
         "${TARGET}/bin/ignited"
     echo "Install completion"
-    "${TARGET}/bin/ignite" completion >"${TARGET}/share/bash-completion/completions/ignite"
+    "${TARGET}/bin/ignite"  completion >"${TARGET}/share/bash-completion/completions/ignite"
+    "${TARGET}/bin/ignited" completion >"${TARGET}/share/bash-completion/completions/ignited" || true
 }
 
 function install-kubefire() {
