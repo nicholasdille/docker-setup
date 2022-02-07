@@ -159,6 +159,7 @@ tools=(
     rootlesskit runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq
     ytt
 )
+tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
 tool_deps["ctop"]="docker"
 tool_deps["dive"]="docker"
@@ -167,7 +168,7 @@ tool_deps["docuum"]="docker"
 tool_deps["dry"]="docker"
 tool_deps["fuse-overlayfs-snapshotter"]="containerd"
 tool_deps["gvisor"]="jq"
-tool_deps["ignite"]="containerd"
+tool_deps["ignite"]="containerd cni"
 tool_deps["ipfs"]="containerd"
 tool_deps["imgcrypt"]="containerd docker"
 tool_deps["jwt"]="docker"
