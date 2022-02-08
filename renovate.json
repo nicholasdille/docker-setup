@@ -34,8 +34,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n", "ArkadeVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "alexellis/arkade",
       "datasourceTemplate": "github-releases"
     },
@@ -54,8 +54,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "BUILDX_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "BUILDX_VERSION=(?<currentValue>.*?)\n", "BuildxVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "docker/buildx",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -103,22 +103,22 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "COSIGN_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "COSIGN_VERSION=(?<currentValue>.*?)\n", "CosignVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "sigstore/cosign",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CRICTL_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "CRICTL_VERSION=(?<currentValue>.*?)\n", "CrictlVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes-sigs/cri-tools",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "CRANE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "CRANE_VERSION=(?<currentValue>.*?)\n", "CraneVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "google/go-containerregistry",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -146,30 +146,30 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DIVE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DIVE_VERSION=(?<currentValue>.*?)\n", "DiveVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "wagoodman/dive",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_COMPOSE_V1_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DOCKER_COMPOSE_V1_VERSION=(?<currentValue>.*?)\n", "DockerComposeV1Version = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^\\d+\\.\\d+\\.\\d+$",
       "versioningTemplate": "^(?<major>1?)\\.(?<minor>\\d+?)\\.(?<patch>\\d+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_COMPOSE_V2_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DOCKER_COMPOSE_V2_VERSION=(?<currentValue>.*?)\n", "DockerComposeV2Version = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_MACHINE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DOCKER_MACHINE_VERSION=(?<currentValue>.*?)\n", "DockerMachineVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "docker/machine",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -182,8 +182,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_SCAN_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DOCKER_SCAN_VERSION=(?<currentValue>.*?)\n", "DockerScanVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "docker/scan-cli-plugin",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -196,15 +196,15 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DRY_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DRY_VERSION=(?<currentValue>.*?)\n", "DryVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "moncho/dry",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DUFFLE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DUFFLE_VERSION=(?<currentValue>.*?)\n", "DuffleVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "cnabio/duffle",
       "datasourceTemplate": "github-releases"
     },
@@ -244,8 +244,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "GLOW_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "GLOW_VERSION=(?<currentValue>.*?)\n", "GlowVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "charmbracelet/glow",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -272,8 +272,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "HELM_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "HELM_VERSION=(?<currentValue>.*?)\n", "HelmVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -286,8 +286,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "HUB_TOOL_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "HUB_TOOL_VERSION=(?<currentValue>.*?)\n", "HubToolVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "docker/hub-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -321,28 +321,28 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "JQ_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "JQ_VERSION=(?<currentValue>.*?)\n", "JqVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "stedolan/jq",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^jq-(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "JP_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "JP_VERSION=(?<currentValue>.*?)\n", "JpVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "jmespath/jp",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "JWT_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "JWT_VERSION=(?<currentValue>.*?)\n", "JwtVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "mike-engel/jwt-cli",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "K3D_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "K3D_VERSION=(?<currentValue>.*?)\n", "K3dVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "rancher/k3d",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -356,37 +356,37 @@
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "K9S_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "K9S_VERSION=(?<currentValue>.*?)\n", "K9sVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "derailed/k9s",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KAPP_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KAPP_VERSION=(?<currentValue>.*?)\n", "KappVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "vmware-tanzu/carvel-kapp",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KIND_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KIND_VERSION=(?<currentValue>.*?)\n", "KindVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes-sigs/kind",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KOMPOSE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KOMPOSE_VERSION=(?<currentValue>.*?)\n", "KomposeVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes/kompose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KUBECTL_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KUBECTL_VERSION=(?<currentValue>.*?)\n", "KubectlVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -420,8 +420,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KUBELETCTL_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KUBELETCTL_VERSION=(?<currentValue>.*?)\n", "KubeletctlVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "cyberark/kubeletctl",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -435,58 +435,58 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KREW_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KREW_VERSION=(?<currentValue>.*?)\n", "KrewVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes-sigs/krew",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "KUSTOMIZE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KUSTOMIZE_VERSION=(?<currentValue>.*?)\n", "KustomizeVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "LAZYDOCKER_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "LAZYDOCKER_VERSION=(?<currentValue>.*?)\n", "LazydockerVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "jesseduffield/lazydocker",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "LAZYGIT_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "LAZYGIT_VERSION=(?<currentValue>.*?)\n", "LazygitVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "jesseduffield/lazygit",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "MANIFEST_TOOL_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "MANIFEST_TOOL_VERSION=(?<currentValue>.*?)\n", "ManifestToolVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "MINIKUBE_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "MINIKUBE_VERSION=(?<currentValue>.*?)\n", "MinikubeVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes/minikube",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "NERDCTL_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "NERDCTL_VERSION=(?<currentValue>.*?)\n", "NerdctlVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "containerd/nerdctl",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "ORAS_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "ORAS_VERSION=(?<currentValue>.*?)\n", "OrasVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "oras-project/oras",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -513,8 +513,8 @@
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "PORTER_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "PORTER_VERSION=(?<currentValue>.*?)\n", "PorterVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "getporter/porter",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -527,8 +527,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n", "RegclientVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "regclient/regclient",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -569,8 +569,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "SOPS_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "SOPS_VERSION=(?<currentValue>.*?)\n", "SopsVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "mozilla/sops",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -597,15 +597,15 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n", "YqVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "mikefarah/yq",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "YTT_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "YTT_VERSION=(?<currentValue>.*?)\n", "YttVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
