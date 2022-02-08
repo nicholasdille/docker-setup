@@ -1,6 +1,10 @@
 #!/bin/bash
 set -o errexit
 
+DOCKER_SETUP_VERSION="master"
+DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
+DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
+
 declare -a unknown_parameters
 : "${CHECK:=false}"
 : "${SHOW_HELP:=false}"
@@ -53,6 +57,10 @@ while test "$#" -gt 0; do
             ;;
         --version)
             SHOW_VERSION=true
+            ;;
+        --bash-completion)
+            curl -sL "${DOCKER_SETUP_REPO_RAW}/completion/bash/docker-setup.sh"
+            exit
             ;;
         --*)
             unknown_parameters+=("$1")
@@ -211,9 +219,6 @@ fi
 : "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
 : "${DOCKER_SETUP_CACHE:=/var/cache/docker-setup}"
 : "${DOCKER_SETUP_CONTRIB:=${DOCKER_SETUP_CACHE}/contrib}"
-DOCKER_SETUP_VERSION="master"
-DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
-DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
 
 echo -e "docker-setup version $(if test "${DOCKER_SETUP_VERSION}" == "master"; then echo "${RED}"; fi)${DOCKER_SETUP_VERSION}${RESET}"
 echo
