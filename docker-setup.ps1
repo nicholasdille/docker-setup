@@ -1,5 +1,11 @@
 #Requires -RunAsAdministrator
 
+if (-Not $Env:TARGET) {
+    $Env:TARGET = "$Env:ProgramFiles\docker-setup"
+}
+New-Item -Path "$Env:TARGET" -Type Directory -Force
+# TODO: Add $Env:TARGET to $Env:Path
+
 $ArkadeVersion = "0.8.12"
 $BuildxVersion = "0.6.3"
 $CosignVersion = "1.5.1"
@@ -39,30 +45,23 @@ $YqVersion = "4.13.2"
 $YttVersion = "0.39.0"
 
 # Enable feature(s) with restart
+# TODO: Parameter to -IgnoreFeature
 Enable-WindowsOptionalFeature -Online -FeatureName Containers
 
 # Install Docker
-# https://github.com/AJDurant/choco-docker-engine/blob/main/tools/chocolateyInstall.ps1
 Invoke-WebRequest -Uri "https://download.docker.com/win/static/stable/x86_64/docker-$DockerVersion.zip" -OutFile "$Env:UserProfile\Downloads\docker-$DockerVersion.zip"
-New-Item -Path "$Env:ProgramFiles\Docker" -Type Directory -Force
-Expand-Archive -LiteralPath "$Env:UserProfile\Downloads\docker-$DockerVersion.zip" -DestinationPath "$Env:ProgramFiles\Docker"
-sc create docker binpath= "$Env:ProgramFiles\Docker\dockerd.exe --run-service" start= auto displayName= "Docker Engine"
-
-# TODO: Add $Env:ProgramFiles\Docker to $Env:Path
-
-if (-Not $Env:TARGET) {
-    $Env:TARGET = "$Env:ProgramFiles\Docker"
-}
+Expand-Archive -LiteralPath "$Env:UserProfile\Downloads\docker-$DockerVersion.zip" -DestinationPath "$Env:TARGET"
+sc create docker binpath= "$Env:TARGET\dockerd.exe --run-service" start= auto displayName= "Docker Engine"
 
 # TODO: Update daemon.json
 
 if (-not $Env:DOCKER_COMPOSE) {
     $Env:DOCKER_COMPOSE = "v2"
 }
-$DockerComposeUrl = "https://github.com/docker/compose/releases/download/v$DockerComposeVersionV2/docker-compose-windows-amd64.exe"
+$DockerComposeUrl = "https://github.com/docker/compose/releases/download/v$DockerComposeV2Version/docker-compose-windows-amd64.exe"
 $DockerComposeTarget = "$Env:ProgramData\Docker\cli-plugins\docker-compose.exe"
 if ($Env:DOCKER_COMPOSE -eq "v1") {
-    $DockerComposeUrl = "https://github.com/docker/compose/releases/download/$DockerComposeVersionV1/docker-compose-Windows-x86_64.exe"
+    $DockerComposeUrl = "https://github.com/docker/compose/releases/download/$DockerComposeV1Version/docker-compose-Windows-x86_64.exe"
     $DockerComposeTarget = "$Env:TARGET\docker-compose.exe"
 }
 Invoke-WebRequest -Uri "$DockerComposeUrl" -OutFile "$DockerComposeTarget"
@@ -122,27 +121,75 @@ Invoke-WebRequest -Uri "https://github.com/stedolan/jq/releases/download/jq-$JqV
 # yq
 Invoke-WebRequest -Uri "https://github.com/mikefarah/yq/releases/download/v$YqVersion/yq_windows_amd64.exe" -OutFile "$Env:TARGET\yq.exe"
 
-# curl
-# https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip
+# arkade
+Invoke-WebRequest -Uri "https://github.com/alexellis/arkade/releases/download/$ArkadeVersion/arkade.exe" -OutFile "$Env:TARGET\arkade.exe"
 
-#https://github.com/alexellis/arkade/releases/download/0.8.12/arkade.exe
-#https://github.com/sigstore/cosign/releases/download/v1.5.1/cosign-windows-amd64.exe
-#https://github.com/google/go-containerregistry/releases/download/v0.8.0/go-containerregistry_Windows_x86_64.tar.gz
-#https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.23.0/crictl-v1.23.0-windows-amd64.tar.gz
-#https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_windows_amd64.zip
-#https://github.com/moncho/dry/releases/download/v0.11.1/dry-windows-amd64
-#https://github.com/cnabio/duffle/releases/download/0.3.5-beta.1/duffle-windows-amd64.exe
-#https://github.com/charmbracelet/glow/releases/download/v1.4.1/glow_1.4.1_Windows_x86_64.zip
-#https://github.com/jmespath/jp/releases/download/0.2.1/jp-windows-amd64
-#https://github.com/mike-engel/jwt-cli/releases/download/5.0.2/jwt-windows.tar.gz
-#https://github.com/derailed/k9s/releases/download/v0.25.18/k9s_Windows_x86_64.tar.gz
-#https://github.com/vmware-tanzu/carvel-kapp/releases/download/v0.45.0/kapp-windows-amd64.exe
-#https://github.com/kubernetes/kompose/releases/download/v1.26.1/kompose-windows-amd64.exe
-#https://github.com/cyberark/kubeletctl/releases/download/v1.8/kubeletctl_windows_amd64.exe
-#https://github.com/jesseduffield/lazydocker/releases/download/v0.12/lazydocker_0.12_Windows_x86_64.zip
-#https://github.com/jesseduffield/lazygit/releases/download/v0.32.2/lazygit_0.32.2_Windows_x86_64.zip
-#https://github.com/kubernetes/minikube/releases/download/v1.25.1/minikube-windows-amd64.tar.gz
-#https://github.com/containerd/nerdctl/releases/download/v0.16.1/nerdctl-0.16.1-windows-amd64.tar.gz
-#https://github.com/getporter/porter/releases/download/v0.38.8/porter-windows-amd64.exe
-#https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.exe
-#https://github.com/vmware-tanzu/carvel-ytt/releases/download/v0.39.0/ytt-windows-amd64.exe
+# cosign
+Invoke-WebRequest -Uri "https://github.com/sigstore/cosign/releases/download/v1.5.1/cosign-windows-amd64.exe" -OutFile "$Env:TARGET\cosign.exe"
+
+#crane
+Invoke-WebRequest -Uri "https://github.com/google/go-containerregistry/releases/download/v$CraneVersion/go-containerregistry_Windows_x86_64.tar.gz" -OutFile "$Env:UserProfile\Downloads\go-containerregistry_Windows_x86_64.tar.gz"
+# TODO: unpack
+
+# crictl
+Invoke-WebRequest -Uri "https://github.com/kubernetes-sigs/cri-tools/releases/download/v$CrictlVersion/crictl-v$CrictlVersion-windows-amd64.tar.gz" -OutFile "$Env:UserProfile\Downloads\crictl-v$CrictlVersion-windows-amd64.tar.gz"
+# TODO: unpack
+
+# dive
+Invoke-WebRequest -Uri "https://github.com/wagoodman/dive/releases/download/v$(DiveVersion)/dive_$(DiveVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\dive_$(DiveVersion)_windows_amd64.zip"
+# TODO: unpack
+
+# dry
+Invoke-WebRequest -Uri "https://github.com/moncho/dry/releases/download/v0.11.1/dry-windows-amd64" -OutFile "$Env:TARGET\dry.exe"
+
+# duffle
+Invoke-WebRequest -Uri "https://github.com/cnabio/duffle/releases/download/$DuffleVersion/duffle-windows-amd64.exe" -OutFile "$Env:TARGET\duffle.exe"
+
+# glow
+Invoke-WebRequest -Uri "https://github.com/charmbracelet/glow/releases/download/v$(GlowVersion)/glow_$(GlowVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\glow_$(GlowVersion)_Windows_x86_64.zip"
+# TODO: unpack
+
+# jp
+Invoke-WebRequest -Uri "https://github.com/jmespath/jp/releases/download/$JpVersion/jp-windows-amd64" -OutFile "$Env:TARGET\jp.exe"
+
+# jwt
+Invoke-WebRequest -Uri "https://github.com/mike-engel/jwt-cli/releases/download/$JwtVersion/jwt-windows.tar.gz" -OutFile "$Env:UserProfile\Downloads\jwt-windows.tar.gz"
+# TODO: unpack
+
+# k9s
+Invoke-WebRequest -Uri "https://github.com/derailed/k9s/releases/download/v$K9sVersion/k9s_Windows_x86_64.tar.gz" -OutFile "$Env:UserProfile\Downloads\k9s_Windows_x86_64.tar.gz"
+# TODO: unpack
+
+# kapp
+Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v$KappVersion/kapp-windows-amd64.exe" -OutFile "$Env:TARGET\kapp.exe"
+
+# kompose
+Invoke-WebRequest -Uri "https://github.com/kubernetes/kompose/releases/download/v$KomposeVersion/kompose-windows-amd64.exe" -OutFile "$Env:TARGET\kompose.exe"
+
+# kubeletctl
+Invoke-WebRequest -Uri "https://github.com/cyberark/kubeletctl/releases/download/v$KubeletctlVersion/kubeletctl_windows_amd64.exe" -OutFile "$Env:TARGET\kubeletctl.exe"
+
+# lazydocker
+Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazydocker/releases/download/v$LazydockerVersion/lazydocker_$(LazydockerVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazydocker_$(LazydockerVersion)_Windows_x86_64.zip"
+# TODO: unpack
+
+# lazygit
+Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazygit/releases/download/v$LazygitVersion/lazygit_$(LazygitVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazygit_$(LazygitVersion)_Windows_x86_64.zip"
+# TODO: unpack
+
+# minikube
+Invoke-WebRequest -Uri "https://github.com/kubernetes/minikube/releases/download/v$MinikubeVersion/minikube-windows-amd64.tar.gz" -OutFile "$Env:UserProfile\Downloads\minikube-windows-amd64.tar.gz"
+# TODO: unpack
+
+# nerdctl
+Invoke-WebRequest -Uri "https://github.com/containerd/nerdctl/releases/download/v$NerdctlVersion/nerdctl-$NerdctlVersion-windows-amd64.tar.gz" -OutFile "$Env:UserProfile\Downloads\nerdctl-$NerdctlVersion-windows-amd64.tar.gz"
+# TODO: unpack
+
+# porter
+Invoke-WebRequest -Uri "https://github.com/getporter/porter/releases/download/v$PorterVersion/porter-windows-amd64.exe" -OutFile "$Env:TARGET\porter.exe"
+
+# sops
+Invoke-WebRequest -Uri "https://github.com/mozilla/sops/releases/download/v$SopsVersion/sops-v$SopsVersion.exe" -OutFile "$Env:TARGET\sops.exe"
+
+# ytt
+Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v$YttVersion/ytt-windows-amd64.exe" -OutFile "$Env:TARGET\ytt.exe"
