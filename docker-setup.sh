@@ -510,7 +510,7 @@ fi
 
 if ${CHECK}; then
     if test "${#tool_outdated[@]}" -gt 0; then
-        echo -e "${RED}ERROR: The following tools are outdated:${RESET}"
+        echo -e "${RED}ERROR: The following requested tools are outdated:${RESET}"
         echo
         for tool in "${tool_outdated[@]}"; do
             echo -e -n "${RED}${tool}  ${RESET}"
