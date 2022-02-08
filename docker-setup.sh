@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-DOCKER_SETUP_VERSION="master"
+DOCKER_SETUP_VERSION="main"
 DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
 DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
 
