@@ -7,6 +7,7 @@ RUN apt-get update \
         iptables \
         git \
         tzdata \
-        unzip
+        unzip \
+        ncurses-bin
 COPY test/test.sh /
 COPY docker-setup.sh /
