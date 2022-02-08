@@ -121,10 +121,12 @@ are accepted:
 
 --help, SHOW_HELP                  Show this help
 --version, SHOW_VERSION            Display version
+--bash-completion                  Output completion script for bash
 --check, CHECK                     Abort after checking versions
 --no-wait, NO_WAIT                 Skip wait before installation
 --reinstall, REINSTALL             Reinstall all tools
 --only, ONLY                       Only install specified tools
+--only-installed, ONLY_INSTALLED   Only process installed tools
 --no-progressbar, NO_PROGRESSBAR   Disable progress bar
 --no-color, NO_COLOR               Disable colored output
 --no-deps, NO_DEPS                 Do not enfore installation of dependencies
@@ -155,6 +157,11 @@ DOCKER_PLUGINS_PATH      Where to store Docker CLI plugins.
 
 EOF
     exit
+fi
+
+if ${ONLY} && ${ONLY_INSTALLED}; then
+    echo -e "${RED}ERROR: You can only specify one: --only/ONLY and --only-installed/ONLY_INSTALLED.${RESET}"
+    exit 1
 fi
 
 declare -a tools
@@ -207,6 +214,11 @@ fi
 
 if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
     echo -e "${RED}ERROR: You must supply --only/ONLY if specifying tools on the command line.${RESET}"
+    echo
+    exit 1
+fi
+if ${ONLY} && test "${#requested_tools[@]}" -eq 0; then
+    echo -e "${RED}ERROR: You must specify tool on the command line if you supply --only/ONLY.${RESET}"
     echo
     exit 1
 fi
