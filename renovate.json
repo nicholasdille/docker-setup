@@ -175,8 +175,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "DOCKER_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "DOCKER_VERSION=(?<currentValue>.*?)\n", "$DockerVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "moby/moby",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
