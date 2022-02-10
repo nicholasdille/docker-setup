@@ -100,7 +100,7 @@ Invoke-WebRequest -Uri "https://github.com/estesp/manifest-tool/releases/downloa
 # portainer?
 
 # oras
-Invoke-WebRequest -Uri "https://github.com/oras-project/oras/releases/download/v$OrasVersion/oras_$($OrasVersion)_windows_amd64.tar.gz"
+Invoke-WebRequest -Uri "https://github.com/oras-project/oras/releases/download/v$OrasVersion/oras_$($OrasVersion)_windows_amd64.tar.gz" -OutFile "$Env:UserProfile\Downloads\oras_$($OrasVersion)_windows_amd64.tar.gz"
 
 # regclient
 Invoke-WebRequest -Uri "https://github.com/regclient/regclient/releases/download/v$RegclientVersion/regctl-windows-amd64.exe" -OutFile "$Env:TARGET\regctl.exe"
