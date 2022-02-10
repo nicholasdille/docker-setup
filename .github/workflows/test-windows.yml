@@ -12,6 +12,7 @@ on:
       - reopened
     paths:
       - docker-setup.ps1
+      - .github/workflows/test-windows.yml
 
 jobs:
 
