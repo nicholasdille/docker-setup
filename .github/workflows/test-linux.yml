@@ -1,0 +1,60 @@
+name: Test-Linux
+
+on:
+  push:
+    tags:
+      - "v*"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - labeled
+      - reopened
+    paths:
+      - docker-setup.sh
+      - test/*
+      - Dockerfile
+      - docker/*
+
+jobs:
+
+  test:
+    name: Tests
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distro:
+          - alpine-3.15
+          #- amazonlinux-2
+          #- archlinux
+          #- clearlinux
+          #- centos-7
+          #- centos-8
+          - debian-11
+          - fedora-35
+          #- opensuse-leap-15
+          #- opensuse-tumbleweed
+          #- rockylinux-8
+          - ubuntu-20.04
+          - ubuntu-21.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Test
+        env:
+          DOCKER_BUILDKIT: 1
+          TERM: xterm
+          SKIP_DOCS: ${{ github.event_name == 'pull_request' }}
+        run: |
+          docker build --tag test --file test/Dockerfile.${{ matrix.distro }} .; \
+          mkdir -p "${PWD}/log"; \
+          docker run --interactive --rm --privileged --env TERM --env Europe/Berlin --env SKIP_DOCS --volume "${PWD}/log:/var/log" test bash test.sh
+
+      - name: Store logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: logs-${{ matrix.distro }}.zip
+          path: log/**
