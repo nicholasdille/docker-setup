@@ -15,6 +15,7 @@ on:
       - test/*
       - Dockerfile
       - docker/*
+      - .github/workflows/test-linux.yml
 
 jobs:
 
