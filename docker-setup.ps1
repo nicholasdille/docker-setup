@@ -1,9 +1,11 @@
 #Requires -RunAsAdministrator
 
+$ErrorActionPreference = "Stop"
+
 if (-Not $Env:TARGET) {
     $Env:TARGET = "$Env:ProgramFiles\docker-setup"
 }
-New-Item -Path "$Env:TARGET" -Type Directory -Force
+New-Item -Path "$Env:TARGET" -Type Directory -Force | Out-Null
 # TODO: Add $Env:TARGET to $Env:Path
 
 $ArkadeVersion = "0.8.12"
@@ -51,14 +53,22 @@ Enable-WindowsOptionalFeature -Online -FeatureName Containers
 # Install Docker
 Invoke-WebRequest -Uri "https://download.docker.com/win/static/stable/x86_64/docker-$DockerVersion.zip" -OutFile "$Env:UserProfile\Downloads\docker-$DockerVersion.zip"
 Expand-Archive -LiteralPath "$Env:UserProfile\Downloads\docker-$DockerVersion.zip" -DestinationPath "$Env:TARGET"
-sc create docker binpath= "$Env:TARGET\dockerd.exe --run-service" start= auto displayName= "Docker Engine"
+if (-Not (Get-Service -Name docker)) {
+    $NewServiceParams = @{
+        Name           = "docker"
+        BinaryPathName = "$Env:TARGET\dockerd.exe --run-service"
+        StartupType    = "Auto"
+        Description    = "Docker Engine"
+    }
+    New-Service @$NewServiceParams
+}
 
 # TODO: Update daemon.json
 
 if (-not $Env:DOCKER_COMPOSE) {
     $Env:DOCKER_COMPOSE = "v2"
 }
-$DockerComposeUrl = "https://github.com/docker/compose/releases/download/v$DockerComposeV2Version/docker-compose-windows-amd64.exe"
+$DockerComposeUrl = "https://github.com/docker/compose/releases/download/v$DockerComposeV2Version/docker-compose-windows-x86_64.exe"
 $DockerComposeTarget = "$Env:ProgramData\Docker\cli-plugins\docker-compose.exe"
 if ($Env:DOCKER_COMPOSE -eq "v1") {
     $DockerComposeUrl = "https://github.com/docker/compose/releases/download/$DockerComposeV1Version/docker-compose-Windows-x86_64.exe"
