@@ -2,6 +2,28 @@
 
 $ErrorActionPreference = "Stop"
 
+param (
+    [Parameter()]
+    [switch]
+    $NoFeature
+    ,
+    [Parameter()]
+    [switch]
+    $NoService
+)
+
+if ($IsLinux) {
+    $Env:TARGET = "$Env:HOME\.docker-setup"
+    $Env:DOCKER_PLUGIN_PATH = "$Env:TARGET\cli-plugins"
+}
+
+if (-Not $Env:TARGET) {
+    $Env:TARGET = "$Env:ProgramFiles\docker-setup"
+}
+if (-Not $Env:DOCKER_PLUGIN_PATH) {
+    $Env:DOCKER_PLUGIN_PATH = "$Env:ProgramData\Docker\cli-plugins"
+}
+
 $Tools = @(
     "arkade", "buildah", "buildkit", "buildx", "clusterawsadm", "clusterctl",
     "cni", "cni-isolation", "conmon", "containerd", "cosign", "crane",
@@ -34,12 +56,8 @@ This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
 '@
-
-if (-Not $Env:TARGET) {
-    $Env:TARGET = "$Env:ProgramFiles\docker-setup"
-}
 New-Item -Path "$Env:TARGET" -Type Directory -Force | Out-Null
-New-Item -Path "$Env:ProgramData\Docker\cli-plugins" -Type Directory -Force | Out-Null
+New-Item -Path "$Env:DOCKER_PLUGIN_PATH" -Type Directory -Force | Out-Null
 # TODO: Add $Env:TARGET to $Env:Path
 
 $ArkadeVersion = "0.8.12"
