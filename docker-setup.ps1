@@ -147,7 +147,7 @@ Invoke-WebRequest -Uri "https://github.com/kubernetes-sigs/cri-tools/releases/do
 # TODO: unpack
 
 # dive
-Invoke-WebRequest -Uri "https://github.com/wagoodman/dive/releases/download/v$(DiveVersion)/dive_$(DiveVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\dive_$(DiveVersion)_windows_amd64.zip"
+Invoke-WebRequest -Uri "https://github.com/wagoodman/dive/releases/download/v$($DiveVersion)/dive_$($DiveVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\dive_$($DiveVersion)_windows_amd64.zip"
 # TODO: unpack
 
 # dry
@@ -157,7 +157,7 @@ Invoke-WebRequest -Uri "https://github.com/moncho/dry/releases/download/v0.11.1/
 Invoke-WebRequest -Uri "https://github.com/cnabio/duffle/releases/download/$DuffleVersion/duffle-windows-amd64.exe" -OutFile "$Env:TARGET\duffle.exe"
 
 # glow
-Invoke-WebRequest -Uri "https://github.com/charmbracelet/glow/releases/download/v$(GlowVersion)/glow_$(GlowVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\glow_$(GlowVersion)_Windows_x86_64.zip"
+Invoke-WebRequest -Uri "https://github.com/charmbracelet/glow/releases/download/v$($GlowVersion)/glow_$($GlowVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\glow_$($GlowVersion)_Windows_x86_64.zip"
 # TODO: unpack
 
 # jp
@@ -181,11 +181,11 @@ Invoke-WebRequest -Uri "https://github.com/kubernetes/kompose/releases/download/
 Invoke-WebRequest -Uri "https://github.com/cyberark/kubeletctl/releases/download/v$KubeletctlVersion/kubeletctl_windows_amd64.exe" -OutFile "$Env:TARGET\kubeletctl.exe"
 
 # lazydocker
-Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazydocker/releases/download/v$LazydockerVersion/lazydocker_$(LazydockerVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazydocker_$(LazydockerVersion)_Windows_x86_64.zip"
+Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazydocker/releases/download/v$LazydockerVersion/lazydocker_$($LazydockerVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazydocker_$($LazydockerVersion)_Windows_x86_64.zip"
 # TODO: unpack
 
 # lazygit
-Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazygit/releases/download/v$LazygitVersion/lazygit_$(LazygitVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazygit_$(LazygitVersion)_Windows_x86_64.zip"
+Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazygit/releases/download/v$LazygitVersion/lazygit_$($LazygitVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazygit_$($LazygitVersion)_Windows_x86_64.zip"
 # TODO: unpack
 
 # minikube
