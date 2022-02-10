@@ -6,6 +6,7 @@ if (-Not $Env:TARGET) {
     $Env:TARGET = "$Env:ProgramFiles\docker-setup"
 }
 New-Item -Path "$Env:TARGET" -Type Directory -Force | Out-Null
+New-Item -Path "$Env:ProgramData\Docker\cli-plugins" -Type Directory -Force | Out-Null
 # TODO: Add $Env:TARGET to $Env:Path
 
 $ArkadeVersion = "0.8.12"
