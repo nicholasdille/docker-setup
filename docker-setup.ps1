@@ -81,16 +81,25 @@ $YqVersion = "4.19.1"
 $YttVersion = "0.39.0"
 
 function IsExecutable() {
-    #
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [string]
+        $Path
+    )
+    Test-Path -Path "$Path"
 }
 
-function DockerIsInstalled() {}
+function DockerIsInstalled() { IsExecutable -Path "$Env:TARGET\dockerd.exe" }
 
-function DockerMatchesVersion() {}
+function DockerMatchesVersion() { & "$Env:TARGET\dockerd.exe" --version }
 
-For ($Tool in $Tools) {
+foreach ($Tool in $Tools) {
     $Tool
 }
+
+if (DockerIsInstalled) { "Docker is installed" }
+if (DockerMatchesVersion) { "Docker matches version" }
 
 # Enable feature(s) with restart
 # TODO: Parameter to -IgnoreFeature
