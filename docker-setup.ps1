@@ -2,6 +2,39 @@
 
 $ErrorActionPreference = "Stop"
 
+$Tools = @(
+    "arkade", "buildah", "buildkit", "buildx", "clusterawsadm", "clusterctl",
+    "cni", "cni-isolation", "conmon", "containerd", "cosign", "crane",
+    "crictl", "crun", "ctop", "dasel", "dive", "docker", "docker-compose",
+    "docker-machine", "docker-scan", "docuum", "dry", "duffle", "firecracker",
+    "firectl", "footloose", "fuse-overlayfs", "fuse-overlayfs-snapshotter",
+    "glow", "gvisor", "helm", "helmfile", "hub-tool", "ignite", "img",
+    "imgcrypt", "ipfs", "jp", "jq", "jwt", "k3d", "k3s", "k9s", "kapp", "kind",
+    "kompose", "krew", "kubectl", "kubectl-build", "kubectl-free",
+    "kubectl-resources", "kubeletctl", "kubefire", "kubeswitch", "kustomize",
+    "lazydocker", "lazygit", "manifest-tool", "minikube", "nerdctl", "oras",
+    "patat", "portainer", "porter", "podman", "qemu", "regclient",
+    "rootlesskit", "runc", "skopeo", "slirp4netns", "sops",
+    "stargz-snapshotter", "umoci", "trivy", "yq", "ytt"
+)
+
+Write-Host @'
+_            _                           _
+__| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
+/ _` |/ _ \ / __| |/ / _ \ '__|____/ __|/ _ \ __| | | | '_ \
+| (_| | (_) | (__|   <  __/ | |_____\__ \  __/ |_| |_| | |_) |
+\__,_|\___/ \___|_|\_\___|_|       |___/\___|\__|\__,_| .__/
+                                                  |_|
+
+                The container tools installer and updater
+            https://github.com/nicholasdille/docker-setup
+--------------------------------------------------------------
+
+This script will install Docker Engine as well as useful tools
+from the container ecosystem.
+
+'@
+
 if (-Not $Env:TARGET) {
     $Env:TARGET = "$Env:ProgramFiles\docker-setup"
 }
@@ -46,6 +79,18 @@ $RegclientVersion = "0.3.10"
 $SopsVersion = "3.7.1"
 $YqVersion = "4.19.1"
 $YttVersion = "0.39.0"
+
+function IsExecutable() {
+    #
+}
+
+function DockerIsInstalled() {}
+
+function DockerMatchesVersion() {}
+
+For ($Tool in $Tools) {
+    $Tool
+}
 
 # Enable feature(s) with restart
 # TODO: Parameter to -IgnoreFeature
