@@ -49,7 +49,9 @@ $YttVersion = "0.39.0"
 
 # Enable feature(s) with restart
 # TODO: Parameter to -IgnoreFeature
-Enable-WindowsOptionalFeature -Online -FeatureName Containers
+if ((Get-WindowsOptionalFeature -Online -FeatureName Containers | Select-Object -ExpandProperty State) -ine "Enabled") {
+    Enable-WindowsOptionalFeature -Online -FeatureName Containers | Out-Null
+}
 
 # Install Docker
 Invoke-WebRequest -Uri "https://download.docker.com/win/static/stable/x86_64/docker-$DockerVersion.zip" -OutFile "$Env:UserProfile\Downloads\docker-$DockerVersion.zip"
