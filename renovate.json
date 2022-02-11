@@ -11,10 +11,6 @@
     "regex"
   ],
 
-  "docker": {
-    "pinDigests": true
-  },
-
   "recreateClosed": true,
 
   "major": {
@@ -39,6 +35,10 @@
       "automerge": true
     }
   ],
+
+  "docker": {
+    "pinDigests": true
+  },
 
   "regexManagers": [
     {
