@@ -9,7 +9,7 @@
   "dockerfile": {
     "fileMatch": [
       "^Dockerfile$",
-      "^test/Dockerfile\\..+$"
+      "/Dockerfile\\."
     ]
   },
   "recreateClosed": true,
