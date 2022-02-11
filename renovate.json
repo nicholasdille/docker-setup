@@ -39,6 +39,12 @@
   "docker": {
     "pinDigests": true
   },
+  
+  "dockerfile": {
+    "fileMatch": [
+      "^test/[^/]*/Dockerfile$"
+    ]
+  },
 
   "regexManagers": [
     {
