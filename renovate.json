@@ -3,6 +3,14 @@
   "extends": [
     "config:base"
   ],
+
+  "enabledManagers": [
+    "dockerfile",
+    "docker-compose",
+    "github-actions",
+    "regex"
+  ],
+
   "docker": {
     "pinDigests": true
   },
@@ -11,14 +19,8 @@
       "^test\/Dockerfile\\..+$"
     ]
   },
-  "recreateClosed": true,
 
-  "enabledManagers": [
-    "dockerfile",
-    "docker-compose",
-    "github-actions",
-    "regex"
-  ],
+  "recreateClosed": true,
 
   "major": {
     "labels": ["type/renovate", "bump/major"]
@@ -35,6 +37,13 @@
   "digest": {
     "labels": ["type/renovate", "bump/digest"]
   },
+
+  "packageRules": [
+    {
+      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
+      "automerge": true
+    }
+  ],
 
   "regexManagers": [
     {
@@ -620,13 +629,6 @@
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
-    }
-  ],
-
-  "packageRules": [
-    {
-      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
-      "automerge": true
     }
   ]
 }
