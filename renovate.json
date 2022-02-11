@@ -6,6 +6,12 @@
   "docker": {
     "pinDigests": true
   },
+  "dockerfile": {
+    "fileMatch": [
+      "^Dockerfile$",
+      "^test/Dockerfile\\..+$"
+    ]
+  },
   "recreateClosed": true,
 
   "enabledManagers": [
