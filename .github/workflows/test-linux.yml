@@ -12,7 +12,7 @@ on:
       - reopened
     paths:
       - docker-setup.sh
-      - test/*
+      - env/**
       - Dockerfile
       - docker/*
       - .github/workflows/test-linux.yml
@@ -49,7 +49,7 @@ jobs:
           TERM: xterm
           SKIP_DOCS: ${{ github.event_name == 'pull_request' }}
         run: |
-          docker build --tag test --file test/Dockerfile.${{ matrix.distro }} .; \
+          docker build --tag test --file env/${{ matrix.distro }}/Dockerfile .; \
           mkdir -p "${PWD}/log"; \
           docker run --interactive --rm --privileged --env TERM --env Europe/Berlin --env SKIP_DOCS --volume "${PWD}/log:/var/log" test bash run.sh
 

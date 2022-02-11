@@ -9,5 +9,5 @@ RUN apt-get update \
         unzip \
         ncurses-bin \
  && update-alternatives --set iptables /usr/sbin/iptables-legacy
-COPY test/run.sh /
+COPY env/run.sh /
 COPY docker-setup.sh /

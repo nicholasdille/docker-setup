@@ -17,5 +17,5 @@ RUN apk add --update-cache --no-cache \
         ncurses \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
-COPY test/run.sh /
+COPY env/run.sh /
 COPY docker-setup.sh /

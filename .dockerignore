@@ -1,6 +1,6 @@
 .git
 .github
-test/Dockerfile*
+env/*/Dockerfile
 LICENSE
 README.md
 renovate.json
