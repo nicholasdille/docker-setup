@@ -8,8 +8,7 @@
   },
   "dockerfile": {
     "fileMatch": [
-      "^Dockerfile$",
-      "/Dockerfile"
+      "^test\/Dockerfile\\..+$"
     ]
   },
   "recreateClosed": true,
