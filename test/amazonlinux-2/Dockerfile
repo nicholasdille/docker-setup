@@ -1,4 +1,4 @@
 FROM amazonlinux:2
 # yum
-COPY test/test.sh /
+COPY test/run.sh /
 COPY docker-setup.sh /

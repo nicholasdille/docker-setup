@@ -1,4 +1,4 @@
 FROM opensuse/leap:15
 #
-COPY test/test.sh /
+COPY test/run.sh /
 COPY docker-setup.sh /

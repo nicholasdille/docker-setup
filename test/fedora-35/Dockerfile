@@ -8,5 +8,5 @@ RUN dnf install -y \
         git \
         unzip \
         ncurses
-COPY test/test.sh /
+COPY test/run.sh /
 COPY docker-setup.sh /

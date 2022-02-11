@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:21.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
@@ -8,6 +8,7 @@ RUN apt-get update \
         git \
         tzdata \
         unzip \
-        ncurses-bin
-COPY test/test.sh /
+        ncurses-bin \
+ && update-alternatives --set iptables /usr/sbin/iptables-legacy
+COPY test/run.sh /
 COPY docker-setup.sh /

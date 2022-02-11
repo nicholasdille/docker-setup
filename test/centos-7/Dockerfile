@@ -1,4 +1,4 @@
-FROM centos:8
+FROM centos:7
 RUN yum install -y \
         curl \
         ca-certificates \
@@ -6,5 +6,5 @@ RUN yum install -y \
         tzdata \
         unzip \
         initscripts
-COPY test/test.sh /
+COPY test/run.sh /
 COPY docker-setup.sh /
