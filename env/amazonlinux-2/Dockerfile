@@ -1,4 +1,4 @@
-FROM amazonlinux:2@sha256:f3a37f84f2644095e2c6f6fdf2bf4dbf68d5436c51afcfbfa747a5de391d5d62
+FROM amazonlinux:2022@sha256:ba535592e8fca7d12c9f6ebe81e1fc69713740287d83c42d83af581a701f6e64
 # yum
 COPY env/run.sh /
 COPY docker-setup.sh /
