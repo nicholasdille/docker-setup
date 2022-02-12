@@ -258,7 +258,7 @@ if test -z "${display_cols}" || test "${display_cols}" -le 0; then
     display_cols=65
 fi
 
-ARKADE_VERSION=0.8.12
+ARKADE_VERSION=0.8.14
 BUILDAH_VERSION=1.24.0
 BUILDKIT_VERSION=0.9.3
 BUILDX_VERSION=0.7.1
