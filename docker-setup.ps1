@@ -6,7 +6,7 @@ if (-Not $Env:TARGET) {
 New-Item -Path "$Env:TARGET" -Type Directory -Force
 # TODO: Add $Env:TARGET to $Env:Path
 
-$ArkadeVersion = "0.8.12"
+$ArkadeVersion = "0.8.14"
 $BuildxVersion = "0.7.1"
 $CosignVersion = "1.5.1"
 $CraneVersion = "0.8.0"
