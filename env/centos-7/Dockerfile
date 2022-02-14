@@ -1,4 +1,4 @@
-FROM centos:8@sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177
+FROM centos:7@sha256:9d4bcbbb213dfd745b58be38b13b996ebb5ac315fe75711bd618426a630e0987
 RUN yum install -y \
         curl \
         ca-certificates \
