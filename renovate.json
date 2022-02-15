@@ -237,7 +237,7 @@
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^\\d+\\.\\d+\\.\\d+$",
-      "versioningTemplate": "^(?<major>1?)\\.(?<minor>\\d+?)\\.(?<patch>\\d+?)$"
+      "versioningTemplate": "regex:^(?<major>1?)\\.(?<minor>\\d+?)\\.(?<patch>\\d+?)$"
     },
     {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
