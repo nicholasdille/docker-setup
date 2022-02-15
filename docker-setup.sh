@@ -686,7 +686,7 @@ function wait_for_tool() {
     fi
 }
 
-function get_distribution() {
+function get_lsb_distro_name() {
 	local lsb_dist=""
 	if test -r "${PREFIX}/etc/os-release"; then
         # shellcheck disable=SC1091
@@ -695,9 +695,18 @@ function get_distribution() {
 	echo "${lsb_dist}"
 }
 
+function get_lsb_distro_version() {
+	local lsb_dist=""
+	if test -r "${PREFIX}/etc/os-release"; then
+        # shellcheck disable=SC1091
+		lsb_dist="$(source "${PREFIX}/etc/os-release" && echo "$VERSION_ID")"
+	fi
+	echo "${lsb_dist}"
+}
+
 function is_debian() {
     local lsb_dist
-    lsb_dist=$(get_distribution)
+    lsb_dist=$(get_lsb_distro_name)
     case "${lsb_dist}" in
         ubuntu|debian|raspbian)
             return 0
@@ -710,9 +719,9 @@ function is_debian() {
 
 function is_redhat() {
     local lsb_dist
-    lsb_dist=$(get_distribution)
+    lsb_dist=$(get_lsb_distro_name)
     case "${lsb_dist}" in
-        centos|rhel|sles|fedora)
+        centos|rhel|sles|fedora|amzn|rocky)
             return 0
             ;;
         *)
@@ -723,9 +732,35 @@ function is_redhat() {
 
 function is_alpine() {
     local lsb_dist
-    lsb_dist=$(get_distribution)
+    lsb_dist=$(get_lsb_distro_name)
     case "${lsb_dist}" in
         alpine)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_clearlinux() {
+    local lsb_dist
+    lsb_dist=$(get_lsb_distro_name)
+    case "${lsb_dist}" in
+        clear-linux-os)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_rockylinux() {
+    local lsb_dist
+    lsb_dist=$(get_lsb_distro_name)
+    case "${lsb_dist}" in
+        rocky)
             return 0
             ;;
         *)
@@ -767,6 +802,17 @@ function is_centos_8() {
             return 1
             ;;
     esac
+}
+
+function is_amzn_2() {
+    local lsb_dist
+    local lsb_vers
+    lsb_dist=$(get_lsb_distro_name)
+    lsb_vers=$(get_lsb_distro_version)
+    if test "${lsb_dist}" == "amzn" && test "${lsb_vers}" == "2"; then
+        return 0
+    fi
+    return 1
 }
 
 function is_container() {
@@ -847,15 +893,12 @@ mkdir -p \
     "${PREFIX}/etc/init.d" \
     "${DOCKER_PLUGINS_PATH}" \
     "${TARGET}/libexec/docker/bin" \
-    "${TARGET}/libexec/cni"
-if test -n "${PREFIX}"; then
-    mkdir -p \
-        "${TARGET}/bin" \
-        "${TARGET}/sbin" \
-        "${TARGET}/share/man" \
-        "${TARGET}/lib" \
-        "${TARGET}/libexec"
-fi
+    "${TARGET}/libexec/cni" \
+    "${TARGET}/bin" \
+    "${TARGET}/sbin" \
+    "${TARGET}/share/man" \
+    "${TARGET}/lib" \
+    "${TARGET}/libexec"
 
 function install-jq() {
     echo "jq ${JQ_VERSION}"
@@ -919,14 +962,16 @@ function install-docker() {
         echo -e "${YELLOW}         $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
 
         local lsb_dist
-        lsb_dist="$(get_distribution)"
-        if test "${lsb_dist,,}" == "centos"; then
-            echo -e "${RED}WARNING: CentOS does not support iptables-legacy.${RESET}"
-            if ! install-iptables; then
-                echo -e "${RED}ERROR: Unable to install iptables-legacy.${RESET}"
-                exit 1
-            fi
-        fi
+        lsb_dist="$(get_lsb_distro_name)"
+        case "${lsb_dist,,}" in
+            centos|amzn|rocky)
+                echo -e "${RED}WARNING: CentOS does not support iptables-legacy.${RESET}"
+                if ! install-iptables; then
+                    echo -e "${RED}ERROR: Unable to install iptables-legacy.${RESET}"
+                    exit 1
+                fi
+                ;;
+        esac
     fi
     echo "Docker ${DOCKER_VERSION}"
     echo "Install binaries"
@@ -945,19 +990,21 @@ function install-docker() {
     curl -sLo "${PREFIX}/etc/systemd/system/docker.socket" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
     sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
     sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
-    if is_debian; then
+    if is_debian || is_clearlinux; then
         echo "Install init script for debian"
         curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
         sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
         sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+        chmod +x "${PREFIX}/etc/init.d/docker"
     elif is_redhat; then
         echo "Install init script for redhat"
         curl -sLo "${PREFIX}/etc/sysconfig/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
         curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
         # shellcheck disable=SC1083
-        sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+        sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
         sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+        chmod +x "${PREFIX}/etc/init.d/docker"
     elif is_alpine; then
         echo "Install openrc script for alpine"
         curl -sLo "${PREFIX}/etc/conf.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
@@ -966,12 +1013,15 @@ function install-docker() {
         sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
         sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
         sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/conf.d/docker"
+        chmod +x "${PREFIX}/etc/init.d/docker"
         openrc
     else
         echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
     fi
-    echo "Set executable bits"
-    chmod +x "${PREFIX}/etc/init.d/docker"
+    if ! has_systemd && ! test -f "${PREFIX}/etc/init.d/docker"; then
+        echo -e "${RED}ERROR: Systemd not available but unable to provide init script.${RESET}"
+        exit 1
+    fi
     echo "Install completion"
     curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
     curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
@@ -2239,13 +2289,13 @@ function install-patat() {
 function install-iptables() {
     echo "iptables ${IPTABLES_VERSION}"
     echo "Install binary"
-    if is_centos_7; then
+    if is_centos_7 || is_amzn_2; then
         curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
         | tar -xzC "${TARGET}" --no-same-owner
 
-    #elif is_centos_8; then
-    #    curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
-    #    | tar -xzC "${TARGET}" --no-same-owner
+    elif is_centos_8 || is_rockylinux; then
+        curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
+        | tar -xzC "${TARGET}" --no-same-owner
 
     else
         echo -e "${RED}ERROR: Unknown version of CentOS ($(get_centos_version))${RESET}"

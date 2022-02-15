@@ -46,31 +46,31 @@
       "matchFiles": [ "^env/amazonlinux-2/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "amazonlinux" ],
-      "allowedVersions": "2.0"
+      "allowedVersions": "<=2.0"
     },
     {
       "matchFiles": [ "^env/centos-7/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "centos" ],
-      "allowedVersions": "7"
+      "allowedVersions": "<=7"
     },
     {
       "matchFiles": [ "^env/centos-8/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "centos" ],
-      "allowedVersions": "8"
+      "allowedVersions": "<=8"
     },
     {
       "matchFiles": [ "^env/debian-11/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "debian" ],
-      "allowedVersions": "11"
+      "allowedVersions": "<=11"
     },
     {
       "matchFiles": [ "^env/fedora-35/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "fedora" ],
-      "allowedVersions": "35"
+      "allowedVersions": "<=35"
     },
     {
       "matchFiles": [ "^env/opensuse-leap-15/Dockerfile$" ],
@@ -82,7 +82,7 @@
       "matchFiles": [ "^env/rockylinux-8/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "rockylinux" ],
-      "allowedVersions": "8"
+      "allowedVersions": "<=8"
     },
     {
       "matchFiles": [ "^env/ubuntu-20.04/Dockerfile$" ],
