@@ -96,6 +96,13 @@
       "matchPackageNames": [ "ubuntu" ],
       "allowedVersions": "21.04",
       "automerge": false
+    },
+    {
+      "matchFiles": [ "^env/ubuntu-22.04/Dockerfile" ],
+      "matchDatasources": [ "docker" ],
+      "matchPackageNames": [ "ubuntu" ],
+      "allowedVersions": "22.04",
+      "automerge": false
     }
   ],
 
