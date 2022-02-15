@@ -13,6 +13,10 @@
 
   "recreateClosed": true,
 
+  "docker": {
+    "pinDigests": true
+  },
+
   "major": {
     "labels": ["type/renovate", "bump/major"]
   },
@@ -101,10 +105,6 @@
       "allowedVersions": "22.04"
     }
   ],
-
-  "docker": {
-    "pinDigests": true
-  },
 
   "regexManagers": [
     {
