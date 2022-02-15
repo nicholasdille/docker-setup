@@ -1277,9 +1277,9 @@ function install-buildx() {
 function install-manifest-tool() {
     echo "manifest-tool ${MANIFEST_TOOL_VERSION}"
     echo "Install binary"
-    curl -sLo "${TARGET}/bin/manifest-tool" "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
-    echo "Set executable bits"
-    chmod +x "${TARGET}/bin/manifest-tool"
+    curl -sL "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/binaries-manifest-tool-${MANIFEST_TOOL_VERSION}.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner
+    mv "${TARGET}/bin/manifest-tool-linux-amd64" "${TARGET}/bin/manifest-tool"
 }
 
 function install-buildkit() {
