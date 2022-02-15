@@ -531,7 +531,7 @@ if ${ONLY_INSTALLED}; then
 fi
 
 echo -e "docker-setup includes ${#tools[*]} tools:"
-echo -e "(${GREEN}installed${RESET}, ${YELLOW}planned${RESET}, ${GREY}skipped${RESET}, up-to-date ${GREEN}${CHECK_MARK}${RESET}, outdated ${RED}${CROSS_MARK}${RESET})"
+echo -e "(${GREEN}installed${RESET}/${YELLOW}planned${RESET}/${GREY}skipped${RESET}, up-to-date ${GREEN}${CHECK_MARK}${RESET}/outdated ${RED}${CROSS_MARK}${RESET})"
 echo
 declare -A tool_version
 declare -a tool_install
