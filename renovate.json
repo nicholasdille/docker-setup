@@ -341,7 +341,8 @@
       "matchStrings": [ "GVISOR_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "google/gvisor",
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^release-(?<version>.+?)\\.0$"
+      "extractVersionTemplate": "^release-(?<version>.+?)\\.0$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
