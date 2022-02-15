@@ -11,8 +11,6 @@
     "regex"
   ],
 
-  "recreateClosed": true,
-
   "docker": {
     "pinDigests": true
   },
