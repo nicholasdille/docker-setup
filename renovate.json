@@ -31,78 +31,74 @@
 
   "packageRules": [
     {
+      "matchFiles": [ "^docker-setup.(sh|ps1)$" ],
       "updateTypes": ["pin", "digest", "patch", "minor", "major"],
+      "automerge": true
+    },
+    {
+      "matchDatasources": [ "docker" ],
+      "updateTypes": ["pin", "digest"],
       "automerge": true
     },
     {
       "matchFiles": [ "^env/amazonlinux-2/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "amazonlinux" ],
-      "allowedVersions": "2.0",
-      "automerge": false
+      "allowedVersions": "2.0"
     },
     {
       "matchFiles": [ "^env/centos-7/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "centos" ],
-      "allowedVersions": "7",
-      "automerge": false
+      "allowedVersions": "7"
     },
     {
       "matchFiles": [ "^env/centos-8/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "centos" ],
-      "allowedVersions": "8",
-      "automerge": false
+      "allowedVersions": "8"
     },
     {
       "matchFiles": [ "^env/debian-11/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "debian" ],
-      "allowedVersions": "11",
-      "automerge": false
+      "allowedVersions": "11"
     },
     {
       "matchFiles": [ "^env/fedora-35/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "fedora" ],
-      "allowedVersions": "35",
-      "automerge": false
+      "allowedVersions": "35"
     },
     {
       "matchFiles": [ "^env/opensuse-leap-15/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "opensuse/leap" ],
-      "allowedVersions": "/^[0-9]+\\.[0-9]+(\\.[0-9]+)?$/",
-      "automerge": false
+      "allowedVersions": "/^[0-9]+\\.[0-9]+(\\.[0-9]+)?$/"
     },
     {
       "matchFiles": [ "^env/rockylinux-8/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "rockylinux" ],
-      "allowedVersions": "8",
-      "automerge": false
+      "allowedVersions": "8"
     },
     {
       "matchFiles": [ "^env/ubuntu-20.04/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "ubuntu" ],
-      "allowedVersions": "20.04",
-      "automerge": false
+      "allowedVersions": "20.04"
     },
     {
       "matchFiles": [ "^env/ubuntu-21.04/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "ubuntu" ],
-      "allowedVersions": "21.04",
-      "automerge": false
+      "allowedVersions": "21.04"
     },
     {
       "matchFiles": [ "^env/ubuntu-22.04/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "ubuntu" ],
-      "allowedVersions": "22.04",
-      "automerge": false
+      "allowedVersions": "22.04"
     }
   ],
 
