@@ -1,4 +1,4 @@
-FROM clearlinux:latest@sha256:48ba652957093eaf8f916bf63d8e776ed7830627f2ce3dda733c47228795d285
+FROM clearlinux:latest@sha256:58ba41cd2ca0529523c249e9f5ef69d8faeef0fd0f71c592d304894cc0531bbe
 #
 COPY env/run.sh /
 COPY docker-setup.sh /
