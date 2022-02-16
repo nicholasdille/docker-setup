@@ -169,7 +169,7 @@ declare -A tool_deps
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
     conmon containerd containerssh cosign crane crictl crun ctop dasel dive
-    docker docker-compose docker-machine docker-scan docuum dry duffle
+    docker docker-compose docker-machine docker-scan docuum dry duffle dyff
     firecracker firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter
     glow gvisor helm helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d
     k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
@@ -284,6 +284,7 @@ DOCKER_VERSION=20.10.12
 DOCUUM_VERSION=0.20.4
 DRY_VERSION=0.11.1
 DUFFLE_VERSION=0.3.5-beta.1
+DYFF_VERSION=1.5.1
 FIRECRACKER_VERSION=1.0.0
 FIRECTL_VERSION=0.1.0
 FOOTLOOSE_VERSION=0.6.3
@@ -387,6 +388,7 @@ function docker_scan_is_installed()                { is_executable "${DOCKER_PLU
 function docuum_is_installed()                     { is_executable "${TARGET}/bin/docuum"; }
 function dry_is_installed()                        { is_executable "${TARGET}/bin/dry"; }
 function duffle_is_installed()                     { is_executable "${TARGET}/bin/duffle"; }
+function dyff_is_installed()                       { is_executable "${TARGET}/bin/dyff"; }
 function firecracker_is_installed()                { is_executable "${TARGET}/bin/firecracker"; }
 function firectl_is_installed()                    { is_executable "${TARGET}/bin/firectl"; }
 function footloose_is_installed()                  { is_executable "${TARGET}/bin/footloose"; }
@@ -470,6 +472,7 @@ function docker_scan_matches_version()                {   test -f "${DOCKER_SETU
 function docuum_matches_version()                     {   test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
 function dry_matches_version()                        {   test "$(${TARGET}/bin/dry --version | cut -d, -f1 | cut -d' ' -f3)"                        == "${DRY_VERSION}"; }
 function duffle_matches_version()                     {   test "$(${TARGET}/bin/duffle version)"                                                     == "${DUFFLE_VERSION}"; }
+function dyff_matches_version()                       {   test "$(${TARGET}/bin/dyff version | cut -d' ' -f3)"                                       == "${DYFF_VERSION}"; }
 function firecracker_matches_version()                {   test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
 function firectl_matches_version()                    {   test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
 function footloose_matches_version()                  {   test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
@@ -2327,6 +2330,17 @@ function install-containerssh() {
         containerssh-testauthconfigserver
     mkdir -p "${DOCKER_SETUP_CACHE}/containerssh"
     touch "${DOCKER_SETUP_CACHE}/containerssh/${CONTAINERSSH_VERSION}"
+}
+
+function install-dyff() {
+    echo "dyff ${DYFF_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/homeport/dyff/releases/download/v${DYFF_VERSION}/dyff_${DYFF_VERSION}_linux_amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        dyff
+    "${TARGET}/bin/dyff" completion bash >"${TARGET}/share/bash-completion/completions/dyff"
+    "${TARGET}/bin/dyff" completion fish >"${TARGET}/share/fish/vendor_completions.d/dyff.fish"
+    "${TARGET}/bin/dyff" completion zsh >"${TARGET}/share/zsh/vendor-completions/_dyff"
 }
 
 function children_are_running() {

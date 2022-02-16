@@ -298,6 +298,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "DYFF_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "homeport/dyff",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "FIRECRACKER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "firecracker-microvm/firecracker",
       "datasourceTemplate": "github-releases",
