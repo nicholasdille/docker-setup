@@ -588,6 +588,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "MITMPROXY_VERSION=(?<currentValue>.*?)\n", "MitmproxyVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "mitmproxy/mitmproxy",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "NERDCTL_VERSION=(?<currentValue>.*?)\n", "NerdctlVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "containerd/nerdctl",
       "datasourceTemplate": "github-releases",

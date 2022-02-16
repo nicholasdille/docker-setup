@@ -174,9 +174,9 @@ tools=(
     glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
     jwt k3d k3s k3sup k9s kapp kind kompose krew kubectl kubectl-build
     kubectl-free kubectl-resources kubeletctl kubefire kubeswitch kustomize
-    lazydocker lazygit manifest-tool minikube nerdctl norouter notation oras
-    patat portainer porter podman qemu regclient rootlesskit runc skopeo
-    slirp4netns sops sshocker stargz-snapshotter umoci trivy yq ytt
+    lazydocker lazygit manifest-tool minikube mitmproxy nerdctl norouter
+    notation oras patat portainer porter podman qemu regclient rootlesskit
+    runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
@@ -325,6 +325,7 @@ LAZYDOCKER_VERSION=0.12
 LAZYGIT_VERSION=0.32.2
 MINIKUBE_VERSION=1.25.1
 MANIFEST_TOOL_VERSION=2.0.0
+MITMPROXY_VERSION=7.0.4
 NERDCTL_VERSION=0.16.1
 NOROUTER_VERSION=0.6.4
 NOTATION_VERSION=0.7.1-alpha.1
@@ -431,6 +432,7 @@ function lazydocker_is_installed()                 { is_executable "${TARGET}/bi
 function lazygit_is_installed()                    { is_executable "${TARGET}/bin/lazygit"; }
 function manifest_tool_is_installed()              { is_executable "${TARGET}/bin/manifest-tool"; }
 function minikube_is_installed()                   { is_executable "${TARGET}/bin/minikube"; }
+function mitmproxy_is_installed()                  { is_executable "${TARGET}/bin/mitmproxy"; }
 function nerdctl_is_installed()                    { is_executable "${TARGET}/bin/nerdctl"; }
 function norouter_is_installed()                   { is_executable "${TARGET}/bin/norouter"; }
 function notation_is_installed()                   { is_executable "${TARGET}/bin/notation"; }
@@ -519,6 +521,7 @@ function lazydocker_matches_version()                 {   test "$(${TARGET}/bin/
 function lazygit_matches_version()                    {   test "$(${TARGET}/bin/lazygit --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,)"          == "${LAZYGIT_VERSION}"; }
 function manifest_tool_matches_version()              {   test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
 function minikube_matches_version()                   {   test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
+function mitmproxy_matches_version()                  {   test "$(LANG=en_US.UTF-8 "${TARGET}/bin/mitmproxy" --version | head -n 1 | cut -d' ' -f2)" == "${MITMPROXY_VERSION}"; }
 function nerdctl_matches_version()                    {   test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
 function norouter_matches_version()                   {   test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
 function notation_matches_version()                   {   test "$(${TARGET}/bin/notation --version | cut -d' ' -f3)"                                 == "${NOTATION_VERSION}"; }
@@ -2391,6 +2394,16 @@ function install-k3sup() {
     curl -sLo "${TARGET}/bin/k3sup" "https://github.com/alexellis/k3sup/releases/download/${K3SUP_VERSION}/k3sup"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/k3sup"
+}
+
+function install-mitmproxy() {
+    echo "mitmproxy ${MITMPROXY_VERSION}"
+    echo "Install binary"
+    curl -sL "https://snapshots.mitmproxy.org/${MITMPROXY_VERSION}/mitmproxy-${MITMPROXY_VERSION}-linux.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        mitmproxy \
+        mitmdump \
+        mitmweb
 }
 
 function children_are_running() {

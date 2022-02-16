@@ -39,6 +39,7 @@ $LazydockerVersion = "0.12"
 $LazygitVersion = "0.32.2"
 $ManifestToolVersion = "2.0.0"
 $MinikubeVersion = "1.25.1"
+$MitmproxyVersion = "7.0.4"
 $NerdctlVersion = "0.16.1"
 $NorouterVersion = "0.6.4"
 $NotationVersion = "0.7.1-alpha.1"
@@ -217,3 +218,7 @@ Invoke-WebRequest -Uri "https://github.com/notaryproject/notation/releases/downl
 
 # k3sup
 Invoke-WebRequest -Uri "https://github.com/alexellis/k3sup/releases/download/$K3supVersion/k3sup.exe" -OutFile "$Env:TARGET\k3sup.exe"
+
+# mitmproxy
+Invoke-WebRequest -Uri "https://snapshots.mitmproxy.org/$MitmproxyVersion/mitmproxy-$($MitmproxyVersion)-windows.zip" -OutFile "$Env:UserProfile\Downloads\mitmproxy-$($MitmproxyVersion)-windows.zip"
+# TODO: unpack
