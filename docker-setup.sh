@@ -174,8 +174,8 @@ tools=(
     glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
     jwt k3d k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
     kubectl-resources kubeletctl kubefire kubeswitch kustomize lazydocker
-    lazygit manifest-tool minikube nerdctl oras patat portainer porter podman
-    qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
+    lazygit manifest-tool minikube nerdctl norouter oras patat portainer porter
+    podman qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
     stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["containerd"]="runc"
@@ -325,6 +325,7 @@ LAZYGIT_VERSION=0.32.2
 MINIKUBE_VERSION=1.25.1
 MANIFEST_TOOL_VERSION=2.0.0
 NERDCTL_VERSION=0.16.1
+NOROUTER_VERSION=0.6.4
 ORAS_VERSION=0.12.0
 PATAT_VERSION=0.8.7.0
 PODMAN_VERSION=3.4.4
@@ -428,6 +429,7 @@ function lazygit_is_installed()                    { is_executable "${TARGET}/bi
 function manifest_tool_is_installed()              { is_executable "${TARGET}/bin/manifest-tool"; }
 function minikube_is_installed()                   { is_executable "${TARGET}/bin/minikube"; }
 function nerdctl_is_installed()                    { is_executable "${TARGET}/bin/nerdctl"; }
+function norouter_is_installed()                   { is_executable "${TARGET}/bin/norouter"; }
 function oras_is_installed()                       { is_executable "${TARGET}/bin/oras"; }
 function patat_is_installed()                      { is_executable "${TARGET}/bin/patat"; }
 function podman_is_installed()                     { is_executable "${TARGET}/bin/podman"; }
@@ -513,6 +515,7 @@ function lazygit_matches_version()                    {   test "$(${TARGET}/bin/
 function manifest_tool_matches_version()              {   test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
 function minikube_matches_version()                   {   test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function nerdctl_matches_version()                    {   test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
+function norouter_matches_version()                   {   test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
 function oras_matches_version()                       {   test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
 function patat_matches_version()                      { { test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}" || test -f "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"; }; }
 function podman_matches_version()                     {   test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
@@ -2355,6 +2358,14 @@ function install-hcloud() {
     "${TARGET}/bin/hcloud" completion bash >"${TARGET}/share/bash-completion/completions/hcloud"
     "${TARGET}/bin/hcloud" completion fish >"${TARGET}/share/fish/vendor_completions.d/hcloud.fish"
     "${TARGET}/bin/hcloud" completion zsh >"${TARGET}/share/zsh/vendor-completions/_hcloud"
+}
+
+function install-norouter() {
+    echo "norouter ${NOROUTER_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/norouter/norouter/releases/download/v${NOROUTER_VERSION}/norouter-Linux-x86_64.tgz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        norouter
 }
 
 function children_are_running() {

@@ -39,6 +39,7 @@ $LazygitVersion = "0.32.2"
 $ManifestToolVersion = "2.0.0"
 $MinikubeVersion = "1.25.1"
 $NerdctlVersion = "0.16.1"
+$NorouterVersion = "0.6.4"
 $OrasVersion = "0.12.0"
 $PorterVersion = "0.38.8"
 $RegclientVersion = "0.3.10"
@@ -202,4 +203,8 @@ Invoke-WebRequest -Uri "https://github.com/ContainerSSH/ContainerSSH/releases/do
 
 # hcloud
 Invoke-WebRequest -Uri "https://github.com/hetznercloud/cli/releases/download/v$HcloudVersion/hcloud-windows-amd64.zip" -OutFile "$Env:UserProfile\Downloads\hcloud-windows-amd64.zip"
+# TODO: unpack
+
+# norouter
+Invoke-WebRequest -Uri "https://github.com/norouter/norouter/releases/download/v$NorouterVersion/norouter-Windows-x64.zip" -OutFile "$Env:UserProfile\Downloads\norouter-Windows-x64.zip"
 # TODO: unpack
