@@ -21,6 +21,7 @@ $DockerScanVersion = "0.17.0"
 $DryVersion = "0.11.1"
 $DuffleVersion = "0.3.5-beta.1"
 $GlowVersion = "1.4.1"
+$HcloudVersion = "1.29.0"
 $HelmVersion = "3.8.0"
 $HubToolVersion = "0.4.4"
 $JpVersion = "0.2.1"
@@ -197,4 +198,8 @@ Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-ytt/releases/down
 
 # containerssh
 Invoke-WebRequest -Uri "https://github.com/ContainerSSH/ContainerSSH/releases/download/v$ContainersshVersion/containerssh_$($ContainersshVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\containerssh_$($ContainersshVersion)_windows_amd64.zip"
+# TODO: unpack
+
+# hcloud
+Invoke-WebRequest -Uri "https://github.com/hetznercloud/cli/releases/download/v$HcloudVersion/hcloud-windows-amd64.zip" -OutFile "$Env:UserProfile\Downloads\hcloud-windows-amd64.zip"
 # TODO: unpack

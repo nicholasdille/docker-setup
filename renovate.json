@@ -375,6 +375,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "HCLOUD_VERSION=(?<currentValue>.*?)\n", "HcloudVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "hetznercloud/cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "HELMFILE_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "roboll/helmfile",

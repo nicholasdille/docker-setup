@@ -171,8 +171,8 @@ tools=(
     conmon containerd containerssh cosign crane crictl crun ctop dasel dive
     docker docker-compose docker-machine docker-scan docuum dry duffle dyff
     firecracker firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter
-    glow gvisor helm helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d
-    k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
+    glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
+    jwt k3d k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
     kubectl-resources kubeletctl kubefire kubeswitch kustomize lazydocker
     lazygit manifest-tool minikube nerdctl oras patat portainer porter podman
     qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
@@ -293,6 +293,7 @@ FUSE_OVERLAYFS_SNAPSHOTTER_VERSION=1.0.4
 GLOW_VERSION=1.4.1
 GO_VERSION=1.17.7
 GVISOR_VERSION=20220214
+HCLOUD_VERSION=1.29.0
 HELM_VERSION=3.8.0
 HELMFILE_VERSION=0.143.0
 IGNITE_VERSION=0.10.0
@@ -397,6 +398,7 @@ function fuse_overlayfs_snapshotter_is_installed() { is_executable "${TARGET}/bi
 function glow_is_installed()                       { is_executable "${TARGET}/bin/glow"; }
 function gvisor_is_installed()                     { is_executable "${TARGET}/bin/runsc"; }
 function ignite_is_installed()                     { is_executable "${TARGET}/bin/ignite"; }
+function hcloud_is_installed()                     { is_executable "${TARGET}/bin/hcloud"; }
 function helm_is_installed()                       { is_executable "${TARGET}/bin/helm"; }
 function helmfile_is_installed()                   { is_executable "${TARGET}/bin/helmfile"; }
 function hub_tool_is_installed()                   { is_executable "${TARGET}/bin/hub-tool"; }
@@ -481,6 +483,7 @@ function fuse_overlayfs_snapshotter_matches_version() { "${TARGET}/bin/container
 function glow_matches_version()                       {   test "$(${TARGET}/bin/glow --version | cut -d' ' -f3)"                                     == "${GLOW_VERSION}"; }
 function gvisor_matches_version()                     {   test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
 function ignite_matches_version()                     {   test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
+function hcloud_matches_version()                     {   test "$(${TARGET}/bin/hcloud version | cut -d' ' -f2)"                                     == "${HCLOUD_VERSION}"; }
 function helm_matches_version()                       {   test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
 function helmfile_matches_version()                   {   test "$(${TARGET}/bin/helmfile --version | cut -d' ' -f3)"                                 == "v${HELMFILE_VERSION}"; }
 function hub_tool_matches_version()                   {   test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1 | cut -d' ' -f4)"                   == "v${HUB_TOOL_VERSION}"; }
@@ -2341,6 +2344,17 @@ function install-dyff() {
     "${TARGET}/bin/dyff" completion bash >"${TARGET}/share/bash-completion/completions/dyff"
     "${TARGET}/bin/dyff" completion fish >"${TARGET}/share/fish/vendor_completions.d/dyff.fish"
     "${TARGET}/bin/dyff" completion zsh >"${TARGET}/share/zsh/vendor-completions/_dyff"
+}
+
+function install-hcloud() {
+    echo "hcloud ${HCLOUD_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/hetznercloud/cli/releases/download/v${HCLOUD_VERSION}/hcloud-linux-amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        hcloud
+    "${TARGET}/bin/hcloud" completion bash >"${TARGET}/share/bash-completion/completions/hcloud"
+    "${TARGET}/bin/hcloud" completion fish >"${TARGET}/share/fish/vendor_completions.d/hcloud.fish"
+    "${TARGET}/bin/hcloud" completion zsh >"${TARGET}/share/zsh/vendor-completions/_hcloud"
 }
 
 function children_are_running() {
