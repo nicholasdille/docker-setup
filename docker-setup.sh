@@ -172,11 +172,11 @@ tools=(
     docker docker-compose docker-machine docker-scan docuum dry duffle dyff
     firecracker firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter
     glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
-    jwt k3d k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
-    kubectl-resources kubeletctl kubefire kubeswitch kustomize lazydocker
-    lazygit manifest-tool minikube nerdctl norouter notation oras patat
-    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
-    sops sshocker stargz-snapshotter umoci trivy yq ytt
+    jwt k3d k3s k3sup k9s kapp kind kompose krew kubectl kubectl-build
+    kubectl-free kubectl-resources kubeletctl kubefire kubeswitch kustomize
+    lazydocker lazygit manifest-tool minikube nerdctl norouter notation oras
+    patat portainer porter podman qemu regclient rootlesskit runc skopeo
+    slirp4netns sops sshocker stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
@@ -307,6 +307,7 @@ JQ_VERSION=1.6
 HUB_TOOL_VERSION=0.4.4
 K3D_VERSION=5.3.0
 K3S_VERSION=1.23.3+k3s1
+K3SUP_VERSION=0.11.3
 K9S_VERSION=0.25.18
 KAPP_VERSION=0.45.0
 KIND_VERSION=0.11.1
@@ -412,6 +413,7 @@ function jq_is_installed()                         { is_executable "${TARGET}/bi
 function jwt_is_installed()                        { is_executable "${TARGET}/bin/jwt"; }
 function k3d_is_installed()                        { is_executable "${TARGET}/bin/k3d"; }
 function k3s_is_installed()                        { is_executable "${TARGET}/bin/k3s"; }
+function k3sup_is_installed()                      { is_executable "${TARGET}/bin/k3sup"; }
 function k9s_is_installed()                        { is_executable "${TARGET}/bin/k9s"; }
 function kind_is_installed()                       { is_executable "${TARGET}/bin/kind"; }
 function kompose_is_installed()                    { is_executable "${TARGET}/bin/kompose"; }
@@ -499,6 +501,7 @@ function jq_matches_version()                         {   test "$(${TARGET}/bin/
 function jwt_matches_version()                        {   test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
 function k3d_matches_version()                        {   test "$(${TARGET}/bin/k3d version | head -n 1 | cut -d' ' -f3)"                            == "v${K3D_VERSION}"; }
 function k3s_matches_version()                        {   test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
+function k3sup_matches_version()                      {   test "$(${TARGET}/bin/k3sup version | grep Version | cut -d' ' -f2)"                       == "${K3SUP_VERSION}"; }
 function k9s_matches_version()                        {   test "$(${TARGET}/bin/k9s version --short | grep "^Version" | cut -dv -f2)"                == "${K9S_VERSION}"; }
 function kind_matches_version()                       {   test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
 function kompose_matches_version()                    {   test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
@@ -2380,6 +2383,14 @@ function install-notation() {
         docker-generate \
         docker-notation
     mv "${TARGET}/bin/docker-generate" "${TARGET}/bin/docker-notation" "${DOCKER_PLUGINS_PATH}"
+}
+
+function install-k3sup() {
+    echo "k3sup ${K3SUP_VERSION}"
+    echo "Install binary"
+    curl -sLo "${TARGET}/bin/k3sup" "https://github.com/alexellis/k3sup/releases/download/${K3SUP_VERSION}/k3sup"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/k3sup"
 }
 
 function children_are_running() {

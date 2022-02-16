@@ -459,6 +459,12 @@
       "versioningTemplate": "loose"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "K3SUP_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "alexellis/k3sup",
+      "datasourceTemplate": "github-releases"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "K9S_VERSION=(?<currentValue>.*?)\n", "K9sVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "derailed/k9s",

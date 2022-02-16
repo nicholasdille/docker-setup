@@ -28,6 +28,7 @@ $JpVersion = "0.2.1"
 $JqVersion = "1.6"
 $JwtVersion = "5.0.2"
 $K3dVersion = "5.3.0"
+$K3supVersion = "0.11.3"
 $K9sVersion = "0.25.18"
 $KappVersion = "0.45.0"
 $KindVersion = "0.11.1"
@@ -213,3 +214,6 @@ Invoke-WebRequest -Uri "https://github.com/norouter/norouter/releases/download/v
 # notation
 Invoke-WebRequest -Uri "https://github.com/notaryproject/notation/releases/download/v$NotationVersion/notation_$($NotationVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\notation_$($NotationVersion)_windows_amd64.zip"
 # TODO: unpack
+
+# k3sup
+Invoke-WebRequest -Uri "https://github.com/alexellis/k3sup/releases/download/$K3supVersion/k3sup.exe" -OutFile "$Env:TARGET\k3sup.exe"
