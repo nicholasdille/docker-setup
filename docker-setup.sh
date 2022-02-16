@@ -175,8 +175,8 @@ tools=(
     kind kompose krew kubectl kubectl-build kubectl-free kubectl-resources
     kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
     minikube nerdctl oras patat portainer porter podman qemu regclient
-    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq
-    ytt
+    rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
+    trivy yq ytt
 )
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
@@ -335,6 +335,7 @@ RUST_VERSION=1.58.1
 SKOPEO_VERSION=1.6.0
 SLIRP4NETNS_VERSION=1.1.12
 SOPS_VERSION=3.7.1
+SSHOCKER_VERSION=0.2.2
 STARGZ_SNAPSHOTTER_VERSION=0.11.0
 TRIVY_VERSION=0.23.0
 UMOCI_VERSION=0.4.7
@@ -433,6 +434,7 @@ function runc_is_installed()                       { is_executable "${TARGET}/bi
 function skopeo_is_installed()                     { is_executable "${TARGET}/bin/skopeo"; }
 function slirp4netns_is_installed()                { is_executable "${TARGET}/bin/slirp4netns"; }
 function sops_is_installed()                       { is_executable "${TARGET}/bin/sops"; }
+function sshocker_is_installed()                   { is_executable "${TARGET}/bin/sshocker"; }
 function stargz_snapshotter_is_installed()         { is_executable "${TARGET}/bin/containerd-stargz-grpc"; }
 function trivy_is_installed()                      { is_executable "${TARGET}/bin/trivy"; }
 function umoci_is_installed()                      { is_executable "${TARGET}/bin/umoci"; }
@@ -514,6 +516,7 @@ function runc_matches_version()                       {   test "$(${TARGET}/bin/
 function skopeo_matches_version()                     {   test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)"                                   == "${SKOPEO_VERSION}"; }
 function slirp4netns_matches_version()                {   test "$(${TARGET}/bin/slirp4netns --version | head -n 1 | cut -d' ' -f3)"                  == "${SLIRP4NETNS_VERSION}"; }
 function sops_matches_version()                       {   test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
+function sshocker_matches_version()                   {   test "$(${TARGET}/bin/sshocker --version | cut -d' ' -f3)"                                 == "v${SSHOCKER_VERSION}"; }
 function stargz_snapshotter_matches_version()         {   test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
 function trivy_matches_version()                      {   test "$(${TARGET}/bin/trivy --version | cut -d' ' -f2)"                                    == "${TRIVY_VERSION}"; }
 function umoci_matches_version()                      {   test "$(${TARGET}/bin/umoci --version | cut -d' ' -f3)"                                    == "${UMOCI_VERSION}"; }
@@ -2301,6 +2304,14 @@ function install-iptables() {
         echo -e "${RED}ERROR: Unknown version of CentOS ($(get_centos_version))${RESET}"
         return 1
     fi
+}
+
+function install-sshocker() {
+    echo "sshocker ${SSHOCKER_VERSION}"
+    echo "Install binary"
+    curl -sLo "${TARGET}/bin/sshocker" "https://github.com/lima-vm/sshocker/releases/download/v${SSHOCKER_VERSION}/sshocker-Linux-x86_64"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/sshocker"
 }
 
 function children_are_running() {

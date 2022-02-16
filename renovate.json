@@ -659,6 +659,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "SSHOCKER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "lima-vm/sshocker",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "STARGZ_SNAPSHOTTER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "containerd/stargz-snapshotter",
       "datasourceTemplate": "github-releases",
