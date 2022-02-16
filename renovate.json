@@ -185,6 +185,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "CONTAINERSSH=(?<currentValue>.*?)\n", "ContainersshVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "ContainerSSH/ContainerSSH",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "COSIGN_VERSION=(?<currentValue>.*?)\n", "CosignVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "sigstore/cosign",
       "datasourceTemplate": "github-releases",

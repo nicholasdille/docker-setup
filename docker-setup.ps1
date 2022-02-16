@@ -8,6 +8,7 @@ New-Item -Path "$Env:TARGET" -Type Directory -Force
 
 $ArkadeVersion = "0.8.14"
 $BuildxVersion = "0.7.1"
+$ContainersshVersion = "0.4.1"
 $CosignVersion = "1.5.1"
 $CraneVersion = "0.8.0"
 $CrictlVersion = "1.23.0"
@@ -193,3 +194,7 @@ Invoke-WebRequest -Uri "https://github.com/mozilla/sops/releases/download/v$Sops
 
 # ytt
 Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v$YttVersion/ytt-windows-amd64.exe" -OutFile "$Env:TARGET\ytt.exe"
+
+# containerssh
+Invoke-WebRequest -Uri "https://github.com/ContainerSSH/ContainerSSH/releases/download/v$ContainersshVersion/containerssh_$($ContainersshVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\containerssh_$($ContainersshVersion)_windows_amd64.zip"
+# TODO: unpack

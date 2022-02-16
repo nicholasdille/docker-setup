@@ -168,15 +168,15 @@ declare -a tools
 declare -A tool_deps
 tools=(
     arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crane crictl crun ctop dasel dive docker
-    docker-compose docker-machine docker-scan docuum dry duffle firecracker
-    firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter glow gvisor
-    helm helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp
-    kind kompose krew kubectl kubectl-build kubectl-free kubectl-resources
-    kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
-    minikube nerdctl oras patat portainer porter podman qemu regclient
-    rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
-    trivy yq ytt
+    conmon containerd containerssh cosign crane crictl crun ctop dasel dive
+    docker docker-compose docker-machine docker-scan docuum dry duffle
+    firecracker firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter
+    glow gvisor helm helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d
+    k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
+    kubectl-resources kubeletctl kubefire kubeswitch kustomize lazydocker
+    lazygit manifest-tool minikube nerdctl oras patat portainer porter podman
+    qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
+    stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
@@ -268,6 +268,7 @@ CNI_ISOLATION_VERSION=0.0.4
 CNI_VERSION=1.0.1
 CONMON_VERSION=2.1.0
 CONTAINERD_VERSION=1.5.9
+CONTAINERSSH_VERSION=0.4.1
 COSIGN_VERSION=1.5.1
 CRANE_VERSION=0.8.0
 CRICTL_VERSION=1.23.0
@@ -369,6 +370,7 @@ function cni_is_installed()                        { is_executable "${TARGET}/li
 function cni_isolation_is_installed()              { is_executable "${TARGET}/libexec/cni/isolation"; }
 function conmon_is_installed()                     { is_executable "${TARGET}/bin/conmon"; }
 function containerd_is_installed()                 { is_executable "${TARGET}/bin/containerd"; }
+function containerssh_is_installed()               { is_executable "${TARGET}/bin/containerssh"; }
 function cosign_is_installed()                     { is_executable "${TARGET}/bin/cosign"; }
 function crane_is_installed()                      { is_executable "${TARGET}/bin/crane"; }
 function crictl_is_installed()                     { is_executable "${TARGET}/bin/crictl"; }
@@ -451,6 +453,7 @@ function cni_matches_version()                        {   test "$(${TARGET}/libe
 function cni_isolation_matches_version()              {   test -f "${DOCKER_SETUP_CACHE}/cni-isolation/${CNI_ISOLATION_VERSION}"; }
 function conmon_matches_version()                     {   test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"           == "${CONMON_VERSION}"; }
 function containerd_matches_version()                 {   test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)"                               == "v${CONTAINERD_VERSION}"; }
+function containerssh_matches_version()               {   test -f "${DOCKER_SETUP_CACHE}/containerssh/${CONTAINERSSH_VERSION}"; }
 function cosign_matches_version()                     {   test "$(${TARGET}/bin/cosign version | grep GitVersion | tr -s ' ' | cut -d' ' -f2)"       == "v${COSIGN_VERSION}"; }
 function crane_matches_version()                      {   test "$(${TARGET}/bin/crane version)"                                                      == "${CRANE_VERSION}"; }
 function crictl_matches_version()                     {   test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
@@ -2312,6 +2315,18 @@ function install-sshocker() {
     curl -sLo "${TARGET}/bin/sshocker" "https://github.com/lima-vm/sshocker/releases/download/v${SSHOCKER_VERSION}/sshocker-Linux-x86_64"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/sshocker"
+}
+
+function install-containerssh() {
+    echo "containerssh ${CONTAINERSSH_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/ContainerSSH/ContainerSSH/releases/download/v${CONTAINERSSH_VERSION}/containerssh_${CONTAINERSSH_VERSION}_linux_amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        containerssh \
+        containerssh-auditlog-decoder \
+        containerssh-testauthconfigserver
+    mkdir -p "${DOCKER_SETUP_CACHE}/containerssh"
+    touch "${DOCKER_SETUP_CACHE}/containerssh/${CONTAINERSSH_VERSION}"
 }
 
 function children_are_running() {
