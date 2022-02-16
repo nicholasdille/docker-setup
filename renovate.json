@@ -596,6 +596,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "NOTATION_VERSION=(?<currentValue>.*?)\n", "NotationVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "notaryproject/notation",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "ORAS_VERSION=(?<currentValue>.*?)\n", "OrasVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "oras-project/oras",
       "datasourceTemplate": "github-releases",

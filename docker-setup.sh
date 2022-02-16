@@ -174,9 +174,9 @@ tools=(
     glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
     jwt k3d k3s k9s kapp kind kompose krew kubectl kubectl-build kubectl-free
     kubectl-resources kubeletctl kubefire kubeswitch kustomize lazydocker
-    lazygit manifest-tool minikube nerdctl norouter oras patat portainer porter
-    podman qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
-    stargz-snapshotter umoci trivy yq ytt
+    lazygit manifest-tool minikube nerdctl norouter notation oras patat
+    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
+    sops sshocker stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
@@ -326,6 +326,7 @@ MINIKUBE_VERSION=1.25.1
 MANIFEST_TOOL_VERSION=2.0.0
 NERDCTL_VERSION=0.16.1
 NOROUTER_VERSION=0.6.4
+NOTATION_VERSION=0.7.1-alpha.1
 ORAS_VERSION=0.12.0
 PATAT_VERSION=0.8.7.0
 PODMAN_VERSION=3.4.4
@@ -430,6 +431,7 @@ function manifest_tool_is_installed()              { is_executable "${TARGET}/bi
 function minikube_is_installed()                   { is_executable "${TARGET}/bin/minikube"; }
 function nerdctl_is_installed()                    { is_executable "${TARGET}/bin/nerdctl"; }
 function norouter_is_installed()                   { is_executable "${TARGET}/bin/norouter"; }
+function notation_is_installed()                   { is_executable "${TARGET}/bin/notation"; }
 function oras_is_installed()                       { is_executable "${TARGET}/bin/oras"; }
 function patat_is_installed()                      { is_executable "${TARGET}/bin/patat"; }
 function podman_is_installed()                     { is_executable "${TARGET}/bin/podman"; }
@@ -516,6 +518,7 @@ function manifest_tool_matches_version()              {   test "$(${TARGET}/bin/
 function minikube_matches_version()                   {   test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
 function nerdctl_matches_version()                    {   test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
 function norouter_matches_version()                   {   test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
+function notation_matches_version()                   {   test "$(${TARGET}/bin/notation --version | cut -d' ' -f3)"                                 == "${NOTATION_VERSION}"; }
 function oras_matches_version()                       {   test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
 function patat_matches_version()                      { { test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}" || test -f "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"; }; }
 function podman_matches_version()                     {   test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
@@ -2366,6 +2369,17 @@ function install-norouter() {
     curl -sL "https://github.com/norouter/norouter/releases/download/v${NOROUTER_VERSION}/norouter-Linux-x86_64.tgz" \
     | tar -xzC "${TARGET}/bin" --no-same-owner \
         norouter
+}
+
+function install-notation() {
+    echo "notation ${NOTATION_VERSION}"
+    echo "Install binary"
+    curl -sL "https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz" \
+    | tar -xzC "${TARGET}/bin" --no-same-owner \
+        notation \
+        docker-generate \
+        docker-notation
+    mv "${TARGET}/bin/docker-generate" "${TARGET}/bin/docker-notation" "${DOCKER_PLUGINS_PATH}"
 }
 
 function children_are_running() {

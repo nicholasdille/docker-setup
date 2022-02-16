@@ -40,6 +40,7 @@ $ManifestToolVersion = "2.0.0"
 $MinikubeVersion = "1.25.1"
 $NerdctlVersion = "0.16.1"
 $NorouterVersion = "0.6.4"
+$NotationVersion = "0.7.1-alpha.1"
 $OrasVersion = "0.12.0"
 $PorterVersion = "0.38.8"
 $RegclientVersion = "0.3.10"
@@ -207,4 +208,8 @@ Invoke-WebRequest -Uri "https://github.com/hetznercloud/cli/releases/download/v$
 
 # norouter
 Invoke-WebRequest -Uri "https://github.com/norouter/norouter/releases/download/v$NorouterVersion/norouter-Windows-x64.zip" -OutFile "$Env:UserProfile\Downloads\norouter-Windows-x64.zip"
+# TODO: unpack
+
+# notation
+Invoke-WebRequest -Uri "https://github.com/notaryproject/notation/releases/download/v$NotationVersion/notation_$($NotationVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\notation_$($NotationVersion)_windows_amd64.zip"
 # TODO: unpack
