@@ -862,7 +862,6 @@ function has_systemd() {
     if test "$(basename "${INIT}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
         return 0
     else
-        >&2 echo -e "${YELLOW}[WARNING] Did not find systemd.${RESET}"
         return 1
     fi
 }
@@ -877,7 +876,7 @@ function docker_is_running() {
 
 function wait_for_docker() {
     local SLEEP=10
-    local RETRIES=12
+    local RETRIES=30
 
     local RETRY=0
     while ! docker_is_running && test "${RETRY}" -le "${RETRIES}"; do
@@ -978,6 +977,7 @@ if type update-grub >/dev/null 2>&1 && test "${CGROUP_VERSION}" == "v2" && test 
 fi
 
 function install-docker() {
+    SECONDS=0
     echo "Docker ${DOCKER_VERSION}"
     echo "Check for iptables/nftables"
     if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
@@ -1006,7 +1006,6 @@ function install-docker() {
                 ;;
         esac
     fi
-    echo "Docker ${DOCKER_VERSION}"
     echo "Install binaries"
     curl -sL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
     | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
@@ -1018,135 +1017,144 @@ function install-docker() {
     | tar -xzC "${TARGET}/libexec/docker/bin" --strip-components=1 --no-same-owner
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless.sh" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${TARGET}/bin"
-    echo "Install systemd units"
-    curl -sLo "${PREFIX}/etc/systemd/system/docker.service" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
-    curl -sLo "${PREFIX}/etc/systemd/system/docker.socket" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
-    sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
-    sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
-    if is_debian || is_clearlinux; then
-        echo "Install init script for debian"
-        curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-        curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
-        sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
-        chmod +x "${PREFIX}/etc/init.d/docker"
-    elif is_redhat; then
-        echo "Install init script for redhat"
-        curl -sLo "${PREFIX}/etc/sysconfig/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
-        curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
-        # shellcheck disable=SC1083
-        sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-        sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
-        chmod +x "${PREFIX}/etc/init.d/docker"
-    elif is_alpine; then
-        echo "Install openrc script for alpine"
-        curl -sLo "${PREFIX}/etc/conf.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
-        curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
-        # shellcheck disable=1083
-        sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-        sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
-        sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/conf.d/docker"
-        chmod +x "${PREFIX}/etc/init.d/docker"
-        openrc
-    else
-        echo -e "${YELLOW}[WARNING] Unable to install init script because the distributon is unknown.${RESET}"
-    fi
-    if ! has_systemd && ! test -f "${PREFIX}/etc/init.d/docker"; then
-        echo -e "${RED}[ERROR] Systemd not available but unable to provide init script.${RESET}"
-        exit 1
-    fi
     echo "Install completion"
     curl -sLo "${TARGET}/share/bash-completion/completions/docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker"
     curl -sLo "${TARGET}/share/fish/vendor_completions.d/docker.fish" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish"
     curl -sLo "${TARGET}/share/zsh/vendor-completions/_docker" "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker"
-    if test -z "${PREFIX}"; then
-        echo "Create group"
-        groupadd --system --force docker
-    fi
-    DOCKER_RESTART=false
-    echo "Configure daemon"
-    if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
-        echo "Initialize dockerd configuration"
-        echo "{}" >"${PREFIX}/etc/docker/daemon.json"
-    fi
-    if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
-        echo "Waiting for jq"
-        wait_for_tool "jq" "${TARGET}/bin"
-
-        if ! test "$("${TARGET}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
-            echo "Configuring native cgroup driver"
-            # shellcheck disable=SC2094
-            cat <<< "$("${TARGET}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-            DOCKER_RESTART=true
-        fi
-        if ! test "$("${TARGET}/bin/jq" '. | keys | any(. == "default-runtime")' "${PREFIX}/etc/docker/daemon.json")" == true; then
-            echo "Set default runtime"
-            # shellcheck disable=SC2094
-            cat <<< "$("${TARGET}/bin/jq" '. * {"default-runtime": "runc"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-            DOCKER_RESTART=true
-        fi
-        # shellcheck disable=SC2016
-        if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${TARGET}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
-            echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
-            # shellcheck disable=SC2094
-            cat <<< "$("${TARGET}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-            DOCKER_RESTART=true
-        fi
-        # shellcheck disable=SC2016
-        if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${TARGET}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
-            echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
-            # shellcheck disable=SC2094
-            # shellcheck disable=SC2016
-            cat <<< "$("${TARGET}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-            DOCKER_RESTART=true
-        fi
-        if ! test "$("${TARGET}/bin/jq" --raw-output '.features.buildkit // false' "${PREFIX}/etc/docker/daemon.json")" == true; then
-            echo "Enable BuildKit"
-            # shellcheck disable=SC2094
-            cat <<< "$("${TARGET}/bin/jq" '. * {"features":{"buildkit":true}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-            DOCKER_RESTART=true
-        fi
-        echo "Check if daemon.json is valid JSON"
-        if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json"; then
-            echo "${RED}[ERROR] "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
-            exit 1
-        fi
+    echo "Binaries installed after ${SECONDS} seconds."
+    if docker_is_running; then
+        touch "${DOCKER_SETUP_CACHE}/docker_already_present"
+        echo "Found that Docker is already present after ${SECONDS} seconds."
+        echo -e "${YELLOW}[WARNING] Docker is already running. Skipping systemd unit, init script and daemon configuration.${RESET}"
 
     else
-        echo -e "${RED}[ERROR] Unable to configure Docker daemon because jq is missing and will not be installed.${RESET}"
-        false
-        exit 1
-    fi
-    if test -z "${PREFIX}"; then
-        if has_systemd; then
-            echo "Reload systemd"
-            systemctl daemon-reload
-            if systemctl is-active --quiet docker; then
-                if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-                    touch "${DOCKER_SETUP_CACHE}/docker_restart"
-                fi
-            else
-                echo "Start dockerd"
-                systemctl enable docker
-                systemctl start docker
-            fi
+        echo "Install systemd units"
+        curl -sLo "${PREFIX}/etc/systemd/system/docker.service" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service"
+        curl -sLo "${PREFIX}/etc/systemd/system/docker.socket" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket"
+        sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
+        sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
+        if is_debian || is_clearlinux; then
+            echo "Install init script for debian"
+            curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
+            curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+            sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
+            sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+            chmod +x "${PREFIX}/etc/init.d/docker"
+        elif is_redhat; then
+            echo "Install init script for redhat"
+            curl -sLo "${PREFIX}/etc/sysconfig/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig"
+            curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker"
+            # shellcheck disable=SC1083
+            sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+            sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+            chmod +x "${PREFIX}/etc/init.d/docker"
+        elif is_alpine; then
+            echo "Install openrc script for alpine"
+            curl -sLo "${PREFIX}/etc/conf.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd"
+            curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd"
+            # shellcheck disable=1083
+            sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+            sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
+            sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/conf.d/docker"
+            chmod +x "${PREFIX}/etc/init.d/docker"
+            openrc
         else
-            if docker_is_running; then
-                if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-                    touch "${DOCKER_SETUP_CACHE}/docker_restart"
+            echo -e "${YELLOW}[WARNING] Unable to install init script because the distributon is unknown.${RESET}"
+        fi
+        if ! has_systemd && ! test -f "${PREFIX}/etc/init.d/docker"; then
+            echo -e "${RED}[ERROR] Systemd not available but unable to provide init script.${RESET}"
+            exit 1
+        fi
+        if test -z "${PREFIX}"; then
+            echo "Create group"
+            groupadd --system --force docker
+        fi
+        DOCKER_RESTART=false
+        echo "Configure daemon"
+        if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
+            echo "Initialize dockerd configuration"
+            echo "{}" >"${PREFIX}/etc/docker/daemon.json"
+        fi
+        if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
+            echo "Waiting for jq"
+            wait_for_tool "jq" "${TARGET}/bin"
+
+            if ! test "$("${TARGET}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+                echo "Configuring native cgroup driver"
+                # shellcheck disable=SC2094
+                cat <<< "$("${TARGET}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                DOCKER_RESTART=true
+            fi
+            if ! test "$("${TARGET}/bin/jq" '. | keys | any(. == "default-runtime")' "${PREFIX}/etc/docker/daemon.json")" == true; then
+                echo "Set default runtime"
+                # shellcheck disable=SC2094
+                cat <<< "$("${TARGET}/bin/jq" '. * {"default-runtime": "runc"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                DOCKER_RESTART=true
+            fi
+            # shellcheck disable=SC2016
+            if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${TARGET}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+                echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
+                # shellcheck disable=SC2094
+                cat <<< "$("${TARGET}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                DOCKER_RESTART=true
+            fi
+            # shellcheck disable=SC2016
+            if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${TARGET}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+                echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
+                # shellcheck disable=SC2094
+                # shellcheck disable=SC2016
+                cat <<< "$("${TARGET}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                DOCKER_RESTART=true
+            fi
+            if ! test "$("${TARGET}/bin/jq" --raw-output '.features.buildkit // false' "${PREFIX}/etc/docker/daemon.json")" == true; then
+                echo "Enable BuildKit"
+                # shellcheck disable=SC2094
+                cat <<< "$("${TARGET}/bin/jq" '. * {"features":{"buildkit":true}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                DOCKER_RESTART=true
+            fi
+            echo "Check if daemon.json is valid JSON"
+            if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json"; then
+                echo "${RED}[ERROR] "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
+                exit 1
+            fi
+
+        else
+            echo -e "${RED}[ERROR] Unable to configure Docker daemon because jq is missing and will not be installed.${RESET}"
+            false
+            exit 1
+        fi
+        if test -z "${PREFIX}"; then
+            if has_systemd; then
+                echo "Reload systemd"
+                systemctl daemon-reload
+                if systemctl is-active --quiet docker; then
+                    if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+                        touch "${DOCKER_SETUP_CACHE}/docker_restart"
+                    fi
+                else
+                    echo "Start dockerd"
+                    systemctl enable docker
+                    systemctl start docker
                 fi
             else
-                echo "Start dockerd"
-                "${PREFIX}/etc/init.d/docker" start
+                if docker_is_running; then
+                    if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
+                        touch "${DOCKER_SETUP_CACHE}/docker_restart"
+                    fi
+                else
+                    echo "Start dockerd"
+                    "${PREFIX}/etc/init.d/docker" start
+                fi
+                echo -e "${YELLOW}[WARNING] Init script was installed but you must enable Docker yourself.${RESET}"
             fi
-            echo -e "${YELLOW}[WARNING] Init script was installed but you must enable Docker yourself.${RESET}"
         fi
-    fi
-    echo "Wait for Docker daemon to start"
-    wait_for_docker
-    if ! docker_is_running; then
-        echo "${RED}[ERROR] Failed to start Docker.${RESET}"
-        exit 1
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        if ! docker_is_running; then
+            echo "${RED}[ERROR] Failed to start Docker.${RESET}"
+            exit 1
+        fi
+        echo "Finished starting Docker after ${SECONDS} seconds."
     fi
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
@@ -1172,6 +1180,7 @@ cp -r man/man5 "/opt/man"
 cp -r man/man8 "/opt/man"
 EOF
     fi
+    echo "Finished after ${SECONDS} seconds."
 }
 
 function install-containerd() {
@@ -1202,7 +1211,7 @@ cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
     else
-        echo "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
+        echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
     fi
     if ! test -f "${PREFIX}/etc/containerd/config.toml"; then
         echo "Adding default configuration"
@@ -1257,7 +1266,7 @@ man/md2man-all.sh -q
 cp -r man/man8/ "/opt/man"
 EOF
     else
-        echo "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
+        echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
     fi
 }
 
@@ -1319,7 +1328,7 @@ git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NET
 cp *.1 /opt/man/man1
 EOF
     else
-        echo "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
+        echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
     fi
 }
 
@@ -1554,7 +1563,7 @@ make
 make install DESTDIR=/target
 EOF
     else
-        echo "${RED}[ERROR] Docker is required to install.${RESET}"
+        echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2039,7 +2048,7 @@ cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
 EOF
 
     else
-        echo "${RED}[ERROR] Docker is required to install.${RESET}"
+        echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2060,7 +2069,7 @@ cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
 EOF
 
     else
-        echo "${RED}[ERROR] Docker is required to install.${RESET}"
+        echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2312,8 +2321,7 @@ function install-patat() {
 }
 
 function install-iptables() {
-    echo "iptables ${IPTABLES_VERSION}"
-    echo "Install binary"
+    echo "Install iptables ${IPTABLES_VERSION}"
     if is_centos_7 || is_amzn_2; then
         curl -sL "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
         | tar -xzC "${TARGET}" --no-same-owner
@@ -2323,7 +2331,7 @@ function install-iptables() {
         | tar -xzC "${TARGET}" --no-same-owner
 
     else
-        echo -e "${RED}[ERROR] Unknown version of CentOS ($(get_centos_version))${RESET}"
+        echo -e "${RED}[ERROR] Unknown distribution ($(get_lsb_distro_name)) or version ($(get_lsb_distro_version))${RESET}"
         return 1
     fi
 }
@@ -2450,7 +2458,7 @@ make tool
 cp oci-runtime-tool /target/bin/
 EOF
     else
-        echo "${RED}[ERROR] Docker is required to install.${RESET}"
+        echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2559,24 +2567,28 @@ while true; do
     sleep 0.1
 done
 
-DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
-if test -n "${DOCKER_JSON_PATCHES}"; then
-    echo
-    echo "Merging configuration changes for Docker"
-    echo "${DOCKER_JSON_PATCHES}" | while read -r file; do
-        bash "${file}"
-        rm "${file}"
-    done
+if test -f "${PREFIX}/etc/docker/daemon.json" && ! test -f "${DOCKER_SETUP_CACHE}/docker_already_present"; then
+    DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
+    if test -n "${DOCKER_JSON_PATCHES}"; then
+        echo
+        echo "Merging configuration changes for Docker"
+        echo "${DOCKER_JSON_PATCHES}" | while read -r file; do
+            bash "${file}"
+            rm "${file}"
+        done
+    fi
 fi
 
-CONTAINERD_CONFIG_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh)"
-if test -n "${CONTAINERD_CONFIG_PATCHES}"; then
-    echo
-    echo "Merging configuration changes for containerd"
-    echo "${CONTAINERD_CONFIG_PATCHES}" | while read -r file; do
-        bash "${file}"
-        rm "${file}"
-    done
+if test -f "${PREFIX}/etc/containerd/config.toml"; then
+    CONTAINERD_CONFIG_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh)"
+    if test -n "${CONTAINERD_CONFIG_PATCHES}"; then
+        echo
+        echo "Merging configuration changes for containerd"
+        echo "${CONTAINERD_CONFIG_PATCHES}" | while read -r file; do
+            bash "${file}"
+            rm "${file}"
+        done
+    fi
 fi
 
 if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
@@ -2584,7 +2596,8 @@ if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
     if has_systemd; then
         echo "Restart dockerd using systemd"
         systemctl restart docker
-    else
+
+    elif test -z "${PREFIX}" && test -f "${PREFIX}/etc/init.d/docker"; then
         echo "Restart dockerd using init script"
         "${PREFIX}/etc/init.d/docker" restart
     fi
