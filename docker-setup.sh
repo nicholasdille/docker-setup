@@ -2573,6 +2573,7 @@ if test -f "${PREFIX}/etc/docker/daemon.json" && ! test -f "${DOCKER_SETUP_CACHE
         echo
         echo "Merging configuration changes for Docker"
         echo "${DOCKER_JSON_PATCHES}" | while read -r file; do
+            echo "- $(echo "${file}" | sed -E "s|${DOCKER_SETUP_CACHE}/daemon.json-(.+).sh|\1|")"
             bash "${file}"
             rm "${file}"
         done
@@ -2585,6 +2586,7 @@ if test -f "${PREFIX}/etc/containerd/config.toml"; then
         echo
         echo "Merging configuration changes for containerd"
         echo "${CONTAINERD_CONFIG_PATCHES}" | while read -r file; do
+            echo "- $(echo "${file}" | sed -E "s|${DOCKER_SETUP_CACHE}/containerd-config.toml-(.+).sh|\1|")"
             bash "${file}"
             rm "${file}"
         done
