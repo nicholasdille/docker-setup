@@ -167,18 +167,19 @@ fi
 declare -a tools
 declare -A tool_deps
 tools=(
-    arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd containerssh cosign crane crictl crun ctop dasel dive
-    docker docker-compose docker-machine docker-scan docuum dry duffle dyff
-    firecracker firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter
-    glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
-    jwt k3d k3s k3sup k9s kapp kind kompose krew kubectl kubectl-build
-    kubectl-free kubectl-resources kubeletctl kubefire kubeswitch kustomize
-    lazydocker lazygit manifest-tool minikube mitmproxy nerdctl norouter
-    notation oci-image-tool oci-runtime-tool oras patat portainer porter podman
-    qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
-    stargz-snapshotter umoci trivy yq ytt
+    arkade buildah buildkit buildx cado clusterawsadm clusterctl cni
+    cni-isolation conmon containerd containerssh cosign crane crictl crun ctop
+    dasel dive docker docker-compose docker-machine docker-scan docuum dry
+    duffle dyff firecracker firectl footloose fuse-overlayfs
+    fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
+    img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kind kompose krew
+    kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
+    kubeswitch kustomize lazydocker lazygit manifest-tool minikube mitmproxy
+    nerdctl norouter notation oci-image-tool oci-runtime-tool oras patat
+    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
+    sops sshocker stargz-snapshotter umoci trivy yq ytt
 )
+tool_deps["cado"]="docker"
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
 tool_deps["ctop"]="docker"
@@ -265,6 +266,7 @@ ARKADE_VERSION=0.8.14
 BUILDAH_VERSION=1.24.0
 BUILDKIT_VERSION=0.9.3
 BUILDX_VERSION=0.7.1
+CADO_VERSION=0.9.5
 CLUSTERAWSADM_VERSION=1.3.0
 CLUSTERCTL_VERSION=1.1.1
 CNI_ISOLATION_VERSION=0.0.4
@@ -375,6 +377,7 @@ function arkade_is_installed()                     { is_executable "${TARGET}/bi
 function buildah_is_installed()                    { is_executable "${TARGET}/bin/buildah"; }
 function buildkit_is_installed()                   { is_executable "${TARGET}/bin/buildkitd"; }
 function buildx_is_installed()                     { is_executable "${DOCKER_PLUGINS_PATH}/docker-buildx"; }
+function cado_is_installed()                       { is_executable "${TARGET}/bin/cado"; }
 function clusterawsadm_is_installed()              { is_executable "${TARGET}/bin/clusterawsadm"; }
 function clusterctl_is_installed()                 { is_executable "${TARGET}/bin/clusterctl"; }
 function cni_is_installed()                        { is_executable "${TARGET}/libexec/cni/loopback"; }
@@ -466,6 +469,7 @@ function arkade_matches_version()                     {   test "$(${TARGET}/bin/
 function buildah_matches_version()                    {   test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)"                                  == "${BUILDAH_VERSION}"; }
 function buildkit_matches_version()                   {   test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f3)"                                == "v${BUILDKIT_VERSION}"; }
 function buildx_matches_version()                     {   test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f2)"                     == "v${BUILDX_VERSION}"; }
+function cado_matches_version()                       {   test "$(${TARGET}/bin/cado --version)"                                                     == "${CADO_VERSION}"; }
 function clusterawsadm_matches_version()              {   test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
 function clusterctl_matches_version()                 {   test "$(${TARGET}/bin/clusterctl version --output short)"                                  == "v${CLUSTERCTL_VERSION}"; }
 function cni_matches_version()                        {   test "$(${TARGET}/libexec/cni/loopback 2>&1 | cut -d' ' -f4)"                              == "v${CNI_VERSION}"; }
@@ -1163,9 +1167,8 @@ function install-docker() {
             --rm \
             --volume "${TARGET}/share/man:/opt/man" \
             --env DOCKER_VERSION \
+            --workdir /go/src/github.com/docker/cli \
             "golang:${GO_VERSION}" bash <<EOF
-mkdir -p /go/src/github.com/docker/cli
-cd /go/src/github.com/docker/cli
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCKER_VERSION}" https://github.com/docker/cli .
 export GO111MODULE=auto
 export DISABLE_WARN_OUTSIDE_CONTAINER=1
@@ -1196,9 +1199,8 @@ function install-containerd() {
             --rm \
             --volume "${TARGET}/share/man:/opt/man" \
             --env CONTAINERD_VERSION \
+            --workdir /go/src/github.com/containerd/containerd \
             "golang:${GO_VERSION}" bash <<EOF
-mkdir -p /go/src/github.com/containerd/containerd
-cd /go/src/github.com/containerd/containerd
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${CONTAINERD_VERSION}" https://github.com/containerd/containerd .
 go install github.com/cpuguy83/go-md2man@latest
 export GO111MODULE=auto
@@ -1253,9 +1255,8 @@ function install-runc() {
             --rm \
             --volume "${TARGET}/share/man:/opt/man" \
             --env RUNC_VERSION \
+            --workdir /go/src/github.com/opencontainers/runc \
             "golang:${GO_VERSION}" bash <<EOF
-mkdir -p /go/src/github.com/opencontainers/runc
-cd /go/src/github.com/opencontainers/runc
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${RUNC_VERSION}" https://github.com/opencontainers/runc .
 go install github.com/cpuguy83/go-md2man@latest
 man/md2man-all.sh -q
@@ -1317,9 +1318,8 @@ function install-slirp4netns() {
             --rm \
             --volume "${TARGET}/share/man:/opt/man" \
             --env SLIRP4NETNS_VERSION \
+            --workdir /go/src/github.com/rootless-containers/slirp4netns \
             "golang:${GO_VERSION}" bash <<EOF
-mkdir -p /go/src/github.com/rootless-containers/slirp4netns
-cd /go/src/github.com/rootless-containers/slirp4netns
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NETNS_VERSION}" https://github.com/rootless-containers/slirp4netns .
 cp *.1 /opt/man/man1
 EOF
@@ -1552,9 +1552,13 @@ function install-imgcrypt() {
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install binary"
-        "${TARGET}/bin/docker" container run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
-mkdir -p /go/src/github.com/containerd/imgcrypt
-cd /go/src/github.com/containerd/imgcrypt
+        "${TARGET}/bin/docker" container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}:/target" \
+            --env IMGCRYPT_VERSION \
+            --workdir /go/src/github.com/containerd/imgcrypt \
+            "golang:${GO_VERSION}" <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
 sed -i -E 's/ -v / /' Makefile
 sed -i -E "s/ --dirty='.m' / /" Makefile
@@ -2428,7 +2432,7 @@ function install-oci-image-tool() {
             --env OCI_IMAGE_TOOL_VERSION \
             --env GO111MODULE=auto \
             --workdir /go/src/github.com/opencontainers/image-tools \
-            golang:${GO_VERSION} <<EOF
+            "golang:${GO_VERSION}" <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_IMAGE_TOOL_VERSION}" https://github.com/opencontainers/image-tools .
 make tool
 cp oci-image-tool /target/bin/
@@ -2452,10 +2456,47 @@ function install-oci-runtime-tool() {
             --env OCI_RUNTIME_TOOL_VERSION \
             --env GO111MODULE=auto \
             --workdir /go/src/github.com/opencontainers/runtime-tools \
-            golang:${GO_VERSION} <<EOF
+            "golang:${GO_VERSION}" <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_RUNTIME_TOOL_VERSION}" https://github.com/opencontainers/runtime-tools .
 make tool
 cp oci-runtime-tool /target/bin/
+EOF
+    else
+        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        false
+    fi
+}
+
+function install-cado() {
+    echo "cado ${CADO_VERSION}"
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        "${TARGET}/bin/docker" container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}:/target" \
+            --env CADO_VERSION \
+            --workdir /tmp/cado \
+            ubuntu:rolling <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    cmake \
+    make \
+    git \
+    ca-certificates \
+    gcc \
+    libcap-dev \
+    libexecs-dev \
+    libmhash-dev \
+    libpam-dev
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${CADO_VERSION}" https://github.com/rd235/cado .
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX:PATH=/target
+make
+make install
 EOF
     else
         echo "${RED}ERROR: Docker is required to install.${RESET}"
