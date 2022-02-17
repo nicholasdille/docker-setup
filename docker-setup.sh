@@ -175,8 +175,9 @@ tools=(
     jwt k3d k3s k3sup k9s kapp kind kompose krew kubectl kubectl-build
     kubectl-free kubectl-resources kubeletctl kubefire kubeswitch kustomize
     lazydocker lazygit manifest-tool minikube mitmproxy nerdctl norouter
-    notation oras patat portainer porter podman qemu regclient rootlesskit
-    runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci trivy yq ytt
+    notation oci-image-tool oci-runtime-tool oras patat portainer porter podman
+    qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
+    stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["containerd"]="runc"
 tool_deps["crun"]="jq"
@@ -193,6 +194,8 @@ tool_deps["imgcrypt"]="containerd docker"
 tool_deps["jwt"]="docker"
 tool_deps["kubectl"]="krew"
 tool_deps["lazydocker"]="docker"
+tool_deps["oci-image-tool"]="docker"
+tool_deps["oci-runtime-tool"]="docker"
 tool_deps["podman"]="conmon"
 tool_deps["portainer"]="docker"
 tool_deps["stargz-snapshotter"]="containerd"
@@ -329,6 +332,8 @@ MITMPROXY_VERSION=7.0.4
 NERDCTL_VERSION=0.16.1
 NOROUTER_VERSION=0.6.4
 NOTATION_VERSION=0.7.1-alpha.1
+OCI_IMAGE_TOOL_VERSION=1.0.0-rc3
+OCI_RUNTIME_TOOL_VERSION=0.9.0
 ORAS_VERSION=0.12.0
 PATAT_VERSION=0.8.7.0
 PODMAN_VERSION=3.4.4
@@ -437,6 +442,8 @@ function nerdctl_is_installed()                    { is_executable "${TARGET}/bi
 function norouter_is_installed()                   { is_executable "${TARGET}/bin/norouter"; }
 function notation_is_installed()                   { is_executable "${TARGET}/bin/notation"; }
 function oras_is_installed()                       { is_executable "${TARGET}/bin/oras"; }
+function oci_image_tool_is_installed()             { is_executable "${TARGET}/bin/oci-image-tool"; }
+function oci_runtime_tool_is_installed()           { is_executable "${TARGET}/bin/oci-runtime-tool"; }
 function patat_is_installed()                      { is_executable "${TARGET}/bin/patat"; }
 function podman_is_installed()                     { is_executable "${TARGET}/bin/podman"; }
 function portainer_is_installed()                  { is_executable "${TARGET}/bin/portainer"; }
@@ -526,6 +533,8 @@ function nerdctl_matches_version()                    {   test "$(${TARGET}/bin/
 function norouter_matches_version()                   {   test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
 function notation_matches_version()                   {   test "$(${TARGET}/bin/notation --version | cut -d' ' -f3)"                                 == "${NOTATION_VERSION}"; }
 function oras_matches_version()                       {   test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
+function oci_image_tool_matches_version()             {   test "$(${TARGET}/bin/oci-image-tool --version | cut -d' ' -f3)"                           == "${OCI_IMAGE_TOOL_VERSION}"; }
+function oci_runtime_tool_matches_version()           {   test "$(${TARGET}/bin/oci-runtime-tool --version | cut -d, -f1 | cut -d' ' -f3)"           == "${OCI_RUNTIME_TOOL_VERSION}"; }
 function patat_matches_version()                      { { test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}" || test -f "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"; }; }
 function podman_matches_version()                     {   test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
 function portainer_matches_version()                  {   test "$(${TARGET}/bin/portainer --version 2>&1)"                                           == "${PORTAINER_VERSION}"; }
@@ -2404,6 +2413,54 @@ function install-mitmproxy() {
         mitmproxy \
         mitmdump \
         mitmweb
+}
+
+function install-oci-image-tool() {
+    echo "oci-image-tool ${OCI_IMAGE_TOOL_VERSION}"
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        "${TARGET}/bin/docker" container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}:/target" \
+            --env OCI_IMAGE_TOOL_VERSION \
+            --env GO111MODULE=auto \
+            --workdir /go/src/github.com/opencontainers/image-tools \
+            golang:${GO_VERSION} <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_IMAGE_TOOL_VERSION}" https://github.com/opencontainers/image-tools .
+make tool
+cp oci-image-tool /target/bin/
+EOF
+    else
+        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        false
+    fi
+}
+
+function install-oci-runtime-tool() {
+    echo "oci-runtime-tool ${OCI_RUNTIME_TOOL_VERSION}"
+    if tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        "${TARGET}/bin/docker" container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}:/target" \
+            --env OCI_RUNTIME_TOOL_VERSION \
+            --env GO111MODULE=auto \
+            --workdir /go/src/github.com/opencontainers/runtime-tools \
+            golang:${GO_VERSION} <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_RUNTIME_TOOL_VERSION}" https://github.com/opencontainers/runtime-tools .
+make tool
+cp oci-runtime-tool /target/bin/
+EOF
+    else
+        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        false
+    fi
 }
 
 function children_are_running() {

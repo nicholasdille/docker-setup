@@ -615,6 +615,20 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "OCI_IMAGE_TOOL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "opencontainers/image-tools",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "OCI_RUNTIME_TOOL_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "opencontainers/runtime-tools",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "ORAS_VERSION=(?<currentValue>.*?)\n", "OrasVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "oras-project/oras",
