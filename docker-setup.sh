@@ -528,7 +528,7 @@ function lazydocker_matches_version()                 {   test "$(${TARGET}/bin/
 function lazygit_matches_version()                    {   test "$(${TARGET}/bin/lazygit --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,)"          == "${LAZYGIT_VERSION}"; }
 function manifest_tool_matches_version()              {   test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
 function minikube_matches_version()                   {   test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
-function mitmproxy_matches_version()                  {   test "$(LANG=en_US.UTF-8 "${TARGET}/bin/mitmproxy" --version | head -n 1 | cut -d' ' -f2)" == "${MITMPROXY_VERSION}"; }
+function mitmproxy_matches_version()                  {   test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function nerdctl_matches_version()                    {   test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
 function norouter_matches_version()                   {   test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
 function notation_matches_version()                   {   test "$(${TARGET}/bin/notation --version | cut -d' ' -f3)"                                 == "${NOTATION_VERSION}"; }
@@ -2394,6 +2394,8 @@ function install-mitmproxy() {
         mitmproxy \
         mitmdump \
         mitmweb
+    mkdir -p "${DOCKER_SETUP_CACHE}/mitmproxy"
+    touch "${DOCKER_SETUP_CACHE}/mitmproxy/${MITMPROXY_VERSION}"
 }
 
 function install-oci-image-tool() {
