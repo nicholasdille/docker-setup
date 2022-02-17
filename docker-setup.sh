@@ -22,6 +22,7 @@ declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
         --check)
+            NO_WAIT=true
             CHECK=true
             ;;
         --help)
@@ -664,7 +665,7 @@ if ${CHECK}; then
     exit "${check_only_exit_code}"
 fi
 
-if ! ${NO_WAIT}; then
+if test "${#tool_install[@]}" -gt "0" && ! ${NO_WAIT}; then
     echo "Please press Ctrl-C to abort."
     SECONDS_REMAINING=10
     while test "${SECONDS_REMAINING}" -gt 0; do
