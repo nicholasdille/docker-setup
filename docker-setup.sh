@@ -107,7 +107,7 @@ from the container ecosystem.
 EOF
 
 if test "${#unknown_parameters[@]}" -gt 0; then
-    echo -e "${RED}ERROR: Unknown parameter(s): ${unknown_parameters[*]}.${RESET}"
+    echo -e "${RED}[ERROR] Unknown parameter(s): ${unknown_parameters[*]}.${RESET}"
     echo
     SHOW_HELP=true
 fi
@@ -160,7 +160,7 @@ EOF
 fi
 
 if ${ONLY} && ${ONLY_INSTALLED}; then
-    echo -e "${RED}ERROR: You can only specify one: --only/ONLY and --only-installed/ONLY_INSTALLED.${RESET}"
+    echo -e "${RED}[ERROR] You can only specify one: --only/ONLY and --only-installed/ONLY_INSTALLED.${RESET}"
     exit 1
 fi
 
@@ -207,7 +207,7 @@ for tool in "${requested_tools[@]}"; do
     fi
 done
 if test "${#unknown_tools[@]}" -gt 0; then
-    echo -e "${RED}ERROR: The following tools were specified but are not supported:${RESET}"
+    echo -e "${RED}[ERROR] The following tools were specified but are not supported:${RESET}"
     for tool in "${unknown_tools[@]}"; do
         echo -e "${RED}       - ${tool}${RESET}"
     done
@@ -216,12 +216,12 @@ if test "${#unknown_tools[@]}" -gt 0; then
 fi
 
 if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
-    echo -e "${RED}ERROR: You must supply --only/ONLY if specifying tools on the command line.${RESET}"
+    echo -e "${RED}[ERROR] You must supply --only/ONLY if specifying tools on the command line.${RESET}"
     echo
     exit 1
 fi
 if ${ONLY} && test "${#requested_tools[@]}" -eq 0; then
-    echo -e "${RED}ERROR: You must specify tool on the command line if you supply --only/ONLY.${RESET}"
+    echo -e "${RED}[ERROR] You must specify tool on the command line if you supply --only/ONLY.${RESET}"
     echo
     exit 1
 fi
@@ -244,7 +244,7 @@ fi
 DEPENDENCIES=(curl git unzip)
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
     if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
-        echo -e "${RED}ERROR: Missing ${DEPENDENCY}.${RESET}"
+        echo -e "${RED}[ERROR] Missing ${DEPENDENCY}.${RESET}"
         exit 1
     fi
 done
@@ -362,7 +362,7 @@ elif test "${DOCKER_COMPOSE}" == "v2"; then
     # shellcheck disable=SC2034
     DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V2_VERSION}"
 else
-    echo -e "${RED}ERROR: Unknown value for DOCKER_COMPOSE. Supported values are v1 and v2 but got ${DOCKER_COMPOSE}.${RESET}"
+    echo -e "${RED}[ERROR] Unknown value for DOCKER_COMPOSE. Supported values are v1 and v2 but got ${DOCKER_COMPOSE}.${RESET}"
     exit 1
 fi
 
@@ -643,18 +643,18 @@ done
 echo -e "\n"
 
 if test -n "${PREFIX}"; then
-    echo -e "${YELLOW}INFO: Installation into ${PREFIX}. Will skip daemon start.${RESET}"
+    echo -e "${YELLOW}[INFO] Installation into ${PREFIX}. Will skip daemon start.${RESET}"
     echo
 fi
 
 if ${SKIP_DOCS}; then
-    echo -e "${YELLOW}INFO: Some documentation is skipped to reduce the installation time.${RESET}"
+    echo -e "${YELLOW}[INFO] Some documentation is skipped to reduce the installation time.${RESET}"
     echo
 fi
 
 if ${CHECK}; then
     if test "${#tool_outdated[@]}" -gt 0; then
-        echo -e "${RED}ERROR: The following requested tools are outdated:${RESET}"
+        echo -e "${RED}[ERROR] The following requested tools are outdated:${RESET}"
         echo
         for tool in "${tool_outdated[@]}"; do
             echo -e -n "${RED}${tool}  ${RESET}"
@@ -676,12 +676,12 @@ if ! ${NO_WAIT}; then
 fi
 
 if test -n "${PREFIX}" && ( ! test -S "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
-    echo "${RED}ERROR: When installing into a subdirectory (${PREFIX}) requires Docker to be present on /var/run/docker.sock.${RESET}"
+    echo "${RED}[ERROR] When installing into a subdirectory (${PREFIX}) requires Docker to be present on /var/run/docker.sock.${RESET}"
     exit 1
 fi
 
 if test ${EUID} -ne 0; then
-    echo -e "${RED}ERROR: You must run this script as root or use sudo.${RESET}"
+    echo -e "${RED}[ERROR] You must run this script as root or use sudo.${RESET}"
     exit 1
 fi
 
@@ -714,7 +714,7 @@ function wait_for_tool() {
     done
 
     if ! has_tool "${tool}" "${path}"; then
-        echo -e "${RED}ERROR: Failed to wait for ${tool} after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
+        echo -e "${RED}[ERROR] Failed to wait for ${tool} after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
         exit 1
     fi
 }
@@ -862,7 +862,7 @@ function has_systemd() {
     if test "$(basename "${INIT}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
         return 0
     else
-        >&2 echo -e "${YELLOW}WARNING: Did not find systemd.${RESET}"
+        >&2 echo -e "${YELLOW}[WARNING] Did not find systemd.${RESET}"
         return 1
     fi
 }
@@ -887,7 +887,7 @@ function wait_for_docker() {
     done
 
     if ! docker_is_running; then
-        echo -e "${RED}ERROR: Failed to wait for Docker daemon to start after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
+        echo -e "${RED}[ERROR] Failed to wait for Docker daemon to start after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
         exit 1
     fi
 }
@@ -898,14 +898,14 @@ function get_contrib() {
     if test -d "${DOCKER_SETUP_CONTRIB}"; then
         echo "Looking for ${DOCKER_SETUP_CONTRIB}/${file}"
         if ! test -f "${DOCKER_SETUP_CONTRIB}/${file}"; then
-            echo -e "${RED}ERROR: Found local contrib directory but missing file ${file}.${RESET}"
+            echo -e "${RED}[ERROR] Found local contrib directory but missing file ${file}.${RESET}"
             exit 1
         fi
-        echo -e "${YELLOW}INFO: Copy from locally cached contrib directory.${RESET}"
+        echo -e "[DEBUG] Copy from locally cached contrib directory."
         cp "${DOCKER_SETUP_CONTRIB}/${file}" "${path}"
 
     else
-        echo -e "${YELLOW}INFO: Download from contrib directory.${RESET}"
+        echo -e "[DEBUG] Download from contrib directory."
         curl -sLo "${path}" "${DOCKER_SETUP_REPO_RAW}/contrib/${file}"
     fi
 }
@@ -960,7 +960,7 @@ if test "$(stat -fc %T /sys/fs/cgroup/)" == "cgroup2fs"; then
 fi
 if type update-grub >/dev/null 2>&1 && test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
     if test -n "${WSL_DISTRO_NAME}"; then
-        echo -e "${RED}ERROR: Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${RESET}"
+        echo -e "${RED}[ERROR] Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${RESET}"
         echo -e "${RED}       Please rerun this script with CGROUP_VERSION=v1${RESET}"
         exit 1
     fi
@@ -981,7 +981,7 @@ function install-docker() {
     echo "Docker ${DOCKER_VERSION}"
     echo "Check for iptables/nftables"
     if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
-        echo -e "${YELLOW}WARNING: Unable to continue because...${RESET}"
+        echo -e "${YELLOW}[WARNING] Unable to continue because...${RESET}"
         echo -e "${YELLOW}         - ...you are missing ipables OR...${RESET}"
         echo -e "${YELLOW}         - ...you are using nftables and not iptables...${RESET}"
         echo -e "${YELLOW}         To fix this, iptables must point to iptables-legacy.${RESET}"
@@ -998,9 +998,9 @@ function install-docker() {
         lsb_dist="$(get_lsb_distro_name)"
         case "${lsb_dist,,}" in
             centos|amzn|rocky)
-                echo -e "${RED}WARNING: CentOS does not support iptables-legacy.${RESET}"
+                echo -e "${RED}[WARNING] CentOS does not support iptables-legacy.${RESET}"
                 if ! install-iptables; then
-                    echo -e "${RED}ERROR: Unable to install iptables-legacy.${RESET}"
+                    echo -e "${RED}[ERROR] Unable to install iptables-legacy.${RESET}"
                     exit 1
                 fi
                 ;;
@@ -1049,10 +1049,10 @@ function install-docker() {
         chmod +x "${PREFIX}/etc/init.d/docker"
         openrc
     else
-        echo -e "${YELLOW}WARNING: Unable to install init script because the distributon is unknown.${RESET}"
+        echo -e "${YELLOW}[WARNING] Unable to install init script because the distributon is unknown.${RESET}"
     fi
     if ! has_systemd && ! test -f "${PREFIX}/etc/init.d/docker"; then
-        echo -e "${RED}ERROR: Systemd not available but unable to provide init script.${RESET}"
+        echo -e "${RED}[ERROR] Systemd not available but unable to provide init script.${RESET}"
         exit 1
     fi
     echo "Install completion"
@@ -1078,14 +1078,12 @@ function install-docker() {
             # shellcheck disable=SC2094
             cat <<< "$("${TARGET}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
-            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
         if ! test "$("${TARGET}/bin/jq" '. | keys | any(. == "default-runtime")' "${PREFIX}/etc/docker/daemon.json")" == true; then
             echo "Set default runtime"
             # shellcheck disable=SC2094
             cat <<< "$("${TARGET}/bin/jq" '. * {"default-runtime": "runc"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
-            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
         # shellcheck disable=SC2016
         if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${TARGET}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
@@ -1093,7 +1091,6 @@ function install-docker() {
             # shellcheck disable=SC2094
             cat <<< "$("${TARGET}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
-            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
         # shellcheck disable=SC2016
         if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${TARGET}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
@@ -1102,23 +1099,21 @@ function install-docker() {
             # shellcheck disable=SC2016
             cat <<< "$("${TARGET}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
-            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
         if ! test "$("${TARGET}/bin/jq" --raw-output '.features.buildkit // false' "${PREFIX}/etc/docker/daemon.json")" == true; then
             echo "Enable BuildKit"
             # shellcheck disable=SC2094
             cat <<< "$("${TARGET}/bin/jq" '. * {"features":{"buildkit":true}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
             DOCKER_RESTART=true
-            echo -e "${YELLOW}WARNING: Docker will be restarted later unless DOCKER_ALLOW_RESTART=false.${RESET}"
         fi
         echo "Check if daemon.json is valid JSON"
         if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json"; then
-            echo "${RED}ERROR: "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
+            echo "${RED}[ERROR] "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
             exit 1
         fi
 
     else
-        echo -e "${RED}ERROR: Unable to configure Docker daemon because jq is missing and will not be installed.${RESET}"
+        echo -e "${RED}[ERROR] Unable to configure Docker daemon because jq is missing and will not be installed.${RESET}"
         false
         exit 1
     fi
@@ -1144,17 +1139,17 @@ function install-docker() {
                 echo "Start dockerd"
                 "${PREFIX}/etc/init.d/docker" start
             fi
-            echo -e "${WARNING}WARNING: Init script was installed but you must enable Docker yourself.${RESET}"
+            echo -e "${YELLOW}[WARNING] Init script was installed but you must enable Docker yourself.${RESET}"
         fi
     fi
     echo "Wait for Docker daemon to start"
     wait_for_docker
     if ! docker_is_running; then
-        echo "${RED}ERROR: Failed to start Docker.${RESET}"
+        echo "${RED}[ERROR] Failed to start Docker.${RESET}"
         exit 1
     fi
     if ${SKIP_DOCS}; then
-        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+        echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
     else
         echo "Install manpages for Docker CLI"
@@ -1185,7 +1180,7 @@ function install-containerd() {
     curl -sL "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
     | tar -xzC "${TARGET}/bin" --strip-components=1 --no-same-owner
     if ${SKIP_DOCS}; then
-        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+        echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
     elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
@@ -1207,7 +1202,7 @@ cp -r man/*.5 "/opt/man/man5"
 cp -r man/*.8 "/opt/man/man8"
 EOF
     else
-        echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
+        echo "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
     fi
     if ! test -f "${PREFIX}/etc/containerd/config.toml"; then
         echo "Adding default configuration"
@@ -1223,7 +1218,7 @@ EOF
             echo "Reload systemd"
             systemctl daemon-reload
         else
-            echo -e "${YELLOW}WARNING: docker-setup does not offer an init script for containerd.${RESET}"
+            echo -e "${YELLOW}[WARNING] docker-setup does not offer an init script for containerd.${RESET}"
         fi
     fi
 }
@@ -1242,7 +1237,7 @@ function install-runc() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runc"
     if ${SKIP_DOCS}; then
-        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+        echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
     elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
@@ -1262,7 +1257,7 @@ man/md2man-all.sh -q
 cp -r man/man8/ "/opt/man"
 EOF
     else
-        echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
+        echo "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
     fi
 }
 
@@ -1306,7 +1301,7 @@ function install-slirp4netns() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/slirp4netns"
     if ${SKIP_DOCS}; then
-        echo -e "${YELLOW}INFO: Installation of manpages will be skipped.${RESET}"
+        echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
     elif tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
@@ -1324,7 +1319,7 @@ git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NET
 cp *.1 /opt/man/man1
 EOF
     else
-        echo "${YELLOW}WARNING: Docker is required to install manpages.${RESET}"
+        echo "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
     fi
 }
 
@@ -1399,7 +1394,6 @@ function install-buildkit() {
                 echo "Start buildkitd"
                 "${PREFIX}/etc/init.d/buildkit" start
             fi
-            echo -e "${WARNING}WARNING: Init script was installed but you must enable BuildKit yourself.${RESET}"
         fi
     fi
 }
@@ -1449,8 +1443,6 @@ function install-portainer() {
         if has_systemd; then
             echo "Reload systemd"
             systemctl daemon-reload
-        else
-            echo -e "${WARNING}WARNING: Init script was installed but you must enable/start/restart Portainer yourself.${RESET}"
         fi
     fi
 }
@@ -1562,7 +1554,7 @@ make
 make install DESTDIR=/target
 EOF
     else
-        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        echo "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -1674,7 +1666,7 @@ EOF
         fi
 
     else
-        echo -e "${RED}ERROR: Unable to configure Docker daemon for crun because jq is missing and will not be installed.${RESET}"
+        echo -e "${RED}[ERROR] Unable to configure Docker daemon for crun because jq is missing and will not be installed.${RESET}"
         false
     fi
 }
@@ -1799,7 +1791,7 @@ who-can
 whoami
 EOF
     else
-        echo "${YELLOW}WARNING: kubectl is missing krew. Plugins will not be installed.${RESET}"
+        echo "${YELLOW}[WARNING] kubectl is missing krew. Plugins will not be installed.${RESET}"
         false
     fi
 }
@@ -2026,7 +2018,7 @@ EOF
         fi
 
     else
-        echo -e "${RED}ERROR: Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${RESET}"
+        echo -e "${RED}[ERROR] Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${RESET}"
         false
     fi
 }
@@ -2047,7 +2039,7 @@ cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
 EOF
 
     else
-        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        echo "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2068,7 +2060,7 @@ cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
 EOF
 
     else
-        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        echo "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2331,7 +2323,7 @@ function install-iptables() {
         | tar -xzC "${TARGET}" --no-same-owner
 
     else
-        echo -e "${RED}ERROR: Unknown version of CentOS ($(get_centos_version))${RESET}"
+        echo -e "${RED}[ERROR] Unknown version of CentOS ($(get_centos_version))${RESET}"
         return 1
     fi
 }
@@ -2434,7 +2426,7 @@ make tool
 cp oci-image-tool /target/bin/
 EOF
     else
-        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        echo "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2458,7 +2450,7 @@ make tool
 cp oci-runtime-tool /target/bin/
 EOF
     else
-        echo "${RED}ERROR: Docker is required to install.${RESET}"
+        echo "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
 }
@@ -2548,9 +2540,14 @@ while true; do
         # shellcheck disable=SC2044
         for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
             tool="$(basename "${error}")"
-            echo -e "${RED}ERROR: Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
+            echo -e "${RED}[ERROR] Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
             exit_code=1
         done
+
+        echo
+        echo "The following messages were generated during installation:"
+        grep -E "\[(WARNING|ERROR)\]" /var/log/docker-setup/*.log \
+        | sed -E 's|/var/log/docker-setup/(.+).log|\1|'
 
         break
     fi
