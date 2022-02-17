@@ -1382,28 +1382,9 @@ function install-buildkit() {
     get_contrib "${PREFIX}/etc/init.d/buildkit" "buildkit/buildkit"
     sed -i "s|/usr/local/bin/buildkitd|${RELATIVE_TARGET}/bin/buildkitd|" "${PREFIX}/etc/init.d/buildkit"
     chmod +x "${PREFIX}/etc/init.d/buildkit"
-    if test -z "${PREFIX}";then
-        if has_systemd; then
-            echo "Reload systemd"
-            systemctl daemon-reload
-            if systemctl is-active --quiet buildkit; then
-                echo "Restart buildkitd"
-                systemctl restart buildkit
-            else
-                echo "Start buildkitd"
-                systemctl enable buildkit
-                systemctl start buildkit
-            fi
-
-        else
-            if ps -C buildkitd >/dev/null 2>&1; then
-                echo "Restart buildkitd"
-                "${PREFIX}/etc/init.d/buildkit" restart
-            else
-                echo "Start buildkitd"
-                "${PREFIX}/etc/init.d/buildkit" start
-            fi
-        fi
+    if test -z "${PREFIX}" && has_systemd; then
+        echo "Reload systemd"
+        systemctl daemon-reload
     fi
 }
 
