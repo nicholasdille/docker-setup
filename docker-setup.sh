@@ -1075,7 +1075,7 @@ function install-docker() {
             echo "Initialize dockerd configuration"
             echo "{}" >"${PREFIX}/etc/docker/daemon.json"
         fi
-        if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
+        if has_tool "jq" || tool_will_be_installed "jq"; then
             echo "Waiting for jq"
             wait_for_tool "jq" "${TARGET}/bin"
 
@@ -1191,7 +1191,7 @@ function install-containerd() {
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
-    elif tool_will_be_installed "docker"; then
+    elif docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install manpages for containerd"
@@ -1248,7 +1248,7 @@ function install-runc() {
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
-    elif tool_will_be_installed "docker"; then
+    elif docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install manpages for runc"
@@ -1312,7 +1312,7 @@ function install-slirp4netns() {
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
 
-    elif tool_will_be_installed "docker"; then
+    elif docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install manpages"
@@ -1353,7 +1353,7 @@ function install-buildx() {
     curl -sLo "${DOCKER_PLUGINS_PATH}/docker-buildx" "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64"
     echo "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
-    if tool_will_be_installed "docker"; then
+    if docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Enable multi-platform builds"
@@ -1549,7 +1549,7 @@ EOF
 
 function install-imgcrypt() {
     echo "imgcrypt ${IMGCRYPT_VERSION}"
-    if tool_will_be_installed "docker"; then
+    if docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install binary"
@@ -1661,7 +1661,7 @@ function install-crun() {
     echo "Install binary"
     curl -sL "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
     | tar -xzC "${TARGET}" --no-same-owner
-    if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
+    if has_tool "jq" || tool_will_be_installed "jq"; then
         echo "Waiting for jq"
         wait_for_tool "jq" "${TARGET}/bin"
 
@@ -1720,7 +1720,7 @@ EOF
     echo "Install kubectl-convert"
     curl -sLo "${TARGET}/bin/kubectl-convert" "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert"
     chmod +x "${TARGET}/bin/kubectl-convert"
-    if test -z "${PREFIX}" && tool_will_be_installed "krew"; then
+    if test -z "${PREFIX}" && ( has_tool "krew" || tool_will_be_installed "krew" ); then
         echo "Waiting for krew"
         wait_for_tool "krew" "${TARGET}/bin"
         echo "Install krew for current user"
@@ -2013,7 +2013,7 @@ function install-gvisor() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
-    if type jq >/dev/null 2>&1 || tool_will_be_installed "jq"; then
+    if has_tool "jq" || tool_will_be_installed "jq"; then
         echo "Waiting for jq"
         wait_for_tool "jq" "${TARGET}/bin"
 
@@ -2034,7 +2034,7 @@ EOF
 
 function install-jwt() {
     echo "jwt ${JWT_VERSION}"
-    if tool_will_be_installed "docker"; then
+    if docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install binary"
@@ -2055,7 +2055,7 @@ EOF
 
 function install-docuum() {
     echo "jwt ${DOCUUM_VERSION}"
-    if tool_will_be_installed "docker"; then
+    if docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install binary"
@@ -2417,7 +2417,7 @@ function install-mitmproxy() {
 
 function install-oci-image-tool() {
     echo "oci-image-tool ${OCI_IMAGE_TOOL_VERSION}"
-    if tool_will_be_installed "docker"; then
+    if docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install binary"
@@ -2441,7 +2441,7 @@ EOF
 
 function install-oci-runtime-tool() {
     echo "oci-runtime-tool ${OCI_RUNTIME_TOOL_VERSION}"
-    if tool_will_be_installed "docker"; then
+    if docker_is_running || tool_will_be_installed "docker"; then
         echo "Wait for Docker daemon to start"
         wait_for_docker
         echo "Install binary"
