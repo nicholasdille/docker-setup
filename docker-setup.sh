@@ -2517,9 +2517,11 @@ while ! ${last_update}; do
         done
     fi
 
+    running="$(count_sub_processes)"
+
     if ! ${NO_PROGRESSBAR}; then
-        todo="$(count_sub_processes)"
-        done=$((child_pid_count - todo))
+        done=$((started_index - running))
+        todo=$((child_pid_count - done))
 
         done_length=$((progress_bar_width * done / child_pid_count))
         todo_length=$((progress_bar_width - done_length))
