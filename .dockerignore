@@ -1,5 +1,6 @@
 .git
 .github
+.downloads
 env/*/Dockerfile
 LICENSE
 README.md
