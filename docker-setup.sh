@@ -17,7 +17,7 @@ declare -a unknown_parameters
 : "${NO_COLOR:=false}"
 : "${PLAN:=false}"
 : "${SKIP_DOCS:=false}"
-: "${MAX_PARALLEL:=3}"
+: "${MAX_PARALLEL:=10}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -2511,7 +2511,6 @@ while ! ${last_update}; do
 
     if ! ${NO_PROGRESSBAR}; then
         done=$((started_index - running))
-        todo=$((child_pid_count - done))
 
         done_length=$((progress_bar_width * done / child_pid_count))
         todo_length=$((progress_bar_width - done_length))
