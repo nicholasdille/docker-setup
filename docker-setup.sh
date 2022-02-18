@@ -18,6 +18,7 @@ declare -a unknown_parameters
 : "${NO_DEPS:=false}"
 : "${PLAN:=false}"
 : "${SKIP_DOCS:=false}"
+: "${MAX_PARALLEL:=3}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -2447,15 +2448,6 @@ EOF
     fi
 }
 
-function children_are_running() {
-    for CHILD in "${child_pids[@]}"; do
-        if test -d "/proc/${CHILD}"; then
-            return 0
-        fi
-    done
-    return 1
-}
-
 function process_exists() {
     local pid=$1
     test -d "/proc/${pid}"
@@ -2471,24 +2463,6 @@ function count_sub_processes() {
     echo "${count}"
 }
 
-declare -A child_pids
-if ${PLAN}; then
-    exit
-fi
-for tool in "${tool_install[@]}"; do
-    {
-        echo "============================================================"
-        date +"%Y-%m-%d %H:%M:%S %Z"
-        echo "------------------------------------------------------------"
-    } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
-
-    (eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1") || touch "${DOCKER_SETUP_CACHE}/errors/${tool}" &
-    child_pids[${tool}]=$!
-done
-child_pid_count=${#child_pids[@]}
-
-tput civis
-
 function cleanup() {
     tput cnorm
     cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r CHILD; do
@@ -2498,13 +2472,21 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-if test "${child_pid_count}" == 0; then
+if ${PLAN}; then
+    exit
+fi
+if test "${#tool_install[@]}" == 0; then
     echo "Everything is up-to-date."
     exit
 fi
 
+tput civis
+
+declare -A child_pids
+started_index=0
 last_update=false
 exit_code=0
+child_pid_count="${#tool_install[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
 progress_bar_width=$((display_cols - ${#info_around_progress_bar}))
 done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
@@ -2512,7 +2494,29 @@ todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
 if ${NO_PROGRESSBAR}; then
     echo "Installing..."
 fi
-while true; do
+while ! ${last_update}; do
+    running="$(count_sub_processes)"
+
+    if test "${running}" -lt "${MAX_PARALLEL}"; then
+        count=$(( MAX_PARALLEL - running ))
+        end_index=$(( started_index + count ))
+
+        while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_install[@]}"; do
+            tool="${tool_install[${started_index}]}"
+
+            {
+                echo "============================================================"
+                date +"%Y-%m-%d %H:%M:%S %Z"
+                echo "------------------------------------------------------------"
+            } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
+
+            (eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1") || touch "${DOCKER_SETUP_CACHE}/errors/${tool}" &
+            child_pids[${tool}]=$!
+
+            started_index=$(( started_index + 1 ))
+        done
+    fi
+
     if ! ${NO_PROGRESSBAR}; then
         todo="$(count_sub_processes)"
         done=$((child_pid_count - todo))
@@ -2527,29 +2531,33 @@ while true; do
         echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
     fi
 
-    if ${last_update}; then
-        echo
-        # shellcheck disable=SC2044
-        for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
-            tool="$(basename "${error}")"
-            echo -e "${RED}[ERROR] Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
-            exit_code=1
-        done
-
-        echo
-        echo "The following messages were generated during installation:"
-        grep -E "\[(WARNING|ERROR)\]" /var/log/docker-setup/*.log \
-        | sed -E 's|/var/log/docker-setup/(.+).log|\1|'
-
+    if ${last_update} || test -f "${DOCKER_SETUP_CACHE}/errors/${tool}.log"; then
         break
     fi
-
-    if ! children_are_running || test -f "${DOCKER_SETUP_CACHE}/errors/${tool}.log"; then
+    if test "${started_index}" -eq "${#tool_install[@]}" && test "$(count_sub_processes)" -eq 0; then
         last_update=true
     fi
 
     sleep 0.1
 done
+
+echo
+# shellcheck disable=SC2044
+for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
+    tool="$(basename "${error}")"
+    echo -e "${RED}[ERROR] Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
+    exit_code=1
+done
+
+messages="$(
+    grep -E "\[(WARNING|ERROR)\]" /var/log/docker-setup/*.log \
+    | sed -E 's|/var/log/docker-setup/(.+).log|\1|'
+)"
+if test -n "${messages}"; then
+    echo
+    echo "The following messages were generated during installation:"
+    echo "${messages}"
+fi
 
 if test -f "${PREFIX}/etc/docker/daemon.json" && ! test -f "${DOCKER_SETUP_CACHE}/docker_already_present"; then
     DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
