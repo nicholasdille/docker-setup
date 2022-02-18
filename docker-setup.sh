@@ -15,7 +15,6 @@ declare -a unknown_parameters
 : "${NO_PROGRESSBAR:=false}"
 : "${SHOW_VERSION:=false}"
 : "${NO_COLOR:=false}"
-: "${NO_DEPS:=false}"
 : "${PLAN:=false}"
 : "${SKIP_DOCS:=false}"
 : "${MAX_PARALLEL:=3}"
@@ -46,9 +45,6 @@ while test "$#" -gt 0; do
             ;;
         --no-color)
             NO_COLOR=true
-            ;;
-        --no-deps)
-            NO_DEPS=true
             ;;
         --plan)
             NO_WAIT=true
@@ -131,7 +127,6 @@ are accepted:
 --only-installed, ONLY_INSTALLED   Only process installed tools
 --no-progressbar, NO_PROGRESSBAR   Disable progress bar
 --no-color, NO_COLOR               Disable colored output
---no-deps, NO_DEPS                 Do not enfore installation of dependencies
 --plan, PLAN                       Show planned installations
 --skip-docs, SKIP_DOCS             Do not install documentation for faster
                                    installation
@@ -573,22 +568,6 @@ declare -a tool_install
 declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
-if ! ${NO_DEPS}; then
-    i=0
-    while test "${i}" -lt "${#requested_tools[@]}"; do
-        tool="${requested_tools[$i]}"
-
-        if test -n "${tool_deps[${tool}]}"; then
-            for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-                if ! printf "%s\n" "${requested_tools[@]}" | grep -q "^${dep}$"; then
-                    requested_tools+=("${dep}")
-                fi
-            done
-        fi
-
-        i=$(( i + 1 ))
-    done
-fi
 for tool in "${tools[@]}"; do
     VAR_NAME="${tool^^}_VERSION"
     VERSION="${VAR_NAME//-/_}"
@@ -596,7 +575,18 @@ for tool in "${tools[@]}"; do
 
     if ! ${ONLY} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
         if ! eval "${tool//-/_}_is_installed" || ! eval "${tool//-/_}_matches_version" || ${REINSTALL}; then
-            tool_install+=("${tool}")
+
+            if test -n "${tool_deps[${tool}]}"; then
+                for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+                    if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
+                        tool_install+=("${dep}")
+                    fi
+                done
+            fi
+
+            if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+                tool_install+=("${tool}")
+            fi
         fi
     fi
 done
