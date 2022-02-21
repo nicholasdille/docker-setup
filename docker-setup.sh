@@ -902,7 +902,7 @@ function get_contrib() {
     fi
 }
 
-function download_and_cache() {
+function get_file() {
     local url=$1
 
     local hash
@@ -921,7 +921,7 @@ function download_and_cache() {
         curl -sLo "${cache_path}/file" "${url}"
     fi
 
-    echo "${cache_path}/file"
+    cat "${cache_path}/file"
 }
 
 # Create directories
@@ -951,7 +951,7 @@ mkdir -p \
 function install-jq() {
     echo "jq ${JQ_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64")" "${TARGET}/bin/jq"
+    get_file "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" >"${TARGET}/bin/jq"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/jq"
 }
@@ -959,7 +959,7 @@ function install-jq() {
 function install-yq() {
     echo "yq ${YQ_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64")" "${TARGET}/bin/yq"
+    get_file "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64" >"${TARGET}/bin/yq"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/yq"
     echo "Install completion"
@@ -1023,8 +1023,8 @@ function install-docker() {
         esac
     fi
     echo "Install binaries"
-    tar -xz \
-        --file "$(download_and_cache "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz")" \
+    get_file "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz" \
+    | tar -xz \
         --directory "${TARGET}/libexec/docker/bin" \
         --strip-components=1 \
         --no-same-owner
@@ -1032,17 +1032,17 @@ function install-docker() {
     mv "${TARGET}/libexec/docker/bin/docker" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/docker-proxy" "${TARGET}/bin"
     echo "Install rootless scripts"
-    tar -xz \
-        --file "$(download_and_cache "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz")" \
+    get_file "https://download.docker.com/linux/static/stable/x86_64/docker-rootless-extras-${DOCKER_VERSION}.tgz" \
+    | tar -xz \
         --directory "${TARGET}/libexec/docker/bin" \
         --strip-components=1 \
         --no-same-owner
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless.sh" "${TARGET}/bin"
     mv "${TARGET}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${TARGET}/bin"
     echo "Install completion"
-    cp "$(download_and_cache "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker")" "${TARGET}/share/bash-completion/completions/docker"
-    cp "$(download_and_cache "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish")" "${TARGET}/share/fish/vendor_completions.d/docker.fish"
-    cp "$(download_and_cache "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker")" "${TARGET}/share/zsh/vendor-completions/_docker"
+    get_file "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/bash/docker" >"${TARGET}/share/bash-completion/completions/docker"
+    get_file "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/fish/docker.fish" >"${TARGET}/share/fish/vendor_completions.d/docker.fish"
+    get_file "https://github.com/docker/cli/raw/v${DOCKER_VERSION}/contrib/completion/zsh/_docker" >"${TARGET}/share/zsh/vendor-completions/_docker"
     echo "Binaries installed after ${SECONDS} seconds."
     if docker_is_running; then
         touch "${DOCKER_SETUP_CACHE}/docker_already_present"
@@ -1051,8 +1051,8 @@ function install-docker() {
 
     else
         echo "Install systemd units"
-        cp "$(download_and_cache "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service")" "${PREFIX}/etc/systemd/system/docker.service"
-        cp "$(download_and_cache "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket")" "${PREFIX}/etc/systemd/system/docker.socket"
+        get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service" >"${PREFIX}/etc/systemd/system/docker.service"
+        get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket" >"${PREFIX}/etc/systemd/system/docker.socket"
         sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
         sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
         if is_debian || is_clearlinux; then
@@ -1064,16 +1064,16 @@ function install-docker() {
             chmod +x "${PREFIX}/etc/init.d/docker"
         elif is_redhat; then
             echo "Install init script for redhat"
-            cp "$(download_and_cache "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig")" "${PREFIX}/etc/sysconfig/docker"
-            cp "$(download_and_cache "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker")" "${PREFIX}/etc/init.d/docker"
+            get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig" >"${PREFIX}/etc/sysconfig/docker"
+            get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker" >"${PREFIX}/etc/init.d/docker"
             # shellcheck disable=SC1083
             sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
             sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
             chmod +x "${PREFIX}/etc/init.d/docker"
         elif is_alpine; then
             echo "Install openrc script for alpine"
-            cp "$(download_and_cache "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd")" "${PREFIX}/etc/conf.d/docker"
-            cp "$(download_and_cache "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd")" "${PREFIX}/etc/init.d/docker"
+            get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd" >"${PREFIX}/etc/conf.d/docker"
+            get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd" >"${PREFIX}/etc/init.d/docker"
             # shellcheck disable=1083
             sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
             sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
@@ -1208,8 +1208,8 @@ EOF
 function install-containerd() {
     echo "containerd ${CONTAINERD_VERSION}"
     echo "Install binaries"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner
@@ -1245,7 +1245,7 @@ EOF
         sed -i "s|/opt/cni/bin|${RELATIVE_TARGET}/libexec/cni|" "${PREFIX}/etc/containerd/config.toml"
     fi
     echo "Install systemd unit"
-    cp "$(download_and_cache "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service")" "${PREFIX}/etc/systemd/system/containerd.service"
+    get_file "https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service" >"${PREFIX}/etc/systemd/system/containerd.service"
     sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${RELATIVE_TARGET}/bin/containerd|" "${PREFIX}/etc/systemd/system/containerd.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
@@ -1260,8 +1260,8 @@ EOF
 function install-rootlesskit() {
     echo "rootlesskit ${ROOTLESSKIT_VERSION}"
     echo "Install binaries"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz")" \
+    get_file "https://github.com/rootless-containers/rootlesskit/releases/download/v${ROOTLESSKIT_VERSION}/rootlesskit-x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
 }
@@ -1269,7 +1269,7 @@ function install-rootlesskit() {
 function install-runc() {
     echo "runc ${RUNC_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64")" "${TARGET}/bin/runc"
+    get_file "https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.amd64" >"${TARGET}/bin/runc"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runc"
     if ${SKIP_DOCS}; then
@@ -1306,7 +1306,7 @@ function install-docker-compose() {
         DOCKER_COMPOSE_TARGET="${TARGET}/bin/docker-compose"
     fi
     echo "Install binary"
-    cp "$(download_and_cache "${DOCKER_COMPOSE_URL}")" "${DOCKER_COMPOSE_TARGET}"
+    get_file "${DOCKER_COMPOSE_URL}" >"${DOCKER_COMPOSE_TARGET}"
     echo "Set executable bits"
     chmod +x "${DOCKER_COMPOSE_TARGET}"
     if test "${DOCKER_COMPOSE}" == "v2"; then
@@ -1323,7 +1323,7 @@ EOF
 function install-docker-scan() {
     echo "docker-scan ${DOCKER_SCAN_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64")" "${DOCKER_PLUGINS_PATH}/docker-scan"
+    get_file "https://github.com/docker/scan-cli-plugin/releases/download/v${DOCKER_SCAN_VERSION}/docker-scan_linux_amd64" >"${DOCKER_PLUGINS_PATH}/docker-scan"
     echo "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-scan"
     mkdir -p "${DOCKER_SETUP_CACHE}/docker-scan"
@@ -1333,7 +1333,7 @@ function install-docker-scan() {
 function install-slirp4netns() {
     echo "slirp4netns ${SLIRP4NETNS_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64")" "${TARGET}/bin/slirp4netns"
+    get_file "https://github.com/rootless-containers/slirp4netns/releases/download/v${SLIRP4NETNS_VERSION}/slirp4netns-x86_64" >"${TARGET}/bin/slirp4netns"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/slirp4netns"
     if ${SKIP_DOCS}; then
@@ -1362,8 +1362,8 @@ EOF
 function install-hub-tool() {
     echo "hub-tool ${HUB_TOOL_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz")" \
+    get_file "https://github.com/docker/hub-tool/releases/download/v${HUB_TOOL_VERSION}/hub-tool-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner
@@ -1372,7 +1372,7 @@ function install-hub-tool() {
 function install-docker-machine() {
     echo "docker-machine ${DOCKER_MACHINE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64")" "${TARGET}/bin/docker-machine"
+    get_file "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-Linux-x86_64" >"${TARGET}/bin/docker-machine"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/docker-machine"
 }
@@ -1380,7 +1380,7 @@ function install-docker-machine() {
 function install-buildx() {
     echo "buildx ${BUILDX_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64")" "${DOCKER_PLUGINS_PATH}/docker-buildx"
+    get_file "https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-amd64" >"${DOCKER_PLUGINS_PATH}/docker-buildx"
     echo "Set executable bits"
     chmod +x "${DOCKER_PLUGINS_PATH}/docker-buildx"
     if docker_is_running || tool_will_be_installed "docker"; then
@@ -1394,8 +1394,8 @@ function install-buildx() {
 function install-manifest-tool() {
     echo "manifest-tool ${MANIFEST_TOOL_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/binaries-manifest-tool-${MANIFEST_TOOL_VERSION}.tar.gz")" \
+    get_file "https://github.com/estesp/manifest-tool/releases/download/v${MANIFEST_TOOL_VERSION}/binaries-manifest-tool-${MANIFEST_TOOL_VERSION}.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
     mv "${TARGET}/bin/manifest-tool-linux-amd64" "${TARGET}/bin/manifest-tool"
@@ -1404,14 +1404,14 @@ function install-manifest-tool() {
 function install-buildkit() {
     echo "BuildKit ${BUILDKIT_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz")" \
+    get_file "https://github.com/moby/buildkit/releases/download/v${BUILDKIT_VERSION}/buildkit-v${BUILDKIT_VERSION}.linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner
     echo "Install systemd units"
-    cp "$(download_and_cache "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.service")" "${PREFIX}/etc/systemd/system/buildkit.service"
-    cp "$(download_and_cache "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket")" "${PREFIX}/etc/systemd/system/buildkit.socket"
+    get_file "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.service" >"${PREFIX}/etc/systemd/system/buildkit.service"
+    get_file "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket" >"${PREFIX}/etc/systemd/system/buildkit.socket"
     sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
     echo "Install init script"
     get_contrib "${PREFIX}/etc/init.d/buildkit" "buildkit/buildkit"
@@ -1426,7 +1426,7 @@ function install-buildkit() {
 function install-img() {
     echo "img ${IMG_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64")" "${TARGET}/bin/img"
+    get_file "https://github.com/genuinetools/img/releases/download/v${IMG_VERSION}/img-linux-amd64" >"${TARGET}/bin/img"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/img"
 }
@@ -1434,8 +1434,8 @@ function install-img() {
 function install-dive() {
     echo "dive ${DIVE_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz")" \
+    get_file "https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         dive
@@ -1448,20 +1448,20 @@ function install-portainer() {
         "${TARGET}/share/portainer" \
         "${TARGET}/lib/portainer"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner \
         portainer/portainer
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/portainer/portainer/releases/download/${PORTAINER_VERSION}/portainer-${PORTAINER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/share/portainer" \
         --strip-components=1 \
         --no-same-owner \
         portainer/public
     echo "Install dedicated docker-compose v1"
-    cp "$(download_and_cache "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64")" "${TARGET}/share/portainer/docker-compose"
+    get_file "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_V1_VERSION}/docker-compose-Linux-x86_64" >"${TARGET}/share/portainer/docker-compose"
     echo "Set executable bits on docker-compose"
     chmod +x "${TARGET}/share/portainer/docker-compose"
     echo "Install systemd unit"
@@ -1482,8 +1482,8 @@ function install-portainer() {
 function install-oras() {
     echo "oras ${ORAS_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz")" \
+    get_file "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         oras
@@ -1492,11 +1492,11 @@ function install-oras() {
 function install-regclient() {
     echo "regclient ${REGCLIENT_VERSION}"
     echo "Install regctl"
-    cp "$(download_and_cache "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64")" "${TARGET}/bin/regctl"
+    get_file "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64" >"${TARGET}/bin/regctl"
     echo "Install regbot"
-    cp "$(download_and_cache "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64")" "${TARGET}/bin/regbot"
+    get_file "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regbot-linux-amd64" >"${TARGET}/bin/regbot"
     echo "Install regsync"
-    cp "$(download_and_cache "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regsync-linux-amd64")" "${TARGET}/bin/regsync"
+    get_file "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regsync-linux-amd64" >"${TARGET}/bin/regsync"
     echo "Set executable bits for regctl"
     chmod +x "${TARGET}/bin/regctl"
     echo "Set executable bits for regbot"
@@ -1520,7 +1520,7 @@ function install-regclient() {
 function install-cosign() {
     echo "cosign ${COSIGN_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64")" "${TARGET}/bin/cosign"
+    get_file "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64" >"${TARGET}/bin/cosign"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/cosign"
     echo "Install completion"
@@ -1532,8 +1532,8 @@ function install-cosign() {
 function install-nerdctl() {
     echo "nerdctl ${NERDCTL_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/containerd/nerdctl/releases/download/v${NERDCTL_VERSION}/nerdctl-${NERDCTL_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
 }
@@ -1541,8 +1541,8 @@ function install-nerdctl() {
 function install-cni() {
     echo "CNI ${CNI_VERSION}"
     echo "Install binaries"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz")" \
+    get_file "https://github.com/containernetworking/plugins/releases/download/v${CNI_VERSION}/cni-plugins-linux-amd64-v${CNI_VERSION}.tgz" \
+    | tar -xz \
         --directory "${TARGET}/libexec/cni" \
         --no-same-owner
 }
@@ -1550,8 +1550,8 @@ function install-cni() {
 function install-cni-isolation() {
     echo "CNI isolation ${CNI_ISOLATION_VERSION}"
     echo "Install binaries"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz")" \
+    get_file "https://github.com/AkihiroSuda/cni-isolation/releases/download/v${CNI_ISOLATION_VERSION}/cni-isolation-amd64.tgz" \
+    | tar -xz \
         --directory "${TARGET}/libexec/cni" \
         --no-same-owner
     mkdir -p "${DOCKER_SETUP_CACHE}/cni-isolation"
@@ -1561,8 +1561,8 @@ function install-cni-isolation() {
 function install-stargz-snapshotter() {
     echo "stargz-snapshotter ${STARGZ_SNAPSHOTTER_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/containerd/stargz-snapshotter/releases/download/v${STARGZ_SNAPSHOTTER_VERSION}/stargz-snapshotter-v${STARGZ_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
     echo "Add configuration to containerd"
@@ -1604,7 +1604,7 @@ EOF
 function install-fuse-overlayfs() {
     echo "fuse-overlayfs ${FUSE_OVERLAYFS_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/containers/fuse-overlayfs/releases/download/v${FUSE_OVERLAYFS_VERSION}/fuse-overlayfs-x86_64")" "${TARGET}/bin/fuse-overlayfs"
+    get_file "https://github.com/containers/fuse-overlayfs/releases/download/v${FUSE_OVERLAYFS_VERSION}/fuse-overlayfs-x86_64" >"${TARGET}/bin/fuse-overlayfs"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/fuse-overlayfs"
 }
@@ -1612,8 +1612,8 @@ function install-fuse-overlayfs() {
 function install-fuse-overlayfs-snapshotter() {
     echo "fuse-overlayfs-snapshotter ${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}/containerd-fuse-overlayfs-${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
     echo "Add configuration to containerd"
@@ -1634,7 +1634,7 @@ EOF
 function install-porter() {
     echo "porter ${PORTER_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/getporter/porter/releases/download/v${PORTER_VERSION}/porter-linux-amd64")" "${TARGET}/bin/porter"
+    get_file "https://github.com/getporter/porter/releases/download/v${PORTER_VERSION}/porter-linux-amd64" >"${TARGET}/bin/porter"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/porter"
     if test -z "${PREFIX}"; then
@@ -1651,8 +1651,8 @@ function install-porter() {
 function install-conmon() {
     echo "conmon ${CONMON_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz")" \
+    get_file "https://github.com/nicholasdille/conmon-static/releases/download/v${CONMON_VERSION}/conmon.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}" \
         --no-same-owner
 }
@@ -1660,14 +1660,14 @@ function install-conmon() {
 function install-podman() {
     echo "podman ${PODMAN_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz")" \
+    get_file "https://github.com/nicholasdille/podman-static/releases/download/v${PODMAN_VERSION}/podman.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}"
     echo "Install systemd unit"
-    cp "$(download_and_cache "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service")" "${PREFIX}/etc/systemd/system/podman.service"
-    cp "$(download_and_cache "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket")" "${PREFIX}/etc/systemd/system/podman.socket"
+    get_file "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.service" >"${PREFIX}/etc/systemd/system/podman.service"
+    get_file "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman.socket" >"${PREFIX}/etc/systemd/system/podman.socket"
     sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${RELATIVE_TARGET}/bin/podman|" "${PREFIX}/etc/systemd/system/podman.service"
-    cp "$(download_and_cache "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf")" "${TARGET}/lib/tmpfiles.d/podman-docker.conf"
+    get_file "https://github.com/containers/podman/raw/v${PODMAN_VERSION}/contrib/systemd/system/podman-docker.conf" >"${TARGET}/lib/tmpfiles.d/podman-docker.conf"
     if test -z "${PREFIX}"; then
         if has_systemd; then
             systemctl daemon-reload
@@ -1690,8 +1690,8 @@ function install-podman() {
 function install-buildah() {
     echo "buildah ${BUILDAH_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz")" \
+    get_file "https://github.com/nicholasdille/buildah-static/releases/download/v${BUILDAH_VERSION}/buildah.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}" \
         --no-same-owner
 }
@@ -1699,8 +1699,8 @@ function install-buildah() {
 function install-crun() {
     echo "crun ${CRUN_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz")" \
+    get_file "https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}" \
         --no-same-owner
     if has_tool "jq" || tool_will_be_installed "jq"; then
@@ -1725,8 +1725,8 @@ EOF
 function install-skopeo() {
     echo "skopeo ${SKOPEO_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz")" \
+    get_file "https://github.com/nicholasdille/skopeo-static/releases/download/v${SKOPEO_VERSION}/skopeo.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}" \
         --no-same-owner
 }
@@ -1734,8 +1734,8 @@ function install-skopeo() {
 function install-krew() {
     echo "krew ${KREW_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz")" \
+    get_file "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         ./krew-linux_amd64
@@ -1753,7 +1753,7 @@ EOF
 function install-kubectl() {
     echo "kubectl ${KUBECTL_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl")" "${TARGET}/bin/kubectl"
+    get_file "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" >"${TARGET}/bin/kubectl"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/kubectl"
     echo "Install completion"
@@ -1765,7 +1765,7 @@ alias k=kubectl
 complete -F __start_kubectl k
 EOF
     echo "Install kubectl-convert"
-    cp "$(download_and_cache "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert")" "${TARGET}/bin/kubectl-convert"
+    get_file "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl-convert" >"${TARGET}/bin/kubectl-convert"
     chmod +x "${TARGET}/bin/kubectl-convert"
     if test -z "${PREFIX}" && ( has_tool "krew" || tool_will_be_installed "krew" ); then
         echo "Waiting for krew"
@@ -1855,7 +1855,7 @@ EOF
 function install-kind() {
     echo "kind ${KIND_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64")" "${TARGET}/bin/kind"
+    get_file "https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64" >"${TARGET}/bin/kind"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/kind"
     echo "Install completion"
@@ -1867,7 +1867,7 @@ function install-kind() {
 function install-k3d() {
     echo "k3d ${K3D_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64")" "${TARGET}/bin/k3d"
+    get_file "https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-amd64" >"${TARGET}/bin/k3d"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/k3d"
     echo "Install completion"
@@ -1879,8 +1879,8 @@ function install-k3d() {
 function install-helm() {
     echo "helm ${HELM_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner \
@@ -1923,8 +1923,8 @@ function install-helm() {
 function install-kustomize() {
     echo "kustomize ${KUSTOMIZE_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz")" \
+    get_file "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
     echo "Install completion"
@@ -1936,7 +1936,7 @@ function install-kustomize() {
 function install-kompose() {
     echo "kompose ${KOMPOSE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64")" "${TARGET}/bin/kompose"
+    get_file "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64" >"${TARGET}/bin/kompose"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/kompose"
     echo "Install completion"
@@ -1948,7 +1948,7 @@ function install-kompose() {
 function install-kapp() {
     echo "kapp ${KAPP_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64")" "${TARGET}/bin/kapp"
+    get_file "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${KAPP_VERSION}/kapp-linux-amd64" >"${TARGET}/bin/kapp"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/kapp"
     echo "Install completion"
@@ -1960,7 +1960,7 @@ function install-kapp() {
 function install-ytt() {
     echo "ytt ${YTT_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64")" "${TARGET}/bin/ytt"
+    get_file "https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${YTT_VERSION}/ytt-linux-amd64" >"${TARGET}/bin/ytt"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/ytt"
     echo "Install completion"
@@ -1972,7 +1972,7 @@ function install-ytt() {
 function install-arkade() {
     echo "arkade ${ARKADE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade")" "${TARGET}/bin/arkade"
+    get_file "https://github.com/alexellis/arkade/releases/download/${ARKADE_VERSION}/arkade" >"${TARGET}/bin/arkade"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/arkade"
     echo "Install completion"
@@ -1984,7 +1984,7 @@ function install-arkade() {
 function install-clusterctl() {
     echo "clusterctl ${CLUSTERCTL_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL_VERSION}/clusterctl-linux-amd64")" "${TARGET}/bin/clusterctl"
+    get_file "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${CLUSTERCTL_VERSION}/clusterctl-linux-amd64" >"${TARGET}/bin/clusterctl"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/clusterctl"
     echo "Install completion"
@@ -1995,7 +1995,7 @@ function install-clusterctl() {
 function install-clusterawsadm() {
     echo "clusterawsadm ${CLUSTERAWSADM_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${CLUSTERAWSADM_VERSION}/clusterawsadm-linux-amd64")" "${TARGET}/bin/clusterawsadm"
+    get_file "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${CLUSTERAWSADM_VERSION}/clusterawsadm-linux-amd64" >"${TARGET}/bin/clusterawsadm"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/clusterawsadm"
     echo "Install completion"
@@ -2007,7 +2007,7 @@ function install-clusterawsadm() {
 function install-minikube() {
     echo "minikube ${MINIKUBE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/kubernetes/minikube/releases/download/v${MINIKUBE_VERSION}/minikube-linux-amd64")" "${TARGET}/bin/minikube"
+    get_file "https://github.com/kubernetes/minikube/releases/download/v${MINIKUBE_VERSION}/minikube-linux-amd64" >"${TARGET}/bin/minikube"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/minikube"
     echo "Install completion"
@@ -2019,8 +2019,8 @@ function install-minikube() {
 function install-kubeswitch() {
     echo "kubeswitch ${KUBESWITCH_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/danielb42/kubeswitch/releases/download/v${KUBESWITCH_VERSION}/kubeswitch_linux_amd64.tar.gz")" \
+    get_file "https://github.com/danielb42/kubeswitch/releases/download/v${KUBESWITCH_VERSION}/kubeswitch_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         kubeswitch
@@ -2031,7 +2031,7 @@ function install-kubeswitch() {
 function install-k3s() {
     echo "k3s ${K3S_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/k3s-io/k3s/releases/download/v${K3S_VERSION}/k3s")" "${TARGET}/bin/k3s"
+    get_file "https://github.com/k3s-io/k3s/releases/download/v${K3S_VERSION}/k3s" >"${TARGET}/bin/k3s"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/k3s"
     echo "Install systemd unit"
@@ -2048,8 +2048,8 @@ function install-k3s() {
 function install-crictl() {
     echo "crictl ${CRICTL_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CRICTL_VERSION}/crictl-v${CRICTL_VERSION}-linux-amd64.tar.gz")" \
+    get_file "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CRICTL_VERSION}/crictl-v${CRICTL_VERSION}-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
 }
@@ -2057,8 +2057,8 @@ function install-crictl() {
 function install-trivy() {
     echo "trivy ${TRIVY_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz")" \
+    get_file "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         trivy
@@ -2067,8 +2067,8 @@ function install-trivy() {
 function install-gvisor() {
     echo "gvisor ${GVISOR_VERSION}"
     echo "Install binaries"
-    cp "$(download_and_cache "https://storage.googleapis.com/gvisor/releases/release/${GVISOR_VERSION}/x86_64/runsc")" "${TARGET}/bin/runsc"
-    cp "$(download_and_cache "https://storage.googleapis.com/gvisor/releases/release/${GVISOR_VERSION}/x86_64/containerd-shim-runsc-v1")" "${TARGET}/bin/containerd-shim-runsc-v1"
+    get_file "https://storage.googleapis.com/gvisor/releases/release/${GVISOR_VERSION}/x86_64/runsc" >"${TARGET}/bin/runsc"
+    get_file "https://storage.googleapis.com/gvisor/releases/release/${GVISOR_VERSION}/x86_64/containerd-shim-runsc-v1" >"${TARGET}/bin/containerd-shim-runsc-v1"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/runsc"
     chmod +x "${TARGET}/bin/containerd-shim-runsc-v1"
@@ -2136,7 +2136,7 @@ EOF
 function install-sops() {
     echo "sops ${SOPS_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux")" "${TARGET}/bin/sops"
+    get_file "https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux" >"${TARGET}/bin/sops"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/sops"
 }
@@ -2144,8 +2144,8 @@ function install-sops() {
 function install-kubectl-resources() {
     echo "kubectl-resources ${KUBECTL_RESOURCES_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/howardjohn/kubectl-resources/releases/download/v${KUBECTL_RESOURCES_VERSION}/kubectl-resources_${KUBECTL_RESOURCES_VERSION}_Linux_x86_64.tar.gz")" \
+    get_file "https://github.com/howardjohn/kubectl-resources/releases/download/v${KUBECTL_RESOURCES_VERSION}/kubectl-resources_${KUBECTL_RESOURCES_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         kubectl-resources
@@ -2156,8 +2156,8 @@ function install-kubectl-resources() {
 function install-kubectl-free() {
     echo "kubectl-free ${KUBECTL_FREE_VERSION}"
     echo "Install binary"
-    curl -sLo "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" 
-    unzip -o -d "/tmp" "$(download_and_cache "https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip")"
+    get_file "https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip" >"/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
+    unzip -o -d "/tmp" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
     cp -fv "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64/kubectl-free" "${TARGET}/bin/"
     rm -rf "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64" "/tmp/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip"
 }
@@ -2165,8 +2165,8 @@ function install-kubectl-free() {
 function install-kubectl-build() {
     echo "kubectl-build ${KUBECTL_BUILD_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${KUBECTL_BUILD_VERSION}/linux-v${KUBECTL_BUILD_VERSION}.tgz")" \
+    get_file "https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${KUBECTL_BUILD_VERSION}/linux-v${KUBECTL_BUILD_VERSION}.tgz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner
     mkdir -p "${DOCKER_SETUP_CACHE}/kubectl-build"
@@ -2176,8 +2176,8 @@ function install-kubectl-build() {
 function install-ipfs() {
     echo "ipfs ${IPFS_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/ipfs/go-ipfs/releases/download/v${IPFS_VERSION}/go-ipfs_v${IPFS_VERSION}_linux-amd64.tar.gz")" \
+    get_file "https://github.com/ipfs/go-ipfs/releases/download/v${IPFS_VERSION}/go-ipfs_v${IPFS_VERSION}_linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner \
@@ -2205,8 +2205,8 @@ EOF
 function install-firecracker() {
     echo "firecracker ${FIRECRACKER_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/firecracker-microvm/firecracker/releases/download/v${FIRECRACKER_VERSION}/firecracker-v${FIRECRACKER_VERSION}-x86_64.tgz")" \
+    get_file "https://github.com/firecracker-microvm/firecracker/releases/download/v${FIRECRACKER_VERSION}/firecracker-v${FIRECRACKER_VERSION}-x86_64.tgz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner \
@@ -2221,7 +2221,7 @@ function install-firecracker() {
 function install-firectl() {
     echo "firectl ${FIRECTL_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://firectl-release.s3.amazonaws.com/firectl-v${FIRECTL_VERSION}")" "${TARGET}/bin/firectl"
+    get_file "https://firectl-release.s3.amazonaws.com/firectl-v${FIRECTL_VERSION}" >"${TARGET}/bin/firectl"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/firectl"
 }
@@ -2229,8 +2229,8 @@ function install-firectl() {
 function install-ignite() {
     echo "ignite ${IGNITE_VERSION}"
     echo "Install binaries"
-    cp "$(download_and_cache "https://github.com/weaveworks/ignite/releases/download/v${IGNITE_VERSION}/ignite-amd64")" "${TARGET}/bin/ignite"
-    cp "$(download_and_cache "https://github.com/weaveworks/ignite/releases/download/v${IGNITE_VERSION}/ignited-amd64")" "${TARGET}/bin/ignited"
+    get_file "https://github.com/weaveworks/ignite/releases/download/v${IGNITE_VERSION}/ignite-amd64" >"${TARGET}/bin/ignite"
+    get_file "https://github.com/weaveworks/ignite/releases/download/v${IGNITE_VERSION}/ignited-amd64" >"${TARGET}/bin/ignited"
     echo "Set executable bits"
     chmod +x \
         "${TARGET}/bin/ignite" \
@@ -2243,8 +2243,8 @@ function install-ignite() {
 function install-kubefire() {
     echo "kubefire ${KUBEFIRE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/kubefire-linux-amd64")" "${TARGET}/bin/kubefire"
-    cp "$(download_and_cache "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/host-local-rev-linux-amd64")" "${TARGET}/libexec/cni/host-local-rev"
+    get_file "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/kubefire-linux-amd64" >"${TARGET}/bin/kubefire"
+    get_file "https://github.com/innobead/kubefire/releases/download/v${KUBEFIRE_VERSION}/host-local-rev-linux-amd64" >"${TARGET}/libexec/cni/host-local-rev"
     echo "Set executable bits"
     chmod +x \
         "${TARGET}/bin/kubefire" \
@@ -2254,7 +2254,7 @@ function install-kubefire() {
 function install-footloose() {
     echo "footloose ${FOOTLOOSE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/weaveworks/footloose/releases/download/${FOOTLOOSE_VERSION}/footloose-${FOOTLOOSE_VERSION}-linux-x86_64")" "${TARGET}/bin/footloose"
+    get_file "https://github.com/weaveworks/footloose/releases/download/${FOOTLOOSE_VERSION}/footloose-${FOOTLOOSE_VERSION}-linux-x86_64" >"${TARGET}/bin/footloose"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/footloose"
 }
@@ -2262,8 +2262,8 @@ function install-footloose() {
 function install-crane() {
     echo "crane ${CRANE_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz")" \
+    get_file "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         crane
@@ -2276,7 +2276,7 @@ function install-crane() {
 function install-umoci() {
     echo "umoci ${UMOCI_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/opencontainers/umoci/releases/download/v${UMOCI_VERSION}/umoci.amd64")" "${TARGET}/bin/umoci"
+    get_file "https://github.com/opencontainers/umoci/releases/download/v${UMOCI_VERSION}/umoci.amd64" >"${TARGET}/bin/umoci"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/umoci"
 }
@@ -2284,7 +2284,7 @@ function install-umoci() {
 function install-kubeletctl() {
     echo "kubeletctl ${KUBELETCTL_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/cyberark/kubeletctl/releases/download/v${KUBELETCTL_VERSION}/kubeletctl_linux_amd64")" "${TARGET}/bin/kubeletctl"
+    get_file "https://github.com/cyberark/kubeletctl/releases/download/v${KUBELETCTL_VERSION}/kubeletctl_linux_amd64" >"${TARGET}/bin/kubeletctl"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/kubeletctl"
 }
@@ -2292,8 +2292,8 @@ function install-kubeletctl() {
 function install-lazydocker() {
     echo "lazydocker ${LAZYDOCKER_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz")" \
+    get_file "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         lazydocker
@@ -2302,8 +2302,8 @@ function install-lazydocker() {
 function install-k9s() {
     echo "k9s ${K9S_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz")" \
+    get_file "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         k9s
@@ -2312,8 +2312,8 @@ function install-k9s() {
 function install-lazygit() {
     echo "lazygit ${LAZYGIT_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz")" \
+    get_file "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         lazygit
@@ -2322,7 +2322,7 @@ function install-lazygit() {
 function install-ctop() {
     echo "ctop ${CTOP_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/bcicen/ctop/releases/download/${CTOP_VERSION}/ctop-${CTOP_VERSION}-linux-amd64")" "${TARGET}/bin/ctop"
+    get_file "https://github.com/bcicen/ctop/releases/download/${CTOP_VERSION}/ctop-${CTOP_VERSION}-linux-amd64" >"${TARGET}/bin/ctop"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/ctop"
 }
@@ -2330,7 +2330,7 @@ function install-ctop() {
 function install-dry() {
     echo "dry ${DRY_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/moncho/dry/releases/download/v${DRY_VERSION}/dry-linux-amd64")" "${TARGET}/bin/dry"
+    get_file "https://github.com/moncho/dry/releases/download/v${DRY_VERSION}/dry-linux-amd64" >"${TARGET}/bin/dry"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/dry"
 }
@@ -2338,7 +2338,7 @@ function install-dry() {
 function install-duffle() {
     echo "duffle ${DUFFLE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/cnabio/duffle/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64")" "${TARGET}/bin/duffle"
+    get_file "https://github.com/cnabio/duffle/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64" >"${TARGET}/bin/duffle"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/duffle"
 }
@@ -2346,7 +2346,7 @@ function install-duffle() {
 function install-jp() {
     echo "jp ${JP_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64")" "${TARGET}/bin/jp"
+    get_file "https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64" >"${TARGET}/bin/jp"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/jp"
 }
@@ -2354,8 +2354,8 @@ function install-jp() {
 function install-qemu() {
     echo "qemu ${QEMU_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/nicholasdille/qemu-static/releases/download/v${QEMU_VERSION}/qemu.tar.gz")" \
+    get_file "https://github.com/nicholasdille/qemu-static/releases/download/v${QEMU_VERSION}/qemu.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}" \
         --strip-components=2 \
         --no-same-owner
@@ -2364,18 +2364,18 @@ function install-qemu() {
 function install-helmfile() {
     echo "helmfile ${HELMFILE_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64")" "${TARGET}/bin/helmfile"
+    get_file "https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64" >"${TARGET}/bin/helmfile"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/helmfile"
     echo "Install completion"
-    cp "$(download_and_cache "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_bash_autocomplete")" "${TARGET}/share/bash-completion/completions/helmfile"
-    cp "$(download_and_cache "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_zsh_autocomplete")" "${TARGET}/share/zsh/vendor-completions/_helmfile"
+    get_file "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_bash_autocomplete" >"${TARGET}/share/bash-completion/completions/helmfile"
+    get_file "https://github.com/roboll/helmfile/raw/v${HELMFILE_VERSION}/autocomplete/helmfile_zsh_autocomplete" >"${TARGET}/share/zsh/vendor-completions/_helmfile"
 }
 
 function install-dasel() {
     echo "dasel ${DASEL_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/TomWright/dasel/releases/download/v${DASEL_VERSION}/dasel_linux_amd64")" "${TARGET}/bin/dasel"
+    get_file "https://github.com/TomWright/dasel/releases/download/v${DASEL_VERSION}/dasel_linux_amd64" >"${TARGET}/bin/dasel"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/dasel"
 }
@@ -2383,8 +2383,8 @@ function install-dasel() {
 function install-glow() {
     echo "glow ${GLOW_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/charmbracelet/glow/releases/download/v${GLOW_VERSION}/glow_${GLOW_VERSION}_linux_x86_64.tar.gz")" \
+    get_file "https://github.com/charmbracelet/glow/releases/download/v${GLOW_VERSION}/glow_${GLOW_VERSION}_linux_x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         glow
@@ -2393,8 +2393,8 @@ function install-glow() {
 function install-patat() {
     echo "patat ${PATAT_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/jaspervdj/patat/releases/download/v${PATAT_VERSION}/patat-v${PATAT_VERSION}-linux-x86_64.tar.gz")" \
+    get_file "https://github.com/jaspervdj/patat/releases/download/v${PATAT_VERSION}/patat-v${PATAT_VERSION}-linux-x86_64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --strip-components=1 \
         --no-same-owner \
@@ -2408,14 +2408,14 @@ function install-patat() {
 function install-iptables() {
     echo "Install iptables ${IPTABLES_VERSION}"
     if is_centos_7 || is_amzn_2; then
-        tar -xz \
-            --file "$(download_and_cache "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz")" \
+        get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
+        | tar -xz \
             --directory "${TARGET}" \
             --no-same-owner
 
     elif is_centos_8 || is_rockylinux; then
-        tar -xz \
-            --file "$(download_and_cache "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz")" \
+        get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
+        | tar -xz \
             --directory "${TARGET}" \
             --no-same-owner
 
@@ -2428,7 +2428,7 @@ function install-iptables() {
 function install-sshocker() {
     echo "sshocker ${SSHOCKER_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/lima-vm/sshocker/releases/download/v${SSHOCKER_VERSION}/sshocker-Linux-x86_64")" "${TARGET}/bin/sshocker"
+    get_file "https://github.com/lima-vm/sshocker/releases/download/v${SSHOCKER_VERSION}/sshocker-Linux-x86_64" >"${TARGET}/bin/sshocker"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/sshocker"
 }
@@ -2436,8 +2436,8 @@ function install-sshocker() {
 function install-containerssh() {
     echo "containerssh ${CONTAINERSSH_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/ContainerSSH/ContainerSSH/releases/download/v${CONTAINERSSH_VERSION}/containerssh_${CONTAINERSSH_VERSION}_linux_amd64.tar.gz")" \
+    get_file "https://github.com/ContainerSSH/ContainerSSH/releases/download/v${CONTAINERSSH_VERSION}/containerssh_${CONTAINERSSH_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         containerssh \
@@ -2450,8 +2450,8 @@ function install-containerssh() {
 function install-dyff() {
     echo "dyff ${DYFF_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/homeport/dyff/releases/download/v${DYFF_VERSION}/dyff_${DYFF_VERSION}_linux_amd64.tar.gz")" \
+    get_file "https://github.com/homeport/dyff/releases/download/v${DYFF_VERSION}/dyff_${DYFF_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         dyff
@@ -2463,8 +2463,8 @@ function install-dyff() {
 function install-hcloud() {
     echo "hcloud ${HCLOUD_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/hetznercloud/cli/releases/download/v${HCLOUD_VERSION}/hcloud-linux-amd64.tar.gz")" \
+    get_file "https://github.com/hetznercloud/cli/releases/download/v${HCLOUD_VERSION}/hcloud-linux-amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         hcloud
@@ -2476,8 +2476,8 @@ function install-hcloud() {
 function install-norouter() {
     echo "norouter ${NOROUTER_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/norouter/norouter/releases/download/v${NOROUTER_VERSION}/norouter-Linux-x86_64.tgz")" \
+    get_file "https://github.com/norouter/norouter/releases/download/v${NOROUTER_VERSION}/norouter-Linux-x86_64.tgz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         norouter
@@ -2486,8 +2486,8 @@ function install-norouter() {
 function install-notation() {
     echo "notation ${NOTATION_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz")" \
+    get_file "https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         notation \
@@ -2499,7 +2499,7 @@ function install-notation() {
 function install-k3sup() {
     echo "k3sup ${K3SUP_VERSION}"
     echo "Install binary"
-    cp "$(download_and_cache "https://github.com/alexellis/k3sup/releases/download/${K3SUP_VERSION}/k3sup")" "${TARGET}/bin/k3sup"
+    get_file "https://github.com/alexellis/k3sup/releases/download/${K3SUP_VERSION}/k3sup" >"${TARGET}/bin/k3sup"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/k3sup"
 }
@@ -2507,8 +2507,8 @@ function install-k3sup() {
 function install-mitmproxy() {
     echo "mitmproxy ${MITMPROXY_VERSION}"
     echo "Install binary"
-    tar -xz \
-        --file "$(download_and_cache "https://snapshots.mitmproxy.org/${MITMPROXY_VERSION}/mitmproxy-${MITMPROXY_VERSION}-linux.tar.gz")" \
+    get_file "https://snapshots.mitmproxy.org/${MITMPROXY_VERSION}/mitmproxy-${MITMPROXY_VERSION}-linux.tar.gz" \
+    | tar -xz \
         --directory "${TARGET}/bin" \
         --no-same-owner \
         mitmproxy \
