@@ -888,24 +888,6 @@ function wait_for_docker() {
     fi
 }
 
-function get_contrib() {
-    local path=$1
-    local file=$2
-    if test -d "${DOCKER_SETUP_CONTRIB}"; then
-        echo "Looking for ${DOCKER_SETUP_CONTRIB}/${file}"
-        if ! test -f "${DOCKER_SETUP_CONTRIB}/${file}"; then
-            echo -e "${RED}[ERROR] Found local contrib directory but missing file ${file}.${RESET}"
-            exit 1
-        fi
-        echo -e "[DEBUG] Copy from locally cached contrib directory."
-        cp "${DOCKER_SETUP_CONTRIB}/${file}" "${path}"
-
-    else
-        echo -e "[DEBUG] Download from contrib directory."
-        curl -sLo "${path}" "${DOCKER_SETUP_REPO_RAW}/contrib/${file}"
-    fi
-}
-
 function get_file() {
     local url=$1
 
@@ -1423,7 +1405,7 @@ function install-buildkit() {
     get_file "https://github.com/moby/buildkit/raw/v${BUILDKIT_VERSION}/examples/systemd/buildkit.socket" >"${PREFIX}/etc/systemd/system/buildkit.socket"
     sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
     echo "Install init script"
-    get_contrib "${PREFIX}/etc/init.d/buildkit" "buildkit/buildkit"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/buildkit/buildkit" >"${PREFIX}/etc/init.d/buildkit"
     sed -i "s|/usr/local/bin/buildkitd|${RELATIVE_TARGET}/bin/buildkitd|" "${PREFIX}/etc/init.d/buildkit"
     chmod +x "${PREFIX}/etc/init.d/buildkit"
     if test -z "${PREFIX}" && has_systemd; then
@@ -1474,10 +1456,10 @@ function install-portainer() {
     echo "Set executable bits on docker-compose"
     chmod +x "${TARGET}/share/portainer/docker-compose"
     echo "Install systemd unit"
-    get_contrib "${PREFIX}/etc/systemd/system/portainer.service" "portainer/portainer.service"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer.service" >"${PREFIX}/etc/systemd/system/portainer.service"
     sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${PREFIX}/etc/systemd/system/portainer.service"
     echo "Install init script"
-    get_contrib "${PREFIX}/etc/init.d/portainer" "portainer/portainer"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/portainer/portainer" >"${PREFIX}/etc/init.d/portainer"
     sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${PREFIX}/etc/init.d/portainer"
     chmod +x "${PREFIX}/etc/init.d/portainer"
     if test -z "${PREFIX}"; then
@@ -1579,7 +1561,7 @@ function install-stargz-snapshotter() {
 "${TARGET}/bin/dasel" put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
 EOF
     echo "Install systemd units"
-    get_contrib "${PREFIX}/etc/systemd/system/stargz-snapshotter.service" "stargz-snapshotter/stargz-snapshotter.service"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/stargz-snapshotter/stargz-snapshotter.service" >"${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
     sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-stargz-grpc|" "${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
@@ -1630,7 +1612,7 @@ function install-fuse-overlayfs-snapshotter() {
 "${TARGET}/bin/dasel" put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
 EOF
     echo "Install systemd units"
-    get_contrib "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service" "fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service" >"${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
     sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-fuse-overlayfs-grpc|" "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
@@ -1692,7 +1674,7 @@ function install-podman() {
         storage.json
     )
     for file in "${files[@]}"; do
-        get_contrib "${PREFIX}/etc/containers/${file}" "podman/${file}"
+        get_file "${DOCKER_SETUP_REPO_RAW}/contrib/podman/${file}" >"${PREFIX}/etc/containers/${file}"
     done
 }
 
@@ -2044,7 +2026,7 @@ function install-k3s() {
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/k3s"
     echo "Install systemd unit"
-    get_contrib "${PREFIX}/etc/init.d/k3s" "k3s/k3s.service"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/k3s/k3s.service" >"${PREFIX}/etc/init.d/k3s"
     sed -i "s|/usr/local/bin/k3s|${RELATIVE_TARGET}/bin/k3s|g" "${PREFIX}/etc/systemd/system/k3s.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
@@ -2201,7 +2183,7 @@ function install-ipfs() {
 "${TARGET}/bin/dasel" put bool --file "${PREFIX}/etc/containerd/config.toml" --parser toml .ipfs true
 EOF
     echo "Install systemd units"
-    get_contrib "${PREFIX}/etc/systemd/system/ipfs.service" "ipfs/ipfs.service"
+    get_file "${DOCKER_SETUP_REPO_RAW}/contrib/ipfs/ipfs.service" >"${PREFIX}/etc/systemd/system/ipfs.service"
     sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${RELATIVE_TARGET}/bin/ipfs|" "${PREFIX}/etc/systemd/system/ipfs.service"
     if test -z "${PREFIX}"; then
         if has_systemd; then
