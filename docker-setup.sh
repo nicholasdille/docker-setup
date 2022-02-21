@@ -18,6 +18,7 @@ declare -a unknown_parameters
 : "${PLAN:=false}"
 : "${SKIP_DOCS:=false}"
 : "${MAX_PARALLEL:=10}"
+: "${NO_CACHE:=false}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -52,6 +53,9 @@ while test "$#" -gt 0; do
             ;;
         --skip-docs)
             SKIP_DOCS=true
+            ;;
+        --no-cache)
+            NO_CACHE=true
             ;;
         --version)
             SHOW_VERSION=true
@@ -904,6 +908,11 @@ function get_contrib() {
 
 function get_file() {
     local url=$1
+
+    if ${NO_CACHE}; then
+        curl -sL "${url}"
+        return
+    fi
 
     local hash
     hash="$(echo -n "${url}" | sha256sum | cut -d' ' -f1)"
