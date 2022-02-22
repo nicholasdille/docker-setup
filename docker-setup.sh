@@ -464,96 +464,96 @@ function umoci_is_installed()                      { is_executable "${TARGET}/bi
 function yq_is_installed()                         { is_executable "${TARGET}/bin/yq"; }
 function ytt_is_installed()                        { is_executable "${TARGET}/bin/ytt"; }
 
-function arkade_matches_version()                     {   test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)"                    == "${ARKADE_VERSION}"; }
-function buildah_matches_version()                    {   test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)"                                  == "${BUILDAH_VERSION}"; }
-function buildkit_matches_version()                   {   test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f3)"                                == "v${BUILDKIT_VERSION}"; }
-function buildx_matches_version()                     {   test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f2)"                     == "v${BUILDX_VERSION}"; }
-function clusterawsadm_matches_version()              {   test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
-function clusterctl_matches_version()                 {   test "$(${TARGET}/bin/clusterctl version --output short)"                                  == "v${CLUSTERCTL_VERSION}"; }
-function cni_matches_version()                        {   test "$(${TARGET}/libexec/cni/loopback 2>&1 | cut -d' ' -f4)"                              == "v${CNI_VERSION}"; }
-function cni_isolation_matches_version()              {   test -f "${DOCKER_SETUP_CACHE}/cni-isolation/${CNI_ISOLATION_VERSION}"; }
-function conmon_matches_version()                     {   test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"           == "${CONMON_VERSION}"; }
-function containerd_matches_version()                 {   test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)"                               == "v${CONTAINERD_VERSION}"; }
-function containerssh_matches_version()               {   test -f "${DOCKER_SETUP_CACHE}/containerssh/${CONTAINERSSH_VERSION}"; }
-function cosign_matches_version()                     {   test "$(${TARGET}/bin/cosign version | grep GitVersion | tr -s ' ' | cut -d' ' -f2)"       == "v${COSIGN_VERSION}"; }
-function crane_matches_version()                      {   test "$(${TARGET}/bin/crane version)"                                                      == "${CRANE_VERSION}"; }
-function crictl_matches_version()                     {   test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
-function crun_matches_version()                       {   test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
-function ctop_matches_version()                       {   test "$(${TARGET}/bin/ctop -v | cut -d, -f1 | cut -d' ' -f3)"                              == "${CTOP_VERSION}"; }
-function dasel_matches_version()                      {   test "$(${TARGET}/bin/dasel --version | cut -d' ' -f3)"                                    == "v${DASEL_VERSION}"; }
-function dive_matches_version()                       {   test "$(${TARGET}/bin/dive --version | cut -d' ' -f2)"                                     == "${DIVE_VERSION}"; }
-function docker_matches_version()                     {   test "$(${TARGET}/bin/dockerd --version | cut -d, -f1 | cut -d' ' -f3)"                    == "${DOCKER_VERSION}"; }
-function docker_compose_matches_version()             {   eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
-function docker_compose_v1_matches_version()          {   test "$(${TARGET}/bin/docker-compose version | cut -d' ' -f4)"                             == "v${DOCKER_COMPOSE_V1_VERSION}"; }
-function docker_compose_v2_matches_version()          {   test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version | cut -d' ' -f4)"            == "v${DOCKER_COMPOSE_V2_VERSION}"; }
-function docker_machine_matches_version()             {   test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1 | cut -d' ' -f3)"             == "${DOCKER_MACHINE_VERSION}"; }
-function docker_scan_matches_version()                {   test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
-function docuum_matches_version()                     {   test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
-function dry_matches_version()                        {   test "$(${TARGET}/bin/dry --version | cut -d, -f1 | cut -d' ' -f3)"                        == "${DRY_VERSION}"; }
-function duffle_matches_version()                     {   test "$(${TARGET}/bin/duffle version)"                                                     == "${DUFFLE_VERSION}"; }
-function dyff_matches_version()                       {   test "$(${TARGET}/bin/dyff version | cut -d' ' -f3)"                                       == "${DYFF_VERSION}"; }
-function firecracker_matches_version()                {   test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
-function firectl_matches_version()                    {   test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
-function footloose_matches_version()                  {   test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
-function fuse_overlayfs_matches_version()             {   test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1 | cut -d' ' -f3)"               == "${FUSE_OVERLAYFS_VERSION}"; }
+function arkade_matches_version()                     { test "$(${TARGET}/bin/arkade version | grep "Version" | cut -d' ' -f2)"                    == "${ARKADE_VERSION}"; }
+function buildah_matches_version()                    { test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)"                                  == "${BUILDAH_VERSION}"; }
+function buildkit_matches_version()                   { test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f3)"                                == "v${BUILDKIT_VERSION}"; }
+function buildx_matches_version()                     { test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f2)"                     == "v${BUILDX_VERSION}"; }
+function clusterawsadm_matches_version()              { test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
+function clusterctl_matches_version()                 { test "$(${TARGET}/bin/clusterctl version --output short)"                                  == "v${CLUSTERCTL_VERSION}"; }
+function cni_matches_version()                        { test "$(${TARGET}/libexec/cni/loopback 2>&1 | cut -d' ' -f4)"                              == "v${CNI_VERSION}"; }
+function cni_isolation_matches_version()              { test -f "${DOCKER_SETUP_CACHE}/cni-isolation/${CNI_ISOLATION_VERSION}"; }
+function conmon_matches_version()                     { test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"           == "${CONMON_VERSION}"; }
+function containerd_matches_version()                 { test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)"                               == "v${CONTAINERD_VERSION}"; }
+function containerssh_matches_version()               { test -f "${DOCKER_SETUP_CACHE}/containerssh/${CONTAINERSSH_VERSION}"; }
+function cosign_matches_version()                     { test "$(${TARGET}/bin/cosign version | grep GitVersion | tr -s ' ' | cut -d' ' -f2)"       == "v${COSIGN_VERSION}"; }
+function crane_matches_version()                      { test "$(${TARGET}/bin/crane version)"                                                      == "${CRANE_VERSION}"; }
+function crictl_matches_version()                     { test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
+function crun_matches_version()                       { test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
+function ctop_matches_version()                       { test "$(${TARGET}/bin/ctop -v | cut -d, -f1 | cut -d' ' -f3)"                              == "${CTOP_VERSION}"; }
+function dasel_matches_version()                      { test "$(${TARGET}/bin/dasel --version | cut -d' ' -f3)"                                    == "v${DASEL_VERSION}"; }
+function dive_matches_version()                       { test "$(${TARGET}/bin/dive --version | cut -d' ' -f2)"                                     == "${DIVE_VERSION}"; }
+function docker_matches_version()                     { test "$(${TARGET}/bin/dockerd --version | cut -d, -f1 | cut -d' ' -f3)"                    == "${DOCKER_VERSION}"; }
+function docker_compose_matches_version()             { eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
+function docker_compose_v1_matches_version()          { test "$(${TARGET}/bin/docker-compose version | cut -d' ' -f4)"                             == "v${DOCKER_COMPOSE_V1_VERSION}"; }
+function docker_compose_v2_matches_version()          { test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version | cut -d' ' -f4)"            == "v${DOCKER_COMPOSE_V2_VERSION}"; }
+function docker_machine_matches_version()             { test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1 | cut -d' ' -f3)"             == "${DOCKER_MACHINE_VERSION}"; }
+function docker_scan_matches_version()                { test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
+function docuum_matches_version()                     { test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
+function dry_matches_version()                        { test "$(${TARGET}/bin/dry --version | cut -d, -f1 | cut -d' ' -f3)"                        == "${DRY_VERSION}"; }
+function duffle_matches_version()                     { test "$(${TARGET}/bin/duffle version)"                                                     == "${DUFFLE_VERSION}"; }
+function dyff_matches_version()                       { test "$(${TARGET}/bin/dyff version | cut -d' ' -f3)"                                       == "${DYFF_VERSION}"; }
+function firecracker_matches_version()                { test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
+function firectl_matches_version()                    { test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
+function footloose_matches_version()                  { test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
+function fuse_overlayfs_matches_version()             { test "$(${TARGET}/bin/fuse-overlayfs --version | head -n 1 | cut -d' ' -f3)"               == "${FUSE_OVERLAYFS_VERSION}"; }
 function fuse_overlayfs_snapshotter_matches_version() { "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
-function glow_matches_version()                       {   test "$(${TARGET}/bin/glow --version | cut -d' ' -f3)"                                     == "${GLOW_VERSION}"; }
-function gvisor_matches_version()                     {   test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
-function hcloud_matches_version()                     {   test "$(${TARGET}/bin/hcloud version | cut -d' ' -f2)"                                     == "${HCLOUD_VERSION}"; }
-function helm_matches_version()                       {   test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
-function helmfile_matches_version()                   {   test "$(${TARGET}/bin/helmfile --version | cut -d' ' -f3)"                                 == "v${HELMFILE_VERSION}"; }
-function hub_tool_matches_version()                   {   test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1 | cut -d' ' -f4)"                   == "v${HUB_TOOL_VERSION}"; }
-function ignite_matches_version()                     {   test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
-function img_matches_version()                        {   test "$(${TARGET}/bin/img --version | cut -d, -f1 | cut -d' ' -f3)"                        == "v${IMG_VERSION}"; }
-function imgcrypt_matches_version()                   {   test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
-function ipfs_matches_version()                       {   test "$(${TARGET}/bin/ipfs version --number)"                                              == "${IPFS_VERSION}"; }
-function jp_matches_version()                         {   test "$(${TARGET}/bin/jp --version | cut -d' ' -f3)"                                       == "${JP_VERSION}"; }
-function jq_matches_version()                         {   test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
-function jwt_matches_version()                        {   test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
-function k3d_matches_version()                        {   test "$(${TARGET}/bin/k3d version | head -n 1 | cut -d' ' -f3)"                            == "v${K3D_VERSION}"; }
-function k3s_matches_version()                        {   test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
-function k3sup_matches_version()                      {   test "$(${TARGET}/bin/k3sup version | grep Version | cut -d' ' -f2)"                       == "${K3SUP_VERSION}"; }
-function k9s_matches_version()                        {   test "$(${TARGET}/bin/k9s version --short | grep "^Version" | cut -dv -f2)"                == "${K9S_VERSION}"; }
-function kind_matches_version()                       {   test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
-function kompose_matches_version()                    {   test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
-function krew_matches_version()                       {   test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
-function kubectl_matches_version()                    {   test "$(${TARGET}/bin/kubectl version --client --short)"  == "Client Version: v${KUBECTL_VERSION}"; }
-function kubectl_build_matches_version()              {   test -f "${DOCKER_SETUP_CACHE}/kubectl-build/${KUBECTL_BUILD_VERSION}"; }
-function kubectl_free_matches_version()               {   test "$(${TARGET}/bin/kubectl-free --version | cut -d' ' -f2 | tr -d ',')"                 == "${KUBECTL_FREE_VERSION}"; }
-function kubectl_resources_matches_version()          {   test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
-function kubefire_matches_version()                   {   test "$(${TARGET}/bin/kubefire version | grep "^Version:" | cut -d' ' -f2)"                == "v${KUBEFIRE_VERSION}"; }
-function kubeletctl_matches_version()                 {   test "$(${TARGET}/bin/kubeletctl version | grep "^Version:" | cut -d' ' -f2)"              == "${KUBELETCTL_VERSION}"; }
-function kubeswitch_matches_version()                 {   test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
-function kustomize_matches_version()                  {   test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
-function kapp_matches_version()                       {   test "$(${TARGET}/bin/kapp version | head -n 1 | cut -d' ' -f3)"                           == "${KAPP_VERSION}"; }
-function lazydocker_matches_version()                 {   test "$(${TARGET}/bin/lazydocker --version | grep Version | cut -d' ' -f2)"                == "${LAZYDOCKER_VERSION}"; }
-function lazygit_matches_version()                    {   test "$(${TARGET}/bin/lazygit --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,)"          == "${LAZYGIT_VERSION}"; }
-function manifest_tool_matches_version()              {   test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
-function minikube_matches_version()                   {   test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
-function mitmproxy_matches_version()                  {   test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
-function nerdctl_matches_version()                    {   test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
-function norouter_matches_version()                   {   test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
-function notation_matches_version()                   {   test "$(${TARGET}/bin/notation --version | cut -d' ' -f3)"                                 == "${NOTATION_VERSION}"; }
-function oras_matches_version()                       {   test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
-function oci_image_tool_matches_version()             {   test "$(${TARGET}/bin/oci-image-tool --version | cut -d' ' -f3)"                           == "${OCI_IMAGE_TOOL_VERSION}"; }
-function oci_runtime_tool_matches_version()           {   test "$(${TARGET}/bin/oci-runtime-tool --version | cut -d, -f1 | cut -d' ' -f3)"           == "${OCI_RUNTIME_TOOL_VERSION}"; }
-function patat_matches_version()                      { { test "$(${TARGET}/bin/patat --version | head -n 1)"                                        == "${PATAT_VERSION}" || test -f "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"; }; }
-function podman_matches_version()                     {   test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
-function portainer_matches_version()                  {   test "$(${TARGET}/bin/portainer --version 2>&1)"                                           == "${PORTAINER_VERSION}"; }
-function porter_matches_version()                     {   test "$(${TARGET}/bin/porter --version | cut -d' ' -f2)"                                   == "v${PORTER_VERSION}"; }
-function qemu_matches_version()                       {   test "$(${TARGET}/bin/qemu-img --version | grep qemu-img | cut -d' ' -f3)"                 == "${QEMU_VERSION}"; }
-function regclient_matches_version()                  {   test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)"                                     == "v${REGCLIENT_VERSION}"; }
-function rootlesskit_matches_version()                {   test "$(${TARGET}/bin/rootlesskit --version | cut -d' ' -f3)"                              == "${ROOTLESSKIT_VERSION}"; }
-function runc_matches_version()                       {   test "$(${TARGET}/bin/runc --version | head -n 1 | cut -d' ' -f3)"                         == "${RUNC_VERSION}"; }
-function skopeo_matches_version()                     {   test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)"                                   == "${SKOPEO_VERSION}"; }
-function slirp4netns_matches_version()                {   test "$(${TARGET}/bin/slirp4netns --version | head -n 1 | cut -d' ' -f3)"                  == "${SLIRP4NETNS_VERSION}"; }
-function sops_matches_version()                       {   test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
-function sshocker_matches_version()                   {   test "$(${TARGET}/bin/sshocker --version | cut -d' ' -f3)"                                 == "v${SSHOCKER_VERSION}"; }
-function stargz_snapshotter_matches_version()         {   test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
-function trivy_matches_version()                      {   test "$(${TARGET}/bin/trivy --version | cut -d' ' -f2)"                                    == "${TRIVY_VERSION}"; }
-function umoci_matches_version()                      {   test "$(${TARGET}/bin/umoci --version | cut -d' ' -f3)"                                    == "${UMOCI_VERSION}"; }
-function yq_matches_version()                         {   test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
-function ytt_matches_version()                        {   test "$(${TARGET}/bin/ytt version | cut -d' ' -f3)"                                        == "${YTT_VERSION}"; }
+function glow_matches_version()                       { test "$(${TARGET}/bin/glow --version | cut -d' ' -f3)"                                     == "${GLOW_VERSION}"; }
+function gvisor_matches_version()                     { test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
+function hcloud_matches_version()                     { test "$(${TARGET}/bin/hcloud version | cut -d' ' -f2)"                                     == "${HCLOUD_VERSION}"; }
+function helm_matches_version()                       { test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
+function helmfile_matches_version()                   { test "$(${TARGET}/bin/helmfile --version | cut -d' ' -f3)"                                 == "v${HELMFILE_VERSION}"; }
+function hub_tool_matches_version()                   { test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1 | cut -d' ' -f4)"                   == "v${HUB_TOOL_VERSION}"; }
+function ignite_matches_version()                     { test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
+function img_matches_version()                        { test "$(${TARGET}/bin/img --version | cut -d, -f1 | cut -d' ' -f3)"                        == "v${IMG_VERSION}"; }
+function imgcrypt_matches_version()                   { test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
+function ipfs_matches_version()                       { test "$(${TARGET}/bin/ipfs version --number)"                                              == "${IPFS_VERSION}"; }
+function jp_matches_version()                         { test "$(${TARGET}/bin/jp --version | cut -d' ' -f3)"                                       == "${JP_VERSION}"; }
+function jq_matches_version()                         { test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
+function jwt_matches_version()                        { test "$(${TARGET}/bin/jwt --version | cut -d' ' -f2)"                                      == "${JWT_VERSION}"; }
+function k3d_matches_version()                        { test "$(${TARGET}/bin/k3d version | head -n 1 | cut -d' ' -f3)"                            == "v${K3D_VERSION}"; }
+function k3s_matches_version()                        { test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
+function k3sup_matches_version()                      { test "$(${TARGET}/bin/k3sup version | grep Version | cut -d' ' -f2)"                       == "${K3SUP_VERSION}"; }
+function k9s_matches_version()                        { test "$(${TARGET}/bin/k9s version --short | grep "^Version" | cut -dv -f2)"                == "${K9S_VERSION}"; }
+function kind_matches_version()                       { test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
+function kompose_matches_version()                    { test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
+function krew_matches_version()                       { test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
+function kubectl_matches_version()                    { test "$(${TARGET}/bin/kubectl version --client --short)"  == "Client Version: v${KUBECTL_VERSION}"; }
+function kubectl_build_matches_version()              { test -f "${DOCKER_SETUP_CACHE}/kubectl-build/${KUBECTL_BUILD_VERSION}"; }
+function kubectl_free_matches_version()               { test "$(${TARGET}/bin/kubectl-free --version | cut -d' ' -f2 | tr -d ',')"                 == "${KUBECTL_FREE_VERSION}"; }
+function kubectl_resources_matches_version()          { test -f "${DOCKER_SETUP_CACHE}/kubectl-resources/${KUBECTL_RESOURCES_VERSION}"; }
+function kubefire_matches_version()                   { test "$(${TARGET}/bin/kubefire version | grep "^Version:" | cut -d' ' -f2)"                == "v${KUBEFIRE_VERSION}"; }
+function kubeletctl_matches_version()                 { test "$(${TARGET}/bin/kubeletctl version | grep "^Version:" | cut -d' ' -f2)"              == "${KUBELETCTL_VERSION}"; }
+function kubeswitch_matches_version()                 { test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
+function kustomize_matches_version()                  { test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
+function kapp_matches_version()                       { test "$(${TARGET}/bin/kapp version | head -n 1 | cut -d' ' -f3)"                           == "${KAPP_VERSION}"; }
+function lazydocker_matches_version()                 { test "$(${TARGET}/bin/lazydocker --version | grep Version | cut -d' ' -f2)"                == "${LAZYDOCKER_VERSION}"; }
+function lazygit_matches_version()                    { test "$(${TARGET}/bin/lazygit --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,)"          == "${LAZYGIT_VERSION}"; }
+function manifest_tool_matches_version()              { test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
+function minikube_matches_version()                   { test "$(${TARGET}/bin/minikube version | grep "minikube version" | cut -d' ' -f3)"         == "v${MINIKUBE_VERSION}"; }
+function mitmproxy_matches_version()                  { test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
+function nerdctl_matches_version()                    { test "$(${TARGET}/bin/nerdctl --version | cut -d' ' -f3)"                                  == "${NERDCTL_VERSION}"; }
+function norouter_matches_version()                   { test "$(${TARGET}/bin/norouter --version | cut -d' ' -f3)"                                 == "${NOROUTER_VERSION}"; }
+function notation_matches_version()                   { test "$(${TARGET}/bin/notation --version | cut -d' ' -f3)"                                 == "${NOTATION_VERSION}"; }
+function oras_matches_version()                       { test "$(${TARGET}/bin/oras version | head -n 1 | tr -s ' ' | cut -d' ' -f2)"               == "${ORAS_VERSION}"; }
+function oci_image_tool_matches_version()             { test "$(${TARGET}/bin/oci-image-tool --version | cut -d' ' -f3)"                           == "${OCI_IMAGE_TOOL_VERSION}"; }
+function oci_runtime_tool_matches_version()           { test "$(${TARGET}/bin/oci-runtime-tool --version | cut -d, -f1 | cut -d' ' -f3)"           == "${OCI_RUNTIME_TOOL_VERSION}"; }
+function patat_matches_version()                      { test -f "${DOCKER_SETUP_CACHE}/patat/${PATAT_VERSION}"; }
+function podman_matches_version()                     { test "$(${TARGET}/bin/podman --version | cut -d' ' -f3)"                                   == "${PODMAN_VERSION}"; }
+function portainer_matches_version()                  { test "$(${TARGET}/bin/portainer --version 2>&1)"                                           == "${PORTAINER_VERSION}"; }
+function porter_matches_version()                     { test "$(${TARGET}/bin/porter --version | cut -d' ' -f2)"                                   == "v${PORTER_VERSION}"; }
+function qemu_matches_version()                       { test "$(${TARGET}/bin/qemu-img --version | grep qemu-img | cut -d' ' -f3)"                 == "${QEMU_VERSION}"; }
+function regclient_matches_version()                  { test "$(${TARGET}/bin/regctl version | jq -r .VCSTag)"                                     == "v${REGCLIENT_VERSION}"; }
+function rootlesskit_matches_version()                { test "$(${TARGET}/bin/rootlesskit --version | cut -d' ' -f3)"                              == "${ROOTLESSKIT_VERSION}"; }
+function runc_matches_version()                       { test "$(${TARGET}/bin/runc --version | head -n 1 | cut -d' ' -f3)"                         == "${RUNC_VERSION}"; }
+function skopeo_matches_version()                     { test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)"                                   == "${SKOPEO_VERSION}"; }
+function slirp4netns_matches_version()                { test "$(${TARGET}/bin/slirp4netns --version | head -n 1 | cut -d' ' -f3)"                  == "${SLIRP4NETNS_VERSION}"; }
+function sops_matches_version()                       { test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
+function sshocker_matches_version()                   { test "$(${TARGET}/bin/sshocker --version | cut -d' ' -f3)"                                 == "v${SSHOCKER_VERSION}"; }
+function stargz_snapshotter_matches_version()         { test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
+function trivy_matches_version()                      { test "$(${TARGET}/bin/trivy --version | cut -d' ' -f2)"                                    == "${TRIVY_VERSION}"; }
+function umoci_matches_version()                      { test "$(${TARGET}/bin/umoci --version | cut -d' ' -f3)"                                    == "${UMOCI_VERSION}"; }
+function yq_matches_version()                         { test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
+function ytt_matches_version()                        { test "$(${TARGET}/bin/ytt version | cut -d' ' -f3)"                                        == "${YTT_VERSION}"; }
 
 if ${ONLY_INSTALLED}; then
     ONLY=true
@@ -906,6 +906,7 @@ function get_file() {
 
     local hash
     hash="$(echo -n "${url}" | sha256sum | cut -d' ' -f1)"
+    local cache_path
     cache_path="${DOCKER_SETUP_DOWNLOADS}/${hash}"
     mkdir -p "${cache_path}"
 
