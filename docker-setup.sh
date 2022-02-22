@@ -408,11 +408,11 @@ function fuse_overlayfs_is_installed()             { is_executable "${TARGET}/bi
 function fuse_overlayfs_snapshotter_is_installed() { is_executable "${TARGET}/bin/containerd-fuse-overlayfs-grpc"; }
 function glow_is_installed()                       { is_executable "${TARGET}/bin/glow"; }
 function gvisor_is_installed()                     { is_executable "${TARGET}/bin/runsc"; }
-function ignite_is_installed()                     { is_executable "${TARGET}/bin/ignite"; }
 function hcloud_is_installed()                     { is_executable "${TARGET}/bin/hcloud"; }
 function helm_is_installed()                       { is_executable "${TARGET}/bin/helm"; }
 function helmfile_is_installed()                   { is_executable "${TARGET}/bin/helmfile"; }
 function hub_tool_is_installed()                   { is_executable "${TARGET}/bin/hub-tool"; }
+function ignite_is_installed()                     { is_executable "${TARGET}/bin/ignite"; }
 function img_is_installed()                        { is_executable "${TARGET}/bin/img"; }
 function imgcrypt_is_installed()                   { is_executable "${TARGET}/bin/ctr-enc"; }
 function ipfs_is_installed()                       { is_executable "${TARGET}/bin/ipfs"; }
@@ -499,11 +499,11 @@ function fuse_overlayfs_matches_version()             {   test "$(${TARGET}/bin/
 function fuse_overlayfs_snapshotter_matches_version() { "${TARGET}/bin/containerd-fuse-overlayfs-grpc" 2>&1 | head -n 1 | cut -d' ' -f4 | grep -q "v${FUSE_OVERLAYFS_SNAPSHOTTER_VERSION}"; }
 function glow_matches_version()                       {   test "$(${TARGET}/bin/glow --version | cut -d' ' -f3)"                                     == "${GLOW_VERSION}"; }
 function gvisor_matches_version()                     {   test "$(${TARGET}/bin/runsc --version | grep "runsc version" | cut -d' ' -f3)"             == "release-${GVISOR_VERSION}.0"; }
-function ignite_matches_version()                     {   test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
 function hcloud_matches_version()                     {   test "$(${TARGET}/bin/hcloud version | cut -d' ' -f2)"                                     == "${HCLOUD_VERSION}"; }
 function helm_matches_version()                       {   test "$(${TARGET}/bin/helm version --short | cut -d+ -f1)"                                 == "v${HELM_VERSION}"; }
 function helmfile_matches_version()                   {   test "$(${TARGET}/bin/helmfile --version | cut -d' ' -f3)"                                 == "v${HELMFILE_VERSION}"; }
 function hub_tool_matches_version()                   {   test "$(${TARGET}/bin/hub-tool --version | cut -d, -f1 | cut -d' ' -f4)"                   == "v${HUB_TOOL_VERSION}"; }
+function ignite_matches_version()                     {   test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
 function img_matches_version()                        {   test "$(${TARGET}/bin/img --version | cut -d, -f1 | cut -d' ' -f3)"                        == "v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   {   test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
 function ipfs_matches_version()                       {   test "$(${TARGET}/bin/ipfs version --number)"                                              == "${IPFS_VERSION}"; }
