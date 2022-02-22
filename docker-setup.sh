@@ -2681,7 +2681,7 @@ DOCKER_SETUP_PROFILING="${DOCKER_SETUP_LOGS}/PROFILING-$(date +%s)"
 echo "tool;age_in_seconds" >"${DOCKER_SETUP_PROFILING}"
 find "${DOCKER_SETUP_LOGS}" -type f -name \*.log | while read -r LOG; do
     tool="$(basename "${LOG}" .log)"
-    age=$(( $(stat --format="%Y-%W" "${LOG}") ))
+    age=$(( $(stat -c "%Y-%W" "${LOG}") ))
 
     echo "${tool};${age}" >>"${DOCKER_SETUP_PROFILING}"
 done
