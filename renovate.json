@@ -109,6 +109,12 @@
   "regexManagers": [
     {
       "fileMatch": [ "^.github/workflows/release.yml$" ],
+      "matchStrings": [ "SEMVER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "fsaintjacques/semver-tool",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^.github/workflows/release.yml$" ],
       "matchStrings": [ "SHELLCHECK_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "koalaman/shellcheck",
       "datasourceTemplate": "github-releases",
