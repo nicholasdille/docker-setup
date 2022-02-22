@@ -661,7 +661,7 @@ if ${CHECK}; then
     exit "${check_only_exit_code}"
 fi
 
-if test "${#tool_install[@]}" -gt "0" && ! ${NO_WAIT}; then
+if test "${#tool_install[@]}" -gt 0 && ! ${NO_WAIT}; then
     echo "Please press Ctrl-C to abort."
     SECONDS_REMAINING=10
     while test "${SECONDS_REMAINING}" -gt 0; do
@@ -839,7 +839,7 @@ function is_amzn_2() {
     local lsb_vers
     lsb_dist=$(get_lsb_distro_name)
     lsb_vers=$(get_lsb_distro_version)
-    if test "${lsb_dist}" == "amzn" && test "${lsb_vers}" == "2"; then
+    if test "${lsb_dist}" == "amzn" && test "${lsb_vers}" -eq 2; then
         return 0
     fi
     return 1
@@ -2566,7 +2566,7 @@ function count_sub_processes() {
     local count=0
     for CHILD in "${child_pids[@]}"; do
         if process_exists "${CHILD}"; then
-            count=$((count + 1))
+            count=$(( count + 1 ))
         fi
     done
     echo "${count}"
@@ -2584,7 +2584,7 @@ trap cleanup EXIT
 if ${PLAN}; then
     exit
 fi
-if test "${#tool_install[@]}" == 0; then
+if test "${#tool_install[@]}" -eq 0; then
     echo "Everything is up-to-date."
     exit
 fi
@@ -2597,7 +2597,7 @@ last_update=false
 exit_code=0
 child_pid_count="${#tool_install[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
-progress_bar_width=$((display_cols - ${#info_around_progress_bar}))
+progress_bar_width=$(( display_cols - ${#info_around_progress_bar} ))
 done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
 todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
 if ${NO_PROGRESSBAR}; then
@@ -2629,14 +2629,14 @@ while ! ${last_update}; do
     running="$(count_sub_processes)"
 
     if ! ${NO_PROGRESSBAR}; then
-        done=$((started_index - running))
+        done=$(( started_index - running ))
 
-        done_length=$((progress_bar_width * done / child_pid_count))
-        todo_length=$((progress_bar_width - done_length))
+        done_length=$(( progress_bar_width * done / child_pid_count ))
+        todo_length=$(( progress_bar_width - done_length ))
 
         todo_chars="${todo_bar:0:${todo_length}}"
         done_chars="${done_bar:0:${done_length}}"
-        percent=$((done * 100 / child_pid_count))
+        percent=$(( done * 100 / child_pid_count ))
 
         echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
     fi
