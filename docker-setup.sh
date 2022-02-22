@@ -2669,6 +2669,15 @@ if test -n "${messages}"; then
     echo "${messages}"
 fi
 
+DOCKER_SETUP_PROFILING="${DOCKER_SETUP_LOGS}/PROFILING-$(date +%s)"
+echo "tool;age_in_seconds" >"${DOCKER_SETUP_PROFILING}"
+find "${DOCKER_SETUP_LOGS}" -type f -name \*.log | while read -r LOG; do
+    tool="$(basename "${LOG}" .log)"
+    age=$(( $(stat --format="%Y-%W" "${LOG}") ))
+
+    echo "${tool};${age}" >>"${DOCKER_SETUP_PROFILING}"
+done
+
 if test -f "${PREFIX}/etc/docker/daemon.json" && ! test -f "${DOCKER_SETUP_CACHE}/docker_already_present"; then
     DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
     if test -n "${DOCKER_JSON_PATCHES}"; then
