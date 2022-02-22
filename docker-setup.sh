@@ -565,6 +565,20 @@ if ${ONLY_INSTALLED}; then
     done
 fi
 
+function resolve_deps() {
+    local tool=$1
+
+    if test -n "${tool_deps[${tool}]}"; then
+        local dep
+        for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+            if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
+                resolve_deps "${dep}"
+                tool_install+=("${dep}")
+            fi
+        done
+    fi
+}
+
 echo -e "docker-setup includes ${#tools[*]} tools:"
 echo -e "(${GREEN}installed${RESET}/${YELLOW}planned${RESET}/${GREY}skipped${RESET}, up-to-date ${GREEN}${CHECK_MARK}${RESET}/outdated ${RED}${CROSS_MARK}${RESET})"
 echo
@@ -581,13 +595,7 @@ for tool in "${tools[@]}"; do
     if ! ${ONLY} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
         if ! eval "${tool//-/_}_is_installed" || ! eval "${tool//-/_}_matches_version" || ${REINSTALL}; then
 
-            if test -n "${tool_deps[${tool}]}"; then
-                for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-                    if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
-                        tool_install+=("${dep}")
-                    fi
-                done
-            fi
+            resolve_deps "${tool}"
 
             if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
                 tool_install+=("${tool}")
