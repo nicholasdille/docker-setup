@@ -906,11 +906,8 @@ function get_file() {
 
     local hash
     hash="$(echo -n "${url}" | sha256sum | cut -d' ' -f1)"
-
-    if ! test -d "${cache_path}"; then
-        cache_path="${DOCKER_SETUP_DOWNLOADS}/${hash}"
-        mkdir -p "${cache_path}"
-    fi
+    cache_path="${DOCKER_SETUP_DOWNLOADS}/${hash}"
+    mkdir -p "${cache_path}"
 
     if ! test -f "${cache_path}/url"; then
         echo -n "${url}" >"${cache_path}/url"
@@ -1056,8 +1053,8 @@ function install-docker() {
         sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
         if is_debian || is_clearlinux; then
             echo "Install init script for debian"
-            curl -sLo "${PREFIX}/etc/default/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default"
-            curl -sLo "${PREFIX}/etc/init.d/docker" "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker"
+            get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default" >"${PREFIX}/etc/default/docker"
+            get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker" >"${PREFIX}/etc/init.d/docker"
             sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
             sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
             chmod +x "${PREFIX}/etc/init.d/docker"
