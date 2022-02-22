@@ -180,7 +180,7 @@ tools=(
     qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
     stargz-snapshotter umoci trivy yq ytt
 )
-tool_deps["containerd"]="runc"
+tool_deps["containerd"]="runc dasel"
 tool_deps["crun"]="docker jq"
 tool_deps["ctop"]="docker"
 tool_deps["dive"]="docker"
