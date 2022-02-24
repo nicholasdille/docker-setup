@@ -2609,6 +2609,7 @@ todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
 if ${NO_PROGRESSBAR}; then
     echo "Installing..."
 fi
+rm -f "${DOCKER_SETUP_LOGS}/PROFILING"
 while ! ${last_update}; do
     running="$(count_sub_processes)"
 
@@ -2625,7 +2626,15 @@ while ! ${last_update}; do
                 echo "------------------------------------------------------------"
             } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
 
-            (eval "install-${tool} >>\"${DOCKER_SETUP_LOGS}/${tool}.log\" 2>&1") || touch "${DOCKER_SETUP_CACHE}/errors/${tool}" &
+            (
+                start_time="$(date +%s)"
+                eval "install-${tool}"
+                last_exit_code=$?
+                end_time="$(date +%s)"
+                echo "${tool};${start_time};${end_time}" >>"${DOCKER_SETUP_LOGS}/PROFILING"
+                exit "${last_exit_code}"
+
+            ) >>"${DOCKER_SETUP_LOGS}/${tool}.log" 2>&1 || touch "${DOCKER_SETUP_CACHE}/errors/${tool}" &
             child_pids[${tool}]=$!
 
             started_index=$(( started_index + 1 ))
@@ -2674,15 +2683,6 @@ if test -n "${messages}"; then
     echo "The following messages were generated during installation:"
     echo "${messages}"
 fi
-
-DOCKER_SETUP_PROFILING="${DOCKER_SETUP_LOGS}/PROFILING-$(date +%s)"
-echo "tool;age_in_seconds" >"${DOCKER_SETUP_PROFILING}"
-find "${DOCKER_SETUP_LOGS}" -type f -name \*.log | while read -r LOG; do
-    tool="$(basename "${LOG}" .log)"
-    age=$(( $(stat -c "%Y-%W" "${LOG}") ))
-
-    echo "${tool};${age}" >>"${DOCKER_SETUP_PROFILING}"
-done
 
 if test -f "${PREFIX}/etc/docker/daemon.json" && ! test -f "${DOCKER_SETUP_CACHE}/docker_already_present"; then
     DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
