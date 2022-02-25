@@ -35,9 +35,11 @@ jobs:
           has_release=false
 
           tags="$(git tag --points-at HEAD)"
+          echo "Got tags: ${tags}."
           if test "$(echo "${tags}" | wc -l)" -gt 0; then
 
               for tag in ${tags}; do
+                  echo "Checking tag ${tag} for release"
                   if curl -sfo /dev/null "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${tag}"; then
                       echo "Found release for current commit/tag, can skip tests"
                       has_release=true
