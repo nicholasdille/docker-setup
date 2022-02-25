@@ -19,26 +19,9 @@ on:
 
 jobs:
 
-  test:
-    name: Tests
+  check:
+    name: Checks
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        distro:
-          - alpine-3.15
-          #- amazonlinux-2
-          #- archlinux
-          #- clearlinux
-          #- centos-7
-          #- centos-8
-          - debian-11
-          - fedora-35
-          #- opensuse-leap-15
-          #- opensuse-tumbleweed
-          #- rockylinux-8
-          - ubuntu-20.04
-          - ubuntu-21.04
-          - ubuntu-22.04
     steps:
 
       - name: Checkout code
@@ -63,8 +46,35 @@ jobs:
 
           echo "::set-output name=has_release::${has_release}"
 
+  test:
+    name: Tests
+    needs:
+    - check
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distro:
+          - alpine-3.15
+          #- amazonlinux-2
+          #- archlinux
+          #- clearlinux
+          #- centos-7
+          #- centos-8
+          - debian-11
+          - fedora-35
+          #- opensuse-leap-15
+          #- opensuse-tumbleweed
+          #- rockylinux-8
+          - ubuntu-20.04
+          - ubuntu-21.04
+          - ubuntu-22.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Test
-        if: steps.release.outputs.has_release == 'false'
+        if: needs.check.outputs.has_release == 'false'
         env:
           DOCKER_BUILDKIT: 1
           TERM: xterm
