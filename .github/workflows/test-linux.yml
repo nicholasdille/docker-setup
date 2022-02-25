@@ -22,6 +22,8 @@ jobs:
   check:
     name: Checks
     runs-on: ubuntu-20.04
+    outputs:
+      has_release: ${{ steps.check.outputs.has_release }}
     steps:
 
       - name: Checkout code
