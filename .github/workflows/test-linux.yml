@@ -64,7 +64,7 @@ jobs:
           echo "::set-output name=has_release::${has_release}"
 
       - name: Test
-        if: ${{ ! steps.release.outputs.has_release }}
+        if: steps.release.outputs.has_release == 'false'
         env:
           DOCKER_BUILDKIT: 1
           TERM: xterm
