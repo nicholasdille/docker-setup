@@ -44,7 +44,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Check release
+        id: release
+        run: |
+          has_release=false
+
+          tags="$(git tag --points-at HEAD)"
+          if test "$(echo "${tags}" | wc -l)" -gt 0; then
+
+              for tag in ${tags}; do
+                  if curl -sfo /dev/null "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${tag}"; then
+                      echo "Found release for current commit/tag, can skip tests"
+                      has_release=true
+                      break
+                  fi
+              done
+          fi
+
+          echo "::set-output name=has_release::${has_release}"
+
       - name: Test
+        if: ! steps.release.outputs.has_release
         env:
           DOCKER_BUILDKIT: 1
           TERM: xterm
