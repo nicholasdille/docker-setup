@@ -72,7 +72,15 @@ jobs:
         run: |
           docker build --tag test --file env/${{ matrix.distro }}/Dockerfile .; \
           mkdir -p "${PWD}/log"; \
-          docker run --interactive --rm --privileged --env TERM --env Europe/Berlin --env SKIP_DOCS --volume "${PWD}/log:/var/log" test bash run.sh
+          docker run \
+              --interactive \
+              --rm \
+              --privileged \
+              --env TERM \
+              --env Europe/Berlin \
+              --env SKIP_DOCS \
+              --volume "${PWD}/log:/var/log" \
+              test bash run.sh
 
       - name: Store logs
         uses: actions/upload-artifact@v2
