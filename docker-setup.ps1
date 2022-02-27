@@ -47,7 +47,7 @@ $OrasVersion = "0.12.0"
 $PorterVersion = "0.38.9"
 $RegclientVersion = "0.3.10"
 $SopsVersion = "3.7.1"
-$YqVersion = "4.20.2"
+$YqVersion = "4.21.1"
 $YttVersion = "0.40.0"
 
 # Enable feature(s) with restart
