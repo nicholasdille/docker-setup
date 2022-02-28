@@ -32,7 +32,7 @@ jobs:
           fetch-depth: '0'
 
       - name: Check release
-        id: release
+        id: check
         run: |
           has_release=false
 
