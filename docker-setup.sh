@@ -2758,7 +2758,7 @@ EOF
 #!/bin/bash
 set -o errexit
 
-"${TARGET}/bin/docker-setup.sh" --no-wait
+"${TARGET}/bin/docker-setup.sh" --no-wait --only-installed
 EOF
 
     chmod +x \
