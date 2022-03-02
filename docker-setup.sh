@@ -237,7 +237,7 @@ fi
 : "${PREFIX:=}"
 : "${RELATIVE_TARGET:=/usr/local}"
 : "${TARGET:=${PREFIX}${RELATIVE_TARGET}}"
-: "${DOCKER_ALLOW_RESTART:=true}"
+: "${DOCKER_ALLOW_RESTART:=false}"
 : "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
 : "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
 : "${DOCKER_SETUP_CACHE:=/var/cache/docker-setup}"
@@ -1095,7 +1095,6 @@ function install-docker() {
             echo "Create group"
             groupadd --system --force docker
         fi
-        DOCKER_RESTART=false
         echo "Configure daemon"
         if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
             echo "Initialize dockerd configuration"
@@ -1109,20 +1108,20 @@ function install-docker() {
                 echo "Configuring native cgroup driver"
                 # shellcheck disable=SC2094
                 cat <<< "$("${TARGET}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-                DOCKER_RESTART=true
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
             if ! test "$("${TARGET}/bin/jq" '. | keys | any(. == "default-runtime")' "${PREFIX}/etc/docker/daemon.json")" == true; then
                 echo "Set default runtime"
                 # shellcheck disable=SC2094
                 cat <<< "$("${TARGET}/bin/jq" '. * {"default-runtime": "runc"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-                DOCKER_RESTART=true
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
             # shellcheck disable=SC2016
             if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${TARGET}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
                 echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
                 # shellcheck disable=SC2094
                 cat <<< "$("${TARGET}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-                DOCKER_RESTART=true
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
             # shellcheck disable=SC2016
             if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${TARGET}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
@@ -1130,13 +1129,13 @@ function install-docker() {
                 # shellcheck disable=SC2094
                 # shellcheck disable=SC2016
                 cat <<< "$("${TARGET}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-                DOCKER_RESTART=true
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
             if ! test "$("${TARGET}/bin/jq" --raw-output '.features.buildkit // false' "${PREFIX}/etc/docker/daemon.json")" == true; then
                 echo "Enable BuildKit"
                 # shellcheck disable=SC2094
                 cat <<< "$("${TARGET}/bin/jq" '. * {"features":{"buildkit":true}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-                DOCKER_RESTART=true
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
             fi
             echo "Check if daemon.json is valid JSON"
             if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json" >/dev/null 2>&1; then
@@ -1153,23 +1152,17 @@ function install-docker() {
             if has_systemd; then
                 echo "Reload systemd"
                 systemctl daemon-reload
-                if systemctl is-active --quiet docker; then
-                    if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-                        touch "${DOCKER_SETUP_CACHE}/docker_restart"
-                    fi
-                else
+                if ! systemctl is-active --quiet docker; then
                     echo "Start dockerd"
                     systemctl enable docker
                     systemctl start docker
+                    touch "${DOCKER_SETUP_CACHE}/docker_restart_allowed"
                 fi
             else
-                if docker_is_running; then
-                    if ${DOCKER_RESTART} && ${DOCKER_ALLOW_RESTART}; then
-                        touch "${DOCKER_SETUP_CACHE}/docker_restart"
-                    fi
-                else
+                if ! docker_is_running; then
                     echo "Start dockerd"
                     "${PREFIX}/etc/init.d/docker" start
+                    touch "${DOCKER_SETUP_CACHE}/docker_restart_allowed"
                 fi
                 echo -e "${YELLOW}[WARNING] Init script was installed but you must enable Docker yourself.${RESET}"
             fi
@@ -2717,17 +2710,26 @@ if test -f "${PREFIX}/etc/containerd/config.toml"; then
     fi
 fi
 
-if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
-    echo
-    if has_systemd; then
-        echo "Restart dockerd using systemd"
-        systemctl restart docker
+if ${DOCKER_ALLOW_RESTART} || test -f "${DOCKER_SETUP_CACHE}/docker_restart_allowed"; then
+    if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
+        echo
+        if has_systemd; then
+            echo "Restart dockerd using systemd"
+            systemctl restart docker
 
-    elif test -z "${PREFIX}" && test -f "${PREFIX}/etc/init.d/docker"; then
-        echo "Restart dockerd using init script"
-        "${PREFIX}/etc/init.d/docker" restart
+        elif test -z "${PREFIX}" && test -f "${PREFIX}/etc/init.d/docker"; then
+            echo "Restart dockerd using init script"
+            "${PREFIX}/etc/init.d/docker" restart
+
+        else
+            echo -e "${YELLOW}WARNING: Unable to determine how to restart Docker daemon.${RESET}"
+        fi
+        rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
     fi
-    rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
+
+else
+    echo
+    echo -e "${YELLOW}WARNING: Unable to restart Docker daemon (already running and DOCKER_ALLOW_RESTART is not true).${RESET}"
 fi
 
 cron_weekly_path="${PREFIX}/etc/cron.weekly"
