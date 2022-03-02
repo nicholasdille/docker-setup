@@ -492,6 +492,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "KBREW_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "kbrew-dev/kbrew",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "KIND_VERSION=(?<currentValue>.*?)\n", "KindVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes-sigs/kind",

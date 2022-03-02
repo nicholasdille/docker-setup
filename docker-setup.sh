@@ -180,7 +180,7 @@ tools=(
     dasel dive docker docker-compose docker-machine docker-scan docuum dry
     duffle dyff firecracker firectl footloose fuse-overlayfs
     fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
-    img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kind kompose krew
+    img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kbrew kind kompose krew
     kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
     kubeswitch kustomize lazydocker lazygit manifest-tool minikube mitmproxy
     nerdctl norouter notation oci-image-tool oci-runtime-tool oras patat
@@ -324,6 +324,7 @@ K3S_VERSION=1.23.4+k3s1
 K3SUP_VERSION=0.11.3
 K9S_VERSION=0.25.18
 KAPP_VERSION=0.46.0
+KBREW_VERSION=0.1.0
 KIND_VERSION=0.11.1
 KOMPOSE_VERSION=1.26.1
 KREW_VERSION=0.4.3
@@ -433,6 +434,8 @@ function k3d_is_installed()                        { is_executable "${TARGET}/bi
 function k3s_is_installed()                        { is_executable "${TARGET}/bin/k3s"; }
 function k3sup_is_installed()                      { is_executable "${TARGET}/bin/k3sup"; }
 function k9s_is_installed()                        { is_executable "${TARGET}/bin/k9s"; }
+function kapp_is_installed()                       { is_executable "${TARGET}/bin/kapp"; }
+function kbrew_is_installed()                      { is_executable "${TARGET}/bin/kbrew"; }
 function kind_is_installed()                       { is_executable "${TARGET}/bin/kind"; }
 function kompose_is_installed()                    { is_executable "${TARGET}/bin/kompose"; }
 function krew_is_installed()                       { is_executable "${TARGET}/bin/krew"; }
@@ -444,7 +447,6 @@ function kubefire_is_installed()                   { is_executable "${TARGET}/bi
 function kubeletctl_is_installed()                 { is_executable "${TARGET}/bin/kubeletctl"; }
 function kubeswitch_is_installed()                 { is_executable "${TARGET}/bin/kubeswitch"; }
 function kustomize_is_installed()                  { is_executable "${TARGET}/bin/kustomize"; }
-function kapp_is_installed()                       { is_executable "${TARGET}/bin/kapp"; }
 function lazydocker_is_installed()                 { is_executable "${TARGET}/bin/lazydocker"; }
 function lazygit_is_installed()                    { is_executable "${TARGET}/bin/lazygit"; }
 function manifest_tool_is_installed()              { is_executable "${TARGET}/bin/manifest-tool"; }
@@ -525,6 +527,8 @@ function k3d_matches_version()                        { test "$(${TARGET}/bin/k3
 function k3s_matches_version()                        { test "$(${TARGET}/bin/k3s --version | head -n 1 | cut -d' ' -f3)"                          == "v${K3S_VERSION}"; }
 function k3sup_matches_version()                      { test "$(${TARGET}/bin/k3sup version | grep Version | cut -d' ' -f2)"                       == "${K3SUP_VERSION}"; }
 function k9s_matches_version()                        { test "$(${TARGET}/bin/k9s version --short | grep "^Version" | cut -dv -f2)"                == "${K9S_VERSION}"; }
+function kapp_matches_version()                       { test "$(${TARGET}/bin/kapp version | head -n 1 | cut -d' ' -f3)"                           == "${KAPP_VERSION}"; }
+function kbrew_matches_version()                      { test "$(${TARGET}/bin/kbrew version | cut -d, -f1 | cut -d'"' -f4)"                        == "v${KBREW_VERSION}"; }
 function kind_matches_version()                       { test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
 function kompose_matches_version()                    { test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
 function krew_matches_version()                       { test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
@@ -536,7 +540,6 @@ function kubefire_matches_version()                   { test "$(${TARGET}/bin/ku
 function kubeletctl_matches_version()                 { test "$(${TARGET}/bin/kubeletctl version | grep "^Version:" | cut -d' ' -f2)"              == "${KUBELETCTL_VERSION}"; }
 function kubeswitch_matches_version()                 { test -f "${DOCKER_SETUP_CACHE}/kubeswitch/${KUBESWITCH_VERSION}"; }
 function kustomize_matches_version()                  { test "$(${TARGET}/bin/kustomize version --short | tr -s ' ' | cut -d' ' -f1)"              == "{kustomize/v${KUSTOMIZE_VERSION}"; }
-function kapp_matches_version()                       { test "$(${TARGET}/bin/kapp version | head -n 1 | cut -d' ' -f3)"                           == "${KAPP_VERSION}"; }
 function lazydocker_matches_version()                 { test "$(${TARGET}/bin/lazydocker --version | grep Version | cut -d' ' -f2)"                == "${LAZYDOCKER_VERSION}"; }
 function lazygit_matches_version()                    { test "$(${TARGET}/bin/lazygit --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,)"          == "${LAZYGIT_VERSION}"; }
 function manifest_tool_matches_version()              { test "$(${TARGET}/bin/manifest-tool --version | cut -d' ' -f3)"                            == "${MANIFEST_TOOL_VERSION}"; }
@@ -2590,6 +2593,16 @@ EOF
         echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
         false
     fi
+}
+
+function install-kbrew() {
+    echo "kbrew ${KBREW_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/kbrew-dev/kbrew/releases/download/v${KBREW_VERSION}/kbrew_${KBREW_VERSION}_Linux_x86_64.tar.gz" \
+    | tar -xz \
+        --directory "${TARGET}/bin" \
+        --no-same-owner \
+        kbrew
 }
 
 function process_exists() {
