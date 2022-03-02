@@ -74,6 +74,7 @@ while test "$#" -gt 0; do
         *)
             if test -n "$1"; then
                 requested_tools+=("$1")
+                ONLY=true
             fi
             ;;
     esac
