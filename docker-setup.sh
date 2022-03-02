@@ -2769,7 +2769,7 @@ if ${DOCKER_ALLOW_RESTART} || test -f "${DOCKER_SETUP_CACHE}/docker_restart_allo
         rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
     fi
 
-else
+elif test -f "${DOCKER_SETUP_CACHE}/docker_restart"; then
     echo
     echo -e "${YELLOW}WARNING: Unable to restart Docker daemon (already running and DOCKER_ALLOW_RESTART is not true).${RESET}"
 fi
