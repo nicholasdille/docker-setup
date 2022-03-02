@@ -7,6 +7,7 @@ RUN dnf install -y \
         initscripts \
         git \
         unzip \
-        ncurses
+        ncurses \
+        crontabs
 COPY env/run.sh /
 COPY docker-setup.sh /

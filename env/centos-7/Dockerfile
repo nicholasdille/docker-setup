@@ -5,6 +5,7 @@ RUN yum install -y \
         git \
         tzdata \
         unzip \
-        initscripts
+        initscripts \
+        crontabs
 COPY env/run.sh /
 COPY docker-setup.sh /

@@ -8,6 +8,7 @@ RUN apt-get update \
         git \
         tzdata \
         unzip \
-        ncurses-bin
+        ncurses-bin \
+        cron
 COPY env/run.sh /
 COPY docker-setup.sh /
