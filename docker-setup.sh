@@ -175,9 +175,9 @@ fi
 declare -a tools
 declare -A tool_deps
 tools=(
-    arkade buildah buildkit buildx bypass4netns clusterawsadm clusterctl cni
-    cni-isolation conmon containerd containerssh cosign crane crictl crun ctop
-    dasel dive docker docker-compose docker-machine docker-scan docuum dry
+    arkade buildah buildkit buildx bypass4netns cinf clusterawsadm clusterctl
+    cni cni-isolation conmon containerd containerssh cosign crane crictl crun
+    ctop dasel dive docker docker-compose docker-machine docker-scan docuum dry
     duffle dyff firecracker firectl footloose fuse-overlayfs
     fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
     img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kbrew kind kompose krew
@@ -276,6 +276,7 @@ BUILDAH_VERSION=1.24.0
 BUILDKIT_VERSION=0.9.3
 BUILDX_VERSION=0.7.1
 BYPASS4NETNS_VERSION=0.2.2
+CINF_VERSION=0.6.0
 CLUSTERAWSADM_VERSION=1.3.0
 CLUSTERCTL_VERSION=1.1.2
 CNI_ISOLATION_VERSION=0.0.4
@@ -388,6 +389,7 @@ function buildah_is_installed()                    { is_executable "${TARGET}/bi
 function buildkit_is_installed()                   { is_executable "${TARGET}/bin/buildkitd"; }
 function buildx_is_installed()                     { is_executable "${DOCKER_PLUGINS_PATH}/docker-buildx"; }
 function bypass4netns_is_installed()               { is_executable "${TARGET}/bin/bypass4netns"; }
+function cinf_is_installed()                       { is_executable "${TARGET}/bin/cinf"; }
 function clusterawsadm_is_installed()              { is_executable "${TARGET}/bin/clusterawsadm"; }
 function clusterctl_is_installed()                 { is_executable "${TARGET}/bin/clusterctl"; }
 function cni_is_installed()                        { is_executable "${TARGET}/libexec/cni/loopback"; }
@@ -481,6 +483,7 @@ function buildah_matches_version()                    { test "$(${TARGET}/bin/bu
 function buildkit_matches_version()                   { test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f3)"                                == "v${BUILDKIT_VERSION}"; }
 function buildx_matches_version()                     { test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f2)"                     == "v${BUILDX_VERSION}"; }
 function bypass4netns_matches_version()               { test "$(XDG_RUNTIME_DIR=/tmp ${TARGET}/bin/bypass4netns --version | grep bypass4netns | cut -d' ' -f3)"  == "${BYPASS4NETNS_VERSION}"; }
+function cinf_matches_version()                       { test "$(${TARGET}/bin/cinf -version | grep "version" | cut -d' ' -f6)"                     == "${CINF_VERSION}"; }
 function clusterawsadm_matches_version()              { test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
 function clusterctl_matches_version()                 { test "$(${TARGET}/bin/clusterctl version --output short)"                                  == "v${CLUSTERCTL_VERSION}"; }
 function cni_matches_version()                        { test "$(${TARGET}/libexec/cni/loopback 2>&1 | cut -d' ' -f4)"                              == "v${CNI_VERSION}"; }
@@ -2603,6 +2606,16 @@ function install-kbrew() {
         --directory "${TARGET}/bin" \
         --no-same-owner \
         kbrew
+}
+
+function install-cinf() {
+    echo "cinf ${CINF_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/mhausenblas/cinf/releases/download/v${CINF_VERSION}/cinf_linux_amd64.tar.gz" \
+    | tar -xz \
+        --directory "${TARGET}/bin" \
+        --no-same-owner \
+        cinf
 }
 
 function process_exists() {

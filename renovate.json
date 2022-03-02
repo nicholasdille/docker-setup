@@ -156,6 +156,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "CONF_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mhausenblas/cinf",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "CLUSTERAWSADM_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes-sigs/cluster-api-provider-aws",
       "datasourceTemplate": "github-releases",
