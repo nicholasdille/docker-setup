@@ -149,6 +149,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "BYPASS4NETNS_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "rootless-containers/bypass4netns",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "CLUSTERAWSADM_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes-sigs/cluster-api-provider-aws",
       "datasourceTemplate": "github-releases",

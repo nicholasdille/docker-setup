@@ -175,18 +175,19 @@ fi
 declare -a tools
 declare -A tool_deps
 tools=(
-    arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd containerssh cosign crane crictl crun ctop dasel dive
-    docker docker-compose docker-machine docker-scan docuum dry duffle dyff
-    firecracker firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter
-    glow gvisor hcloud helm helmfile hub-tool ignite img imgcrypt ipfs jp jq
-    jwt k3d k3s k3sup k9s kapp kind kompose krew kubectl kubectl-build
-    kubectl-free kubectl-resources kubeletctl kubefire kubeswitch kustomize
-    lazydocker lazygit manifest-tool minikube mitmproxy nerdctl norouter
-    notation oci-image-tool oci-runtime-tool oras patat portainer porter podman
-    qemu regclient rootlesskit runc skopeo slirp4netns sops sshocker
-    stargz-snapshotter umoci trivy yq ytt
+    arkade buildah buildkit buildx bypass4netns clusterawsadm clusterctl cni
+    cni-isolation conmon containerd containerssh cosign crane crictl crun ctop
+    dasel dive docker docker-compose docker-machine docker-scan docuum dry
+    duffle dyff firecracker firectl footloose fuse-overlayfs
+    fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
+    img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kind kompose krew
+    kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
+    kubeswitch kustomize lazydocker lazygit manifest-tool minikube mitmproxy
+    nerdctl norouter notation oci-image-tool oci-runtime-tool oras patat
+    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
+    sops sshocker stargz-snapshotter umoci trivy yq ytt
 )
+tool_deps["bypass4netns"]="docker slirp4netns"
 tool_deps["containerd"]="runc dasel"
 tool_deps["crun"]="docker jq"
 tool_deps["ctop"]="docker"
@@ -274,6 +275,7 @@ ARKADE_VERSION=0.8.14
 BUILDAH_VERSION=1.24.0
 BUILDKIT_VERSION=0.9.3
 BUILDX_VERSION=0.7.1
+BYPASS4NETNS_VERSION=0.2.2
 CLUSTERAWSADM_VERSION=1.3.0
 CLUSTERCTL_VERSION=1.1.2
 CNI_ISOLATION_VERSION=0.0.4
@@ -384,6 +386,7 @@ function arkade_is_installed()                     { is_executable "${TARGET}/bi
 function buildah_is_installed()                    { is_executable "${TARGET}/bin/buildah"; }
 function buildkit_is_installed()                   { is_executable "${TARGET}/bin/buildkitd"; }
 function buildx_is_installed()                     { is_executable "${DOCKER_PLUGINS_PATH}/docker-buildx"; }
+function bypass4netns_is_installed()               { is_executable "${TARGET}/bin/bypass4netns"; }
 function clusterawsadm_is_installed()              { is_executable "${TARGET}/bin/clusterawsadm"; }
 function clusterctl_is_installed()                 { is_executable "${TARGET}/bin/clusterctl"; }
 function cni_is_installed()                        { is_executable "${TARGET}/libexec/cni/loopback"; }
@@ -475,6 +478,7 @@ function arkade_matches_version()                     { test "$(${TARGET}/bin/ar
 function buildah_matches_version()                    { test "$(${TARGET}/bin/buildah --version | cut -d' ' -f3)"                                  == "${BUILDAH_VERSION}"; }
 function buildkit_matches_version()                   { test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f3)"                                == "v${BUILDKIT_VERSION}"; }
 function buildx_matches_version()                     { test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f2)"                     == "v${BUILDX_VERSION}"; }
+function bypass4netns_matches_version()               { test "$(XDG_RUNTIME_DIR=/tmp ${TARGET}/bin/bypass4netns --version | grep bypass4netns | cut -d' ' -f3)"  == "${BYPASS4NETNS_VERSION}"; }
 function clusterawsadm_matches_version()              { test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
 function clusterctl_matches_version()                 { test "$(${TARGET}/bin/clusterctl version --output short)"                                  == "v${CLUSTERCTL_VERSION}"; }
 function cni_matches_version()                        { test "$(${TARGET}/libexec/cni/loopback 2>&1 | cut -d' ' -f4)"                              == "v${CNI_VERSION}"; }
@@ -2556,6 +2560,31 @@ function install-oci-runtime-tool() {
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_RUNTIME_TOOL_VERSION}" https://github.com/opencontainers/runtime-tools .
 make tool
 cp oci-runtime-tool /target/bin/
+EOF
+    else
+        echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+        false
+    fi
+}
+
+function install-bypass4netns() {
+    echo "bypass4netns ${BYPASS4NETNS_VERSION}"
+    if docker_is_running || tool_will_be_installed "docker"; then
+        echo "Wait for Docker daemon to start"
+        wait_for_docker
+        echo "Install binary"
+        "${TARGET}/bin/docker" container run \
+            --interactive \
+            --rm \
+            --volume "${TARGET}:/target" \
+            --env BYPASS4NETNS_VERSION \
+            --workdir /go/src/github.com/rootless-containers/bypass4netns \
+            golang:${GO_VERSION} <<EOF
+apt-get update
+apt-get -y install libseccomp-dev
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${BYPASS4NETNS_VERSION}" https://github.com/rootless-containers/bypass4netns .
+make static
+cp bypass4netns{,d} /target/bin/
 EOF
     else
         echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
