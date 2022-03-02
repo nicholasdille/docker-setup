@@ -1139,7 +1139,7 @@ function install-docker() {
                 DOCKER_RESTART=true
             fi
             echo "Check if daemon.json is valid JSON"
-            if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json"; then
+            if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json" >/dev/null 2>&1; then
                 echo "${RED}[ERROR] "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
                 exit 1
             fi
