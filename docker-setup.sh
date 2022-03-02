@@ -19,6 +19,7 @@ declare -a unknown_parameters
 : "${SKIP_DOCS:=false}"
 : "${MAX_PARALLEL:=10}"
 : "${NO_CACHE:=false}"
+: "${NO_CRON:=false}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -56,6 +57,9 @@ while test "$#" -gt 0; do
             ;;
         --no-cache)
             NO_CACHE=true
+            ;;
+        --no-cron)
+            NO_CRON=true
             ;;
         --version)
             SHOW_VERSION=true
@@ -134,6 +138,8 @@ are accepted:
 --plan, PLAN                       Show planned installations
 --skip-docs, SKIP_DOCS             Do not install documentation for faster
                                    installation
+--no-cache, NO_CACHE               XXX
+--no-cron, NO_CRON                 YYY
 
 The above environment variables can be true or false.
 
@@ -2721,6 +2727,36 @@ if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
         "${PREFIX}/etc/init.d/docker" restart
     fi
     rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
+fi
+
+if ! test -d "${PREFIX}/etc/cron.weekly"; then
+    echo -e "${RED}ERROR: Disabled creation of cronjob because directory for weekly job is missing.${RESET}"
+    NO_CRON=true
+fi
+if ! ${NO_CRON}; then
+    # Weekly update of docker-setup into current location
+    cat >"${PREFIX}/etc/cron.weekly/docker-setup-update" <<EOF
+#!/bin/bash
+set -o errexit
+
+curl https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh \
+    --silent \
+    --location \
+    --output "${TARGET}/bin/docker-setup.sh"
+chmod +x "${TARGET}/bin/docker-setup.sh"
+EOF
+
+    # Weekly run of docker-setup
+    cat >"${PREFIX}/etc/cron.weekly/docker-setup-upgrade" <<EOF
+#!/bin/bash
+set -o errexit
+
+"${TARGET}/bin/docker-setup.sh" --no-wait
+EOF
+
+    chmod +x \
+        "${PREFIX}/etc/cron.weekly/docker-setup-update" \
+        "${PREFIX}/etc/cron.weekly/docker-setup-upgrade"
 fi
 
 echo
