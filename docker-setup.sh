@@ -2729,13 +2729,20 @@ if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
     rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
 fi
 
-if ! test -d "${PREFIX}/etc/cron.weekly"; then
-    echo -e "${RED}ERROR: Disabled creation of cronjob because directory for weekly job is missing.${RESET}"
+cron_weekly_path="${PREFIX}/etc/cron.weekly"
+lsb_dist=$(get_lsb_distro_name)
+case "${lsb_dist}" in
+    alpine)
+        cron_weekly_path="${PREFIX}/etc/periodic/weekly"
+        ;;
+esac
+if ! test -d "${cron_weekly_path}"; then
+    echo -e "${YELLOW}WARNING: Disabled creation of cronjob because directory for weekly job is missing.${RESET}"
     NO_CRON=true
 fi
 if ! ${NO_CRON}; then
     # Weekly update of docker-setup into current location
-    cat >"${PREFIX}/etc/cron.weekly/docker-setup-update" <<EOF
+    cat >"${cron_weekly_path}/docker-setup-update" <<EOF
 #!/bin/bash
 set -o errexit
 
@@ -2747,7 +2754,7 @@ chmod +x "${TARGET}/bin/docker-setup.sh"
 EOF
 
     # Weekly run of docker-setup
-    cat >"${PREFIX}/etc/cron.weekly/docker-setup-upgrade" <<EOF
+    cat >"${cron_weekly_path}/docker-setup-upgrade" <<EOF
 #!/bin/bash
 set -o errexit
 
@@ -2755,8 +2762,8 @@ set -o errexit
 EOF
 
     chmod +x \
-        "${PREFIX}/etc/cron.weekly/docker-setup-update" \
-        "${PREFIX}/etc/cron.weekly/docker-setup-upgrade"
+        "${cron_weekly_path}/docker-setup-update" \
+        "${cron_weekly_path}/docker-setup-upgrade"
 fi
 
 echo
