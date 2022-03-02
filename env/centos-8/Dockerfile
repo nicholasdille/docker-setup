@@ -7,4 +7,5 @@ RUN yum install -y \
         unzip \
         initscripts
 COPY env/run.sh /
-COPY docker-setup.sh /
+COPY docker-setup.sh /usr/local/bin/docker-setup
+RUN chmod +x /usr/local/bin/docker-setup

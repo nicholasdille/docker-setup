@@ -2749,8 +2749,8 @@ set -o errexit
 curl https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh \
     --silent \
     --location \
-    --output "${TARGET}/bin/docker-setup.sh"
-chmod +x "${TARGET}/bin/docker-setup.sh"
+    --output /usr/local/bin/docker-setup
+chmod +x /usr/local/bin/docker-setup
 EOF
 
     # Weekly run of docker-setup
@@ -2758,7 +2758,7 @@ EOF
 #!/bin/bash
 set -o errexit
 
-"${TARGET}/bin/docker-setup.sh" --no-wait --only-installed
+/usr/local/bin/docker-setup --no-wait --only-installed
 EOF
 
     chmod +x \

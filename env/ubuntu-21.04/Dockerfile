@@ -12,4 +12,5 @@ RUN apt-get update \
         cron \
  && update-alternatives --set iptables /usr/sbin/iptables-legacy
 COPY env/run.sh /
-COPY docker-setup.sh /
+COPY docker-setup.sh /usr/local/bin/docker-setup
+RUN chmod +x /usr/local/bin/docker-setup

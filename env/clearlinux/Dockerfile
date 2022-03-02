@@ -5,4 +5,5 @@ RUN swupd bundle-add \
 # TODO: tput
 # TODO: init scripts
 COPY env/run.sh /
-COPY docker-setup.sh /
+COPY docker-setup.sh /usr/local/bin/docker-setup
+RUN chmod +x /usr/local/bin/docker-setup
