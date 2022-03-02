@@ -48,7 +48,7 @@ $PorterVersion = "0.38.9"
 $RegclientVersion = "0.3.10"
 $SopsVersion = "3.7.1"
 $YqVersion = "4.21.1"
-$YttVersion = "0.40.0"
+$YttVersion = "0.40.1"
 
 # Enable feature(s) with restart
 # TODO: Parameter to -IgnoreFeature
