@@ -483,7 +483,7 @@ function buildah_matches_version()                    { test "$(${TARGET}/bin/bu
 function buildkit_matches_version()                   { test "$(${TARGET}/bin/buildkitd --version | cut -d' ' -f3)"                                == "v${BUILDKIT_VERSION}"; }
 function buildx_matches_version()                     { test "$(${DOCKER_PLUGINS_PATH}/docker-buildx version | cut -d' ' -f2)"                     == "v${BUILDX_VERSION}"; }
 function bypass4netns_matches_version()               { test "$(XDG_RUNTIME_DIR=/tmp ${TARGET}/bin/bypass4netns --version | grep bypass4netns | cut -d' ' -f3)"  == "${BYPASS4NETNS_VERSION}"; }
-function cinf_matches_version()                       { test "$(${TARGET}/bin/cinf -version | grep "version" | cut -d' ' -f6)"                     == "${CINF_VERSION}"; }
+function cinf_matches_version()                       { test -f "${DOCKER_SETUP_CACHE}/cinf/${CINF_VERSION}"; }
 function clusterawsadm_matches_version()              { test "$(${TARGET}/bin/clusterawsadm version --output short)"                               == "v${CLUSTERAWSADM_VERSION}"; }
 function clusterctl_matches_version()                 { test "$(${TARGET}/bin/clusterctl version --output short)"                                  == "v${CLUSTERCTL_VERSION}"; }
 function cni_matches_version()                        { test "$(${TARGET}/libexec/cni/loopback 2>&1 | cut -d' ' -f4)"                              == "v${CNI_VERSION}"; }
@@ -2616,6 +2616,8 @@ function install-cinf() {
         --directory "${TARGET}/bin" \
         --no-same-owner \
         cinf
+    mkdir -p "${DOCKER_SETUP_CACHE}/cinf"
+    touch "${DOCKER_SETUP_CACHE}/cinf/${CINF_VERSION}"
 }
 
 function process_exists() {
