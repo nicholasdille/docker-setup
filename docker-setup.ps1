@@ -20,10 +20,12 @@ $DockerMachineVersion = "0.16.2"
 $DockerScanVersion = "0.17.0"
 $DryVersion = "0.11.1"
 $DuffleVersion = "0.3.5-beta.1"
+$FaasCliVersion = "0.14.2"
 $GlowVersion = "1.4.1"
 $HcloudVersion = "1.29.0"
 $HelmVersion = "3.8.0"
 $HubToolVersion = "0.4.4"
+$ImgpkgVersion = "0.25.0"
 $JpVersion = "0.2.1"
 $JqVersion = "1.6"
 $JwtVersion = "5.0.2"
@@ -225,3 +227,6 @@ Invoke-WebRequest -Uri "https://snapshots.mitmproxy.org/$MitmproxyVersion/mitmpr
 
 # faas-cli
 Invoke-WebRequest -Uri "https://github.com/openfaas/faas-cli/releases/download/$FaasCliVersion/faas-cli.exe" -OutFile "$Env:TARGET\faas-cli.exe"
+
+# imgpkg
+Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v$ImgpkgVersion/imgpkg-windows-amd64.exe" -OutFile "$Env:TARGET\imgpkg.exe"

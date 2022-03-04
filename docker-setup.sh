@@ -180,12 +180,13 @@ tools=(
     ctop dasel dive docker docker-compose docker-machine docker-scan docuum dry
     duffle dyff faas-cli faasd firecracker firectl footloose fuse-overlayfs
     fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
-    img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kbrew kind kompose krew
-    kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
-    kubeswitch kustomize lazydocker lazygit manifest-tool minikube mitmproxy
-    nerdctl norouter notation oci-image-tool oci-runtime-tool oras patat
-    portainer porter podman qemu regclient rootlesskit runc skopeo slirp4netns
-    sops sshocker stargz-snapshotter umoci trivy yq ytt
+    img imgcrypt imgpkg ipfs jp jq jwt k3d k3s k3sup k9s kapp kbrew kind
+    kompose krew kubectl kubectl-build kubectl-free kubectl-resources
+    kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
+    minikube mitmproxy nerdctl norouter notation oci-image-tool
+    oci-runtime-tool oras patat portainer porter podman qemu regclient
+    rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
+    trivy yq ytt
 )
 tool_deps["bypass4netns"]="docker slirp4netns"
 tool_deps["containerd"]="runc cni dasel"
@@ -317,6 +318,7 @@ HELMFILE_VERSION=0.143.0
 IGNITE_VERSION=0.10.0
 IMG_VERSION=0.5.11
 IMGCRYPT_VERSION=1.1.2
+IMGPKG_VERSION=0.25.0
 IPFS_VERSION=0.12.0
 IPTABLES_VERSION=1.8.7
 JP_VERSION=0.2.1
@@ -433,6 +435,7 @@ function hub_tool_is_installed()                   { is_executable "${TARGET}/bi
 function ignite_is_installed()                     { is_executable "${TARGET}/bin/ignite"; }
 function img_is_installed()                        { is_executable "${TARGET}/bin/img"; }
 function imgcrypt_is_installed()                   { is_executable "${TARGET}/bin/ctr-enc"; }
+function imgpkg_is_installed()                     { is_executable "${TARGET}/bin/imgpkg"; }
 function ipfs_is_installed()                       { is_executable "${TARGET}/bin/ipfs"; }
 function jp_is_installed()                         { is_executable "${TARGET}/bin/jp"; }
 function jq_is_installed()                         { is_executable "${TARGET}/bin/jq"; }
@@ -529,6 +532,7 @@ function hub_tool_matches_version()                   { test "$(${TARGET}/bin/hu
 function ignite_matches_version()                     { test "$(${TARGET}/bin/ignite version --output short)"                                      == "v${IGNITE_VERSION}"; }
 function img_matches_version()                        { test "$(${TARGET}/bin/img --version | cut -d, -f1 | cut -d' ' -f3)"                        == "v${IMG_VERSION}"; }
 function imgcrypt_matches_version()                   { test "$(${TARGET}/bin/ctr-enc --version | cut -d' ' -f3)"                                  == "v${IMGCRYPT_VERSION}"; }
+function imgpkg_matches_version()                     { test "$(${TARGET}/bin/imgpkg version | head -n 1 | cut -d' ' -f3)"                         == "${IMGPKG_VERSION}"; }
 function ipfs_matches_version()                       { test "$(${TARGET}/bin/ipfs version --number)"                                              == "${IPFS_VERSION}"; }
 function jp_matches_version()                         { test "$(${TARGET}/bin/jp --version | cut -d' ' -f3)"                                       == "${JP_VERSION}"; }
 function jq_matches_version()                         { test "$(${TARGET}/bin/jq --version)"                                                       == "jq-${JQ_VERSION}"; }
@@ -2647,6 +2651,14 @@ function install-faasd() {
     get_file "https://github.com/openfaas/faasd/releases/download/${FAASD_VERSION}/faasd" >"${TARGET}/bin/faasd"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/faasd"
+}
+
+function install-imgpkg() {
+    echo "imgpkg ${IMGPKG_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${IMGPKG_VERSION}/imgpkg-linux-amd64" >"${TARGET}/bin/imgpkg"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/imgpkg"
 }
 
 function process_exists() {

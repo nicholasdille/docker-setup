@@ -435,6 +435,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "IMGPKG_VERSION=(?<currentValue>.*?)\n", "ImgpkgVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "vmware-tanzu/carvel-imgpkg",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "IMG_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "genuinetools/img",
