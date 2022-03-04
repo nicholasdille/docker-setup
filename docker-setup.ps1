@@ -33,6 +33,7 @@ $K3dVersion = "5.3.0"
 $K3supVersion = "0.11.3"
 $K9sVersion = "0.25.18"
 $KappVersion = "0.46.0"
+$KbldVersion = "0.32.0"
 $KindVersion = "0.11.1"
 $KomposeVersion = "1.26.1"
 $KubectlVersion = "1.23.4"
@@ -230,3 +231,6 @@ Invoke-WebRequest -Uri "https://github.com/openfaas/faas-cli/releases/download/$
 
 # imgpkg
 Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v$ImgpkgVersion/imgpkg-windows-amd64.exe" -OutFile "$Env:TARGET\imgpkg.exe"
+
+# kbld
+Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-kbld/releases/download/v$KbldVersion/kbld-windows-amd64.exe" -OutFile "$Env:TARGET\kbld.exe"

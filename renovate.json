@@ -518,6 +518,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KBLD_VERSION=(?<currentValue>.*?)\n", "KbldVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "vmware-tanzu/carvel-kbld",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "KBREW_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kbrew-dev/kbrew",

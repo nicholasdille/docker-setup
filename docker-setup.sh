@@ -180,7 +180,7 @@ tools=(
     ctop dasel dive docker docker-compose docker-machine docker-scan docuum dry
     duffle dyff faas-cli faasd firecracker firectl footloose fuse-overlayfs
     fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
-    img imgcrypt imgpkg ipfs jp jq jwt k3d k3s k3sup k9s kapp kbrew kind
+    img imgcrypt imgpkg ipfs jp jq jwt k3d k3s k3sup k9s kapp kbld kbrew kind
     kompose krew kubectl kubectl-build kubectl-free kubectl-resources
     kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
     minikube mitmproxy nerdctl norouter notation oci-image-tool
@@ -330,6 +330,7 @@ K3S_VERSION=1.23.4+k3s1
 K3SUP_VERSION=0.11.3
 K9S_VERSION=0.25.18
 KAPP_VERSION=0.46.0
+KBLD_VERSION=0.32.0
 KBREW_VERSION=0.1.0
 KIND_VERSION=0.11.1
 KOMPOSE_VERSION=1.26.1
@@ -445,6 +446,7 @@ function k3s_is_installed()                        { is_executable "${TARGET}/bi
 function k3sup_is_installed()                      { is_executable "${TARGET}/bin/k3sup"; }
 function k9s_is_installed()                        { is_executable "${TARGET}/bin/k9s"; }
 function kapp_is_installed()                       { is_executable "${TARGET}/bin/kapp"; }
+function kbld_is_installed()                       { is_executable "${TARGET}/bin/kbld"; }
 function kbrew_is_installed()                      { is_executable "${TARGET}/bin/kbrew"; }
 function kind_is_installed()                       { is_executable "${TARGET}/bin/kind"; }
 function kompose_is_installed()                    { is_executable "${TARGET}/bin/kompose"; }
@@ -542,6 +544,7 @@ function k3s_matches_version()                        { test "$(${TARGET}/bin/k3
 function k3sup_matches_version()                      { test "$(${TARGET}/bin/k3sup version | grep Version | cut -d' ' -f2)"                       == "${K3SUP_VERSION}"; }
 function k9s_matches_version()                        { test "$(${TARGET}/bin/k9s version --short | grep "^Version" | cut -dv -f2)"                == "${K9S_VERSION}"; }
 function kapp_matches_version()                       { test "$(${TARGET}/bin/kapp version | head -n 1 | cut -d' ' -f3)"                           == "${KAPP_VERSION}"; }
+function kbld_matches_version()                       { test "$(${TARGET}/bin/kbld version | head -n 1 | cut -d' ' -f3)"                           == "${KBLD_VERSION}"; }
 function kbrew_matches_version()                      { test "$(${TARGET}/bin/kbrew version | cut -d, -f1 | cut -d'"' -f4)"                        == "v${KBREW_VERSION}"; }
 function kind_matches_version()                       { test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
 function kompose_matches_version()                    { test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
@@ -2659,6 +2662,14 @@ function install-imgpkg() {
     get_file "https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${IMGPKG_VERSION}/imgpkg-linux-amd64" >"${TARGET}/bin/imgpkg"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/imgpkg"
+}
+
+function install-kbld() {
+    echo "kbld ${KBLD_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${KBLD_VERSION}/kbld-linux-amd64" >"${TARGET}/bin/kbld"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/kbld"
 }
 
 function process_exists() {
