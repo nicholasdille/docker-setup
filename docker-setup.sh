@@ -178,7 +178,7 @@ tools=(
     arkade buildah buildkit buildx bypass4netns cinf clusterawsadm clusterctl
     cni cni-isolation conmon containerd containerssh cosign crane crictl crun
     ctop dasel dive docker docker-compose docker-machine docker-scan docuum dry
-    duffle dyff firecracker firectl footloose fuse-overlayfs
+    duffle dyff faas-cli faasd firecracker firectl footloose fuse-overlayfs
     fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
     img imgcrypt ipfs jp jq jwt k3d k3s k3sup k9s kapp kbrew kind kompose krew
     kubectl kubectl-build kubectl-free kubectl-resources kubeletctl kubefire
@@ -188,13 +188,14 @@ tools=(
     sops sshocker stargz-snapshotter umoci trivy yq ytt
 )
 tool_deps["bypass4netns"]="docker slirp4netns"
-tool_deps["containerd"]="runc dasel"
+tool_deps["containerd"]="runc cni dasel"
 tool_deps["crun"]="docker jq"
 tool_deps["ctop"]="docker"
 tool_deps["dive"]="docker"
 tool_deps["docker"]="jq"
 tool_deps["docuum"]="docker"
 tool_deps["dry"]="docker"
+tool_deps["faasd"]="containerd faas-cli"
 tool_deps["fuse-overlayfs-snapshotter"]="containerd"
 tool_deps["gvisor"]="docker jq"
 tool_deps["ignite"]="containerd cni"
@@ -300,6 +301,8 @@ DOCUUM_VERSION=0.20.4
 DRY_VERSION=0.11.1
 DUFFLE_VERSION=0.3.5-beta.1
 DYFF_VERSION=1.5.1
+FAAS_CLI_VERSION=0.14.3
+FAASD_VERSION=0.14.4
 FIRECRACKER_VERSION=1.0.0
 FIRECTL_VERSION=0.1.0
 FOOTLOOSE_VERSION=0.6.3
@@ -414,6 +417,8 @@ function docuum_is_installed()                     { is_executable "${TARGET}/bi
 function dry_is_installed()                        { is_executable "${TARGET}/bin/dry"; }
 function duffle_is_installed()                     { is_executable "${TARGET}/bin/duffle"; }
 function dyff_is_installed()                       { is_executable "${TARGET}/bin/dyff"; }
+function faas_cli_is_installed()                   { is_executable "${TARGET}/bin/faas-cli"; }
+function faasd_is_installed()                      { is_executable "${TARGET}/bin/faasd"; }
 function firecracker_is_installed()                { is_executable "${TARGET}/bin/firecracker"; }
 function firectl_is_installed()                    { is_executable "${TARGET}/bin/firectl"; }
 function footloose_is_installed()                  { is_executable "${TARGET}/bin/footloose"; }
@@ -508,6 +513,8 @@ function docuum_matches_version()                     { test "$(${TARGET}/bin/do
 function dry_matches_version()                        { test "$(${TARGET}/bin/dry --version | cut -d, -f1 | cut -d' ' -f3)"                        == "${DRY_VERSION}"; }
 function duffle_matches_version()                     { test "$(${TARGET}/bin/duffle version)"                                                     == "${DUFFLE_VERSION}"; }
 function dyff_matches_version()                       { test "$(${TARGET}/bin/dyff version | cut -d' ' -f3)"                                       == "${DYFF_VERSION}"; }
+function faas_cli_matches_version()                   { test "$(${TARGET}/bin/faas-cli version | grep "version:" | cut -d' ' -f3)"                 == "${FAAS_CLI_VERSION}"; }
+function faasd_matches_version()                      { test "$(${TARGET}/bin/faasd version | grep faasd | tr '\t' ' ' | cut -d' ' -f3)"           == "${FAASD_VERSION}"; }
 function firecracker_matches_version()                { test "$(${TARGET}/bin/firecracker --version | grep "^Firecracker" | cut -d' ' -f2)"        == "v${FIRECRACKER_VERSION}"; }
 function firectl_matches_version()                    { test "$(${TARGET}/bin/firectl --version)"                                                  == "${FIRECTL_VERSION}"; }
 function footloose_matches_version()                  { test "$(${TARGET}/bin/footloose version | cut -d' ' -f2)"                                  == "${FOOTLOOSE_VERSION}"; }
@@ -2624,6 +2631,22 @@ function install-cinf() {
         cinf
     mkdir -p "${DOCKER_SETUP_CACHE}/cinf"
     touch "${DOCKER_SETUP_CACHE}/cinf/${CINF_VERSION}"
+}
+
+function install-faas-cli() {
+    echo "faas-cli ${FAAS_CLI_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/openfaas/faas-cli/releases/download/${FAAS_CLI_VERSION}/faas-cli" >"${TARGET}/bin/faas-cli"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/faas-cli"
+}
+
+function install-faasd() {
+    echo "faasd ${FAASD_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/openfaas/faasd/releases/download/${FAASD_VERSION}/faasd" >"${TARGET}/bin/faasd"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/faasd"
 }
 
 function process_exists() {

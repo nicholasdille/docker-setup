@@ -325,6 +325,18 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "FAAS_CLI_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "openfaas/faas-cli",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
+      "matchStrings": [ "FAASD_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "openfaas/faasd",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "FIRECRACKER_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "firecracker-microvm/firecracker",
       "datasourceTemplate": "github-releases",
