@@ -52,6 +52,7 @@ $PorterVersion = "0.38.9"
 $RegclientVersion = "0.3.10"
 $SopsVersion = "3.7.1"
 $YqVersion = "4.21.1"
+$VendirVersion = "0.24.0"
 $YttVersion = "0.40.1"
 
 # Enable feature(s) with restart
@@ -239,3 +240,6 @@ Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-kbld/releases/dow
 # kink
 Invoke-WebRequest -Uri "https://github.com/Trendyol/kink/releases/download/v$KinkVersion/kink_$($KinkVersion)_Windows-x86_64.tar.gz" -OutFile "$Env:UserProfile\Downloads\kink_$($KinkVersion)_Windows-x86_64.tar.gz"
 # TODO: unpack
+
+# vendir
+Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-vendir/releases/download/v$VendirVersion/vendir-windows-amd64.exe" -OutFile "$Env:TARGET\vendir.exe"

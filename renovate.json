@@ -816,6 +816,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "VENDIR_VERSION=(?<currentValue>.*?)\n", "VendirVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "vmware-tanzu/carvel-vendir",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "YTT_VERSION=(?<currentValue>.*?)\n", "YttVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
       "datasourceTemplate": "github-releases",

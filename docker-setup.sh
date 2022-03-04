@@ -186,7 +186,7 @@ tools=(
     minikube mitmproxy nerdctl norouter notation oci-image-tool
     oci-runtime-tool oras patat portainer porter podman qemu regclient
     rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
-    trivy yq ytt
+    trivy vendir yq ytt
 )
 tool_deps["bypass4netns"]="docker slirp4netns"
 tool_deps["containerd"]="runc cni dasel"
@@ -371,6 +371,7 @@ SSHOCKER_VERSION=0.2.2
 STARGZ_SNAPSHOTTER_VERSION=0.11.1
 TRIVY_VERSION=0.24.2
 UMOCI_VERSION=0.4.7
+VENDIR_VERSION=0.24.0
 YTT_VERSION=0.40.1
 YQ_VERSION=4.21.1
 
@@ -487,6 +488,7 @@ function sshocker_is_installed()                   { is_executable "${TARGET}/bi
 function stargz_snapshotter_is_installed()         { is_executable "${TARGET}/bin/containerd-stargz-grpc"; }
 function trivy_is_installed()                      { is_executable "${TARGET}/bin/trivy"; }
 function umoci_is_installed()                      { is_executable "${TARGET}/bin/umoci"; }
+function vendir_is_installed()                     { is_executable "${TARGET}/bin/vendir"; }
 function yq_is_installed()                         { is_executable "${TARGET}/bin/yq"; }
 function ytt_is_installed()                        { is_executable "${TARGET}/bin/ytt"; }
 
@@ -586,6 +588,7 @@ function sshocker_matches_version()                   { test "$(${TARGET}/bin/ss
 function stargz_snapshotter_matches_version()         { test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
 function trivy_matches_version()                      { test "$(${TARGET}/bin/trivy --version | cut -d' ' -f2)"                                    == "${TRIVY_VERSION}"; }
 function umoci_matches_version()                      { test "$(${TARGET}/bin/umoci --version | cut -d' ' -f3)"                                    == "${UMOCI_VERSION}"; }
+function vendir_matches_version()                     { test "$(${TARGET}/bin/vendir version | head -n 1 | cut -d' ' -f3)"                         == "${VENDIR_VERSION}"; }
 function yq_matches_version()                         { test "$(${TARGET}/bin/yq --version | cut -d' ' -f4)"                                       == "${YQ_VERSION}"; }
 function ytt_matches_version()                        { test "$(${TARGET}/bin/ytt version | cut -d' ' -f3)"                                        == "${YTT_VERSION}"; }
 
@@ -2686,6 +2689,14 @@ function install-kink() {
     "${TARGET}/bin/kink" completion bash >"${TARGET}/share/bash-completion/completions/kink"
     "${TARGET}/bin/kink" completion fish >"${TARGET}/share/fish/vendor_completions.d/kink.fish"
     "${TARGET}/bin/kink" completion zsh >"${TARGET}/share/zsh/vendor-completions/_kink"
+}
+
+function install-vendir() {
+    echo "vendir ${VENDIR_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${VENDIR_VERSION}/vendir-linux-amd64" >"${TARGET}/bin/vendir"
+    echo "Set executable bits"
+    chmod +x "${TARGET}/bin/vendir"
 }
 
 function process_exists() {
