@@ -1,0 +1,25 @@
+#!/bin/bash
+
+docker_cli_plugin_metadata() {
+	if [ -z "$DOCKER_COMPOSE_VERSION" ]; then
+		export DOCKER_COMPOSE_VERSION
+        DOCKER_COMPOSE_VERSION="$(docker-compose --version | cut -d " " -f 3 | cut -d "," -f 1)"
+	fi
+
+	local vendor="Docker"
+	local url="https://www.docker.com"
+	local description="Define and run multi-container applications"
+	cat <<-EOF
+	{"SchemaVersion":"0.1.0","Vendor":"${vendor}","Version":"${DOCKER_COMPOSE_VERSION}","ShortDescription":"${description}","URL":"${url}"}
+EOF
+}
+
+case "$1" in
+	docker-cli-plugin-metadata)
+		docker_cli_plugin_metadata
+		;;
+	*)
+        shift
+		exec docker-compose "$@"
+		;;
+esac

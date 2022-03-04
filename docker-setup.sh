@@ -1316,15 +1316,21 @@ function install-docker-compose() {
     get_file "${DOCKER_COMPOSE_URL}" >"${DOCKER_COMPOSE_TARGET}"
     echo "Set executable bits"
     chmod +x "${DOCKER_COMPOSE_TARGET}"
-    if test "${DOCKER_COMPOSE}" == "v2"; then
-        echo "Install wrapper for docker-compose"
-        cat >"${TARGET}/bin/docker-compose" <<EOF
+    case "${DOCKER_COMPOSE}" in
+        "v1")
+            get_file "${DOCKER_SETUP_REPO_RAW}/contrib/docker-compose/docker-compose" >"${DOCKER_PLUGINS_PATH}/docker-compose"
+            chmod +x "${DOCKER_PLUGINS_PATH}/docker-compose"
+            ;;
+        "v2")
+            echo "Install wrapper for docker-compose"
+            cat >"${TARGET}/bin/docker-compose" <<EOF
 #!/bin/bash
 exec "${DOCKER_PLUGINS_PATH}/docker-compose" compose "\$@"
 EOF
-        echo "Set executable bits"
-        chmod +x "${TARGET}/bin/docker-compose"
-    fi
+            echo "Set executable bits"
+            chmod +x "${TARGET}/bin/docker-compose"
+            ;;
+    esac
 }
 
 function install-docker-scan() {
