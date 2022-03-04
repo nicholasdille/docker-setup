@@ -268,11 +268,6 @@ if ! type tput >/dev/null 2>&1; then
     }
 fi
 
-display_cols=$(tput cols || echo "65")
-if test -z "${display_cols}" || test "${display_cols}" -le 0; then
-    display_cols=65
-fi
-
 ARKADE_VERSION=0.8.14
 BUILDAH_VERSION=1.24.0
 BUILDKIT_VERSION=0.9.3
@@ -605,6 +600,14 @@ if ${ONLY_INSTALLED}; then
     done
 fi
 
+function get_display_cols() {
+    display_cols=$(tput cols || echo "65")
+    if test -z "${display_cols}" || test "${display_cols}" -le 0; then
+        display_cols=65
+    fi
+    echo "${display_cols}"
+}
+
 function resolve_deps() {
     local tool=$1
 
@@ -678,7 +681,7 @@ for tool in "${tools[@]}"; do
 
     item="${tool} ${tool_version[${tool}]} ${tool_sign[${tool}]}"
     item_length=$(( ${#item} + 3 ))
-    if test "$(( line_length + item_length ))" -gt "${display_cols}"; then
+    if test "$(( line_length + item_length ))" -gt "$(get_display_cols)"; then
         echo
         line_length=0
     fi
@@ -2767,14 +2770,14 @@ last_update=false
 exit_code=0
 child_pid_count="${#tool_install[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
-progress_bar_width=$(( display_cols - ${#info_around_progress_bar} ))
-done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
-todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
 if ${NO_PROGRESSBAR}; then
     echo "Installing..."
 fi
 rm -f "${DOCKER_SETUP_LOGS}/PROFILING"
 while ! ${last_update}; do
+    progress_bar_width=$(( $(get_display_cols) - ${#info_around_progress_bar} ))
+    done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
+    todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
     running="$(count_sub_processes)"
 
     if test "${running}" -lt "${MAX_PARALLEL}"; then
