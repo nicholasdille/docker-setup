@@ -1844,6 +1844,7 @@ grep
 hns
 images
 janitor
+kniff
 konfig
 kubesec-scan
 kurt
