@@ -794,6 +794,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "TASK_VERSION=(?<currentValue>.*?)\n", "TaskVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "go-task/task",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
       "fileMatch": [ "^docker-setup.sh$" ],
       "matchStrings": [ "TRIVY_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate": "aquasecurity/trivy",

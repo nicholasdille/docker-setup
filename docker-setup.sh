@@ -186,7 +186,7 @@ tools=(
     minikube mitmproxy nerdctl norouter notation oci-image-tool
     oci-runtime-tool oras patat portainer porter podman qemu regclient
     rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
-    trivy vendir yq ytt
+    task trivy vendir yq ytt
 )
 tool_deps["bypass4netns"]="docker slirp4netns"
 tool_deps["containerd"]="runc cni dasel"
@@ -369,6 +369,7 @@ SLIRP4NETNS_VERSION=1.1.12
 SOPS_VERSION=3.7.1
 SSHOCKER_VERSION=0.2.2
 STARGZ_SNAPSHOTTER_VERSION=0.11.1
+TASK_VERSION=3.11.0
 TRIVY_VERSION=0.24.2
 UMOCI_VERSION=0.4.7
 VENDIR_VERSION=0.24.0
@@ -486,6 +487,7 @@ function slirp4netns_is_installed()                { is_executable "${TARGET}/bi
 function sops_is_installed()                       { is_executable "${TARGET}/bin/sops"; }
 function sshocker_is_installed()                   { is_executable "${TARGET}/bin/sshocker"; }
 function stargz_snapshotter_is_installed()         { is_executable "${TARGET}/bin/containerd-stargz-grpc"; }
+function task_is_installed()                       { is_executable "${TARGET}/bin/task"; }
 function trivy_is_installed()                      { is_executable "${TARGET}/bin/trivy"; }
 function umoci_is_installed()                      { is_executable "${TARGET}/bin/umoci"; }
 function vendir_is_installed()                     { is_executable "${TARGET}/bin/vendir"; }
@@ -586,6 +588,7 @@ function slirp4netns_matches_version()                { test "$(${TARGET}/bin/sl
 function sops_matches_version()                       { test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
 function sshocker_matches_version()                   { test "$(${TARGET}/bin/sshocker --version | cut -d' ' -f3)"                                 == "v${SSHOCKER_VERSION}"; }
 function stargz_snapshotter_matches_version()         { test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
+function task_matches_version()                       { test "$(${TARGET}/bin/task --version | cut -d' ' -f3)"                                     == "v${TASK_VERSION}"; }
 function trivy_matches_version()                      { test "$(${TARGET}/bin/trivy --version | cut -d' ' -f2)"                                    == "${TRIVY_VERSION}"; }
 function umoci_matches_version()                      { test "$(${TARGET}/bin/umoci --version | cut -d' ' -f3)"                                    == "${UMOCI_VERSION}"; }
 function vendir_matches_version()                     { test "$(${TARGET}/bin/vendir version | head -n 1 | cut -d' ' -f3)"                         == "${VENDIR_VERSION}"; }
@@ -2488,6 +2491,7 @@ function install-dyff() {
         --directory "${TARGET}/bin" \
         --no-same-owner \
         dyff
+    echo "Install completion"
     "${TARGET}/bin/dyff" completion bash >"${TARGET}/share/bash-completion/completions/dyff"
     "${TARGET}/bin/dyff" completion fish >"${TARGET}/share/fish/vendor_completions.d/dyff.fish"
     "${TARGET}/bin/dyff" completion zsh >"${TARGET}/share/zsh/vendor-completions/_dyff"
@@ -2501,6 +2505,7 @@ function install-hcloud() {
         --directory "${TARGET}/bin" \
         --no-same-owner \
         hcloud
+    echo "Install completion"
     "${TARGET}/bin/hcloud" completion bash >"${TARGET}/share/bash-completion/completions/hcloud"
     "${TARGET}/bin/hcloud" completion fish >"${TARGET}/share/fish/vendor_completions.d/hcloud.fish"
     "${TARGET}/bin/hcloud" completion zsh >"${TARGET}/share/zsh/vendor-completions/_hcloud"
@@ -2686,6 +2691,7 @@ function install-kink() {
         --directory "${TARGET}/bin" \
         --no-same-owner \
         kink
+    echo "Install completion"
     "${TARGET}/bin/kink" completion bash >"${TARGET}/share/bash-completion/completions/kink"
     "${TARGET}/bin/kink" completion fish >"${TARGET}/share/fish/vendor_completions.d/kink.fish"
     "${TARGET}/bin/kink" completion zsh >"${TARGET}/share/zsh/vendor-completions/_kink"
@@ -2697,6 +2703,28 @@ function install-vendir() {
     get_file "https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${VENDIR_VERSION}/vendir-linux-amd64" >"${TARGET}/bin/vendir"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/vendir"
+}
+
+function install-task() {
+    echo "task ${TASK_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/go-task/task/releases/download/v${TASK_VERSION}/task_linux_amd64.tar.gz" \
+    | tar -xz \
+        --directory "${TARGET}/bin" \
+        --no-same-owner \
+        task
+    echo "Install completion"
+    get_file "https://github.com/go-task/task/releases/download/v${TASK_VERSION}/task_linux_amd64.tar.gz" \
+    | tar -xz \
+        --directory "${TARGET}/share" \
+        --strip-components=2 \
+        --no-same-owner \
+        completion/bash/task.bash \
+        completion/fish/task.fish \
+        completion/zsh/_task
+    mv "${TARGET}/share/task.bash" "${TARGET}/share/bash-completion/completions/task"
+    mv "${TARGET}/share/task.fish" "${TARGET}/share/fish/vendor_completions.d/task.fish"
+    mv "${TARGET}/share/_task" "${TARGET}/share/zsh/vendor-completions/_task"
 }
 
 function process_exists() {

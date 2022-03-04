@@ -51,6 +51,7 @@ $OrasVersion = "0.12.0"
 $PorterVersion = "0.38.9"
 $RegclientVersion = "0.3.10"
 $SopsVersion = "3.7.1"
+$TaskVersion = "3.11.0"
 $YqVersion = "4.21.1"
 $VendirVersion = "0.24.0"
 $YttVersion = "0.40.1"
@@ -243,3 +244,7 @@ Invoke-WebRequest -Uri "https://github.com/Trendyol/kink/releases/download/v$Kin
 
 # vendir
 Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-vendir/releases/download/v$VendirVersion/vendir-windows-amd64.exe" -OutFile "$Env:TARGET\vendir.exe"
+
+# task
+Invoke-WebRequest -Uri "https://github.com/go-task/task/releases/download/v$TaskVersion/task_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\task_windows_amd64.zip"
+# TODO: unpack
