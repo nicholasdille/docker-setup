@@ -181,7 +181,7 @@ tools=(
     duffle dyff faas-cli faasd firecracker firectl footloose fuse-overlayfs
     fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
     img imgcrypt imgpkg ipfs jp jq jwt k3d k3s k3sup k9s kapp kbld kbrew kind
-    kompose krew kubectl kubectl-build kubectl-free kubectl-resources
+    kink kompose krew kubectl kubectl-build kubectl-free kubectl-resources
     kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
     minikube mitmproxy nerdctl norouter notation oci-image-tool
     oci-runtime-tool oras patat portainer porter podman qemu regclient
@@ -333,6 +333,7 @@ KAPP_VERSION=0.46.0
 KBLD_VERSION=0.32.0
 KBREW_VERSION=0.1.0
 KIND_VERSION=0.11.1
+KINK_VERSION=0.2.1
 KOMPOSE_VERSION=1.26.1
 KREW_VERSION=0.4.3
 KUBECTL_VERSION=1.23.4
@@ -449,6 +450,7 @@ function kapp_is_installed()                       { is_executable "${TARGET}/bi
 function kbld_is_installed()                       { is_executable "${TARGET}/bin/kbld"; }
 function kbrew_is_installed()                      { is_executable "${TARGET}/bin/kbrew"; }
 function kind_is_installed()                       { is_executable "${TARGET}/bin/kind"; }
+function kink_is_installed()                       { is_executable "${TARGET}/bin/kink"; }
 function kompose_is_installed()                    { is_executable "${TARGET}/bin/kompose"; }
 function krew_is_installed()                       { is_executable "${TARGET}/bin/krew"; }
 function kubectl_is_installed()                    { is_executable "${TARGET}/bin/kubectl"; }
@@ -547,6 +549,7 @@ function kapp_matches_version()                       { test "$(${TARGET}/bin/ka
 function kbld_matches_version()                       { test "$(${TARGET}/bin/kbld version | head -n 1 | cut -d' ' -f3)"                           == "${KBLD_VERSION}"; }
 function kbrew_matches_version()                      { test "$(${TARGET}/bin/kbrew version | cut -d, -f1 | cut -d'"' -f4)"                        == "v${KBREW_VERSION}"; }
 function kind_matches_version()                       { test "$(${TARGET}/bin/kind version | cut -d' ' -f1-2 | cut -d' ' -f2)"                     == "v${KIND_VERSION}"; }
+function kink_matches_version()                       { test "$(${TARGET}/bin/kink version | grep GitVersion | tr -s ' ' | cut -d' ' -f2)"         == "${KINK_VERSION}"; }
 function kompose_matches_version()                    { test "$(${TARGET}/bin/kompose version | cut -d' ' -f1)"                                    == "${KOMPOSE_VERSION}"; }
 function krew_matches_version()                       { test "$(${TARGET}/bin/krew version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2)" == "v${KREW_VERSION}"; }
 function kubectl_matches_version()                    { test "$(${TARGET}/bin/kubectl version --client --short)"  == "Client Version: v${KUBECTL_VERSION}"; }
@@ -2670,6 +2673,19 @@ function install-kbld() {
     get_file "https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${KBLD_VERSION}/kbld-linux-amd64" >"${TARGET}/bin/kbld"
     echo "Set executable bits"
     chmod +x "${TARGET}/bin/kbld"
+}
+
+function install-kink() {
+    echo "kink ${KINK_VERSION}"
+    echo "Install binary"
+    get_file "https://github.com/Trendyol/kink/releases/download/v${KINK_VERSION}/kink_${KINK_VERSION}_Linux-x86_64.tar.gz" \
+    | tar -xz \
+        --directory "${TARGET}/bin" \
+        --no-same-owner \
+        kink
+    "${TARGET}/bin/kink" completion bash >"${TARGET}/share/bash-completion/completions/kink"
+    "${TARGET}/bin/kink" completion fish >"${TARGET}/share/fish/vendor_completions.d/kink.fish"
+    "${TARGET}/bin/kink" completion zsh >"${TARGET}/share/zsh/vendor-completions/_kink"
 }
 
 function process_exists() {

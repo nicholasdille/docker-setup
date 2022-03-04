@@ -35,6 +35,7 @@ $K9sVersion = "0.25.18"
 $KappVersion = "0.46.0"
 $KbldVersion = "0.32.0"
 $KindVersion = "0.11.1"
+$KinkVersion = "0.2.1"
 $KomposeVersion = "1.26.1"
 $KubectlVersion = "1.23.4"
 $KubeletctlVersion = "1.8"
@@ -234,3 +235,7 @@ Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-imgpkg/releases/d
 
 # kbld
 Invoke-WebRequest -Uri "https://github.com/vmware-tanzu/carvel-kbld/releases/download/v$KbldVersion/kbld-windows-amd64.exe" -OutFile "$Env:TARGET\kbld.exe"
+
+# kink
+Invoke-WebRequest -Uri "https://github.com/Trendyol/kink/releases/download/v$KinkVersion/kink_$($KinkVersion)_Windows-x86_64.tar.gz" -OutFile "$Env:UserProfile\Downloads\kink_$($KinkVersion)_Windows-x86_64.tar.gz"
+# TODO: unpack

@@ -540,6 +540,13 @@
     },
     {
       "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "KINK_VERSION=(?<currentValue>.*?)\n", "KinkVersion = \"(?<currentValue>.*?)\"" ],
+      "depNameTemplate": "Trendyol/kink",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
       "matchStrings": [ "KOMPOSE_VERSION=(?<currentValue>.*?)\n", "KomposeVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "kubernetes/kompose",
       "datasourceTemplate": "github-releases",
