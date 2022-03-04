@@ -1,4 +1,4 @@
-FROM amazonlinux:2@sha256:3807816d350446a722cfc8cf366e163ebf566a52a333d87372b77320a5d7eb4e
+FROM amazonlinux:2@sha256:ff9ec1b0de6572fd14c6bdbda585828257d72dfea74b2b106a1f3ede56eac871
 RUN yum install -y \
         curl \
         ca-certificates \
