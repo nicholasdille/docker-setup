@@ -222,3 +222,6 @@ Invoke-WebRequest -Uri "https://github.com/alexellis/k3sup/releases/download/$K3
 # mitmproxy
 Invoke-WebRequest -Uri "https://snapshots.mitmproxy.org/$MitmproxyVersion/mitmproxy-$($MitmproxyVersion)-windows.zip" -OutFile "$Env:UserProfile\Downloads\mitmproxy-$($MitmproxyVersion)-windows.zip"
 # TODO: unpack
+
+# faas-cli
+Invoke-WebRequest -Uri "https://github.com/openfaas/faas-cli/releases/download/$FaasCliVersion/faas-cli.exe" -OutFile "$Env:TARGET\faas-cli.exe"

@@ -324,8 +324,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$" ],
-      "matchStrings": [ "FAAS_CLI_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
+      "matchStrings": [ "FAAS_CLI_VERSION=(?<currentValue>.*?)\n", "FaasCliVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "openfaas/faas-cli",
       "datasourceTemplate": "github-releases"
     },
