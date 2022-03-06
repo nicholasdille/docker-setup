@@ -502,7 +502,7 @@ function cni_isolation_matches_version()              { test -f "${DOCKER_SETUP_
 function conmon_matches_version()                     { test "$(${TARGET}/bin/conmon --version | grep "conmon version" | cut -d' ' -f3)"           == "${CONMON_VERSION}"; }
 function containerd_matches_version()                 { test "$(${TARGET}/bin/containerd --version | cut -d' ' -f3)"                               == "v${CONTAINERD_VERSION}"; }
 function containerssh_matches_version()               { test -f "${DOCKER_SETUP_CACHE}/containerssh/${CONTAINERSSH_VERSION}"; }
-function cosign_matches_version()                     { test "$(${TARGET}/bin/cosign version | grep GitVersion | tr -s ' ' | cut -d' ' -f2)"       == "v${COSIGN_VERSION}"; }
+function cosign_matches_version()                     { test "$(${TARGET}/bin/cosign version 2>&1 | grep GitVersion | cut -dv -f2)"                == "${COSIGN_VERSION}"; }
 function crane_matches_version()                      { test "$(${TARGET}/bin/crane version)"                                                      == "${CRANE_VERSION}"; }
 function crictl_matches_version()                     { test "$(${TARGET}/bin/crictl --version | cut -d' ' -f3)"                                   == "v${CRICTL_VERSION}"; }
 function crun_matches_version()                       { test "$(${TARGET}/bin/crun --version | grep "crun version" | cut -d' ' -f3)"               == "${CRUN_VERSION}"; }
