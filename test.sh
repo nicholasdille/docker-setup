@@ -3,7 +3,8 @@
 # TODO: Install yq
 YQ=yq
 TOOLS_YAML=tools.yaml
-TARGET=.
+# TODO: Process/substitute target directory
+target=.
 
 declare -a tools
 mapfile -t tools < <(${YQ} eval '.tools[].name' "${TOOLS_YAML}")
@@ -21,6 +22,8 @@ for tool in "${tools[@]}"; do
     
     version="$(${YQ} eval '.version' <<<"${data}")"
     echo "  version: ${version}."
+
+    # TODO: Install deps (deduplicate using hash tool_instlled)
 
     # TODO: Version check
 
