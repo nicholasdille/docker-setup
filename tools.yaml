@@ -1,0 +1,90 @@
+tools:
+  - name: arkade
+    github_releases: alexellis/arkade
+    version: 0.8.13
+    binary: ${TARGET}/bin/arkade
+    check: ${TARGET}/bin/arkade version | grep "version" | cut -d' ' -f2
+    x86_64: https://github.com/alexellis/arkade/releases/download/${version}/arkade
+    aarch64: https://github.com/alexellis/arkade/releases/download/${version}/arkade-arm64
+    install:
+      type: executable
+    post_install: |
+      "${TARGET}/bin/ytt" completion bash >"${TARGET}/share/bash-completion/completions/ytt"
+      "${TARGET}/bin/ytt" completion fish >"${TARGET}/share/fish/vendor_completions.d/ytt.fish"
+      "${TARGET}/bin/ytt" completion zsh >"${TARGET}/share/zsh/vendor-completions/_ytt"
+
+  - name: buildkit
+    version: 0.9.3
+    home:
+      type: github
+      source: github_releases
+      repo: moby/buildkit
+    binary: ${TARGET}/bin/buildkitd
+    check: ${TARGET}/bin/buildkitd --version | cut -d' ' -f3 | tr -d v
+    x86_64: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-amd64.tar.gz
+    aarch64: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-arm64.tar.gz
+    install:
+      type: tarball
+      directory: ${TARGET}/bin
+      strip: 1
+    post_install: |
+      echo "Install systemd units"
+      get_file "https://github.com/moby/buildkit/raw/v${BUILDKIT_version}/examples/systemd/buildkit.service" >"${PREFIX}/etc/systemd/system/buildkit.service"
+      get_file "https://github.com/moby/buildkit/raw/v${BUILDKIT_version}/examples/systemd/buildkit.socket" >"${PREFIX}/etc/systemd/system/buildkit.socket"
+      sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
+      echo "Install init script"
+      get_file "${DOCKER_SETUP_REPO_RAW}/contrib/buildkit/buildkit" >"${PREFIX}/etc/init.d/buildkit"
+      sed -i "s|/usr/local/bin/buildkitd|${RELATIVE_TARGET}/bin/buildkitd|" "${PREFIX}/etc/init.d/buildkit"
+      chmod +x "${PREFIX}/etc/init.d/buildkit"
+      if test -z "${PREFIX}" && has_systemd; then
+          echo "Reload systemd"
+          systemctl daemon-reload
+      fi
+
+  - name: helm
+    version: 3.8.0
+    home:
+      type: github
+      source: github_releases
+      repo: helm/helm
+    x86_64: https://get.helm.sh/helm-v${version}-linux-amd64.tar.gz
+    aarch64: https://get.helm.sh/helm-v${version}-linux-arm64.tar.gz
+    install:
+      type: tarball
+      directory: ${TARGET}/bin
+      strip: 1
+      files:
+      - linux-amd64/helm
+    post_install: |
+      "${TARGET}/bin/helm" completion bash >"${TARGET}/share/bash-completion/completions/helm"
+      "${TARGET}/bin/helm" completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
+      "${TARGET}/bin/helm" completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
+      if test -z "${PREFIX}"; then
+          echo "Install plugins"
+          plugins=(
+              https://github.com/mstrzele/helm-edit
+              https://github.com/databus23/helm-diff
+              https://github.com/aslafy-z/helm-git
+              https://github.com/sstarcher/helm-release
+              https://github.com/maorfr/helm-backup
+              https://github.com/technosophos/helm-keybase
+              https://github.com/technosophos/helm-gpg
+              https://github.com/cloudogu/helm-sudo
+              https://github.com/bloodorangeio/helm-oci-mirror
+              https://github.com/UniKnow/helm-outdated
+              https://github.com/rimusz/helm-chartify
+              https://github.com/random-dwi/helm-doc
+              https://github.com/sapcc/helm-outdated-dependencies
+              https://github.com/jkroepke/helm-secrets
+              https://github.com/sigstore/helm-sigstore
+          )
+          for url in "${plugins[@]}"; do
+              directory="$(basename "${url}")"
+              if test -d "${HOME}/.local/share/helm/plugins/${directory}"; then
+                  name="${directory//helm-/}"
+                  helm plugin update "${name}"
+              else
+                  helm plugin install "${url}"
+              fi
+          done
+      fi

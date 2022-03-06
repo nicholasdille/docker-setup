@@ -121,8 +121,10 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n", "ArkadeVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$", "^tools.yaml$" ],
+      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n", "ArkadeVersion = \"(?<currentValue>.*?)\"",
+        "arkade:\nversion: \"?(?<currentValue>.*?)\"?\n"
+      ],
       "depNameTemplate": "alexellis/arkade",
       "datasourceTemplate": "github-releases"
     },
