@@ -41,6 +41,27 @@ tools:
           systemctl daemon-reload
       fi
 
+  - name: firecracker
+    version: 1.0.0
+    home:
+      type: github
+      source: github_releases
+      repo: firecracker-microvm/firecracker
+    x86_64: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-x86_64.tgz
+    aarch64: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-aarch64.tgz
+    install:
+      type: tarball
+      directory: ${TARGET}/bin
+      strip: 1
+      files:
+      - release-v${version}-x86_64/firecracker-v${version}-x86_64
+      - release-v${version}-x86_64/jailer-v${version}-x86_64
+      - release-v${version}-x86_64/seccompiler-bin-v${version}-x86_64
+    post_install: |
+      mv "${TARGET}/bin/firecracker-v${version}-x86_64"     "${TARGET}/bin/firecracker"
+      mv "${TARGET}/bin/jailer-v${version}-x86_64"          "${TARGET}/bin/jailer"
+      mv "${TARGET}/bin/seccompiler-bin-v${version}-x86_64" "${TARGET}/bin/seccompiler-bin"
+
   - name: helm
     version: 3.8.0
     home:
@@ -88,3 +109,13 @@ tools:
               fi
           done
       fi
+
+  - name: jq
+    version: 1.6
+    home:
+      type: github
+      source: github_releases
+      repo: stedolan/jq
+    x86_64: https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    install:
+      type: executable
