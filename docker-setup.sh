@@ -512,7 +512,7 @@ function dive_matches_version()                       { test "$(${TARGET}/bin/di
 function docker_matches_version()                     { test "$(${TARGET}/bin/dockerd --version | cut -d, -f1 | cut -d' ' -f3)"                    == "${DOCKER_VERSION}"; }
 function docker_compose_matches_version()             { eval "docker_compose_${DOCKER_COMPOSE}_matches_version"; }
 function docker_compose_v1_matches_version()          { test "$(${TARGET}/bin/docker-compose version --short)"                                     == "${DOCKER_COMPOSE_V1_VERSION}"; }
-function docker_compose_v2_matches_version()          { test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version | cut -d' ' -f4)"            == "v${DOCKER_COMPOSE_V2_VERSION}"; }
+function docker_compose_v2_matches_version()          { test "$(${DOCKER_PLUGINS_PATH}/docker-compose compose version --short)"                    == "${DOCKER_COMPOSE_V2_VERSION}"; }
 function docker_machine_matches_version()             { test "$(${TARGET}/bin/docker-machine --version | cut -d, -f1 | cut -d' ' -f3)"             == "${DOCKER_MACHINE_VERSION}"; }
 function docker_scan_matches_version()                { test -f "${DOCKER_SETUP_CACHE}/docker-scan/${DOCKER_SCAN_VERSION}"; }
 function docuum_matches_version()                     { test "$(${TARGET}/bin/docuum --version | cut -d' ' -f2)"                                   == "${DOCUUM_VERSION}"; }
