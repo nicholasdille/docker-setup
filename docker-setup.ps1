@@ -53,7 +53,7 @@ $RegclientVersion = "0.4.0"
 $SopsVersion = "3.7.1"
 $TaskVersion = "3.11.0"
 $YqVersion = "4.21.1"
-$VendirVersion = "0.24.0"
+$VendirVersion = "0.25.0"
 $YttVersion = "0.40.1"
 
 # Enable feature(s) with restart
