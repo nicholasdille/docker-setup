@@ -24,33 +24,71 @@ case "${arch}" in
         ;;
 esac
 
-# TODO: Install yq
-YQ=yq
-TOOLS_YAML=tools.yaml
-# TODO: Process/substitute target directory
+: "${prefix:=}"
+: "${relative_target:=/usr/local}"
+: "${target:=${prefix}${relative_target}}"
+: "${docker_allow_restart:=false}"
+: "${docker_plugins_path:=${target}/libexec/docker/cli-plugins}"
+: "${docker_setup_logs:=/var/log/docker-setup}"
+: "${docker_setup_cache:=/var/cache/docker-setup}"
+: "${docker_setup_contrib:=${docker_setup_cache}/contrib}"
+: "${docker_setup_downloads:=${docker_setup_cache}/downloads}"
+
+mkdir -p \
+    "${docker_setup_logs}" \
+    "${docker_setup_cache}" \
+    "${docker_setup_cache}/errors" \
+    "${docker_setup_downloads}" \
+    "${prefix}/etc/docker" \
+    "${target}/share/bash-completion/completions" \
+    "${target}/share/fish/vendor_completions.d" \
+    "${target}/share/zsh/vendor-completions" \
+    "${prefix}/etc/systemd/system" \
+    "${prefix}/etc/default" \
+    "${prefix}/etc/sysconfig" \
+    "${prefix}/etc/conf.d" \
+    "${prefix}/etc/init.d" \
+    "${docker_plugins_path}" \
+    "${target}/libexec/docker/bin" \
+    "${target}/libexec/cni" \
+    "${target}/bin" \
+    "${target}/sbin" \
+    "${target}/share/man" \
+    "${target}/lib" \
+    "${target}/libexec"
+
+if ! type jq >/dev/null 2>&1; then
+    echo "ERROR: jq is required."
+    exit 1
+fi
+docker_setup_tools_file="${docker_setup_cache}/tools.json"
+if ! test -f "${docker_setup_tools_file}"; then
+    echo "ERROR: tools.json is missing."
+    exit 1
+fi
 target=/usr/local
 
 function get_tools() {
-    ${YQ} eval '.tools[].name' "${TOOLS_YAML}"
+    jq --raw-output '.tools[].name' "${docker_setup_tools_file}"
 }
 
 function get_tool() {
     local tool=$1
 
-    tool="${tool}" ${YQ} eval '.tools[] | select(.name == env(tool))' "${TOOLS_YAML}"
+    jq --raw-output --arg tool "${tool}" '.tools[] | select(.name == $tool)' "${docker_setup_tools_file}"
 }
 
 function get_tool_download_count() {
     local tool=$1
 
-    get_tool "${tool}" | ${YQ} eval '.download | length'
+    get_tool "${tool}" | jq --raw-output 'select(.download != null) | .download | length'
 }
 
 function get_tool_download_index() {
     local tool=$1
     local index=$2
 
-    get_tool "${tool}" | index="${index}" ${YQ} eval '.download[env(index)]'
+    get_tool "${tool}" | jq --raw-output --arg index "${index}" '.download[$index | tonumber]'
 }
 
 function replace_vars() {
@@ -73,19 +111,20 @@ function replace_vars() {
 }
 
 function run() {
-    :
+    eval "$@"
 }
 
 function install_tool() {
     local tool=$1
+    local reinstall=$2
 
     # TODO: Check if all deps all installed
 
     echo
     echo "tool: ${tool}."
-    data="$(get_tool "${tool}")"
+    tool_json="$(get_tool "${tool}")"
     
-    version="$(${YQ} eval '.version' <<<"${data}")"
+    version="$(jq --raw-output '.version' <<<"${tool_json}")"
     if test -z "${version}"; then
         echo "ERROR: Empty version for ${tool}."
         return
@@ -93,10 +132,10 @@ function install_tool() {
     echo "  version: ${version}."
     
     binary="$(
-        ${YQ} eval '.binary' <<<"${data}" \
+        jq --raw-output 'select(.binary != null) | .binary' <<<"${tool_json}" \
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
-    if test "${binary}" == "null"; then
+    if test -z "${binary}"; then
         binary="${target}/bin/${tool}"
     fi
     if ! test "${binary:0:1}" == "/"; then
@@ -106,28 +145,51 @@ function install_tool() {
 
     # TODO: Version check
     # TODO: If .check is empty, use touch-based version in cache directory
-    # TODO: Substitute ${binary}
+    # TODO: Substitute
+    check="$(
+        jq --raw-output 'select(.check != null) | .check' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -z "${check}"; then
+        echo "ERROR: Not implemented yet."
+        return
+    fi
+    if test -f "${binary}" && test -x "${binary}" && ! ${reinstall}; then
+        run "${check}"
+        echo "INFO: Nothing to do."
+        return
+    fi
 
-    install="$(${YQ} eval '.install' <<<"${data}")"
-    if ! test "${install}" == "null"; then
-        echo "  XXX RUN"
+    echo "  pre_install"
+    pre_install="$(
+        jq --raw-output 'select(.pre_install != null) | .pre_install' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -n "${pre_install}"; then
+        run "${pre_install}"
+    fi
+
+    install="$(jq --raw-output 'select(.install != null) | .install' <<<"${tool_json}")"
+    if test -n "${install}"; then
+        echo "  SCRIPTED"
+        run "${install}"
 
     else
-        echo "  XXX MANAGED"
-
+        echo "  MANAGED"
         local index=0
         local count
         count="$(get_tool_download_count "${tool}")"
         while test "${index}" -lt "${count}"; do
             echo "  index: ${index}"
 
-            data="$(get_tool_download_index "${tool}" "${index}")"
+            download_json="$(get_tool_download_index "${tool}" "${index}")"
 
-            url="$(${YQ} eval '.url' <<<"${data}")"
+            # TODO: First check for .url[$arch] and then for .url
+            url="$(jq --raw-output '.url' <<<"${download_json}")"
             if grep ": " <<<"${url}"; then
-                url="$(arch="${arch}" ${YQ} eval '.url.[env(arch)]' <<<"${data}")"
+                url="$(jq --raw-output --arg arch "${arch}" '.url[$arch]' <<<"${download_json}")"
             fi
-            if test "${url}" == "null"; then
+            if test -z "${url}"; then
                 echo "ERROR: Platform not available."
                 return
             fi
@@ -140,48 +202,56 @@ function install_tool() {
             fi
             echo "  url: ${url}."
 
-            type="$(${YQ} eval '.type' <<<"${data}")"
+            type="$(jq --raw-output '.type' <<<"${download_json}")"
 
             path="$(
-                ${YQ} eval '.path' <<<"${data}" \
+                jq --raw-output 'select(.path != null) | .path' <<<"${download_json}" \
                 | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
             )"
             
             case "${type}" in
 
                 executable)
-                    if test "${path}" == "null"; then
+                    echo "  executable"
+                    if test -z "${path}"; then
                         path="${binary}"
                     fi
-                    echo "  XXX curl -sLo ${path} ${url}"
-                    echo "  XXX chmod +x ${path}"
+                    curl -sLo "${path}" "${url}"
+                    chmod +x "${path}"
                     ;;
 
                 file)
-                    if test "${path}" == "null"; then
+                    echo "  file"
+                    if test -z "${path}"; then
                         echo "ERROR: Path not specified."
                         return
                     fi
-                    echo "  XXX curl -sLo ${path} ${url}"
-                    echo "  XXX chmod +x ${path}"
+                    curl -sLo "${path}" "${url}"
                     ;;
             
                 tarball)
-                    strip="$(${YQ} eval '.strip' <<<"${data}")"
-                    if ! test "${strip}" == null; then
+                    echo "  tarball"
+                    echo "    strip"
+                    strip="$(jq --raw-output 'select(.strip != null) | .strip' <<<"${download_json}")"
+                    if test -n "${strip}"; then
                         param_strip="--strip-components=${strip}"
                     fi
+                    echo "    files"
                     files="$(
-                        ${YQ} eval '.files[]' <<<"${data}" \
+                        jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
                         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
                     )"
-                    if ! test "${files}" == null; then
+                    if test -n "${files}"; then
                         param_files="${files}"
                     fi
-                    echo "  path: ${path}."
-                    echo "  strip: ${strip}."
-                    echo "  files: ${files}"
-                    echo "  xxx curl -sL ${url} | tar -xz --directory ${path} --no-same-owner ${param_strip} ${param_files}"
+                    echo "    cmd"
+                    curl -sL "${url}" \
+                    | tar -xz \
+                        --directory "${path}" \
+                        --no-same-owner \
+                        "${param_strip}" \
+                        "${param_files}"
+                    echo "    done"
                     ;;
             
                 *)
@@ -196,14 +266,15 @@ function install_tool() {
 
     fi
 
+    echo "  post_install"
     post_install="$(
-        ${YQ} eval '.post_install' <<<"${data}" \
+        jq --raw-output 'select(.post_install != null) | .post_install' <<<"${tool_json}" \
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
-    if ! test "${post_install}" == "null"; then
-        echo "  post_install:"
-        echo "${post_install}"
+    if test -n "${post_install}"; then
+        run "${post_install}"
     fi
+    echo "  DONE"
 }
 
 declare -a tools

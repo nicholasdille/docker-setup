@@ -9,7 +9,9 @@ RUN apt-get update \
         unzip \
         ncurses-bin \
         cron \
+        jq \
  && update-alternatives --set iptables /usr/sbin/iptables-legacy
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
+COPY tools.json /var/cache/docker-setup/
 RUN chmod +x /usr/local/bin/docker-setup

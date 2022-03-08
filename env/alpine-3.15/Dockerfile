@@ -15,8 +15,10 @@ RUN apk add --update-cache --no-cache \
         libgcc \
         unzip \
         ncurses \
+        jq \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
+COPY tools.json /var/cache/docker-setup/
 RUN chmod +x /usr/local/bin/docker-setup
