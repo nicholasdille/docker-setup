@@ -3,50 +3,50 @@ tools:
   - name: arkade
     version: 0.8.13
     check: ${binary} version | grep "version" | cut -d' ' -f2
-    install:
+    download:
     - url:
         x86_64: https://github.com/alexellis/arkade/releases/download/${version}/arkade
         aarch64: https://github.com/alexellis/arkade/releases/download/${version}/arkade-arm64
       type: executable
     post_install: |
-      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/ytt"
-      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/ytt.fish"
-      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_ytt"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/ytt"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/ytt.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
 
   - name: buildah
     version: 1.24.0
     check: ${binary} --version | cut -d' ' -f3
-    install:
+    download:
     - url:
         x86_64: https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah.tar.gz
       type: tarball
-      path: ${TARGET}
+      path: ${target}
 
   - name: buildkit
     version: 0.9.3
     binary: buildkitd
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
-    install:
+    download:
     - url: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${TARGET}/bin
+      path: ${target}/bin
       strip: 1
     - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.service
       type: file
-      path: ${PREFIX}/etc/systemd/system/buildkit.service
+      path: ${prefix}/etc/systemd/system/buildkit.service
     - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.socket
       type: file
-      path: ${PREFIX}/etc/systemd/system/buildkit.socket
+      path: ${prefix}/etc/systemd/system/buildkit.socket
     - url: contrib/buildkit/buildkit
       type: file
-      path: ${PREFIX}/etc/init.d/buildkit
+      path: ${prefix}/etc/init.d/buildkit
     post_install: |
       echo "Install systemd units"
-      sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${TARGET}/bin/buildkitd|" "${PREFIX}/etc/systemd/system/buildkit.service"
+      sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
       echo "Install init script"
-      sed -i "s|/usr/local/bin/buildkitd|${RELATIVE_TARGET}/bin/buildkitd|" "${PREFIX}/etc/init.d/buildkit"
-      chmod +x "${PREFIX}/etc/init.d/buildkit"
-      if test -z "${PREFIX}" && has_systemd; then
+      sed -i "s|/usr/local/bin/buildkitd|${RELATIVE_TARGET}/bin/buildkitd|" "${prefix}/etc/init.d/buildkit"
+      chmod +x "${prefix}/etc/init.d/buildkit"
+      if test -z "${prefix}" && has_systemd; then
           echo "Reload systemd"
           systemctl daemon-reload
       fi
@@ -55,7 +55,7 @@ tools:
     version: 0.7.1
     binary: ${DOCKER_PLUGINS_PATH}/docker-buildx
     check: ${binary} version | cut -d' ' -f2 | tr -d v
-    install:
+    download:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
     post_install:
@@ -63,7 +63,7 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Enable multi-platform builds"
-          "${TARGET}/bin/docker" container run --privileged --rm tonistiigi/binfmt --install all
+          "${target}/bin/docker" container run --privileged --rm tonistiigi/binfmt --install all
       fi
   
   - name: bypass4netns
@@ -72,71 +72,115 @@ tools:
     needs:
     - docker
     - slirp4netns
+    install: |
+      echo "bypass4netns ${BYPASS4NETNS_VERSION}"
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${TARGET}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${TARGET}:/target" \
+              --env BYPASS4NETNS_VERSION \
+              --workdir /go/src/github.com/rootless-containers/bypass4netns \
+              golang:${GO_VERSION} <<EOF
+      apt-get update
+      apt-get -y install libseccomp-dev
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${BYPASS4NETNS_VERSION}" https://github.com/rootless-containers/bypass4netns .
+      make static
+      cp bypass4netns{,d} /target/bin/
+      EOF
+      else
+          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          false
+      fi
 
   - name: cinf
     version: 0.6.0
+    download:
+    - url: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - cinf
 
   - name: clusterawsadm
     version: 1.3.0
     check: ${binary} version --output short | tr -d v
+    download:
+    - url: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-amd64
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/clusterawsadm"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/clusterawsadm.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterawsadm"
 
   - name: clusterctl
     version: 1.1.2
     check: ${binary} version --output short | tr -d v
+    download:
+    - url: https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/clusterctl"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_clusterctl"
 
   - name: cni
     version: 1.1.0
-    binary: ${TARGET}/libexec/cni/loopback
+    binary: ${target}/libexec/cni/loopback
     check: ${binary} 2>&1 | cut -d' ' -f4 | tr -d v
-    install:
+    download:
     - url: https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz
       type: tarball
-      path: ${TARGET}/libexec/cni
+      path: ${target}/libexec/cni
 
   - name: cni-isolation
     version: 0.0.4
-    binary: ${TARGET}/libexec/cni/isolation
-    install:
+    binary: ${target}/libexec/cni/isolation
+    download:
     - url: https://github.com/AkihiroSuda/cni-isolation/releases/download/v${version}/cni-isolation-${alt_arch}.tgz
       type: tarball
-      path: ${TARGET}/libexec/cni
+      path: ${target}/libexec/cni
 
   - name: conmon
     version: 2.1.0
     check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
-    install:
+    download:
     - url:
         x86_64: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon.tar.gz
       type: tarball
-      path: ${TARGET}
+      path: ${target}
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service
       type: file
-      path: ${PREFIX}/etc/systemd/system/podman.service
+      path: ${prefix}/etc/systemd/system/podman.service
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
       type: file
-      path: ${PREFIX}/etc/systemd/system/podman.socket
+      path: ${prefix}/etc/systemd/system/podman.socket
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
       type: file
-      path: ${TARGET}/lib/tmpfiles.d/podman-docker.conf
+      path: ${target}/lib/tmpfiles.d/podman-docker.conf
     - url: contrib/podman/registries.conf.d/00-shortnames.conf
       type: file
-      path: ${PREFIX}/etc/containers/registries.conf.d/00-shortnames.conf
+      path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
     - url: contrib/podman/registries.d/default.yaml
       type: file
-      path: ${PREFIX}/etc/containers/registries.d/default.yaml
+      path: ${prefix}/etc/containers/registries.d/default.yaml
     - url: contrib/podman/policy.json
       type: file
-      path: ${PREFIX}/etc/containers/policy.json
+      path: ${prefix}/etc/containers/policy.json
     - url: contrib/podman/registries.json
       type: file
-      path: ${PREFIX}/etc/containers/registries.json
+      path: ${prefix}/etc/containers/registries.json
     - url: contrib/podman/storage.json
       type: file
-      path: ${PREFIX}/etc/containers/storage.json
+      path: ${prefix}/etc/containers/storage.json
     post_install: |
       echo "Fix systemd unit"
-      sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${RELATIVE_TARGET}/bin/podman|" "${PREFIX}/etc/systemd/system/podman.service"
-      if test -z "${PREFIX}"; then
+      sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${RELATIVE_TARGET}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
+      if test -z "${prefix}"; then
           if has_systemd; then
               systemctl daemon-reload
           fi
@@ -149,12 +193,12 @@ tools:
     - runc
     - cni
     - dasel
-    install:
+    download:
     - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
     - url: https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service
       type: file
-      path: ${PREFIX}/etc/systemd/system/containerd.service
+      path: ${prefix}/etc/systemd/system/containerd.service
     post_install: |
       if ${SKIP_DOCS}; then
           echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
@@ -163,10 +207,10 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Install manpages for containerd"
-          "${TARGET}/bin/docker" container run \
+          "${target}/bin/docker" container run \
               --interactive \
               --rm \
-              --volume "${TARGET}/share/man:/opt/man" \
+              --volume "${target}/share/man:/opt/man" \
               --env CONTAINERD_VERSION \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/containerd/containerd
@@ -181,15 +225,15 @@ tools:
       else
           echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
       fi
-      if ! test -f "${PREFIX}/etc/containerd/config.toml"; then
+      if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
-          mkdir -p "${PREFIX}/etc/containerd"
-          "${TARGET}/bin/containerd" config default >"${PREFIX}/etc/containerd/config.toml"
-          sed -i "s|/opt/cni/bin|${RELATIVE_TARGET}/libexec/cni|" "${PREFIX}/etc/containerd/config.toml"
+          mkdir -p "${prefix}/etc/containerd"
+          "${target}/bin/containerd" config default >"${prefix}/etc/containerd/config.toml"
+          sed -i "s|/opt/cni/bin|${RELATIVE_TARGET}/libexec/cni|" "${prefix}/etc/containerd/config.toml"
       fi
       echo "Install systemd unit"
-      sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${RELATIVE_TARGET}/bin/containerd|" "${PREFIX}/etc/systemd/system/containerd.service"
-      if test -z "${PREFIX}"; then
+      sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${RELATIVE_TARGET}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
+      if test -z "${prefix}"; then
           if has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
@@ -200,26 +244,49 @@ tools:
 
   - name: containerssh
     version: 0.4.1
+    download:
+    - url: https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - containerssh
+      - containerssh-auditlog-decoder
+      - containerssh-testauthconfigserver
 
   - name: cosign
     version: 1.5.2
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
-    install:
+    download:
     - url: https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/cosign"
-      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/cosign.fish"
-      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_cosign"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/cosign"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/cosign.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_cosign"
 
   - name: crane
     version: 0.8.0
     check: ${binary} version
+    download:
+    - url: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - crane
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/crane"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/crane.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_crane"
 
   - name: crictl
     version: 1.23.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    download:
+    - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
 
   - name: crun
     version: 1.4.3
@@ -227,21 +294,21 @@ tools:
     needs:
     - docker
     - jq
-    install:
+    download:
     - url:
         x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz
       type: tarball
-      path: ${TARGET}
+      path: ${target}
     post_install: |
       if has_tool "jq" || tool_will_be_installed "jq"; then
           echo "Waiting for jq"
-          wait_for_tool "jq" "${TARGET}/bin"
+          wait_for_tool "jq" "${target}/bin"
 
-          if ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+          if ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
               echo "Add runtime to Docker"
               # shellcheck disable=SC2094
               cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
-      cat <<< "\$("${TARGET}/bin/jq" --arg target "${TARGET}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
       EOF
               touch "${DOCKER_SETUP_CACHE}/docker_restart"
           fi
@@ -256,17 +323,23 @@ tools:
     check: ${binary} -v | cut -d, -f1 | cut -d' ' -f3
     needs:
     - docker
+    download:
+    - url: https://github.com/bcicen/ctop/releases/download/${version}/ctop-${version}-linux-${alt_arch}
+      type: executable
 
   - name: dasel
     version: 1.22.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    download:
+    - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
+      type: executable
 
   - name: dive
     version: 0.10.0
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
-    install:
+    download:
     - url: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       files:
@@ -306,30 +379,30 @@ tools:
                   ;;
           esac
       fi
-    install:
+    download:
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
       type: tarball
-      path: ${TARGET}/libexec/docker/bin
+      path: ${target}/libexec/docker/bin
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz
       type: tarball
-      path: ${TARGET}/libexec/docker/bin
+      path: ${target}/libexec/docker/bin
     - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker
       type: file
-      path: ${TARGET}/share/bash-completion/completions/docker
+      path: ${target}/share/bash-completion/completions/docker
     - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/fish/docker.fish
       type: file
-      path: ${TARGET}/share/fish/vendor_completions.d/docker.fish
+      path: ${target}/share/fish/vendor_completions.d/docker.fish
     - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/zsh/_docker
       type: file
-      path: ${TARGET}/share/zsh/vendor-completions/_docker
+      path: ${target}/share/zsh/vendor-completions/_docker
     post_install: |
       echo "Move binaries"
-      mv "${TARGET}/libexec/docker/bin/dockerd" "${TARGET}/bin"
-      mv "${TARGET}/libexec/docker/bin/docker" "${TARGET}/bin"
-      mv "${TARGET}/libexec/docker/bin/docker-proxy" "${TARGET}/bin"
+      mv "${target}/libexec/docker/bin/dockerd" "${target}/bin"
+      mv "${target}/libexec/docker/bin/docker" "${target}/bin"
+      mv "${target}/libexec/docker/bin/docker-proxy" "${target}/bin"
       echo "Move rootless scripts"
-      mv "${TARGET}/libexec/docker/bin/dockerd-rootless.sh" "${TARGET}/bin"
-      mv "${TARGET}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${TARGET}/bin"
+      mv "${target}/libexec/docker/bin/dockerd-rootless.sh" "${target}/bin"
+      mv "${target}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${target}/bin"
       echo "Binaries installed after ${SECONDS} seconds."
       if docker_is_running; then
           touch "${DOCKER_SETUP_CACHE}/docker_already_present"
@@ -338,91 +411,91 @@ tools:
 
       else
           echo "Install systemd units"
-          get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service" >"${PREFIX}/etc/systemd/system/docker.service"
-          get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket" >"${PREFIX}/etc/systemd/system/docker.socket"
-          sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${PREFIX}/etc/systemd/system/docker.service"
-          sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/systemd/system/docker.service"
+          get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.service" >"${prefix}/etc/systemd/system/docker.service"
+          get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/systemd/docker.socket" >"${prefix}/etc/systemd/system/docker.socket"
+          sed -i "/^\[Service\]/a Environment=PATH=${RELATIVE_TARGET}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}/etc/systemd/system/docker.service"
+          sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
           if is_debian || is_clearlinux; then
               echo "Install init script for debian"
-              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default" >"${PREFIX}/etc/default/docker"
-              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker" >"${PREFIX}/etc/init.d/docker"
-              sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${PREFIX}/etc/init.d/docker"
-              sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
-              chmod +x "${PREFIX}/etc/init.d/docker"
+              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker.default" >"${prefix}/etc/default/docker"
+              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-debian/docker" >"${prefix}/etc/init.d/docker"
+              sed -i -E "s|^(export PATH=)|\1${RELATIVE_TARGET}/libexec/docker/bin:|" "${prefix}/etc/init.d/docker"
+              sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${RELATIVE_TARGET}/bin/dockerd|" "${prefix}/etc/init.d/docker"
+              chmod +x "${prefix}/etc/init.d/docker"
           elif is_redhat; then
               echo "Install init script for redhat"
-              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig" >"${PREFIX}/etc/sysconfig/docker"
-              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker" >"${PREFIX}/etc/init.d/docker"
+              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig" >"${prefix}/etc/sysconfig/docker"
+              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker" >"${prefix}/etc/init.d/docker"
               # shellcheck disable=SC1083
-              sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-              sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
-              chmod +x "${PREFIX}/etc/init.d/docker"
+              sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${prefix}/etc/init.d/docker"
+              sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${prefix}/etc/init.d/docker"
+              chmod +x "${prefix}/etc/init.d/docker"
           elif is_alpine; then
               echo "Install openrc script for alpine"
-              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd" >"${PREFIX}/etc/conf.d/docker"
-              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd" >"${PREFIX}/etc/init.d/docker"
+              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.confd" >"${prefix}/etc/conf.d/docker"
+              get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/openrc/docker.initd" >"${prefix}/etc/init.d/docker"
               # shellcheck disable=1083
-              sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
-              sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
-              sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/conf.d/docker"
-              chmod +x "${PREFIX}/etc/init.d/docker"
+              sed -i -E "s|^(command=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:\${PATH}"\n\n\1|" "${prefix}/etc/init.d/docker"
+              sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${prefix}/etc/init.d/docker"
+              sed -i "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${prefix}/etc/conf.d/docker"
+              chmod +x "${prefix}/etc/init.d/docker"
               openrc
           else
               echo -e "${YELLOW}[WARNING] Unable to install init script because the distributon is unknown.${RESET}"
           fi
-          if ! has_systemd && ! test -f "${PREFIX}/etc/init.d/docker"; then
+          if ! has_systemd && ! test -f "${prefix}/etc/init.d/docker"; then
               echo -e "${RED}[ERROR] Systemd not available but unable to provide init script.${RESET}"
               exit 1
           fi
-          if test -z "${PREFIX}"; then
+          if test -z "${prefix}"; then
               echo "Create group"
               groupadd --system --force docker
           fi
           echo "Configure daemon"
-          if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
+          if ! test -f "${prefix}/etc/docker/daemon.json"; then
               echo "Initialize dockerd configuration"
-              echo "{}" >"${PREFIX}/etc/docker/daemon.json"
+              echo "{}" >"${prefix}/etc/docker/daemon.json"
           fi
           if has_tool "jq" || tool_will_be_installed "jq"; then
               echo "Waiting for jq"
-              wait_for_tool "jq" "${TARGET}/bin"
+              wait_for_tool "jq" "${target}/bin"
 
-              if ! test "$("${TARGET}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+              if ! test "$("${target}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${prefix}/etc/docker/daemon.json")" == "true"; then
                   echo "Configuring native cgroup driver"
                   # shellcheck disable=SC2094
-                  cat <<< "$("${TARGET}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${DOCKER_SETUP_CACHE}/docker_restart"
               fi
-              if ! test "$("${TARGET}/bin/jq" '. | keys | any(. == "default-runtime")' "${PREFIX}/etc/docker/daemon.json")" == true; then
+              if ! test "$("${target}/bin/jq" '. | keys | any(. == "default-runtime")' "${prefix}/etc/docker/daemon.json")" == true; then
                   echo "Set default runtime"
                   # shellcheck disable=SC2094
-                  cat <<< "$("${TARGET}/bin/jq" '. * {"default-runtime": "runc"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" '. * {"default-runtime": "runc"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${DOCKER_SETUP_CACHE}/docker_restart"
               fi
               # shellcheck disable=SC2016
-              if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${TARGET}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+              if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${target}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${prefix}/etc/docker/daemon.json")" == "true"; then
                   echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
                   # shellcheck disable=SC2094
-                  cat <<< "$("${TARGET}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${DOCKER_SETUP_CACHE}/docker_restart"
               fi
               # shellcheck disable=SC2016
-              if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${TARGET}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+              if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${target}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
                   echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
                   # shellcheck disable=SC2094
                   # shellcheck disable=SC2016
-                  cat <<< "$("${TARGET}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${DOCKER_SETUP_CACHE}/docker_restart"
               fi
-              if ! test "$("${TARGET}/bin/jq" --raw-output '.features.buildkit // false' "${PREFIX}/etc/docker/daemon.json")" == true; then
+              if ! test "$("${target}/bin/jq" --raw-output '.features.buildkit // false' "${prefix}/etc/docker/daemon.json")" == true; then
                   echo "Enable BuildKit"
                   # shellcheck disable=SC2094
-                  cat <<< "$("${TARGET}/bin/jq" '. * {"features":{"buildkit":true}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" '. * {"features":{"buildkit":true}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${DOCKER_SETUP_CACHE}/docker_restart"
               fi
               echo "Check if daemon.json is valid JSON"
-              if ! "${TARGET}/bin/jq" --exit-status '.' "${PREFIX}/etc/docker/daemon.json" >/dev/null 2>&1; then
-                  echo "${RED}[ERROR] "${PREFIX}/etc/docker/daemon.json" is not valid JSON.${RESET}"
+              if ! "${target}/bin/jq" --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
+                  echo "${RED}[ERROR] "${prefix}/etc/docker/daemon.json" is not valid JSON.${RESET}"
                   exit 1
               fi
 
@@ -431,7 +504,7 @@ tools:
               false
               exit 1
           fi
-          if test -z "${PREFIX}"; then
+          if test -z "${prefix}"; then
               if has_systemd; then
                   echo "Reload systemd"
                   systemctl daemon-reload
@@ -444,7 +517,7 @@ tools:
               else
                   if ! docker_is_running; then
                       echo "Start dockerd"
-                      "${PREFIX}/etc/init.d/docker" start
+                      "${prefix}/etc/init.d/docker" start
                       touch "${DOCKER_SETUP_CACHE}/docker_restart_allowed"
                   fi
                   echo -e "${YELLOW}[WARNING] Init script was installed but you must enable Docker yourself.${RESET}"
@@ -463,10 +536,10 @@ tools:
 
       else
           echo "Install manpages for Docker CLI"
-          "${TARGET}/bin/docker" container run \
+          "${target}/bin/docker" container run \
               --interactive \
               --rm \
-              --volume "${TARGET}/share/man:/opt/man" \
+              --volume "${target}/share/man:/opt/man" \
               --env DOCKER_VERSION \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/docker/cli
@@ -496,13 +569,13 @@ tools:
   - name: docker-machine
     version: 0.16.2
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
       type: executable
 
   - name: docker-scan
     version: 0.17.0
-    install:
+    download:
     - url: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
 
   - name: docuum
@@ -510,24 +583,65 @@ tools:
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
+    install: |
+      echo "jwt ${DOCUUM_VERSION}"
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${TARGET}/bin/docker" container run --interactive --rm --volume "${TARGET}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
+      mkdir -p /go/src/github.com/stepchowfun/docuum
+      cd /go/src/github.com/stepchowfun/docuum
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCUUM_VERSION}" https://github.com/stepchowfun/docuum .
+      export RUSTFLAGS='-C target-feature=+crt-static'
+      cargo build --release --target x86_64-unknown-linux-gnu
+      cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
+      EOF
+
+      else
+          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          false
+      fi
 
   - name: dry
     version: 0.11.1
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
     - docker
+    download:
+    - url: https://github.com/moncho/dry/releases/download/v${version}/dry-linux-${alt_arch}
+      type: executable
 
   - name: duffle
     version: 0.3.5-beta.1
     check: ${binary} version
+    download:
+    - url: https://github.com/cnabio/duffle/releases/download/${version}/duffle-linux-${alt_arch}
+      type: executable
 
   - name: dyff
     version: 1.5.1
     check: ${binary} version | cut -d' ' -f3
+    download:
+    - url: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}\bin
+      files:
+      - dyff
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/dyff"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/dyff.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_dyff"
 
   - name: faas-cli
     version: 0.14.2
     check: ${binary} version | grep "version:" | cut -d' ' -f3
+    download:
+    - url:
+        x86_64: https://github.com/openfaas/faas-cli/releases/download/${version}/faas-cli
+        aarch64: https://github.com/openfaas/faas-cli/releases/download/${version}/faas-cli-${alt_arch}
+      type: executable
 
   - name: faasd
     version: 0.14.4
@@ -535,36 +649,48 @@ tools:
     needs:
     - containerd
     - faas-cli
+    download:
+    - url:
+        x86_64: https://github.com/openfaas/faasd/releases/download/${version}/faasd
+        aarch64: https://github.com/openfaas/faasd/releases/download/${version}/faasd-${alt_arch}
+      type: executable
 
   - name: firecracker
     version: 1.0.0
     check: ${binary} --version | grep "^Firecracker" | cut -d' ' -f2 | tr -d v
-    install:
+    download:
     - url: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-${arch}.tgz
       type: tarball
-      path: ${TARGET}/bin
+      path: ${target}/bin
       strip: 1
       files:
       - release-v${version}-${arch}/firecracker-v${version}-${arch}
       - release-v${version}-${arch}/jailer-v${version}-${arch}
       - release-v${version}-${arch}/seccompiler-bin-v${version}-${arch}
     post_install: |
-      mv "${TARGET}/bin/firecracker-v${version}-${arch}"     "${TARGET}/bin/firecracker"
-      mv "${TARGET}/bin/jailer-v${version}-${arch}"          "${TARGET}/bin/jailer"
-      mv "${TARGET}/bin/seccompiler-bin-v${version}-${arch}" "${TARGET}/bin/seccompiler-bin"
+      mv "${target}/bin/firecracker-v${version}-${arch}"     "${target}/bin/firecracker"
+      mv "${target}/bin/jailer-v${version}-${arch}"          "${target}/bin/jailer"
+      mv "${target}/bin/seccompiler-bin-v${version}-${arch}" "${target}/bin/seccompiler-bin"
 
   - name: firectl
     version: 0.1.0
     check: ${binary} --version
+    download:
+    - url:
+        x86_64: https://firectl-release.s3.amazonaws.com/firectl-v${version}
+      type: executable
 
   - name: footloose
     version: 0.6.3
     check: ${binary} version | cut -d' ' -f2
+    download:
+    - url: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
+      type: executable
   
   - name: fuse-overlayfs
     version: 1.8.2
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}
       type: executable
 
@@ -573,18 +699,18 @@ tools:
     binary: containerd-fuse-overlayfs-grpc
     needs:
     - containerd
-    install:
+    download:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
     post_install: |
       echo "Add configuration to containerd"
       cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
-      "${TARGET}/bin/dasel" put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
+      "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
       EOF
       echo "Install systemd units"
-      get_file "contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service" >"${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
-      sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-fuse-overlayfs-grpc|" "${PREFIX}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
-      if test -z "${PREFIX}"; then
+      get_file "contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service" >"${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
+      sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
+      if test -z "${prefix}"; then
           if has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
@@ -594,34 +720,70 @@ tools:
   - name: glow
     version: 1.4.1
     check: ${binary} --version | cut -d' ' -f3
+    download:
+    - url: https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - glow
 
   - name: gvisor
     version: 20220228
-    binary: ${TARGET}/bin/runsc
+    binary: ${target}/bin/runsc
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
     - docker
     - jq
+    download:
+    - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc
+      type: executable
+    - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/containerd-shim-runsc-v1
+      type: executable
+      path: ${target}/bin/containerd-shim-runsc-v1
+    post_install: |
+      if has_tool "jq" || tool_will_be_installed "jq"; then
+          echo "Waiting for jq"
+          wait_for_tool "jq" "${TARGET}/bin"
+
+          if ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+              echo "Add runtime to Docker"
+              # shellcheck disable=SC2094
+              cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
+      cat <<< "\$("${TARGET}/bin/jq" --arg target "${TARGET}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+      EOF
+              touch "${DOCKER_SETUP_CACHE}/docker_restart"
+          fi
+
+      else
+          echo -e "${RED}[ERROR] Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${RESET}"
+          false
+      fi
 
   - name: hcloud
     version: 1.29.0
     check: ${binary} version | cut -d' ' -f2
+    download:
+    - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - hcloud
 
   - name: helm
     version: 3.8.0
     check: ${binary} version --short | cut -d+ -f1 | tr -d v
-    install:
+    download:
     - url: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${TARGET}/bin
+      path: ${target}/bin
       strip: 1
       files:
       - linux-amd64/helm
     post_install: |
-      "${TARGET}/bin/helm" completion bash >"${TARGET}/share/bash-completion/completions/helm"
-      "${TARGET}/bin/helm" completion fish >"${TARGET}/share/fish/vendor_completions.d/helm.fish"
-      "${TARGET}/bin/helm" completion zsh >"${TARGET}/share/zsh/vendor-completions/_helm"
-      if test -z "${PREFIX}"; then
+      "${target}/bin/helm" completion bash >"${target}/share/bash-completion/completions/helm"
+      "${target}/bin/helm" completion fish >"${target}/share/fish/vendor_completions.d/helm.fish"
+      "${target}/bin/helm" completion zsh >"${target}/share/zsh/vendor-completions/_helm"
+      if test -z "${prefix}"; then
           echo "Install plugins"
           plugins=(
               https://github.com/mstrzele/helm-edit
@@ -654,11 +816,20 @@ tools:
   - name: helmfile
     version: 0.143.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    download:
+    - url: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
+      type: executable
+    - url: https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_bash_autocomplete
+      type: file
+      path: ${target}/share/bash-completion/completions/helmfile
+    - url: https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_zsh_autocomplete
+      type: file
+      path: ${target}/share/zsh/vendor-completions/_helmfile
 
   - name: hub-tool
     version: 0.4.4
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
-    install:
+    download:
     - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
       type: tarball
 
@@ -668,11 +839,21 @@ tools:
     needs:
     - containerd
     - cni
+    download:
+    - url: https://github.com/weaveworks/ignite/releases/download/v${version}/ignite-${alt_arch}
+      type: executable
+    - url: https://github.com/weaveworks/ignite/releases/download/v${version}/ignited-${alt_arch}
+      type: executable
+      path: ${target}/bin/ignited
+    post_install: |
+      echo "Install completion"
+      ${binary}  completion >"${TARGET}/share/bash-completion/completions/ignite"
+      "${TARGET}/bin/ignited" completion >"${TARGET}/share/bash-completion/completions/ignited" || true
 
   - name: img
     version: 0.5.11
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
-    install:
+    download:
     - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
       tpe: binary
 
@@ -688,7 +869,7 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Install binary"
-          "${TARGET}/bin/docker" container run --interactive --rm --volume "${TARGET}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
+          "${target}/bin/docker" container run --interactive --rm --volume "${target}:/target" --env IMGCRYPT_VERSION golang:${GO_VERSION} <<EOF
       mkdir -p /go/src/github.com/containerd/imgcrypt
       cd /go/src/github.com/containerd/imgcrypt
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
@@ -705,24 +886,76 @@ tools:
   - name: imgpkg
     version: 0.25.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    download:
+    - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
+      type: executable
 
   - name: ipfs
     version: 0.12.0
     check: ${binary} version --number
     needs:
     - containerd
+    download:
+    - url: https://github.com/ipfs/go-ipfs/releases/download/v${version}/go-ipfs_v${version}_linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      strip: 1
+      files:
+      - go-ipfs/ipfs
+    - url: contrib/ipfs/ipfs.service
+      type: file
+      path: ${prefix}/etc/systemd/system/ipfs.service
+    post_install: |
+      echo "Install completion"
+      ${binary} commands completion >"${TARGET}/share/bash-completion/completions/ipfs"
+      IPFS_PATH=${PREFIX}/var/lib/ipfs ${binary} init
+      IPFS_PATH=${PREFIX}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
+      IPFS_PATH=${PREFIX}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
+      echo "Add configuration to containerd"
+      cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-ipfs.sh" <<EOF
+      "${TARGET}/bin/dasel" put bool --file "${PREFIX}/etc/containerd/config.toml" --parser toml .ipfs true
+      EOF
+      echo "Fix systemd units"
+      sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${RELATIVE_TARGET}/bin/ipfs|" "${PREFIX}/etc/systemd/system/ipfs.service"
+      if test -z "${PREFIX}"; then
+          if has_systemd; then
+              echo "Reload systemd"
+              systemctl daemon-reload
+          fi
+      fi
 
   - name: iptables
     version: 1.8.7
+    install: |
+      echo "Install iptables ${IPTABLES_VERSION}"
+      if is_centos_7 || is_amzn_2; then
+          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
+          | tar -xz \
+              --directory "${TARGET}" \
+              --no-same-owner
+
+      elif is_centos_8 || is_rockylinux; then
+          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
+          | tar -xz \
+              --directory "${TARGET}" \
+              --no-same-owner
+
+      else
+          echo -e "${RED}[ERROR] Unknown distribution ($(get_lsb_distro_name)) or version ($(get_lsb_distro_version))${RESET}"
+          return 1
+      fi
 
   - name: jp
     version: 0.2.1
     check: ${binary} --version | cut -d' ' -f3
+    download:
+    - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
+      type: executable
   
   - name: jq
     version: 1.6
     check: ${binary} --version | cut -d- -f2-
-    install:
+    download:
     - url:
         x86_64: https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
       type: executable
@@ -732,108 +965,191 @@ tools:
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
+    install: |
+      echo "jwt ${JWT_VERSION}"
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${TARGET}/bin/docker" container run --interactive --rm --volume "${TARGET}:/target" --env JWT_VERSION "rust:${RUST_VERSION}" <<EOF
+      mkdir -p /go/src/github.com/mike-engel/jwt-cli
+      cd /go/src/github.com/mike-engel/jwt-cli
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSION}" https://github.com/mike-engel/jwt-cli .
+      export RUSTFLAGS='-C target-feature=+crt-static'
+      cargo build --release --target x86_64-unknown-linux-gnu
+      cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
+      EOF
+
+      else
+          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          false
+      fi
 
   - name: k3d
     version: 5.3.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3 | tr -d v
-    install:
+    download:
     - url: https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/k3d"
-      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/k3d.fish"
-      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_k3d"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/k3d"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/k3d.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_k3d"
 
   - name: k3s
     version: 1.23.4+k3s1
     check: ${binary} --version | head -n 1 | cut -d' ' -f3 | tr -d v
+    download:
+    - url:
+        x86_64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s
+        aarch64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s-arm64
+      type: executable
+    - url: contrib/k3s/k3s.service
+      type: file
+      path: ${prefix}/etc/init.d/k3s
+      post_install: |
+        echo "Fix systemd unit"
+        sed -i "s|/usr/local/bin/k3s|${RELATIVE_TARGET}/bin/k3s|g" "${PREFIX}/etc/systemd/system/k3s.service"
+        if test -z "${PREFIX}"; then
+            if has_systemd; then
+                echo "Reload systemd"
+                systemctl daemon-reload
+            fi
+        fi
 
   - name: k3sup
     version: 0.11.3
     check: ${binary} version | grep Version | cut -d' ' -f2
+    download:
+    - url:
+        x86_64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup
+        aarch64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup.${alt_arch}
+      type: executable
 
   - name: k9s
     version: 0.25.18
     check: ${binary} version --short | grep "^Version" | cut -dv -f2
+    download:
+    - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - k9s
 
   - name: kapp
     version: 0.46.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    download:
+    - url: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/kapp"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/kapp.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_kapp"
 
   - name: kbld
     version: 0.32.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    download:
+    - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
+      type: executable
 
   - name: kbrew
     version: 0.1.0
     check: ${binary} version | cut -d, -f1 | cut -d'"' -f4 | tr -d v
+    download:
+    - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kbrew
 
   - name: kind
     version: 0.11.1
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
-    install:
+    download:
     - url: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/kind"
-      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/kind.fish"
-      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_kind"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/kind"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kind.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kind"
 
   - name: kink
     version: 0.2.1
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2
+    download:
+    - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kink
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/kink"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/kink.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_kink"
 
   - name: kompose
     version: 1.26.1
     check: ${binary} version | cut -d' ' -f1
+    download:
+    - url: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/kompose"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/kompose.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_kompose"
 
   - name: krew
     version: 0.4.3
     check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
-    install:
+    download:
     - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-${alt_arch}.tar.gz
       type: tarball
       files:
       - ./krew-linux_amd64
     post_install: |
-      mv "${TARGET}/bin/krew-linux_amd64" "${TARGET}/bin/krew"
+      mv "${target}/bin/krew-linux_amd64" "${target}/bin/krew"
       echo "Add to path"
-      cat >"${PREFIX}/etc/profile.d/krew.sh" <<"EOF"
+      cat >"${prefix}/etc/profile.d/krew.sh" <<"EOF"
       export PATH="${HOME}/.krew/bin:${PATH}"
       EOF
       echo "Install completion"
-      ${binary} completion bash 2>/dev/null >"${TARGET}/share/bash-completion/completions/krew"
-      ${binary} completion fish 2>/dev/null >"${TARGET}/share/fish/vendor_completions.d/krew.fish"
-      ${binary} completion zsh 2>/dev/null >"${TARGET}/share/zsh/vendor-completions/_krew"
+      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/krew"
+      ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/krew.fish"
+      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_krew"
 
   - name: kubectl
     version: 1.23.4
     check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
     needs:
     - krew
-    install:
+    download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
       type: executable
     - url: https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert
       type: executable
-      path: ${TARGET}/bin/kubectl-convert
+      path: ${target}/bin/kubectl-convert
     post_install: |
       echo "Install completion"
-      kubectl completion bash >"${TARGET}/share/bash-completion/completions/kubectl"
-      kubectl completion zsh >"${TARGET}/share/zsh/vendor-completions/_kubectl"
+      kubectl completion bash >"${target}/share/bash-completion/completions/kubectl"
+      kubectl completion zsh >"${target}/share/zsh/vendor-completions/_kubectl"
       echo "Add alias k"
-      cat >"${PREFIX}/etc/profile.d/kubectl.sh" <<EOF
+      cat >"${prefix}/etc/profile.d/kubectl.sh" <<EOF
       alias k=kubectl
       complete -F __start_kubectl k
       EOF
-      if test -z "${PREFIX}" && ( has_tool "krew" || tool_will_be_installed "krew" ); then
+      if test -z "${prefix}" && ( has_tool "krew" || tool_will_be_installed "krew" ); then
           echo "Waiting for krew"
-          wait_for_tool "krew" "${TARGET}/bin"
+          wait_for_tool "krew" "${target}/bin"
           echo "Install krew for current user"
           # shellcheck source=/dev/null
-          source "${PREFIX}/etc/profile.d/krew.sh"
+          source "${prefix}/etc/profile.d/krew.sh"
           krew install krew
           echo "Install plugins for current user"
           krew install <<EOF || true
@@ -915,86 +1231,215 @@ tools:
 
   - name: kubectl-build
     version: 0.1.5
+    download:
+    - url:
+        x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
+      type: tarball
 
   - name: kubectl-free
     version: 0.2.0
     check: ${binary} --version | cut -d' ' -f2 | tr -d ','
+    download:
+    - url: https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip
+      type: zip
+      path: ${target}/bin
 
   - name: kubectl-resources
     version: 0.2.0
+    download:
+    - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kubectl-resources
 
   - name: kubefire
     version: 0.3.6
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2 | tr -d v
+    download:
+    - url: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
+      type: executable
+    - url: https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}
+      type: executable
+      path: ${target}/libexec/cni/host-local-rev
 
   - name: kubeletctl
     version: 1.8
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2
+    download:
+    - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
+      type: executable
 
   - name: kubeswitch
     version: 1.4.0
+    download:
+    - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kubeswitch
 
   - name: kustomize
     version: 4.5.2
     check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
+    download:
+    - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/kustomize"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/kustomize.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_kustomize"
 
   - name: lazydocker
     version: 0.12
     check: ${binary} --version | grep Version | cut -d' ' -f2
     needs:
     - docker
+    download:
+    - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - lazydocker
 
   - name: lazygit
     version: 0.32.2
     check: ${binary} --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,
+    download:
+    - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - lazygit
 
   - name: manifest-tool
     version: 2.0.0
     check: ${binary} --version | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
       type: tarball
     post_install:
-      mv "${TARGET}/bin/manifest-tool-linux-${arch}" "${TARGET}/bin/manifest-tool"
+      mv "${target}/bin/manifest-tool-linux-${arch}" "${target}/bin/manifest-tool"
 
   - name: minikube
     version: 1.25.2
     check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
+    download:
+    - url: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/minikube"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/minikube.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_minikube"
 
   - name: mitmproxy
     version: 7.0.4
+    download:
+    - url:
+        x86_64: https://snapshots.mitmproxy.org/${MITMPROXY_VERSION}/mitmproxy-${MITMPROXY_VERSION}-linux.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - mitmproxy
+      - mitmdump
+      - mitmweb
 
   - name: nerdctl
     version: 0.17.1
     check: ${binary} --version | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
 
   - name: norouter
     version: 0.6.4
     check: ${binary} --version | cut -d' ' -f3
+    download:
+    - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - norouter
 
   - name: notation
     version: 0.7.1-alpha.1
     check: ${binary} --version | cut -d' ' -f3
+    download:
+    - url: https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - notation
+    - url: https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz
+      type: tarball
+      path: ${DOCKER_PLUGINS_PATH}
+      files:
+      - docker-generate
+      - docker-notation
 
   - name: oci-image-tool
     version: 1.0.0-rc3
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - docker
+    install: |
+      echo "oci-image-tool ${OCI_IMAGE_TOOL_VERSION}"
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${TARGET}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${TARGET}:/target" \
+              --env OCI_IMAGE_TOOL_VERSION \
+              --env GO111MODULE=auto \
+              --workdir /go/src/github.com/opencontainers/image-tools \
+              golang:${GO_VERSION} <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_IMAGE_TOOL_VERSION}" https://github.com/opencontainers/image-tools .
+      make tool
+      cp oci-image-tool /target/bin/
+      EOF
+      else
+          echo "${RED}[ERROR] Docker is required to install.${RESET}"
+          false
+      fi
 
   - name: oci-runtime-tool
     version: 0.9.0
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
     - docker
+    install: |
+      echo "oci-runtime-tool ${OCI_RUNTIME_TOOL_VERSION}"
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${TARGET}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${TARGET}:/target" \
+              --env OCI_RUNTIME_TOOL_VERSION \
+              --env GO111MODULE=auto \
+              --workdir /go/src/github.com/opencontainers/runtime-tools \
+              golang:${GO_VERSION} <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_RUNTIME_TOOL_VERSION}" https://github.com/opencontainers/runtime-tools .
+      make tool
+      cp oci-runtime-tool /target/bin/
+      EOF
+      else
+          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          false
+      fi
 
   - name: oras
     version: 0.12.0
     check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
-    install:
+    download:
     - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       files:
@@ -1002,6 +1447,19 @@ tools:
 
   - name: patat
     version: 0.8.7.0
+    download:
+    - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      strip: 1
+      files:
+      - patat-v${version}-linux-${arch}/patat
+    - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
+      type: tarball
+      path: ${target}/share/man/man1
+      strip: 1
+      files:
+      - patat-v${version}-linux-${arch}/patat.1
 
   - name: podman
     version: 3.4.4
@@ -1015,7 +1473,7 @@ tools:
     needs:
     - docker
     - docker-compose
-    install:
+    download:
     - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       strip: 1
@@ -1023,25 +1481,25 @@ tools:
       - portainer/portainer
     - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${TARGET}/share/portainer
+      path: ${target}/share/portainer
       strip: 1
       files:
       - portainer/public
     - url: contrib/portainer/portainer.service
       type: file
-      path: ${PREFIX}/etc/systemd/system/portainer.service
+      path: ${prefix}/etc/systemd/system/portainer.service
     - url: contrib/portainer/portainer
       type: file
-      path: ${PREFIX}/etc/init.d/portainer
+      path: ${prefix}/etc/init.d/portainer
     post_install: |
       echo "Install dedicated docker-compose v1"
-      cp "${TARGET}/bin/docker-compose" "${TARGET}/share/portainer/docker-compose"
+      cp "${target}/bin/docker-compose" "${target}/share/portainer/docker-compose"
       echo "Fix systemd unit"
-      sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${PREFIX}/etc/systemd/system/portainer.service"
+      sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${prefix}/etc/systemd/system/portainer.service"
       echo "Fix init script"
-      sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${PREFIX}/etc/init.d/portainer"
-      chmod +x "${PREFIX}/etc/init.d/portainer"
-      if test -z "${PREFIX}"; then
+      sed -i "s|/usr/local/bin/portainer|${RELATIVE_TARGET}/bin/portainer|g" "${prefix}/etc/init.d/portainer"
+      chmod +x "${prefix}/etc/init.d/portainer"
+      if test -z "${prefix}"; then
           if has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
@@ -1051,11 +1509,11 @@ tools:
   - name: porter
     version: 0.38.9
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
-    install:
+    download:
     - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
       type: executable
     post_install: |
-      if test -z "${PREFIX}"; then
+      if test -z "${prefix}"; then
           echo "Install mixins"
           porter mixin install exec
           porter mixin install docker
@@ -1069,46 +1527,52 @@ tools:
     version: 6.2.0
     binary: qemu-img
     check: ${binary} --version | grep qemu-img | cut -d' ' -f3
+    download:
+    - url:
+        x86_64: https://github.com/nicholasdille/qemu-static/releases/download/v${QEMU_VERSION}/qemu.tar.gz
+      type: tarball
+      strip: 2
+      path: ${target}
 
   - name: regclient
     version: 0.4.0
     binary: regctl
     check: ${binary} version | jq -r .VCSTag | tr -d v
-    install:
+    download:
     - url: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
       type: executable
-      path: ${TARGET}/bin/regctl
+      path: ${target}/bin/regctl
     - url: https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}
       type: executable
-      path: ${TARGET}/bin/regbot
+      path: ${target}/bin/regbot
     - url: https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}
       type: executable
-      path: ${TARGET}/bin/regsync
+      path: ${target}/bin/regsync
     post_install: |
       echo "Install completion for regctl"
-      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/regctl"
-      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/regctl.fish"
-      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_regctl"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/regctl"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/regctl.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_regctl"
       echo "Install completion for regbot"
-      "${TARGET}/bin/regbot" completion bash >"${TARGET}/share/bash-completion/completions/regbot"
-      "${TARGET}/bin/regbot" completion fish >"${TARGET}/share/fish/vendor_completions.d/regbot.fish"
-      "${TARGET}/bin/regbot" completion zsh >"${TARGET}/share/zsh/vendor-completions/_regbot"
+      "${target}/bin/regbot" completion bash >"${target}/share/bash-completion/completions/regbot"
+      "${target}/bin/regbot" completion fish >"${target}/share/fish/vendor_completions.d/regbot.fish"
+      "${target}/bin/regbot" completion zsh >"${target}/share/zsh/vendor-completions/_regbot"
       echo "Install completion for regsync"
-      "${TARGET}/bin/regsync" completion bash >"${TARGET}/share/bash-completion/completions/regsync"
-      "${TARGET}/bin/regsync" completion fish >"${TARGET}/share/fish/vendor_completions.d/regsync.fish"
-      "${TARGET}/bin/regsync" completion zsh >"${TARGET}/share/zsh/vendor-completions/_regsync"
+      "${target}/bin/regsync" completion bash >"${target}/share/bash-completion/completions/regsync"
+      "${target}/bin/regsync" completion fish >"${target}/share/fish/vendor_completions.d/regsync.fish"
+      "${target}/bin/regsync" completion zsh >"${target}/share/zsh/vendor-completions/_regsync"
 
   - name: rootlesskit
     version: 0.14.6
     check: ${binary} --version | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
       type: tarball
 
   - name: runc
     version: 1.1.0
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
     post_install: |
@@ -1119,10 +1583,10 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Install manpages for runc"
-          "${TARGET}/bin/docker" container run \
+          "${target}/bin/docker" container run \
               --interactive \
               --rm \
-              --volume "${TARGET}/share/man:/opt/man" \
+              --volume "${target}/share/man:/opt/man" \
               --env RUNC_VERSION \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/opencontainers/runc
@@ -1139,16 +1603,16 @@ tools:
   - name: skopeo
     version: 1.6.1
     check: ${binary} --version | cut -d' ' -f3
-    install:
+    download:
     - url:
         x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo.tar.gz
       type: tarball
-      path: ${TARGET}
+      path: ${target}
 
   - name: slirp4netns
     version: 1.1.12
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
-    install:
+    download:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
     post_install:
@@ -1159,10 +1623,10 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Install manpages"
-          "${TARGET}/bin/docker" container run \
+          "${target}/bin/docker" container run \
               --interactive \
               --rm \
-              --volume "${TARGET}/share/man:/opt/man" \
+              --volume "${target}/share/man:/opt/man" \
               --env SLIRP4NETNS_VERSION \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/rootless-containers/slirp4netns
@@ -1177,10 +1641,17 @@ tools:
   - name: sops
     version: 3.7.1
     check: ${binary} --version | cut -d' ' -f2
+    download:
+    - url:
+        x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
+      type: executable
 
   - name: sshocker
     version: 0.2.2
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    download:
+    - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
+      type: executable
 
   - name: stargz-snapshotter
     version: 0.11.1
@@ -1188,19 +1659,19 @@ tools:
     check: ${binary} -version | cut -d' ' -f2 | tr -d v
     needs:
     - containerd
-    install:
+    download:
     - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${TARGET}/bin
+      path: ${target}/bin
     post_install: |
       echo "Add configuration to containerd"
       cat >"${DOCKER_SETUP_CACHE}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
-      "${TARGET}/bin/dasel" put object --file "${PREFIX}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
+      "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
       EOF
       echo "Install systemd units"
-      get_file "contrib/stargz-snapshotter/stargz-snapshotter.service" >"${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
-      sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-stargz-grpc|" "${PREFIX}/etc/systemd/system/stargz-snapshotter.service"
-      if test -z "${PREFIX}"; then
+      get_file "contrib/stargz-snapshotter/stargz-snapshotter.service" >"${prefix}/etc/systemd/system/stargz-snapshotter.service"
+      sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${RELATIVE_TARGET}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
+      if test -z "${prefix}"; then
           if has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
@@ -1210,31 +1681,71 @@ tools:
   - name: task
     version: 3.11.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    download:
+    - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - task
+    - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${TARGET}/share
+      strip: 2
+      files:
+      - completion/bash/task.bash
+      - completion/fish/task.fish
+      - completion/zsh/_task
+    post_install: |
+      mv "${TARGET}/share/task.bash" "${TARGET}/share/bash-completion/completions/task"
+      mv "${TARGET}/share/task.fish" "${TARGET}/share/fish/vendor_completions.d/task.fish"
+      mv "${TARGET}/share/_task" "${TARGET}/share/zsh/vendor-completions/_task"
 
   - name: trivy
     version: 0.24.2
     check: ${binary} --version | cut -d' ' -f2
+    download:
+    - url:
+        x86_64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz
+        aarch64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-ARM64.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - trivy
 
   - name: umoci
     version: 0.4.7
     check: ${binary} --version | cut -d' ' -f3
+    download:
+    - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
+      type: executable
 
   - name: vendir
     version: 0.24.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    download:
+    - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
+      type: executable
 
   - name: ytt
     version: 0.40.1
     check: ${binary} version | cut -d' ' -f3
+    download:
+    - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${TARGET}/share/bash-completion/completions/ytt"
+      ${binary} completion fish >"${TARGET}/share/fish/vendor_completions.d/ytt.fish"
+      ${binary} completion zsh >"${TARGET}/share/zsh/vendor-completions/_ytt"
 
   - name: yq
     version: 4.21.1
     check: ${binary} --version | cut -d' ' -f4
-    install:
+    download:
     - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} shell-completion bash >"${TARGET}/share/bash-completion/completions/yq"
-      ${binary} shell-completion fish >"${TARGET}/share/fish/vendor_completions.d/yq.fish"
-      ${binary} shell-completion zsh >"${TARGET}/share/zsh/vendor-completions/_yq"
+      ${binary} shell-completion bash >"${target}/share/bash-completion/completions/yq"
+      ${binary} shell-completion fish >"${target}/share/fish/vendor_completions.d/yq.fish"
+      ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_yq"
