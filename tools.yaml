@@ -1669,7 +1669,7 @@ tools:
 
   - name: sops
     version: 3.7.1
-    check: ${binary} --version | cut -d' ' -f2
+    check: ${binary} --version | head -n 1 | cut -d' ' -f2
     download:
     - url:
         x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
