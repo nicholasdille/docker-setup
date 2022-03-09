@@ -180,7 +180,6 @@ if ! test "$(uname -s)" == "Linux"; then
 fi
 
 arch="$(uname -m)"
-echo "arch: ${arch}."
 case "${arch}" in
     x86_64)
         alt_arch=amd64
@@ -295,12 +294,23 @@ function is_executable() {
     test -f "${file}" && test -x "${file}"
 }
 
-# TODO: Substitute for *_is_installed
+function is_installed() {
+    local tool=$1
+
+    binary="$(get_tool_binary "${tool}")"
+
+    if test -f "${binary}" && test -x "${binary}"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 if ${only_installed}; then
     only=true
 
     for tool in "${tools[@]}"; do
-        if eval "${tool//-/_}_is_installed"; then
+        if is_installed "${tool//-/_}"; then
             requested_tools+=("${tool}")
         fi
     done
@@ -333,25 +343,26 @@ function replace_vars() {
     | sed "s|\${prefix}|${prefix}|g"
 }
 
-function install_tool() {
+function get_tool_version() {
     local tool=$1
-    local reinstall=$2
 
-    # TODO: Check if all deps all installed
-
-    echo
-    echo "tool: ${tool}."
-    tool_json="$(get_tool "${tool}")"
-    
-    version="$(jq --raw-output '.version' <<<"${tool_json}")"
+    version="$(
+        get_tool "${tool}" \
+        | jq --raw-output '.version'
+    )"
     if test -z "${version}"; then
-        echo "ERROR: Empty version for ${tool}."
+        >&2 echo -e "${red}ERROR: Empty version for ${tool}.${reset}"
         return
     fi
-    echo "  version: ${version}."
+    echo "${version}"
+}
+
+function get_tool_binary() {
+    local tool=$1
     
     binary="$(
-        jq --raw-output 'select(.binary != null) | .binary' <<<"${tool_json}" \
+        get_tool "${tool}" \
+        | jq --raw-output 'select(.binary != null) | .binary' \
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
     if test -z "${binary}"; then
@@ -360,26 +371,30 @@ function install_tool() {
     if ! test "${binary:0:1}" == "/"; then
         binary="${target}/bin/${binary}"
     fi
+    echo "${binary}"
+}
+
+function install_tool() {
+    local tool=$1
+    local reinstall=$2
+
+    # TODO: Check if all deps all installed
+
+    echo
+    echo "tool: ${tool}."
+    local tool_json
+    tool_json="$(get_tool "${tool}")"
+    
+    local version
+    version="$(get_tool_version "${tool}")"
+    echo "  version: ${version}."
+    
+    local binary
+    binary="$(get_tool_binary "${tool}")"
     echo "  binary: ${binary}."
 
-    # TODO: Version check
-    # TODO: If .check is empty, use touch-based version in cache directory
-    # TODO: Substitute
-    check="$(
-        jq --raw-output 'select(.check != null) | .check' <<<"${tool_json}" \
-        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
-    )"
-    if test -z "${check}"; then
-        echo "ERROR: Not implemented yet."
-        return
-    fi
-    if test -f "${binary}" && test -x "${binary}" && ! ${reinstall}; then
-        eval "${check}"
-        echo "INFO: Nothing to do."
-        return
-    fi
-
     echo "  pre_install"
+    local pre_install
     pre_install="$(
         jq --raw-output 'select(.pre_install != null) | .pre_install' <<<"${tool_json}" \
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
@@ -388,6 +403,7 @@ function install_tool() {
         eval "${pre_install}"
     fi
 
+    local install
     install="$(jq --raw-output 'select(.install != null) | .install' <<<"${tool_json}")"
     if test -n "${install}"; then
         echo "  SCRIPTED"
@@ -401,9 +417,11 @@ function install_tool() {
         while test "${index}" -lt "${count}"; do
             echo "  index: ${index}"
 
+            local download_json
             download_json="$(get_tool_download_index "${tool}" "${index}")"
 
             # TODO: First check for .url[$arch] and then for .url
+            local url
             url="$(jq --raw-output '.url' <<<"${download_json}")"
             if grep ": " <<<"${url}"; then
                 url="$(jq --raw-output --arg arch "${arch}" '.url | select(.[$arch] != null) | .[$arch]' <<<"${download_json}")"
@@ -422,8 +440,10 @@ function install_tool() {
             fi
             echo "  url: ${url}."
 
+            local type
             type="$(jq --raw-output '.type' <<<"${download_json}")"
 
+            local path
             path="$(
                 jq --raw-output 'select(.path != null) | .path' <<<"${download_json}" \
                 | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
@@ -452,11 +472,15 @@ function install_tool() {
                 tarball)
                     echo "  tarball"
                     echo "    strip"
+                    local strip
+                    local param_strip
                     strip="$(jq --raw-output 'select(.strip != null) | .strip' <<<"${download_json}")"
                     if test -n "${strip}"; then
                         param_strip="--strip-components=${strip}"
                     fi
                     echo "    files"
+                    local files
+                    local param_files
                     files="$(
                         jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
                         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
@@ -487,6 +511,7 @@ function install_tool() {
     fi
 
     echo "  post_install"
+    local post_install
     post_install="$(
         jq --raw-output 'select(.post_install != null) | .post_install' <<<"${tool_json}" \
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
@@ -511,7 +536,58 @@ function resolve_deps() {
     fi
 }
 
-# TODO: Substitute for *_matches_version
+function get_tool_check() {
+    local tool=$1
+
+    local check
+    check="$(
+        jq --raw-output 'select(.check != null) | .check' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    echo "${check}"
+}
+
+function tool_has_check() {
+    local tool=$1
+
+    local check
+    check="$(get_tool_check "${tool}")"
+    if test -z "${check}"; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+function matches_version() {
+    local tool=$1
+
+    local version
+    version="$(get_tool_version "${tool}")"
+
+    local check
+    check="$(get_tool_check "${tool}")"
+    if test -z "${check}"; then
+        if test -f "${docker_setup_cache}/${tool}/${version}"; then
+            return 0
+        else
+            return 1
+        fi
+    fi
+    if is_installed "${tool}"; then
+        local installed_version
+        installed_version="$(eval "${check}")"
+        if test "${installed_version}" == "${version}"; then
+            return 0
+        else
+            return 1
+        fi
+
+    else
+        return 1
+    fi
+}
+
 echo -e "docker-setup includes ${#tools[*]} tools:"
 echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 echo
@@ -521,12 +597,10 @@ declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
 for tool in "${tools[@]}"; do
-    var_name="${tool^^}_version"
-    version="${var_name//-/_}"
-    tool_version[${tool}]="${!version}"
+    tool_version[${tool}]="$(get_tool_version "${tool}")"
 
     if ! ${only} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
-        if ! eval "${tool//-/_}_is_installed" || ! eval "${tool//-/_}_matches_version" || ${reinstall}; then
+        if ! is_installed "${tool//-/_}" || ! matches_version "${tool//-/_}" || ${reinstall}; then
 
             resolve_deps "${tool}"
 
@@ -539,7 +613,7 @@ done
 check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
-    if eval "${tool//-/_}_is_installed" && eval "${tool//-/_}_matches_version"; then
+    if is_installed "${tool//-/_}" && matches_version "${tool//-/_}"; then
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_color[${tool}]="${yellow}"
             tool_sign[${tool}]="${green}${check_mark}"
@@ -603,7 +677,7 @@ if ${check}; then
 fi
 
 if test "${#tool_install[@]}" -gt 0 && ! ${no_wait}; then
-    echo "please press ctrl-c to abort."
+    echo "Please press ctrl-c to abort."
     seconds_remaining=10
     while test "${seconds_remaining}" -gt 0; do
         echo -e -n "\rSleeping for ${seconds_remaining} seconds... "
@@ -795,7 +869,6 @@ function is_container() {
 }
 
 function has_systemd() {
-    # TODO
     local init
     init="$(readlink -f /sbin/init)"
     if test "$(basename "${init}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
@@ -887,7 +960,7 @@ fi
 if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test "${current_cgroup_version}" == "v1"; then
     if test -n "${WSL_DISTRO_NAME}"; then
         echo -e "${red}[ERROR] Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${reset}"
-        echo -e "${red}       Please rerun this script with CGROUP_VERSION=v1${reset}"
+        echo -e "${red}        Please rerun this script with CGROUP_VERSION=v1${reset}"
         exit 1
     fi
 
@@ -932,7 +1005,7 @@ if ${plan}; then
     exit
 fi
 if test "${#tool_install[@]}" -eq 0; then
-    echo "Everything is up-to-date."
+    echo -e "${green}Everything is up-to-date.${reset}"
     exit
 fi
 
@@ -947,7 +1020,7 @@ info_around_progress_bar="Installed xxx/yyy [] zzz%"
 if ${no_progressbar}; then
     echo "installing..."
 fi
-rm -f "${docker_setup_logs}/profiling"
+rm -f "${docker_setup_logs}/PROFILING"
 while ! ${last_update}; do
     progress_bar_width=$(( $(get_display_cols) - ${#info_around_progress_bar} ))
     done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
@@ -968,9 +1041,15 @@ while ! ${last_update}; do
             } >>"${docker_setup_logs}/${tool}.log"
 
             (
+                set -o errexit
                 start_time="$(date +%s)"
-                eval "install-${tool}"
+                install_tool "${tool}"
                 last_exit_code=$?
+                if test "${last_exit_code}" -eq 0; then
+                    mkdir -p "${docker_setup_cache}/${tool}"
+                    version="$(get_tool_version "${tool}")"
+                    touch "${docker_setup_cache}/${tool}/${version}"
+                fi
                 end_time="$(date +%s)"
                 echo "${tool};${start_time};${end_time}" >>"${docker_setup_logs}/profiling"
                 exit "${last_exit_code}"
@@ -994,7 +1073,7 @@ while ! ${last_update}; do
         done_chars="${done_bar:0:${done_length}}"
         percent=$(( done * 100 / child_pid_count ))
 
-        echo -e -n "\rinstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
+        echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
     fi
 
     if ${last_update} || test -f "${docker_setup_cache}/errors/${tool}.log"; then
