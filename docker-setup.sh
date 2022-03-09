@@ -1130,6 +1130,7 @@ function install-docker() {
             groupadd --system --force docker
         fi
         echo "Configure daemon"
+        mount
         if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
             echo "Initialize dockerd configuration"
             echo '{"storage-driver": "overlay2"}' >"${PREFIX}/etc/docker/daemon.json"
