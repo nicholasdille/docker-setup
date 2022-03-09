@@ -351,6 +351,7 @@ tools:
     binary: dockerd
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
+    - fuse-overlayfs
     - jq
     pre_install: |
       echo "Check for iptables/nftables"
@@ -460,6 +461,16 @@ tools:
           if has_tool "jq" || tool_will_be_installed "jq"; then
               echo "Waiting for jq"
               wait_for_tool "jq" "${target}/bin"
+
+              local root_fs
+              root_fs="$(mount | grep " on / " | cut -d' ' -f5)"
+              echo "Found ${root_fs} on /"
+              if test "${root_fs}" == "overlay" && test -z "$("${TARGET}/bin/jq" '."storage-driver" // ""' "${PREFIX}/etc/docker/daemon.json")"; then
+                  echo "Configuring storage driver for DinD"
+                  # shellcheck disable=SC2094
+                  cat <<< "$("${TARGET}/bin/jq" '. * {"storage-driver": "fuse-overlayfs"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                  touch "${DOCKER_SETUP_CACHE}/docker_restart"
+              fi
 
               if ! test "$("${target}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${prefix}/etc/docker/daemon.json")" == "true"; then
                   echo "Configuring native cgroup driver"
@@ -699,6 +710,7 @@ tools:
     version: 1.0.4
     binary: containerd-fuse-overlayfs-grpc
     needs:
+    - fuse-overlayfs
     - containerd
     download:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
