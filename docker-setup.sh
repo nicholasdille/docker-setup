@@ -1037,24 +1037,22 @@ function install-docker() {
     echo "Docker ${DOCKER_VERSION}"
     echo "Check for iptables/nftables"
     if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
-        echo -e "${YELLOW}[WARNING] Unable to continue because...${RESET}"
-        echo -e "${YELLOW}         - ...you are missing ipables OR...${RESET}"
-        echo -e "${YELLOW}         - ...you are using nftables and not iptables...${RESET}"
-        echo -e "${YELLOW}         To fix this, iptables must point to iptables-legacy.${RESET}"
+        echo -e "${YELLOW}[WARNING] Unable to continue because you are either missing ipables or you are using nftables and not iptables.${RESET}"
+        echo -e "${YELLOW}[WARNING] To fix this, iptables must point to iptables-legacy.${RESET}"
         echo
-        echo -e "${YELLOW}         You don't want to run Docker with iptables=false:${RESET}"
-        echo -e "${YELLOW}         https://docs.docker.com/network/iptables ${RESET}"
+        echo -e "${YELLOW}[WARNING] You don't want to run Docker with iptables=false:${RESET}"
+        echo -e "${YELLOW}[WARNING] https://docs.docker.com/network/iptables ${RESET}"
         echo
-        echo -e "${YELLOW}         For Ubuntu:${RESET}"
-        echo -e "${YELLOW}         $ apt-get update${RESET}"
-        echo -e "${YELLOW}         $ apt-get -y install --no-install-recommends iptables${RESET}"
-        echo -e "${YELLOW}         $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
+        echo -e "${YELLOW}[WARNING] For Ubuntu:${RESET}"
+        echo -e "${YELLOW}[WARNING] $ apt-get update${RESET}"
+        echo -e "${YELLOW}[WARNING] $ apt-get -y install --no-install-recommends iptables${RESET}"
+        echo -e "${YELLOW}[WARNING] $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
 
         local lsb_dist
         lsb_dist="$(get_lsb_distro_name)"
         case "${lsb_dist,,}" in
             centos|amzn|rocky)
-                echo -e "${RED}[WARNING] CentOS does not support iptables-legacy.${RESET}"
+                echo -e "${YELLOW}[WARNING] CentOS does not support iptables-legacy.${RESET}"
                 if ! install-iptables; then
                     echo -e "${RED}[ERROR] Unable to install iptables-legacy.${RESET}"
                     exit 1
@@ -1210,6 +1208,7 @@ function install-docker() {
             exit 1
         fi
         echo "Finished starting Docker after ${SECONDS} seconds."
+        docker info
     fi
     if ${SKIP_DOCS}; then
         echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
