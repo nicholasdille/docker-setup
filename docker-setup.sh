@@ -188,12 +188,15 @@ tools=(
     rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
     task trivy vendir yq ytt
 )
+tool_deps["buildx"]="docker"
 tool_deps["bypass4netns"]="docker slirp4netns"
 tool_deps["containerd"]="runc cni dasel"
 tool_deps["crun"]="docker jq"
 tool_deps["ctop"]="docker"
 tool_deps["dive"]="docker"
 tool_deps["docker"]="fuse-overlayfs jq"
+tool_deps["docker-compose"]="docker"
+tool_deps["docker-scan"]="docker"
 tool_deps["docuum"]="docker"
 tool_deps["dry"]="docker"
 tool_deps["faasd"]="containerd faas-cli"
@@ -1141,7 +1144,7 @@ function install-docker() {
             local root_fs
             root_fs="$(mount | grep " on / " | cut -d' ' -f5)"
             echo "Found ${root_fs} on /"
-            if test "${root_fs}" == "overlay" && test -z "$("${TARGET}/bin/jq" '."storage-driver" // ""' "${PREFIX}/etc/docker/daemon.json")"; then
+            if test "${root_fs}" == "overlay"; then
                 echo "Configuring storage driver for DinD"
                 # shellcheck disable=SC2094
                 cat <<< "$("${TARGET}/bin/jq" '. * {"storage-driver": "fuse-overlayfs"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
