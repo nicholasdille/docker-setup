@@ -196,6 +196,7 @@ tools:
     download:
     - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
+      path: ${target}
     - url: https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
@@ -296,7 +297,7 @@ tools:
     - jq
     download:
     - url:
-        x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${CRUN_VERSION}/crun.tar.gz
+        x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun.tar.gz
       type: tarball
       path: ${target}
     post_install: |

@@ -101,17 +101,13 @@ function replace_vars() {
     local prefix=$7
 
     cat \
-    | tool="${tool}" sed "s|\${tool}|${tool}|g" \
-    | binary="${binary}" sed "s|\${binary}|${binary}|g" \
-    | version="${version}" sed "s|\${version}|${version}|g" \
-    | arch="${arch}" sed "s|\${arch}|${arch}|g" \
-    | alt_arch="${alt_arch}" sed "s|\${alt_arch}|${alt_arch}|g" \
-    | target="${target}" sed "s|\${target}|${target}|g" \
-    | prefix="${prefix}" sed "s|\${prefix}|${prefix}|g"
-}
-
-function run() {
-    eval "$@"
+    | sed "s|\${tool}|${tool}|g" \
+    | sed "s|\${binary}|${binary}|g" \
+    | sed "s|\${version}|${version}|g" \
+    | sed "s|\${arch}|${arch}|g" \
+    | sed "s|\${alt_arch}|${alt_arch}|g" \
+    | sed "s|\${target}|${target}|g" \
+    | sed "s|\${prefix}|${prefix}|g"
 }
 
 function install_tool() {
@@ -155,7 +151,7 @@ function install_tool() {
         return
     fi
     if test -f "${binary}" && test -x "${binary}" && ! ${reinstall}; then
-        run "${check}"
+        eval "${check}"
         echo "INFO: Nothing to do."
         return
     fi
@@ -166,13 +162,13 @@ function install_tool() {
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
     if test -n "${pre_install}"; then
-        run "${pre_install}"
+        eval "${pre_install}"
     fi
 
     install="$(jq --raw-output 'select(.install != null) | .install' <<<"${tool_json}")"
     if test -n "${install}"; then
         echo "  SCRIPTED"
-        run "${install}"
+        eval "${install}"
 
     else
         echo "  MANAGED"
@@ -187,8 +183,9 @@ function install_tool() {
             # TODO: First check for .url[$arch] and then for .url
             url="$(jq --raw-output '.url' <<<"${download_json}")"
             if grep ": " <<<"${url}"; then
-                url="$(jq --raw-output --arg arch "${arch}" '.url[$arch]' <<<"${download_json}")"
+                url="$(jq --raw-output --arg arch "${arch}" '.url | select(.[$arch] != null) | .[$arch]' <<<"${download_json}")"
             fi
+            echo "url: ${url}."
             if test -z "${url}"; then
                 echo "ERROR: Platform not available."
                 return
@@ -272,7 +269,7 @@ function install_tool() {
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
     if test -n "${post_install}"; then
-        run "${post_install}"
+        eval "${post_install}"
     fi
     echo "  DONE"
 }
