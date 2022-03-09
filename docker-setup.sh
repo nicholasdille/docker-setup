@@ -1132,7 +1132,7 @@ function install-docker() {
         echo "Configure daemon"
         if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
             echo "Initialize dockerd configuration"
-            echo "{}" >"${PREFIX}/etc/docker/daemon.json"
+            echo '{"storage-driver": "overlay2"}' >"${PREFIX}/etc/docker/daemon.json"
         fi
         if has_tool "jq" || tool_will_be_installed "jq"; then
             echo "Waiting for jq"
