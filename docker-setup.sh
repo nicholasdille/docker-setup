@@ -1108,7 +1108,7 @@ function install-docker() {
             get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker.sysconfig" >"${PREFIX}/etc/sysconfig/docker"
             get_file "https://github.com/moby/moby/raw/v${DOCKER_VERSION}/contrib/init/sysvinit-redhat/docker" >"${PREFIX}/etc/init.d/docker"
             # shellcheck disable=SC1083
-            sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
+            sed -i -E "s|(^prog=)|export PATH="${RELATIVE_TARGET}/libexec/docker/bin:${RELATIVE_TARGET}/sbin:${RELATIVE_TARGET}/bin:\${PATH}"\n\n\1|" "${PREFIX}/etc/init.d/docker"
             sed -i -E "s|/usr/bin/dockerd|${RELATIVE_TARGET}/bin/dockerd|" "${PREFIX}/etc/init.d/docker"
             chmod +x "${PREFIX}/etc/init.d/docker"
         elif is_alpine; then
