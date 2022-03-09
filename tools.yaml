@@ -259,6 +259,8 @@ tools:
   - name: cosign
     version: 1.5.2
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+    needs:
+    - docker
     download:
     - url: https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}
       type: executable
@@ -693,6 +695,8 @@ tools:
   - name: firectl
     version: 0.1.0
     check: ${binary} --version
+    needs:
+    - firecracker
     download:
     - url:
         x86_64: https://firectl-release.s3.amazonaws.com/firectl-v${version}
@@ -1017,6 +1021,8 @@ tools:
   - name: k3d
     version: 5.3.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3 | tr -d v
+    needs:
+    - docker
     download:
     - url: https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-${alt_arch}
       type: executable
@@ -1098,6 +1104,8 @@ tools:
   - name: kind
     version: 0.11.1
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
+    needs:
+    - docker
     download:
     - url: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
       type: executable
@@ -1260,6 +1268,8 @@ tools:
 
   - name: kubectl-build
     version: 0.1.5
+    needs:
+    - kubectl
     download:
     - url:
         x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
@@ -1268,6 +1278,8 @@ tools:
   - name: kubectl-free
     version: 0.2.0
     check: ${binary} --version | cut -d' ' -f2 | tr -d ','
+    needs:
+    - kubectl
     download:
     - url: https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip
       type: zip
@@ -1275,6 +1287,8 @@ tools:
 
   - name: kubectl-resources
     version: 0.2.0
+    needs:
+    - kubectl
     download:
     - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -1396,6 +1410,8 @@ tools:
   - name: notation
     version: 0.7.1-alpha.1
     check: ${binary} --version | cut -d' ' -f3
+    needs:
+    - docker
     download:
     - url: https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz
       type: tarball
