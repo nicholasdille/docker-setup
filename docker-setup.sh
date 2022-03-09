@@ -583,7 +583,7 @@ function rootlesskit_matches_version()                { test "$(${TARGET}/bin/ro
 function runc_matches_version()                       { test "$(${TARGET}/bin/runc --version | head -n 1 | cut -d' ' -f3)"                         == "${RUNC_VERSION}"; }
 function skopeo_matches_version()                     { test "$(${TARGET}/bin/skopeo --version | cut -d' ' -f3)"                                   == "${SKOPEO_VERSION}"; }
 function slirp4netns_matches_version()                { test "$(${TARGET}/bin/slirp4netns --version | head -n 1 | cut -d' ' -f3)"                  == "${SLIRP4NETNS_VERSION}"; }
-function sops_matches_version()                       { test "$(${TARGET}/bin/sops --version | cut -d' ' -f2)"                                     == "${SOPS_VERSION}"; }
+function sops_matches_version()                       { test "$(${TARGET}/bin/sops --version | head -n 1 | cut -d' ' -f2)"                         == "${SOPS_VERSION}"; }
 function sshocker_matches_version()                   { test "$(${TARGET}/bin/sshocker --version | cut -d' ' -f3)"                                 == "v${SSHOCKER_VERSION}"; }
 function stargz_snapshotter_matches_version()         { test "$(${TARGET}/bin/containerd-stargz-grpc -version | cut -d' ' -f2)"                    == "v${STARGZ_SNAPSHOTTER_VERSION}"; }
 function task_matches_version()                       { test "$(${TARGET}/bin/task --version | cut -d' ' -f3)"                                     == "v${TASK_VERSION}"; }
