@@ -1,71 +1,80 @@
 #!/bin/bash
 set -o errexit
 
-DOCKER_SETUP_VERSION="main"
-DOCKER_SETUP_REPO_BASE="https://github.com/nicholasdille/docker-setup"
-DOCKER_SETUP_REPO_RAW="${DOCKER_SETUP_REPO_BASE}/raw/${DOCKER_SETUP_VERSION}"
+docker_setup_version="main"
+docker_setup_repo_base="https://github.com/nicholasdille/docker-setup"
+docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
+: "${prefix:=}"
+: "${relative_target:=/usr/local}"
+: "${target:=${prefix}${relative_target}}"
+: "${docker_allow_restart:=false}"
+: "${docker_plugins_path:=${target}/libexec/docker/cli-plugins}"
+: "${docker_setup_logs:=/var/log/docker-setup}"
+: "${docker_setup_cache:=/var/cache/docker-setup}"
+: "${docker_setup_contrib:=${docker_setup_cache}/contrib}"
+: "${docker_setup_downloads:=${docker_setup_cache}/downloads}"
 
 declare -a unknown_parameters
-: "${CHECK:=false}"
-: "${SHOW_HELP:=false}"
-: "${NO_WAIT:=false}"
-: "${REINSTALL:=false}"
-: "${ONLY:=false}"
-: "${ONLY_INSTALLED:=false}"
-: "${NO_PROGRESSBAR:=false}"
-: "${SHOW_VERSION:=false}"
-: "${NO_COLOR:=false}"
-: "${PLAN:=false}"
-: "${SKIP_DOCS:=false}"
-: "${MAX_PARALLEL:=10}"
-: "${NO_CACHE:=false}"
-: "${NO_CRON:=false}"
+: "${check:=false}"
+: "${show_help:=false}"
+: "${no_wait:=false}"
+: "${reinstall:=false}"
+: "${only:=false}"
+: "${only_installed:=false}"
+: "${no_progressbar:=false}"
+: "${show_version:=false}"
+: "${no_color:=false}"
+: "${plan:=false}"
+: "${skip_docs:=false}"
+: "${max_parallel:=10}"
+: "${no_cache:=false}"
+: "${no_cron:=false}"
 declare -a requested_tools
 while test "$#" -gt 0; do
     case "$1" in
         --check)
-            NO_WAIT=true
-            CHECK=true
+            no_wait=true
+            check=true
             ;;
         --help)
-            SHOW_HELP=true
+            show_help=true
             ;;
         --no-wait)
-            NO_WAIT=true
+            no_wait=true
             ;;
         --reinstall)
-            REINSTALL=true
+            reinstall=true
             ;;
         --only)
-            ONLY=true
+            only=true
             ;;
         --only-installed)
-            ONLY_INSTALLED=true
+            only_installed=true
             ;;
         --no-progressbar)
-            NO_PROGRESSBAR=true
+            no_progressbar=true
             ;;
         --no-color)
-            NO_COLOR=true
+            no_color=true
             ;;
         --plan)
-            NO_WAIT=true
-            PLAN=true
+            no_wait=true
+            plan=true
             ;;
         --skip-docs)
-            SKIP_DOCS=true
+            skip_docs=true
             ;;
         --no-cache)
-            NO_CACHE=true
+            no_cache=true
             ;;
         --no-cron)
-            NO_CRON=true
+            no_cron=true
             ;;
         --version)
-            SHOW_VERSION=true
+            show_version=true
             ;;
         --bash-completion)
-            curl -sL "${DOCKER_SETUP_REPO_RAW}/completion/bash/docker-setup.sh"
+            curl -sl "${docker_setup_repo_raw}/completion/bash/docker-setup.sh"
             exit
             ;;
         --*)
@@ -74,7 +83,7 @@ while test "$#" -gt 0; do
         *)
             if test -n "$1"; then
                 requested_tools+=("$1")
-                ONLY=true
+                only=true
             fi
             ;;
     esac
@@ -82,19 +91,19 @@ while test "$#" -gt 0; do
     shift
 done
 
-RESET="\e[39m\e[49m"
-GREEN="\e[92m"
-YELLOW="\e[93m"
-RED="\e[91m"
-GREY="\e[90m"
-if ${NO_COLOR} || test -p /dev/stdout; then
-    RESET=""
-    GREEN=""
-    YELLOW=""
-    RED=""
+reset="\e[39m\e[49m"
+green="\e[92m"
+yellow="\e[93m"
+red="\e[91m"
+grey="\e[90m"
+if ${no_color} || test -p /dev/stdout; then
+    reset=""
+    green=""
+    yellow=""
+    red=""
 fi
-CHECK_MARK="✓" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
-CROSS_MARK="✗" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
+check_mark="✓" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
+cross_mark="✗" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
 
 cat <<"EOF"
      _            _                           _
@@ -114,149 +123,93 @@ from the container ecosystem.
 EOF
 
 if test "${#unknown_parameters[@]}" -gt 0; then
-    echo -e "${RED}[ERROR] Unknown parameter(s): ${unknown_parameters[*]}.${RESET}"
+    echo -e "${red}[ERROR] Unknown parameter(s): ${unknown_parameters[*]}.${reset}"
     echo
-    SHOW_HELP=true
+    show_help=true
 fi
 
-if ${SHOW_HELP}; then
+if ${show_help}; then
     cat <<EOF
 Usage: docker-setup.sh [<options>] [<tool>[ <tool>]]
 
 The following command line switches and environment variables
 are accepted:
 
---help, SHOW_HELP                  Show this help
---version, SHOW_VERSION            Display version
+--help, show_help                  Show this help
+--version, show_version            Display version
 --bash-completion                  Output completion script for bash
---check, CHECK                     Abort after checking versions
---no-wait, NO_WAIT                 Skip wait before installation
---reinstall, REINSTALL             Reinstall all tools
---only, ONLY                       Only install specified tools
---only-installed, ONLY_INSTALLED   Only process installed tools
---no-progressbar, NO_PROGRESSBAR   Disable progress bar
---no-color, NO_COLOR               Disable colored output
---plan, PLAN                       Show planned installations
---skip-docs, SKIP_DOCS             Do not install documentation for faster
+--check, check                     Abort after checking versions
+--no-wait, no_wait                 Skip wait before installation
+--reinstall, reinstall             Reinstall all tools
+--only, only                       Only install specified tools
+--only-installed, only_installed   Only process installed tools
+--no-progressbar, no_progressbar   Disable progress bar
+--no-color, no_color               Disable colored output
+--plan, plan                       Show planned installations
+--skip-docs, skip_docs             Do not install documentation for faster
                                    installation
---no-cache, NO_CACHE               XXX
---no-cron, NO_CRON                 YYY
+--no-cache, no_cache               XXX
+--no-cron, no_cron                 YYY
 
 The above environment variables can be true or false.
 
 The following environment variables are processed:
 
-PREFIX                   Install into a subdirectory
-TARGET                   Specifies the target directory for
+prefix                   Install into a subdirectory
+target                   Specifies the target directory for
                          binaries. Defaults to /usr
-CGROUP_VERSION           Specifies which version of cgroup
+cgroup_version           Specifies which version of cgroup
                          to use. Defaults to v2
-DOCKER_ADDRESS_BASE      Specifies the address pool for networks,
+docker_address_base      Specifies the address pool for networks,
                          e.g. 192.168.0.0/16
-DOCKER_ADDRESS_SIZE      Specifies the size of each network,
+docker_address_size      Specifies the size of each network,
                          e.g. 24
-DOCKER_REGISTRY_MIRROR   Specifies a host to be used as registry
+docker_registry_mirror   Specifies a host to be used as registry
                          mirror, e.g. https://proxy.my-domain.tld
-DOCKER_ALLOW_RESTART     Whether restarting dockerd is acceptable
-DOCKER_COMPOSE           Specifies which major version of
-                         docker-compose to use. Defaults to v2
-DOCKER_PLUGINS_PATH      Where to store Docker CLI plugins.
-                         Defaults to ${TARGET}/libexec/docker/cli-plugins
+docker_allow_restart     Whether restarting dockerd is acceptable
+docker_plugins_path      Where to store Docker CLI plugins.
+                         Defaults to ${target}/libexec/docker/cli-plugins
 
 EOF
     exit
 fi
 
-if ${ONLY} && ${ONLY_INSTALLED}; then
-    echo -e "${RED}[ERROR] You can only specify one: --only/ONLY and --only-installed/ONLY_INSTALLED.${RESET}"
+if ! test "$(uname -s)" == "Linux"; then
+    echo "ERROR: Unsupport operating system ($(uname -s))."
     exit 1
 fi
 
-declare -a tools
-declare -A tool_deps
-tools=(
-    arkade buildah buildkit buildx bypass4netns cinf clusterawsadm clusterctl
-    cni cni-isolation conmon containerd containerssh cosign crane crictl crun
-    ctop dasel dive docker docker-compose docker-machine docker-scan docuum dry
-    duffle dyff faas-cli faasd firecracker firectl footloose fuse-overlayfs
-    fuse-overlayfs-snapshotter glow gvisor hcloud helm helmfile hub-tool ignite
-    img imgcrypt imgpkg ipfs jp jq jwt k3d k3s k3sup k9s kapp kbld kbrew kind
-    kink kompose krew kubectl kubectl-build kubectl-free kubectl-resources
-    kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
-    minikube mitmproxy nerdctl norouter notation oci-image-tool
-    oci-runtime-tool oras patat portainer porter podman qemu regclient
-    rootlesskit runc skopeo slirp4netns sops sshocker stargz-snapshotter umoci
-    task trivy vendir yq ytt
-)
-tool_deps["bypass4netns"]="docker slirp4netns"
-tool_deps["containerd"]="runc cni dasel"
-tool_deps["crun"]="docker jq"
-tool_deps["ctop"]="docker"
-tool_deps["dive"]="docker"
-tool_deps["docker"]="jq"
-tool_deps["docuum"]="docker"
-tool_deps["dry"]="docker"
-tool_deps["faasd"]="containerd faas-cli"
-tool_deps["fuse-overlayfs-snapshotter"]="containerd"
-tool_deps["gvisor"]="docker jq"
-tool_deps["ignite"]="containerd cni"
-tool_deps["ipfs"]="containerd"
-tool_deps["imgcrypt"]="containerd docker"
-tool_deps["jwt"]="docker"
-tool_deps["kubectl"]="krew"
-tool_deps["lazydocker"]="docker"
-tool_deps["oci-image-tool"]="docker"
-tool_deps["oci-runtime-tool"]="docker"
-tool_deps["podman"]="conmon"
-tool_deps["portainer"]="docker"
-tool_deps["stargz-snapshotter"]="containerd"
+arch="$(uname -m)"
+echo "arch: ${arch}."
+case "${arch}" in
+    x86_64)
+        alt_arch=amd64
+        ;;
+    aarch64)
+        alt_arch=arm64
+        ;;
+    *)
+        echo -e "${red}ERROR: Unsupported architecture (${arch}).${reset}"
+        exit 1
+        ;;
+esac
 
-declare -a unknown_tools
-for tool in "${requested_tools[@]}"; do
-    if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
-        unknown_tools+=( "${tool}" )
-    fi
-done
-if test "${#unknown_tools[@]}" -gt 0; then
-    echo -e "${RED}[ERROR] The following tools were specified but are not supported:${RESET}"
-    for tool in "${unknown_tools[@]}"; do
-        echo -e "${RED}       - ${tool}${RESET}"
-    done
-    echo
+docker_setup_tools_file="${docker_setup_cache}/tools.json"
+if ! test -f "${docker_setup_tools_file}"; then
+    echo -e "${red}ERROR: tools.json is missing.${reset}"
     exit 1
 fi
 
-if ! ${ONLY} && test "${#requested_tools[@]}" -gt 0; then
-    echo -e "${RED}[ERROR] You must supply --only/ONLY if specifying tools on the command line.${RESET}"
-    echo
-    exit 1
-fi
-if ${ONLY} && test "${#requested_tools[@]}" -eq 0; then
-    echo -e "${RED}[ERROR] You must specify tool on the command line if you supply --only/ONLY.${RESET}"
-    echo
+
+if ${only} && ${only_installed}; then
+    echo -e "${red}[ERROR] You can only specify one: --only/ONLY and --only-installed/ONLY_INSTALLED.${reset}"
     exit 1
 fi
 
-: "${PREFIX:=}"
-: "${RELATIVE_TARGET:=/usr/local}"
-: "${TARGET:=${PREFIX}${RELATIVE_TARGET}}"
-: "${DOCKER_ALLOW_RESTART:=false}"
-: "${DOCKER_PLUGINS_PATH:=${TARGET}/libexec/docker/cli-plugins}"
-: "${DOCKER_SETUP_LOGS:=/var/log/docker-setup}"
-: "${DOCKER_SETUP_CACHE:=/var/cache/docker-setup}"
-: "${DOCKER_SETUP_CONTRIB:=${DOCKER_SETUP_CACHE}/contrib}"
-: "${DOCKER_SETUP_DOWNLOADS:=${DOCKER_SETUP_CACHE}/downloads}"
-
-echo -e "docker-setup version $(if test "${DOCKER_SETUP_VERSION}" == "master"; then echo "${RED}"; fi)${DOCKER_SETUP_VERSION}${RESET}"
-echo
-if ${SHOW_VERSION}; then
-    exit
-fi
-
-DEPENDENCIES=(curl git unzip)
-for DEPENDENCY in "${DEPENDENCIES[@]}"; do
-    if ! type "${DEPENDENCY}" >/dev/null 2>&1; then
-        echo -e "${RED}[ERROR] Missing ${DEPENDENCY}.${RESET}"
+dependencies=(jq curl git unzip)
+for dependency in "${dependencies[@]}"; do
+    if ! type "${dependency}" >/dev/null 2>&1; then
+        echo -e "${red}[ERROR] Missing ${dependency}.${reset}"
         exit 1
     fi
 done
@@ -268,30 +221,83 @@ if ! type tput >/dev/null 2>&1; then
     }
 fi
 
-GO_VERSION=1.17.8
-IPTABLES_VERSION=1.8.7
-MITMPROXY_VERSION=7.0.4
-RUST_VERSION=1.59.0
+function get_tools() {
+    jq --raw-output '.tools[].name' "${docker_setup_tools_file}"
+}
 
-: "${DOCKER_COMPOSE:=v2}"
-if test "${DOCKER_COMPOSE}" == "v1"; then
-    # shellcheck disable=SC2034
-    DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V1_VERSION}"
-elif test "${DOCKER_COMPOSE}" == "v2"; then
-    # shellcheck disable=SC2034
-    DOCKER_COMPOSE_VERSION="${DOCKER_COMPOSE_V2_VERSION}"
-else
-    echo -e "${RED}[ERROR] Unknown value for DOCKER_COMPOSE. Supported values are v1 and v2 but got ${DOCKER_COMPOSE}.${RESET}"
+function get_tool() {
+    local tool=$1
+
+    jq --raw-output --arg tool "${tool}" '.tools[] | select(.name == $tool)' "${docker_setup_tools_file}"
+}
+
+function get_tool_download_count() {
+    local tool=$1
+
+    get_tool "${tool}" | jq --raw-output 'select(.download != null) | .download | length'
+}
+
+function get_tool_download_index() {
+    local tool=$1
+    local index=$2
+
+    get_tool "${tool}" | jq --raw-output --arg index "${index}" '.download[$index | tonumber]'
+}
+
+declare -a tools
+mapfile -t tools < <(get_tools)
+declare -A tool_deps
+# TODO: Build hash tool_deps
+
+declare -a unknown_tools
+for tool in "${requested_tools[@]}"; do
+    if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
+        unknown_tools+=( "${tool}" )
+    fi
+done
+if test "${#unknown_tools[@]}" -gt 0; then
+    echo -e "${red}[ERROR] The following tools were specified but are not supported:${reset}"
+    for tool in "${unknown_tools[@]}"; do
+        echo -e "${red}       - ${tool}${reset}"
+    done
+    echo
     exit 1
 fi
+
+if ! ${only} && test "${#requested_tools[@]}" -gt 0; then
+    echo -e "${red}[ERROR] You must supply --only/ONLY if specifying tools on the command line.${reset}"
+    echo
+    exit 1
+fi
+if ${only} && test "${#requested_tools[@]}" -eq 0; then
+    echo -e "${red}[ERROR] You must specify tool on the command line if you supply --only/ONLY.${reset}"
+    echo
+    exit 1
+fi
+
+echo -e "docker-setup version $(if test "${docker_setup_version}" == "master"; then echo "${red}"; fi)${docker_setup_version}${reset}"
+echo
+if ${show_version}; then
+    exit
+fi
+
+# shellcheck disable=SC2034
+go_version=1.17.8
+# shellcheck disable=SC2034
+iptables_version=1.8.7
+# shellcheck disable=SC2034
+mitmproxy_version=7.0.4
+# shellcheck disable=SC2034
+rust_version=1.59.0
 
 function is_executable() {
     local file=$1
     test -f "${file}" && test -x "${file}"
 }
 
-if ${ONLY_INSTALLED}; then
-    ONLY=true
+# TODO: Substitute for *_is_installed
+if ${only_installed}; then
+    only=true
 
     for tool in "${tools[@]}"; do
         if eval "${tool//-/_}_is_installed"; then
@@ -308,6 +314,189 @@ function get_display_cols() {
     echo "${display_cols}"
 }
 
+function replace_vars() {
+    local tool=$1
+    local binary=$2
+    local version=$3
+    local arch=$4
+    local alt_arch=$5
+    local target=$6
+    local prefix=$7
+
+    cat \
+    | sed "s|\${tool}|${tool}|g" \
+    | sed "s|\${binary}|${binary}|g" \
+    | sed "s|\${version}|${version}|g" \
+    | sed "s|\${arch}|${arch}|g" \
+    | sed "s|\${alt_arch}|${alt_arch}|g" \
+    | sed "s|\${target}|${target}|g" \
+    | sed "s|\${prefix}|${prefix}|g"
+}
+
+function install_tool() {
+    local tool=$1
+    local reinstall=$2
+
+    # TODO: Check if all deps all installed
+
+    echo
+    echo "tool: ${tool}."
+    tool_json="$(get_tool "${tool}")"
+    
+    version="$(jq --raw-output '.version' <<<"${tool_json}")"
+    if test -z "${version}"; then
+        echo "ERROR: Empty version for ${tool}."
+        return
+    fi
+    echo "  version: ${version}."
+    
+    binary="$(
+        jq --raw-output 'select(.binary != null) | .binary' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -z "${binary}"; then
+        binary="${target}/bin/${tool}"
+    fi
+    if ! test "${binary:0:1}" == "/"; then
+        binary="${target}/bin/${binary}"
+    fi
+    echo "  binary: ${binary}."
+
+    # TODO: Version check
+    # TODO: If .check is empty, use touch-based version in cache directory
+    # TODO: Substitute
+    check="$(
+        jq --raw-output 'select(.check != null) | .check' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -z "${check}"; then
+        echo "ERROR: Not implemented yet."
+        return
+    fi
+    if test -f "${binary}" && test -x "${binary}" && ! ${reinstall}; then
+        eval "${check}"
+        echo "INFO: Nothing to do."
+        return
+    fi
+
+    echo "  pre_install"
+    pre_install="$(
+        jq --raw-output 'select(.pre_install != null) | .pre_install' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -n "${pre_install}"; then
+        eval "${pre_install}"
+    fi
+
+    install="$(jq --raw-output 'select(.install != null) | .install' <<<"${tool_json}")"
+    if test -n "${install}"; then
+        echo "  SCRIPTED"
+        eval "${install}"
+
+    else
+        echo "  MANAGED"
+        local index=0
+        local count
+        count="$(get_tool_download_count "${tool}")"
+        while test "${index}" -lt "${count}"; do
+            echo "  index: ${index}"
+
+            download_json="$(get_tool_download_index "${tool}" "${index}")"
+
+            # TODO: First check for .url[$arch] and then for .url
+            url="$(jq --raw-output '.url' <<<"${download_json}")"
+            if grep ": " <<<"${url}"; then
+                url="$(jq --raw-output --arg arch "${arch}" '.url | select(.[$arch] != null) | .[$arch]' <<<"${download_json}")"
+            fi
+            echo "url: ${url}."
+            if test -z "${url}"; then
+                echo "ERROR: Platform not available."
+                return
+            fi
+            url="$(
+                echo -n "${url}" \
+                | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+            )"
+            if ! grep -qE "^https?://" <<<"${url}"; then
+                url="${docker_setup_repo_raw}/${url}"
+            fi
+            echo "  url: ${url}."
+
+            type="$(jq --raw-output '.type' <<<"${download_json}")"
+
+            path="$(
+                jq --raw-output 'select(.path != null) | .path' <<<"${download_json}" \
+                | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+            )"
+            
+            case "${type}" in
+
+                executable)
+                    echo "  executable"
+                    if test -z "${path}"; then
+                        path="${binary}"
+                    fi
+                    curl -sLo "${path}" "${url}"
+                    chmod +x "${path}"
+                    ;;
+
+                file)
+                    echo "  file"
+                    if test -z "${path}"; then
+                        echo "ERROR: Path not specified."
+                        return
+                    fi
+                    curl -sLo "${path}" "${url}"
+                    ;;
+            
+                tarball)
+                    echo "  tarball"
+                    echo "    strip"
+                    strip="$(jq --raw-output 'select(.strip != null) | .strip' <<<"${download_json}")"
+                    if test -n "${strip}"; then
+                        param_strip="--strip-components=${strip}"
+                    fi
+                    echo "    files"
+                    files="$(
+                        jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
+                        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+                    )"
+                    if test -n "${files}"; then
+                        param_files="${files}"
+                    fi
+                    echo "    cmd"
+                    curl -sL "${url}" \
+                    | tar -xz \
+                        --directory "${path}" \
+                        --no-same-owner \
+                        "${param_strip}" \
+                        "${param_files}"
+                    echo "    done"
+                    ;;
+            
+                *)
+                    echo "ERROR: Unknown installation type"
+                    exit 1
+                    ;;
+            
+            esac
+
+            index=$((index + 1))
+        done
+
+    fi
+
+    echo "  post_install"
+    post_install="$(
+        jq --raw-output 'select(.post_install != null) | .post_install' <<<"${tool_json}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -n "${post_install}"; then
+        eval "${post_install}"
+    fi
+    echo "  DONE"
+}
+
 function resolve_deps() {
     local tool=$1
 
@@ -322,8 +511,9 @@ function resolve_deps() {
     fi
 }
 
+# TODO: Substitute for *_matches_version
 echo -e "docker-setup includes ${#tools[*]} tools:"
-echo -e "(${GREEN}installed${RESET}/${YELLOW}planned${RESET}/${GREY}skipped${RESET}, up-to-date ${GREEN}${CHECK_MARK}${RESET}/outdated ${RED}${CROSS_MARK}${RESET})"
+echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 echo
 declare -A tool_version
 declare -a tool_install
@@ -331,12 +521,12 @@ declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
 for tool in "${tools[@]}"; do
-    VAR_NAME="${tool^^}_VERSION"
-    VERSION="${VAR_NAME//-/_}"
-    tool_version[${tool}]="${!VERSION}"
+    var_name="${tool^^}_version"
+    version="${var_name//-/_}"
+    tool_version[${tool}]="${!version}"
 
-    if ! ${ONLY} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
-        if ! eval "${tool//-/_}_is_installed" || ! eval "${tool//-/_}_matches_version" || ${REINSTALL}; then
+    if ! ${only} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
+        if ! eval "${tool//-/_}_is_installed" || ! eval "${tool//-/_}_matches_version" || ${reinstall}; then
 
             resolve_deps "${tool}"
 
@@ -351,32 +541,32 @@ line_length=0
 for tool in "${tools[@]}"; do
     if eval "${tool//-/_}_is_installed" && eval "${tool//-/_}_matches_version"; then
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
-            tool_color[${tool}]="${YELLOW}"
-            tool_sign[${tool}]="${GREEN}${CHECK_MARK}"
+            tool_color[${tool}]="${yellow}"
+            tool_sign[${tool}]="${green}${check_mark}"
 
         else
-            tool_color[${tool}]="${GREEN}"
-            tool_sign[${tool}]="${GREEN}${CHECK_MARK}"
+            tool_color[${tool}]="${green}"
+            tool_sign[${tool}]="${green}${check_mark}"
         fi
 
     else
-        if ! ${ONLY} || printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+        if ! ${only} || printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_outdated+=("${tool}")
             check_only_exit_code=1
         fi
 
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
-            tool_color[${tool}]="${YELLOW}"
-            tool_sign[${tool}]="${RED}${CROSS_MARK}"
+            tool_color[${tool}]="${yellow}"
+            tool_sign[${tool}]="${red}${cross_mark}"
 
         else
-            tool_color[${tool}]="${RED}"
-            tool_sign[${tool}]="${RED}${CROSS_MARK}"
+            tool_color[${tool}]="${red}"
+            tool_sign[${tool}]="${red}${cross_mark}"
         fi
     fi
 
-    if ${ONLY} && ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
-        tool_color[${tool}]="${GREY}"
+    if ${only} && ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+        tool_color[${tool}]="${grey}"
     fi
 
     item="${tool} ${tool_version[${tool}]} ${tool_sign[${tool}]}"
@@ -386,50 +576,50 @@ for tool in "${tools[@]}"; do
         line_length=0
     fi
     line_length=$(( line_length + item_length ))
-    echo -e -n "${tool_color[${tool}]}${item}   ${RESET}"
+    echo -e -n "${tool_color[${tool}]}${item}   ${reset}"
 done
 echo -e "\n"
 
-if test -n "${PREFIX}"; then
-    echo -e "${YELLOW}[INFO] Installation into ${PREFIX}. Will skip daemon start.${RESET}"
+if test -n "${prefix}"; then
+    echo -e "${yellow}[INFO] Installation into ${prefix}. Will skip daemon start.${reset}"
     echo
 fi
 
-if ${SKIP_DOCS}; then
-    echo -e "${YELLOW}[INFO] Some documentation is skipped to reduce the installation time.${RESET}"
+if ${skip_docs}; then
+    echo -e "${yellow}[INFO] Some documentation is skipped to reduce the installation time.${reset}"
     echo
 fi
 
-if ${CHECK}; then
+if ${check}; then
     if test "${#tool_outdated[@]}" -gt 0; then
-        echo -e "${RED}[ERROR] The following requested tools are outdated:${RESET}"
+        echo -e "${red}[ERROR] The following requested tools are outdated:${reset}"
         echo
         for tool in "${tool_outdated[@]}"; do
-            echo -e -n "${RED}${tool}  ${RESET}"
+            echo -e -n "${red}${tool}  ${reset}"
         done
         echo -e -n "\n\n"
     fi
     exit "${check_only_exit_code}"
 fi
 
-if test "${#tool_install[@]}" -gt 0 && ! ${NO_WAIT}; then
-    echo "Please press Ctrl-C to abort."
-    SECONDS_REMAINING=10
-    while test "${SECONDS_REMAINING}" -gt 0; do
-        echo -e -n "\rSleeping for ${SECONDS_REMAINING} seconds... "
-        SECONDS_REMAINING=$(( SECONDS_REMAINING - 1 ))
+if test "${#tool_install[@]}" -gt 0 && ! ${no_wait}; then
+    echo "please press ctrl-c to abort."
+    seconds_remaining=10
+    while test "${seconds_remaining}" -gt 0; do
+        echo -e -n "\rSleeping for ${seconds_remaining} seconds... "
+        seconds_remaining=$(( seconds_remaining - 1 ))
         sleep 1
     done
     echo -e "\r                                             "
 fi
 
-if test -n "${PREFIX}" && ( ! test -S "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
-    echo "${RED}[ERROR] When installing into a subdirectory (${PREFIX}) requires Docker to be present on /var/run/docker.sock.${RESET}"
+if test -n "${prefix}" && ( ! test -s "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
+    echo "${red}[ERROR] When installing into a subdirectory (${prefix}) requires Docker to be present on /var/run/docker.sock.${reset}"
     exit 1
 fi
 
 if test ${EUID} -ne 0; then
-    echo -e "${RED}[ERROR] You must run this script as root or use sudo.${RESET}"
+    echo -e "${red}[ERROR] You must run this script as root or use sudo.${reset}"
     exit 1
 fi
 
@@ -451,36 +641,36 @@ function wait_for_tool() {
     local tool=$1
     local path=$2
 
-    local SLEEP=10
-    local RETRIES=60
+    local sleep=10
+    local retries=60
 
-    local RETRY=0
-    while ! has_tool "${tool}" "${path}" && test "${RETRY}" -le "${RETRIES}"; do
-        sleep "${SLEEP}"
+    local retry=0
+    while ! has_tool "${tool}" "${path}" && test "${retry}" -le "${retries}"; do
+        sleep "${sleep}"
 
-        RETRY=$(( RETRY + 1 ))
+        retry=$(( retry + 1 ))
     done
 
     if ! has_tool "${tool}" "${path}"; then
-        echo -e "${RED}[ERROR] Failed to wait for ${tool} after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
+        echo -e "${red}[ERROR] Failed to wait for ${tool} after $(( (retry - 1) * sleep )) seconds.${reset}"
         exit 1
     fi
 }
 
 function get_lsb_distro_name() {
 	local lsb_dist=""
-	if test -r "${PREFIX}/etc/os-release"; then
+	if test -r "${prefix}/etc/os-release"; then
         # shellcheck disable=SC1091
-		lsb_dist="$(source "${PREFIX}/etc/os-release" && echo "$ID")"
+		lsb_dist="$(source "${prefix}/etc/os-release" && echo "$ID")"
 	fi
 	echo "${lsb_dist}"
 }
 
 function get_lsb_distro_version() {
 	local lsb_dist=""
-	if test -r "${PREFIX}/etc/os-release"; then
+	if test -r "${prefix}/etc/os-release"; then
         # shellcheck disable=SC1091
-		lsb_dist="$(source "${PREFIX}/etc/os-release" && echo "$VERSION_ID")"
+		lsb_dist="$(source "${prefix}/etc/os-release" && echo "$VERSION_ID")"
 	fi
 	echo "${lsb_dist}"
 }
@@ -552,9 +742,9 @@ function is_rockylinux() {
 
 function get_centos_version() {
 	local lsb_version_id=""
-	if test -r /etc/os-release; then
+	if test -r "${prefix}/etc/os-release"; then
         # shellcheck disable=SC1091
-		lsb_version_id="$(source /etc/os-release && echo "$VERSION_ID")"
+		lsb_version_id="$(source "${prefix}/etc/os-release" && echo "$VERSION_ID")"
 	fi
 	echo "${lsb_version_id}"
 }
@@ -606,8 +796,9 @@ function is_container() {
 
 function has_systemd() {
     # TODO
-    INIT="$(readlink -f /sbin/init)"
-    if test "$(basename "${INIT}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
+    local init
+    init="$(readlink -f /sbin/init)"
+    if test "$(basename "${init}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
         return 0
     else
         return 1
@@ -615,7 +806,7 @@ function has_systemd() {
 }
 
 function docker_is_running() {
-    if "${TARGET}/bin/docker" version >/dev/null 2>&1; then
+    if "${target}/bin/docker" version >/dev/null 2>&1; then
         return 0
     else
         return 1
@@ -623,18 +814,18 @@ function docker_is_running() {
 }
 
 function wait_for_docker() {
-    local SLEEP=10
-    local RETRIES=30
+    local sleep=10
+    local retries=30
 
-    local RETRY=0
-    while ! docker_is_running && test "${RETRY}" -le "${RETRIES}"; do
-        sleep "${SLEEP}"
+    local retry=0
+    while ! docker_is_running && test "${retry}" -le "${retries}"; do
+        sleep "${sleep}"
 
-        RETRY=$(( RETRY + 1 ))
+        retry=$(( retry + 1 ))
     done
 
     if ! docker_is_running; then
-        echo -e "${RED}[ERROR] Failed to wait for Docker daemon to start after $(( (RETRY - 1) * SLEEP )) seconds.${RESET}"
+        echo -e "${red}[ERROR] Failed to wait for Docker daemon to start after $(( (retry - 1) * sleep )) seconds.${reset}"
         exit 1
     fi
 }
@@ -642,15 +833,15 @@ function wait_for_docker() {
 function get_file() {
     local url=$1
 
-    if ${NO_CACHE}; then
-        curl -sL "${url}"
+    if ${no_cache}; then
+        curl -sl "${url}"
         return
     fi
 
     local hash
     hash="$(echo -n "${url}" | sha256sum | cut -d' ' -f1)"
     local cache_path
-    cache_path="${DOCKER_SETUP_DOWNLOADS}/${hash}"
+    cache_path="${docker_setup_downloads}/${hash}"
     mkdir -p "${cache_path}"
 
     if ! test -f "${cache_path}/url"; then
@@ -666,43 +857,43 @@ function get_file() {
 
 # Create directories
 mkdir -p \
-    "${DOCKER_SETUP_LOGS}" \
-    "${DOCKER_SETUP_CACHE}" \
-    "${DOCKER_SETUP_CACHE}/errors" \
-    "${DOCKER_SETUP_DOWNLOADS}" \
-    "${PREFIX}/etc/docker" \
-    "${TARGET}/share/bash-completion/completions" \
-    "${TARGET}/share/fish/vendor_completions.d" \
-    "${TARGET}/share/zsh/vendor-completions" \
-    "${PREFIX}/etc/systemd/system" \
-    "${PREFIX}/etc/default" \
-    "${PREFIX}/etc/sysconfig" \
-    "${PREFIX}/etc/conf.d" \
-    "${PREFIX}/etc/init.d" \
-    "${DOCKER_PLUGINS_PATH}" \
-    "${TARGET}/libexec/docker/bin" \
-    "${TARGET}/libexec/cni" \
-    "${TARGET}/bin" \
-    "${TARGET}/sbin" \
-    "${TARGET}/share/man" \
-    "${TARGET}/lib" \
-    "${TARGET}/libexec"
+    "${docker_setup_logs}" \
+    "${docker_setup_cache}" \
+    "${docker_setup_cache}/errors" \
+    "${docker_setup_downloads}" \
+    "${prefix}/etc/docker" \
+    "${target}/share/bash-completion/completions" \
+    "${target}/share/fish/vendor_completions.d" \
+    "${target}/share/zsh/vendor-completions" \
+    "${prefix}/etc/systemd/system" \
+    "${prefix}/etc/default" \
+    "${prefix}/etc/sysconfig" \
+    "${prefix}/etc/conf.d" \
+    "${prefix}/etc/init.d" \
+    "${docker_plugins_path}" \
+    "${target}/libexec/docker/bin" \
+    "${target}/libexec/cni" \
+    "${target}/bin" \
+    "${target}/sbin" \
+    "${target}/share/man" \
+    "${target}/lib" \
+    "${target}/libexec"
 
-: "${CGROUP_VERSION:=v2}"
-CURRENT_CGROUP_VERSION="v1"
-if test "$(stat -fc %T /sys/fs/cgroup/)" == "cgroup2fs"; then
-    CURRENT_CGROUP_VERSION="v2"
+: "${cgroup_version:=v2}"
+current_cgroup_version="v1"
+if test "$(stat -fc %t /sys/fs/cgroup/)" == "cgroup2fs"; then
+    current_cgroup_version="v2"
 fi
-if type update-grub >/dev/null 2>&1 && test "${CGROUP_VERSION}" == "v2" && test "${CURRENT_CGROUP_VERSION}" == "v1"; then
+if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test "${current_cgroup_version}" == "v1"; then
     if test -n "${WSL_DISTRO_NAME}"; then
-        echo -e "${RED}[ERROR] Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${RESET}"
-        echo -e "${RED}       Please rerun this script with CGROUP_VERSION=v1${RESET}"
+        echo -e "${red}[ERROR] Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${reset}"
+        echo -e "${red}       Please rerun this script with CGROUP_VERSION=v1${reset}"
         exit 1
     fi
 
     echo "cgroup v2"
     echo "Configure grub"
-    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' "${PREFIX}/etc/default/grub"
+    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' "${prefix}/etc/default/grub"
     echo "Update grub"
     update-grub
     read -r -p "Reboot to enable cgroup v2 (y/N)"
@@ -719,8 +910,9 @@ function process_exists() {
 
 function count_sub_processes() {
     local count=0
-    for CHILD in "${child_pids[@]}"; do
-        if process_exists "${CHILD}"; then
+    local child
+    for child in "${child_pids[@]}"; do
+        if process_exists "${child}"; then
             count=$(( count + 1 ))
         fi
     done
@@ -729,14 +921,14 @@ function count_sub_processes() {
 
 function cleanup() {
     tput cnorm
-    cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r CHILD; do
-        kill "${CHILD}"
+    cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r child; do
+        kill "${child}"
     done
-    rm -rf "${DOCKER_SETUP_CACHE}/errors"
+    rm -rf "${docker_setup_cache}/errors"
 }
 trap cleanup EXIT
 
-if ${PLAN}; then
+if ${plan}; then
     exit
 fi
 if test "${#tool_install[@]}" -eq 0; then
@@ -752,18 +944,18 @@ last_update=false
 exit_code=0
 child_pid_count="${#tool_install[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
-if ${NO_PROGRESSBAR}; then
-    echo "Installing..."
+if ${no_progressbar}; then
+    echo "installing..."
 fi
-rm -f "${DOCKER_SETUP_LOGS}/PROFILING"
+rm -f "${docker_setup_logs}/profiling"
 while ! ${last_update}; do
     progress_bar_width=$(( $(get_display_cols) - ${#info_around_progress_bar} ))
     done_bar=$(printf '#%.0s' $(seq 0 "${progress_bar_width}"))
     todo_bar=$(printf ' %.0s' $(seq 0 "${progress_bar_width}"))
     running="$(count_sub_processes)"
 
-    if test "${running}" -lt "${MAX_PARALLEL}"; then
-        count=$(( MAX_PARALLEL - running ))
+    if test "${running}" -lt "${max_parallel}"; then
+        count=$(( max_parallel - running ))
         end_index=$(( started_index + count ))
 
         while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_install[@]}"; do
@@ -773,17 +965,17 @@ while ! ${last_update}; do
                 echo "============================================================"
                 date +"%Y-%m-%d %H:%M:%S %Z"
                 echo "------------------------------------------------------------"
-            } >>"${DOCKER_SETUP_LOGS}/${tool}.log"
+            } >>"${docker_setup_logs}/${tool}.log"
 
             (
                 start_time="$(date +%s)"
                 eval "install-${tool}"
                 last_exit_code=$?
                 end_time="$(date +%s)"
-                echo "${tool};${start_time};${end_time}" >>"${DOCKER_SETUP_LOGS}/PROFILING"
+                echo "${tool};${start_time};${end_time}" >>"${docker_setup_logs}/profiling"
                 exit "${last_exit_code}"
 
-            ) >>"${DOCKER_SETUP_LOGS}/${tool}.log" 2>&1 || touch "${DOCKER_SETUP_CACHE}/errors/${tool}" &
+            ) >>"${docker_setup_logs}/${tool}.log" 2>&1 || touch "${docker_setup_cache}/errors/${tool}" &
             child_pids[${tool}]=$!
 
             started_index=$(( started_index + 1 ))
@@ -792,7 +984,7 @@ while ! ${last_update}; do
 
     running="$(count_sub_processes)"
 
-    if ! ${NO_PROGRESSBAR}; then
+    if ! ${no_progressbar}; then
         done=$(( started_index - running ))
 
         done_length=$(( progress_bar_width * done / child_pid_count ))
@@ -802,10 +994,10 @@ while ! ${last_update}; do
         done_chars="${done_bar:0:${done_length}}"
         percent=$(( done * 100 / child_pid_count ))
 
-        echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
+        echo -e -n "\rinstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
     fi
 
-    if ${last_update} || test -f "${DOCKER_SETUP_CACHE}/errors/${tool}.log"; then
+    if ${last_update} || test -f "${docker_setup_cache}/errors/${tool}.log"; then
         break
     fi
     if test "${started_index}" -eq "${#tool_install[@]}" && test "$(count_sub_processes)" -eq 0; then
@@ -817,9 +1009,9 @@ done
 
 echo
 # shellcheck disable=SC2044
-for error in $(find "${DOCKER_SETUP_CACHE}/errors/" -type f); do
+for error in $(find "${docker_setup_cache}/errors/" -type f); do
     tool="$(basename "${error}")"
-    echo -e "${RED}[ERROR] Failed to install ${tool}. Please check ${DOCKER_SETUP_LOGS}/${tool}.log.${RESET}"
+    echo -e "${red}[ERROR] Failed to install ${tool}. Please check ${docker_setup_logs}/${tool}.log.${reset}"
     exit_code=1
 done
 
@@ -833,66 +1025,66 @@ if test -n "${messages}"; then
     echo "${messages}"
 fi
 
-if test -f "${PREFIX}/etc/docker/daemon.json" && ! test -f "${DOCKER_SETUP_CACHE}/docker_already_present"; then
-    DOCKER_JSON_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name daemon.json-\*.sh)"
-    if test -n "${DOCKER_JSON_PATCHES}"; then
+if test -f "${prefix}/etc/docker/daemon.json" && ! test -f "${docker_setup_cache}/docker_already_present"; then
+    docker_json_patches="$(find "${docker_setup_cache}" -type f -name daemon.json-\*.sh)"
+    if test -n "${docker_json_patches}"; then
         echo
         echo "Merging configuration changes for Docker"
-        echo "${DOCKER_JSON_PATCHES}" | while read -r file; do
-            echo "- $(echo "${file}" | sed -E "s|${DOCKER_SETUP_CACHE}/daemon.json-(.+).sh|\1|")"
+        echo "${docker_json_patches}" | while read -r file; do
+            echo "- $(echo "${file}" | sed -E "s|${docker_setup_cache}/daemon.json-(.+).sh|\1|")"
             bash "${file}"
             rm "${file}"
         done
     fi
 fi
 
-if test -f "${PREFIX}/etc/containerd/config.toml"; then
-    CONTAINERD_CONFIG_PATCHES="$(find "${DOCKER_SETUP_CACHE}" -type f -name containerd-config.toml-\*.sh)"
-    if test -n "${CONTAINERD_CONFIG_PATCHES}"; then
+if test -f "${prefix}/etc/containerd/config.toml"; then
+    containerd_config_patches="$(find "${docker_setup_cache}" -type f -name containerd-config.toml-\*.sh)"
+    if test -n "${containerd_config_patches}"; then
         echo
         echo "Merging configuration changes for containerd"
-        echo "${CONTAINERD_CONFIG_PATCHES}" | while read -r file; do
-            echo "- $(echo "${file}" | sed -E "s|${DOCKER_SETUP_CACHE}/containerd-config.toml-(.+).sh|\1|")"
+        echo "${containerd_config_patches}" | while read -r file; do
+            echo "- $(echo "${file}" | sed -E "s|${docker_setup_cache}/containerd-config.toml-(.+).sh|\1|")"
             bash "${file}"
             rm "${file}"
         done
     fi
 fi
 
-if ${DOCKER_ALLOW_RESTART} || test -f "${DOCKER_SETUP_CACHE}/docker_restart_allowed"; then
-    if test -f "${DOCKER_SETUP_CACHE}/docker_restart" && test -z "${PREFIX}"; then
+if ${docker_allow_restart} || test -f "${docker_setup_cache}/docker_restart_allowed"; then
+    if test -f "${docker_setup_cache}/docker_restart" && test -z "${prefix}"; then
         echo
         if has_systemd; then
             echo "Restart dockerd using systemd"
             systemctl restart docker
 
-        elif test -z "${PREFIX}" && test -f "${PREFIX}/etc/init.d/docker"; then
+        elif test -z "${prefix}" && test -f "${prefix}/etc/init.d/docker"; then
             echo "Restart dockerd using init script"
-            "${PREFIX}/etc/init.d/docker" restart
+            "${prefix}/etc/init.d/docker" restart
 
         else
-            echo -e "${YELLOW}WARNING: Unable to determine how to restart Docker daemon.${RESET}"
+            echo -e "${yellow}WARNING: Unable to determine how to restart Docker daemon.${reset}"
         fi
-        rm -f "${DOCKER_SETUP_CACHE}/docker_restart"
+        rm -f "${docker_setup_cache}/docker_restart"
     fi
 
-elif test -f "${DOCKER_SETUP_CACHE}/docker_restart"; then
+elif test -f "${docker_setup_cache}/docker_restart"; then
     echo
-    echo -e "${YELLOW}WARNING: Unable to restart Docker daemon (already running and DOCKER_ALLOW_RESTART is not true).${RESET}"
+    echo -e "${yellow}WARNING: Unable to restart Docker daemon (already running and DOCKER_ALLOW_RESTART is not true).${reset}"
 fi
 
-cron_weekly_path="${PREFIX}/etc/cron.weekly"
+cron_weekly_path="${prefix}/etc/cron.weekly"
 lsb_dist=$(get_lsb_distro_name)
 case "${lsb_dist}" in
     alpine)
-        cron_weekly_path="${PREFIX}/etc/periodic/weekly"
+        cron_weekly_path="${prefix}/etc/periodic/weekly"
         ;;
 esac
 if ! test -d "${cron_weekly_path}"; then
-    echo -e "${YELLOW}WARNING: Disabled creation of cronjob because directory for weekly job is missing.${RESET}"
-    NO_CRON=true
+    echo -e "${yellow}WARNING: Disabled creation of cronjob because directory for weekly job is missing.${reset}"
+    no_cron=true
 fi
-if ! ${NO_CRON}; then
+if ! ${no_cron}; then
     # Weekly update of docker-setup into current location
     cat >"${cron_weekly_path}/docker-setup-update" <<EOF
 #!/bin/bash
