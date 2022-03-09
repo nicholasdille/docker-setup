@@ -55,6 +55,8 @@ tools:
     version: 0.7.1
     binary: ${DOCKER_PLUGINS_PATH}/docker-buildx
     check: ${binary} version | cut -d' ' -f2 | tr -d v
+    needs:
+    - docker
     download:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
@@ -577,6 +579,8 @@ tools:
     version: 2.3.0
     binary: ${DOCKER_PLUGINS_PATH}/docker-compose
     check: ${binary} compose version --short
+    needs:
+    - docker
 
   - name: docker-machine
     version: 0.16.2
@@ -587,6 +591,8 @@ tools:
 
   - name: docker-scan
     version: 0.17.0
+    needs:
+    - docker
     download:
     - url: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
 
