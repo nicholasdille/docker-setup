@@ -193,7 +193,7 @@ tool_deps["containerd"]="runc cni dasel"
 tool_deps["crun"]="docker jq"
 tool_deps["ctop"]="docker"
 tool_deps["dive"]="docker"
-tool_deps["docker"]="jq"
+tool_deps["docker"]="fuse-overlayfs jq"
 tool_deps["docuum"]="docker"
 tool_deps["dry"]="docker"
 tool_deps["faasd"]="containerd faas-cli"
@@ -1130,7 +1130,6 @@ function install-docker() {
             groupadd --system --force docker
         fi
         echo "Configure daemon"
-        mount
         if ! test -f "${PREFIX}/etc/docker/daemon.json"; then
             echo "Initialize dockerd configuration"
             echo '{}' >"${PREFIX}/etc/docker/daemon.json"
@@ -1139,6 +1138,15 @@ function install-docker() {
             echo "Waiting for jq"
             wait_for_tool "jq" "${TARGET}/bin"
 
+            local root_fs
+            root_fs="$(mount | grep " on / " | cut -d' ' -f5)"
+            echo "Found ${root_fs} on /"
+            if test "${root_fs}" == "overlay" && test -z "$("${TARGET}/bin/jq" '."storage-driver" // ""' "${PREFIX}/etc/docker/daemon.json")"; then
+                echo "Configuring storage driver for DinD"
+                # shellcheck disable=SC2094
+                cat <<< "$("${TARGET}/bin/jq" '. * {"storage-driver": "fuse-overlayfs"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+                touch "${DOCKER_SETUP_CACHE}/docker_restart"
+            fi
             if ! test "$("${TARGET}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
                 echo "Configuring native cgroup driver"
                 # shellcheck disable=SC2094
