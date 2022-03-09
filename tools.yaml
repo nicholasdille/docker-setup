@@ -94,7 +94,7 @@ tools:
       cp bypass4netns{,d} /target/bin/
       EOF
       else
-          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          echo -e "${red}[ERROR] Docker is required to install.${reset}"
           false
       fi
 
@@ -203,8 +203,8 @@ tools:
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
     post_install: |
-      if ${SKIP_DOCS}; then
-          echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
+      if ${skip_docs}; then
+          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
 
       elif docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -226,7 +226,7 @@ tools:
       cp -r man/*.8 "/opt/man/man8"
       EOF
       else
-          echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
+          echo -e "${yellow}[WARNING] Docker is required to install manpages.${reset}"
       fi
       if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
@@ -241,7 +241,7 @@ tools:
               echo "Reload systemd"
               systemctl daemon-reload
           else
-              echo -e "${YELLOW}[WARNING] docker-setup does not offer an init script for containerd.${RESET}"
+              echo -e "${yellow}[WARNING] docker-setup does not offer an init script for containerd.${reset}"
           fi
       fi
 
@@ -317,7 +317,7 @@ tools:
           fi
 
       else
-          echo -e "${RED}[ERROR] Unable to configure Docker daemon for crun because jq is missing and will not be installed.${RESET}"
+          echo -e "${red}[ERROR] Unable to configure Docker daemon for crun because jq is missing and will not be installed.${reset}"
           false
       fi
 
@@ -358,26 +358,26 @@ tools:
     pre_install: |
       echo "Check for iptables/nftables"
       if ! type iptables >/dev/null 2>&1 || ! iptables --version | grep -q legacy; then
-          echo -e "${YELLOW}[WARNING] Unable to continue because...${RESET}"
-          echo -e "${YELLOW}         - ...you are missing ipables OR...${RESET}"
-          echo -e "${YELLOW}         - ...you are using nftables and not iptables...${RESET}"
-          echo -e "${YELLOW}         To fix this, iptables must point to iptables-legacy.${RESET}"
+          echo -e "${yellow}[WARNING] Unable to continue because...${reset}"
+          echo -e "${yellow}         - ...you are missing ipables OR...${reset}"
+          echo -e "${yellow}         - ...you are using nftables and not iptables...${reset}"
+          echo -e "${yellow}         To fix this, iptables must point to iptables-legacy.${reset}"
           echo
-          echo -e "${YELLOW}         You don't want to run Docker with iptables=false:${RESET}"
-          echo -e "${YELLOW}         https://docs.docker.com/network/iptables ${RESET}"
+          echo -e "${yellow}         You don't want to run Docker with iptables=false:${reset}"
+          echo -e "${yellow}         https://docs.docker.com/network/iptables ${reset}"
           echo
-          echo -e "${YELLOW}         For Ubuntu:${RESET}"
-          echo -e "${YELLOW}         $ apt-get update${RESET}"
-          echo -e "${YELLOW}         $ apt-get -y install --no-install-recommends iptables${RESET}"
-          echo -e "${YELLOW}         $ update-alternatives --set iptables /usr/sbin/iptables-legacy${RESET}"
+          echo -e "${yellow}         For Ubuntu:${reset}"
+          echo -e "${yellow}         $ apt-get update${reset}"
+          echo -e "${yellow}         $ apt-get -y install --no-install-recommends iptables${reset}"
+          echo -e "${yellow}         $ update-alternatives --set iptables /usr/sbin/iptables-legacy${reset}"
 
           local lsb_dist
           lsb_dist="$(get_lsb_distro_name)"
           case "${lsb_dist,,}" in
               centos|amzn|rocky)
-                  echo -e "${RED}[WARNING] CentOS does not support iptables-legacy.${RESET}"
+                  echo -e "${red}[WARNING] CentOS does not support iptables-legacy.${reset}"
                   if ! install-iptables; then
-                      echo -e "${RED}[ERROR] Unable to install iptables-legacy.${RESET}"
+                      echo -e "${red}[ERROR] Unable to install iptables-legacy.${reset}"
                       exit 1
                   fi
                   ;;
@@ -411,7 +411,7 @@ tools:
       if docker_is_running; then
           touch "${docker_setup_cache}/docker_already_present"
           echo "Found that Docker is already present after ${SECONDS} seconds."
-          echo -e "${YELLOW}[WARNING] Docker is already running. Skipping systemd unit, init script and daemon configuration.${RESET}"
+          echo -e "${yellow}[WARNING] Docker is already running. Skipping systemd unit, init script and daemon configuration.${reset}"
 
       else
           echo "Install systemd units"
@@ -445,10 +445,10 @@ tools:
               chmod +x "${prefix}/etc/init.d/docker"
               openrc
           else
-              echo -e "${YELLOW}[WARNING] Unable to install init script because the distributon is unknown.${RESET}"
+              echo -e "${yellow}[WARNING] Unable to install init script because the distributon is unknown.${reset}"
           fi
           if ! has_systemd && ! test -f "${prefix}/etc/init.d/docker"; then
-              echo -e "${RED}[ERROR] Systemd not available but unable to provide init script.${RESET}"
+              echo -e "${red}[ERROR] Systemd not available but unable to provide init script.${reset}"
               exit 1
           fi
           if test -z "${prefix}"; then
@@ -470,8 +470,8 @@ tools:
               if test "${root_fs}" == "overlay"; then
                   echo "Configuring storage driver for DinD"
                   # shellcheck disable=SC2094
-                  cat <<< "$("${TARGET}/bin/jq" '. * {"storage-driver": "fuse-overlayfs"}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
-                  touch "${DOCKER_SETUP_CACHE}/docker_restart"
+                  cat <<< "$("${target}/bin/jq" '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+                  touch "${docker_setup_cache}/docker_restart"
               fi
 
               if ! test "$("${target}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${prefix}/etc/docker/daemon.json")" == "true"; then
@@ -487,18 +487,18 @@ tools:
                   touch "${docker_setup_cache}/docker_restart"
               fi
               # shellcheck disable=SC2016
-              if test -n "${DOCKER_ADDRESS_BASE}" && test -n "${DOCKER_ADDRESS_SIZE}" && ! test "$("${target}/bin/jq" --arg base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" | any(.base == $base and .size == $size)' "${prefix}/etc/docker/daemon.json")" == "true"; then
-                  echo "Add address pool with base ${DOCKER_ADDRESS_BASE} and size ${DOCKER_ADDRESS_SIZE}"
+              if test -n "${docker_address_base}" && test -n "${docker_address_size}" && ! test "$("${target}/bin/jq" --arg base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" | any(.base == $base and .size == $size)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+                  echo "Add address pool with base ${docker_address_base} and size ${docker_address_size}"
                   # shellcheck disable=SC2094
-                  cat <<< "$("${target}/bin/jq" --args base "${DOCKER_ADDRESS_BASE}" --arg size "${DOCKER_ADDRESS_SIZE}" '."default-address-pool" += {"base": $base, "size": $size}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" --args base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" += {"base": $base, "size": $size}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${docker_setup_cache}/docker_restart"
               fi
               # shellcheck disable=SC2016
-              if test -n "${DOCKER_REGISTRY_MIRROR}" && ! test "$("${target}/bin/jq" --arg mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
-                  echo "Add registry mirror ${DOCKER_REGISTRY_MIRROR}"
+              if test -n "${docker_registry_mirror}" && ! test "$("${target}/bin/jq" --arg mirror "${docker_registry_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+                  echo "Add registry mirror ${docker_registry_mirror}"
                   # shellcheck disable=SC2094
                   # shellcheck disable=SC2016
-                  cat <<< "$("${target}/bin/jq" --args mirror "${DOCKER_REGISTRY_MIRROR}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+                  cat <<< "$("${target}/bin/jq" --args mirror "${docker_registry_mirror}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
                   touch "${docker_setup_cache}/docker_restart"
               fi
               if ! test "$("${target}/bin/jq" --raw-output '.features.buildkit // false' "${prefix}/etc/docker/daemon.json")" == true; then
@@ -509,12 +509,12 @@ tools:
               fi
               echo "Check if daemon.json is valid JSON"
               if ! "${target}/bin/jq" --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
-                  echo "${RED}[ERROR] "${prefix}/etc/docker/daemon.json" is not valid JSON.${RESET}"
+                  echo "${red}[ERROR] "${prefix}/etc/docker/daemon.json" is not valid JSON.${reset}"
                   exit 1
               fi
 
           else
-              echo -e "${RED}[ERROR] Unable to configure Docker daemon because jq is missing and will not be installed.${RESET}"
+              echo -e "${red}[ERROR] Unable to configure Docker daemon because jq is missing and will not be installed.${reset}"
               false
               exit 1
           fi
@@ -534,19 +534,19 @@ tools:
                       "${prefix}/etc/init.d/docker" start
                       touch "${docker_setup_cache}/docker_restart_allowed"
                   fi
-                  echo -e "${YELLOW}[WARNING] Init script was installed but you must enable Docker yourself.${RESET}"
+                  echo -e "${yellow}[WARNING] Init script was installed but you must enable Docker yourself.${reset}"
               fi
           fi
           echo "Wait for Docker daemon to start"
           wait_for_docker
           if ! docker_is_running; then
-              echo "${RED}[ERROR] Failed to start Docker.${RESET}"
+              echo "${red}[ERROR] Failed to start Docker.${reset}"
               exit 1
           fi
           echo "Finished starting Docker after ${SECONDS} seconds."
       fi
-      if ${SKIP_DOCS}; then
-          echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
+      if ${skip_docs}; then
+          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
 
       else
           echo "Install manpages for Docker CLI"
@@ -617,7 +617,7 @@ tools:
       EOF
 
       else
-          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          echo -e "${red}[ERROR] Docker is required to install.${reset}"
           false
       fi
 
@@ -768,13 +768,13 @@ tools:
               echo "Add runtime to Docker"
               # shellcheck disable=SC2094
               cat >"${docker_setup_cache}/daemon.json-gvisor.sh" <<EOF
-      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}' "${PREFIX}/etc/docker/daemon.json")" >"${PREFIX}/etc/docker/daemon.json"
+      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
       EOF
               touch "${docker_setup_cache}/docker_restart"
           fi
 
       else
-          echo -e "${RED}[ERROR] Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${RESET}"
+          echo -e "${red}[ERROR] Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${reset}"
           false
       fi
 
@@ -903,7 +903,7 @@ tools:
       make install DESTDIR=/target
       EOF
       else
-          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          echo -e "${red}[ERROR] Docker is required to install.${reset}"
           false
       fi
 
@@ -965,7 +965,7 @@ tools:
               --no-same-owner
 
       else
-          echo -e "${RED}[ERROR] Unknown distribution ($(get_lsb_distro_name)) or version ($(get_lsb_distro_version))${RESET}"
+          echo -e "${red}[ERROR] Unknown distribution ($(get_lsb_distro_name)) or version ($(get_lsb_distro_version))${reset}"
           return 1
       fi
 
@@ -1010,7 +1010,7 @@ tools:
       EOF
 
       else
-          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          echo -e "${red}[ERROR] Docker is required to install.${reset}"
           false
       fi
 
@@ -1254,7 +1254,7 @@ tools:
       whoami
       EOF
       else
-          echo "${YELLOW}[WARNING] kubectl is missing krew. Plugins will not be installed.${RESET}"
+          echo "${yellow}[WARNING] kubectl is missing krew. Plugins will not be installed.${reset}"
           false
       fi
 
@@ -1433,7 +1433,7 @@ tools:
       cp oci-image-tool /target/bin/
       EOF
       else
-          echo "${RED}[ERROR] Docker is required to install.${RESET}"
+          echo "${red}[ERROR] Docker is required to install.${reset}"
           false
       fi
 
@@ -1448,10 +1448,10 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Install binary"
-          "${TARGET}/bin/docker" container run \
+          "${target}/bin/docker" container run \
               --interactive \
               --rm \
-              --volume "${TARGET}:/target" \
+              --volume "${target}:/target" \
               --env "OCI_RUNTIME_TOOL_VERSION=${version}" \
               --env GO111MODULE=auto \
               --workdir /go/src/github.com/opencontainers/runtime-tools \
@@ -1461,7 +1461,7 @@ tools:
       cp oci-runtime-tool /target/bin/
       EOF
       else
-          echo -e "${RED}[ERROR] Docker is required to install.${RESET}"
+          echo -e "${red}[ERROR] Docker is required to install.${reset}"
           false
       fi
 
@@ -1605,8 +1605,8 @@ tools:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
     post_install: |
-      if ${SKIP_DOCS}; then
-          echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
+      if ${skip_docs}; then
+          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
 
       elif docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -1626,7 +1626,7 @@ tools:
       cp -r man/man8/ "/opt/man"
       EOF
       else
-          echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
+          echo -e "${yellow}[WARNING] Docker is required to install manpages.${reset}"
       fi
 
   - name: skopeo
@@ -1645,8 +1645,8 @@ tools:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
     post_install:
-      if ${SKIP_DOCS}; then
-          echo -e "${YELLOW}[WARNING] Installation of manpages will be skipped.${RESET}"
+      if ${skip_docs}; then
+          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
 
       elif docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -1664,7 +1664,7 @@ tools:
       cp *.1 /opt/man/man1
       EOF
       else
-          echo -e "${YELLOW}[WARNING] Docker is required to install manpages.${RESET}"
+          echo -e "${yellow}[WARNING] Docker is required to install manpages.${reset}"
       fi
 
   - name: sops
@@ -1718,7 +1718,7 @@ tools:
       - task
     - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${TARGET}/share
+      path: ${target}/share
       strip: 2
       files:
       - completion/bash/task.bash
