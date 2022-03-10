@@ -7,7 +7,7 @@ New-Item -Path "$Env:TARGET" -Type Directory -Force
 # TODO: Add $Env:TARGET to $Env:Path
 
 $ArkadeVersion = "0.8.14"
-$BuildxVersion = "0.7.1"
+$BuildxVersion = "0.8.0"
 $ContainersshVersion = "0.4.1"
 $CosignVersion = "1.6.0"
 $CraneVersion = "0.8.0"
