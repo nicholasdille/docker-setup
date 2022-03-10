@@ -1765,7 +1765,7 @@ function install-crun() {
         echo "Waiting for jq"
         wait_for_tool "jq" "${TARGET}/bin"
 
-        if ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+        if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add runtime to Docker"
             # shellcheck disable=SC2094
             cat >"${DOCKER_SETUP_CACHE}/daemon.json-crun.sh" <<EOF
@@ -2135,7 +2135,7 @@ function install-gvisor() {
         echo "Waiting for jq"
         wait_for_tool "jq" "${TARGET}/bin"
 
-        if ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
+        if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add runtime to Docker"
             # shellcheck disable=SC2094
             cat >"${DOCKER_SETUP_CACHE}/daemon.json-gvisor.sh" <<EOF
