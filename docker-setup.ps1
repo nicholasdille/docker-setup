@@ -52,7 +52,7 @@ $PorterVersion = "0.38.9"
 $RegclientVersion = "0.4.0"
 $SopsVersion = "3.7.2"
 $TaskVersion = "3.11.0"
-$YqVersion = "4.21.1"
+$YqVersion = "4.22.1"
 $VendirVersion = "0.25.0"
 $YttVersion = "0.40.1"
 
