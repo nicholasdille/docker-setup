@@ -2135,6 +2135,7 @@ function install-gvisor() {
         echo "Waiting for jq"
         wait_for_tool "jq" "${TARGET}/bin"
 
+        ls -al "${PREFIX}/etc/docker"
         if ! test "$("${TARGET}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${PREFIX}/etc/docker/daemon.json")" == "true"; then
             echo "Add runtime to Docker"
             # shellcheck disable=SC2094
