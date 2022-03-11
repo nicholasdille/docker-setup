@@ -309,7 +309,7 @@ tools:
           echo "Waiting for jq"
           wait_for_tool "jq" "${target}/bin"
 
-          if ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
+          if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
               echo "Add runtime to Docker"
               # shellcheck disable=SC2094
               cat >"${docker_setup_cache}/daemon.json-crun.sh" <<EOF
@@ -768,7 +768,7 @@ tools:
           echo "Waiting for jq"
           wait_for_tool "jq" "${target}/bin"
 
-          if ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
+          if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
               echo "Add runtime to Docker"
               # shellcheck disable=SC2094
               cat >"${docker_setup_cache}/daemon.json-gvisor.sh" <<EOF
