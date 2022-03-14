@@ -467,7 +467,7 @@ function install_tool() {
                     if test -z "${path}"; then
                         path="${binary}"
                     fi
-                    curl -sLo "${path}" "${url}"
+                    get_file "${url}" >"${path}"
                     chmod +x "${path}"
                     ;;
 
@@ -477,7 +477,7 @@ function install_tool() {
                         echo "ERROR: Path not specified."
                         return
                     fi
-                    curl -sLo "${path}" "${url}"
+                    get_file "${url}" >"${path}"
                     ;;
             
                 tarball)
@@ -500,7 +500,7 @@ function install_tool() {
                         param_files="${files}"
                     fi
                     echo "    cmd"
-                    curl -sL "${url}" \
+                    get_file "${url}" \
                     | tar -xz \
                         --directory "${path}" \
                         --no-same-owner \
@@ -510,9 +510,11 @@ function install_tool() {
                     ;;
 
                 zip)
-                    # TODO
-                    echo -e "${red}ERROR: Installation type zip is not implemented yet.${reset}"
-                    exit 1
+                    local filename
+                    filename="$(basename "${url}")"
+                    get_file "${url}" >"${prefix}/tmp/${filename}"
+                    unzip -d "${prefix}/tmp" "${prefix}/tmp/${filename}" "${files}"
+                    mv "${files}" "${path}"
                     ;;
             
                 *)
