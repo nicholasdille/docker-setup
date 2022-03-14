@@ -313,7 +313,7 @@ tools:
               echo "Add runtime to Docker"
               # shellcheck disable=SC2094
               cat >"${docker_setup_cache}/daemon.json-crun.sh" <<EOF
-      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
       EOF
               touch "${docker_setup_cache}/docker_restart"
           fi
@@ -775,7 +775,7 @@ tools:
               echo "Add runtime to Docker"
               # shellcheck disable=SC2094
               cat >"${docker_setup_cache}/daemon.json-gvisor.sh" <<EOF
-      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
       EOF
               touch "${docker_setup_cache}/docker_restart"
           fi
