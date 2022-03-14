@@ -1147,10 +1147,12 @@ tools:
     download:
     - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
       type: tarball
+      strip: 1
+      path: "${target}/bin"
       files:
-      - ./krew-linux_amd64
+      - ./krew-linux_${alt_arch}
     post_install: |
-      mv "${target}/bin/krew-linux_amd64" "${target}/bin/krew"
+      mv "${target}/bin/krew-linux_${alt_arch}" "${target}/bin/krew"
       echo "Add to path"
       cat >"${prefix}/etc/profile.d/krew.sh" <<"EOF"
       export PATH="${HOME}/.krew/bin:${PATH}"
