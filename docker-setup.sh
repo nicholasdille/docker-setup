@@ -482,10 +482,10 @@ function install_tool() {
             
                 tarball)
                     echo "  tarball"
-                    echo "    strip"
                     local strip
                     local param_strip
                     strip="$(jq --raw-output 'select(.strip != null) | .strip' <<<"${download_json}")"
+                    echo "    strip: ${strip}"
                     if test -n "${strip}"; then
                         param_strip="--strip-components=${strip}"
                     fi
