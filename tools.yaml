@@ -14,7 +14,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
 
   - name: buildah
-    version: 1.24.0
+    version: 1.24.2
     check: ${binary} --version | cut -d' ' -f3
     download:
     - url:
@@ -23,7 +23,7 @@ tools:
       path: ${target}
 
   - name: buildkit
-    version: 0.9.3
+    version: 0.10.0
     binary: buildkitd
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
@@ -52,7 +52,7 @@ tools:
       fi
 
   - name: buildx
-    version: 0.7.1
+    version: 0.8.0
     binary: ${DOCKER_PLUGINS_PATH}/docker-buildx
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
@@ -120,7 +120,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_clusterawsadm"
 
   - name: clusterctl
-    version: 1.1.2
+    version: 1.1.3
     check: ${binary} version --output short | tr -d v
     download:
     - url: https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}
@@ -131,7 +131,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_clusterctl"
 
   - name: cni
-    version: 1.1.0
+    version: 1.1.1
     binary: ${target}/libexec/cni/loopback
     check: ${binary} 2>&1 | cut -d' ' -f4 | tr -d v
     download:
@@ -257,7 +257,7 @@ tools:
       - containerssh-testauthconfigserver
 
   - name: cosign
-    version: 1.5.2
+    version: 1.6.0
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
     needs:
     - docker
@@ -333,7 +333,7 @@ tools:
       type: executable
 
   - name: dasel
-    version: 1.22.1
+    version: 1.23.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
@@ -351,7 +351,7 @@ tools:
       - dive
 
   - name: docker
-    version: 20.10.12
+    version: 20.10.13
     binary: dockerd
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
@@ -580,7 +580,7 @@ tools:
     check: ${binary} version --short
 
   - name: docker-compose-v2
-    version: 2.3.0
+    version: 2.3.3
     binary: ${DOCKER_PLUGINS_PATH}/docker-compose
     check: ${binary} compose version --short
     needs:
@@ -602,7 +602,7 @@ tools:
       type: executable
 
   - name: docuum
-    version: 0.20.4
+    version: 0.20.5
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
@@ -754,7 +754,7 @@ tools:
       - glow
 
   - name: gvisor
-    version: 20220228
+    version: 20220309
     binary: ${target}/bin/runsc
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
@@ -796,7 +796,7 @@ tools:
       - hcloud
 
   - name: helm
-    version: 3.8.0
+    version: 3.8.1
     check: ${binary} version --short | cut -d+ -f1 | tr -d v
     download:
     - url: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
@@ -840,7 +840,7 @@ tools:
       fi
 
   - name: helmfile
-    version: 0.143.0
+    version: 0.143.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
@@ -915,7 +915,7 @@ tools:
       fi
 
   - name: imgpkg
-    version: 0.25.0
+    version: 0.26.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     download:
     - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
@@ -1101,7 +1101,7 @@ tools:
       - kbrew
 
   - name: kind
-    version: 0.11.1
+    version: 0.12.0
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
     needs:
     - docker
@@ -1687,7 +1687,7 @@ tools:
       fi
 
   - name: sops
-    version: 3.7.1
+    version: 3.7.2
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
     download:
     - url:
@@ -1702,7 +1702,7 @@ tools:
       type: executable
 
   - name: stargz-snapshotter
-    version: 0.11.1
+    version: 0.11.2
     binary: containerd-stargz-grpc
     check: ${binary} -version | cut -d' ' -f2 | tr -d v
     needs:
@@ -1768,7 +1768,7 @@ tools:
       type: executable
 
   - name: vendir
-    version: 0.24.0
+    version: 0.26.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     download:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
@@ -1787,7 +1787,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
 
   - name: yq
-    version: 4.21.1
+    version: 4.22.1
     check: ${binary} --version | cut -d' ' -f4
     download:
     - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
