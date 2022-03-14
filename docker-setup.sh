@@ -508,9 +508,15 @@ function install_tool() {
                         "${param_files}"
                     echo "    done"
                     ;;
+
+                zip)
+                    # TODO
+                    echo -e "${red}ERROR: Installation type zip is not implemented yet.${reset}"
+                    exit 1
+                    ;;
             
                 *)
-                    echo "ERROR: Unknown installation type"
+                    echo -e "${red}ERROR: Unknown installation type${reset}"
                     exit 1
                     ;;
             

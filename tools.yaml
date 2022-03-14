@@ -599,6 +599,7 @@ tools:
     - docker
     download:
     - url: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
+      type: executable
 
   - name: docuum
     version: 0.20.4
@@ -880,7 +881,7 @@ tools:
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
-      tpe: binary
+      type: binary
 
   - name: imgcrypt
     version: 1.1.2
@@ -969,10 +970,6 @@ tools:
           | tar -xz \
               --directory "${target}" \
               --no-same-owner
-
-      else
-          echo -e "${red}[ERROR] Unknown distribution ($(get_lsb_distro_name)) or version ($(get_lsb_distro_version))${reset}"
-          return 1
       fi
 
   - name: jp
@@ -1148,7 +1145,7 @@ tools:
     version: 0.4.3
     check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
     download:
-    - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-${alt_arch}.tar.gz
+    - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
       type: tarball
       files:
       - ./krew-linux_amd64
