@@ -86,6 +86,7 @@ jobs:
           TERM: xterm
           SKIP_DOCS: ${{ github.event_name == 'pull_request' }}
         run: |
+          make tools.json; \
           docker build --tag test --file env/${{ matrix.distro }}/Dockerfile .; \
           mkdir -p "${PWD}/log"; \
           docker run \
