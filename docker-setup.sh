@@ -220,6 +220,25 @@ if ! type tput >/dev/null 2>&1; then
     }
 fi
 
+function replace_vars() {
+    local tool=$1
+    local binary=$2
+    local version=$3
+    local arch=$4
+    local alt_arch=$5
+    local target=$6
+    local prefix=$7
+
+    cat \
+    | sed "s|\${tool}|${tool}|g" \
+    | sed "s|\${binary}|${binary}|g" \
+    | sed "s|\${version}|${version}|g" \
+    | sed "s|\${arch}|${arch}|g" \
+    | sed "s|\${alt_arch}|${alt_arch}|g" \
+    | sed "s|\${target}|${target}|g" \
+    | sed "s|\${prefix}|${prefix}|g"
+}
+
 function get_tools() {
     jq --raw-output '.tools[].name' "${docker_setup_tools_file}"
 }
@@ -247,6 +266,37 @@ function get_tool_download_index() {
     local index=$2
 
     get_tool "${tool}" | jq --raw-output --arg index "${index}" '.download[$index | tonumber]'
+}
+
+function get_tool_binary() {
+    local tool=$1
+    
+    binary="$(
+        get_tool "${tool}" \
+        | jq --raw-output 'select(.binary != null) | .binary' \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
+    if test -z "${binary}"; then
+        binary="${target}/bin/${tool}"
+    fi
+    if ! test "${binary:0:1}" == "/"; then
+        binary="${target}/bin/${binary}"
+    fi
+    echo "${binary}"
+}
+
+function get_tool_version() {
+    local tool=$1
+
+    version="$(
+        get_tool "${tool}" \
+        | jq --raw-output '.version'
+    )"
+    if test -z "${version}"; then
+        >&2 echo -e "${red}ERROR: Empty version for ${tool}.${reset}"
+        return
+    fi
+    echo "${version}"
 }
 
 declare -a tools
@@ -321,7 +371,7 @@ if ${only_installed}; then
     only=true
 
     for tool in "${tools[@]}"; do
-        if is_installed "${tool//-/_}"; then
+        if is_installed "${tool}"; then
             requested_tools+=("${tool}")
         fi
     done
@@ -333,56 +383,6 @@ function get_display_cols() {
         display_cols=65
     fi
     echo "${display_cols}"
-}
-
-function replace_vars() {
-    local tool=$1
-    local binary=$2
-    local version=$3
-    local arch=$4
-    local alt_arch=$5
-    local target=$6
-    local prefix=$7
-
-    cat \
-    | sed "s|\${tool}|${tool}|g" \
-    | sed "s|\${binary}|${binary}|g" \
-    | sed "s|\${version}|${version}|g" \
-    | sed "s|\${arch}|${arch}|g" \
-    | sed "s|\${alt_arch}|${alt_arch}|g" \
-    | sed "s|\${target}|${target}|g" \
-    | sed "s|\${prefix}|${prefix}|g"
-}
-
-function get_tool_version() {
-    local tool=$1
-
-    version="$(
-        get_tool "${tool}" \
-        | jq --raw-output '.version'
-    )"
-    if test -z "${version}"; then
-        >&2 echo -e "${red}ERROR: Empty version for ${tool}.${reset}"
-        return
-    fi
-    echo "${version}"
-}
-
-function get_tool_binary() {
-    local tool=$1
-    
-    binary="$(
-        get_tool "${tool}" \
-        | jq --raw-output 'select(.binary != null) | .binary' \
-        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
-    )"
-    if test -z "${binary}"; then
-        binary="${target}/bin/${tool}"
-    fi
-    if ! test "${binary:0:1}" == "/"; then
-        binary="${target}/bin/${binary}"
-    fi
-    echo "${binary}"
 }
 
 function install_tool() {
@@ -628,7 +628,7 @@ for tool in "${tools[@]}"; do
     tool_version[${tool}]="$(get_tool_version "${tool}")"
 
     if ! ${only} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
-        if ! is_installed "${tool//-/_}" || ! matches_version "${tool//-/_}" || ${reinstall}; then
+        if ! is_installed "${tool}" || ! matches_version "${tool}" || ${reinstall}; then
 
             resolve_deps "${tool}"
 
@@ -641,7 +641,7 @@ done
 check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
-    if is_installed "${tool//-/_}" && matches_version "${tool//-/_}"; then
+    if is_installed "${tool}" && matches_version "${tool}"; then
         if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
             tool_color[${tool}]="${yellow}"
             tool_sign[${tool}]="${green}${check_mark}"
