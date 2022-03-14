@@ -230,6 +230,12 @@ function get_tool() {
     jq --raw-output --arg tool "${tool}" '.tools[] | select(.name == $tool)' "${docker_setup_tools_file}"
 }
 
+function get_tool_deps() {
+    local tool=$1
+
+    jq --raw-output --arg tool "${tool}" '.tools[] | select(.name == $tool) | select(.needs != null) | .needs[]' "${docker_setup_tools_file}"
+}
+
 function get_tool_download_count() {
     local tool=$1
 
@@ -246,7 +252,12 @@ function get_tool_download_index() {
 declare -a tools
 mapfile -t tools < <(get_tools)
 declare -A tool_deps
-# TODO: Build hash tool_deps
+for tool in "${tools[@]}"; do
+    deps="$(get_tool_deps "${tool}" | tr '\n' ' ')"
+    if test -n "${deps}"; then
+        tool_deps[${tool}]="${deps}"
+    fi
+done
 
 declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
