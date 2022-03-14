@@ -16,6 +16,7 @@ RUN apk add --update-cache --no-cache \
         unzip \
         ncurses \
         jq \
+        tar \
  && mkdir -p /run/openrc \
  && touch /run/openrc/softlevel
 COPY env/run.sh /
