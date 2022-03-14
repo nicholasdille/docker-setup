@@ -53,7 +53,7 @@ tools:
 
   - name: buildx
     version: 0.8.0
-    binary: ${docker_plugins_path}/docker-buildx
+    binary: ${target}/libexec/docker/cli-plugins/docker-buildx
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
     - docker
@@ -70,7 +70,6 @@ tools:
   
   - name: bypass4netns
     version: 0.2.2
-    check: XDG_RUNTIME_DIR=/tmp ${binary} --version | grep bypass4netns | cut -d' ' -f3
     needs:
     - docker
     - slirp4netns
@@ -347,6 +346,7 @@ tools:
     download:
     - url: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
       type: tarball
+      path: ${target}/bin
       files:
       - dive
 
@@ -578,13 +578,20 @@ tools:
   - name: docker-compose
     version: 1.29.2
     check: ${binary} version --short
+    download:
+    - url:
+        x86_64: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+      type: executable
 
   - name: docker-compose-v2
     version: 2.3.3
-    binary: ${DOCKER_PLUGINS_PATH}/docker-compose
+    binary: ${target}/libexec/docker/cli-plugins/docker-compose
     check: ${binary} compose version --short
     needs:
     - docker
+    download:
+    - url: https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}
+      type: executable
 
   - name: docker-machine
     version: 0.16.2
@@ -595,6 +602,7 @@ tools:
 
   - name: docker-scan
     version: 0.17.0
+    binary: ${target}/libexec/docker/cli-plugins/docker-scan
     needs:
     - docker
     download:
@@ -612,7 +620,12 @@ tools:
           echo "Wait for Docker daemon to start"
           wait_for_docker
           echo "Install binary"
-          "${target}/bin/docker" container run --interactive --rm --volume "${target}:/target" --env DOCUUM_VERSION "rust:${RUST_VERSION}" <<EOF
+          "${target}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${target}:/target" \
+              --env DOCUUM_VERSION \
+              "rust:${rust_version}" <<EOF
       mkdir -p /go/src/github.com/stepchowfun/docuum
       cd /go/src/github.com/stepchowfun/docuum
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCUUM_VERSION}" https://github.com/stepchowfun/docuum .
@@ -648,7 +661,7 @@ tools:
     download:
     - url: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}\bin
+      path: ${target}/bin
       files:
       - dyff
     post_install: |
@@ -728,6 +741,7 @@ tools:
     download:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
+      path: ${target}/bin
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
@@ -858,6 +872,10 @@ tools:
     download:
     - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
       type: tarball
+      path: ${target}/bin
+      strip: 1
+      files:
+      - hub-tool/hub-tool
 
   - name: ignite
     version: 0.10.0
@@ -900,7 +918,7 @@ tools:
               --rm \
               --volume "${target}:/target" \
               --env "IMGCRYPT_VERSION=${version}" \
-              golang:${GO_VERSION} <<EOF
+              golang:${go_version} <<EOF
       mkdir -p /go/src/github.com/containerd/imgcrypt
       cd /go/src/github.com/containerd/imgcrypt
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
@@ -958,7 +976,6 @@ tools:
   - name: iptables
     version: 1.8.7
     install: |
-      echo "Install iptables ${version}"
       if is_centos_7 || is_amzn_2; then
           get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
           | tar -xz \
@@ -1003,7 +1020,7 @@ tools:
               --rm \
               --volume "${target}:/target" \
               --env "JWT_VERSION=${version}" \
-              "rust:${RUST_VERSION}" <<EOF
+              "rust:${rust_version}" <<EOF
       mkdir -p /go/src/github.com/mike-engel/jwt-cli
       cd /go/src/github.com/mike-engel/jwt-cli
       git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSION}" https://github.com/mike-engel/jwt-cli .
@@ -1275,6 +1292,7 @@ tools:
     - url:
         x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
       type: tarball
+      path: ${target}/bin
 
   - name: kubectl-free
     version: 0.2.0
@@ -1282,11 +1300,12 @@ tools:
     needs:
     - kubectl
     download:
-    - url: https://github.com/makocchi-git/kubectl-free/releases/download/v${KUBECTL_FREE_VERSION}/kubectl-free_${KUBECTL_FREE_VERSION}_Linux_x86_64.zip
+    - url:
+        x86_64: https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip
       type: zip
       path: ${target}/bin
       files:
-      - kubectl-free_0.2.0_Linux_x86_64/kubectl-free
+      - kubectl-free_${version}_Linux_${arch}/kubectl-free
 
   - name: kubectl-resources
     version: 0.2.0
@@ -1366,6 +1385,9 @@ tools:
     download:
     - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
       type: tarball
+      path: ${target}/bin
+      files:
+      - manifest-tool-linux-${alt_arch}
     post_install:
       mv "${target}/bin/manifest-tool-linux-${arch}" "${target}/bin/manifest-tool"
 
@@ -1385,7 +1407,7 @@ tools:
     version: 7.0.4
     download:
     - url:
-        x86_64: https://snapshots.mitmproxy.org/${MITMPROXY_VERSION}/mitmproxy-${MITMPROXY_VERSION}-linux.tar.gz
+        x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1399,6 +1421,7 @@ tools:
     download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
+      path: ${target}/bin
 
   - name: norouter
     version: 0.6.4
@@ -1416,14 +1439,14 @@ tools:
     needs:
     - docker
     download:
-    - url: https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz
+    - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
       - notation
-    - url: https://github.com/notaryproject/notation/releases/download/v${NOTATION_VERSION}/notation_${NOTATION_VERSION}_linux_amd64.tar.gz
+    - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${DOCKER_PLUGINS_PATH}
+      path: ${target}/libexec/docker/cli-plugins
       files:
       - docker-generate
       - docker-notation
@@ -1446,7 +1469,7 @@ tools:
               --env "OCI_IMAGE_TOOL_VERSION=${version}" \
               --env GO111MODULE=auto \
               --workdir /go/src/github.com/opencontainers/image-tools \
-              golang:${GO_VERSION} <<EOF
+              golang:${go_version} <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_IMAGE_TOOL_VERSION}" https://github.com/opencontainers/image-tools .
       make tool
       cp oci-image-tool /target/bin/
@@ -1474,7 +1497,7 @@ tools:
               --env "OCI_RUNTIME_TOOL_VERSION=${version}" \
               --env GO111MODULE=auto \
               --workdir /go/src/github.com/opencontainers/runtime-tools \
-              golang:${GO_VERSION} <<EOF
+              golang:${go_version} <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_RUNTIME_TOOL_VERSION}" https://github.com/opencontainers/runtime-tools .
       make tool
       cp oci-runtime-tool /target/bin/
@@ -1490,6 +1513,7 @@ tools:
     download:
     - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
       type: tarball
+      path: ${target}/bin
       files:
       - oras
 
@@ -1514,6 +1538,11 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - conmon
+    download:
+    - url:
+        x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman.tar.gz
+      type: tarball
+      path: ${target}
 
   - name: portainer
     version: 2.11.1
@@ -1524,6 +1553,7 @@ tools:
     download:
     - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
+      path: ${target}/bin
       strip: 1
       files:
       - portainer/portainer
@@ -1577,7 +1607,7 @@ tools:
     check: ${binary} --version | grep qemu-img | cut -d' ' -f3
     download:
     - url:
-        x86_64: https://github.com/nicholasdille/qemu-static/releases/download/v${QEMU_VERSION}/qemu.tar.gz
+        x86_64: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu.tar.gz
       type: tarball
       strip: 2
       path: ${target}
@@ -1616,6 +1646,7 @@ tools:
     download:
     - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
       type: tarball
+      path: ${target}/bin
 
   - name: runc
     version: 1.1.0
