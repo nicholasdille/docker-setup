@@ -53,7 +53,7 @@ tools:
 
   - name: buildx
     version: 0.8.0
-    binary: ${DOCKER_PLUGINS_PATH}/docker-buildx
+    binary: ${docker_plugins_path}/docker-buildx
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
     - docker
@@ -86,7 +86,7 @@ tools:
               --volume "${target}:/target" \
               --env "BYPASS4NETNS_VERSION=${version}" \
               --workdir /go/src/github.com/rootless-containers/bypass4netns \
-              golang:${GO_VERSION} <<EOF
+              golang:${go_version} <<EOF
       apt-get update
       apt-get -y install libseccomp-dev
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${BYPASS4NETNS_VERSION}" https://github.com/rootless-containers/bypass4netns .
@@ -94,7 +94,7 @@ tools:
       cp bypass4netns{,d} /target/bin/
       EOF
       else
-          echo -e "${red}[ERROR] Docker is required to install.${reset}"
+          echo "[ERROR] Docker is required to install."
           false
       fi
 
