@@ -392,19 +392,17 @@ function install_tool() {
     # TODO: Check if all deps all installed
 
     echo
-    echo "tool: ${tool}."
+    echo "Installing ${tool}"
     local tool_json
     tool_json="$(get_tool "${tool}")"
     
     local version
     version="$(get_tool_version "${tool}")"
-    echo "  version: ${version}."
+    echo "  Version: ${version}."
     
     local binary
     binary="$(get_tool_binary "${tool}")"
-    echo "  binary: ${binary}."
 
-    echo "  pre_install"
     local pre_install
     pre_install="$(
         jq --raw-output 'select(.pre_install != null) | .pre_install' <<<"${tool_json}" \
@@ -417,17 +415,13 @@ function install_tool() {
     local install
     install="$(jq --raw-output 'select(.install != null) | .install' <<<"${tool_json}")"
     if test -n "${install}"; then
-        echo "  SCRIPTED"
         eval "${install}"
 
     else
-        echo "  MANAGED"
         local index=0
         local count
         count="$(get_tool_download_count "${tool}")"
-        while test "${index}" -lt "${count}"; do
-            echo "  index: ${index}"
-
+        while test "${index}" -lt "${count:-0}"; do
             local download_json
             download_json="$(get_tool_download_index "${tool}" "${index}")"
 
@@ -449,7 +443,7 @@ function install_tool() {
             if ! grep -qE "^https?://" <<<"${url}"; then
                 url="${docker_setup_repo_raw}/${url}"
             fi
-            echo "  url: ${url}."
+            echo "  Installing from ${url}"
 
             local type
             type="$(jq --raw-output '.type' <<<"${download_json}")"
@@ -463,33 +457,35 @@ function install_tool() {
             case "${type}" in
 
                 executable)
-                    echo "  executable"
                     if test -z "${path}"; then
                         path="${binary}"
                     fi
+                    echo "    Executable ${path}"
                     get_file "${url}" >"${path}"
                     chmod +x "${path}"
                     ;;
 
                 file)
-                    echo "  file"
                     if test -z "${path}"; then
                         echo "ERROR: Path not specified."
                         return
                     fi
+                    echo "    File ${path}"
                     get_file "${url}" >"${path}"
                     ;;
             
                 tarball)
-                    echo "  tarball"
+                    if test -z "${path}"; then
+                        echo "ERROR: Path not specified."
+                        return
+                    fi
+                    echo "    Unpacking tarball"
                     local strip
                     local param_strip
                     strip="$(jq --raw-output 'select(.strip != null) | .strip' <<<"${download_json}")"
-                    echo "    strip: ${strip}"
                     if test -n "${strip}"; then
                         param_strip="--strip-components=${strip}"
                     fi
-                    echo "    files"
                     local files
                     local param_files
                     files="$(
@@ -499,14 +495,12 @@ function install_tool() {
                     if test -n "${files}"; then
                         param_files="${files}"
                     fi
-                    echo "    cmd"
                     get_file "${url}" \
                     | tar -xz \
                         --directory "${path}" \
                         --no-same-owner \
                         "${param_strip}" \
                         "${param_files}"
-                    echo "    done"
                     ;;
 
                 zip)
@@ -529,13 +523,13 @@ function install_tool() {
 
     fi
 
-    echo "  post_install"
     local post_install
     post_install="$(
         jq --raw-output 'select(.post_install != null) | .post_install' <<<"${tool_json}" \
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
     if test -n "${post_install}"; then
+        echo "  Running post_install"
         eval "${post_install}"
     fi
     echo "  DONE"
