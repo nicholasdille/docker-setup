@@ -431,7 +431,6 @@ function install_tool() {
             if grep ": " <<<"${url}"; then
                 url="$(jq --raw-output --arg arch "${arch}" '.url | select(.[$arch] != null) | .[$arch]' <<<"${download_json}")"
             fi
-            echo "url: ${url}."
             if test -z "${url}"; then
                 echo "ERROR: Platform not available."
                 return
