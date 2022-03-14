@@ -504,10 +504,25 @@ function install_tool() {
                     ;;
 
                 zip)
+                    if test -z "${path}"; then
+                        echo "ERROR: Path not specified."
+                        return
+                    fi
+                    files="$(
+                        jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
+                        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+                    )"
+                    if test -z "${files}"; then
+                        echo -e "${red}ERROR: Files not specified.${reset}"
+                        exit 1
+                    fi
                     local filename
                     filename="$(basename "${url}")"
+                    echo "    Downloading ZIP to ${prefix}/tmp/${filename}"
                     get_file "${url}" >"${prefix}/tmp/${filename}"
+                    echo "      Unpacking into ${prefix}/tmp"
                     unzip -d "${prefix}/tmp" "${prefix}/tmp/${filename}" "${files}"
+                    echo "      Moving files to ${path}"
                     mv "${files}" "${path}"
                     ;;
             

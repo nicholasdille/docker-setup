@@ -881,7 +881,7 @@ tools:
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
-      type: binary
+      type: executable
 
   - name: imgcrypt
     version: 1.1.2
