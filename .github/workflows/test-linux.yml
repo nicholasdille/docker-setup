@@ -74,10 +74,19 @@ jobs:
           - ubuntu-20.04
           - ubuntu-21.04
           - ubuntu-22.04
+        arch:
+          - amd64
+          - arm64
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
       - name: Test
         if: needs.check.outputs.has_release != 'true'
@@ -87,9 +96,14 @@ jobs:
           SKIP_DOCS: ${{ github.event_name == 'pull_request' }}
         run: |
           make tools.json; \
-          docker build --tag test --file env/${{ matrix.distro }}/Dockerfile .; \
+          docker build \
+              --platform linux/${{ matrix.arch }} \
+              --file env/${{ matrix.distro }}/Dockerfile \
+              --tag test \
+              .; \
           mkdir -p "${PWD}/log"; \
           docker run \
+              --platform linux/${{ matrix.arch }} \
               --interactive \
               --rm \
               --privileged \
