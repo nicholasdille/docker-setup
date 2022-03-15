@@ -2,8 +2,10 @@ FROM archlinux:latest@sha256:37de5153ec2c095fd3344d068297766a962020b10ac31c55e27
 RUN pacman -Sy \
  && pacman -S --noconfirm \
         git \
-        unzip
+        unzip \
+        jq
 # TODO: init scripts
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
+COPY tools.json /var/cache/docker-setup/
 RUN chmod +x /usr/local/bin/docker-setup

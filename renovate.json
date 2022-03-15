@@ -121,8 +121,15 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^docker-setup.sh$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "ARKADE_VERSION=(?<currentValue>.*?)\n", "ArkadeVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^.github/workflows/release.yml$" ],
+      "matchStrings": [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "mikefarah/yq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^docker-setup.ps1$", "^tools.yaml$" ],
+      "matchStrings": [ "ArkadeVersion = \"(?<currentValue>.*?)\"", "arkade:\nversion: \"?(?<currentValue>.*?)\"?\n" ],
       "depNameTemplate": "alexellis/arkade",
       "datasourceTemplate": "github-releases"
     },

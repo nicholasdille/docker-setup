@@ -1,16 +1,35 @@
-DISTROS = $(shell ls env/*/Dockerfile | sed -E 's|env/([^/]+)/Dockerfile|\1|')
+OWNER          = nicholasdille
+PROJECT        = docker-setup
+REPOSITORY     = $(OWNER)/$(PROJECT)
+BIN            = $(PWD)/bin
+SEMVER_VERSION = 3.3.0
+SEMVER         = $(BIN)/semver
+HUB_VERSION    = 2.14.2
+HUB            = $(BIN)/hub
+GH             = $(BIN)/gh
+GH_VERSION     = 2.5.1
+DIST           = $(PWD)/dist
+GIT_TAG        = $(shell git describe --tags 2>/dev/null)
+RESET          = "\\e[39m\\e[49m"
+GREEN          = "\\e[92m"
+YELLOW         = "\\e[93m"
+RED            = "\\e[91m"
+GREY           = "\\e[90m"
+M              = $(shell printf "\033[34;1m▶\033[0m")
 
-.PHONY: all check test-% build-% record-%
+DISTROS        = $(shell ls env/*/Dockerfile | sed -E 's|env/([^/]+)/Dockerfile|\1|')
+
+.PHONY: all check env-% test test-% build build-% record-%
 
 all: check $(DISTROS)
 
 check:
 	@shellcheck docker-setup.sh
 
-$(DISTROS):
+$(DISTROS): docker-setup.sh tools.json
 	@distro=$@ docker buildx bake
 
-test-%: %
+env-%: %
 	@docker run \
 		--interactive \
 		--tty \
@@ -31,23 +50,27 @@ CHANGELOG.md:
         	--user nicholasdille \
             --project docker-setup
 
-build:
+build: docker-setup.sh tools.json
 	@docker image build \
 		--tag nicholasdille/docker-setup:main \
 		.
 
-test: build
+test: test-amd64
+
+test-%: check build-%
 	@docker run \
 		--interactive \
 		--tty \
 		--rm \
 		--privileged \
+		--platform linux/$* \
 		--entrypoint bash \
 		nicholasdille/docker-setup:main
 
-build-%:
+build-%: tools.json
 	@docker image build \
-		--tag nicholasdille/docker-setup:$* \
+		--tag nicholasdille/docker-setup:main \
+		--platform linux/$* \
 		.
 
 record-%: build-%
@@ -60,24 +83,8 @@ record-%: build-%
 		--entrypoint bash \
 		nicholasdille/docker-setup:$*
 
-OWNER          = nicholasdille
-PROJECT        = docker-setup
-REPOSITORY     = $(OWNER)/$(PROJECT)
-BIN            = $(PWD)/bin
-SEMVER_VERSION = 3.3.0
-SEMVER         = $(BIN)/semver
-HUB_VERSION    = 2.14.2
-HUB            = $(BIN)/hub
-GH             = $(BIN)/gh
-GH_VERSION     = 2.5.1
-DIST           = $(PWD)/dist
-GIT_TAG        = $(shell git describe --tags 2>/dev/null)
-RESET          = "\\e[39m\\e[49m"
-GREEN          = "\\e[92m"
-YELLOW         = "\\e[93m"
-RED            = "\\e[91m"
-GREY           = "\\e[90m"
-M              = $(shell printf "\033[34;1m▶\033[0m")
+%.json: %.yaml $(YQ)
+	@yq --output-format json eval . $*.yaml >$*.json
 
 $(BIN): ; $(info $(M) Preparing tools...)
 	@mkdir -p $(BIN)

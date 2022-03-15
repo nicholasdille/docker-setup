@@ -8,7 +8,9 @@ RUN dnf install -y \
         git \
         unzip \
         ncurses \
-        crontabs
+        crontabs \
+        jq
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
+COPY tools.json /var/cache/docker-setup/
 RUN chmod +x /usr/local/bin/docker-setup
