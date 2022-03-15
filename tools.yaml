@@ -74,7 +74,6 @@ tools:
     - docker
     - slirp4netns
     install: |
-      echo "bypass4netns ${version}"
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
           wait_for_docker
@@ -83,12 +82,12 @@ tools:
               --interactive \
               --rm \
               --volume "${target}:/target" \
-              --env "BYPASS4NETNS_VERSION=${version}" \
+              --env version \
               --workdir /go/src/github.com/rootless-containers/bypass4netns \
               golang:${go_version} <<EOF
       apt-get update
       apt-get -y install libseccomp-dev
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${BYPASS4NETNS_VERSION}" https://github.com/rootless-containers/bypass4netns .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/bypass4netns .
       make static
       cp bypass4netns{,d} /target/bin/
       EOF
@@ -150,8 +149,7 @@ tools:
     version: 2.1.0
     check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
     download:
-    - url:
-        x86_64: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon.tar.gz
+    - url: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service
@@ -213,11 +211,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}/share/man:/opt/man" \
-              --env "CONTAINERD_VERSION=${version}" \
+              --env version \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/containerd/containerd
       cd /go/src/github.com/containerd/containerd
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${CONTAINERD_VERSION}" https://github.com/containerd/containerd .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/containerd .
       go install github.com/cpuguy83/go-md2man@latest
       export GO111MODULE=auto
       make man
@@ -355,6 +353,7 @@ tools:
     binary: dockerd
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
+    - iptables
     - fuse-overlayfs
     - jq
     pre_install: |
@@ -558,11 +557,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}/share/man:/opt/man" \
-              --env "DOCKER_VERSION=${version}" \
+              --env version \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/docker/cli
       cd /go/src/github.com/docker/cli
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCKER_VERSION}" https://github.com/docker/cli .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/docker/cli .
       export GO111MODULE=auto
       export DISABLE_WARN_OUTSIDE_CONTAINER=1
       sed -i -E 's|^(\s+)(log.Printf\("WARN:)|\1//\2|' man/generate.go
@@ -615,7 +614,6 @@ tools:
     needs:
     - docker
     install: |
-      echo "docuum ${version}"
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
           wait_for_docker
@@ -624,11 +622,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}:/target" \
-              --env DOCUUM_VERSION \
+              --env version \
               "rust:${rust_version}" <<EOF
       mkdir -p /go/src/github.com/stepchowfun/docuum
       cd /go/src/github.com/stepchowfun/docuum
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${DOCUUM_VERSION}" https://github.com/stepchowfun/docuum .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stepchowfun/docuum .
       export RUSTFLAGS='-C target-feature=+crt-static'
       cargo build --release --target x86_64-unknown-linux-gnu
       cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
@@ -917,11 +915,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}:/target" \
-              --env "IMGCRYPT_VERSION=${version}" \
+              --env version \
               golang:${go_version} <<EOF
       mkdir -p /go/src/github.com/containerd/imgcrypt
       cd /go/src/github.com/containerd/imgcrypt
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IMGCRYPT_VERSION}" https://github.com/containerd/imgcrypt .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/imgcrypt .
       sed -i -E 's/ -v / /' Makefile
       sed -i -E "s/ --dirty='.m' / /" Makefile
       make
@@ -975,15 +973,16 @@ tools:
 
   - name: iptables
     version: 1.8.7
+    hidden: true
     install: |
       if is_centos_7 || is_amzn_2; then
-          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos7.tar.gz" \
+          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos7.tar.gz" \
           | tar -xz \
               --directory "${target}" \
               --no-same-owner
 
       elif is_centos_8 || is_rockylinux; then
-          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${IPTABLES_VERSION}/iptables-centos8.tar.gz" \
+          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos8.tar.gz" \
           | tar -xz \
               --directory "${target}" \
               --no-same-owner
@@ -1019,11 +1018,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}:/target" \
-              --env "JWT_VERSION=${version}" \
+              --env version \
               "rust:${rust_version}" <<EOF
       mkdir -p /go/src/github.com/mike-engel/jwt-cli
       cd /go/src/github.com/mike-engel/jwt-cli
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "${JWT_VERSION}" https://github.com/mike-engel/jwt-cli .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/mike-engel/jwt-cli .
       export RUSTFLAGS='-C target-feature=+crt-static'
       cargo build --release --target x86_64-unknown-linux-gnu
       cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
@@ -1389,7 +1388,7 @@ tools:
       files:
       - manifest-tool-linux-${alt_arch}
     post_install:
-      mv "${target}/bin/manifest-tool-linux-${arch}" "${target}/bin/manifest-tool"
+      mv "${target}/bin/manifest-tool-linux-${alt_arch}" "${target}/bin/manifest-tool"
 
   - name: minikube
     version: 1.25.2
@@ -1466,11 +1465,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}:/target" \
-              --env "OCI_IMAGE_TOOL_VERSION=${version}" \
+              --env version \
               --env GO111MODULE=auto \
               --workdir /go/src/github.com/opencontainers/image-tools \
               golang:${go_version} <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_IMAGE_TOOL_VERSION}" https://github.com/opencontainers/image-tools .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/image-tools .
       make tool
       cp oci-image-tool /target/bin/
       EOF
@@ -1494,11 +1493,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}:/target" \
-              --env "OCI_RUNTIME_TOOL_VERSION=${version}" \
+              --env version \
               --env GO111MODULE=auto \
               --workdir /go/src/github.com/opencontainers/runtime-tools \
               golang:${go_version} <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${OCI_RUNTIME_TOOL_VERSION}" https://github.com/opencontainers/runtime-tools .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runtime-tools .
       make tool
       cp oci-runtime-tool /target/bin/
       EOF
@@ -1666,11 +1665,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}/share/man:/opt/man" \
-              --env "RUNC_VERSION=${version}" \
+              --env version \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/opencontainers/runc
       cd /go/src/github.com/opencontainers/runc
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${RUNC_VERSION}" https://github.com/opencontainers/runc .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runc .
       go install github.com/cpuguy83/go-md2man@latest
       man/md2man-all.sh -q
       cp -r man/man8/ "/opt/man"
@@ -1706,11 +1705,11 @@ tools:
               --interactive \
               --rm \
               --volume "${target}/share/man:/opt/man" \
-              --env "SLIRP4NETNS_VERSION=${version}" \
+              --env version \
               "golang:${GO_VERSION}" bash <<EOF
       mkdir -p /go/src/github.com/rootless-containers/slirp4netns
       cd /go/src/github.com/rootless-containers/slirp4netns
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${SLIRP4NETNS_VERSION}" https://github.com/rootless-containers/slirp4netns .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/slirp4netns .
       cp *.1 /opt/man/man1
       EOF
       else

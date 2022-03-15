@@ -240,7 +240,7 @@ function replace_vars() {
 }
 
 function get_tools() {
-    jq --raw-output '.tools[].name' "${docker_setup_tools_file}"
+    jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
 }
 
 function get_tool() {
@@ -489,17 +489,21 @@ function install_tool() {
                     local param_files
                     files="$(
                         jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
+                        | tr '\n' ' ' \
                         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
                     )"
                     if test -n "${files}"; then
-                        param_files="${files}"
+                        param_files=()
+                        for file in ${files}; do
+                            param_files+=( "${file}" )
+                        done
                     fi
                     get_file "${url}" \
                     | tar -xz \
                         --directory "${path}" \
                         --no-same-owner \
                         "${param_strip}" \
-                        "${param_files}"
+                        "${param_files[@]}"
                     ;;
 
                 zip)
@@ -507,22 +511,33 @@ function install_tool() {
                         echo "ERROR: Path not specified."
                         return
                     fi
+                    local files
+                    local param_files
                     files="$(
                         jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
+                        | tr '\n' ' ' \
                         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
                     )"
                     if test -z "${files}"; then
                         echo -e "${red}ERROR: Files not specified.${reset}"
                         exit 1
+
+                    else
+                        param_files=()
+                        for file in ${files}; do
+                            param_files+=( "${file}" )
+                        done
                     fi
                     local filename
                     filename="$(basename "${url}")"
                     echo "    Downloading ZIP to ${prefix}/tmp/${filename}"
                     get_file "${url}" >"${prefix}/tmp/${filename}"
                     echo "      Unpacking into ${prefix}/tmp"
-                    unzip -d "${prefix}/tmp" "${prefix}/tmp/${filename}" "${files}"
+                    unzip -d "${prefix}/tmp" "${prefix}/tmp/${filename}"
                     echo "      Moving files to ${path}"
-                    mv "${files}" "${path}"
+                    for file in "${param_files[@]}"; do
+                        mv "${prefix}/tmp/${file}" "${path}"
+                    done
                     ;;
             
                 *)
@@ -555,6 +570,7 @@ function resolve_deps() {
     if test -n "${tool_deps[${tool}]}"; then
         local dep
         for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+            # TODO: Check if already installed
             if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
                 resolve_deps "${dep}"
                 tool_install+=("${dep}")
@@ -593,7 +609,10 @@ function matches_version() {
     version="$(get_tool_version "${tool}")"
 
     local check
-    check="$(get_tool_check "${tool}")"
+    check="$(
+        get_tool_check "${tool}" \
+        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+    )"
     if test -z "${check}"; then
         if test -f "${docker_setup_cache}/${tool}/${version}"; then
             return 0
