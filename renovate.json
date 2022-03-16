@@ -16,6 +16,7 @@
   },
   "rebaseWhen": "never",
   "rebaseLabel": "renovate/rebase",
+  "recreateClosed": true,
 
   "major": {
     "labels": ["type/renovate", "bump/major"]
