@@ -344,10 +344,6 @@ fi
 # shellcheck disable=SC2034
 go_version=1.17.8
 # shellcheck disable=SC2034
-iptables_version=1.8.7
-# shellcheck disable=SC2034
-mitmproxy_version=7.0.4
-# shellcheck disable=SC2034
 rust_version=1.59.0
 
 function is_executable() {
