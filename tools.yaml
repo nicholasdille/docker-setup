@@ -1711,7 +1711,7 @@ tools:
       mv "${target}/share/_task" "${target}/share/zsh/vendor-completions/_task"
 
   - name: trivy
-    version: 0.24.2
+    version: 0.24.3
     check: ${binary} --version | cut -d' ' -f2
     download:
     - url:
