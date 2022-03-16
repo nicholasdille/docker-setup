@@ -295,29 +295,19 @@ tools:
     check: ${binary} --version | grep "crun version" | cut -d' ' -f3
     needs:
     - docker
-    - jq
     download:
     - url:
         x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun.tar.gz
       type: tarball
       path: ${target}
     post_install: |
-      if has_tool "jq" || tool_will_be_installed "jq"; then
-          echo "Waiting for jq"
-          wait_for_tool "jq" "${target}/bin"
-
-          if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
-              echo "Add runtime to Docker"
-              # shellcheck disable=SC2094
-              cat >"${docker_setup_cache}/daemon.json-crun.sh" <<EOF
-      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+      if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
+          echo "Add runtime to Docker"
+          # shellcheck disable=SC2094
+          cat >"${docker_setup_cache}/daemon.json-crun.sh" <<EOF
+      cat <<< "\$(jq --arg target "${target}" '. * {"runtimes":{"crun":{"path":"\(\$target)/bin/crun"}}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
       EOF
-              touch "${docker_setup_cache}/docker_restart"
-          fi
-
-      else
-          echo -e "${red}[ERROR] Unable to configure Docker daemon for crun because jq is missing and will not be installed.${reset}"
-          false
+          touch "${docker_setup_cache}/docker_restart"
       fi
 
   - name: ctop
@@ -355,7 +345,6 @@ tools:
     needs:
     - iptables
     - fuse-overlayfs
-    - jq
     download:
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
       type: tarball
@@ -435,62 +424,52 @@ tools:
               echo "Initialize dockerd configuration"
               echo "{}" >"${prefix}/etc/docker/daemon.json"
           fi
-          if has_tool "jq" || tool_will_be_installed "jq"; then
-              echo "Waiting for jq"
-              wait_for_tool "jq" "${target}/bin"
+          local root_fs
+          root_fs="$(mount | grep " on / " | cut -d' ' -f5)"
+          echo "Found ${root_fs} on /"
+          if test "${root_fs}" == "overlay"; then
+              echo "Configuring storage driver for DinD"
+              # shellcheck disable=SC2094
+              cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              touch "${docker_setup_cache}/docker_restart"
+          fi
 
-              local root_fs
-              root_fs="$(mount | grep " on / " | cut -d' ' -f5)"
-              echo "Found ${root_fs} on /"
-              if test "${root_fs}" == "overlay"; then
-                  echo "Configuring storage driver for DinD"
-                  # shellcheck disable=SC2094
-                  cat <<< "$("${target}/bin/jq" '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-                  touch "${docker_setup_cache}/docker_restart"
-              fi
-
-              if ! test "$("${target}/bin/jq" '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${prefix}/etc/docker/daemon.json")" == "true"; then
-                  echo "Configuring native cgroup driver"
-                  # shellcheck disable=SC2094
-                  cat <<< "$("${target}/bin/jq" '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-                  touch "${docker_setup_cache}/docker_restart"
-              fi
-              if ! test "$("${target}/bin/jq" '. | keys | any(. == "default-runtime")' "${prefix}/etc/docker/daemon.json")" == true; then
-                  echo "Set default runtime"
-                  # shellcheck disable=SC2094
-                  cat <<< "$("${target}/bin/jq" '. * {"default-runtime": "runc"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-                  touch "${docker_setup_cache}/docker_restart"
-              fi
+          if ! test "$(jq '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${prefix}/etc/docker/daemon.json")" == "true"; then
+              echo "Configuring native cgroup driver"
+              # shellcheck disable=SC2094
+              cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              touch "${docker_setup_cache}/docker_restart"
+          fi
+          if ! test "$(jq '. | keys | any(. == "default-runtime")' "${prefix}/etc/docker/daemon.json")" == true; then
+              echo "Set default runtime"
+              # shellcheck disable=SC2094
+              cat <<< "$(jq '. * {"default-runtime": "runc"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              touch "${docker_setup_cache}/docker_restart"
+          fi
+          # shellcheck disable=SC2016
+          if test -n "${docker_address_base}" && test -n "${docker_address_size}" && ! test "$(jq --arg base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" | any(.base == $base and .size == $size)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+              echo "Add address pool with base ${docker_address_base} and size ${docker_address_size}"
+              # shellcheck disable=SC2094
+              cat <<< "$(jq --args base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" += {"base": $base, "size": $size}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              touch "${docker_setup_cache}/docker_restart"
+          fi
+          # shellcheck disable=SC2016
+          if test -n "${docker_registry_mirror}" && ! test "$(jq --arg mirror "${docker_registry_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+              echo "Add registry mirror ${docker_registry_mirror}"
+              # shellcheck disable=SC2094
               # shellcheck disable=SC2016
-              if test -n "${docker_address_base}" && test -n "${docker_address_size}" && ! test "$("${target}/bin/jq" --arg base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" | any(.base == $base and .size == $size)' "${prefix}/etc/docker/daemon.json")" == "true"; then
-                  echo "Add address pool with base ${docker_address_base} and size ${docker_address_size}"
-                  # shellcheck disable=SC2094
-                  cat <<< "$("${target}/bin/jq" --args base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" += {"base": $base, "size": $size}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-                  touch "${docker_setup_cache}/docker_restart"
-              fi
-              # shellcheck disable=SC2016
-              if test -n "${docker_registry_mirror}" && ! test "$("${target}/bin/jq" --arg mirror "${docker_registry_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
-                  echo "Add registry mirror ${docker_registry_mirror}"
-                  # shellcheck disable=SC2094
-                  # shellcheck disable=SC2016
-                  cat <<< "$("${target}/bin/jq" --args mirror "${docker_registry_mirror}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-                  touch "${docker_setup_cache}/docker_restart"
-              fi
-              if ! test "$("${target}/bin/jq" --raw-output '.features.buildkit // false' "${prefix}/etc/docker/daemon.json")" == true; then
-                  echo "Enable BuildKit"
-                  # shellcheck disable=SC2094
-                  cat <<< "$("${target}/bin/jq" '. * {"features":{"buildkit":true}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-                  touch "${docker_setup_cache}/docker_restart"
-              fi
-              echo "Check if daemon.json is valid JSON"
-              if ! "${target}/bin/jq" --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
-                  echo "${red}[ERROR] "${prefix}/etc/docker/daemon.json" is not valid JSON.${reset}"
-                  exit 1
-              fi
-
-          else
-              echo -e "${red}[ERROR] Unable to configure Docker daemon because jq is missing and will not be installed.${reset}"
-              false
+              cat <<< "$(jq --args mirror "${docker_registry_mirror}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              touch "${docker_setup_cache}/docker_restart"
+          fi
+          if ! test "$(jq --raw-output '.features.buildkit // false' "${prefix}/etc/docker/daemon.json")" == true; then
+              echo "Enable BuildKit"
+              # shellcheck disable=SC2094
+              cat <<< "$(jq '. * {"features":{"buildkit":true}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              touch "${docker_setup_cache}/docker_restart"
+          fi
+          echo "Check if daemon.json is valid JSON"
+          if ! jq --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
+              echo "${red}[ERROR] "${prefix}/etc/docker/daemon.json" is not valid JSON.${reset}"
               exit 1
           fi
           if test -z "${prefix}"; then
@@ -743,7 +722,6 @@ tools:
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
     - docker
-    - jq
     download:
     - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc
       type: executable
@@ -751,22 +729,13 @@ tools:
       type: executable
       path: ${target}/bin/containerd-shim-runsc-v1
     post_install: |
-      if has_tool "jq" || tool_will_be_installed "jq"; then
-          echo "Waiting for jq"
-          wait_for_tool "jq" "${target}/bin"
-
-          if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$("${target}/bin/jq" --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
-              echo "Add runtime to Docker"
-              # shellcheck disable=SC2094
-              cat >"${docker_setup_cache}/daemon.json-gvisor.sh" <<EOF
-      cat <<< "\$("${target}/bin/jq" --arg target "${target}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+      if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
+          echo "Add runtime to Docker"
+          # shellcheck disable=SC2094
+          cat >"${docker_setup_cache}/daemon.json-gvisor.sh" <<EOF
+      cat <<< "\$(jq --arg target "${target}" '. * {"runtimes":{"runsc":{"path":"\(\$target)/bin/runsc"}}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
       EOF
-              touch "${docker_setup_cache}/docker_restart"
-          fi
-
-      else
-          echo -e "${red}[ERROR] Unable to configure Docker daemon for gvisor because jq is missing and will not be installed.${reset}"
-          false
+          touch "${docker_setup_cache}/docker_restart"
       fi
 
   - name: hcloud
@@ -967,14 +936,6 @@ tools:
     - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
       type: executable
   
-  - name: jq
-    version: 1.6
-    check: ${binary} --version | cut -d- -f2-
-    download:
-    - url:
-        x86_64: https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-      type: executable
-
   - name: jwt
     version: 5.0.2
     check: ${binary} --version | cut -d' ' -f2
