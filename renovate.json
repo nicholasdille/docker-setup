@@ -129,7 +129,7 @@
     },
     {
       "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "arkade:\nversion: \"?(?<currentValue>.*?)\"?\n", "ArkadeVersion = \"(?<currentValue>.*?)\"" ],
+      "matchStrings": [ "name: arkade:\n\\s+version: \"?(?<currentValue>.*?)\"?\n", "ArkadeVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "alexellis/arkade",
       "datasourceTemplate": "github-releases"
     },
