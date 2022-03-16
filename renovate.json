@@ -129,8 +129,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: arkade\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "ArkadeVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: arkade\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "alexellis/arkade",
       "datasourceTemplate": "github-releases"
     },
@@ -149,8 +149,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: buildx\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "BuildxVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: buildx\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "docker/buildx",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -212,29 +212,29 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: containerssh\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "ContainersshVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: containerssh\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "ContainerSSH/ContainerSSH",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: cosign\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "CosignVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: cosign\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "sigstore/cosign",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: crictl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "CrictlVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: crictl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "kubernetes-sigs/cri-tools",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: crane\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "CraneVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: crane\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "google/go-containerregistry",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -262,44 +262,44 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: dive\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DiveVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: dive\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "wagoodman/dive",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: docker-compose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DockerComposeV1Version = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: docker-compose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^\\d+\\.\\d+\\.\\d+$",
       "versioningTemplate": "regex:^(?<major>1?)\\.(?<minor>\\d+?)\\.(?<patch>\\d+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: docker-compose-v2\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DockerComposeV2Version = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: docker-compose-v2\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: docker-machine\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DockerMachineVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: docker-machine\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "docker/machine",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DockerVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "moby/moby",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: docker-scan\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DockerScanVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: docker-scan\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "docker/scan-cli-plugin",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -312,15 +312,15 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: dry\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DryVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: dry\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "moncho/dry",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: duffle\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n", "DuffleVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: duffle\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "cnabio/duffle",
       "datasourceTemplate": "github-releases"
     },
@@ -332,8 +332,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: faas-cli\\n\\s+version: \"?(?<currentValue>.*?)\n", "FaasCliVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: faas-cli\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "openfaas/faas-cli",
       "datasourceTemplate": "github-releases"
     },
@@ -379,8 +379,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\n", "GlowVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "charmbracelet/glow",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -408,15 +408,15 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: helm\\n\\s+version: \"?(?<currentValue>.*?)\n", "HelmVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: helm\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: hcloud\\n\\s+version: \"?(?<currentValue>.*?)\n", "HcloudVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: hcloud\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "hetznercloud/cli",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -429,8 +429,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: hub-tool\\n\\s+version: \"?(?<currentValue>.*?)\n", "HubToolVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: hub-tool\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "docker/hub-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -443,8 +443,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: imgpkg\\n\\s+version: \"?(?<currentValue>.*?)\n", "ImgpkgVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: imgpkg\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "vmware-tanzu/carvel-imgpkg",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -471,28 +471,28 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: jq\\n\\s+version: \"?(?<currentValue>.*?)\n", "JqVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: jq\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "stedolan/jq",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^jq-(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: jp\\n\\s+version: \"?(?<currentValue>.*?)\n", "JpVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: jp\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "jmespath/jp",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: jwt\\n\\s+version: \"?(?<currentValue>.*?)\n", "JwtVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: jwt\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mike-engel/jwt-cli",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "K3D:\nversion: \"?(?<currentValue>.*?)\n", "K3dVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "K3D:\nversion: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "rancher/k3d",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -512,22 +512,22 @@
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "K9S:\nversion: \"?(?<currentValue>.*?)\n", "K9sVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "K9S:\nversion: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "derailed/k9s",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kapp\\n\\s+version: \"?(?<currentValue>.*?)\n", "KappVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kapp\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "vmware-tanzu/carvel-kapp",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kbld\\n\\s+version: \"?(?<currentValue>.*?)\n", "KbldVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kbld\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "vmware-tanzu/carvel-kbld",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -540,30 +540,30 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kind\\n\\s+version: \"?(?<currentValue>.*?)\n", "KindVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kind\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes-sigs/kind",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kink\\n\\s+version: \"?(?<currentValue>.*?)\n", "KinkVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kink\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "Trendyol/kink",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kompose\\n\\s+version: \"?(?<currentValue>.*?)\n", "KomposeVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kompose\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes/kompose",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kubectl\\n\\s+version: \"?(?<currentValue>.*?)\n", "KubectlVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kubectl\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -597,8 +597,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kubeletctl\\n\\s+version: \"?(?<currentValue>.*?)\n", "KubeletctlVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kubeletctl\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "cyberark/kubeletctl",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -612,72 +612,72 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: krew\\n\\s+version: \"?(?<currentValue>.*?)\n", "KrewVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: krew\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes-sigs/krew",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: kustomize\\n\\s+version: \"?(?<currentValue>.*?)\n", "KustomizeVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: kustomize\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: lazydocker\\n\\s+version: \"?(?<currentValue>.*?)\n", "LazydockerVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: lazydocker\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "jesseduffield/lazydocker",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$",
       "versioningTemplate": "loose"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: lazygit\\n\\s+version: \"?(?<currentValue>.*?)\n", "LazygitVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: lazygit\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "jesseduffield/lazygit",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\\n", "ManifestToolVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\\n" ],
       "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: minikube\\n\\s+version: \"?(?<currentValue>.*?)\n", "MinikubeVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: minikube\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "kubernetes/minikube",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: mitmproxy\\n\\s+version: \"?(?<currentValue>.*?)\n", "MitmproxyVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: mitmproxy\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mitmproxy/mitmproxy",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: nerdctl\\n\\s+version: \"?(?<currentValue>.*?)\n", "NerdctlVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: nerdctl\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "containerd/nerdctl",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: norouter\\n\\s+version: \"?(?<currentValue>.*?)\n", "NorouterVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: norouter\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "norouter/norouter",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: notation\\n\\s+version: \"?(?<currentValue>.*?)\n", "NotationVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: notation\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "notaryproject/notation",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -697,8 +697,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: oras\\n\\s+version: \"?(?<currentValue>.*?)\n", "OrasVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: oras\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "oras-project/oras",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -725,8 +725,8 @@
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: porter\\n\\s+version: \"?(?<currentValue>.*?)\n", "PorterVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: porter\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "getporter/porter",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -739,8 +739,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: regclient\\n\\s+version: \"?(?<currentValue>.*?)\n", "RegclientVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: regclient\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "regclient/regclient",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -781,8 +781,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: sops\\n\\s+version: \"?(?<currentValue>.*?)\n", "SopsVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: sops\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mozilla/sops",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -802,8 +802,8 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: task\\n\\s+version: \"?(?<currentValue>.*?)\n", "TaskVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: task\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "go-task/task",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
@@ -823,22 +823,22 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: yq\\n\\s+version: \"?(?<currentValue>.*?)\n", "YqVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: yq\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mikefarah/yq",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: vendir\\n\\s+version: \"?(?<currentValue>.*?)\n", "VendirVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: vendir\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "vmware-tanzu/carvel-vendir",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "name: ytt\\n\\s+version: \"?(?<currentValue>.*?)\n", "YttVersion = \"(?<currentValue>.*?)\"" ],
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: ytt\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
