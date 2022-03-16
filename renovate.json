@@ -641,7 +641,7 @@
     },
     {
       "fileMatch": [ "^tools.yaml$", "^docker-setup.ps1$" ],
-      "matchStrings": [ "manifest-tool:\nversion: \"?(?<currentValue>.*?)\n", "ManifestToolVersion = \"(?<currentValue>.*?)\"" ],
+      "matchStrings": [ "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\\n", "ManifestToolVersion = \"(?<currentValue>.*?)\"" ],
       "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
