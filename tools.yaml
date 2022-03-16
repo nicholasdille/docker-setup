@@ -1312,7 +1312,7 @@ tools:
       - lazygit
 
   - name: manifest-tool
-    version: 2.0.0
+    version: 2.0.3
     check: ${binary} --version | cut -d' ' -f3
     download:
     - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
