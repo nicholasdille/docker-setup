@@ -342,7 +342,7 @@ if ${show_version}; then
 fi
 
 # shellcheck disable=SC2034
-go_version=1.17.8
+go_version=1.18.0
 # shellcheck disable=SC2034
 rust_version=1.59.0
 
