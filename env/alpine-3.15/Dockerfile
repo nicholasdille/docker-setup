@@ -1,4 +1,4 @@
-FROM alpine:3.15@sha256:bbba0862badb4b50d1e2859de44c54c68856d022beca16fec713c810e46151e7
+FROM alpine:3.15@sha256:3c4222bc5d16ab768ce961fec6fb14150586c84437840a5f9e7086445f60a015
 RUN apk add --update-cache --no-cache \
         bash \
         curl \
