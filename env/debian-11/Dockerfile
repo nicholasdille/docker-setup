@@ -1,4 +1,4 @@
-FROM debian:11.2@sha256:10b622c6cf6daa0a295be74c0e412ed20e10f91ae4c6f3ce6ff0c9c04f77cbf6
+FROM debian:11.2@sha256:96b00def89b8871e77608fa5a32158b885c4188d2ad984276650f47f0d7bc1ce
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
         curl \
