@@ -1,9 +1,63 @@
 #Requires -RunAsAdministrator
 
+$ErrorActionPreference = "Stop"
+
+param (
+    [Parameter()]
+    [switch]
+    $NoFeature
+    ,
+    [Parameter()]
+    [switch]
+    $NoService
+)
+
+if ($IsLinux) {
+    $Env:TARGET = "$Env:HOME\.docker-setup"
+    $Env:DOCKER_PLUGIN_PATH = "$Env:TARGET\cli-plugins"
+}
+
 if (-Not $Env:TARGET) {
     $Env:TARGET = "$Env:ProgramFiles\docker-setup"
 }
-New-Item -Path "$Env:TARGET" -Type Directory -Force
+if (-Not $Env:DOCKER_PLUGIN_PATH) {
+    $Env:DOCKER_PLUGIN_PATH = "$Env:ProgramData\Docker\cli-plugins"
+}
+
+$Tools = @(
+    "arkade", "buildah", "buildkit", "buildx", "clusterawsadm", "clusterctl",
+    "cni", "cni-isolation", "conmon", "containerd", "cosign", "crane",
+    "crictl", "crun", "ctop", "dasel", "dive", "docker", "docker-compose",
+    "docker-machine", "docker-scan", "docuum", "dry", "duffle", "firecracker",
+    "firectl", "footloose", "fuse-overlayfs", "fuse-overlayfs-snapshotter",
+    "glow", "gvisor", "helm", "helmfile", "hub-tool", "ignite", "img",
+    "imgcrypt", "ipfs", "jp", "jq", "jwt", "k3d", "k3s", "k9s", "kapp", "kind",
+    "kompose", "krew", "kubectl", "kubectl-build", "kubectl-free",
+    "kubectl-resources", "kubeletctl", "kubefire", "kubeswitch", "kustomize",
+    "lazydocker", "lazygit", "manifest-tool", "minikube", "nerdctl", "oras",
+    "patat", "portainer", "porter", "podman", "qemu", "regclient",
+    "rootlesskit", "runc", "skopeo", "slirp4netns", "sops",
+    "stargz-snapshotter", "umoci", "trivy", "yq", "ytt"
+)
+
+Write-Host @'
+_            _                           _
+__| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
+/ _` |/ _ \ / __| |/ / _ \ '__|____/ __|/ _ \ __| | | | '_ \
+| (_| | (_) | (__|   <  __/ | |_____\__ \  __/ |_| |_| | |_) |
+\__,_|\___/ \___|_|\_\___|_|       |___/\___|\__|\__,_| .__/
+                                                  |_|
+
+                The container tools installer and updater
+            https://github.com/nicholasdille/docker-setup
+--------------------------------------------------------------
+
+This script will install Docker Engine as well as useful tools
+from the container ecosystem.
+
+'@
+New-Item -Path "$Env:TARGET" -Type Directory -Force | Out-Null
+New-Item -Path "$Env:DOCKER_PLUGIN_PATH" -Type Directory -Force | Out-Null
 # TODO: Add $Env:TARGET to $Env:Path
 
 $ArkadeVersion = "0.8.14"
@@ -56,21 +110,52 @@ $YqVersion = "4.22.1"
 $VendirVersion = "0.26.0"
 $YttVersion = "0.40.1"
 
+function IsExecutable() {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [string]
+        $Path
+    )
+    Test-Path -Path "$Path"
+}
+
+function DockerIsInstalled() { IsExecutable -Path "$Env:TARGET\dockerd.exe" }
+
+function DockerMatchesVersion() { & "$Env:TARGET\dockerd.exe" --version }
+
+foreach ($Tool in $Tools) {
+    $Tool
+}
+
+if (DockerIsInstalled) { "Docker is installed" }
+if (DockerMatchesVersion) { "Docker matches version" }
+
 # Enable feature(s) with restart
 # TODO: Parameter to -IgnoreFeature
-Enable-WindowsOptionalFeature -Online -FeatureName Containers
+if ((Get-WindowsOptionalFeature -Online -FeatureName Containers | Select-Object -ExpandProperty State) -ine "Enabled") {
+    Enable-WindowsOptionalFeature -Online -FeatureName Containers | Out-Null
+}
 
 # Install Docker
 Invoke-WebRequest -Uri "https://download.docker.com/win/static/stable/x86_64/docker-$DockerVersion.zip" -OutFile "$Env:UserProfile\Downloads\docker-$DockerVersion.zip"
 Expand-Archive -LiteralPath "$Env:UserProfile\Downloads\docker-$DockerVersion.zip" -DestinationPath "$Env:TARGET"
-sc create docker binpath= "$Env:TARGET\dockerd.exe --run-service" start= auto displayName= "Docker Engine"
+if (-Not (Get-Service -Name docker)) {
+    $NewServiceParams = @{
+        Name           = "docker"
+        BinaryPathName = "$Env:TARGET\dockerd.exe --run-service"
+        StartupType    = "Auto"
+        Description    = "Docker Engine"
+    }
+    New-Service @$NewServiceParams
+}
 
 # TODO: Update daemon.json
 
 if (-not $Env:DOCKER_COMPOSE) {
     $Env:DOCKER_COMPOSE = "v2"
 }
-$DockerComposeUrl = "https://github.com/docker/compose/releases/download/v$DockerComposeV2Version/docker-compose-windows-amd64.exe"
+$DockerComposeUrl = "https://github.com/docker/compose/releases/download/v$DockerComposeV2Version/docker-compose-windows-x86_64.exe"
 $DockerComposeTarget = "$Env:ProgramData\Docker\cli-plugins\docker-compose.exe"
 if ($Env:DOCKER_COMPOSE -eq "v1") {
     $DockerComposeUrl = "https://github.com/docker/compose/releases/download/$DockerComposeV1Version/docker-compose-Windows-x86_64.exe"
@@ -101,7 +186,7 @@ Invoke-WebRequest -Uri "https://github.com/estesp/manifest-tool/releases/downloa
 # portainer?
 
 # oras
-Invoke-WebRequest -Uri "https://github.com/oras-project/oras/releases/download/v$OrasVersion/oras_$($OrasVersion)_windows_amd64.tar.gz"
+Invoke-WebRequest -Uri "https://github.com/oras-project/oras/releases/download/v$OrasVersion/oras_$($OrasVersion)_windows_amd64.tar.gz" -OutFile "$Env:UserProfile\Downloads\oras_$($OrasVersion)_windows_amd64.tar.gz"
 
 # regclient
 Invoke-WebRequest -Uri "https://github.com/regclient/regclient/releases/download/v$RegclientVersion/regctl-windows-amd64.exe" -OutFile "$Env:TARGET\regctl.exe"
@@ -148,7 +233,7 @@ Invoke-WebRequest -Uri "https://github.com/kubernetes-sigs/cri-tools/releases/do
 # TODO: unpack
 
 # dive
-Invoke-WebRequest -Uri "https://github.com/wagoodman/dive/releases/download/v$(DiveVersion)/dive_$(DiveVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\dive_$(DiveVersion)_windows_amd64.zip"
+Invoke-WebRequest -Uri "https://github.com/wagoodman/dive/releases/download/v$($DiveVersion)/dive_$($DiveVersion)_windows_amd64.zip" -OutFile "$Env:UserProfile\Downloads\dive_$($DiveVersion)_windows_amd64.zip"
 # TODO: unpack
 
 # dry
@@ -158,7 +243,7 @@ Invoke-WebRequest -Uri "https://github.com/moncho/dry/releases/download/v0.11.1/
 Invoke-WebRequest -Uri "https://github.com/cnabio/duffle/releases/download/$DuffleVersion/duffle-windows-amd64.exe" -OutFile "$Env:TARGET\duffle.exe"
 
 # glow
-Invoke-WebRequest -Uri "https://github.com/charmbracelet/glow/releases/download/v$(GlowVersion)/glow_$(GlowVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\glow_$(GlowVersion)_Windows_x86_64.zip"
+Invoke-WebRequest -Uri "https://github.com/charmbracelet/glow/releases/download/v$($GlowVersion)/glow_$($GlowVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\glow_$($GlowVersion)_Windows_x86_64.zip"
 # TODO: unpack
 
 # jp
@@ -182,11 +267,11 @@ Invoke-WebRequest -Uri "https://github.com/kubernetes/kompose/releases/download/
 Invoke-WebRequest -Uri "https://github.com/cyberark/kubeletctl/releases/download/v$KubeletctlVersion/kubeletctl_windows_amd64.exe" -OutFile "$Env:TARGET\kubeletctl.exe"
 
 # lazydocker
-Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazydocker/releases/download/v$LazydockerVersion/lazydocker_$(LazydockerVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazydocker_$(LazydockerVersion)_Windows_x86_64.zip"
+Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazydocker/releases/download/v$LazydockerVersion/lazydocker_$($LazydockerVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazydocker_$($LazydockerVersion)_Windows_x86_64.zip"
 # TODO: unpack
 
 # lazygit
-Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazygit/releases/download/v$LazygitVersion/lazygit_$(LazygitVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazygit_$(LazygitVersion)_Windows_x86_64.zip"
+Invoke-WebRequest -Uri "https://github.com/jesseduffield/lazygit/releases/download/v$LazygitVersion/lazygit_$($LazygitVersion)_Windows_x86_64.zip" -OutFile "$Env:UserProfile\Downloads\lazygit_$($LazygitVersion)_Windows_x86_64.zip"
 # TODO: unpack
 
 # minikube
