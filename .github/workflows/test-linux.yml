@@ -78,7 +78,7 @@ jobs:
           - ubuntu-22.04
         arch:
           - amd64
-          - arm64
+          #- arm64
     steps:
 
       - name: Checkout code
