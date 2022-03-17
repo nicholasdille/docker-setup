@@ -1112,7 +1112,7 @@ tools:
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_krew"
 
   - name: kubectl
-    version: 1.23.4
+    version: 1.23.5
     check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
     needs:
     - krew
