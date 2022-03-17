@@ -12,6 +12,7 @@ on:
       - reopened
     paths:
       - docker-setup.sh
+      - tools.yaml
       - env/**
       - Dockerfile
       - docker/*
