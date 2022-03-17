@@ -717,7 +717,7 @@ tools:
       - glow
 
   - name: gvisor
-    version: 20220309
+    version: 20220314
     binary: ${target}/bin/runsc
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
