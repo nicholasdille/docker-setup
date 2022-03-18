@@ -311,7 +311,7 @@ done
 
 declare -a unknown_tools
 for tool in "${requested_tools[@]}"; do
-    if ! printf "%s\n" "${tools[@]}" | grep -q "^${tool}$"; then
+    if ! test -v "tools[${tool}]"; then
         unknown_tools+=( "${tool}" )
     fi
 done
@@ -351,14 +351,25 @@ function is_executable() {
     test -f "${file}" && test -x "${file}"
 }
 
+declare -A tool_is_installed
 function is_installed() {
     local tool=$1
+
+    if test -v "tool_is_installed[${tool}]"; then
+        if ${tool_is_installed[${tool}]}; then
+            return 0
+        else
+            return 1
+        fi
+    fi
 
     binary="$(get_tool_binary "${tool}")"
 
     if test -f "${binary}" && test -x "${binary}"; then
+        tool_is_installed[${tool}]="true"
         return 0
     else
+        tool_is_installed[${tool}]="false"
         return 1
     fi
 }
@@ -573,8 +584,8 @@ function resolve_deps() {
     if test -n "${tool_deps[${tool}]}"; then
         local dep
         for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-            # TODO: Check if already installed
-            if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${dep}$"; then
+            if ! is_installed "${dep}" && ! matches_version "${dep}" && ! test -v "tool_install[${dep}]"; then
+                echo "resolve_eps(${tool}): recurse for ${dep}"
                 resolve_deps "${dep}"
                 tool_install+=("${dep}")
             fi
@@ -605,8 +616,17 @@ function tool_has_check() {
     fi
 }
 
+declare -A tool_matches_version
 function matches_version() {
     local tool=$1
+
+    if test -v "tool_matches_version[${tool}]"; then
+        if ${tool_matches_version[${tool}]}; then
+            return 0
+        else
+            return 1
+        fi
+    fi
 
     local version
     version="$(get_tool_version "${tool}")"
@@ -618,8 +638,10 @@ function matches_version() {
     )"
     if test -z "${check}"; then
         if test -f "${docker_setup_cache}/${tool}/${version}"; then
+            tool_matches_version[${tool}]="true"
             return 0
         else
+            tool_matches_version[${tool}]="false"
             return 1
         fi
     fi
@@ -627,8 +649,10 @@ function matches_version() {
         local installed_version
         installed_version="$(eval "${check}")"
         if test "${installed_version}" == "${version}"; then
+            tool_matches_version[${tool}]="true"
             return 0
         else
+            tool_matches_version[${tool}]="false"
             return 1
         fi
 
@@ -648,12 +672,12 @@ declare -a tool_outdated
 for tool in "${tools[@]}"; do
     tool_version[${tool}]="$(get_tool_version "${tool}")"
 
-    if ! ${only} || printf "%s\n" "${requested_tools[@]}" | grep -q "^${tool}$"; then
+    if ! ${only} || test -v "requested_tools[${tool}]"; then
         if ! is_installed "${tool}" || ! matches_version "${tool}" || ${reinstall}; then
 
             resolve_deps "${tool}"
 
-            if ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+            if ! test -v "tool_install[${tool}]"; then
                 tool_install+=("${tool}")
             fi
         fi
@@ -663,7 +687,7 @@ check_only_exit_code=0
 line_length=0
 for tool in "${tools[@]}"; do
     if is_installed "${tool}" && matches_version "${tool}"; then
-        if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+        if test -v "tool_install[${tool}]"; then
             tool_color[${tool}]="${yellow}"
             tool_sign[${tool}]="${green}${check_mark}"
 
@@ -673,12 +697,12 @@ for tool in "${tools[@]}"; do
         fi
 
     else
-        if ! ${only} || printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+        if ! ${only} || test -v "tool_install[${tool}]"; then
             tool_outdated+=("${tool}")
             check_only_exit_code=1
         fi
 
-        if printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+        if test -v "tool_install[${tool}]"; then
             tool_color[${tool}]="${yellow}"
             tool_sign[${tool}]="${red}${cross_mark}"
 
@@ -688,7 +712,7 @@ for tool in "${tools[@]}"; do
         fi
     fi
 
-    if ${only} && ! printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"; then
+    if ${only} && ! is_installed "${tool}" && ! test -v "tool_install[${tool}]"; then
         tool_color[${tool}]="${grey}"
     fi
 
@@ -749,7 +773,7 @@ fi
 function tool_will_be_installed() {
     local tool=$1
 
-    printf "%s\n" "${tool_install[@]}" | grep -q "^${tool}$"
+    test -v "tool_install[${tool}]"
 }
 
 function has_tool() {
