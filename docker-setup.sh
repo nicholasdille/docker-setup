@@ -456,6 +456,7 @@ function install_tool() {
                         path="${binary}"
                     fi
                     echo "    Executable ${path}"
+                    mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
                     chmod +x "${path}"
                     ;;
@@ -465,7 +466,11 @@ function install_tool() {
                         echo "ERROR: Path not specified."
                         return
                     fi
+                    if test "${path:0:8}" == "contrib/"; then
+                        path="${docker_setup_contrib}/${path:8}"
+                    fi
                     echo "    File ${path}"
+                    mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
                     ;;
             
@@ -494,6 +499,7 @@ function install_tool() {
                             param_files+=( "${file}" )
                         done
                     fi
+                    mkdir -p "$(dirname "${path}")"
                     get_file "${url}" \
                     | tar -xz \
                         --directory "${path}" \
@@ -524,6 +530,7 @@ function install_tool() {
                             param_files+=( "${file}" )
                         done
                     fi
+                    mkdir -p "$(dirname "${path}")"
                     local filename
                     filename="$(basename "${url}")"
                     echo "    Downloading ZIP to ${prefix}/tmp/${filename}"

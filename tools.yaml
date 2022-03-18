@@ -363,6 +363,30 @@ tools:
     - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/zsh/_docker
       type: file
       path: ${target}/share/zsh/vendor-completions/_docker
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service
+      type: file
+      path: contrib/${tool}/systemd/docker.service
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.socket
+      type: file
+      path: contrib/${tool}/systemd/docker.socket
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default
+      type: file
+      path: contrib/${tool}/sysvinit/debian/docker.default
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker
+      type: file
+      path: contrib/${tool}/sysvinit/debian/docker
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig
+      type: file
+      path: contrib/${tool}/sysvinit/redhat/docker.sysconfig
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker
+      type: file
+      path: contrib/${tool}/sysvinit/redhat/docker
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd
+      type: file
+      path: contrib/${tool}/openrc/docker.confd
+    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd
+      type: file
+      path: contrib/${tool}/openrc/docker.initd
     post_install: |
       echo "Move binaries"
       mv "${target}/libexec/docker/bin/dockerd" "${target}/bin"
@@ -379,29 +403,29 @@ tools:
 
       else
           echo "Install systemd units"
-          get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service" >"${prefix}/etc/systemd/system/docker.service"
-          get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.socket" >"${prefix}/etc/systemd/system/docker.socket"
+          cp "${docker_setup_contrib}/${tool}/systemd/docker.service" "${prefix}/etc/systemd/system/docker.service"
+          cp "${docker_setup_contrib}/${tool}/systemd/docker.socket" "${prefix}/etc/systemd/system/docker.socket"
           sed -i "/^\[Service\]/a Environment=PATH=${relative_target}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}/etc/systemd/system/docker.service"
           sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
           if is_debian || is_clearlinux; then
               echo "Install init script for debian"
-              get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default" >"${prefix}/etc/default/docker"
-              get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker" >"${prefix}/etc/init.d/docker"
+              cp "${docker_setup_contrib}/${tool}/sysvinit/debian/docker.default" "${prefix}/etc/default/docker"
+              cp "${docker_setup_contrib}/${tool}/sysvinit/debian/docker" "${prefix}/etc/init.d/docker"
               sed -i -E "s|^(export PATH=)|\1${relative_target}/libexec/docker/bin:|" "${prefix}/etc/init.d/docker"
               sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${relative_target}/bin/dockerd|" "${prefix}/etc/init.d/docker"
               chmod +x "${prefix}/etc/init.d/docker"
           elif is_redhat; then
               echo "Install init script for redhat"
-              get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig" >"${prefix}/etc/sysconfig/docker"
-              get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker" >"${prefix}/etc/init.d/docker"
+              cp "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker.sysconfig" "${prefix}/etc/sysconfig/docker"
+              cp "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker" "${prefix}/etc/init.d/docker"
               # shellcheck disable=SC1083
               sed -i -E "s|(^prog=)|export PATH="${relative_target}/libexec/docker/bin:${relative_target}/sbin:${relative_target}/bin:\${PATH}"\n\n\1|" "${prefix}/etc/init.d/docker"
               sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${prefix}/etc/init.d/docker"
               chmod +x "${prefix}/etc/init.d/docker"
           elif is_alpine; then
               echo "Install openrc script for alpine"
-              get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd" >"${prefix}/etc/conf.d/docker"
-              get_file "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd" >"${prefix}/etc/init.d/docker"
+              cp "${docker_setup_contrib}/${tool}/openrc/docker.confd" "${prefix}/etc/conf.d/docker"
+              cp "${docker_setup_contrib}/${tool}/openrc/docker.initd" "${prefix}/etc/init.d/docker"
               # shellcheck disable=1083
               sed -i -E "s|^(command=)|export PATH="${relative_target}/libexec/docker/bin:\${PATH}"\n\n\1|" "${prefix}/etc/init.d/docker"
               sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${prefix}/etc/init.d/docker"
@@ -691,13 +715,16 @@ tools:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
+    - url: contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service
+      type: file
+      path: contrib/${tool}/fuse-overlayfs-snapshotter.service
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
       "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
       EOF
       echo "Install systemd units"
-      get_file "contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service" >"${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
+      cp "${docker_setup_contrib}/${tool}/fuse-overlayfs-snapshotter.service" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
       if test -z "${prefix}"; then
           if has_systemd; then
@@ -1673,13 +1700,16 @@ tools:
     - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
+    - url: contrib/stargz-snapshotter/stargz-snapshotter.service
+      type: file
+      path: contrib/${tool}/stargz-snapshotter.service
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
       "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
       EOF
       echo "Install systemd units"
-      get_file "contrib/stargz-snapshotter/stargz-snapshotter.service" >"${prefix}/etc/systemd/system/stargz-snapshotter.service"
+      cp "${docker_Setup_contrib}/${tool}/stargz-snapshotter.service" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       if test -z "${prefix}"; then
           if has_systemd; then
