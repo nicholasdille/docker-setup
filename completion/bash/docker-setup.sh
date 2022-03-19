@@ -1,18 +1,24 @@
 #!/bin/bash
 
+reset="\e[39m\e[49m"
+green="\e[92m"
+yellow="\e[93m"
+red="\e[91m"
+grey="\e[90m"
+
+function get_tools() {
+    jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
+}
+
+: "${docker_setup_cache:=/var/cache/docker-setup}"
+docker_setup_tools_file="${docker_setup_cache}/tools.json"
+if ! test -f "${docker_setup_tools_file}"; then
+    echo -e "${red}ERROR: tools.json is missing.${reset}"
+    exit 1
+fi
+
 declare -a tools
-tools=(
-    arkade buildah buildkit buildx clusterawsadm clusterctl cni cni-isolation
-    conmon containerd cosign crane crictl crun ctop dasel dive docker
-    docker-compose docker-machine docker-scan docuum dry duffle firecracker
-    firectl footloose fuse-overlayfs fuse-overlayfs-snapshotter glow gvisor
-    helm helmfile hub-tool ignite img imgcrypt ipfs jp jq jwt k3d k3s k9s kapp
-    kind kompose krew kubectl kubectl-build kubectl-free kubectl-resources
-    kubeletctl kubefire kubeswitch kustomize lazydocker lazygit manifest-tool
-    minikube nerdctl oras patat portainer porter podman qemu regclient
-    rootlesskit runc skopeo slirp4netns sops stargz-snapshotter umoci trivy yq
-    ytt
-)
+mapfile -t tools < <(get_tools)
 
 parameters=(
     --check
@@ -23,10 +29,12 @@ parameters=(
     --only-installed
     --no-progressbar
     --no-color
-    --no-deps
     --plan
     --skip-docs
+    --no-cache
+    --no-cron
     --version
+    --bash-completion
 )
 
 function _docker_setup_completion() {
@@ -49,4 +57,5 @@ function _docker_setup_completion() {
     COMPREPLY=($(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[${index}]}"))
 }
 
+complete -F _docker_setup_completion docker-setup
 complete -F _docker_setup_completion docker-setup.sh
