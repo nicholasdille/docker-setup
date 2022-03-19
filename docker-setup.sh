@@ -396,8 +396,6 @@ function install_tool() {
     local tool=$1
     local reinstall=$2
 
-    # TODO: Check if all deps all installed
-
     echo
     echo "Installing ${tool}"
     local tool_json
