@@ -1,5 +1,28 @@
 # shellcheck shell=bash
 
+: "${docker_setup_logs:=/var/log/docker-setup}"
+# shellcheck source=lib/vars.sh
+source "${docker_setup_cache}/lib/vars.sh"
+
+function replace_vars() {
+    local tool=$1
+    local binary=$2
+    local version=$3
+    local arch=$4
+    local alt_arch=$5
+    local target=$6
+    local prefix=$7
+
+    cat \
+    | sed "s|\${tool}|${tool}|g" \
+    | sed "s|\${binary}|${binary}|g" \
+    | sed "s|\${version}|${version}|g" \
+    | sed "s|\${arch}|${arch}|g" \
+    | sed "s|\${alt_arch}|${alt_arch}|g" \
+    | sed "s|\${target}|${target}|g" \
+    | sed "s|\${prefix}|${prefix}|g"
+}
+
 function get_tools() {
     jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
 }
@@ -62,7 +85,6 @@ function get_tool_version() {
 
 function install_tool() {
     local tool=$1
-    local reinstall=$2
 
     echo
     echo "Installing ${tool}"

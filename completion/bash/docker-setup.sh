@@ -1,16 +1,13 @@
 #!/bin/bash
 
-reset="\e[39m\e[49m"
-red="\e[91m"
-
-function get_tools() {
-    jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
-}
-
 : "${docker_setup_cache:=/var/cache/docker-setup}"
+
+# shellcheck source=lib/tools.sh
+source "${docker_setup_cache}/lib/tools.sh"
+
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
-    echo -e "${red}ERROR: tools.json is missing.${reset}"
+    echo "ERROR: tools.json is missing."
     exit 1
 fi
 

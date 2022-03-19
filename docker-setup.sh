@@ -4,15 +4,14 @@ set -o errexit
 docker_setup_version="main"
 docker_setup_repo_base="https://github.com/nicholasdille/docker-setup"
 docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
-: "${prefix:=}"
-: "${relative_target:=/usr/local}"
-: "${target:=${prefix}${relative_target}}"
-: "${docker_allow_restart:=false}"
-: "${docker_plugins_path:=${target}/libexec/docker/cli-plugins}"
+
 : "${docker_setup_logs:=/var/log/docker-setup}"
-: "${docker_setup_cache:=/var/cache/docker-setup}"
-: "${docker_setup_contrib:=${docker_setup_cache}/contrib}"
-: "${docker_setup_downloads:=${docker_setup_cache}/downloads}"
+mkdir -p "${docker_setup_cache}/lib"
+if ! test -f "${docker_setup_cache}/lib/vars.sh"; then
+    curl -sLo "${docker_setup_cache}/lib/vars.sh" "${docker_setup_repo_raw}/lib/vars.sh"
+fi
+# shellcheck source=lib/vars.sh
+source "${docker_setup_cache}/lib/vars.sh"
 
 declare -a unknown_parameters
 : "${check:=false}"
@@ -185,23 +184,14 @@ EOF
 fi
 
 if ! test "$(uname -s)" == "Linux"; then
-    echo "ERROR: Unsupport operating system ($(uname -s))."
+    echo "${red}ERROR: Unsupported operating system ($(uname -s)).${reset}"
     exit 1
 fi
 
-arch="$(uname -m)"
-case "${arch}" in
-    x86_64)
-        alt_arch=amd64
-        ;;
-    aarch64)
-        alt_arch=arm64
-        ;;
-    *)
-        echo -e "${red}ERROR: Unsupported architecture (${arch}).${reset}"
-        exit 1
-        ;;
-esac
+if test -z "${alt_arch}"; then
+    echo "${red}ERROR: Unsupported architecture (${arch}).${reset}"
+    exit 1
+fi
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
