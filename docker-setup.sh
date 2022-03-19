@@ -199,7 +199,6 @@ if ! test -f "${docker_setup_tools_file}"; then
     exit 1
 fi
 
-
 if ${only} && ${only_installed}; then
     echo -e "${red}[ERROR] You can only specify one: --only/only and --only-installed/only_installed.${reset}"
     exit 1
