@@ -29,7 +29,7 @@ declare -a unknown_parameters
 : "${max_parallel:=10}"
 : "${no_cache:=false}"
 : "${no_cron:=false}"
-declare -a requested_tools
+declare -A requested_tools
 while test "$#" -gt 0; do
     case "$1" in
         --check)
@@ -82,7 +82,7 @@ while test "$#" -gt 0; do
             ;;
         *)
             if test -n "$1"; then
-                requested_tools+=("$1")
+                requested_tools["$1"]=true
                 only=true
             fi
             ;;
@@ -201,7 +201,7 @@ fi
 
 
 if ${only} && ${only_installed}; then
-    echo -e "${red}[ERROR] You can only specify one: --only/ONLY and --only-installed/ONLY_INSTALLED.${reset}"
+    echo -e "${red}[ERROR] You can only specify one: --only/only and --only-installed/only_installed.${reset}"
     exit 1
 fi
 
@@ -302,35 +302,35 @@ function get_tool_version() {
 declare -a tools
 mapfile -t tools < <(get_tools)
 declare -A tool_deps
-for tool in "${tools[@]}"; do
-    deps="$(get_tool_deps "${tool}" | tr '\n' ' ')"
+for name in "${tools[@]}"; do
+    deps="$(get_tool_deps "${name}" | tr '\n' ' ')"
     if test -n "${deps}"; then
-        tool_deps[${tool}]="${deps}"
+        tool_deps[${name}]="${deps}"
     fi
 done
 
 declare -a unknown_tools
-for tool in "${requested_tools[@]}"; do
-    if ! test -v "tools[${tool}]"; then
-        unknown_tools+=( "${tool}" )
+for name in "${!requested_tools[@]}"; do
+    if test -z "${tools[${name}]}"; then
+        unknown_tools+=( "${name}" )
     fi
 done
 if test "${#unknown_tools[@]}" -gt 0; then
     echo -e "${red}[ERROR] The following tools were specified but are not supported:${reset}"
-    for tool in "${unknown_tools[@]}"; do
-        echo -e "${red}       - ${tool}${reset}"
+    for name in "${unknown_tools[@]}"; do
+        echo -e "${red}       - ${name}${reset}"
     done
     echo
     exit 1
 fi
 
 if ! ${only} && test "${#requested_tools[@]}" -gt 0; then
-    echo -e "${red}[ERROR] You must supply --only/ONLY if specifying tools on the command line.${reset}"
+    echo -e "${red}[ERROR] You must supply --only/only if specifying tools on the command line.${reset}"
     echo
     exit 1
 fi
 if ${only} && test "${#requested_tools[@]}" -eq 0; then
-    echo -e "${red}[ERROR] You must specify tool on the command line if you supply --only/ONLY.${reset}"
+    echo -e "${red}[ERROR] You must specify tool on the command line if you supply --only/only.${reset}"
     echo
     exit 1
 fi
@@ -355,7 +355,7 @@ declare -A tool_is_installed
 function is_installed() {
     local tool=$1
 
-    if test -v "tool_is_installed[${tool}]"; then
+    if test -n "${tool_is_installed[${tool}]}"; then
         if ${tool_is_installed[${tool}]}; then
             return 0
         else
@@ -379,7 +379,7 @@ if ${only_installed}; then
 
     for tool in "${tools[@]}"; do
         if is_installed "${tool}"; then
-            requested_tools+=("${tool}")
+            requested_tools["${tool}"]=true
         fi
     done
 fi
@@ -584,10 +584,10 @@ function resolve_deps() {
     if test -n "${tool_deps[${tool}]}"; then
         local dep
         for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
-            if ! is_installed "${dep}" && ! matches_version "${dep}" && ! test -v "tool_install[${dep}]"; then
+            if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}"; then
                 echo "resolve_eps(${tool}): recurse for ${dep}"
                 resolve_deps "${dep}"
-                tool_install+=("${dep}")
+                tool_install["${dep}"]=true
             fi
         done
     fi
@@ -620,7 +620,7 @@ declare -A tool_matches_version
 function matches_version() {
     local tool=$1
 
-    if test -v "tool_matches_version[${tool}]"; then
+    if test -n "${tool_matches_version[${tool}]}"; then
         if ${tool_matches_version[${tool}]}; then
             return 0
         else
@@ -665,65 +665,65 @@ echo -e "docker-setup includes ${#tools[*]} tools:"
 echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 echo
 declare -A tool_version
-declare -a tool_install
+declare -A tool_install
 declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
-for tool in "${tools[@]}"; do
-    tool_version[${tool}]="$(get_tool_version "${tool}")"
+for name in "${tools[@]}"; do
+    tool_version[${name}]="$(get_tool_version "${name}")"
 
-    if ! ${only} || test -v "requested_tools[${tool}]"; then
-        if ! is_installed "${tool}" || ! matches_version "${tool}" || ${reinstall}; then
+    if ! ${only} || test -n "${requested_tools[${name}]}"; then
+        if ! is_installed "${name}" || ! matches_version "${name}" || ${reinstall}; then
 
-            resolve_deps "${tool}"
+            resolve_deps "${name}"
 
-            if ! test -v "tool_install[${tool}]"; then
-                tool_install+=("${tool}")
+            if test -z "${tool_install[${name}]}"; then
+                tool_install["${name}"]=true
             fi
         fi
     fi
 done
 check_only_exit_code=0
 line_length=0
-for tool in "${tools[@]}"; do
-    if is_installed "${tool}" && matches_version "${tool}"; then
-        if test -v "tool_install[${tool}]"; then
-            tool_color[${tool}]="${yellow}"
-            tool_sign[${tool}]="${green}${check_mark}"
+for name in "${tools[@]}"; do
+    if is_installed "${name}" && matches_version "${name}"; then
+        if test -n "${tool_install[${name}]}"; then
+            tool_color[${name}]="${yellow}"
+            tool_sign[${name}]="${green}${check_mark}"
 
         else
-            tool_color[${tool}]="${green}"
-            tool_sign[${tool}]="${green}${check_mark}"
+            tool_color[${name}]="${green}"
+            tool_sign[${name}]="${green}${check_mark}"
         fi
 
     else
-        if ! ${only} || test -v "tool_install[${tool}]"; then
-            tool_outdated+=("${tool}")
+        if ! ${only} || test -n "${tool_install[${name}]}"; then
+            tool_outdated+=("${name}")
             check_only_exit_code=1
         fi
 
-        if test -v "tool_install[${tool}]"; then
-            tool_color[${tool}]="${yellow}"
-            tool_sign[${tool}]="${red}${cross_mark}"
+        if test -n "${tool_install[${name}]}"; then
+            tool_color[${name}]="${yellow}"
+            tool_sign[${name}]="${red}${cross_mark}"
 
         else
-            tool_color[${tool}]="${red}"
-            tool_sign[${tool}]="${red}${cross_mark}"
+            tool_color[${name}]="${red}"
+            tool_sign[${name}]="${red}${cross_mark}"
         fi
     fi
 
-    if ${only} && ! is_installed "${tool}" && ! test -v "tool_install[${tool}]"; then
-        tool_color[${tool}]="${grey}"
+    if ${only} && ! is_installed "${name}" && test -z "${tool_install[${name}]}"; then
+        tool_color[${name}]="${grey}"
     fi
 
-    item="${tool} ${tool_version[${tool}]} ${tool_sign[${tool}]}"
+    item="${name} ${tool_version[${name}]} ${tool_sign[${name}]}"
     item_length=$(( ${#item} + 3 ))
     if test "$(( line_length + item_length ))" -gt "$(get_display_cols)"; then
         echo
         line_length=0
     fi
     line_length=$(( line_length + item_length ))
-    echo -e -n "${tool_color[${tool}]}${item}   ${reset}"
+    echo -e -n "${tool_color[${name}]}${item}   ${reset}"
 done
 echo -e "\n"
 
@@ -741,8 +741,8 @@ if ${check}; then
     if test "${#tool_outdated[@]}" -gt 0; then
         echo -e "${red}[ERROR] The following requested tools are outdated:${reset}"
         echo
-        for tool in "${tool_outdated[@]}"; do
-            echo -e -n "${red}${tool}  ${reset}"
+        for name in "${tool_outdated[@]}"; do
+            echo -e -n "${red}${name}  ${reset}"
         done
         echo -e -n "\n\n"
     fi
@@ -773,7 +773,7 @@ fi
 function tool_will_be_installed() {
     local tool=$1
 
-    test -v "tool_install[${tool}]"
+    test -n "${tool_install[${tool}]}"
 }
 
 function has_tool() {
@@ -1057,7 +1057,7 @@ function process_exists() {
 function count_sub_processes() {
     local count=0
     local child
-    for child in "${child_pids[@]}"; do
+    for child in "${!child_pids[@]}"; do
         if process_exists "${child}"; then
             count=$(( count + 1 ))
         fi
@@ -1084,11 +1084,12 @@ fi
 
 tput civis
 
+tool_install_array=("${!tool_install[@]}")
 declare -A child_pids
 started_index=0
 last_update=false
 exit_code=0
-child_pid_count="${#tool_install[@]}"
+child_pid_count="${#tool_install_array[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
 if ${no_progressbar}; then
     echo "installing..."
@@ -1104,31 +1105,31 @@ while ! ${last_update}; do
         count=$(( max_parallel - running ))
         end_index=$(( started_index + count ))
 
-        while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_install[@]}"; do
-            tool="${tool_install[${started_index}]}"
+        while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_install_array[@]}"; do
+            name="${tool_install_array[${started_index}]}"
 
             {
                 echo "============================================================"
                 date +"%Y-%m-%d %H:%M:%S %Z"
                 echo "------------------------------------------------------------"
-            } >>"${docker_setup_logs}/${tool}.log"
+            } >>"${docker_setup_logs}/${name}.log"
 
             (
                 set -o errexit
                 start_time="$(date +%s)"
-                install_tool "${tool}"
+                install_tool "${name}"
                 last_exit_code=$?
                 if test "${last_exit_code}" -eq 0; then
-                    mkdir -p "${docker_setup_cache}/${tool}"
-                    version="$(get_tool_version "${tool}")"
-                    touch "${docker_setup_cache}/${tool}/${version}"
+                    mkdir -p "${docker_setup_cache}/${name}"
+                    version="$(get_tool_version "${name}")"
+                    touch "${docker_setup_cache}/${name}/${version}"
                 fi
                 end_time="$(date +%s)"
-                echo "${tool};${start_time};${end_time}" >>"${docker_setup_logs}/profiling"
+                echo "${name};${start_time};${end_time}" >>"${docker_setup_logs}/profiling"
                 exit "${last_exit_code}"
 
-            ) >>"${docker_setup_logs}/${tool}.log" 2>&1 || touch "${docker_setup_cache}/errors/${tool}" &
-            child_pids[${tool}]=$!
+            ) >>"${docker_setup_logs}/${name}.log" 2>&1 || touch "${docker_setup_cache}/errors/${name}" &
+            child_pids[${name}]=$!
 
             started_index=$(( started_index + 1 ))
         done
@@ -1149,7 +1150,7 @@ while ! ${last_update}; do
         echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
     fi
 
-    if ${last_update} || test -f "${docker_setup_cache}/errors/${tool}.log"; then
+    if ${last_update} || test -f "${docker_setup_cache}/errors/${name}.log"; then
         break
     fi
     if test "${started_index}" -eq "${#tool_install[@]}" && test "$(count_sub_processes)" -eq 0; then
@@ -1162,8 +1163,8 @@ done
 echo
 # shellcheck disable=SC2044
 for error in $(find "${docker_setup_cache}/errors/" -type f); do
-    tool="$(basename "${error}")"
-    echo -e "${red}[ERROR] Failed to install ${tool}. Please check ${docker_setup_logs}/${tool}.log.${reset}"
+    name="$(basename "${error}")"
+    echo -e "${red}[ERROR] Failed to install ${name}. Please check ${docker_setup_logs}/${name}.log.${reset}"
     exit_code=1
 done
 
