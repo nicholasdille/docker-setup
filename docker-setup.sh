@@ -432,16 +432,22 @@ function install_tool() {
             local download_json
             download_json="$(get_tool_download_index "${tool}" "${index}")"
 
-            # TODO: First check for .url[$arch] and then for .url
             local url
-            url="$(jq --raw-output '.url' <<<"${download_json}")"
-            if grep ": " <<<"${url}"; then
-                url="$(jq --raw-output --arg arch "${arch}" '.url | select(.[$arch] != null) | .[$arch]' <<<"${download_json}")"
-            fi
-            if test -z "${url}"; then
-                echo "ERROR: Platform not available."
-                return
-            fi
+            local url_type
+            url_type="$(jq --raw-output '.url | type' <<<"${download_json}")"
+            case "${url_type}" in
+                object)
+                    url="$(jq --raw-output --arg arch "${arch}" '.url | select(.[$arch] != null) | .[$arch]' <<<"${download_json}")"
+                    ;;
+                string)
+                    url="$(jq --raw-output '.url' <<<"${download_json}")"
+                    ;;
+                *)
+                    echo -e "${red}ERROR: Malformed url. Must be string or object not ${url_type}.${reset}"
+                    exit 1
+                    ;;
+            esac
+
             url="$(
                 echo -n "${url}" \
                 | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
