@@ -5,7 +5,8 @@ docker_setup_version="main"
 docker_setup_repo_base="https://github.com/nicholasdille/docker-setup"
 docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
 
-: "${docker_setup_logs:=/var/log/docker-setup}"
+: "${docker_setup_cache:=/var/cache/docker-setup}"
+
 mkdir -p "${docker_setup_cache}/lib"
 if ! test -f "${docker_setup_cache}/lib/vars.sh"; then
     curl -sLo "${docker_setup_cache}/lib/vars.sh" "${docker_setup_repo_raw}/lib/vars.sh"
