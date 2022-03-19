@@ -585,7 +585,6 @@ function resolve_deps() {
         local dep
         for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
             if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}"; then
-                echo "resolve_eps(${tool}): recurse for ${dep}"
                 resolve_deps "${dep}"
                 tool_install["${dep}"]=true
             fi
