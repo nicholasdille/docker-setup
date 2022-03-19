@@ -1,10 +1,7 @@
 #!/bin/bash
 
 reset="\e[39m\e[49m"
-green="\e[92m"
-yellow="\e[93m"
 red="\e[91m"
-grey="\e[90m"
 
 function get_tools() {
     jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
@@ -54,7 +51,7 @@ function _docker_setup_completion() {
     fi
 
     index="$((${#COMP_WORDS[@]} - 1))"
-    COMPREPLY=($(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[${index}]}"))
+    mapfile -t COMPREPLY < <(compgen -W "${suggestions[*]}" -- "${COMP_WORDS[${index}]}")
 }
 
 complete -F _docker_setup_completion docker-setup
