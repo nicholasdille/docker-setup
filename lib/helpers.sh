@@ -318,8 +318,11 @@ function process_exists() {
 function count_sub_processes() {
     local count=0
     local child
+    local child
+    local pid
     for child in "${!child_pids[@]}"; do
-        if process_exists "${child}"; then
+        pid=${child_pids[${child}]}
+        if process_exists "${pid}"; then
             count=$(( count + 1 ))
         fi
     done
