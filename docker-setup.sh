@@ -185,18 +185,18 @@ EOF
 fi
 
 if ! test "$(uname -s)" == "Linux"; then
-    echo "${red}ERROR: Unsupported operating system ($(uname -s)).${reset}"
+    echo "${red}[ERROR] Unsupported operating system ($(uname -s)).${reset}"
     exit 1
 fi
 
 if test -z "${alt_arch}"; then
-    echo "${red}ERROR: Unsupported architecture (${arch}).${reset}"
+    echo "${red}[ERROR] Unsupported architecture (${arch}).${reset}"
     exit 1
 fi
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
-    echo -e "${red}ERROR: tools.json is missing.${reset}"
+    echo -e "${red}[ERROR] tools.json is missing.${reset}"
     exit 1
 fi
 

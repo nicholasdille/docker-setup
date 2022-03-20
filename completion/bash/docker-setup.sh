@@ -7,7 +7,7 @@ source "${docker_setup_cache}/lib/tools.sh"
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
-    echo "ERROR: tools.json is missing."
+    echo "[ERROR] tools.json is missing."
     exit 1
 fi
 
