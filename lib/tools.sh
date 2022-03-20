@@ -83,6 +83,12 @@ function get_tool_version() {
     echo "${version}"
 }
 
+function tool_will_be_installed() {
+    local tool=$1
+
+    test -n "${tool_install[${tool}]}"
+}
+
 function install_tool() {
     local tool=$1
 
