@@ -39,6 +39,10 @@ function get_tool_deps() {
     jq --raw-output --arg tool "${tool}" '.tools[] | select(.name == $tool) | select(.needs != null) | .needs[]' "${docker_setup_tools_file}"
 }
 
+function get_all_tool_deps() {
+    jq --raw-output '.tools[] | select(.needs != null) | "\(.name)=\(.needs | join(","))"' "${docker_setup_tools_file}"
+}
+
 function get_tool_download_count() {
     local tool=$1
 
@@ -69,6 +73,28 @@ function get_tool_binary() {
     echo "${binary}"
 }
 
+function get_all_tool_binaries() {
+    jq --raw-output '.tools[] | select(.binary != null) | "\(.name)=\(.binary)"' "${docker_setup_tools_file}"
+}
+
+function resolve_tool_binaries() {
+    for name in "${tools[@]}"; do
+        if test -z "${tool_binary[${name}]}"; then
+            tool_binary[${name}]="${target}/bin/${tool}"
+
+        else
+            tool_binary[${name}]="$(
+                echo "${tool_binary[${name}]}" \
+                | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+            )"
+        fi
+
+        if ! test "${tool_binary[${name}]:0:1}" == "/"; then
+            tool_binary[${name}]="${target}/bin/${tool_binary[${name}]}"
+        fi
+    done
+}
+
 function get_tool_version() {
     local tool=$1
 
@@ -81,6 +107,10 @@ function get_tool_version() {
         return
     fi
     echo "${version}"
+}
+
+function get_all_tool_versions() {
+    jq --raw-output '.tools[] | "\(.name)=\(.version)"' "${docker_setup_tools_file}"
 }
 
 function tool_will_be_installed() {
@@ -98,11 +128,11 @@ function install_tool() {
     tool_json="$(get_tool "${tool}")"
     
     local version
-    version="$(get_tool_version "${tool}")"
+    version="${tool_version[${tool}]}"
     echo "  Version: ${version}."
     
     local binary
-    binary="$(get_tool_binary "${tool}")"
+    binary="${tool_binary[${tool}]}"
 
     local pre_install
     pre_install="$(
@@ -282,8 +312,9 @@ function resolve_deps() {
     local tool=$1
 
     if test -n "${tool_deps[${tool}]}"; then
+
         local dep
-        for dep in $(echo "${tool_deps[${tool}]}" | tr ',' ' '); do
+        for dep in ${tool_deps[${tool}]}; do
             if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}"; then
                 resolve_deps "${dep}"
                 tool_install["${dep}"]=true

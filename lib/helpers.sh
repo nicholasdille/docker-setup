@@ -21,7 +21,7 @@ function is_installed() {
         fi
     fi
 
-    binary="$(get_tool_binary "${tool}")"
+    binary="${tool_binary[${tool}]}"
 
     if test -f "${binary}" && test -x "${binary}"; then
         tool_is_installed[${tool}]="true"
@@ -53,7 +53,7 @@ function matches_version() {
     fi
 
     local version
-    version="$(get_tool_version "${tool}")"
+    version="${tool_version[${tool}]}"
 
     local check
     check="$(

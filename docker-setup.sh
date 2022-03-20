@@ -222,12 +222,12 @@ fi
 
 declare -a tools
 mapfile -t tools < <(get_tools)
+echo -e "${magenta}Built tools (@ ${SECONDS})${reset}"
 declare -A tool_deps
-for name in "${tools[@]}"; do
-    deps="$(get_tool_deps "${name}" | tr '\n' ' ')"
-    if test -n "${deps}"; then
-        tool_deps[${name}]="${deps}"
-    fi
+for deps in $(get_all_tool_deps); do
+    name="${deps%%=*}"
+    value="${deps#*=}"
+    tool_deps[${name}]="${value//,/ }"
 done
 
 declare -a unknown_tools
@@ -267,6 +267,20 @@ go_version=1.18.0
 # shellcheck disable=SC2034
 rust_version=1.59.0
 
+declare -A tool_version
+for version in $(get_all_tool_versions); do
+    name="${version%%=*}"
+    value="${version#*=}"
+    tool_version[${name}]="${value}"
+done
+declare -A tool_binary
+for binary in $(get_all_tool_binaries); do
+    name="${binary%%=*}"
+    value="${binary#*=}"
+    tool_binary[${name}]="${value}"
+done
+resolve_tool_binaries
+
 if ${only_installed}; then
     only=true
 
@@ -280,13 +294,11 @@ fi
 echo -e "docker-setup includes ${#tools[*]} tools:"
 echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 echo
-declare -A tool_version
 declare -A tool_install
 declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
 for name in "${tools[@]}"; do
-    tool_version[${name}]="$(get_tool_version "${name}")"
 
     if ! ${only} || test -n "${requested_tools[${name}]}"; then
         if ! is_installed "${name}" || ! matches_version "${name}" || ${reinstall}; then
@@ -490,7 +502,7 @@ while ! ${last_update}; do
                 last_exit_code=$?
                 if test "${last_exit_code}" -eq 0; then
                     mkdir -p "${docker_setup_cache}/${name}"
-                    version="$(get_tool_version "${name}")"
+                    version="${tool_version[${name}]}"
                     touch "${docker_setup_cache}/${name}/${version}"
                 fi
                 end_time="$(date +%s)"
