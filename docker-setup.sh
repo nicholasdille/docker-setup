@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+SECONDS=0
+
 docker_setup_version="main"
 docker_setup_repo_base="https://github.com/nicholasdille/docker-setup"
 docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"

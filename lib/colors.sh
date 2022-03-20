@@ -12,6 +12,8 @@ yellow="\e[93m"
 red="\e[91m"
 # shellcheck disable=SC2034
 grey="\e[90m"
+# shellcheck disable=SC2034
+magenta="\e[95m"
 
 if ${no_color} || test -p /dev/stdout; then
     # shellcheck disable=SC2034
@@ -24,4 +26,6 @@ if ${no_color} || test -p /dev/stdout; then
     red=""
     # shellcheck disable=SC2034
     grey=""
+    # shellcheck disable=SC2034
+    magenta=""
 fi
