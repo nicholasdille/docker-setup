@@ -196,7 +196,7 @@ tools:
     - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
-    - url: https://github.com/containerd/containerd/raw/v${CONTAINERD_VERSION}/containerd.service
+    - url: https://github.com/containerd/containerd/raw/v${version}/containerd.service
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
     post_install: |
@@ -212,7 +212,7 @@ tools:
               --rm \
               --volume "${target}/share/man:/opt/man" \
               --env version \
-              "golang:${GO_VERSION}" bash <<EOF
+              "golang:${go_version}" bash <<EOF
       mkdir -p /go/src/github.com/containerd/containerd
       cd /go/src/github.com/containerd/containerd
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/containerd .
@@ -301,7 +301,7 @@ tools:
       type: tarball
       path: ${target}
     post_install: |
-      if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
+      if ! test -f "${prefix}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
           echo "Add runtime to Docker"
           # shellcheck disable=SC2094
           cat >"${docker_setup_cache}/daemon.json-crun.sh" <<EOF
@@ -533,7 +533,7 @@ tools:
               --rm \
               --volume "${target}/share/man:/opt/man" \
               --env version \
-              "golang:${GO_VERSION}" bash <<EOF
+              "golang:${go_version}" bash <<EOF
       mkdir -p /go/src/github.com/docker/cli
       cd /go/src/github.com/docker/cli
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/docker/cli .
@@ -756,7 +756,7 @@ tools:
       type: executable
       path: ${target}/bin/containerd-shim-runsc-v1
     post_install: |
-      if ! test -f "${PREFIX}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
+      if ! test -f "${prefix}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
           echo "Add runtime to Docker"
           # shellcheck disable=SC2094
           cat >"${docker_setup_cache}/daemon.json-gvisor.sh" <<EOF
@@ -969,7 +969,6 @@ tools:
     needs:
     - docker
     install: |
-      echo "jwt ${JWT_VERSION}"
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
           wait_for_docker
@@ -999,7 +998,7 @@ tools:
     needs:
     - docker
     download:
-    - url: https://github.com/rancher/k3d/releases/download/v${K3D_VERSION}/k3d-linux-${alt_arch}
+    - url: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -1625,7 +1624,7 @@ tools:
               --rm \
               --volume "${target}/share/man:/opt/man" \
               --env version \
-              "golang:${GO_VERSION}" bash <<EOF
+              "golang:${go_version}" bash <<EOF
       mkdir -p /go/src/github.com/opencontainers/runc
       cd /go/src/github.com/opencontainers/runc
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runc .
@@ -1665,7 +1664,7 @@ tools:
               --rm \
               --volume "${target}/share/man:/opt/man" \
               --env version \
-              "golang:${GO_VERSION}" bash <<EOF
+              "golang:${go_version}" bash <<EOF
       mkdir -p /go/src/github.com/rootless-containers/slirp4netns
       cd /go/src/github.com/rootless-containers/slirp4netns
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/slirp4netns .
