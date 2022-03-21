@@ -1,4 +1,4 @@
-FROM fedora:35@sha256:40ba585f0e25c096a08c30ab2f70ef3820b8ea5a4bdd16da0edbfc0a6952fa57
+FROM fedora:35@sha256:f1e3a29da8990568c1da6a460cf9658ee7e9b409aa39c2aded67f7ac1dfe7e8a
 RUN dnf install -y \
         cpio \
  && dnf install -y \
