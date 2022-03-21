@@ -17,6 +17,8 @@
   "rebaseWhen": "never",
   "rebaseLabel": "renovate/rebase",
   "recreateClosed": true,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
 
   "major": {
     "labels": ["type/renovate", "bump/major"]
