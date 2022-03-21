@@ -396,6 +396,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: grype\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "anchore/grype",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: gvisor\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "google/gvisor",
       "datasourceTemplate": "github-tags",
@@ -814,6 +821,13 @@
       "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: stargz-snapshotter\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "containerd/stargz-snapshotter",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: syft\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "anchore/syft",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
