@@ -229,6 +229,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: cri-dockerd\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
+      "depNameTemplate": "Mirantis/cri-dockerd",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: crictl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n" ],
       "depNameTemplate": "kubernetes-sigs/cri-tools",
       "datasourceTemplate": "github-releases",

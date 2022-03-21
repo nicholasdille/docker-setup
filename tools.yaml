@@ -282,6 +282,16 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/crane.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_crane"
 
+  - name: cri-dockerd
+    version: 0.2.0
+    check: ${binary} --version 2>&1 | cut -d' ' -f2
+    download:
+    - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-v${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - cri-dockerd
+
   - name: crictl
     version: 1.23.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
