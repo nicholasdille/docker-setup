@@ -913,7 +913,7 @@ tools:
       type: executable
 
   - name: ipfs
-    version: 0.12.0
+    version: 0.12.1
     check: ${binary} version --number
     needs:
     - containerd
