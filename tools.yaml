@@ -455,6 +455,13 @@ tools:
               echo "Configuring storage driver for DinD"
               # shellcheck disable=SC2094
               cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+              if tool_will_be_installed "fuse-overlayfs"; then
+                  wait_for_tool "fuse-overlayfs" "${target}/bin"
+
+              else
+                  echo -e "${red}[ERROR] fuse-overlayfs must be planned for installation.${reset}"
+                  exit 1
+              fi
               touch "${docker_setup_cache}/docker_restart"
           fi
 
