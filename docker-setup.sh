@@ -77,7 +77,7 @@ while test "$#" -gt 0; do
             show_version=true
             ;;
         --bash-completion)
-            curl -sl "${docker_setup_repo_raw}/completion/bash/docker-setup.sh"
+            curl -sL "${docker_setup_repo_raw}/completion/bash/docker-setup.sh"
             exit
             ;;
         --debug)
