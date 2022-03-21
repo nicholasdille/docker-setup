@@ -52,6 +52,7 @@ jobs:
               done
           fi
 
+          echo "has_release=${has_release}"
           echo "::set-output name=has_release::${has_release}"
 
       - name: Check magic tag
@@ -65,6 +66,7 @@ jobs:
               has_tag=true
           fi
 
+          echo "has_tag=${has_tag}"
           echo "::set-output name=has_tag::${has_tag}"
 
   test:
