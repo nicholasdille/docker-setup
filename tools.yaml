@@ -52,7 +52,7 @@ tools:
       fi
 
   - name: buildx
-    version: 0.8.0
+    version: 0.8.1
     binary: ${target}/libexec/docker/cli-plugins/docker-buildx
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
