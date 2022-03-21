@@ -125,6 +125,8 @@ fi
 # shellcheck source=lib/helpers.sh
 source "${docker_setup_cache}/lib/helpers.sh"
 
+debug "Loaded library files (@ ${SECONDS})"
+
 check_mark="✓" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
 cross_mark="✗" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
 
@@ -212,6 +214,8 @@ if test -z "${alt_arch}"; then
     exit 1
 fi
 
+debug "Finished parameter checks part 1 (@ ${SECONDS})"
+
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
     error "tools.json is missing."
@@ -233,15 +237,21 @@ if ! type tput >/dev/null 2>&1; then
     }
 fi
 
+debug "Finished checking of runtime dependencies (@ ${SECONDS})"
+
 declare -a tools
 mapfile -t tools < <(get_tools)
-echo -e "${magenta}Built tools (@ ${SECONDS})${reset}"
+
+debug "Finished tools retrieval (@ ${SECONDS})"
+
 declare -A tool_deps
 for deps in $(get_all_tool_deps); do
     name="${deps%%=*}"
     value="${deps#*=}"
     tool_deps[${name}]="${value//,/ }"
 done
+
+debug "Finished dependency retrieval (@ ${SECONDS})"
 
 declare -a unknown_tools
 for name in "${!requested_tools[@]}"; do
@@ -275,6 +285,8 @@ if ${show_version}; then
     exit
 fi
 
+debug "Finished parameter checks part 2 (@ ${SECONDS})"
+
 # shellcheck disable=SC2034
 go_version=1.18.0
 # shellcheck disable=SC2034
@@ -304,6 +316,8 @@ if ${only_installed}; then
     done
 fi
 
+debug "Finished caching data from tools.json (@ ${SECONDS})"
+
 echo -e "docker-setup includes ${#tools[*]} tools:"
 echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 echo
@@ -324,6 +338,11 @@ for name in "${tools[@]}"; do
         fi
     fi
 done
+
+debug "The following tools will be installed: ${!tool_install[*]}."
+
+debug "Finished dependency resolution (@ ${SECONDS})"
+
 check_only_exit_code=0
 line_length=0
 for name in "${tools[@]}"; do
@@ -367,6 +386,8 @@ for name in "${tools[@]}"; do
     echo -e -n "${tool_color[${name}]}${item}   ${reset}"
 done
 echo -e "\n"
+
+debug "Finished state retrieval and output (@ ${SECONDS})"
 
 if test -n "${prefix}"; then
     info "Installation into ${prefix}. Will skip daemon start."
