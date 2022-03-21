@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       has_release: ${{ steps.check.outputs.has_release }}
+      has_tag: ${{ steps.tag.outputs.has_tag }}
     steps:
 
       - name: Checkout code
@@ -52,6 +53,19 @@ jobs:
           fi
 
           echo "::set-output name=has_release::${has_release}"
+
+      - name: Check magic tag
+        id: tag
+        run: |
+          has_tag=false
+
+          tags="$(git tag --points-at HEAD)"
+          echo "Got tags: ${tags}."
+          if echo "${tags}" | grep -q "^skip-tests$"; then
+              has_tag=true
+          fi
+
+          echo "::set-output name=has_tag::${has_tag}"
 
   test:
     name: Tests
@@ -91,7 +105,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Test
-        if: needs.check.outputs.has_release != 'true'
+        if: needs.check.outputs.has_release != 'true' && nees.check.outputs.has_tag != true
         env:
           DOCKER_BUILDKIT: 1
           TERM: xterm
