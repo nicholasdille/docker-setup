@@ -31,6 +31,7 @@ declare -a unknown_parameters
 : "${max_parallel:=10}"
 : "${no_cache:=false}"
 : "${no_cron:=false}"
+: "${debug:=false}"
 declare -A requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -79,6 +80,9 @@ while test "$#" -gt 0; do
             curl -sl "${docker_setup_repo_raw}/completion/bash/docker-setup.sh"
             exit
             ;;
+        --debug)
+            debug=true
+            ;;
         --*)
             unknown_parameters+=("$1")
             ;;
@@ -99,6 +103,13 @@ if ! test -f "${docker_setup_cache}/lib/colors.sh"; then
 fi
 # shellcheck source=lib/colors.sh
 source "${docker_setup_cache}/lib/colors.sh"
+
+mkdir -p "${docker_setup_cache}/lib"
+if ! test -f "${docker_setup_cache}/lib/logging.sh"; then
+    curl -sLo "${docker_setup_cache}/lib/logging.sh" "${docker_setup_repo_raw}/lib/logging.sh"
+fi
+# shellcheck source=lib/logging.sh
+source "${docker_setup_cache}/lib/logging.sh"
 
 mkdir -p "${docker_setup_cache}/lib"
 if ! test -f "${docker_setup_cache}/lib/tools.sh"; then
@@ -147,40 +158,40 @@ Usage: docker-setup.sh [<options>] [<tool>[ <tool>]]
 The following command line switches and environment variables
 are accepted:
 
---help, show_help                  Show this help
---version, show_version            Display version
---bash-completion                  Output completion script for bash
---check, check                     Abort after checking versions
---no-wait, no_wait                 Skip wait before installation
---reinstall, reinstall             Reinstall all tools
---only, only                       Only install specified tools
---only-installed, only_installed   Only process installed tools
---no-progressbar, no_progressbar   Disable progress bar
---no-color, no_color               Disable colored output
---plan, plan                       Show planned installations
---skip-docs, skip_docs             Do not install documentation for faster
-                                   installation
---no-cache, no_cache               XXX
---no-cron, no_cron                 YYY
+--help, $show_help                  Show this help
+--version, $show_version            Display version
+--bash-completion                   Output completion script for bash
+--check, $check                     Abort after checking versions
+--no-wait, $no_wait                 Skip wait before installation
+--reinstall, $reinstall             Reinstall all tools
+--only, $only                       Only install specified tools
+--only-installed, $only_installed   Only process installed tools
+--no-progressbar, $no_progressbar   Disable progress bar
+--no-color, $no_color               Disable colored output
+--plan, $plan                       Show planned installations
+--skip-docs, $skip_docs             Do not install documentation for faster
+                                    installation
+--no-cache, $no_cache               Do not cache downloads
+--no-cron, $no_cron                 Do not create cronjob for automated updates
 
 The above environment variables can be true or false.
 
 The following environment variables are processed:
 
-prefix                   Install into a subdirectory
-target                   Specifies the target directory for
-                         binaries. Defaults to /usr
-cgroup_version           Specifies which version of cgroup
-                         to use. Defaults to v2
-docker_address_base      Specifies the address pool for networks,
-                         e.g. 192.168.0.0/16
-docker_address_size      Specifies the size of each network,
-                         e.g. 24
-docker_registry_mirror   Specifies a host to be used as registry
-                         mirror, e.g. https://proxy.my-domain.tld
-docker_allow_restart     Whether restarting dockerd is acceptable
-docker_plugins_path      Where to store Docker CLI plugins.
-                         Defaults to ${target}/libexec/docker/cli-plugins
+\$prefix                   Install into a subdirectory
+\$target                   Specifies the target directory for
+                          binaries. Defaults to /usr
+\$cgroup_version           Specifies which version of cgroup
+                          to use. Defaults to v2
+\$docker_address_base      Specifies the address pool for networks,
+                          e.g. 192.168.0.0/16
+\$docker_address_size      Specifies the size of each network,
+                          e.g. 24
+\$docker_registry_mirror   Specifies a host to be used as registry
+                          mirror, e.g. https://proxy.my-domain.tld
+\$docker_allow_restart     Whether restarting dockerd is acceptable
+\$docker_plugins_path      Where to store Docker CLI plugins.
+                          Defaults to ${target}/libexec/docker/cli-plugins
 
 EOF
     exit
