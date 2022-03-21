@@ -679,6 +679,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: libcgroup\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "libcgroup/libcgroup",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\\n" ],
       "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",

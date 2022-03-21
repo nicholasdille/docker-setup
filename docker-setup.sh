@@ -225,6 +225,9 @@ fi
 debug "Finished parameter checks part 1 (@ ${SECONDS})"
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
+if test -f "${PWD}/tools.json"; then
+    cp "${PWD}/tools.json" "${docker_setup_cache}/tools.json"
+fi
 if ! test -f "${docker_setup_tools_file}"; then
     curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/${docker_setup_version}/tools.json"
 fi
