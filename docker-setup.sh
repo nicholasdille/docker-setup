@@ -259,12 +259,12 @@ if test "${#unknown_tools[@]}" -gt 0; then
 fi
 
 if ! ${only} && test "${#requested_tools[@]}" -gt 0; then
-    echo -e "${red}[ERROR] You must supply --only/only if specifying tools on the command line.${reset}"
+    echo -e "${red}[ERROR] You must supply --only/\$only if specifying tools on the command line.${reset}"
     echo
     exit 1
 fi
 if ${only} && test "${#requested_tools[@]}" -eq 0; then
-    echo -e "${red}[ERROR] You must specify tool on the command line if you supply --only/only.${reset}"
+    echo -e "${red}[ERROR] You must specify tool on the command line if you supply --only/\$only.${reset}"
     echo
     exit 1
 fi
