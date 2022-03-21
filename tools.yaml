@@ -787,6 +787,14 @@ tools:
           touch "${docker_setup_cache}/docker_restart"
       fi
 
+  - name: hadolint
+    version: 2.9.2
+    check: ${binary} --version | cut -d' ' -f4 | cut -d- -f1
+    download:
+    - url:
+        x86_64: https://github.com/hadolint/hadolint/releases/download/v${version}/hadolint-Linux-${arch}
+      type: executable
+
   - name: hcloud
     version: 1.29.0
     check: ${binary} version | cut -d' ' -f2

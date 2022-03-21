@@ -411,6 +411,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: hadolint\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "hadolint/hadolint",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: ignite\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "weaveworks/ignite",
       "datasourceTemplate": "github-tags",
