@@ -14,6 +14,7 @@ if ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
         "${docker_setup_cache:?}/lib" \
         "${docker_setup_cache:?}/tools.json"
 fi
+mkdir -p "${docker_setup_cache}"
 touch "${docker_setup_cache}/${docker_setup_version}"
 
 mkdir -p "${docker_setup_cache}/lib"
