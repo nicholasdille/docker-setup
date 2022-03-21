@@ -1144,6 +1144,17 @@ tools:
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/krew.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_krew"
 
+  - name: kubeadm
+    version: 1.23.5
+    check: ${binary} version --output short | tr -d v
+    download:
+    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/kubeadm"
+      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_kubeadm"
+
   - name: kubectl
     version: 1.23.5
     check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
