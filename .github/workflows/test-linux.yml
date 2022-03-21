@@ -105,7 +105,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Test
-        if: needs.check.outputs.has_release != 'true' && nees.check.outputs.has_tag != true
+        if: needs.check.outputs.has_release != 'true' && needs.check.outputs.has_tag != true
         env:
           DOCKER_BUILDKIT: 1
           TERM: xterm

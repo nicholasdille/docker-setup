@@ -1,20 +1,7 @@
 #!/bin/bash
 
-: "${docker_setup_cache:=/var/cache/docker-setup}"
-
-# shellcheck source=lib/tools.sh
-source "${docker_setup_cache}/lib/colors.sh"
-source "${docker_setup_cache}/lib/logging.sh"
-source "${docker_setup_cache}/lib/tools.sh"
-
-docker_setup_tools_file="${docker_setup_cache}/tools.json"
-if ! test -f "${docker_setup_tools_file}"; then
-    error "tools.json is missing."
-    exit 1
-fi
-
 declare -a tools
-mapfile -t tools < <(get_tools)
+mapfile -t tools < <(jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' /var/cache/docker-setup/tools.json)
 
 parameters=(
     --check
@@ -31,19 +18,20 @@ parameters=(
     --no-cron
     --version
     --bash-completion
+    --debug
 )
 
 function _docker_setup_completion() {
     local suggestions=()
     for parameter in "${parameters[@]}"; do
-        if ! printf "%s\n" "${COMP_WORDS[@]}" | grep -q -- "^${parameter}$"; then
+        if test -z "${COMP_WORDS[${parameter}]}"; then
             suggestions+=("${parameter}")
         fi
     done
 
-    if printf "%s\n" "${COMP_WORDS[@]}" | grep -q -- "^--only$"; then
+    if test -n "${COMP_WORDS["--only"]}"; then
         for tool in "${tools[@]}"; do
-            if ! printf "%s\n" "${COMP_WORDS[@]}" | grep -q -- "^${tool}$"; then
+            if test -z "${COMP_WORDS[${tool}]}"; then
                 suggestions+=("${tool}")
             fi
         done
