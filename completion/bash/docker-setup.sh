@@ -24,14 +24,14 @@ parameters=(
 function _docker_setup_completion() {
     local suggestions=()
     for parameter in "${parameters[@]}"; do
-        if test -z "${COMP_WORDS[${parameter}]}"; then
+        if ! printf "%s\n" "${COMP_WORDS[@]}" | grep -q -- "^${parameter}$"; then
             suggestions+=("${parameter}")
         fi
     done
 
-    if test -n "${COMP_WORDS["--only"]}"; then
+    if printf "%s\n" "${COMP_WORDS[@]}" | grep -q -- "^--only$"; then
         for tool in "${tools[@]}"; do
-            if test -z "${COMP_WORDS[${tool}]}"; then
+            if ! printf "%s\n" "${COMP_WORDS[@]}" | grep -q -- "^${tool}$"; then
                 suggestions+=("${tool}")
             fi
         done
