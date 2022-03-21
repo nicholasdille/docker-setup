@@ -80,7 +80,7 @@ function get_all_tool_binaries() {
 function resolve_tool_binaries() {
     for name in "${tools[@]}"; do
         if test -z "${tool_binary[${name}]}"; then
-            tool_binary[${name}]="${target}/bin/${tool}"
+            tool_binary[${name}]="${target}/bin/${name}"
 
         else
             tool_binary[${name}]="$(
@@ -133,6 +133,7 @@ function install_tool() {
     
     local binary
     binary="${tool_binary[${tool}]}"
+    echo "  Binary: ${tool_binary[${tool}]}."
 
     local pre_install
     pre_install="$(
