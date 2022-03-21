@@ -3,11 +3,13 @@
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 
 # shellcheck source=lib/tools.sh
+source "${docker_setup_cache}/lib/colors.sh"
+source "${docker_setup_cache}/lib/logging.sh"
 source "${docker_setup_cache}/lib/tools.sh"
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
-    echo "[ERROR] tools.json is missing."
+    error "tools.json is missing."
     exit 1
 fi
 

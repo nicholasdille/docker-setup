@@ -103,7 +103,7 @@ function get_tool_version() {
         | jq --raw-output '.version'
     )"
     if test -z "${version}"; then
-        >&2 echo -e "${red}[ERROR] Empty version for ${tool}.${reset}"
+        error "Empty version for ${tool}."
         return
     fi
     echo "${version}"
@@ -168,7 +168,7 @@ function install_tool() {
                     url="$(jq --raw-output '.url' <<<"${download_json}")"
                     ;;
                 *)
-                    echo -e "${red}[ERROR] Malformed url. Must be string or object not ${url_type}.${reset}"
+                    error "Malformed url. Must be string or object not ${url_type}."
                     exit 1
                     ;;
             esac
@@ -205,7 +205,7 @@ function install_tool() {
 
                 file)
                     if test -z "${path}"; then
-                        echo -e "${red}[ERROR] Path not specified.${reset}"
+                        error "Path not specified."
                         return
                     fi
                     if test "${path:0:8}" == "contrib/"; then
@@ -218,7 +218,7 @@ function install_tool() {
             
                 tarball)
                     if test -z "${path}"; then
-                        echo -e "${red}[ERROR] Path not specified.${reset}"
+                        error "Path not specified."
                         return
                     fi
                     echo "    Unpacking tarball"
@@ -252,7 +252,7 @@ function install_tool() {
 
                 zip)
                     if test -z "${path}"; then
-                        echo -e "${red}[ERROR] Path not specified.${reset}"
+                        error "Path not specified."
                         return
                     fi
                     local files
@@ -263,7 +263,7 @@ function install_tool() {
                         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
                     )"
                     if test -z "${files}"; then
-                        echo -e "${red}[ERROR] Files not specified.${reset}"
+                        error "Files not specified."
                         exit 1
 
                     else
@@ -286,7 +286,7 @@ function install_tool() {
                     ;;
             
                 *)
-                    echo -e "${red}[ERROR] Unknown installation type${reset}"
+                    error "Unknown installation type."
                     exit 1
                     ;;
             

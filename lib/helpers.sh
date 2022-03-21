@@ -108,7 +108,7 @@ function wait_for_tool() {
     done
 
     if ! has_tool "${tool}" "${path}"; then
-        echo -e "${red}[ERROR] Failed to wait for ${tool} after $(( (retry - 1) * sleep )) seconds.${reset}"
+        error "Failed to wait for ${tool} after $(( (retry - 1) * sleep )) seconds."
         exit 1
     fi
 }
@@ -280,7 +280,7 @@ function wait_for_docker() {
     done
 
     if ! docker_is_running; then
-        echo -e "${red}[ERROR] Failed to wait for Docker daemon to start after $(( (retry - 1) * sleep )) seconds.${reset}"
+        error "Failed to wait for Docker daemon to start after $(( (retry - 1) * sleep )) seconds."
         exit 1
     fi
 }

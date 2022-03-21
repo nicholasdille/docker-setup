@@ -146,7 +146,7 @@ from the container ecosystem.
 EOF
 
 if test "${#unknown_parameters[@]}" -gt 0; then
-    echo -e "${red}[ERROR] Unknown parameter(s): ${unknown_parameters[*]}.${reset}"
+    error "Unknown parameter(s): ${unknown_parameters[*]}."
     echo
     show_help=true
 fi
@@ -198,30 +198,30 @@ EOF
 fi
 
 if ${only} && ${only_installed}; then
-    echo -e "${red}[ERROR] You can only specify one: --only/\$only and --only-installed/\$only_installed.${reset}"
+    error "You can only specify one: --only/\$only and --only-installed/\$only_installed."
     exit 1
 fi
 
 if ! test "$(uname -s)" == "Linux"; then
-    echo "${red}[ERROR] Unsupported operating system ($(uname -s)).${reset}"
+    error "Unsupported operating system ($(uname -s))."
     exit 1
 fi
 
 if test -z "${alt_arch}"; then
-    echo "${red}[ERROR] Unsupported architecture (${arch}).${reset}"
+    error "Unsupported architecture (${arch})."
     exit 1
 fi
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if ! test -f "${docker_setup_tools_file}"; then
-    echo -e "${red}[ERROR] tools.json is missing.${reset}"
+    error "tools.json is missing."
     exit 1
 fi
 
 dependencies=(jq curl git unzip)
 for dependency in "${dependencies[@]}"; do
     if ! type "${dependency}" >/dev/null 2>&1; then
-        echo -e "${red}[ERROR] Missing ${dependency}.${reset}"
+        error "Missing ${dependency}."
         exit 1
     fi
 done
@@ -250,21 +250,21 @@ for name in "${!requested_tools[@]}"; do
     fi
 done
 if test "${#unknown_tools[@]}" -gt 0; then
-    echo -e "${red}[ERROR] The following tools were specified but are not supported:${reset}"
+    error "The following tools were specified but are not supported:"
     for name in "${unknown_tools[@]}"; do
-        echo -e "${red}       - ${name}${reset}"
+        error "       - ${name}"
     done
     echo
     exit 1
 fi
 
 if ! ${only} && test "${#requested_tools[@]}" -gt 0; then
-    echo -e "${red}[ERROR] You must supply --only/\$only if specifying tools on the command line.${reset}"
+    error "You must supply --only/\$only if specifying tools on the command line."
     echo
     exit 1
 fi
 if ${only} && test "${#requested_tools[@]}" -eq 0; then
-    echo -e "${red}[ERROR] You must specify tool on the command line if you supply --only/\$only.${reset}"
+    error "You must specify tool on the command line if you supply --only/\$only."
     echo
     exit 1
 fi
@@ -369,21 +369,21 @@ done
 echo -e "\n"
 
 if test -n "${prefix}"; then
-    echo -e "${yellow}[INFO] Installation into ${prefix}. Will skip daemon start.${reset}"
+    info "Installation into ${prefix}. Will skip daemon start."
     echo
 fi
 
 if ${skip_docs}; then
-    echo -e "${yellow}[INFO] Some documentation is skipped to reduce the installation time.${reset}"
+    info "Some documentation is skipped to reduce the installation time."
     echo
 fi
 
 if ${check}; then
     if test "${#tool_outdated[@]}" -gt 0; then
-        echo -e "${red}[ERROR] The following requested tools are outdated:${reset}"
+        error "The following requested tools are outdated:"
         echo
         for name in "${tool_outdated[@]}"; do
-            echo -e -n "${red}${name}  ${reset}"
+            error "       - ${name}"
         done
         echo -e -n "\n\n"
     fi
@@ -402,12 +402,12 @@ if test "${#tool_install[@]}" -gt 0 && ! ${no_wait}; then
 fi
 
 if test -n "${prefix}" && ( ! test -s "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
-    echo "${red}[ERROR] When installing into a subdirectory (${prefix}) requires Docker to be present on /var/run/docker.sock.${reset}"
+    error "When installing into a subdirectory (${prefix}) Docker must be present via /var/run/docker.sock."
     exit 1
 fi
 
 if test ${EUID} -ne 0; then
-    echo -e "${red}[ERROR] You must run this script as root or use sudo.${reset}"
+    error "You must run this script as root or use sudo."
     exit 1
 fi
 
@@ -442,8 +442,8 @@ if test "$(stat -fc %t /sys/fs/cgroup/)" == "cgroup2fs"; then
 fi
 if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test "${current_cgroup_version}" == "v1"; then
     if test -n "${WSL_DISTRO_NAME}"; then
-        echo -e "${red}[ERROR] Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662.${reset}"
-        echo -e "${red}        Please rerun this script with CGROUP_VERSION=v1${reset}"
+        error "Unable to enable cgroup v2 on WSL. Please refer to https://github.com/microsoft/WSL/issues/6662."
+        error "        Please rerun this script with CGROUP_VERSION=v1"
         exit 1
     fi
 
@@ -558,7 +558,7 @@ echo
 # shellcheck disable=SC2044
 for error in $(find "${docker_setup_cache}/errors/" -type f); do
     name="$(basename "${error}")"
-    echo -e "${red}[ERROR] Failed to install ${name}. Please check ${docker_setup_logs}/${name}.log.${reset}"
+    error "Failed to install ${name}. Please check ${docker_setup_logs}/${name}.log."
     exit_code=1
 done
 

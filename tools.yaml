@@ -92,7 +92,7 @@ tools:
       cp bypass4netns{,d} /target/bin/
       EOF
       else
-          echo "[ERROR] Docker is required to install."
+          error "Docker is required to install."
           false
       fi
 
@@ -201,7 +201,7 @@ tools:
       path: ${prefix}/etc/systemd/system/containerd.service
     post_install: |
       if ${skip_docs}; then
-          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
+          warning "Installation of manpages will be skipped."
 
       elif docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -223,7 +223,7 @@ tools:
       cp -r man/*.8 "/opt/man/man8"
       EOF
       else
-          echo -e "${yellow}[WARNING] Docker is required to install manpages.${reset}"
+          warning "Docker is required to install manpages."
       fi
       if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
@@ -238,7 +238,7 @@ tools:
               echo "Reload systemd"
               systemctl daemon-reload
           else
-              echo -e "${yellow}[WARNING] docker-setup does not offer an init script for containerd.${reset}"
+              warning "docker-setup does not offer an init script for containerd."
           fi
       fi
 
@@ -399,7 +399,7 @@ tools:
       if docker_is_running; then
           touch "${docker_setup_cache}/docker_already_present"
           echo "Found that Docker is already present after ${SECONDS} seconds."
-          echo -e "${yellow}[WARNING] Docker is already running. Skipping systemd unit, init script and daemon configuration.${reset}"
+          warning "Docker is already running. Skipping systemd unit, init script and daemon configuration."
 
       else
           echo "Install systemd units"
@@ -433,10 +433,10 @@ tools:
               chmod +x "${prefix}/etc/init.d/docker"
               openrc
           else
-              echo -e "${yellow}[WARNING] Unable to install init script because the distributon is unknown.${reset}"
+              warning "Unable to install init script because the distributon is unknown."
           fi
           if ! has_systemd && ! test -f "${prefix}/etc/init.d/docker"; then
-              echo -e "${red}[ERROR] Systemd not available but unable to provide init script.${reset}"
+              error "Systemd not available but unable to provide init script."
               exit 1
           fi
           if test -z "${prefix}"; then
@@ -459,7 +459,7 @@ tools:
                   wait_for_tool "fuse-overlayfs" "${target}/bin"
 
               else
-                  echo -e "${red}[ERROR] fuse-overlayfs must be planned for installation.${reset}"
+                  error "fuse-overlayfs must be planned for installation."
                   exit 1
               fi
               touch "${docker_setup_cache}/docker_restart"
@@ -500,7 +500,7 @@ tools:
           fi
           echo "Check if daemon.json is valid JSON"
           if ! jq --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
-              echo "${red}[ERROR] "${prefix}/etc/docker/daemon.json" is not valid JSON.${reset}"
+              error "${prefix}/etc/docker/daemon.json is not valid JSON."
               exit 1
           fi
           if test -z "${prefix}"; then
@@ -519,19 +519,19 @@ tools:
                       "${prefix}/etc/init.d/docker" start
                       touch "${docker_setup_cache}/docker_restart_allowed"
                   fi
-                  echo -e "${yellow}[WARNING] Init script was installed but you must enable Docker yourself.${reset}"
+                  warning "Init script was installed but you must enable Docker yourself."
               fi
           fi
           echo "Wait for Docker daemon to start"
           wait_for_docker
           if ! docker_is_running; then
-              echo "${red}[ERROR] Failed to start Docker.${reset}"
+              error "Failed to start Docker."
               exit 1
           fi
           echo "Finished starting Docker after ${SECONDS} seconds."
       fi
       if ${skip_docs}; then
-          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
+          warning "Installation of manpages will be skipped."
 
       else
           echo "Install manpages for Docker CLI"
@@ -615,7 +615,7 @@ tools:
       EOF
 
       else
-          echo -e "${red}[ERROR] Docker is required to install.${reset}"
+          error "Docker is required to install."
           false
       fi
 
@@ -901,7 +901,7 @@ tools:
       make install DESTDIR=/target
       EOF
       else
-          echo -e "${red}[ERROR] Docker is required to install.${reset}"
+          error "Docker is required to install."
           false
       fi
 
@@ -995,7 +995,7 @@ tools:
       EOF
 
       else
-          echo -e "${red}[ERROR] Docker is required to install.${reset}"
+          error "Docker is required to install."
           false
       fi
 
@@ -1245,7 +1245,7 @@ tools:
       whoami
       EOF
       else
-          echo "${yellow}[WARNING] kubectl is missing krew. Plugins will not be installed.${reset}"
+          warning "kubectl is missing krew. Plugins will not be installed."
           false
       fi
 
@@ -1440,7 +1440,7 @@ tools:
       cp oci-image-tool /target/bin/
       EOF
       else
-          echo "${red}[ERROR] Docker is required to install.${reset}"
+          error "Docker is required to install."
           false
       fi
 
@@ -1468,7 +1468,7 @@ tools:
       cp oci-runtime-tool /target/bin/
       EOF
       else
-          echo -e "${red}[ERROR] Docker is required to install.${reset}"
+          error "Docker is required to install."
           false
       fi
 
@@ -1620,7 +1620,7 @@ tools:
       type: executable
     post_install: |
       if ${skip_docs}; then
-          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
+          warning "Installation of manpages will be skipped."
 
       elif docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -1640,7 +1640,7 @@ tools:
       cp -r man/man8/ "/opt/man"
       EOF
       else
-          echo -e "${yellow}[WARNING] Docker is required to install manpages.${reset}"
+          warning "Docker is required to install manpages."
       fi
 
   - name: skopeo
@@ -1660,7 +1660,7 @@ tools:
       type: executable
     post_install:
       if ${skip_docs}; then
-          echo -e "${yellow}[WARNING] Installation of manpages will be skipped.${reset}"
+          warning "Installation of manpages will be skipped."
 
       elif docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -1678,7 +1678,7 @@ tools:
       cp *.1 /opt/man/man1
       EOF
       else
-          echo -e "${yellow}[WARNING] Docker is required to install manpages.${reset}"
+          warning "Docker is required to install manpages."
       fi
 
   - name: sops

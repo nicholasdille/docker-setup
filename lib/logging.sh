@@ -1,5 +1,9 @@
 # shellcheck shell=bash
 
+function info() {
+    >&2 echo -e "${yellow}[INFO] $*${reset}"
+}
+
 function warning() {
     >&2 echo -e "${yellow}[WARNING] $*${reset}"
 }
