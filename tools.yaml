@@ -1304,6 +1304,13 @@ tools:
       type: executable
       path: ${target}/libexec/cni/host-local-rev
 
+  - name: kubelet
+    version: 1.23.5
+    check: ${binary} --version | cut -d' ' -f2 | tr -d v
+    download:
+    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
+      type: executable
+
   - name: kubeletctl
     version: 1.8
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2
