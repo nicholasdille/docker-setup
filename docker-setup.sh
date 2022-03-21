@@ -9,6 +9,13 @@ docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 
+if ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
+    rm -rf \
+        "${docker_setup_cache:?}/lib" \
+        "${docker_setup_cache:?}/tools.json"
+fi
+touch "${docker_setup_cache}/${docker_setup_version}"
+
 mkdir -p "${docker_setup_cache}/lib"
 if ! test -f "${docker_setup_cache}/lib/vars.sh"; then
     curl -sLo "${docker_setup_cache}/lib/vars.sh" "${docker_setup_repo_raw}/lib/vars.sh"
