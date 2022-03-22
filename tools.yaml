@@ -1392,6 +1392,7 @@ tools:
 
   - name: libcgroup
     version: 2.0.1
+    binary: ${target}/bin/lscgroup
     needs:
     - docker
     install: |
@@ -1413,13 +1414,18 @@ tools:
           ca-certificates \
           m4 \
           bison \
-          flex
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/libcgroup/libcgroup .
-      autoconf
+          flex \
+          curl
+      curl -sL https://github.com/libcgroup/libcgroup/releases/download/v${version}/libcgroup-${version}.tar.gz \
+      | tar -xz --strip-components 1
       ./configure --prefix=/target --disable-pam --disable-daemon
       make
       make install
       EOF
+      cat >/etc/ld.so.conf.d/libcgroup.conf <<EOF
+      ${target}/lib
+      EOF
+      ldconfig
 
   - name: manifest-tool
     version: 2.0.3
