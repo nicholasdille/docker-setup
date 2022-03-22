@@ -9,7 +9,7 @@ docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 
-if ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
+if test "${docker_setup_version}" != "main" && ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
     rm -rf \
         "${docker_setup_cache:?}/lib" \
         "${docker_setup_cache:?}/tools.json"
