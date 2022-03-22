@@ -1806,7 +1806,7 @@ tools:
       fi
 
   - name: syft
-    version: 0.42.1
+    version: 0.42.2
     check: ${binary} --version | cut -d' ' -f2
     download:
     - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
