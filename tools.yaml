@@ -613,7 +613,7 @@ tools:
               --rm \
               --volume "${target}:/target" \
               --env version \
-              --env workdir /go/src/github.com/stepchowfun/docuum \
+              --workdir /go/src/github.com/stepchowfun/docuum \
               "rust:${rust_version}" <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stepchowfun/docuum .
       export RUSTFLAGS='-C target-feature=+crt-static'
