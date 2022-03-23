@@ -1,4 +1,4 @@
-FROM opensuse/tumbleweed:latest@sha256:6ca9d0552c522c74366973a2a42fb673cf32cf4b256330fbe95f09064fa72459
+FROM opensuse/tumbleweed:latest@sha256:c7b86b82256b7b200959f00fee283c67b95720f0628bcc40cce7797190767c02
 RUN zypper install -y \
         curl \
         tar \
