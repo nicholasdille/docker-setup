@@ -38,7 +38,7 @@
 
   "packageRules": [
     {
-      "matchFiles": [ "^docker-setup.(sh|ps1)$" ],
+      "matchFiles": [ "^tools.yaml$" ],
       "updateTypes": ["pin", "digest", "patch", "minor", "major"],
       "automerge": true
     },
