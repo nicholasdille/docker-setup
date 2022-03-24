@@ -857,7 +857,7 @@ tools:
       fi
 
   - name: helmfile
-    version: 0.143.1
+    version: 0.143.2
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
