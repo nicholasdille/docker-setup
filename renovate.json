@@ -14,6 +14,8 @@
   "docker": {
     "pinDigests": true
   },
+  "automergeType": "pr",
+  "ignoreTests": false,
   "rebaseWhen": "never",
   "rebaseLabel": "renovate/rebase",
   "recreateClosed": true,
