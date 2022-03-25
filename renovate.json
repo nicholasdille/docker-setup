@@ -40,7 +40,6 @@
 
   "packageRules": [
     {
-      "matchFiles": [ "^tools.yaml$" ],
       "updateTypes": ["pin", "digest", "patch", "minor", "major"],
       "automerge": true
     },
@@ -50,10 +49,10 @@
       "automerge": true
     },
     {
-      "matchFiles": [ "^env/amazonlinux-2/Dockerfile$" ],
+      "matchFiles": [ "^env/amazonlinux-2022/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "amazonlinux" ],
-      "allowedVersions": "<=2.0"
+      "allowedVersions": "<=2022"
     },
     {
       "matchFiles": [ "^env/centos-7/Dockerfile$" ],

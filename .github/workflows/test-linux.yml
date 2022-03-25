@@ -80,7 +80,7 @@ jobs:
       matrix:
         distro:
           - alpine-3.15
-          #- amazonlinux-2
+          #- amazonlinux-2022
           #- archlinux
           #- clearlinux
           - centos-7
