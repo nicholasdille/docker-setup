@@ -356,12 +356,15 @@ debug "Finished dependency resolution (@ ${SECONDS})"
 check_only_exit_code=0
 line_length=0
 for name in "${tools[@]}"; do
+    tool_prefix=
     if is_installed "${name}" && matches_version "${name}"; then
         if test -n "${tool_install[${name}]}"; then
+            tool_prefix="+"
             tool_color[${name}]="${yellow}"
             tool_sign[${name}]="${green}${check_mark}"
 
         else
+            tool_prefix="="
             tool_color[${name}]="${green}"
             tool_sign[${name}]="${green}${check_mark}"
         fi
@@ -373,10 +376,12 @@ for name in "${tools[@]}"; do
         fi
 
         if test -n "${tool_install[${name}]}"; then
+            tool_prefix="+"
             tool_color[${name}]="${yellow}"
             tool_sign[${name}]="${red}${cross_mark}"
 
         else
+            tool_prefix="-"
             tool_color[${name}]="${red}"
             tool_sign[${name}]="${red}${cross_mark}"
         fi
@@ -386,7 +391,7 @@ for name in "${tools[@]}"; do
         tool_color[${name}]="${grey}"
     fi
 
-    item="${name} ${tool_version[${name}]} ${tool_sign[${name}]}"
+    item="$(if ${no_color}; then echo "${tool_prefix}"; fi)${name} ${tool_version[${name}]} ${tool_sign[${name}]}"
     item_length=$(( ${#item} + 3 ))
     if test "$(( line_length + item_length ))" -gt "$(get_display_cols)"; then
         echo

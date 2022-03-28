@@ -126,6 +126,7 @@ jobs:
               .; \
           mkdir -p "${PWD}/log"; \
           if ${IS_PR}; then
+              echo "This is a PR"
               TOOL="$(
                   curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
                       --silent \
@@ -135,6 +136,7 @@ jobs:
                   | grep -E -B 1 -- "-\s+version:" \
                   | sed -zE 's/^\s*-\sname:\s([^\n]+)\n.+$/\1/'
               )"
+              echo "TOOL=${TOOL}"
           fi
           docker run \
               --platform linux/${{ matrix.arch }} \
