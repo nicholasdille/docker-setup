@@ -16,7 +16,7 @@
   },
   "automergeType": "branch",
   "ignoreTests": false,
-  "rebaseWhen": "behind-base-branch",
+  "rebaseWhen": "auto",
   "rebaseLabel": "renovate/rebase",
   "recreateClosed": true,
   "prHourlyLimit": 0,
