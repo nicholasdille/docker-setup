@@ -6,9 +6,11 @@ on:
       - "v*"
     branches:
       - "renovate/*"
+      - "test/renovate"
   pull_request:
     branches-ignore:
       - "renovate/*"
+      - "test/renovate"
     types:
       - opened
       - synchronize
