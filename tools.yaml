@@ -1688,7 +1688,7 @@ tools:
       "${target}/bin/regsync" completion zsh >"${target}/share/zsh/vendor-completions/_regsync"
 
   - name: rootlesskit
-    version: 0.14.6
+    version: 1.0.0
     check: ${binary} --version | cut -d' ' -f3
     download:
     - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
