@@ -13,7 +13,7 @@
   "docker": {
     "pinDigests": true
   },
-  "automergeType": "branch",
+  "automergeType": "pr",
   "ignoreTests": false,
   "rebaseWhen": "auto",
   "rebaseLabel": "renovate/rebase",
