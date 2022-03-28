@@ -130,6 +130,7 @@ jobs:
                       --fail \
                       --header "Accept: application/vnd.github.v3+json" \
                       --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                  | jq --raw-output '.[].patch' \
                   | grep -E -B 1 -- "-\s+version:" \
                   | sed -zE 's/^\s*-\sname:\s([^\n]+)\n.+$/\1/'
               )"
