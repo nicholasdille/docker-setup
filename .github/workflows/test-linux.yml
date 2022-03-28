@@ -115,7 +115,8 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
           TERM: xterm
-          SKIP_DOCS: ${{ github.event_name == 'pull_request' }}
+          IS_PR: ${{ github.event_name == 'pull_request' }}
+          PR: ${{ github.event.pull_request.number }}
         run: |
           make tools.json; \
           docker build \
@@ -124,6 +125,17 @@ jobs:
               --tag test \
               .; \
           mkdir -p "${PWD}/log"; \
+          if ${IS_PR}; then
+              TOOL="$(
+                  curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
+                      --silent \
+                      --fail \
+                      --header "Accept: application/vnd.github.v3+json" \
+                      --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                  | grep -E -B 1 -- "-\s+version:" \
+                  | sed -zE 's/^\s*-\sname:\s([^\n]+)\n.+$/\1/'
+              )"
+          fi
           docker run \
               --platform linux/${{ matrix.arch }} \
               --interactive \
@@ -131,7 +143,8 @@ jobs:
               --privileged \
               --env TERM \
               --env Europe/Berlin \
-              --env SKIP_DOCS \
+              --env "SKIP_DOCS=${IS_PR}" \
+              --env "TOOL=${TOOL}" \
               --volume "${PWD}/log:/var/log" \
               test bash run.sh
 
