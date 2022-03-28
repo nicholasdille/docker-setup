@@ -2,8 +2,6 @@ name: Debug
 
 on:
   pull_request:
-    branches:
-      - "fast-test"
     types:
       - opened
       - synchronize
