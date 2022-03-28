@@ -4,11 +4,7 @@ on:
   push:
     tags:
       - "v*"
-    branches:
-      - "renovate/*"
   pull_request:
-    branches:
-      - "!renovate/*"
     types:
       - opened
       - synchronize
