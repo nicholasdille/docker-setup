@@ -32,6 +32,10 @@ jobs:
       has_tag: ${{ steps.tag.outputs.has_tag }}
     steps:
 
+      - name: Show event payload
+        run: |
+          jq '.' "${GITHUB_EVENT_PATH}"
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
