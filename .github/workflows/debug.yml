@@ -1,0 +1,22 @@
+name: Debug
+
+on:
+  pull_request:
+    branches:
+      - "fast-test"
+    types:
+      - opened
+      - synchronize
+      - labeled
+      - reopened
+
+jobs:
+
+  check:
+    name: Checks
+    runs-on: ubuntu-20.04
+    steps:
+
+      - name: Show event payload
+        run: |
+          jq '.' "${GITHUB_EVENT_PATH}"
