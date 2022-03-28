@@ -39,15 +39,6 @@
 
   "packageRules": [
     {
-      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
-      "automerge": true
-    },
-    {
-      "matchDatasources": [ "docker" ],
-      "updateTypes": ["pin", "digest"],
-      "automerge": true
-    },
-    {
       "matchFiles": [ "^env/amazonlinux-2022/Dockerfile$" ],
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "amazonlinux" ],
@@ -106,6 +97,15 @@
       "matchDatasources": [ "docker" ],
       "matchPackageNames": [ "ubuntu" ],
       "allowedVersions": "22.04"
+    },
+    {
+      "matchDatasources": [ "docker" ],
+      "updateTypes": ["pin", "digest"],
+      "automerge": true
+    },
+    {
+      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
+      "automerge": true
     }
   ],
 
