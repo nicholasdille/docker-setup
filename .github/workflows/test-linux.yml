@@ -125,6 +125,7 @@ jobs:
               --tag test \
               .; \
           mkdir -p "${PWD}/log"; \
+          echo "IS_PR=${IS_PR}"
           if ${IS_PR}; then
               echo "This is a PR"
               TOOL="$(
