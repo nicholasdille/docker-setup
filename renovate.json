@@ -100,10 +100,23 @@
     },
     {
       "matchDatasources": [ "docker" ],
+      "matchPackageNames": [
+        "golang",
+        "rust"
+      ],
+      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
+      "automerge": true
+    },
+    {
+      "matchDatasources": [ "docker" ],
       "updateTypes": ["pin", "digest"],
       "automerge": true
     },
     {
+      "matchDatasources": [
+        "github-releases",
+        "github-tags"
+      ],
       "updateTypes": ["pin", "digest", "patch", "minor", "major"],
       "automerge": true
     }
