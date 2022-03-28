@@ -6,7 +6,6 @@
 
   "enabledManagers": [
     "dockerfile",
-    "docker-compose",
     "github-actions",
     "regex"
   ],
