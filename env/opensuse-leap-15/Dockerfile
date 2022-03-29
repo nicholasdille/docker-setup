@@ -1,4 +1,4 @@
-FROM opensuse/leap:15@sha256:1f02654f14b4e7c3b1e2ec84d713f5a3df5a9f0e1e0d984814b568e227f420cf
+FROM opensuse/leap:42@sha256:271c921a1c84d65467d565e3f1c754b75aa01ceed1a7ac39de4816683c355fd2
 RUN zypper install -y \
         curl \
         tar \
