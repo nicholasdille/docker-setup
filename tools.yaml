@@ -3,6 +3,9 @@ tools:
   - name: arkade
     version: 0.8.14
     check: ${binary} version | grep "version" | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url:
         x86_64: https://github.com/alexellis/arkade/releases/download/${version}/arkade
@@ -16,6 +19,9 @@ tools:
   - name: buildah
     version: 1.24.2
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - build
+    - redhat
     download:
     - url:
         x86_64: https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah.tar.gz
@@ -25,6 +31,9 @@ tools:
   - name: buildkit
     version: 0.10.0
     binary: buildkitd
+    tags:
+    - build
+    - docker
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
@@ -57,6 +66,9 @@ tools:
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
     - docker
+    tags:
+    - docker
+    - plugin
     download:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
@@ -73,6 +85,9 @@ tools:
     needs:
     - docker
     - slirp4netns
+    tags:
+    - rootless
+    - network
     install: |
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -98,6 +113,8 @@ tools:
 
   - name: cinf
     version: 0.6.0
+    tags:
+    - cgroups
     download:
     - url: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
       type: tarball
@@ -108,6 +125,10 @@ tools:
   - name: clusterawsadm
     version: 1.3.0
     check: ${binary} version --output short | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - cloud
     download:
     - url: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-amd64
       type: executable
@@ -120,6 +141,9 @@ tools:
   - name: clusterctl
     version: 1.1.3
     check: ${binary} version --output short | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}
       type: executable
@@ -132,6 +156,10 @@ tools:
     version: 1.1.1
     binary: ${target}/libexec/cni/loopback
     check: ${binary} 2>&1 | cut -d' ' -f4 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - network
     download:
     - url: https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz
       type: tarball
@@ -140,6 +168,10 @@ tools:
   - name: cni-isolation
     version: 0.0.4
     binary: ${target}/libexec/cni/isolation
+    tags:
+    - k8s
+    - kubernetes
+    - network
     download:
     - url: https://github.com/AkihiroSuda/cni-isolation/releases/download/v${version}/cni-isolation-${alt_arch}.tgz
       type: tarball
@@ -148,6 +180,8 @@ tools:
   - name: conmon
     version: 2.1.0
     check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
+    tags:
+    - redhat
     download:
     - url: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
       type: tarball
@@ -192,6 +226,8 @@ tools:
     - runc
     - cni
     - dasel
+    tags:
+    - runtime
     download:
     - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -243,6 +279,8 @@ tools:
 
   - name: containerssh
     version: 0.4.1
+    tags:
+    - misc
     download:
     - url: https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -257,6 +295,8 @@ tools:
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
     needs:
     - docker
+    tags:
+    - security
     download:
     - url: https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}
       type: executable
@@ -269,6 +309,9 @@ tools:
   - name: crane
     version: 0.8.0
     check: ${binary} version
+    tags:
+    - registry
+    - image
     download:
     - url: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
       type: tarball
@@ -284,6 +327,11 @@ tools:
   - name: cri-dockerd
     version: 0.2.0
     check: ${binary} --version 2>&1 | cut -d' ' -f2
+    tags:
+    - docker
+    - k8s
+    - kubernetes
+    - runtime
     download:
     - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -294,6 +342,8 @@ tools:
   - name: crictl
     version: 1.23.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - runtime
     download:
     - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -304,6 +354,9 @@ tools:
     check: ${binary} --version | grep "crun version" | cut -d' ' -f3
     needs:
     - docker
+    tags:
+    - runtime
+    - redhat
     download:
     - url:
         x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun.tar.gz
@@ -322,6 +375,8 @@ tools:
   - name: ctop
     version: 0.7.7
     check: ${binary} -v | cut -d, -f1 | cut -d' ' -f3
+    tags:
+    - analysis
     needs:
     - docker
     download:
@@ -331,6 +386,8 @@ tools:
   - name: dasel
     version: 1.24.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - misc
     download:
     - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
       type: executable
@@ -340,6 +397,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
+    tags:
+    - analysis
     download:
     - url: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -354,6 +413,10 @@ tools:
     needs:
     - iptables
     - fuse-overlayfs
+    tags:
+    - docker
+    - runtijme
+    - build
     download:
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
       type: tarball
@@ -567,6 +630,9 @@ tools:
   - name: docker-compose
     version: 1.29.2
     check: ${binary} version --short
+    tags:
+    - docker
+    - compose
     download:
     - url:
         x86_64: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
@@ -578,6 +644,10 @@ tools:
     check: ${binary} compose version --short
     needs:
     - docker
+    tags:
+    - docker
+    - compose
+    - plugin
     download:
     - url: https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}
       type: executable
@@ -585,6 +655,8 @@ tools:
   - name: docker-machine
     version: 0.16.2
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
+    tags:
+    - docker
     download:
     - url: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
       type: executable
@@ -594,6 +666,10 @@ tools:
     binary: ${target}/libexec/docker/cli-plugins/docker-scan
     needs:
     - docker
+    tags:
+    - docker
+    - security
+    - plugin
     download:
     - url: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
       type: executable
@@ -603,6 +679,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
+    tags:
+    - misc
     install: |
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -631,6 +709,10 @@ tools:
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
     - docker
+    tags:
+    - analysis
+    - management
+    - tui
     download:
     - url: https://github.com/moncho/dry/releases/download/v${version}/dry-linux-${alt_arch}
       type: executable
@@ -638,6 +720,8 @@ tools:
   - name: duffle
     version: 0.3.5-beta.1
     check: ${binary} version
+    tags:
+    - cnab
     download:
     - url: https://github.com/cnabio/duffle/releases/download/${version}/duffle-linux-${alt_arch}
       type: executable
@@ -645,6 +729,8 @@ tools:
   - name: dyff
     version: 1.5.2
     check: ${binary} version | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -660,6 +746,9 @@ tools:
   - name: faas-cli
     version: 0.14.2
     check: ${binary} version | grep "version:" | cut -d' ' -f3
+    tags:
+    - serverless
+    - faas
     download:
     - url:
         x86_64: https://github.com/openfaas/faas-cli/releases/download/${version}/faas-cli
@@ -672,6 +761,9 @@ tools:
     needs:
     - containerd
     - faas-cli
+    tags:
+    - serverless
+    - faas
     download:
     - url:
         x86_64: https://github.com/openfaas/faasd/releases/download/${version}/faasd
@@ -681,6 +773,8 @@ tools:
   - name: firecracker
     version: 1.0.0
     check: ${binary} --version | grep "^Firecracker" | cut -d' ' -f2 | tr -d v
+    tags:
+    - kvm
     download:
     - url: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-${arch}.tgz
       type: tarball
@@ -700,6 +794,8 @@ tools:
     check: ${binary} --version
     needs:
     - firecracker
+    tags:
+    - kvm
     download:
     - url:
         x86_64: https://firectl-release.s3.amazonaws.com/firectl-v${version}
@@ -708,6 +804,8 @@ tools:
   - name: footloose
     version: 0.6.3
     check: ${binary} version | cut -d' ' -f2
+    tags:
+    - misc
     download:
     - url: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
       type: executable
@@ -715,6 +813,8 @@ tools:
   - name: fuse-overlayfs
     version: 1.8.2
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    tags:
+    - storage
     download:
     - url: https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}
       type: executable
@@ -725,6 +825,8 @@ tools:
     needs:
     - fuse-overlayfs
     - containerd
+    tags:
+    - storage
     download:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -750,6 +852,8 @@ tools:
   - name: glow
     version: 1.4.1
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_linux_${arch}.tar.gz
       type: tarball
@@ -760,6 +864,9 @@ tools:
   - name: grype
     version: 0.34.7
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
+    tags:
+    - security
+    - sbom
     download:
     - url: https://github.com/anchore/grype/releases/download/v0.34.3/grype_0.34.3_linux_amd64.tar.gz
       type: tarball
@@ -778,6 +885,8 @@ tools:
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
     - docker
+    tags:
+    - runtime
     download:
     - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc
       type: executable
@@ -797,6 +906,10 @@ tools:
   - name: hadolint
     version: 2.9.3
     check: ${binary} --version | cut -d' ' -f4 | cut -d- -f1
+    tags:
+    - docker
+    - build
+    - analysis
     download:
     - url:
         x86_64: https://github.com/hadolint/hadolint/releases/download/v${version}/hadolint-Linux-${arch}
@@ -805,6 +918,8 @@ tools:
   - name: hcloud
     version: 1.29.0
     check: ${binary} version | cut -d' ' -f2
+    tags:
+    - cloud
     download:
     - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
       type: tarball
@@ -815,6 +930,10 @@ tools:
   - name: helm
     version: 3.8.1
     check: ${binary} version --short | cut -d+ -f1 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - templating
     download:
     - url: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -859,6 +978,10 @@ tools:
   - name: helmfile
     version: 0.143.5
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - templating
     download:
     - url: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
       type: executable
@@ -872,6 +995,8 @@ tools:
   - name: hub-tool
     version: 0.4.4
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
+    tags:
+    - docker
     download:
     - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
       type: tarball
@@ -886,6 +1011,8 @@ tools:
     needs:
     - containerd
     - cni
+    tags:
+    - kvm
     download:
     - url: https://github.com/weaveworks/ignite/releases/download/v${version}/ignite-${alt_arch}
       type: executable
@@ -900,6 +1027,8 @@ tools:
   - name: img
     version: 0.5.11
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
+    tags:
+    - build
     download:
     - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
       type: executable
@@ -911,6 +1040,8 @@ tools:
     needs:
     - containerd
     - docker
+    tags:
+    - misc
     install: |
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -937,6 +1068,8 @@ tools:
   - name: imgpkg
     version: 0.27.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
       type: executable
@@ -946,6 +1079,8 @@ tools:
     check: ${binary} version --number
     needs:
     - containerd
+    tags:
+    - misc
     download:
     - url: https://github.com/ipfs/go-ipfs/releases/download/v${version}/go-ipfs_v${version}_linux-${alt_arch}.tar.gz
       type: tarball
@@ -978,6 +1113,8 @@ tools:
   - name: iptables
     version: 1.8.7
     hidden: true
+    tags:
+    - network
     install: |
       if is_centos_7 || is_amzn_2; then
           get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos7-${alt_arch}.tar.gz" \
@@ -995,6 +1132,8 @@ tools:
   - name: jp
     version: 0.2.1
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
       type: executable
@@ -1004,6 +1143,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
+    tags:
+    - misc
     install: |
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
@@ -1032,6 +1173,9 @@ tools:
     check: ${binary} version | head -n 1 | cut -d' ' -f3 | tr -d v
     needs:
     - docker
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
       type: executable
@@ -1044,6 +1188,9 @@ tools:
   - name: k3s
     version: 1.23.4+k3s1
     check: ${binary} --version | head -n 1 | cut -d' ' -f3 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url:
         x86_64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s
@@ -1065,6 +1212,9 @@ tools:
   - name: k3sup
     version: 0.11.3
     check: ${binary} version | grep Version | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url:
         x86_64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup
@@ -1074,6 +1224,11 @@ tools:
   - name: k9s
     version: 0.25.18
     check: ${binary} version --short | grep "^Version" | cut -dv -f2
+    tags:
+    - k8s
+    - kubernetes
+    - management
+    - tui
     download:
     - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
       type: tarball
@@ -1084,6 +1239,10 @@ tools:
   - name: kapp
     version: 0.46.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    - templating
     download:
     - url: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
       type: executable
@@ -1096,6 +1255,10 @@ tools:
   - name: kbld
     version: 0.32.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    - build
     download:
     - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
       type: executable
@@ -1103,6 +1266,9 @@ tools:
   - name: kbrew
     version: 0.1.0
     check: ${binary} version | cut -d, -f1 | cut -d'"' -f4 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -1113,6 +1279,9 @@ tools:
   - name: kind
     version: 0.12.0
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     needs:
     - docker
     download:
@@ -1127,6 +1296,9 @@ tools:
   - name: kink
     version: 0.2.1
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
       type: tarball
@@ -1142,6 +1314,10 @@ tools:
   - name: kompose
     version: 1.26.1
     check: ${binary} version | cut -d' ' -f1
+    tags:
+    - k8s
+    - kubernetes
+    - compose
     download:
     - url: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
       type: executable
@@ -1154,6 +1330,9 @@ tools:
   - name: krew
     version: 0.4.3
     check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
       type: tarball
@@ -1175,6 +1354,9 @@ tools:
   - name: kubeadm
     version: 1.23.5
     check: ${binary} version --output short | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
       type: executable
@@ -1188,6 +1370,9 @@ tools:
     check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
     needs:
     - krew
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
       type: executable
@@ -1292,6 +1477,10 @@ tools:
     version: 0.1.5
     needs:
     - kubectl
+    tags:
+    - k8s
+    - kubernetes
+    - build
     download:
     - url:
         x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
@@ -1303,6 +1492,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f2 | tr -d ','
     needs:
     - kubectl
+    tags:
+    - k8s
+    - kubernetes
+    - analysis
     download:
     - url:
         x86_64: https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip
@@ -1315,6 +1508,10 @@ tools:
     version: 0.2.0
     needs:
     - kubectl
+    tags:
+    - k8s
+    - kubernetes
+    - analysis
     download:
     - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -1325,6 +1522,10 @@ tools:
   - name: kubefire
     version: 0.3.6
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - kvm
     download:
     - url: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
       type: executable
@@ -1335,6 +1536,9 @@ tools:
   - name: kubelet
     version: 1.23.5
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
       type: executable
@@ -1342,12 +1546,18 @@ tools:
   - name: kubeletctl
     version: 1.8
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
       type: executable
 
   - name: kubeswitch
     version: 1.4.0
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1358,6 +1568,10 @@ tools:
   - name: kustomize
     version: 4.5.4
     check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - templating
     download:
     - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1373,6 +1587,10 @@ tools:
     check: ${binary} --version | grep Version | cut -d' ' -f2
     needs:
     - docker
+    tags:
+    - docker
+    - management
+    - tui
     download:
     - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -1383,6 +1601,9 @@ tools:
   - name: lazygit
     version: 0.32.2
     check: ${binary} --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,
+    tags:
+    - misc
+    - management
     download:
     - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -1395,6 +1616,8 @@ tools:
     binary: ${target}/bin/lscgroup
     needs:
     - docker
+    tags:
+    - cgroup
     install: |
       wait_for_docker
       "${target}/bin/docker" container run \
@@ -1430,6 +1653,8 @@ tools:
   - name: manifest-tool
     version: 2.0.3
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
       type: tarball
@@ -1442,6 +1667,9 @@ tools:
   - name: minikube
     version: 1.25.2
     check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
     download:
     - url: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
       type: executable
@@ -1453,6 +1681,9 @@ tools:
 
   - name: mitmproxy
     version: 8.0.0
+    tags:
+    - misc
+    - network
     download:
     - url:
         x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
@@ -1466,6 +1697,8 @@ tools:
   - name: nerdctl
     version: 0.18.0
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -1474,6 +1707,9 @@ tools:
   - name: norouter
     version: 0.6.4
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - misc
+    - network
     download:
     - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
       type: tarball
@@ -1486,6 +1722,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - docker
+    tags:
+    - docker
+    - plugin
+    - security
     download:
     - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1504,6 +1744,9 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - docker
+    tags:
+    - misc
+    - oci
     install: |
       echo "oci-image-tool ${version}"
       if docker_is_running || tool_will_be_installed "docker"; then
@@ -1532,6 +1775,9 @@ tools:
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
     - docker
+    tags:
+    - misc
+    - oci
     install: |
       echo "oci-runtime-tool ${version}"
       if docker_is_running || tool_will_be_installed "docker"; then
@@ -1558,6 +1804,10 @@ tools:
   - name: oras
     version: 0.12.0
     check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
+    tags:
+    - misc
+    - storage
+    - cnab
     download:
     - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1567,6 +1817,8 @@ tools:
 
   - name: patat
     version: 0.8.7.0
+    tags:
+    - misc
     download:
     - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
       type: tarball
@@ -1586,6 +1838,9 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - conmon
+    tags:
+    - runtime
+    - redhat
     download:
     - url:
         x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman.tar.gz
@@ -1598,6 +1853,11 @@ tools:
     needs:
     - docker
     - docker-compose
+    tags:
+    - docker
+    - k8s
+    - kubernetes
+    - management
     download:
     - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -1635,6 +1895,8 @@ tools:
   - name: porter
     version: 0.38.10
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
+    tags:
+    - cnab
     download:
     - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
       type: executable
@@ -1653,6 +1915,8 @@ tools:
     version: 6.2.0
     binary: qemu-img
     check: ${binary} --version | grep qemu-img | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz
       type: tarball
@@ -1663,6 +1927,8 @@ tools:
     version: 0.4.1
     binary: regctl
     check: ${binary} version | jq -r .VCSTag | tr -d v
+    tags:
+    - registry
     download:
     - url: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
       type: executable
@@ -1690,6 +1956,8 @@ tools:
   - name: rootlesskit
     version: 1.0.0
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - rootless
     download:
     - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
       type: tarball
@@ -1698,6 +1966,9 @@ tools:
   - name: runc
     version: 1.1.1
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    tags:
+    - runtime
+    - oci
     download:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
@@ -1728,6 +1999,9 @@ tools:
   - name: skopeo
     version: 1.6.1
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - registry
+    - redhat
     download:
     - url:
         x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo.tar.gz
@@ -1737,6 +2011,9 @@ tools:
   - name: slirp4netns
     version: 1.1.12
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    tags:
+    - rootless
+    - network
     download:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
@@ -1765,6 +2042,9 @@ tools:
   - name: sops
     version: 3.7.2
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
+    tags:
+    - misc
+    - security
     download:
     - url:
         x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
@@ -1773,6 +2053,9 @@ tools:
   - name: sshocker
     version: 0.2.3
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - misc
+    - security
     download:
     - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
       type: executable
@@ -1783,6 +2066,8 @@ tools:
     check: ${binary} -version | cut -d' ' -f2 | tr -d v
     needs:
     - containerd
+    tags:
+    - storage
     download:
     - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -1808,6 +2093,8 @@ tools:
   - name: syft
     version: 0.42.4
     check: ${binary} --version | cut -d' ' -f2
+    tags:
+    - sbom
     download:
     - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1823,6 +2110,8 @@ tools:
   - name: task
     version: 3.11.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - misc
     download:
     - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1845,6 +2134,8 @@ tools:
   - name: trivy
     version: 0.24.4
     check: ${binary} --version | cut -d' ' -f2
+    tags:
+    - security
     download:
     - url:
         x86_64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz
@@ -1857,6 +2148,9 @@ tools:
   - name: umoci
     version: 0.4.7
     check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - misc
+    - oci
     download:
     - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
       type: executable
@@ -1864,6 +2158,8 @@ tools:
   - name: vendir
     version: 0.26.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
+    tags:
+    - misc
     download:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
       type: executable
@@ -1871,6 +2167,10 @@ tools:
   - name: ytt
     version: 0.40.1
     check: ${binary} version | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    - templating
     download:
     - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
       type: executable
@@ -1883,6 +2183,8 @@ tools:
   - name: yq
     version: 4.24.2
     check: ${binary} --version | cut -d' ' -f4
+    tags:
+    - misc
     download:
     - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
       type: executable

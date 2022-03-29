@@ -27,6 +27,12 @@ function get_tools() {
     jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
 }
 
+function get_tags() {
+    jq --raw-output '.tools[] | select(.tags != null) | .tags[]' "${docker_setup_tools_file}" \
+    | sort \
+    | uniq
+}
+
 function get_tool() {
     local tool=$1
 

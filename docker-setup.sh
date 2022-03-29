@@ -31,6 +31,7 @@ declare -a unknown_parameters
 : "${reinstall:=false}"
 : "${only:=false}"
 : "${only_installed:=false}"
+: "${tags:=false}"
 : "${no_progressbar:=false}"
 : "${show_version:=false}"
 : "${no_color:=false}"
@@ -40,6 +41,7 @@ declare -a unknown_parameters
 : "${no_cache:=false}"
 : "${no_cron:=false}"
 : "${debug:=false}"
+declare -A requested_names
 declare -A requested_tools
 while test "$#" -gt 0; do
     case "$1" in
@@ -61,6 +63,9 @@ while test "$#" -gt 0; do
             ;;
         --only-installed)
             only_installed=true
+            ;;
+        --tags)
+            tags=true
             ;;
         --no-progressbar)
             no_progressbar=true
@@ -96,8 +101,7 @@ while test "$#" -gt 0; do
             ;;
         *)
             if test -n "$1"; then
-                requested_tools["$1"]=true
-                only=true
+                requested_names["$1"]=true
             fi
             ;;
     esac
@@ -176,6 +180,7 @@ are accepted:
 --reinstall, $reinstall             Reinstall all tools
 --only, $only                       Only install specified tools
 --only-installed, $only_installed   Only process installed tools
+--tags, $tags                       Only install tools with specified tags
 --no-progressbar, $no_progressbar   Disable progress bar
 --no-color, $no_color               Disable colored output
 --plan, $plan                       Show planned installations
@@ -208,7 +213,18 @@ EOF
 fi
 
 if ${only} && ${only_installed}; then
-    error "You can only specify one: --only/\$only and --only-installed/\$only_installed."
+    error "You can only specify one: --only/\$only or --only-installed/\$only_installed."
+    echo
+    exit 1
+fi
+if ${only} && ${tags}; then
+    error "You can only specify one: --only/\$only or --tags/\$tags."
+    echo
+    exit 1
+fi
+if ${tags} && ${only_installed}; then
+    error "You can only specify one: --tags/\$tags or --only-installed/\$only_installed."
+    echo
     exit 1
 fi
 
@@ -251,6 +267,8 @@ debug "Finished checking of runtime dependencies (@ ${SECONDS})"
 
 declare -a tools
 mapfile -t tools < <(get_tools)
+declare -a all_tags
+mapfile -t all_tags < <(get_tags)
 
 debug "Finished tools retrieval (@ ${SECONDS})"
 
@@ -262,6 +280,24 @@ for deps in $(get_all_tool_deps); do
 done
 
 debug "Finished dependency retrieval (@ ${SECONDS})"
+
+if ${only}; then
+    for tool in "${!requested_names[@]}"; do
+        requested_tools[${tool}]=true
+    done
+fi
+if ${tags}; then
+    for tag in "${!requested_names[@]}"; do
+        tool_names="$(
+            jq --raw-output --arg tag "${tag}" '.tools[] | select(.tags != null and (.tags[] | contains($tag))) | .name' "${docker_setup_tools_file}" \
+            | tr '\n' ' '
+        )"
+        for tool in ${tool_names}; do
+            requested_tools[${tool}]=true
+        done
+    done
+    only=true
+fi
 
 declare -a unknown_tools
 for name in "${!requested_tools[@]}"; do
@@ -278,13 +314,13 @@ if test "${#unknown_tools[@]}" -gt 0; then
     exit 1
 fi
 
-if ! ${only} && test "${#requested_tools[@]}" -gt 0; then
-    error "You must supply --only/\$only if specifying tools on the command line."
+if ! ${only} && ! ${tags} && test "${#requested_tools[@]}" -gt 0; then
+    error "When specifying names (${#requested_tools[@]}) you must supply --only/\$only (${only}) or --tags/\$tags (${tags})."
     echo
     exit 1
 fi
-if ${only} && test "${#requested_tools[@]}" -eq 0; then
-    error "You must specify tool on the command line if you supply --only/\$only."
+if ( ${only} || ${tags} ) && test "${#requested_tools[@]}" -eq 0; then
+    error "You must specify at least one name if you supply --only/\$only or --tags/\$tags."
     echo
     exit 1
 fi
@@ -327,6 +363,20 @@ if ${only_installed}; then
 fi
 
 debug "Finished caching data from tools.json (@ ${SECONDS})"
+
+echo "docker-setup includes ${#all_tags[@]} tags:"
+line_length=0
+for tag in "${all_tags[@]}"; do
+    tag_length=$(( ${#tag} + 3 ))
+    if test "$(( line_length + tag_length ))" -gt "$(get_display_cols)"; then
+        echo
+        line_length=0
+    fi
+    line_length=$(( line_length + tag_length ))
+    echo -n "${tag} "
+done
+echo
+echo
 
 echo -e "docker-setup includes ${#tools[*]} tools:"
 echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
