@@ -41,6 +41,7 @@ declare -a unknown_parameters
 : "${no_cache:=false}"
 : "${no_cron:=false}"
 : "${debug:=false}"
+: "${no_cgroup_reboot:=false}"
 declare -A requested_names
 declare -A requested_tools
 while test "$#" -gt 0; do
@@ -95,6 +96,9 @@ while test "$#" -gt 0; do
             ;;
         --debug)
             debug=true
+            ;;
+        --no-cgroup-reboot)
+            no_cgroup_reboot=true
             ;;
         --*)
             unknown_parameters+=("$1")
@@ -523,7 +527,7 @@ mkdir -p \
 
 : "${cgroup_version:=v2}"
 current_cgroup_version="v1"
-if test "$(stat -fc %t /sys/fs/cgroup/)" == "cgroup2fs"; then
+if test "$(stat -fc %T /sys/fs/cgroup/)" == "cgroup2fs"; then
     current_cgroup_version="v2"
 fi
 if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test "${current_cgroup_version}" == "v1"; then
@@ -538,10 +542,13 @@ if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test 
     sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"/' "${prefix}/etc/default/grub"
     echo "Update grub"
     update-grub
-    read -r -p "Reboot to enable cgroup v2 (y/N)"
-    if test "${REPLY,,}" == "y"; then
-        reboot
-        exit
+
+    if ! ${no_cgroup_reboot}; then
+        read -r -p "Reboot to enable cgroup v2 (y/N)"
+        if test "${REPLY,,}" == "y"; then
+            reboot
+            exit
+        fi
     fi
 fi
 
