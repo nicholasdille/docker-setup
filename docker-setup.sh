@@ -501,6 +501,23 @@ if test ${EUID} -ne 0; then
     exit 1
 fi
 
+if ${plan}; then
+    exit
+fi
+if test "${#tool_install[@]}" -eq 0; then
+    echo -e "${green}Everything is up-to-date.${reset}"
+    exit
+fi
+
+function cleanup() {
+    tput cnorm
+    cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r child; do
+        kill "${child}"
+    done
+    rm -rf "${docker_setup_cache}/errors"
+}
+trap cleanup EXIT
+
 # Create directories
 mkdir -p \
     "${docker_setup_logs}" \
@@ -550,23 +567,6 @@ if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test 
             exit
         fi
     fi
-fi
-
-function cleanup() {
-    tput cnorm
-    cat /proc/$$/task/*/child_pids 2>/dev/null | while read -r child; do
-        kill "${child}"
-    done
-    rm -rf "${docker_setup_cache}/errors"
-}
-trap cleanup EXIT
-
-if ${plan}; then
-    exit
-fi
-if test "${#tool_install[@]}" -eq 0; then
-    echo -e "${green}Everything is up-to-date.${reset}"
-    exit
 fi
 
 tput civis
