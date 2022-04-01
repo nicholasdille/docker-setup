@@ -904,7 +904,7 @@ tools:
       fi
 
   - name: hadolint
-    version: 2.9.3
+    version: 2.10.0
     check: ${binary} --version | cut -d' ' -f4 | cut -d- -f1
     tags:
     - docker
