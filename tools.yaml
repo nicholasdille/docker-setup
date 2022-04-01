@@ -1,7 +1,7 @@
 tools:
 
   - name: arkade
-    version: 0.8.14
+    version: 0.8.18
     check: ${binary} version | grep "version" | cut -d' ' -f2
     download:
     - url:
