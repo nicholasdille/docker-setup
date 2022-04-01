@@ -10,6 +10,11 @@
     "regex"
   ],
 
+  "baseBranches": [
+    "main",
+    "v1.3"
+  ],
+  "useBaseBranchConfig": "merge",
   "docker": {
     "pinDigests": true
   },
