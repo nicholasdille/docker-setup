@@ -468,7 +468,7 @@ mkdir -p \
 
 : "${cgroup_version:=v2}"
 current_cgroup_version="v1"
-if test "$(stat -fc %t /sys/fs/cgroup/)" == "cgroup2fs"; then
+if test "$(stat -fc %T /sys/fs/cgroup/)" == "cgroup2fs"; then
     current_cgroup_version="v2"
 fi
 if type update-grub >/dev/null 2>&1 && test "${cgroup_version}" == "v2" && test "${current_cgroup_version}" == "v1"; then
