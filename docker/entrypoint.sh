@@ -5,4 +5,4 @@ if ! test -S /var/run/docker.sock; then
     echo "WARNING: You must map the Docker socket for the installation."
 fi
 
-bash docker-setup.sh "$@"
+docker-setup "$@"
