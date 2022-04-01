@@ -163,6 +163,15 @@ from the container ecosystem.
 
 EOF
 
+if test -z "${TERM}"; then
+    error "TERM must be set for tput to work."
+    exit 1
+fi
+if ! tput -x >/dev/null 2>&1; then
+    error "Error running tput. TERM (${TERM}) might be weird."
+    exit 1
+fi
+
 if test "${#unknown_parameters[@]}" -gt 0; then
     error "Unknown parameter(s): ${unknown_parameters[*]}."
     echo
