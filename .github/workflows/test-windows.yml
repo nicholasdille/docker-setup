@@ -4,16 +4,16 @@ on:
   push:
     tags:
       - "v*"
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - labeled
-      - reopened
-    paths:
-      - docker-setup.ps1
-      - tools.yaml
-      - .github/workflows/test-windows.yml
+  #pull_request:
+  #  types:
+  #    - opened
+  #    - synchronize
+  #    - labeled
+  #    - reopened
+  #  paths:
+  #    - docker-setup.ps1
+  #    - tools.yaml
+  #    - .github/workflows/test-windows.yml
 
 jobs:
 
