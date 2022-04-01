@@ -7,9 +7,9 @@ on:
   pull_request:
     types:
       - opened
-      - synchronize
-      - labeled
-      - reopened
+      #- synchronize
+      #- labeled
+      #- reopened
     paths:
       - docker-setup.sh
       - tools.yaml
