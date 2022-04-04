@@ -66,6 +66,7 @@ jobs:
       has_release: ${{ steps.check.outputs.has_release }}
       has_tag: ${{ steps.tag.outputs.has_tag }}
       distros: ${{ steps.matrix.outputs.distros }}
+      archs: ${{ steps.matrix.outputs.archs }}
     steps:
 
       - name: Checkout code
@@ -125,8 +126,8 @@ jobs:
               echo "::set-output name=distros::${all_distros}"
               echo "::set-output name=archs::${all_archs}"
           else
-              echo "::set-output name=distros::${core_distros}"
-              echo "::set-output name=archs::${core_archs}"
+              echo "::set-output name=distros::$(echo "${core_distros}" | jq --compact-output '.')"
+              echo "::set-output name=archs::$(echo "${core_archs}" | jq --compact-output '.')"
           fi
 
   test:
