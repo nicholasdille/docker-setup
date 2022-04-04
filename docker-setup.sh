@@ -167,7 +167,7 @@ if test -z "${TERM}"; then
     error "TERM must be set for tput to work."
     exit 1
 fi
-if ! tput init >/dev/null 2>&1; then
+if ! tput init; then
     error "Error running tput. TERM (${TERM}) might be weird."
     exit 1
 fi
