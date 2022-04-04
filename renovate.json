@@ -535,14 +535,14 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
-      "matchStrings": [ "K3D:\nversion: \"?(?<currentValue>.*?)\n" ],
+      "matchStrings": [ "name: k3d:\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "rancher/k3d",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
-      "matchStrings": [ "K3S:\nversion: \"?(?<currentValue>.*?)\n" ],
+      "matchStrings": [ "name: k3s:\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -550,13 +550,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
-      "matchStrings": [ "K3SUP:\nversion: \"?(?<currentValue>.*?)\n" ],
+      "matchStrings": [ "name: k3sup:\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "alexellis/k3sup",
       "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
-      "matchStrings": [ "K9S:\nversion: \"?(?<currentValue>.*?)\n" ],
+      "matchStrings": [ "name: k9s:\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "derailed/k9s",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
