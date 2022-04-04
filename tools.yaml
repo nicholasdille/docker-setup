@@ -2155,6 +2155,61 @@ tools:
     - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
       type: executable
 
+  - name: util-linux
+    version: 2.38
+    needs:
+    - docker
+    tags:
+    - misc
+    install: |
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${target}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${target}:/target" \
+              --env DEBIAN_FRONTEND=noninteractive \
+              --env version \
+              --workdir /util-linux \
+              ubuntu:latest <<EOF
+      apt-get update
+      apt-get -y install --no-install-recommends \
+          git \
+          ca-certificates \
+          autoconf \
+          automake \
+          autopoint \
+          gettext \
+          bison \
+          libtool \
+          pkg-config \
+          make \
+          asciidoctor
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/util-linux/util-linux .
+      ./autogen.sh
+      ./configure --disable-shared
+      make LDFLAGS=--static
+      mkdir -p \
+          /target/bin \
+          /target/share/man/man1 \
+          /target/share/man/man8 \
+          /target/share/bash-completion/completions
+      cp lsns nsenter unshare /target/bin
+      cp \
+          sys-utils/nsenter.1 sys-utils/unshare.1 \
+          /target/share/man/man1/
+      cp sys-utils/lsns.8 /target/share/man/man8/
+      cp \
+          bash-completion/lsns bash-completion/nsenter bash-completion/unshare \
+          /target/share/bash-completion/completions
+      EOF
+      else
+          error "Docker is required to install."
+          false
+      fi
+
   - name: vendir
     version: 0.26.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3

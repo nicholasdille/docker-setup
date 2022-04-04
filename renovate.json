@@ -895,6 +895,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: util-linux\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "util-linux/util-linux",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: yq\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "mikefarah/yq",
       "datasourceTemplate": "github-releases",
