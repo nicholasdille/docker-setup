@@ -78,7 +78,9 @@ jobs:
         id: release
         run: |
           is_release=false
+          echo "Check GITHUB_REF for tag: ${GITHUB_REF:0:10}"
           if test "${GITHUB_REF:0:10}" == "ref/tags/v"; then
+              echo "This is a release"
               is_release=true
           fi
           echo "::set-output name=is_release::${is_release}"
@@ -123,9 +125,11 @@ jobs:
         id: matrix
         run: |
           if ${{ steps.release.outputs.is_release }}; then
-              echo "::set-output name=distros::${all_distros}"
-              echo "::set-output name=archs::${all_archs}"
+              echo "Returning all distros and archs"
+              echo "::set-output name=distros::$(echo "${all_distros}" | jq --compact-output '.')"
+              echo "::set-output name=archs::$(echo "${all_archs}" | jq --compact-output '.')"
           else
+              echo "Returning core distros and archs"
               echo "::set-output name=distros::$(echo "${core_distros}" | jq --compact-output '.')"
               echo "::set-output name=archs::$(echo "${core_archs}" | jq --compact-output '.')"
           fi
