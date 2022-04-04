@@ -699,6 +699,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: libcap\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "git://git.kernel.org/pub/scm/libs/libcap/libcap.git",
+      "datasourceTemplate": "git-tags",
+      "extractVersionTemplate": "^libcap-(?<version>.+)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: libcgroup\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "libcgroup/libcgroup",
       "datasourceTemplate": "github-releases",

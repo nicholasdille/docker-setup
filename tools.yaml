@@ -1611,6 +1611,36 @@ tools:
       files:
       - lazygit
 
+  - name: libcap
+    version: 2.63
+    binary: setcap
+    needs:
+    - docker
+    tags:
+    - misc
+    install: |
+      wait_for_docker
+      "${target}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${target}:/target" \
+              --env version \
+              --workdir /libcap \
+              "ubuntu:latest" bash <<EOF
+      apt-get update
+      apt-get -y install --no-install-recommends \
+          build-essential \
+          git \
+          ca-certificates
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "libcap-${version}" https://git.kernel.org/pub/scm/libs/libcap/libcap.git .
+      make -C progs
+      make -C progs install FAKEROOT=/target
+      cp doc/capsh.1 /target/share/man/man1
+      cp doc/getcap.8 /target/share/man/man8
+      cp doc/getpcaps.8 /target/share/man/man8
+      cp doc/setcap.8 /target/share/man/man8
+      EOF
+
   - name: libcgroup
     version: 2.0.1
     binary: ${target}/bin/lscgroup
