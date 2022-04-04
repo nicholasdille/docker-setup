@@ -1,0 +1,26 @@
+FROM ubuntu:22.04 AS tools
+RUN apt-get update \
+ && apt-get -y install --no-install-recommends \
+        git \
+        ca-certificates \
+        autoconf \
+        automake \
+        build-essential \
+        libcap-dev \
+        libbsd-dev \
+        libcap2-bin
+
+FROM tools AS source
+ARG NSUTILS_VERSION=0.2
+WORKDIR /nsutils
+RUN git clone -q --config advice.detachedHead=false --depth 1 --branch "v${NSUTILS_VERSION}" https://github.com/rd235/nsutils .
+
+FROM source AS build
+RUN autoreconf -if \
+ && ./configure --prefix=/target \
+ && make LDFLAGS=--static
+
+FROM build AS install
+RUN mkdir -p \
+        /target/share/man/man1 \
+ && make install
