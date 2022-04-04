@@ -23,15 +23,51 @@ jobs:
   check:
     name: Checks
     runs-on: ubuntu-20.04
+    env:
+      quick_test: |
+        [ 
+          "ubuntu-22.04"
+        ]
+      full_test: |
+        [
+          "alpine-3.15"
+          "centos-7"
+          "debian-11"
+          "fedora-35"
+          "ubuntu-20.04"
+          "ubuntu-21.04"
+          "ubuntu-22.04"
+        ]
+      future_test: |
+        [
+          "amazonlinux-2022"
+          "archlinux"
+          "clearlinux"
+          "centos-8"
+          "opensuse-leap-15"
+          "opensuse-tumbleweed"
+          "rockylinux-8"
+        ]
     outputs:
+      is_release: ${{ steps.release.outputs.is_release }}
       has_release: ${{ steps.check.outputs.has_release }}
       has_tag: ${{ steps.tag.outputs.has_tag }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: '0'
+
+      - name: Is release
+        id: release
+        run: |
+          is_release=falsse
+          if test "${GITHUB_REF:0:10}" == "ref/tags/v"; then
+              is_release=true
+          fi
+          echo "::set-output name=is_release::${is_release}"
 
       - name: Check release
         id: check
@@ -69,6 +105,15 @@ jobs:
           echo "has_tag=${has_tag}"
           echo "::set-output name=has_tag::${has_tag}"
 
+      - name: Prepare matrix
+        id: matrix
+        run: |
+          if ${{ steps.release.outputs.is_release }}; then
+              echo "::set-output name=matrix::${full_test}"
+          else
+              echo "::set-output name=matrix::${quick_test}"
+          fi
+
   test:
     name: Tests
     needs:
@@ -78,21 +123,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro:
-          - alpine-3.15
-          #- amazonlinux-2022
-          #- archlinux
-          #- clearlinux
-          - centos-7
-          #- centos-8
-          - debian-11
-          - fedora-35
-          #- opensuse-leap-15
-          #- opensuse-tumbleweed
-          #- rockylinux-8
-          - ubuntu-20.04
-          - ubuntu-21.04
-          - ubuntu-22.04
+        distro: ${{ fromJSON(needs.check.outputs.matrix) }}
         arch:
           - amd64
           #- arm64
