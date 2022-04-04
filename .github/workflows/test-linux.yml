@@ -77,7 +77,7 @@ jobs:
       - name: Is release
         id: release
         run: |
-          is_release=falsse
+          is_release=false
           if test "${GITHUB_REF:0:10}" == "ref/tags/v"; then
               is_release=true
           fi
