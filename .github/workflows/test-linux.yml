@@ -24,11 +24,15 @@ jobs:
     name: Checks
     runs-on: ubuntu-20.04
     env:
-      quick_test: |
+      core_distros: |
         [ 
           "ubuntu-22.04"
         ]
-      full_test: |
+      core_archs: |
+        [
+          "amd64"
+        ]
+      all_distros: |
         [
           "alpine-3.15"
           "centos-7"
@@ -38,7 +42,11 @@ jobs:
           "ubuntu-21.04"
           "ubuntu-22.04"
         ]
-      future_test: |
+      all_archs: |
+        [
+          "amd64"
+        ]
+      future_distros: |
         [
           "amazonlinux-2022"
           "archlinux"
@@ -48,11 +56,17 @@ jobs:
           "opensuse-tumbleweed"
           "rockylinux-8"
         ]
+      future_archs: |
+        [
+          "amd64",
+          "arm64"
+        ]
     outputs:
       is_release: ${{ steps.release.outputs.is_release }}
       has_release: ${{ steps.check.outputs.has_release }}
       has_tag: ${{ steps.tag.outputs.has_tag }}
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      distros: ${{ steps.matrix.outputs.distros }}
+      archs: ${{ steps.matrix.outputs.archs }}
     steps:
 
       - name: Checkout code
@@ -109,9 +123,11 @@ jobs:
         id: matrix
         run: |
           if ${{ steps.release.outputs.is_release }}; then
-              echo "::set-output name=matrix::${full_test}"
+              echo "::set-output name=distros::${all_distros}"
+              echo "::set-output name=archs::${all_archs}"
           else
-              echo "::set-output name=matrix::${quick_test}"
+              echo "::set-output name=distros::$(echo "${core_distros}" | jq --compact-output '.')"
+              echo "::set-output name=archs::$(echo "${core_archs}" | jq --compact-output '.')"
           fi
 
   test:
@@ -123,10 +139,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        distro: ${{ fromJSON(needs.check.outputs.matrix) }}
-        arch:
-          - amd64
-          #- arm64
+        distro: ${{ fromJSON(needs.check.outputs.distros) }}
+        arch: ${{ fromJSON(needs.check.outputs.archs) }}
     steps:
 
       - name: Checkout code
