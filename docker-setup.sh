@@ -167,10 +167,6 @@ if test -z "${TERM}"; then
     error "TERM must be set for tput to work."
     exit 1
 fi
-if ! tput init; then
-    error "Error running tput. TERM (${TERM}) might be weird."
-    exit 1
-fi
 
 if test "${#unknown_parameters[@]}" -gt 0; then
     error "Unknown parameter(s): ${unknown_parameters[*]}."
@@ -268,7 +264,7 @@ for dependency in "${dependencies[@]}"; do
         exit 1
     fi
 done
-if ! type tput >/dev/null 2>&1; then
+if ! type tput >/dev/null 2>&1 || ! tput init >/dev/null 2>&1; then
     function tput() {
         if test "$1" == "lines"; then
             echo 0
