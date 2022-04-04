@@ -79,7 +79,7 @@ jobs:
         run: |
           is_release=false
           echo "Check GITHUB_REF for tag: ${GITHUB_REF:0:11}"
-          if test "${GITHUB_REF:0:11}" == "ref/tags/v"; then
+          if test "${GITHUB_REF:0:11}" == "refs/tags/v"; then
               echo "This is a release"
               is_release=true
           fi
