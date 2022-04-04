@@ -1739,6 +1739,50 @@ tools:
       - docker-generate
       - docker-notation
 
+  - name: nsutils
+    version: 0.2
+    binary: nslist
+    needs:
+    - docker
+    tags:
+    - misc
+    install: |
+      echo "nsutils ${version}"
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${target}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${target}:/target" \
+              --env version \
+              --env GO111MODULE=auto \
+              --workdir /nsutils \
+              ubuntu:latest <<EOF
+      apt-get update
+      apt-get -y install --no-install-recommends \
+          git \
+          ca-certificates \
+          autoconf \
+          automake \
+          build-essential \
+          libcap-dev \
+          libbsd-dev \
+          libcap2-bin
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rd235/nsutils .
+      autoreconf -if
+      ./configure --prefix=/target
+      make LDFLAGS=--static
+      mkdir -p \
+          /target/share/man/man1
+      make install
+      EOF
+      else
+          error "Docker is required to install."
+          false
+      fi
+
   - name: oci-image-tool
     version: 1.0.0-rc3
     check: ${binary} --version | cut -d' ' -f3

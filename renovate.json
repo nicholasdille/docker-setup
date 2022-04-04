@@ -748,6 +748,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: nsutils\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "rd235/nsutils",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "oci_image_tool:\nversion: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "opencontainers/image-tools",
       "datasourceTemplate": "github-releases",
