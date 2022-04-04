@@ -895,6 +895,13 @@
     },
     {
       "fileMatch": [ "^tools.yaml$" ],
+      "matchStrings": [ "name: uidmap\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
+      "depNameTemplate": "shadow-maint/shadow",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [ "^tools.yaml$" ],
       "matchStrings": [ "name: umoci\\n\\s+version: \"?(?<currentValue>.*?)\n" ],
       "depNameTemplate": "opencontainers/umoci",
       "datasourceTemplate": "github-releases",

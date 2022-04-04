@@ -2189,6 +2189,49 @@ tools:
       files:
       - trivy
 
+  - name: uidmap
+    version: 4.11.1
+    binary: newuidmap
+    needs:
+    - docker
+    tags:
+    - misc
+    install: |
+      if docker_is_running || tool_will_be_installed "docker"; then
+          echo "Wait for Docker daemon to start"
+          wait_for_docker
+          echo "Install binary"
+          "${target}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${target}:/target" \
+              --env DEBIAN_FRONTEND=noninteractive \
+              --env version \
+              --workdir /uidmap \
+              ubuntu:latest <<EOF
+      apt-get update
+      apt-get -y install --no-install-recommends \
+          curl \
+          ca-certificates \
+          xz-utils \
+          build-essential
+      curl -sL https://github.com/shadow-maint/shadow/releases/download/v${version}/shadow-${version}.tar.xz \
+      | tar -xJ --strip-components 1
+      ./configure --prefix=/target --enable-static --disable-shared
+      make LDFLAGS=--static
+      mkdir -p \
+          /target/bin \
+          /target/share/man/man1
+      cp src/newuidmap /target/bin
+      cp src/newgidmap /target/bin
+      cp man/man1/newuidmap.1 /target/share/man/man1
+      cp man/man1/newgidmap.1 /target/share/man/man1
+      EOF
+      else
+          error "Docker is required to install."
+          false
+      fi
+
   - name: umoci
     version: 0.4.7
     check: ${binary} --version | cut -d' ' -f3
