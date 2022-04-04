@@ -126,13 +126,17 @@ jobs:
         run: |
           if ${{ steps.release.outputs.is_release }}; then
               echo "Returning all distros and archs"
-              echo "::set-output name=distros::$(echo "${all_distros}" | jq --compact-output '.')"
-              echo "::set-output name=archs::$(echo "${all_archs}" | jq --compact-output '.')"
+              distros_json="$(echo "${all_distros}" | jq --compact-output '.')"
+              archs_json="$(echo "${all_archs}" | jq --compact-output '.')"
           else
               echo "Returning core distros and archs"
-              echo "::set-output name=distros::$(echo "${core_distros}" | jq --compact-output '.')"
-              echo "::set-output name=archs::$(echo "${core_archs}" | jq --compact-output '.')"
+              distros_json="$(echo "${core_distros}" | jq --compact-output '.')"
+              archs_json="$(echo "${core_archs}" | jq --compact-output '.')"
           fi
+          echo "distros_json=${distros_json}"
+          echo "archs_json=${archs_json}"
+          echo "::set-output name=distros::${distros_json}"
+          echo "::set-output name=archs::${archs_json}"
 
   test:
     name: Tests
