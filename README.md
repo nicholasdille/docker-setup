@@ -11,6 +11,8 @@
 
 The container tools installer and updater
 
+foo
+
 ## Quickstart
 
 Download and run `docker-setup`:
