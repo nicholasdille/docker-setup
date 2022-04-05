@@ -2206,7 +2206,7 @@ tools:
       mv "${target}/share/_task" "${target}/share/zsh/vendor-completions/_task"
 
   - name: trivy
-    version: 0.25.0
+    version: 0.25.1
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - security
