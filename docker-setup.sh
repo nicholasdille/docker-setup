@@ -4,7 +4,8 @@ set -o errexit
 SECONDS=0
 
 docker_setup_version="main"
-docker_setup_repo_base="https://github.com/nicholasdille/docker-setup"
+docker_setup_repo_name="nicholasdille/docker-setup"
+docker_setup_repo_base="https://github.com/${docker_setup_repo_name}"
 docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
@@ -335,6 +336,22 @@ if ( ${only} || ${tags} ) && test "${#requested_tools[@]}" -eq 0; then
 fi
 
 echo -e "docker-setup version $(if test "${docker_setup_version}" == "main"; then echo "${red}"; fi)${docker_setup_version}${reset}"
+minor_version="$(
+    echo "${docker_setup_version}" \
+    | sed -E 's/^v([0-9]+\.[0-9]+)\.[0-9]+$/\1/'
+)"
+if test -n "${minor_version}" && test "${minor_version}" != "main"; then
+    new_version="$(
+        curl --silent "https://api.github.com/repos/${docker_setup_repo_name}/releases" \
+        | jq --raw-output '.[] | select(.prerelease == false) | .tag_name' \
+        | grep "^v${minor_version}." \
+        | sort -Vr \
+        | head -n 1
+    )"
+    if test -n "${new_version}" && test "${new_version}" != "${docker_setup_version}"; then
+        warning "New version available: ${new_version}"
+    fi
+fi
 echo
 if ${show_version}; then
     exit
