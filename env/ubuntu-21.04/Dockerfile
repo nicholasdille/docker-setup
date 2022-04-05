@@ -11,6 +11,7 @@ RUN apt-get update \
         ncurses-bin \
         cron \
         jq \
+        gettext \
  && update-alternatives --set iptables /usr/sbin/iptables-legacy
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup

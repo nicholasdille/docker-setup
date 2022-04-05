@@ -257,7 +257,7 @@ if ! test -f "${docker_setup_tools_file}"; then
     curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/${docker_setup_version}/tools.json"
 fi
 
-dependencies=(jq curl git unzip)
+dependencies=(jq curl git unzip envsubst)
 for dependency in "${dependencies[@]}"; do
     if ! type "${dependency}" >/dev/null 2>&1; then
         error "Missing ${dependency}."
@@ -344,8 +344,10 @@ debug "Finished parameter checks part 2 (@ ${SECONDS})"
 
 # shellcheck disable=SC2034
 go_version=1.18.0
+export go_version
 # shellcheck disable=SC2034
 rust_version=1.59.0
+export rust_version
 
 declare -A tool_version
 for version in $(get_all_tool_versions); do
@@ -387,9 +389,7 @@ done
 echo
 echo
 
-echo -e "docker-setup includes ${#tools[*]} tools:"
-echo -e "(${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
-echo
+echo -e "docker-setup includes ${#tools[*]} tools: (${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 declare -A tool_install
 declare -A tool_color
 declare -A tool_sign

@@ -92,28 +92,19 @@ tools:
     tags:
     - rootless
     - network
+    dockerfile: |
+      FROM golang:${go_version}
+      RUN apt-get update \
+       && apt-get -y install \
+              libseccomp-dev
     install: |
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /go/src/github.com/rootless-containers/bypass4netns \
-              golang:${go_version} <<EOF
-      apt-get update
-      apt-get -y install libseccomp-dev
+      docker_run \
+          --workdir /go/src/github.com/rootless-containers/bypass4netns \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/bypass4netns .
       make static
       cp bypass4netns{,d} /target/bin/
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: cinf
     version: 0.6.0
@@ -243,21 +234,16 @@ tools:
     - url: https://github.com/containerd/containerd/raw/v${version}/containerd.service
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
+    dockerfile: |
+      FROM golang:${go_version}
     post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
-      elif docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install manpages for containerd"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}/share/man:/opt/man" \
-              --env version \
+      else
+          docker_run \
               --workdir /go/src/github.com/containerd/containerd \
-              "golang:${go_version}" bash <<EOF
+              <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/containerd .
       go install github.com/cpuguy83/go-md2man@latest
       export GO111MODULE=auto
@@ -265,8 +251,6 @@ tools:
       cp -r man/*.5 "/opt/man/man5"
       cp -r man/*.8 "/opt/man/man8"
       EOF
-      else
-          warning "Docker is required to install manpages."
       fi
       if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
@@ -545,7 +529,11 @@ tools:
               echo "Configuring storage driver for DinD"
               # shellcheck disable=SC2094
               cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
-              if tool_will_be_installed "fuse-overlayfs"; then
+              if has_tool "fuse-overlayfs"; then
+                  info "Found fuse-overlayfs"
+                  
+              elif tool_will_be_installed "fuse-overlayfs"; then
+                  info "Waiting for fuse-overlayfs to be installed"
                   wait_for_tool "fuse-overlayfs" "${target}/bin"
 
               else
@@ -631,16 +619,17 @@ tools:
               --volume "${target}/share/man:/opt/man" \
               --env version \
               --workdir /go/src/github.com/docker/cli \
-              "golang:${go_version}" bash <<EOF
+              "golang:${go_version}" bash \
+              <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/docker/cli .
       export GO111MODULE=auto
       export DISABLE_WARN_OUTSIDE_CONTAINER=1
       sed -i -E 's|^(\s+)(log.Printf\("WARN:)|\1//\2|' man/generate.go
       sed -i -E 's|^(\s+)"log"||' man/generate.go
       make manpages
-      cp -r man/man1 "/opt/man"
-      cp -r man/man5 "/opt/man"
-      cp -r man/man8 "/opt/man"
+      cp -r man/man1 /opt/man
+      cp -r man/man5 /opt/man
+      cp -r man/man8 /opt/man
       EOF
       fi
       echo "Finished after ${SECONDS} seconds."
@@ -700,28 +689,17 @@ tools:
     tags:
     - docker
     - management
+    dockerfile: |
+      FROM rust:${rust_version}
     install: |
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /go/src/github.com/stepchowfun/docuum \
-              "rust:${rust_version}" <<EOF
+      docker_run \
+          --workdir /go/src/github.com/stepchowfun/docuum \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stepchowfun/docuum .
       export RUSTFLAGS='-C target-feature=+crt-static'
       cargo build --release --target x86_64-unknown-linux-gnu
       cp target/x86_64-unknown-linux-gnu/release/docuum /target/bin/
       EOF
-
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: dry
     version: 0.11.1
@@ -1080,28 +1058,18 @@ tools:
     tags:
     - containerd
     - security
+    dockerfile: |
+      FROM golang:${go_version}
     install: |
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /go/src/github.com/containerd/imgcrypt \
-              golang:${go_version} <<EOF
+      docker_run \
+          --workdir /go/src/github.com/containerd/imgcrypt \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/imgcrypt .
       sed -i -E 's/ -v / /' Makefile
       sed -i -E "s/ --dirty='.m' / /" Makefile
       make
       make install DESTDIR=/target
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: imgpkg
     version: 0.27.0
@@ -1188,28 +1156,17 @@ tools:
     - docker
     tags:
     - security
+    dockerfile: |
+      FROM rust:${rust_version}
     install: |
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /go/src/github.com/mike-engel/jwt-cli \
-              "rust:${rust_version}" <<EOF
+      docker_run \
+          --workdir /go/src/github.com/mike-engel/jwt-cli \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/mike-engel/jwt-cli .
       export RUSTFLAGS='-C target-feature=+crt-static'
       cargo build --release --target x86_64-unknown-linux-gnu
       cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
       EOF
-
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: k3d
     version: 5.3.0
@@ -1683,26 +1640,23 @@ tools:
 
   - name: libcap
     version: 2.63
-    binary: setcap
+    binary: ${target}/sbin/setcap
     needs:
     - docker
     tags:
     - kernel
     - caps
+    dockerfile: |
+      FROM ubuntu:latest
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              build-essential \
+              git \
+              ca-certificates
     install: |
-      wait_for_docker
-      "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /libcap \
-              "ubuntu:latest" bash <<EOF
-      apt-get update
-      apt-get -y install --no-install-recommends \
-          build-essential \
-          git \
-          ca-certificates
+      docker_run \
+          --workdir /libcap \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "libcap-${version}" https://git.kernel.org/pub/scm/libs/libcap/libcap.git .
       make -C progs
       make -C progs install FAKEROOT=/target
@@ -1720,24 +1674,21 @@ tools:
     tags:
     - kernel
     - caps
+    dockerfile: |
+      FROM ubuntu:latest
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              git \
+              curl \
+              ca-certificates \
+              autoconf \
+              automake \
+              libtool \
+              build-essential
     install: |
-      wait_for_docker
-      "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /libcap \
-              "ubuntu:latest" bash <<EOF
-      apt-get update
-      apt-get -y install --no-install-recommends \
-          git \
-          curl \
-          ca-certificates \
-          autoconf \
-          automake \
-          libtool \
-          build-essential
+      docker_run \
+          --workdir /libcap-ng \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stevegrubb/libcap-ng .
       ./autogen.sh
       ./configure --prefix=/target --enable-static --disable-shared --without-python
@@ -1753,27 +1704,24 @@ tools:
     tags:
     - kernel
     - cgroup
+    dockerfile: |
+      FROM ubuntu:latest
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              build-essential \
+              autoconf \
+              automake \
+              libtool \
+              git \
+              ca-certificates \
+              m4 \
+              bison \
+              flex \
+              curl
     install: |
-      wait_for_docker
-      "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --workdir /libcgroup \
-              "ubuntu:latest" bash <<EOF
-      apt-get update
-      apt-get -y install --no-install-recommends \
-          build-essential \
-          autoconf \
-          automake \
-          libtool \
-          git \
-          ca-certificates \
-          m4 \
-          bison \
-          flex \
-          curl
+      docker_run \
+          --workdir /libcgroup \
+          <<EOF
       curl -sL https://github.com/libcgroup/libcgroup/releases/download/v${version}/libcgroup-${version}.tar.gz \
       | tar -xz --strip-components 1
       ./configure --prefix=/target --disable-pam --disable-daemon
@@ -1884,30 +1832,23 @@ tools:
     tags:
     - kernel
     - namespaces
+    dockerfile: |
+      FROM ubuntu:latest
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              git \
+              ca-certificates \
+              autoconf \
+              automake \
+              build-essential \
+              libcap-dev \
+              libbsd-dev \
+              libcap2-bin
     install: |
       echo "nsutils ${version}"
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --env GO111MODULE=auto \
-              --workdir /nsutils \
-              ubuntu:latest <<EOF
-      apt-get update
-      apt-get -y install --no-install-recommends \
-          git \
-          ca-certificates \
-          autoconf \
-          automake \
-          build-essential \
-          libcap-dev \
-          libbsd-dev \
-          libcap2-bin
+      docker_run \
+          --workdir /nsutils \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rd235/nsutils .
       autoreconf -if
       ./configure --prefix=/target
@@ -1916,10 +1857,6 @@ tools:
           /target/share/man/man1
       make install
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: oci-image-tool
     version: 1.0.0-rc3
@@ -1928,28 +1865,18 @@ tools:
     - docker
     tags:
     - oci
+    dockerfile: |
+      FROM golang:${go_version}
     install: |
       echo "oci-image-tool ${version}"
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --env GO111MODULE=auto \
-              --workdir /go/src/github.com/opencontainers/image-tools \
-              golang:${go_version} <<EOF
+      docker_run \
+          --env GO111MODULE=auto \
+          --workdir /go/src/github.com/opencontainers/image-tools \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/image-tools .
       make tool
       cp oci-image-tool /target/bin/
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: oci-runtime-tool
     version: 0.9.0
@@ -1958,28 +1885,18 @@ tools:
     - docker
     tags:
     - oci
+    dockerfile: |
+      FROM golang:${go_version}
     install: |
       echo "oci-runtime-tool ${version}"
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env version \
-              --env GO111MODULE=auto \
-              --workdir /go/src/github.com/opencontainers/runtime-tools \
-              golang:${go_version} <<EOF
+      docker_run \
+          --env GO111MODULE=auto \
+          --workdir /go/src/github.com/opencontainers/runtime-tools \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runtime-tools .
       make tool
       cp oci-runtime-tool /target/bin/
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: oras
     version: 0.12.0
@@ -2155,28 +2072,22 @@ tools:
     download:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
+    dockerfile: |
+      FROM golang:${go_version}
     post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
-      elif docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install manpages for runc"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
+      else
+          docker_run \
               --volume "${target}/share/man:/opt/man" \
-              --env version \
               --workdir /go/src/github.com/opencontainers/runc \
-              "golang:${go_version}" bash <<EOF
+              <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runc .
       go install github.com/cpuguy83/go-md2man@latest
       man/md2man-all.sh -q
       cp -r man/man8/ "/opt/man"
       EOF
-      else
-          warning "Docker is required to install manpages."
       fi
 
   - name: skopeo
@@ -2201,26 +2112,20 @@ tools:
     download:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
+    dockerfile: |
+      FROM golang:${go_version}
     post_install:
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
-      elif docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install manpages"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
+      else
+          docker_run \
               --volume "${target}/share/man:/opt/man" \
-              --env version \
               --workdir /go/src/github.com/rootless-containers/slirp4netns \
-              "golang:${go_version}" bash <<EOF
+              <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/slirp4netns .
       cp *.1 /opt/man/man1
       EOF
-      else
-          warning "Docker is required to install manpages."
       fi
 
   - name: sops
@@ -2337,25 +2242,19 @@ tools:
     - docker
     tags:
     - kernel
+    dockerfile: |
+      FROM ubuntu:latest
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              curl \
+              ca-certificates \
+              xz-utils \
+              build-essential
     install: |
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env DEBIAN_FRONTEND=noninteractive \
-              --env version \
-              --workdir /uidmap \
-              ubuntu:latest <<EOF
-      apt-get update
-      apt-get -y install --no-install-recommends \
-          curl \
-          ca-certificates \
-          xz-utils \
-          build-essential
+      docker_run \
+          --env DEBIAN_FRONTEND=noninteractive \
+          --workdir /uidmap \
+          <<EOF
       curl -sL https://github.com/shadow-maint/shadow/releases/download/v${version}/shadow-${version}.tar.xz \
       | tar -xJ --strip-components 1
       ./configure --prefix=/target --enable-static --disable-shared
@@ -2368,10 +2267,6 @@ tools:
       cp man/man1/newuidmap.1 /target/share/man/man1
       cp man/man1/newgidmap.1 /target/share/man/man1
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: umoci
     version: 0.4.7
@@ -2389,32 +2284,26 @@ tools:
     tags:
     - kernel
     - namespaces
+    dockerfile: |
+      FROM ubuntu:latest
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              git \
+              ca-certificates \
+              autoconf \
+              automake \
+              autopoint \
+              gettext \
+              bison \
+              libtool \
+              pkg-config \
+              make \
+              asciidoctor
     install: |
-      if docker_is_running || tool_will_be_installed "docker"; then
-          echo "Wait for Docker daemon to start"
-          wait_for_docker
-          echo "Install binary"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}:/target" \
-              --env DEBIAN_FRONTEND=noninteractive \
-              --env version \
-              --workdir /util-linux \
-              ubuntu:latest <<EOF
-      apt-get update
-      apt-get -y install --no-install-recommends \
-          git \
-          ca-certificates \
-          autoconf \
-          automake \
-          autopoint \
-          gettext \
-          bison \
-          libtool \
-          pkg-config \
-          make \
-          asciidoctor
+      docker_run \
+          --env DEBIAN_FRONTEND=noninteractive \
+          --workdir /util-linux \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/util-linux/util-linux .
       ./autogen.sh
       ./configure --disable-shared
@@ -2433,10 +2322,6 @@ tools:
           bash-completion/lsns bash-completion/nsenter bash-completion/unshare \
           /target/share/bash-completion/completions
       EOF
-      else
-          error "Docker is required to install."
-          false
-      fi
 
   - name: vendir
     version: 0.26.0

@@ -8,7 +8,8 @@ RUN yum install -y epel-release \
         unzip \
         initscripts \
         crontabs \
-        jq
+        jq \
+        gettext
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
 COPY tools.json /var/cache/docker-setup/

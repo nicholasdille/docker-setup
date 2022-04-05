@@ -6,7 +6,8 @@ RUN zypper install -y \
         git \
         unzip \
         iptables \
-        jq
+        jq \
+        gettext-runtime
 # TODO: init scripts (where is /lib/lsb/init-functions?)
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup

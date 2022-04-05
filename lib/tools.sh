@@ -125,6 +125,16 @@ function tool_will_be_installed() {
     test -n "${tool_install[${tool}]}"
 }
 
+function docker_run() {
+    docker run \
+        --interactive \
+        --rm \
+        --volume "${target}:/target" \
+        --env version \
+        "$@" \
+        nicholasdille/docker-setup:${docker_setup_version}-${tool}
+}
+
 function install_tool() {
     local tool=$1
 
@@ -148,6 +158,49 @@ function install_tool() {
     )"
     if test -n "${pre_install}"; then
         eval "${pre_install}"
+    fi
+
+    local dockerfile
+    dockerfile="$(jq --raw-output 'select(.dockerfile != null) | .dockerfile' <<<"${tool_json}")"
+    if test -n "${dockerfile}"; then
+        echo "${dockerfile}"
+
+        if docker_is_running || tool_will_be_installed "docker"; then
+            echo "Waiting for Docker daemon to start"
+            wait_for_docker
+        
+            local image_name
+            image_name="nicholasdille/docker-setup:${docker_setup_version}-${tool}"
+
+            local image_build
+            image_build=false
+
+            if test "${docker_setup_version}" == "main"; then
+                echo "Must build because version is main"
+                image_build=true
+
+            else
+                echo "Running on release version"
+                if test "$(docker image ls "${image_name}" | wc -l)" -eq 1; then
+                    echo "Image not found locally"
+                    if ! docker pull --quiet "${image_name}"; then
+                        echo "Image not found in registry... must build"
+                        image_build=true
+                    fi
+                fi
+            fi
+
+            if ${image_build}; then
+                echo "Building image ${image_name}"
+                echo "${dockerfile}" \
+                | envsubst \
+                | docker build --tag "${image_name}" -
+            fi
+
+        else
+            error "Docker is required to install"
+            exit 1
+        fi
     fi
 
     local install

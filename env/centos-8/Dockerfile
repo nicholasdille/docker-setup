@@ -6,7 +6,8 @@ RUN yum install -y \
         tzdata \
         unzip \
         initscripts \
-        jq
+        jq \
+        gettext
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
 COPY tools.json /var/cache/docker-setup/

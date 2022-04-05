@@ -3,7 +3,8 @@ RUN pacman -Sy \
  && pacman -S --noconfirm \
         git \
         unzip \
-        jq
+        jq \
+        gettext
 # TODO: init scripts
 COPY env/run.sh /
 COPY docker-setup.sh /usr/local/bin/docker-setup
