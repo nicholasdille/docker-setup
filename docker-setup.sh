@@ -334,7 +334,7 @@ if ( ${only} || ${tags} ) && test "${#requested_tools[@]}" -eq 0; then
     exit 1
 fi
 
-echo -e "docker-setup version $(if test "${docker_setup_version}" == "master"; then echo "${red}"; fi)${docker_setup_version}${reset}"
+echo -e "docker-setup version $(if test "${docker_setup_version}" == "main"; then echo "${red}"; fi)${docker_setup_version}${reset}"
 echo
 if ${show_version}; then
     exit
