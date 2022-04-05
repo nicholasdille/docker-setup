@@ -1641,6 +1641,38 @@ tools:
       cp doc/setcap.8 /target/share/man/man8
       EOF
 
+  - name: libcap-ng
+    version: 0.8.3
+    binary: captest
+    needs:
+    - docker
+    tags:
+    - misc
+    install: |
+      wait_for_docker
+      "${target}/bin/docker" container run \
+              --interactive \
+              --rm \
+              --volume "${target}:/target" \
+              --env version \
+              --workdir /libcap \
+              "ubuntu:latest" bash <<EOF
+      apt-get update
+      apt-get -y install --no-install-recommends \
+          git \
+          curl \
+          ca-certificates \
+          autoconf \
+          automake \
+          libtool \
+          build-essential
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stevegrubb/libcap-ng .
+      ./autogen.sh
+      ./configure --prefix=/target --enable-static --disable-shared --without-python
+      make LDFLAGS=--static
+      make install
+      EOF
+
   - name: libcgroup
     version: 2.0.1
     binary: ${target}/bin/lscgroup
