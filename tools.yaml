@@ -2286,6 +2286,7 @@ tools:
     - namespaces
     dockerfile: |
       FROM ubuntu:latest
+      ENV DEBIAN_FRONTEND=noninteractive
       RUN apt-get update \
        && apt-get -y install --no-install-recommends \
               git \
@@ -2301,7 +2302,6 @@ tools:
               asciidoctor
     install: |
       docker_run \
-          --env DEBIAN_FRONTEND=noninteractive \
           --workdir /util-linux \
           <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/util-linux/util-linux .
