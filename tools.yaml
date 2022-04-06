@@ -320,7 +320,7 @@ tools:
       fi
 
   - name: ctop
-    version: 0.7.6
+    version: 0.7.7
     check: ${binary} -v | cut -d, -f1 | cut -d' ' -f3
     needs:
     - docker
