@@ -21,7 +21,7 @@
   "automergeType": "pr",
   "platformAutomerge": true,
   "ignoreTests": false,
-  "rebaseWhen": "auto",
+  "rebaseWhen": "conflicted",
   "rebaseLabel": "renovate/rebase",
   "stopUpdatingLabel": "renovate/stop-updating",
   "recreateClosed": true,
