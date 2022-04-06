@@ -1,10 +1,10 @@
 # Internals
 
 1. [Tools (YAML/JSON)](tools.md)
-1. [Variables](variables.md)
 1. [Dependency resolution](dependency_resolution.md)
 1. [Download cache](download_cache.md)
 1. [Image cache](image_cache.md)
+1. [Contrib](contrib.md)
 1. [Library files](libs.md)
 1. [Bootstrapping](bootstrapping.md)
 1. [Workflows](workflows.md)

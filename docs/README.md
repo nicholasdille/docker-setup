@@ -1,5 +1,7 @@
 # Documentation
 
+The documentation of `docker-setup` is devided into the following sections:
+
 1. [Usage](usage.md)
 1. [Dependencies](dependencies.md)
 1. [Docker](docker.md)
