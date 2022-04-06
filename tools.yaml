@@ -905,7 +905,7 @@ tools:
       type: executable
 
   - name: imgcrypt
-    version: 1.1.2
+    version: 1.1.4
     binary: ctr-enc
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     needs:
