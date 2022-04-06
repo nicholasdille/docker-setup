@@ -336,9 +336,9 @@ if ( ${only} || ${tags} ) && test "${#requested_tools[@]}" -eq 0; then
 fi
 
 echo -e "docker-setup version $(if test "${docker_setup_version}" == "main"; then echo "${red}"; fi)${docker_setup_version}${reset}"
-if test "${docker_setup_version}" != "main"; then
+if test "${docker_setup_version}" != "main" && github_ensure_rate_limit; then
     release_tags="$(
-        curl --silent "https://api.github.com/repos/${docker_setup_repo_name}/releases" \
+        github_api "/repos/${docker_setup_repo_name}/releases" \
         | jq --raw-output '.[] | select(.prerelease == false) | .tag_name'
     )"
 

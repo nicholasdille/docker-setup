@@ -328,3 +328,45 @@ function count_sub_processes() {
     done
     echo "${count}"
 }
+
+function github_api() {
+    local path="$1"
+
+    local param_auth=()
+    if test -n "${GITHUB_TOKEN}"; then
+        param_auth=("--header" "Authorization: token ${GITHUB_TOKEN}")
+    fi
+
+    curl "https://api.github.com${path}" \
+        --silent \
+        --fail \
+        "${param_auth[@]}"
+}
+
+function github_ensure_rate_limit() {
+    if test -z "${GITHUB_TOKEN}"; then
+        warning "Please provide GITHUB_TOKEN to avoid hitting the GitHub API rate limit"
+
+        local rate_limit
+        rate_limit="$(
+            github_api /rate_limit \
+            | jq '.rate'
+        )"
+
+        local remaining
+        local reset
+        remaining="$(jq '.remaining' <<<"${rate_limit}")"
+        reset="$(jq '.reset' <<<"${rate_limit}")"
+
+        local now
+        now="$(date +%s)"
+
+        echo "remaining=${remaining},left=$(( (reset - now) / 60 ))"
+
+        if test "${remaining}" -ge "$(( (reset - now) / 60 ))"; then
+            return 0
+        else
+            return 1
+        fi
+    fi
+}
