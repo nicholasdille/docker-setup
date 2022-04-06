@@ -10,7 +10,7 @@ jobs:
     name: Prepare
     runs-on: ubuntu-20.04
     outputs:
-      branches: ${{ steps.branches.output.branches }}
+      branches: ${{ steps.branches.outputs.branches }}
     steps:
 
       - name: Checkout
