@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-20.04
+    outputs:
+      branches: ${{ steps.branches.output.branches }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Collect branches
+        id: branches
+        run: |
+          branches="$(
+              git branch -r \
+              | grep -E "origin/v[0-9]+\.[0-9]+" \
+              | tr -d ' ' \
+              | cut -d/ -f2 \
+              | jq --null-input --raw-input --compact-output '[inputs]'
+          )"
+          echo "::set-output name=branches::${branches}"
+
+  patch:
+    name: patch
+    needs:
+    - prepare
+    strategy:
+      matrix:
+        branch: ${{ fromJSON(needs.prepare.outputs.branches) }}
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ matrix.branch }}
+
+    - name: Get info
+      id: info
+      run: |
+        tag="$(git describe --abbrev=0)"
+        updates="$(git log "${tag}.." --author=".*bot@renovateapp.com.*" --oneline | wc -l)"
+        echo "Found ${updates} update(s) since tag ${tag}"
+        echo "::set-output name=tag::${tag}"
+        echo "::set-output name=updates::${updates}"
+
+    - name: Create tag
+      if: ${{ steps.info.outputs.updates > 0 }}
+      uses: mathieudutour/github-tag-action@v6.0
