@@ -16,7 +16,7 @@
   },
   "rebaseWhen": "never",
   "rebaseLabel": "renovate/rebase",
-  "recreateClosed": true,
+  "recreateClosed": false,
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
 
