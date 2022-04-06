@@ -59,3 +59,5 @@ jobs:
     - name: Create tag
       if: ${{ steps.info.outputs.updates > 0 }}
       uses: mathieudutour/github-tag-action@v6.0
+      with:
+        github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
