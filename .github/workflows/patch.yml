@@ -41,6 +41,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Install tools
+      env:
+        SEMVER_VERSION: 3.3.0
+      run: |
+        curl -sLo /usr/local/bin/semver "https://github.com/fsaintjacques/semver-tool/raw/${SEMVER_VERSION}/src/semver"
+        chmod +x /usr/local/bin/semver
+
     - name: Checkout
       uses: actions/checkout@v3
       with:
@@ -56,8 +63,15 @@ jobs:
         echo "::set-output name=tag::${tag}"
         echo "::set-output name=updates::${updates}"
 
+    - name: Bump tag
+      id: bump
+      run: |
+        new_tag="$(semver bump patch "${{ steps.info.outputs.tag }}")"
+        echo "Bumped ${{ steps.info.outputs.tag }} to ${new_tag}"
+
     - name: Create tag
       if: ${{ steps.info.outputs.updates > 0 }}
-      uses: mathieudutour/github-tag-action@v6.0
-      with:
-        github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+      run: |
+        git describe
+        git tag "${new_tag}"
+        git push origin "${new_tag}"
