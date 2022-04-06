@@ -23,7 +23,7 @@
   "rebaseWhen": "conflicted",
   "rebaseLabel": "renovate/rebase",
   "stopUpdatingLabel": "renovate/stop-updating",
-  "recreateClosed": true,
+  "recreateClosed": false,
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "major": {
