@@ -1821,7 +1821,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_syft"
 
   - name: task
-    version: 3.11.0
+    version: 3.12.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
