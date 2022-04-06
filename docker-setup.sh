@@ -258,7 +258,7 @@ if ! test -f "${docker_setup_tools_file}"; then
     curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/${docker_setup_version}/tools.json"
 fi
 
-dependencies=(jq curl git unzip envsubst)
+dependencies=(jq curl unzip envsubst)
 for dependency in "${dependencies[@]}"; do
     if ! type "${dependency}" >/dev/null 2>&1; then
         error "Missing ${dependency}."
