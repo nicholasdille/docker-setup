@@ -682,7 +682,7 @@ tools:
       type: executable
 
   - name: docuum
-    version: 0.20.5
+    version: 0.21.0
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
