@@ -2,7 +2,7 @@ name: Patch
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
 
@@ -26,6 +26,7 @@ jobs:
               | cut -d/ -f2 \
               | jq --null-input --raw-input --compact-output '[inputs]'
           )"
+          echo "Found branches: ${branches}."
           echo "::set-output name=branches::${branches}"
 
   patch:
