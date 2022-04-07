@@ -75,5 +75,5 @@ jobs:
       if: ${{ steps.info.outputs.updates > 0 }}
       run: |
         git describe
-        git tag "${{ steps.bump.outputs.tag }}"
-        git push origin "${{ steps.bump.outputs.tag }}"
+        git tag "v${{ steps.bump.outputs.tag }}"
+        git push origin "v${{ steps.bump.outputs.tag }}"
