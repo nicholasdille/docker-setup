@@ -1,11 +1,7 @@
 # Renovate
 
-XXX purpose
+`docker-setup` relys heavily on [Renovate](https://renovatebot.com/) to propose tool updates using pull requests. These pull requests are [tested against the several distributions](envs.md). Renovate will automatically merge the pull requests after the tests have completed successfully.
 
-XXX automerge
+The configuration for Renovate contains a regex manager for every tool defining how to update it.
 
-XXX package rules
-
-XXX regex managers
-
-XXX digest pinning
+Renovate will also pin all container images to the most recent digest.

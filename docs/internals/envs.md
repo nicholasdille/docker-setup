@@ -3,3 +3,5 @@
 XXX link to distributions
 
 XXX `run.sh`
+
+XXX shortcuts
