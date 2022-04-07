@@ -68,10 +68,11 @@ jobs:
       run: |
         new_tag="$(semver bump patch "${{ steps.info.outputs.tag }}")"
         echo "Bumped ${{ steps.info.outputs.tag }} to ${new_tag}"
+        echo "::set-output name=tag::${new_tag}"
 
     - name: Create tag
       if: ${{ steps.info.outputs.updates > 0 }}
       run: |
         git describe
-        git tag "${new_tag}"
-        git push origin "${new_tag}"
+        git tag "${{ steps.bump.outputs.tag }}"
+        git push origin "${{ steps.bump.outputs.tag }}"
