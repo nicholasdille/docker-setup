@@ -58,14 +58,18 @@ jobs:
     - name: Get info
       id: info
       run: |
+        sha="$(git rev-parse HEAD)"
+        echo "Running on commit ${sha} for $(git describe)"
         tag="$(git describe --abbrev=0)"
         updates="$(git log "${tag}.." --author=".*bot@renovateapp.com.*" --oneline | wc -l)"
         echo "Found ${updates} update(s) since tag ${tag}"
+        echo "::set-output name=sha::${sha}"
         echo "::set-output name=tag::${tag}"
         echo "::set-output name=updates::${updates}"
 
     - name: Bump tag
       id: bump
+      if: ${{ steps.info.outputs.updates > 0 }}
       run: |
         new_tag="$(semver bump patch "${{ steps.info.outputs.tag }}")"
         echo "Bumped ${{ steps.info.outputs.tag }} to ${new_tag}"
@@ -74,6 +78,9 @@ jobs:
     - name: Create tag
       if: ${{ steps.info.outputs.updates > 0 }}
       run: |
-        git describe
-        git tag "v${{ steps.bump.outputs.tag }}"
-        git push origin "v${{ steps.bump.outputs.tag }}"
+        echo "Creating tag v${{ steps.bump.outputs.tag }} for sha ${{ steps.info.outputs.sha }}"
+        curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/refs" \
+            --silent \
+            --fail \
+            --header "Authorization: token ${{ secrets.BOT_GITHUB_TOKEN }}" \
+            --data '{"ref": "refs/tags/v${{ steps.bump.outputs.tag }}", "sha": "${{ steps.info.outputs.sha }}"}'
