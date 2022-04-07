@@ -2179,7 +2179,7 @@ tools:
       fi
 
   - name: syft
-    version: 0.43.0
+    version: 0.43.2
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - sbom
