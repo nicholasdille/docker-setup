@@ -6,7 +6,7 @@ SECONDS=0
 docker_setup_version="main"
 docker_setup_repo_name="nicholasdille/docker-setup"
 docker_setup_repo_base="https://github.com/${docker_setup_repo_name}"
-docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
+docker_setup_repo_raw="${docker_setup_repo_base}/raw/v${docker_setup_version}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 
@@ -255,7 +255,7 @@ if test "${docker_setup_version}" == "main" && test -f "${PWD}/tools.json"; then
     cp "${PWD}/tools.json" "${docker_setup_cache}/tools.json"
 fi
 if ! test -f "${docker_setup_tools_file}"; then
-    curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/${docker_setup_version}/tools.json"
+    curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/v${docker_setup_version}/tools.json"
 fi
 
 dependencies=(jq curl unzip envsubst)
@@ -344,7 +344,7 @@ if test "${docker_setup_version}" != "main" && github_ensure_rate_limit; then
 
     minor_version="$(
         echo "${docker_setup_version}" \
-        | sed -E 's/^v([0-9]+\.[0-9]+)\.[0-9]+$/\1/'
+        | sed -E 's/^([0-9]+\.[0-9]+)\.[0-9]+$/\1/'
     )"
     new_patch="$(
         echo "${release_tags}" \
@@ -352,7 +352,7 @@ if test "${docker_setup_version}" != "main" && github_ensure_rate_limit; then
         | sort -Vr \
         | head -n 1
     )"
-    if test -n "${new_patch}" && test "${new_patch}" != "${docker_setup_version}"; then
+    if test -n "${new_patch}" && test "${new_patch#v}" != "${docker_setup_version}"; then
         warning "New patch available: ${new_patch}"
     fi
 
