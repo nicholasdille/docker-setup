@@ -3,6 +3,7 @@ name: Patch
 on:
   schedule:
     - cron: "0 2 * * *"
+    - cron: "*/10 * * * *"
 
 jobs:
 
