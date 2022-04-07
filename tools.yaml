@@ -23,7 +23,7 @@ tools:
       path: ${target}
 
   - name: buildkit
-    version: 0.10.0
+    version: 0.10.1
     binary: buildkitd
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
