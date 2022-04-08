@@ -77,7 +77,12 @@ tools:
     path: ${target}/bin/bar
 ```
 
-XXX types: `executable`, `tarball`, `zip`, `file`
+Downloads have one of the following types in `type`:
+
+- `file` requires `path` to point to a filename
+- `executable` works like `file` but executes `chmod` to set `0755`
+- `tarball` requires `path` to point to a directory. Adding `strip` removes the specified number of path components from extracted files. Adding `files` specifies a list of files to extract
+- `zip` requires `path` to point to a directory and `files` to list the files to extract
 
 See [download cache](download_cache.md) about the integrated caching of downloads.
 
@@ -100,7 +105,7 @@ System-specific variables:
 Variables specific to `docker-setup`:
 
 - `docker_setup_version` - version of `docker-setup`
-- `docker_setup_contrib` - XXX
+- `docker_setup_contrib` - directory with [contrib](contrib.md) files
 - `docker_setup_cache` - cache directory (defaults to `/var/cache/docker-setup`)
 
 Tool-specific variables:
@@ -113,16 +118,18 @@ Tool-specific variables:
 
 `docker-setup` comes with several functions to support installation commands:
 
-- `info`, `warning`, `error`, `debug` - XXX
-- `is_debian`, `is_redhat`, `is_alpine` - XXX
-- `has_tool` - XXX
-- `wait_for_tool` - XXX
-- `tool_will_be_installed` - XXX
-- `wait_for_docker` - XXX
-- `docker_is_running` - XXX
-- `has_systemd` - XXX
-- `docker_run` - XXX, see [image cache](image_cache.md)
+- `info`, `warning`, `error`, `debug` - formatted and colored output
+- `is_debian`, `is_redhat`, `is_alpine` - checks for distribution flavors
+- `has_tool` - check whether a tool is installed
+- `wait_for_tool` - wait for a tool to be installed (timeout after 60 * 10 seconds)
+- `tool_will_be_installed` - check whether a tool is planned to be installed
+- `wait_for_docker` - wait for the Docker daemon to be available
+- `docker_is_running` - check whether the Docker daemon is already running
+- `has_systemd` - check whether the system offers `systemd`
+- `docker_run` - execute commands in a container based on the image built by `dockerfile`, see [image cache](image_cache.md)
 
-XXX ${docker_setup_cache}/docker_restart
+## Special files
 
-XXX ${docker_setup_cache}/docker_restart_allowed
+`docker-setup` recognized several special files:
+
+- `${docker_setup_cache}/docker_restart` - touch file to request a restart of the Docker daemon after tools are installed

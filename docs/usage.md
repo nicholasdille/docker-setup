@@ -18,8 +18,8 @@ You can tweak the behaviour of `docker-setup` by passing parameters or environme
 | `--no-color`        | `no_color`               | Do not display colored output |
 | `--plan`            | `plan`                   | Show planned installations |
 | `--skip-docs`       | `skip_docs`              | Do not install documentation for faster installation |
-| `--no-cache`        | `no_cache`               | XXX |
-| `--no-cron`         | `no_cron`                | YYY |
+| `--no-cache`        | `no_cache`               | Disable caching of downloads |
+| `--no-cron`         | `no_cron`                | Disable creation of cron jobs for updates |
 |                     | `prefix`                 | Install into a subdirectory (see notes below) |
 |                     | `target`                 | Specifies the target directory for binaries. Defaults to /usr |
 |                     | `cgroup_version`         | Specifies which version of cgroup to use. Defaults to v2 |
