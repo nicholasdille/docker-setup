@@ -3,39 +3,58 @@
   "extends": [
     "config:base"
   ],
-
   "enabledManagers": [
     "dockerfile",
-    "docker-compose",
     "github-actions",
     "regex"
   ],
-
+  "baseBranches": [
+    "main",
+    "v1.3"
+  ],
+  "useBaseBranchConfig": "merge",
   "docker": {
     "pinDigests": true
   },
-  "rebaseWhen": "never",
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "ignoreTests": false,
+  "rebaseWhen": "conflicted",
   "rebaseLabel": "renovate/rebase",
+  "stopUpdatingLabel": "renovate/stop-updating",
   "recreateClosed": false,
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-
   "major": {
-    "labels": ["type/renovate", "bump/major"]
+    "labels": [
+      "type/renovate",
+      "bump/major"
+    ]
   },
   "minor": {
-    "labels": ["type/renovate", "bump/minor"]
+    "labels": [
+      "type/renovate",
+      "bump/minor"
+    ]
   },
   "patch": {
-    "labels": ["type/renovate", "bump/patch"]
+    "labels": [
+      "type/renovate",
+      "bump/patch"
+    ]
   },
   "pin": {
-    "labels": ["type/renovate", "bump/pin"]
+    "labels": [
+      "type/renovate",
+      "bump/pin"
+    ]
   },
   "digest": {
-    "labels": ["type/renovate", "bump/digest"]
+    "labels": [
+      "type/renovate",
+      "bump/digest"
+    ]
   },
-
   "packageRules": [
     {
       "matchFiles": [ "^docker-setup.(sh|ps1)$" ],
