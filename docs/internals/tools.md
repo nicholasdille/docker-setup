@@ -2,65 +2,127 @@
 
 Available tools are defined in `tools.yaml`, converted to `tools.json` using [make](make.md) and published in a [release](release.md).
 
-XXX format
+`tools.yaml` contains an array called `tools` containing all available tools:
 
 ```yaml
-- name: buildkit
-  version: 0.10.0
-  binary: buildkitd
+tools:
+- name: foo
+  version: 1.2.3
+  binary: fooctl
+  needs:
+  - baz
   tags:
   - docker
-  - build
   - oci
   check: ${binary} --version | cut -d' ' -f3 | tr -d v
   download:
-  - url: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
+  - url: https://github.com/foo/bar/releases/download/v${version}/foo.tar.gz
     type: tarball
     path: ${target}/bin
     strip: 1
-  - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.service
+    files:
+    - fooctl
+  - url:
+      x86_64: https://github.com/foo/bar/releases/download/v${version}/bar
+      aarch64: https://github.com/foo/bar/releases/download/v${version}/bar-arm64
+    type: executable
+    path: ${target}/bin
+  - url: https://github.com/foo/bar/raw/v${version}/foo.service
     type: file
-    path: ${prefix}/etc/systemd/system/buildkit.service
-  - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.socket
-    type: file
-    path: ${prefix}/etc/systemd/system/buildkit.socket
-  - url: contrib/buildkit/buildkit
-    type: file
-    path: ${prefix}/etc/init.d/buildkit
+    path: ${prefix}/etc/systemd/system/foo.service
   post_install: |
     echo "Install systemd units"
-    sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
-    echo "Install init script"
-    sed -i "s|/usr/local/bin/buildkitd|${relative_target}/bin/buildkitd|" "${prefix}/etc/init.d/buildkit"
-    chmod +x "${prefix}/etc/init.d/buildkit"
+    sed -i "s|ExecStart=/usr/local/bin/foo|ExecStart=${target}/bin/foo|" "${prefix}/etc/systemd/system/foo.service"
     if test -z "${prefix}" && has_systemd; then
         echo "Reload systemd"
         systemctl daemon-reload
     fi
 ```
 
-XXX `name` and `version` are required
+The fields `name` and `version` are mandatory.
 
-XXX binary defaults to `${target}/bin/${name}`, relativ paths are relativ to `${target}/bin`
+`binary` defaults to `${target}/bin/${name}` and relativ paths are resolved with `${target}/bin`.
 
-XXX `requires`
+`needs` is a list of dependent tools that are automatically installed before the current tool. See [dependency resolution](dependency_information.md) for more information.
 
-XXX `tags`
+Every tool should have a list of tag specified in `tags`. Tags offer a different approach of installing tools by specifying a topics to install multiple tools at once.
 
-XXX `check` must contain a command or pipe to output the version as stored in `version`, empty `check` enables fallback using `${docker_setup_cache}/<name>/<version>`
+`check` is optional and defaults to check versions using a marker file located at `${docker_setup_cache}/<name>/<version>`. If set `check` must contain a command or pipe to output the version as stored in `version`.
 
-XXX `download` or `install`
+You can specify either `download` or `install`. If `install` is supplied it must contain a string with one or more commands:
 
-XXX `download` contains a list of downloads
+```yaml
+tools:
+- name: foo
+  # ...
+  install: |
+    echo "Installing foo ${version}"
+    touch ${binary}
+```
 
-XXX requirements for types (`executable`, `tarball`, `zip`, `file`) in entries of `download`
+You will most likely use `download` which contains a list of downloads. Each entry must contain a single `url` or separate URLs for `x86_64` and `aarch64`:
 
-XXX `post_install`
+```yaml
+tools:
+- name: foo
+  # ...
+  download:
+  - url: https://github.com/foo/bar/releases/download/v${version}/foo
+    type: executable
+    path: ${target}/bin/foo
+  - url:
+      x86_64: https://github.com/foo/bar/releases/download/v${version}/bar
+      aarch64: https://github.com/foo/bar/releases/download/v${version}/bar-arm64
+    type: executable
+    path: ${target}/bin/bar
+```
 
-XXX variables
+XXX types: `executable`, `tarball`, `zip`, `file`
 
-XXX functions
+See [download cache](download_cache.md) about the integrated caching of downloads.
 
-See the [download cache](download_cache.md) for `.download`.
+If a tools is not shipped as a binary, you must built it manually - preferably in a container. To speed up the build process, you can supply a Docker in `dockerfile` which is built and uploaded to Docker Hub. See [image cache](image_cache.md) for more information.
 
-See the [image cache](image_cache.md) for `.dockerfile`.
+`post_install` is executed after `download` and `install` and must contain a string with one or more commands. See `install` above.
+
+## Variables
+
+`docker-setup` provides multiple variables to parameterize information about the target environment as well as the tool.
+
+System-specific variables:
+
+- `arch` - system architecture (`x86_64` or `aarch64`)
+- `alt_arch` - alternative name for system architecture (`amd64` or `arm64`)
+- `prefix` - used to install into a subdirectory (empty by default)
+- `target` - installation directory (defaults to `${prefix}/usr/local`)
+- `relative_target` - installation directory relative to `prefix`
+
+Variables specific to `docker-setup`:
+
+- `docker_setup_version` - version of `docker-setup`
+- `docker_setup_contrib` - XXX
+- `docker_setup_cache` - cache directory (defaults to `/var/cache/docker-setup`)
+
+Tool-specific variables:
+
+- `name` - name of the tool
+- `version` - version of the tool
+- `binary` - expanded binary for the tool
+
+## Functions
+
+`docker-setup` comes with several functions to support installation commands:
+
+- `info`, `warning`, `error`, `debug` - XXX
+- `is_debian`, `is_redhat`, `is_alpine` - XXX
+- `has_tool` - XXX
+- `wait_for_tool` - XXX
+- `tool_will_be_installed` - XXX
+- `wait_for_docker` - XXX
+- `docker_is_running` - XXX
+- `has_systemd` - XXX
+- `docker_run` - XXX, see [image cache](image_cache.md)
+
+XXX ${docker_setup_cache}/docker_restart
+
+XXX ${docker_setup_cache}/docker_restart_allowed

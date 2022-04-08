@@ -2169,7 +2169,7 @@ tools:
       "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
       EOF
       echo "Install systemd units"
-      cp "${docker_Setup_contrib}/${tool}/stargz-snapshotter.service" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
+      cp "${docker_setup_contrib}/${tool}/stargz-snapshotter.service" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       if test -z "${prefix}"; then
           if has_systemd; then
