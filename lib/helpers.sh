@@ -289,7 +289,7 @@ function get_file() {
     local url=$1
 
     if ${no_cache}; then
-        curl -sl "${url}"
+        curl -sL "${url}"
         return
     fi
 
