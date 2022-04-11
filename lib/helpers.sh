@@ -304,7 +304,10 @@ function get_file() {
     fi
 
     if ! test -f "${cache_path}/file"; then
-        curl -sLo "${cache_path}/file" "${url}"
+        if ! curl -sLo "${cache_path}/file" "${url}"; then
+            error "Unable to download from ${url} (exit code $?)"
+            exit 1
+        fi
     fi
 
     cat "${cache_path}/file"
