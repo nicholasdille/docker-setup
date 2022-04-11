@@ -198,8 +198,7 @@ function install_tool() {
             fi
 
         else
-            error "Docker is required to install"
-            exit 1
+            warning "Unable to build image"
         fi
     fi
 
