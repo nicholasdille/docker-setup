@@ -62,6 +62,19 @@ function get_tool_download_index() {
     get_tool "${tool}" | jq --raw-output --arg index "${index}" '.download[$index | tonumber]'
 }
 
+function get_tool_files_count() {
+    local tool=$1
+
+    get_tool "${tool}" | jq --raw-output 'select(.files != null) | .files | length'
+}
+
+function get_tool_files_index() {
+    local tool=$1
+    local index=$2
+
+    get_tool "${tool}" | jq --raw-output --arg index "${index}" '.files[$index | tonumber]'
+}
+
 function get_tool_binary() {
     local tool=$1
     
@@ -266,9 +279,6 @@ function install_tool() {
                         error "Path not specified."
                         return
                     fi
-                    if test "${path:0:8}" == "contrib/"; then
-                        path="${docker_setup_contrib}/${path:8}"
-                    fi
                     echo "    File ${path}"
                     mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
@@ -354,6 +364,29 @@ function install_tool() {
         done
 
     fi
+
+    local files_index=0
+    local files_count
+    files_count="$(get_tool_files_count "${tool}")"
+    echo "Files count = ${files_count}"
+    while test "${files_index}" -lt "${files_count}"; do
+        echo "Processing file ${files_index}"
+
+        local file_json
+        file_json="$(get_tool_files_index "${tool}" "${files_index}")"
+
+        local path
+        path="$(
+            jq --raw-output '.path' <<<"${file_json}" \
+            | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+        )"
+        echo "  path: ${path}"
+        mkdir -p "$(dirname "${path}")"
+
+        jq --raw-output '.content' <<<"${file_json}" >"${path}"
+
+        files_index=$((files_index + 1))
+    done
 
     local post_install
     post_install="$(

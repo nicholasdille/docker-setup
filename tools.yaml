@@ -50,9 +50,160 @@ tools:
     - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.socket
       type: file
       path: ${prefix}/etc/systemd/system/buildkit.socket
-    - url: contrib/buildkit/buildkit
-      type: file
-      path: ${prefix}/etc/init.d/buildkit
+    files:
+    - path: ${prefix}/etc/init.d/buildkit
+      content: |
+        #!/bin/sh
+        set -e
+
+        ### BEGIN INIT INFO
+        # Provides:           buildkit
+        # Required-Start:     $syslog $remote_fs
+        # Required-Stop:      $syslog $remote_fs
+        # Should-Start:       cgroupfs-mount cgroup-lite
+        # Should-Stop:        cgroupfs-mount cgroup-lite
+        # Default-Start:      2 3 4 5
+        # Default-Stop:       0 1 6
+        # Short-Description:  Create lightweight, portable, self-sufficient containers.
+        # Description:
+        #  Docker is an open-source project to easily create lightweight, portable,
+        #  self-sufficient containers from any application. The same container that a
+        #  developer builds and tests on a laptop can run at scale, in production, on
+        #  VMs, bare metal, OpenStack clusters, public clouds and more.
+        ### END INIT INFO
+
+        export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+        BASE=buildkit
+
+        # modify these in /etc/default/$BASE (/etc/default/buildkit)
+        BUILDKIT=/usr/local/bin/buildkitd
+        # This is the pid file created/managed by start-stop-daemon
+        BUILDKIT_SSD_PIDFILE=/var/run/$BASE-ssd.pid
+        BUILDKIT_LOGFILE=/var/log/$BASE.log
+        BUILDKIT_DESC="BuildKit"
+
+        # Get lsb functions
+        . /lib/lsb/init-functions
+
+        if [ -f /etc/default/$BASE ]; then
+          . /etc/default/$BASE
+        fi
+
+        # Check buildkit is present
+        if [ ! -x $BUILDKIT ]; then
+          log_failure_msg "$BUILDKIT not present or not executable"
+          exit 1
+        fi
+
+        check_init() {
+          # see also init_is_upstart in /lib/lsb/init-functions (which isn't available in Ubuntu 12.04, or we'd use it directly)
+          if [ -x /sbin/initctl ] && /sbin/initctl version 2> /dev/null | grep -q upstart; then
+            log_failure_msg "$BUILDKIT_DESC is managed via upstart, try using service $BASE $1"
+            exit 1
+          fi
+        }
+
+        fail_unless_root() {
+          if [ "$(id -u)" != '0' ]; then
+            log_failure_msg "$BUILDKIT_DESC must be run as root"
+            exit 1
+          fi
+        }
+
+        cgroupfs_mount() {
+          # see also https://github.com/tianon/cgroupfs-mount/blob/master/cgroupfs-mount
+          if grep -v '^#' /etc/fstab | grep -q cgroup \
+            || [ ! -e /proc/cgroups ] \
+            || [ ! -d /sys/fs/cgroup ]; then
+            return
+          fi
+          if ! mountpoint -q /sys/fs/cgroup; then
+            mount -t tmpfs -o uid=0,gid=0,mode=0755 cgroup /sys/fs/cgroup
+          fi
+          (
+            cd /sys/fs/cgroup
+            for sys in $(awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
+              mkdir -p $sys
+              if ! mountpoint -q $sys; then
+                if ! mount -n -t cgroup -o $sys cgroup $sys; then
+                  rmdir $sys || true
+                fi
+              fi
+            done
+          )
+        }
+
+        case "$1" in
+          start)
+            check_init
+
+            fail_unless_root
+
+            cgroupfs_mount
+
+            touch "$BUILDKIT_LOGFILE"
+
+            ulimit -n 1048576
+
+            # Having non-zero limits causes performance problems due to accounting overhead
+            # in the kernel. We recommend using cgroups to do container-local accounting.
+            if [ "$BASH" ]; then
+              ulimit -u unlimited
+            else
+              ulimit -p unlimited
+            fi
+
+            log_begin_msg "Starting $BUILDKIT_DESC: $BASE"
+            start-stop-daemon --start --background \
+              --no-close \
+              --exec "$BUILDKIT" \
+              --pidfile "$BUILDKIT_SSD_PIDFILE" \
+              --make-pidfile \
+              -- \
+              >> "$BUILDKIT_LOGFILE" 2>&1
+            log_end_msg $?
+            ;;
+
+          stop)
+            check_init
+            fail_unless_root
+            if [ -f "$BUILDKIT_SSD_PIDFILE" ]; then
+              log_begin_msg "Stopping $BUILDKIT_DESC: $BASE"
+              start-stop-daemon --stop --pidfile "$BUILDKIT_SSD_PIDFILE" --retry 10
+              log_end_msg $?
+            else
+              log_warning_msg "Docker already stopped - file $BUILDKIT_SSD_PIDFILE not found."
+            fi
+            ;;
+
+          restart)
+            check_init
+            fail_unless_root
+            buildkit_pid=$(cat "$BUILDKIT_SSD_PIDFILE" 2> /dev/null)
+            [ -n "$buildkit_pid" ] \
+              && ps -p $buildkit_pid > /dev/null 2>&1 \
+              && $0 stop
+            $0 start
+            ;;
+
+          force-reload)
+            check_init
+            fail_unless_root
+            $0 restart
+            ;;
+
+          status)
+            check_init
+            status_of_proc -p "$BUILDKIT_SSD_PIDFILE" "$BUILDKIT" "$BUILDKIT_DESC"
+            ;;
+
+          *)
+            echo "Usage: service buildkit {start|stop|restart|status}"
+            exit 1
+            ;;
+        esac
+
     post_install: |
       echo "Install systemd units"
       sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
@@ -193,21 +344,104 @@ tools:
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
-    - url: contrib/podman/registries.conf.d/00-shortnames.conf
-      type: file
-      path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
-    - url: contrib/podman/registries.d/default.yaml
-      type: file
-      path: ${prefix}/etc/containers/registries.d/default.yaml
-    - url: contrib/podman/policy.json
-      type: file
-      path: ${prefix}/etc/containers/policy.json
-    - url: contrib/podman/registries.json
-      type: file
-      path: ${prefix}/etc/containers/registries.json
-    - url: contrib/podman/storage.json
-      type: file
-      path: ${prefix}/etc/containers/storage.json
+    files:
+    - path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
+      content: |
+        [aliases]
+          "almalinux" = "docker.io/library/almalinux"
+          "almalinux-minimal" = "docker.io/library/almalinux-minimal"
+          "centos" = "quay.io/centos/centos"
+          "skopeo" = "quay.io/skopeo/stable"
+          "buildah" = "quay.io/buildah/stable"
+          "podman" = "quay.io/podman/stable"
+          "alpine" = "docker.io/library/alpine"
+          "docker" = "docker.io/library/docker"
+          "registry" = "docker.io/library/registry"
+          "hello-world" = "docker.io/library/hello-world"
+          "swarm" = "docker.io/library/swarm"
+          "fedora-minimal" = "registry.fedoraproject.org/fedora-minimal"
+          "fedora" = "registry.fedoraproject.org/fedora"
+          "opensuse/tumbleweed" = "registry.opensuse.org/opensuse/tumbleweed"
+          "opensuse/tumbleweed-dnf" = "registry.opensuse.org/opensuse/tumbleweed-dnf"
+          "opensuse/tumbleweed-microdnf" = "registry.opensuse.org/opensuse/tumbleweed-microdnf"
+          "opensuse/leap" = "registry.opensuse.org/opensuse/leap"
+          "opensuse/busybox" = "registry.opensuse.org/opensuse/busybox"
+          "tumbleweed" = "registry.opensuse.org/opensuse/tumbleweed"
+          "tumbleweed-dnf" = "registry.opensuse.org/opensuse/tumbleweed-dnf"
+          "tumbleweed-microdnf" = "registry.opensuse.org/opensuse/tumbleweed-microdnf"
+          "leap" = "registry.opensuse.org/opensuse/leap"
+          "leap-dnf" = "registry.opensuse.org/opensuse/leap-dnf"
+          "leap-microdnf" = "registry.opensuse.org/opensuse/leap-microdnf"
+          "tw-busybox" = "registry.opensuse.org/opensuse/busybox"
+          "suse/sle15" = "registry.suse.com/suse/sle15"
+          "suse/sles12sp5" = "registry.suse.com/suse/sles12sp5"
+          "suse/sles12sp4" = "registry.suse.com/suse/sles12sp4"
+          "suse/sles12sp3" = "registry.suse.com/suse/sles12sp3"
+          "sle15" = "registry.suse.com/suse/sle15"
+          "sles12sp5" = "registry.suse.com/suse/sles12sp5"
+          "sles12sp4" = "registry.suse.com/suse/sles12sp4"
+          "sles12sp3" = "registry.suse.com/suse/sles12sp3"
+          "rhel" = "registry.access.redhat.com/rhel"
+          "rhel6" = "registry.access.redhat.com/rhel6"
+          "rhel7" = "registry.access.redhat.com/rhel7"
+          "ubi7" = "registry.access.redhat.com/ubi7"
+          "ubi7-init" = "registry.access.redhat.com/ubi7-init"
+          "ubi7-minimal" = "registry.access.redhat.com/ubi7-minimal"
+          "ubi8" = "registry.access.redhat.com/ubi8"
+          "ubi8-minimal" = "registry.access.redhat.com/ubi8-minimal"
+          "ubi8-init" = "registry.access.redhat.com/ubi8-init"
+          "ubi8-micro" = "registry.access.redhat.com/ubi8-micro"
+          "ubi8/ubi" = "registry.access.redhat.com/ubi8/ubi"
+          "ubi8/ubi-minimal" = "registry.access.redhat.com/ubi8-minimal"
+          "ubi8/ubi-init" = "registry.access.redhat.com/ubi8-init"
+          "ubi8/ubi-micro" = "registry.access.redhat.com/ubi8-micro"
+          "debian" = "docker.io/library/debian"
+          "ubuntu" = "docker.io/library/ubuntu"
+          "oraclelinux" = "container-registry.oracle.com/os/oraclelinux"
+          "busybox" = "docker.io/library/busybox"
+          "php" = "docker.io/library/php"
+          "python" = "docker.io/library/python"
+          "node" = "docker.io/library/node"
+    - path: ${prefix}/etc/containers/registries.d/default.yaml
+      content: |
+        default-docker:
+          sigstore-staging: file:///var/lib/containers/sigstore
+    - path: ${prefix}/etc/containers/policy.json
+      content: |
+        {
+          "default": [
+            {
+              "type": "insecureAcceptAnything"
+            }
+          ],
+          "transports": {
+            "docker-daemon": {
+              "": [
+                {
+                  "type":"insecureAcceptAnything"
+                }
+              ]
+            }
+          }
+        }
+    - path: ${prefix}/etc/containers/registries.json
+      content: |
+        unqualified-search-registries = ["docker.io", "quay.io"]
+    - path: ${prefix}/etc/containers/storage.conf
+      content: |
+        [storage]
+        driver = "overlay"
+        runroot = "/run/containers/storage"
+        graphroot = "/var/lib/containers/storage"
+
+        [storage.options]
+        additionalimagestores = [
+        ]
+
+        [storage.options.overlay]
+        mountopt = "nodev,metacopy=on"
+
+        [storage.options.thinpool]
     post_install: |
       echo "Fix systemd unit"
       sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
@@ -644,6 +878,34 @@ tools:
     - url:
         x86_64: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
       type: executable
+    files:
+    - path: ${target}/bin/docker-compose
+      content: |
+        #!/bin/bash
+
+        docker_cli_plugin_metadata() {
+          if [ -z "$DOCKER_COMPOSE_VERSION" ]; then
+            export DOCKER_COMPOSE_VERSION
+                DOCKER_COMPOSE_VERSION="$(docker-compose --version | cut -d " " -f 3 | cut -d "," -f 1)"
+          fi
+
+          local vendor="Docker"
+          local url="https://www.docker.com"
+          local description="Define and run multi-container applications"
+          cat <<-EOF
+          {"SchemaVersion":"0.1.0","Vendor":"${vendor}","Version":"${DOCKER_COMPOSE_VERSION}","ShortDescription":"${description}","URL":"${url}"}
+        EOF
+        }
+
+        case "$1" in
+          docker-cli-plugin-metadata)
+            docker_cli_plugin_metadata
+            ;;
+          *)
+            shift
+            exec docker-compose "$@"
+            ;;
+        esac
 
   - name: docker-compose-v2
     version: 2.4.1
@@ -838,9 +1100,23 @@ tools:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
-    - url: contrib/fuse-overlayfs-snapshotter/fuse-overlayfs-snapshotter.service
-      type: file
-      path: contrib/${tool}/fuse-overlayfs-snapshotter.service
+    files:
+    - path: contrib/${tool}/fuse-overlayfs-snapshotter.service
+      content: |
+        [Unit]
+        Description=containerd-fuse-overlayfs
+        PartOf=containerd
+
+        [Service]
+        ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc "/var/run/containerd-fuse-overlayfs.sock" "/var/lib/containerd-fuse-overlayfs"
+        ExecReload=/bin/kill -s HUP \$MAINPID
+        RestartSec=2
+        Restart=always
+        Type=simple
+        KillMode=mixed
+
+        [Install]
+        WantedBy=default.target
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
@@ -1098,9 +1374,24 @@ tools:
       strip: 1
       files:
       - go-ipfs/ipfs
-    - url: contrib/ipfs/ipfs.service
-      type: file
-      path: ${prefix}/etc/systemd/system/ipfs.service
+    files:
+    - path: ${prefix}/etc/systemd/system/ipfs.service
+      content: |
+        [Unit]
+        Description=ipfs daemon
+        PartOf=containerd
+
+        [Service]
+        Environment=IPFS_PATH=/var/lib/ipfs
+        ExecStart=/usr/local/bin/ipfs daemon $@
+        ExecReload=/bin/kill -s HUP \$MAINPID
+        RestartSec=2
+        Restart=always
+        Type=simple
+        KillMode=mixed
+
+        [Install]
+        WantedBy=default.target
     post_install: |
       echo "Install completion"
       ${binary} commands completion >"${target}/share/bash-completion/completions/ipfs"
@@ -1198,18 +1489,46 @@ tools:
         x86_64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s
         aarch64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s-arm64
       type: executable
-    - url: contrib/k3s/k3s.service
-      type: file
-      path: ${prefix}/etc/init.d/k3s
-      post_install: |
-        echo "Fix systemd unit"
-        sed -i "s|/usr/local/bin/k3s|${relative_target}/bin/k3s|g" "${prefix}/etc/systemd/system/k3s.service"
-        if test -z "${prefix}"; then
-            if has_systemd; then
-                echo "Reload systemd"
-                systemctl daemon-reload
-            fi
-        fi
+    files:
+    - path: ${prefix}/etc/init.d/k3s
+      content: |
+        [Unit]
+        Description=Lightweight Kubernetes
+        Documentation=https://k3s.io
+        Wants=network-online.target
+        After=network-online.target
+
+        [Install]
+        WantedBy=multi-user.target
+
+        [Service]
+        Type=notify
+        EnvironmentFile=-/etc/default/%N
+        EnvironmentFile=-/etc/sysconfig/%N
+        KillMode=process
+        Delegate=yes
+        # Having non-zero Limit*s causes performance problems due to accounting overhead
+        # in the kernel. We recommend using cgroups to do container-local accounting.
+        LimitNOFILE=1048576
+        LimitNPROC=infinity
+        LimitCORE=infinity
+        TasksMax=infinity
+        TimeoutStartSec=0
+        Restart=always
+        RestartSec=5s
+        ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
+        ExecStartPre=-/sbin/modprobe br_netfilter
+        ExecStartPre=-/sbin/modprobe overlay
+        ExecStart=/usr/local/bin/k3s
+    post_install: |
+      echo "Fix systemd unit"
+      sed -i "s|/usr/local/bin/k3s|${relative_target}/bin/k3s|g" "${prefix}/etc/systemd/system/k3s.service"
+      if test -z "${prefix}"; then
+          if has_systemd; then
+              echo "Reload systemd"
+              systemctl daemon-reload
+          fi
+      fi
 
   - name: k3sup
     version: 0.11.3
@@ -1969,12 +2288,184 @@ tools:
       strip: 1
       files:
       - portainer/public
-    - url: contrib/portainer/portainer.service
-      type: file
-      path: ${prefix}/etc/systemd/system/portainer.service
-    - url: contrib/portainer/portainer
-      type: file
-      path: ${prefix}/etc/init.d/portainer
+    - path: ${prefix}/etc/systemd/system/portainer.service
+      content: |
+        [Unit]
+        Description=portainer
+        Documentation=https://www.portainer.io/
+        After=network.target local-fs.target
+
+        [Service]
+        ExecStart=/usr/local/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
+
+        Type=exec
+        Delegate=yes
+        KillMode=process
+        Restart=always
+        RestartSec=5
+        # Having non-zero Limit*s causes performance problems due to accounting overhead
+        # in the kernel. We recommend using cgroups to do container-local accounting.
+        LimitNPROC=infinity
+        LimitCORE=infinity
+        LimitNOFILE=1048576
+        # Comment TasksMax if your systemd version does not supports it.
+        # Only systemd 226 and above support this version.
+        TasksMax=infinity
+
+        [Install]
+        WantedBy=multi-user.target
+    - path: ${prefix}/etc/init.d/portainer
+      content: |
+        #!/bin/sh
+        set -e
+
+        ### BEGIN INIT INFO
+        # Provides:           portainer
+        # Required-Start:     $syslog $remote_fs
+        # Required-Stop:      $syslog $remote_fs
+        # Should-Start:       cgroupfs-mount cgroup-lite
+        # Should-Stop:        cgroupfs-mount cgroup-lite
+        # Default-Start:      2 3 4 5
+        # Default-Stop:       0 1 6
+        # Short-Description:  Create lightweight, portable, self-sufficient containers.
+        # Description:
+        #  Docker is an open-source project to easily create lightweight, portable,
+        #  self-sufficient containers from any application. The same container that a
+        #  developer builds and tests on a laptop can run at scale, in production, on
+        #  VMs, bare metal, OpenStack clusters, public clouds and more.
+        ### END INIT INFO
+
+        export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+        BASE=portainer
+
+        # modify these in /etc/default/$BASE (/etc/default/portainer)
+        PORTAINER=/usr/local/bin/portainer
+        # This is the pid file created/managed by start-stop-daemon
+        PORTAINER_SSD_PIDFILE=/var/run/$BASE-ssd.pid
+        PORTAINER_LOGFILE=/var/log/$BASE.log
+        PORTAINER_DESC="Portainer"
+
+        # Get lsb functions
+        . /lib/lsb/init-functions
+
+        if [ -f /etc/default/$BASE ]; then
+          . /etc/default/$BASE
+        fi
+
+        # Check portainer is present
+        if [ ! -x $PORTAINER ]; then
+          log_failure_msg "$PORTAINER not present or not executable"
+          exit 1
+        fi
+
+        check_init() {
+          # see also init_is_upstart in /lib/lsb/init-functions (which isn't available in Ubuntu 12.04, or we'd use it directly)
+          if [ -x /sbin/initctl ] && /sbin/initctl version 2> /dev/null | grep -q upstart; then
+            log_failure_msg "$PORTAINER_DESC is managed via upstart, try using service $BASE $1"
+            exit 1
+          fi
+        }
+
+        fail_unless_root() {
+          if [ "$(id -u)" != '0' ]; then
+            log_failure_msg "$PORTAINER_DESC must be run as root"
+            exit 1
+          fi
+        }
+
+        cgroupfs_mount() {
+          # see also https://github.com/tianon/cgroupfs-mount/blob/master/cgroupfs-mount
+          if grep -v '^#' /etc/fstab | grep -q cgroup \
+            || [ ! -e /proc/cgroups ] \
+            || [ ! -d /sys/fs/cgroup ]; then
+            return
+          fi
+          if ! mountpoint -q /sys/fs/cgroup; then
+            mount -t tmpfs -o uid=0,gid=0,mode=0755 cgroup /sys/fs/cgroup
+          fi
+          (
+            cd /sys/fs/cgroup
+            for sys in $(awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
+              mkdir -p $sys
+              if ! mountpoint -q $sys; then
+                if ! mount -n -t cgroup -o $sys cgroup $sys; then
+                  rmdir $sys || true
+                fi
+              fi
+            done
+          )
+        }
+
+        case "$1" in
+          start)
+            check_init
+
+            fail_unless_root
+
+            cgroupfs_mount
+
+            touch "$PORTAINER_LOGFILE"
+
+            ulimit -n 1048576
+
+            # Having non-zero limits causes performance problems due to accounting overhead
+            # in the kernel. We recommend using cgroups to do container-local accounting.
+            if [ "$BASH" ]; then
+              ulimit -u unlimited
+            else
+              ulimit -p unlimited
+            fi
+
+            log_begin_msg "Starting $PORTAINER_DESC: $BASE"
+            start-stop-daemon --start --background \
+              --no-close \
+              --exec "$PORTAINER" \
+              --pidfile "$PORTAINER_SSD_PIDFILE" \
+              --make-pidfile \
+              -- \
+              >> "$PORTAINER_LOGFILE" 2>&1
+            log_end_msg $?
+            ;;
+
+          stop)
+            check_init
+            fail_unless_root
+            if [ -f "$PORTAINER_SSD_PIDFILE" ]; then
+              log_begin_msg "Stopping $PORTAINER_DESC: $BASE"
+              start-stop-daemon --stop --pidfile "$PORTAINER_SSD_PIDFILE" --retry 10
+              log_end_msg $?
+            else
+              log_warning_msg "Docker already stopped - file $PORTAINER_SSD_PIDFILE not found."
+            fi
+            ;;
+
+          restart)
+            check_init
+            fail_unless_root
+            portainer_pid=$(cat "$PORTAINER_SSD_PIDFILE" 2> /dev/null)
+            [ -n "$portainer_pid" ] \
+              && ps -p $portainer_pid > /dev/null 2>&1 \
+              && $0 stop
+            $0 start
+            ;;
+
+          force-reload)
+            check_init
+            fail_unless_root
+            $0 restart
+            ;;
+
+          status)
+            check_init
+            status_of_proc -p "$PORTAINER_SSD_PIDFILE" "$PORTAINER" "$PORTAINER_DESC"
+            ;;
+
+          *)
+            echo "Usage: service portainer {start|stop|restart|status}"
+            exit 1
+            ;;
+        esac
     post_install: |
       echo "Install dedicated docker-compose v1"
       cp "${target}/bin/docker-compose" "${target}/share/portainer/docker-compose"
@@ -2160,9 +2651,24 @@ tools:
     - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
-    - url: contrib/stargz-snapshotter/stargz-snapshotter.service
-      type: file
-      path: contrib/${tool}/stargz-snapshotter.service
+    files:
+    - path: contrib/${tool}/stargz-snapshotter.service
+      content: |
+        [Unit]
+        Description=stargz snapshotter
+        PartOf=containerd
+
+        [Service]
+        Environment=IPFS_PATH=${XDG_DATA_HOME}/ipfs
+        ExecStart=/usr/local/bin/containerd-stargz-grpc -address "${XDG_RUNTIME_DIR}/containerd-stargz-grpc/containerd-stargz-grpc.sock" -root "${XDG_DATA_HOME}/containerd-stargz-grpc" -config "${XDG_CONFIG_HOME}/containerd-stargz-grpc/config.toml"
+        ExecReload=/bin/kill -s HUP \$MAINPID
+        RestartSec=2
+        Restart=always
+        Type=simple
+        KillMode=mixed
+
+        [Install]
+        WantedBy=default.target
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-stargz-snapshotter.sh" <<EOF

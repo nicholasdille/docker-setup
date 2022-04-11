@@ -7,7 +7,6 @@
 : "${docker_plugins_path:=${target}/libexec/docker/cli-plugins}"
 : "${docker_setup_logs:=/var/log/docker-setup}"
 : "${docker_setup_cache:=/var/cache/docker-setup}"
-: "${docker_setup_contrib:=${docker_setup_cache}/contrib}"
 : "${docker_setup_downloads:=${docker_setup_cache}/downloads}"
 
 arch="$(uname -m)"

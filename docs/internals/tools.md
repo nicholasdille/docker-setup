@@ -105,7 +105,6 @@ System-specific variables:
 Variables specific to `docker-setup`:
 
 - `docker_setup_version` - version of `docker-setup`
-- `docker_setup_contrib` - directory with [contrib](contrib.md) files
 - `docker_setup_cache` - cache directory (defaults to `/var/cache/docker-setup`)
 
 Tool-specific variables:
