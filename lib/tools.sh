@@ -239,7 +239,7 @@ function install_tool() {
                     url="$(jq --raw-output '.url' <<<"${download_json}")"
                     ;;
                 *)
-                    error "Malformed url. Must be string or object not ${url_type}."
+                    error "Malformed url for index ${index}. Must be string or object not ${url_type}."
                     exit 1
                     ;;
             esac
