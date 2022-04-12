@@ -222,6 +222,16 @@ EOF
     exit
 fi
 
+if test "${#requested_names[@]}" -eq 1; then
+    requested_names_string="${!requested_names[*]}"
+    if [[ "${requested_names_string}" == *" "* ]]; then
+        requested_names=()
+        for name in ${requested_names_string}; do
+            requested_names[${name}]=true
+        done
+    fi
+fi
+
 if ${only} && ${only_installed}; then
     error "You can only specify one: --only/\$only or --only-installed/\$only_installed."
     echo
