@@ -279,6 +279,9 @@ function install_tool() {
                         error "Path not specified."
                         return
                     fi
+                    if test "${path:0:8}" == "contrib/"; then
+                        path="${docker_setup_contrib}/${path:8}"
+                    fi
                     echo "    File ${path}"
                     mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
@@ -368,6 +371,9 @@ function install_tool() {
     local files_index=0
     local files_count
     files_count="$(get_tool_files_count "${tool}")"
+    if test -z "${files_count}"; then
+        files_count=0
+    fi
     echo "Files count = ${files_count}"
     while test "${files_index}" -lt "${files_count}"; do
         echo "Processing file ${files_index}"
