@@ -2288,6 +2288,7 @@ tools:
       strip: 1
       files:
       - portainer/public
+    files:
     - path: ${prefix}/etc/systemd/system/portainer.service
       content: |
         [Unit]
