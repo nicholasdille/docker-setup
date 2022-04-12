@@ -1,4 +1,4 @@
-FROM archlinux:latest@sha256:b15db21228c7cd5fd3ab364a97193ba38abfad0e8b9593c15b71850b74738153
+FROM archlinux:latest@sha256:4d421ae2256a9e607d7937b7f015e19111a28d0bd87d35ad82ce627378bb82d1
 RUN pacman -Sy \
  && pacman -S --noconfirm \
         git \
