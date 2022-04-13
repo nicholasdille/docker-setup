@@ -5,7 +5,7 @@ SECONDS=0
 
 docker_setup_version="main"
 docker_setup_repo_base="https://github.com/nicholasdille/docker-setup"
-docker_setup_repo_raw="${docker_setup_repo_base}/raw/${docker_setup_version}"
+docker_setup_repo_raw="${docker_setup_repo_base}/raw/v${docker_setup_version}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 
@@ -229,7 +229,7 @@ if test "${docker_setup_version}" == "main" && test -f "${PWD}/tools.json"; then
     cp "${PWD}/tools.json" "${docker_setup_cache}/tools.json"
 fi
 if ! test -f "${docker_setup_tools_file}"; then
-    curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/${docker_setup_version}/tools.json"
+    curl -sLo "${docker_setup_cache}/tools.json" "${docker_setup_repo_base}/releases/download/v${docker_setup_version}/tools.json"
 fi
 
 dependencies=(jq curl git unzip)
