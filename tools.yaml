@@ -1213,7 +1213,7 @@ tools:
       - hcloud
 
   - name: helm
-    version: 3.8.1
+    version: 3.8.2
     check: ${binary} version --short | cut -d+ -f1 | tr -d v
     tags:
     - k8s
