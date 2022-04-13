@@ -935,7 +935,7 @@ tools:
       fi
 
   - name: imgpkg
-    version: 0.27.0
+    version: 0.28.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     download:
     - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
