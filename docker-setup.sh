@@ -6,7 +6,11 @@ SECONDS=0
 docker_setup_version="main"
 docker_setup_repo_name="nicholasdille/docker-setup"
 docker_setup_repo_base="https://github.com/${docker_setup_repo_name}"
-docker_setup_repo_raw="${docker_setup_repo_base}/raw/v${docker_setup_version}"
+if test "${docker_setup_version}" == "main"; then
+    docker_setup_repo_raw="${docker_setup_repo_base}/raw/main"
+else
+    docker_setup_repo_raw="${docker_setup_repo_base}/raw/v${docker_setup_version}"
+fi
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 
