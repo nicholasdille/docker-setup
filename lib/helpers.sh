@@ -242,6 +242,17 @@ function is_amzn_2() {
     return 1
 }
 
+function is_amzn_2022() {
+    local lsb_dist
+    local lsb_vers
+    lsb_dist=$(get_lsb_distro_name)
+    lsb_vers=$(get_lsb_distro_version)
+    if test "${lsb_dist}" == "amzn" && test "${lsb_vers}" -eq 2022; then
+        return 0
+    fi
+    return 1
+}
+
 function is_container() {
     if grep -q "/docker/" /proc/1/cgroup; then
         return 0

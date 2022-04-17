@@ -1,12 +1,15 @@
 FROM amazonlinux:2022@sha256:b43e6145a7c17c628533cf743fe1555eb0766f91067ba13546d32fb832dd0a85
-RUN yum install -y \
-        curl \
-        ca-certificates \
-        git \
-        tar \
-        tzdata \
-        unzip \
+RUN dnf install -y \
+        cpio \
+ && dnf install -y \
+        procps-ng \
+        iptables-legacy \
         initscripts \
+        git \
+        unzip \
+        tar \
+        ncurses \
+        crontabs \
         jq \
         gettext
 COPY env/run.sh /

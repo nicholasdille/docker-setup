@@ -35,9 +35,11 @@ jobs:
       all_distros: |
         [
           "alpine-3.15",
+          "amazonlinux-2022",
           "centos-7",
           "debian-11",
           "fedora-35",
+          "rockylinux-8",
           "ubuntu-20.04",
           "ubuntu-21.04",
           "ubuntu-22.04"
@@ -48,13 +50,11 @@ jobs:
         ]
       future_distros: |
         [
-          "amazonlinux-2022",
           "archlinux",
           "clearlinux",
           "centos-8",
           "opensuse-leap-15",
-          "opensuse-tumbleweed",
-          "rockylinux-8"
+          "opensuse-tumbleweed"
         ]
       future_archs: |
         [
