@@ -466,6 +466,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: dagger\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "dagger/dagger",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: dasel\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "TomWright/dasel",

@@ -615,6 +615,18 @@ tools:
     - url: https://github.com/bcicen/ctop/releases/download/${version}/ctop-${version}-linux-${alt_arch}
       type: executable
 
+  - name: dagger
+    version: 0.2.4
+    check: ${binary} version | cut -d' ' -f2
+    tags:
+    - management
+    download:
+    - url: https://github.com/dagger/dagger/releases/download/v${version}/dagger_v${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - dagger
+
   - name: dasel
     version: 1.24.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
