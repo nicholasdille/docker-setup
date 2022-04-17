@@ -13,6 +13,9 @@ else
 fi
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
+if test ${EUID} -ne 0 && ! test -w "${docker_setup_cache}"; then
+    docker_setup_cache=${HOME}/.cache/docker-setup
+fi
 
 if test "${docker_setup_version}" != "main" && ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
     rm -rf \
@@ -540,13 +543,13 @@ if test "${#tool_install[@]}" -gt 0 && ! ${no_wait}; then
     echo -e "\r                                             "
 fi
 
-if test -n "${prefix}" && ( ! test -s "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
+if test -n "${prefix}" && ( ! test -S "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
     error "When installing into a subdirectory (${prefix}) Docker must be present via /var/run/docker.sock."
     exit 1
 fi
 
-if test ${EUID} -ne 0; then
-    error "You must run this script as root or use sudo."
+if ! test -w "${prefix}"; then
+    error "You must have permissions to write to ${prefix}. Or run docker-setup with sudo or as root."
     exit 1
 fi
 
@@ -705,8 +708,8 @@ for error in $(find "${docker_setup_cache}/errors/" -type f); do
 done
 
 messages="$(
-    grep -E "\[(WARNING|ERROR)\]" /var/log/docker-setup/*.log \
-    | sed -E 's|/var/log/docker-setup/(.+).log|\1|'
+    grep -E "\[(WARNING|ERROR)\]" "${docker_setup_logs}/*.log" \
+    | sed -E "s|${docker_setup_logs}/(.+).log|\1|"
 )"
 if test -n "${messages}"; then
     echo

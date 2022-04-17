@@ -6,9 +6,12 @@
 : "${docker_allow_restart:=false}"
 : "${docker_plugins_path:=${target}/libexec/docker/cli-plugins}"
 : "${docker_setup_logs:=/var/log/docker-setup}"
-: "${docker_setup_cache:=/var/cache/docker-setup}"
 : "${docker_setup_contrib:=${docker_setup_cache}/contrib}"
 : "${docker_setup_downloads:=${docker_setup_cache}/downloads}"
+
+if test ${EUID} -ne 0 && ! test -w "${docker_setup_logs}"; then
+    docker_setup_logs=${HOME}/.logs/docker-setup
+fi
 
 arch="$(uname -m)"
 case "${arch}" in
