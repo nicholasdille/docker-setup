@@ -1229,9 +1229,9 @@ tools:
       files:
       - linux-amd64/helm
     post_install: |
-      "${target}/bin/helm" completion bash >"${target}/share/bash-completion/completions/helm"
-      "${target}/bin/helm" completion fish >"${target}/share/fish/vendor_completions.d/helm.fish"
-      "${target}/bin/helm" completion zsh >"${target}/share/zsh/vendor-completions/_helm"
+      "${binary}" completion bash >"${target}/share/bash-completion/completions/helm"
+      "${binary}" completion fish >"${target}/share/fish/vendor_completions.d/helm.fish"
+      "${binary}" completion zsh >"${target}/share/zsh/vendor-completions/_helm"
       if test -z "${prefix}"; then
           echo "Install plugins"
           plugins=(
@@ -1311,7 +1311,7 @@ tools:
       path: ${target}/bin/ignited
     post_install: |
       echo "Install completion"
-      ${binary}  completion >"${target}/share/bash-completion/completions/ignite"
+      ${binary} completion >"${target}/share/bash-completion/completions/ignite"
       "${target}/bin/ignited" completion >"${target}/share/bash-completion/completions/ignited" || true
 
   - name: img
@@ -1714,8 +1714,8 @@ tools:
       path: ${target}/bin/kubectl-convert
     post_install: |
       echo "Install completion"
-      kubectl completion bash >"${target}/share/bash-completion/completions/kubectl"
-      kubectl completion zsh >"${target}/share/zsh/vendor-completions/_kubectl"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/kubectl"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kubectl"
       echo "Add alias k"
       cat >"${prefix}/etc/profile.d/kubectl.sh" <<EOF
       alias k=kubectl
@@ -2493,12 +2493,12 @@ tools:
     post_install: |
       if test -z "${prefix}"; then
           echo "Install mixins"
-          porter mixin install exec
-          porter mixin install docker
-          porter mixin install docker-compose
-          porter mixin install kubernetes
+          ${binary} mixin install exec
+          ${binary} mixin install docker
+          ${binary} mixin install docker-compose
+          ${binary} mixin install kubernetes
           echo "Install plugins"
-          porter plugins install kubernetes
+          ${binary} plugins install kubernetes
       fi
 
   - name: qemu
