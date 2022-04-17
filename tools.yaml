@@ -2592,6 +2592,25 @@ tools:
       EOF
       fi
 
+  - name: scorecard
+    version: 4.1.0
+    check: ${binary} version | grep "GitVersion" | cut -dv -f2
+    tags:
+    - security
+    download:
+    - url: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - scorecard-linux-${alt-arch}
+    post_install: |
+      echo "Rename binary"
+      mv "${target}/bin/scorecard-linux-${alt_arch}" "${target}/bin/scorecard"
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/scorecard"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/scorecard.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_scorecard"
+
   - name: skopeo
     version: 1.6.1
     check: ${binary} --version | cut -d' ' -f3

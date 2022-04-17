@@ -1358,6 +1358,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: scorecard\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "ossf/scorecard",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: skopeo\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "nicholasdille/skopeo-static",
