@@ -106,7 +106,7 @@ tools:
       - cinf
 
   - name: clusterawsadm
-    version: 1.4.0
+    version: 1.4.1
     check: ${binary} version --output short | tr -d v
     download:
     - url: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-amd64
