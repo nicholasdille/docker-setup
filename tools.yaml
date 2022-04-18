@@ -1771,7 +1771,7 @@ tools:
       type: executable
 
   - name: sshocker
-    version: 0.2.3
+    version: 0.3.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
