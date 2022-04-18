@@ -271,7 +271,7 @@ tools:
       - cinf
 
   - name: clusterawsadm
-    version: 1.4.0
+    version: 1.4.1
     check: ${binary} version --output short | tr -d v
     tags:
     - k8s
