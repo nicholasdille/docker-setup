@@ -1094,7 +1094,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kapp"
 
   - name: kbld
-    version: 0.32.0
+    version: 0.33.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     download:
     - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
