@@ -616,7 +616,7 @@ tools:
       type: executable
 
   - name: dagger
-    version: 0.2.6
+    version: 0.2.7
     check: ${binary} version | cut -d' ' -f2
     tags:
     - management
