@@ -1173,7 +1173,7 @@ tools:
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_krew"
 
   - name: kubeadm
-    version: 1.23.5
+    version: 1.23.6
     check: ${binary} version --output short | tr -d v
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
@@ -1184,7 +1184,7 @@ tools:
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_kubeadm"
 
   - name: kubectl
-    version: 1.23.5
+    version: 1.23.6
     check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
     needs:
     - krew
@@ -1333,7 +1333,7 @@ tools:
       path: ${target}/libexec/cni/host-local-rev
 
   - name: kubelet
-    version: 1.23.5
+    version: 1.23.6
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
