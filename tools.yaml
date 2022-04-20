@@ -2524,7 +2524,7 @@ tools:
       fi
 
   - name: qemu
-    version: 6.2.0
+    version: 7.0.0
     binary: qemu-img
     check: ${binary} --version | grep qemu-img | cut -d' ' -f3
     tags:
