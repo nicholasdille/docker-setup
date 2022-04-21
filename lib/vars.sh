@@ -9,7 +9,7 @@
 : "${docker_setup_contrib:=${docker_setup_cache}/contrib}"
 : "${docker_setup_downloads:=${docker_setup_cache}/downloads}"
 
-if test ${EUID} -ne 0 && ! test -w "${docker_setup_logs}"; then
+if [[ ${EUID} -ne 0 ]] && [[ ! -w "${docker_setup_logs}" ]]; then
     docker_setup_logs=${HOME}/.logs/docker-setup
 fi
 
