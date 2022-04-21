@@ -13,8 +13,10 @@ else
 fi
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
-if test ${EUID} -ne 0 && ! test -w "${docker_setup_cache}"; then
+: "${docker_setup_logs:=/var/log/docker-setup}"
+if [[ ${EUID} -ne 0 ]] && [[ ! -w "${docker_setup_logs}" ]]; then
     docker_setup_cache=${HOME}/.cache/docker-setup
+    docker_setup_logs=${HOME}/.logs/docker-setup
 fi
 
 if test "${docker_setup_version}" != "main" && ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
