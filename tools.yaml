@@ -203,7 +203,6 @@ tools:
             exit 1
             ;;
         esac
-
     post_install: |
       echo "Install systemd units"
       sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
@@ -227,7 +226,7 @@ tools:
     download:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
-    post_install:
+    post_install: |
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
           wait_for_docker
@@ -2086,7 +2085,7 @@ tools:
       path: ${target}/bin
       files:
       - manifest-tool-linux-${alt_arch}
-    post_install:
+    post_install: |
       mv "${target}/bin/manifest-tool-linux-${alt_arch}" "${target}/bin/manifest-tool"
 
   - name: minikube
@@ -2647,7 +2646,7 @@ tools:
       type: executable
     dockerfile: |
       FROM golang:${go_version}
-    post_install:
+    post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
