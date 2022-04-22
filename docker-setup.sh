@@ -441,6 +441,7 @@ echo
 
 echo -e "docker-setup includes ${#tools[*]} tools: (${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 declare -A tool_install
+declare -a tool_order
 declare -A tool_color
 declare -A tool_sign
 declare -a tool_outdated
@@ -452,13 +453,14 @@ for name in "${tools[@]}"; do
             resolve_deps "${name}"
 
             if test -z "${tool_install[${name}]}"; then
+                tool_order+=( "${name}" )
                 tool_install["${name}"]=true
             fi
         fi
     fi
 done
 
-debug "The following tools will be installed: ${!tool_install[*]}."
+debug "Tools will be installed in the following order: ${tool_order[*]}."
 
 debug "Finished dependency resolution (@ ${SECONDS})"
 
@@ -626,12 +628,11 @@ fi
 
 tput civis
 
-tool_install_array=("${!tool_install[@]}")
 declare -A child_pids
 started_index=0
 last_update=false
 exit_code=0
-child_pid_count="${#tool_install_array[@]}"
+child_pid_count="${#tool_order[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
 if ${no_progressbar}; then
     echo "installing..."
@@ -647,8 +648,8 @@ while ! ${last_update}; do
         count=$(( max_parallel - running ))
         end_index=$(( started_index + count ))
 
-        while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_install_array[@]}"; do
-            name="${tool_install_array[${started_index}]}"
+        while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_order[@]}"; do
+            name="${tool_order[${started_index}]}"
 
             {
                 echo "============================================================"

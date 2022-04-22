@@ -415,6 +415,7 @@ function resolve_deps() {
         for dep in ${tool_deps[${tool}]}; do
             if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}"; then
                 resolve_deps "${dep}"
+                tool_order+=( "${dep}" )
                 tool_install["${dep}"]=true
             fi
         done
