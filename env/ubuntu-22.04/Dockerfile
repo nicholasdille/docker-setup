@@ -1,4 +1,4 @@
-FROM ubuntu:22.04@sha256:7599221e4e2e4eeb90ad282fc523139578f3dfea245b5049c4fee1b28776d2be
+FROM ubuntu:22.04@sha256:2a7dffab37165e8b4f206f61cfd984f8bb279843b070217f6ad310c9c31c9c7c
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
