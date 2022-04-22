@@ -273,18 +273,22 @@ function has_systemd() {
 
 function docker_is_running() {
     if "${target}/bin/docker" version >/dev/null 2>&1; then
+        debug "docker_is_running(): yes"
         return 0
     else
+        debug "docker_is_running(): no"
         return 1
     fi
 }
 
 function wait_for_docker() {
     local sleep=10
-    local retries=30
+    local retries=$(( docker_max_wait / sleep ))
+    debug "wait_for_docker(): sleep=${sleep}, retries=${retries}"
 
     local retry=0
     while ! docker_is_running && test "${retry}" -le "${retries}"; do
+        debug "wait_for_docker(): Waiting for docker (attempt ${retry}/${retries})"
         sleep "${sleep}"
 
         retry=$(( retry + 1 ))
