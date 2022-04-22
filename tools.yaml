@@ -2826,6 +2826,7 @@ tools:
 
   - name: util-linux
     version: 2.38
+    binary: lsns
     needs:
     - docker
     tags:
