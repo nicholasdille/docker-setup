@@ -152,7 +152,7 @@ function install_tool() {
     local tool=$1
 
     echo
-    echo "Installing ${tool}"
+    echo "Installing ${tool} (@ ${SECONDS} seconds)"
     local tool_json
     tool_json="$(get_tool "${tool}")"
     
@@ -176,8 +176,6 @@ function install_tool() {
     local dockerfile
     dockerfile="$(jq --raw-output 'select(.dockerfile != null) | .dockerfile' <<<"${tool_json}")"
     if test -n "${dockerfile}"; then
-        echo "${dockerfile}"
-
         if docker_is_running || tool_will_be_installed "docker"; then
             echo "Waiting for Docker daemon to start"
             wait_for_docker
@@ -251,7 +249,7 @@ function install_tool() {
             if ! grep -qE "^https?://" <<<"${url}"; then
                 url="${docker_setup_repo_raw}/${url}"
             fi
-            echo "  Installing from ${url}"
+            echo "  Installing from ${url} (@ ${SECONDS} seconds)"
 
             local type
             type="$(jq --raw-output '.type' <<<"${download_json}")"
@@ -376,7 +374,7 @@ function install_tool() {
     fi
     echo "Files count = ${files_count}"
     while test "${files_index}" -lt "${files_count}"; do
-        echo "Processing file ${files_index}"
+        echo "Processing file ${files_index} (@ ${SECONDS} seconds)"
 
         local file_json
         file_json="$(get_tool_files_index "${tool}" "${files_index}")"
@@ -400,7 +398,7 @@ function install_tool() {
         | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
     )"
     if test -n "${post_install}"; then
-        echo "  Running post_install"
+        echo "  Running post_install (@ ${SECONDS} seconds)"
         eval "${post_install}"
     fi
     echo "  DONE"

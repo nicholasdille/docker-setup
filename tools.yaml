@@ -707,11 +707,11 @@ tools:
       type: file
       path: contrib/${tool}/openrc/docker.initd
     post_install: |
-      echo "Move binaries"
+      echo "Move binaries (@ ${SECONDS} seconds)"
       mv "${target}/libexec/docker/bin/dockerd" "${target}/bin"
       mv "${target}/libexec/docker/bin/docker" "${target}/bin"
       mv "${target}/libexec/docker/bin/docker-proxy" "${target}/bin"
-      echo "Move rootless scripts"
+      echo "Move rootless scripts (@ ${SECONDS} seconds)"
       mv "${target}/libexec/docker/bin/dockerd-rootless.sh" "${target}/bin"
       mv "${target}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${target}/bin"
       echo "Binaries installed after ${SECONDS} seconds."
@@ -721,7 +721,7 @@ tools:
           warning "Docker is already running. Skipping systemd unit, init script and daemon configuration."
 
       else
-          echo "Install systemd units"
+          echo "Install systemd units (@ ${SECONDS} seconds)"
           cp "${docker_setup_contrib}/${tool}/systemd/docker.service" "${prefix}/etc/systemd/system/docker.service"
           cp "${docker_setup_contrib}/${tool}/systemd/docker.socket" "${prefix}/etc/systemd/system/docker.socket"
           sed -i "/^\[Service\]/a Environment=PATH=${relative_target}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}/etc/systemd/system/docker.service"
@@ -759,10 +759,10 @@ tools:
               exit 1
           fi
           if test -z "${prefix}"; then
-              echo "Create group"
+              echo "Create group (@ ${SECONDS} seconds)"
               groupadd --system --force docker
           fi
-          echo "Configure daemon"
+          echo "Configure daemon (@ ${SECONDS} seconds)"
           if ! test -f "${prefix}/etc/docker/daemon.json"; then
               echo "Initialize dockerd configuration"
               echo "{}" >"${prefix}/etc/docker/daemon.json"
@@ -821,31 +821,31 @@ tools:
               cat <<< "$(jq '. * {"features":{"buildkit":true}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
               touch "${docker_setup_cache}/docker_restart"
           fi
-          echo "Check if daemon.json is valid JSON"
+          echo "Check if daemon.json is valid JSON (@ ${SECONDS} seconds)"
           if ! jq --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
               error "${prefix}/etc/docker/daemon.json is not valid JSON."
               exit 1
           fi
           if test -z "${prefix}"; then
               if has_systemd; then
-                  echo "Reload systemd"
+                  echo "Reload systemd (@ ${SECONDS} seconds)"
                   systemctl daemon-reload
                   if ! systemctl is-active --quiet docker; then
-                      echo "Start dockerd"
+                      echo "Start dockerd (@ ${SECONDS} seconds)"
                       systemctl enable docker
                       systemctl start docker
                       touch "${docker_setup_cache}/docker_restart_allowed"
                   fi
               else
                   if ! docker_is_running; then
-                      echo "Start dockerd"
+                      echo "Start dockerd (@ ${SECONDS} seconds)"
                       "${prefix}/etc/init.d/docker" start
                       touch "${docker_setup_cache}/docker_restart_allowed"
                   fi
                   warning "Init script was installed but you must enable Docker yourself."
               fi
           fi
-          echo "Wait for Docker daemon to start"
+          echo "Wait for Docker daemon to start (@ ${SECONDS} seconds)"
           wait_for_docker
           if ! docker_is_running; then
               error "Failed to start Docker."
