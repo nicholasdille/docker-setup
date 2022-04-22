@@ -377,7 +377,7 @@ function github_ensure_rate_limit() {
         local now
         now="$(date +%s)"
 
-        echo "remaining=${remaining},left=$(( (reset - now) / 60 ))"
+        debug "github_ensure_rate_limit(): remaining=${remaining},left=$(( (reset - now) / 60 ))"
 
         if test "${remaining}" -ge "$(( (reset - now) / 60 ))"; then
             return 0
