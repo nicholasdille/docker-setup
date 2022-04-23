@@ -329,7 +329,7 @@ tools:
       type: executable
 
   - name: dasel
-    version: 1.24.2
+    version: 1.24.3
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
