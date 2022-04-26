@@ -17,6 +17,8 @@ on:
       - Dockerfile
       - docker/*
       - .github/workflows/test-linux.yml
+      - .github/workflows/release.yml
+      - .github/workflows/patch.yml
 
 jobs:
 
