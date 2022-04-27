@@ -1000,7 +1000,7 @@ tools:
       type: executable
   
   - name: jwt
-    version: 5.0.2
+    version: 5.0.3
     check: ${binary} --version | cut -d' ' -f2
     needs:
     - docker
