@@ -887,7 +887,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_grype"
 
   - name: gvisor
-    version: 20220418
+    version: 20220425
     binary: ${target}/bin/runsc
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
