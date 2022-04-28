@@ -1862,7 +1862,7 @@ tools:
       type: executable
 
   - name: vendir
-    version: 0.26.0
+    version: 0.27.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     download:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
