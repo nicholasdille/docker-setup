@@ -573,7 +573,7 @@ tools:
       type: executable
 
   - name: docker-compose-v2
-    version: 2.4.1
+    version: 2.5.0
     binary: ${target}/libexec/docker/cli-plugins/docker-compose
     check: ${binary} compose version --short
     needs:
