@@ -1991,7 +1991,7 @@ tools:
       fi
 
   - name: porter
-    version: 0.38.10
+    version: 0.38.11
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
     tags:
     - cnab
