@@ -1,4 +1,4 @@
-FROM clearlinux:latest@sha256:1d6ed1cf54763afed4271626d989e0463825de396f827bf5670a66cb4c0d279e
+FROM clearlinux:latest@sha256:b63a3b7ba6722c4b0327ce00d87d72c12c5d5570f3654820067a68ff8bde24b5
 RUN swupd bundle-add \
         git \
         unzip \
