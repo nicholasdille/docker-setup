@@ -333,7 +333,7 @@ tools:
       - cri-dockerd
 
   - name: crictl
-    version: 1.23.0
+    version: 1.24.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - k8s
