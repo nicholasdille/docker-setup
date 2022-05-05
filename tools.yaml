@@ -292,7 +292,7 @@ tools:
       - cri-dockerd
 
   - name: crictl
-    version: 1.23.0
+    version: 1.24.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
