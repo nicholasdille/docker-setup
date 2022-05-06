@@ -769,7 +769,7 @@ tools:
       type: executable
 
   - name: firecracker
-    version: 1.0.0
+    version: 1.1.0
     check: ${binary} --version | grep "^Firecracker" | cut -d' ' -f2 | tr -d v
     tags:
     - kvm
