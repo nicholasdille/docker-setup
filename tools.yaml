@@ -1593,7 +1593,7 @@ tools:
       path: ${target}
 
   - name: portainer
-    version: 2.11.1
+    version: 2.13.0
     check: ${binary} --version 2>&1
     needs:
     - docker
