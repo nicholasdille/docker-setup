@@ -21,6 +21,9 @@ tools:
   - name: buildah
     version: 1.24.2
     check: ${binary} --version | cut -d' ' -f3
+    needs:
+    - runc
+    - cni
     tags:
     - build
     - redhat
@@ -2275,6 +2278,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - conmon
+    - runc
+    - cni
     tags:
     - runtime
     - redhat
