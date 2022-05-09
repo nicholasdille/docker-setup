@@ -2129,7 +2129,7 @@ tools:
       fi
 
   - name: sops
-    version: 3.7.2
+    version: 3.7.3
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
     tags:
     - security
