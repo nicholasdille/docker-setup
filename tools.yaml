@@ -2274,7 +2274,7 @@ tools:
       - patat-v${version}-linux-${arch}/patat.1
 
   - name: podman
-    version: 3.4.4
+    version: 4.1.0
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - conmon
