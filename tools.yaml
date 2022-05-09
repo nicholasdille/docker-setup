@@ -2091,7 +2091,7 @@ tools:
       fi
 
   - name: skopeo
-    version: 1.6.1
+    version: 1.8.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - registry
