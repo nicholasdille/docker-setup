@@ -2749,7 +2749,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_syft"
 
   - name: task
-    version: 3.12.0
+    version: 3.12.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - development
