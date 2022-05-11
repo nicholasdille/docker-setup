@@ -1952,7 +1952,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kustomize"
 
   - name: lazydocker
-    version: 0.17.1
+    version: 0.18.1
     check: ${binary} --version | grep Version | cut -d' ' -f2
     needs:
     - docker
