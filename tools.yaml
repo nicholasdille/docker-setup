@@ -348,7 +348,7 @@ tools:
       - dive
 
   - name: docker
-    version: 20.10.15
+    version: 20.10.16
     binary: dockerd
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
