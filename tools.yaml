@@ -2067,7 +2067,7 @@ tools:
       EOF
 
   - name: libcgroup
-    version: 2.0.1
+    version: 2.0.2
     binary: ${target}/bin/lscgroup
     needs:
     - docker
