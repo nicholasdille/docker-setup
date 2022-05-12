@@ -617,6 +617,17 @@ tools:
     - url: https://github.com/bcicen/ctop/releases/download/${version}/ctop-${version}-linux-${alt_arch}
       type: executable
 
+  - name: cyclonedx-cli
+    version: 0.24.0
+    tags:
+    - security
+    - sbom
+    download:
+    - url:
+        x86_64: https://github.com/CycloneDX/cyclonedx-cli/releases/download/v${version}/cyclonedx-linux-x64
+        aarch64: https://github.com/CycloneDX/cyclonedx-cli/releases/download/v${version}/cyclonedx-linux-arm64
+      type: executable
+
   - name: dagger
     version: 0.2.10
     check: ${binary} version | cut -d' ' -f2
@@ -943,6 +954,22 @@ tools:
     download:
     - url: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
       type: executable
+
+  - name: docker-sbom
+    version: 0.6.0
+    binary: ${target}/libexec/docker/cli-plugins/docker-sbom
+    needs:
+    - docker
+    tags:
+    - docker
+    - security
+    - sbom
+    download:
+    - url: https://github.com/docker/sbom-cli-plugin/releases/download/v${version}/sbom-cli-plugin_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/libexec/docker/cli-plugins
+      files:
+      - docker-sbom
 
   - name: docker-scan
     version: 0.17.0
