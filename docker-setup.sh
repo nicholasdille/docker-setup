@@ -782,28 +782,19 @@ if ! test -d "${cron_weekly_path}"; then
 fi
 if ! ${no_cron}; then
     # Weekly update of docker-setup into current location
-    cat >"${cron_weekly_path}/docker-setup-update" <<EOF
+    cat >"${cron_weekly_path}/docker-setup" <<EOF
 #!/bin/bash
 set -o errexit
 
 curl https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh \
-    --silent \
     --location \
     --output /usr/local/bin/docker-setup
 chmod +x /usr/local/bin/docker-setup
-EOF
-
-    # Weekly run of docker-setup
-    cat >"${cron_weekly_path}/docker-setup-upgrade" <<EOF
-#!/bin/bash
-set -o errexit
 
 /usr/local/bin/docker-setup --no-wait --only-installed
 EOF
 
-    chmod +x \
-        "${cron_weekly_path}/docker-setup-update" \
-        "${cron_weekly_path}/docker-setup-upgrade"
+    chmod +x "${cron_weekly_path}/docker-setup"
 fi
 
 echo
