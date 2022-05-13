@@ -366,6 +366,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: cnitool\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "containernetworking/cni",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: conmon\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/conmon-static",

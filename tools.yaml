@@ -315,6 +315,26 @@ tools:
       type: tarball
       path: ${target}/libexec/cni
 
+  - name: cnitool
+    version: 1.1.0
+    needs:
+    - docker
+    tags:
+    - k8s
+    - kubernetes
+    - network
+    dockerfile: |
+      FROM golang:${go_version}
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/containernetworking/cni \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containernetworking/cni .
+      cd cnitool
+      CGO_ENABLED=0 go build -ldflags '-s -w' -o cnitool .
+      cp cnitool /target/bin/
+      EOF
+
   - name: cni-isolation
     version: 0.0.4
     binary: ${target}/libexec/cni/isolation
