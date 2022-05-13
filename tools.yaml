@@ -1,7 +1,7 @@
 tools:
 
   - name: arkade
-    version: 0.8.23
+    version: 0.8.24
     check: ${binary} version | grep "version" | cut -d' ' -f2
     tags:
     - k8s
