@@ -893,7 +893,7 @@ tools:
       fi
       echo "Finished after ${SECONDS} seconds."
 
-  - name: docker-compose
+  - name: docker-compose-v1
     version: 1.29.2
     check: ${binary} version --short
     flags: 
@@ -943,7 +943,7 @@ tools:
     - url: https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}
       type: executable
 
-  - name: docker-compose-v2
+  - name: docker-compose
     version: 2.5.0
     binary: ${target}/libexec/docker/cli-plugins/docker-compose
     check: ${binary} compose version --short
