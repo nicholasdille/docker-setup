@@ -946,6 +946,80 @@ tools:
     - url: https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}
       type: executable
 
+  - name: docker-credential-acr-env
+    version: 0.7.0
+    needs:
+    - docker
+    tags:
+    - docker
+    - security
+    download:
+    - url: https://github.com/chrismellard/docker-credential-acr-env/releases/download/${version}/docker-credential-acr-env_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - docker-credential-acr-env
+
+  - name: docker-credential-ecr-login
+    version: 0.6.0
+    needs:
+    - docker
+    tags:
+    - docker
+    - security
+    download:
+    - url: https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${version}/linux-${alt_arch}/docker-credential-ecr-login
+      type: executable
+      
+  - name: docker-credential-gcr
+    version: 2.1.3
+    needs:
+    - docker
+    tags:
+    - docker
+    - security
+    download:
+    - url: https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${version}/docker-credential-gcr_linux_${alt_arch}-${version}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - docker-credential-gcr
+      
+  - name: docker-credential-helpers
+    version: 0.6.4
+    binary: docker-credential-pass
+    needs:
+    - docker
+    tags:
+    - docker
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-pass-v${version}-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+    - url:
+        x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-secretservice-v${version}-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      
+  - name: docker-credential-magic
+    version: 0.8.1
+    needs:
+    - docker
+    tags:
+    - docker
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${arch}.tar.gz
+        aarch64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - docker-credential-magic
+      - docker-credential-magician
+
   - name: docker-machine
     version: 0.16.2
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
