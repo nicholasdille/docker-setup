@@ -9,6 +9,8 @@ tools:
 - name: foo
   version: 1.2.3
   binary: fooctl
+  if: |
+    is_debian
   flags:
   - flag_name
   needs:
@@ -50,6 +52,8 @@ The fields `name` and `version` are mandatory.
 Every tool should have a list of tag specified in `tags`. Tags offer a different approach of installing tools by specifying a topics to install multiple tools at once.
 
 `check` is optional and defaults to check versions using a marker file located at `${docker_setup_cache}/<name>/<version>`. If set `check` must contain a command or pipe to output the version as stored in `version`.
+
+`if` is an optional script block that is executed to determine if the tool should be installed. If the script block fails, the tool will not be installed.
 
 `flags` is optional and can be used to enable or disable the installation of packages similar to feature flags. If a tool requires flag `enable-something` it will only be installed if `--flag-enable-something` is specified. A negated flag `not-enable-something` is automatically created. Since `not` is a special prefix, flags should not begin with `not-`.
 

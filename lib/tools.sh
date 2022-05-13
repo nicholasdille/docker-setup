@@ -24,7 +24,7 @@ function replace_vars() {
 }
 
 function get_tools() {
-    jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' "${docker_setup_tools_file}"
+    jq --raw-output '.tools[] | .name' "${docker_setup_tools_file}"
 }
 
 function get_tags() {
@@ -167,6 +167,13 @@ function install_tool() {
     local binary
     binary="${tool_binary[${tool}]}"
     echo "  Binary: ${tool_binary[${tool}]}."
+
+    local condition
+    condition="$(jq --raw-output 'select(.if != null) | .if' <<<"${tool_json}")"
+    if ! eval "${condition}"; then
+        echo "  Condition failed"
+        return
+    fi
 
     local pre_install
     pre_install="$(

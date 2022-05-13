@@ -1543,7 +1543,8 @@ tools:
 
   - name: iptables
     version: 1.8.7
-    hidden: true
+    if: |
+      is_centos_7 || is_amzn_2 || is_rockylinux
     tags:
     - network
     install: |
