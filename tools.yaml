@@ -2410,7 +2410,7 @@ tools:
     check: ${binary} --version 2>&1
     needs:
     - docker
-    - docker-compose
+    - docker-compose-v1
     tags:
     - docker
     - k8s
