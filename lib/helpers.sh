@@ -386,3 +386,21 @@ function github_ensure_rate_limit() {
         fi
     fi
 }
+
+function flags_are_satisfied() {
+    local name=$1
+
+    debug "flags_are_satisfied(${name})"
+
+    for flag in ${tool_flags[${name}]}; do
+        debug "flags_are_satisfied(${name}): Checking for flag ${flag} (value: ${flags[${flag}]})"
+
+        if test -z "${flags[${flag}]}" || ! ${flags[${flag}]}; then
+            debug "flags_are_satisfied(${name}): Flag is not set"
+            return 1
+        fi
+    done
+
+    debug "flags_are_satisfied(${name}): Flag is set"
+    return 0
+}

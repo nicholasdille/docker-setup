@@ -55,6 +55,7 @@ declare -a unknown_parameters
 : "${docker_max_wait:=300}"
 declare -A requested_names
 declare -A requested_tools
+declare -A flags
 while test "$#" -gt 0; do
     case "$1" in
         --check)
@@ -110,6 +111,10 @@ while test "$#" -gt 0; do
             ;;
         --no-cgroup-reboot)
             no_cgroup_reboot=true
+            ;;
+        --flag-*)
+            flags["${1##--flag-}"]=true
+            flags["not-${1##--flag-}"]=false
             ;;
         --*)
             unknown_parameters+=("$1")
@@ -308,11 +313,42 @@ for deps in $(get_all_tool_deps); do
     value="${deps#*=}"
     tool_deps[${name}]="${value//,/ }"
 done
+declare -A tool_flags
+for flag_list in $(get_all_tool_flags); do
+    name="${flag_list%%=*}"
+    value="${flag_list#*=}"
+    tool_flags[${name}]="${value//,/ }"
+
+    for flag in ${tool_flags[${name}]}; do
+        case "${flag}" in
+            not-*)
+                if test -z "${flags[${flag#not-}]}"; then
+                    flags[${flag}]=true
+                fi
+            ;;
+            *)
+                if test -z "${flags[${flag}]}"; then
+                    flags[${flag}]=false
+                fi
+                if test -z "${flags[not-${flag}]}"; then
+                    flags[not-${flag}]=true
+                fi
+            ;;
+        esac
+    done
+done
+for flag in "${!flags[@]}"; do
+    debug "Flag ${flag} is ${flags[${flag}]}"
+done
 
 debug "Finished dependency retrieval (@ ${SECONDS})"
 
 if ${only}; then
     for tool in "${!requested_names[@]}"; do
+        if ! flags_are_satisfied "${tool}"; then
+            error "Flags required but missing for ${tool}."
+            exit 1
+        fi
         requested_tools[${tool}]=true
     done
 fi
@@ -452,7 +488,7 @@ for name in "${tools[@]}"; do
 
             resolve_deps "${name}"
 
-            if test -z "${tool_install[${name}]}"; then
+            if test -z "${tool_install[${name}]}" && flags_are_satisfied "${name}"; then
                 tool_order+=( "${name}" )
                 tool_install["${name}"]=true
             fi

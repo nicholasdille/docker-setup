@@ -49,6 +49,10 @@ function get_all_tool_deps() {
     jq --raw-output '.tools[] | select(.needs != null) | "\(.name)=\(.needs | join(","))"' "${docker_setup_tools_file}"
 }
 
+function get_all_tool_flags() {
+    jq --raw-output '.tools[] | select(.flags != null) | "\(.name)=\(.flags | join(","))"' "${docker_setup_tools_file}"
+}
+
 function get_tool_download_count() {
     local tool=$1
 
@@ -411,7 +415,7 @@ function resolve_deps() {
 
         local dep
         for dep in ${tool_deps[${tool}]}; do
-            if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}"; then
+            if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}" && flags_are_satisfied "${dep}"; then
                 resolve_deps "${dep}"
                 tool_order+=( "${dep}" )
                 tool_install["${dep}"]=true
