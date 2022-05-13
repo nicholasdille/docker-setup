@@ -1807,6 +1807,23 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kompose.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kompose"
 
+  - name: kots
+    version: 1.70.0
+    binary: kubectl-kots
+    check: ${binary} version | cut -d' ' -f3
+    download:
+    - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kots
+    post_install: |
+      mv "${target}/bin/kots" "${target}/bin/kubectl-kots"
+      echo "Install completion"
+      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: krew
     version: 0.4.3
     check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
