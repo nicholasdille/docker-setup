@@ -1280,6 +1280,29 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: mutagen\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "mutagen-io/mutagen",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: mutagen\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "mutagen-io/mutagen-compose",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: nerdctl\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "containerd/nerdctl",

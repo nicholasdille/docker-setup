@@ -2236,6 +2236,46 @@ tools:
       - mitmdump
       - mitmweb
 
+  - name: mutagen
+    version: 0.14.0
+    check: ${binary} version
+    tags:
+    - security
+    - network
+    - storage
+    download:
+    - url: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
+      type: tarball
+      path: ${target}/bin
+    post_install: |
+      echo "Install agents"
+      mkdir -p "${target}/libexec/mutagen"
+      tar -xz \
+          --file "${target}/bin/mutagen-agents.tar.gz" \
+          --directory "${target}/libexec/mutagen"
+      rm "${target}/bin/mutagen-agents.tar.gz"
+      echo "Install completion for ${name}"
+      ${binary} generate \
+          "--bash-completion-script=${target}/share/bash-completion/completions/${name}" \
+          "--fish-completion-script=${target}/share/fish/vendor_completions.d/${name}.fish" \
+          "--zsh-completion-script=${target}/share/zsh/vendor-completions/_${name}"
+
+  - name: mutagen-compose
+    version: 0.14.0-1
+    needs:
+    - mutagen
+    tags:
+    - security
+    - network
+    - storage
+    install: |
+      curl https://github.com/mutagen-io/mutagen-compose/releases/download/v${version}/mutagen-compose_linux_${alt_arch}_v${version%-*}.tar.gz \
+          --silent \
+          --location \
+      | tar -xz \
+          --directory "${target}/bin" \
+          --no-same-owner
+
   - name: nerdctl
     version: 0.19.0
     check: ${binary} --version | cut -d' ' -f3
@@ -2795,6 +2835,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - security
+    - network
+    - storage
     download:
     - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
       type: executable
