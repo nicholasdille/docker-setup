@@ -1464,7 +1464,7 @@ tools:
       - mitmweb
 
   - name: nerdctl
-    version: 0.19.0
+    version: 0.20.0
     check: ${binary} --version | cut -d' ' -f3
     download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
