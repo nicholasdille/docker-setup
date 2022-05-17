@@ -230,6 +230,10 @@ tools:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
     post_install: |
+      if test -z "${prefix}"; then
+          echo "Set buildx as the default builder"
+          docker buildx install
+      fi
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
           wait_for_docker
