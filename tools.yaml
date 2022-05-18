@@ -1366,7 +1366,7 @@ tools:
       - hcloud
 
   - name: helm
-    version: 3.8.2
+    version: 3.9.0
     check: ${binary} version --short | cut -d+ -f1 | tr -d v
     tags:
     - k8s
