@@ -1758,7 +1758,7 @@ tools:
       - kbrew
 
   - name: kind
-    version: 0.13.0
+    version: 0.14.0
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
     tags:
     - k8s
