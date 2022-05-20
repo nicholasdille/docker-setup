@@ -1356,7 +1356,7 @@ tools:
       - kubeswitch
 
   - name: kustomize
-    version: 4.5.4
+    version: 4.5.5
     check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
     download:
     - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
