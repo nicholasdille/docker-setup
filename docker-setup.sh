@@ -481,7 +481,7 @@ done
 echo
 echo
 
-echo -e "docker-setup includes ${#tools[*]} tools: (${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
+echo -e "docker-setup includes ${#tools[*]} tools: (${green}installed${reset}/${yellow}planned${reset}/${grey}skipped${reset}/${red}todo${reset}, up-to-date ${green}${check_mark}${reset}/outdated ${red}${cross_mark}${reset})"
 declare -A tool_install
 declare -a tool_order
 declare -A tool_color
@@ -510,29 +510,37 @@ check_only_exit_code=0
 line_length=0
 for name in "${tools[@]}"; do
     tool_prefix=
+    
+    # installed and current
     if is_installed "${name}" && matches_version "${name}"; then
+
+        # planned for installation
         if test -n "${tool_install[${name}]}"; then
             tool_prefix="+"
             tool_color[${name}]="${yellow}"
             tool_sign[${name}]="${green}${check_mark}"
 
+        # not planned for installation
         else
             tool_prefix="="
             tool_color[${name}]="${green}"
             tool_sign[${name}]="${green}${check_mark}"
         fi
 
+    # not installed or not current
     else
         if ! ${only} || test -n "${tool_install[${name}]}"; then
             tool_outdated+=("${name}")
             check_only_exit_code=1
         fi
 
+        # planned for installation
         if test -n "${tool_install[${name}]}"; then
             tool_prefix="+"
             tool_color[${name}]="${yellow}"
             tool_sign[${name}]="${red}${cross_mark}"
 
+        # not planned for installation
         else
             tool_prefix="-"
             tool_color[${name}]="${red}"
