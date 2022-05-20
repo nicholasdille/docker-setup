@@ -1812,7 +1812,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kompose"
 
   - name: kots
-    version: 1.70.0
+    version: 1.70.1
     binary: kubectl-kots
     check: ${binary} version | cut -d' ' -f3
     download:
