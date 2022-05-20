@@ -343,6 +343,12 @@ done
 
 debug "Finished dependency retrieval (@ ${SECONDS})"
 
+if ! ${only} && ! ${tags}; then
+    info "Defaulting to tag default"
+    tags=true
+    requested_names["default"]=true
+fi
+
 if ${only}; then
     for tool in "${!requested_names[@]}"; do
         if ! flags_are_satisfied "${tool}"; then

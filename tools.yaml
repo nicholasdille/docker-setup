@@ -224,6 +224,7 @@ tools:
     needs:
     - docker
     tags:
+    - default
     - docker
     - plugin
     download:
@@ -698,6 +699,7 @@ tools:
     - iptables
     - fuse-overlayfs
     tags:
+    - default
     - docker
     - runtime
     - build
@@ -923,6 +925,7 @@ tools:
     flags: 
     - docker-compose-v1
     tags:
+    - default
     - docker
     - compose
     download:
@@ -963,6 +966,8 @@ tools:
     binary: docker-compose
     flags:
     - not-docker-compose-v1
+    tags:
+    - default
     download:
     - url: https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}
       type: executable
@@ -977,6 +982,7 @@ tools:
     flags:
     - not-docker-compose-v1
     tags:
+    - default
     - docker
     - compose
     - plugin
@@ -1233,6 +1239,7 @@ tools:
     version: 1.8.2
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
     tags:
+    - default
     - docker
     - storage
     - containerd
