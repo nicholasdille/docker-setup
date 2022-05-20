@@ -3,3 +3,6 @@ dist
 CHANGELOG.md
 .downloads
 tools.json
+
+/docker-setup
+dist/
