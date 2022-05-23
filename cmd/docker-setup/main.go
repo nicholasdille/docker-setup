@@ -4,6 +4,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version string = "main"
+
 var (
 	rootCmd = &cobra.Command{
 		Use:   "docker-setup",

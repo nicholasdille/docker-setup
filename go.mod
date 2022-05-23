@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/jedib0t/go-pretty/v6 v6.3.1
 	github.com/spf13/cobra v1.4.0
-	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 )
 
 require (

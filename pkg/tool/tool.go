@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 )
@@ -49,7 +49,6 @@ func LoadFromBytes(data []byte) (Tools, error) {
 func (tools *Tools) GetByName(name string) (*Tool, error) {
 	for _, tool := range tools.Tools {
 		if tool.Name == name {
-			fmt.Printf("%+v\n", tool)
 			return &tool, nil
 		}
 	}
@@ -71,7 +70,7 @@ func (tools *Tools) GetByTag(tagName string) (*Tools) {
 	return &toolList
 }
 
-func (tool *Tool) Print() {
+func (tool *Tool) List() {
 	t := table.NewWriter()
     t.SetOutputMirror(os.Stdout)
 
@@ -84,7 +83,16 @@ func (tool *Tool) Print() {
     t.Render()
 }
 
-func (tools *Tools) Print() {
+func (tool *Tool) Print() {
+	fmt.Printf("Name: %s\n", tool.Name)
+	fmt.Printf("  Version: %s\n", tool.Version)
+	fmt.Printf("  Tags:\n")
+	for _, tag := range tool.Tags {
+		fmt.Printf("    %s\n", tag)
+	}
+}
+
+func (tools *Tools) List() {
 	t := table.NewWriter()
     t.SetOutputMirror(os.Stdout)
 
