@@ -43,14 +43,17 @@ tools:
     - oci
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
-    - url: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       strip: 1
-    - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.service
+    - url:
+        template: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.service
       type: file
       path: ${prefix}/etc/systemd/system/buildkit.service
-    - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.socket
+    - url:
+        template: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.socket
       type: file
       path: ${prefix}/etc/systemd/system/buildkit.socket
     files:
@@ -228,7 +231,8 @@ tools:
     - docker
     - plugin
     download:
-    - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
+    - url:
+        template: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
     post_install: |
       if test -z "${prefix}"; then
@@ -271,7 +275,8 @@ tools:
     - cgroups
     - caps
     download:
-    - url: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -285,7 +290,8 @@ tools:
     - kubernetes
     - cloud
     download:
-    - url: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-amd64
+    - url:
+        template: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-amd64
       type: executable
     post_install: |
       echo "Install completion"
@@ -300,7 +306,8 @@ tools:
     - k8s
     - kubernetes
     download:
-    - url: https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}
+    - url:
+        template: https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -316,7 +323,8 @@ tools:
     - kubernetes
     - network
     download:
-    - url: https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz
+    - url:
+        template: https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz
       type: tarball
       path: ${target}/libexec/cni
 
@@ -348,7 +356,8 @@ tools:
     - kubernetes
     - network
     download:
-    - url: https://github.com/AkihiroSuda/cni-isolation/releases/download/v${version}/cni-isolation-${alt_arch}.tgz
+    - url:
+        template: https://github.com/AkihiroSuda/cni-isolation/releases/download/v${version}/cni-isolation-${alt_arch}.tgz
       type: tarball
       path: ${target}/libexec/cni
 
@@ -359,16 +368,20 @@ tools:
     - redhat
     - runtime
     download:
-    - url: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
-    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service
+    - url:
+        template: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service
       type: file
       path: ${prefix}/etc/systemd/system/podman.service
-    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
+    - url:
+        template: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
       type: file
       path: ${prefix}/etc/systemd/system/podman.socket
-    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
+    - url:
+        template: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
     files:
@@ -489,10 +502,12 @@ tools:
     - runtime
     - containerd
     download:
-    - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
-    - url: https://github.com/containerd/containerd/raw/v${version}/containerd.service
+    - url:
+        template: https://github.com/containerd/containerd/raw/v${version}/containerd.service
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
     dockerfile: |
@@ -535,7 +550,8 @@ tools:
     tags:
     - security
     download:
-    - url: https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -551,7 +567,8 @@ tools:
     tags:
     - security
     download:
-    - url: https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}
+    - url:
+        template: https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -567,7 +584,8 @@ tools:
     - image
     - oci
     download:
-    - url: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -587,7 +605,8 @@ tools:
     - kubernetes
     - runtime
     download:
-    - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-v${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -601,7 +620,8 @@ tools:
     - kubernetes
     - runtime
     download:
-    - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
 
@@ -639,7 +659,8 @@ tools:
     needs:
     - docker
     download:
-    - url: https://github.com/bcicen/ctop/releases/download/${version}/ctop-${version}-linux-${alt_arch}
+    - url:
+        template: https://github.com/bcicen/ctop/releases/download/${version}/ctop-${version}-linux-${alt_arch}
       type: executable
 
   - name: cyclonedx-cli
@@ -659,7 +680,8 @@ tools:
     tags:
     - management
     download:
-    - url: https://github.com/dagger/dagger/releases/download/v${version}/dagger_v${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/dagger/dagger/releases/download/v${version}/dagger_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -672,7 +694,8 @@ tools:
     - conversion
     - format
     download:
-    - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
+    - url:
+        template: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
       type: executable
 
   - name: dive
@@ -685,7 +708,8 @@ tools:
     - build
     - tui
     download:
-    - url: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -705,45 +729,58 @@ tools:
     - build
     - oci
     download:
-    - url: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
+    - url:
+        template: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
       type: tarball
       strip: 1
       path: ${target}/libexec/docker/bin
-    - url: https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz
+    - url:
+        template: https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz
       type: tarball
       strip: 1
       path: ${target}/libexec/docker/bin
-    - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker
+    - url:
+        template: https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker
       type: file
       path: ${target}/share/bash-completion/completions/docker
-    - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/fish/docker.fish
+    - url:
+        template: https://github.com/docker/cli/raw/v${version}/contrib/completion/fish/docker.fish
       type: file
       path: ${target}/share/fish/vendor_completions.d/docker.fish
-    - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/zsh/_docker
+    - url:
+        template: https://github.com/docker/cli/raw/v${version}/contrib/completion/zsh/_docker
       type: file
       path: ${target}/share/zsh/vendor-completions/_docker
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service
       type: file
       path: contrib/${tool}/systemd/docker.service
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.socket
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.socket
       type: file
       path: contrib/${tool}/systemd/docker.socket
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default
       type: file
       path: contrib/${tool}/sysvinit/debian/docker.default
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker
       type: file
       path: contrib/${tool}/sysvinit/debian/docker
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig
       type: file
       path: contrib/${tool}/sysvinit/redhat/docker.sysconfig
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker
       type: file
       path: contrib/${tool}/sysvinit/redhat/docker
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd
       type: file
       path: contrib/${tool}/openrc/docker.confd
-    - url: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd
+    - url:
+        template: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd
       type: file
       path: contrib/${tool}/openrc/docker.initd
     post_install: |
@@ -969,7 +1006,8 @@ tools:
     tags:
     - default
     download:
-    - url: https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}
+    - url:
+        template: https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}
       type: executable
 
   - name: docker-compose
@@ -987,7 +1025,8 @@ tools:
     - compose
     - plugin
     download:
-    - url: https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}
+    - url:
+        template: https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}
       type: executable
 
   - name: docker-credential-acr-env
@@ -998,7 +1037,8 @@ tools:
     - docker
     - security
     download:
-    - url: https://github.com/chrismellard/docker-credential-acr-env/releases/download/${version}/docker-credential-acr-env_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/chrismellard/docker-credential-acr-env/releases/download/${version}/docker-credential-acr-env_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1012,7 +1052,8 @@ tools:
     - docker
     - security
     download:
-    - url: https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${version}/linux-${alt_arch}/docker-credential-ecr-login
+    - url:
+        template: https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${version}/linux-${alt_arch}/docker-credential-ecr-login
       type: executable
       
   - name: docker-credential-gcr
@@ -1023,7 +1064,8 @@ tools:
     - docker
     - security
     download:
-    - url: https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${version}/docker-credential-gcr_linux_${alt_arch}-${version}.tar.gz
+    - url:
+        template: https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${version}/docker-credential-gcr_linux_${alt_arch}-${version}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1070,7 +1112,8 @@ tools:
     tags:
     - docker
     download:
-    - url: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
+    - url:
+        template: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
       type: executable
 
   - name: docker-sbom
@@ -1083,7 +1126,8 @@ tools:
     - security
     - sbom
     download:
-    - url: https://github.com/docker/sbom-cli-plugin/releases/download/v${version}/sbom-cli-plugin_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/docker/sbom-cli-plugin/releases/download/v${version}/sbom-cli-plugin_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/libexec/docker/cli-plugins
       files:
@@ -1099,7 +1143,8 @@ tools:
     - security
     - plugin
     download:
-    - url: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
+    - url:
+        template: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
       type: executable
 
   - name: docuum
@@ -1132,7 +1177,8 @@ tools:
     - management
     - tui
     download:
-    - url: https://github.com/moncho/dry/releases/download/v${version}/dry-linux-${alt_arch}
+    - url:
+        template: https://github.com/moncho/dry/releases/download/v${version}/dry-linux-${alt_arch}
       type: executable
 
   - name: duffle
@@ -1141,7 +1187,8 @@ tools:
     tags:
     - cnab
     download:
-    - url: https://github.com/cnabio/duffle/releases/download/${version}/duffle-linux-${alt_arch}
+    - url:
+        template: https://github.com/cnabio/duffle/releases/download/${version}/duffle-linux-${alt_arch}
       type: executable
 
   - name: dyff
@@ -1151,7 +1198,8 @@ tools:
     - development
     - dev
     download:
-    - url: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1197,7 +1245,8 @@ tools:
     - vm
     - emulation
     download:
-    - url: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-${arch}.tgz
+    - url:
+        template: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-${arch}.tgz
       type: tarball
       path: ${target}/bin
       strip: 1
@@ -1232,7 +1281,8 @@ tools:
     - vm
     - emulation
     download:
-    - url: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
+    - url:
+        template: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
       type: executable
   
   - name: fuse-overlayfs
@@ -1244,7 +1294,8 @@ tools:
     - storage
     - containerd
     download:
-    - url: https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}
+    - url:
+        template: https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}
       type: executable
 
   - name: fuse-overlayfs-snapshotter
@@ -1257,7 +1308,8 @@ tools:
     - storage
     - containerd
     download:
-    - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
     files:
@@ -1298,7 +1350,8 @@ tools:
     tags:
     - markdown
     download:
-    - url: https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1311,7 +1364,8 @@ tools:
     - security
     - sbom
     download:
-    - url: https://github.com/anchore/grype/releases/download/v0.34.3/grype_0.34.3_linux_amd64.tar.gz
+    - url:
+        template: https://github.com/anchore/grype/releases/download/v0.34.3/grype_0.34.3_linux_amd64.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1332,9 +1386,11 @@ tools:
     - runtime
     - security
     download:
-    - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc
+    - url:
+        template: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc
       type: executable
-    - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/containerd-shim-runsc-v1
+    - url:
+        template: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/containerd-shim-runsc-v1
       type: executable
       path: ${target}/bin/containerd-shim-runsc-v1
     post_install: |
@@ -1366,7 +1422,8 @@ tools:
     - cloud
     - management
     download:
-    - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1382,7 +1439,8 @@ tools:
     - package
     - manager
     download:
-    - url: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       strip: 1
@@ -1431,12 +1489,15 @@ tools:
     - kubernetes
     - templating
     download:
-    - url: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
+    - url:
+        template: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
       type: executable
-    - url: https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_bash_autocomplete
+    - url:
+        template: https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_bash_autocomplete
       type: file
       path: ${target}/share/bash-completion/completions/helmfile
-    - url: https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_zsh_autocomplete
+    - url:
+        template: https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_zsh_autocomplete
       type: file
       path: ${target}/share/zsh/vendor-completions/_helmfile
 
@@ -1446,7 +1507,8 @@ tools:
     tags:
     - docker
     download:
-    - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       strip: 1
@@ -1465,9 +1527,11 @@ tools:
     - vm
     - emulation
     download:
-    - url: https://github.com/weaveworks/ignite/releases/download/v${version}/ignite-${alt_arch}
+    - url:
+        template: https://github.com/weaveworks/ignite/releases/download/v${version}/ignite-${alt_arch}
       type: executable
-    - url: https://github.com/weaveworks/ignite/releases/download/v${version}/ignited-${alt_arch}
+    - url:
+        template: https://github.com/weaveworks/ignite/releases/download/v${version}/ignited-${alt_arch}
       type: executable
       path: ${target}/bin/ignited
     post_install: |
@@ -1482,7 +1546,8 @@ tools:
     - build
     - oci
     download:
-    - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
+    - url:
+        template: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
       type: executable
 
   - name: imgcrypt
@@ -1516,7 +1581,8 @@ tools:
     - registry
     - management
     download:
-    - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
+    - url:
+        template: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
       type: executable
 
   - name: ipfs
@@ -1529,7 +1595,8 @@ tools:
     - network
     - containerd
     download:
-    - url: https://github.com/ipfs/go-ipfs/releases/download/v${version}/go-ipfs_v${version}_linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/ipfs/go-ipfs/releases/download/v${version}/go-ipfs_v${version}_linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       strip: 1
@@ -1599,7 +1666,8 @@ tools:
     - conversion
     - format
     download:
-    - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
+    - url:
+        template: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
       type: executable
   
   - name: jwt
@@ -1632,7 +1700,8 @@ tools:
     - docker
     - management
     download:
-    - url: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
+    - url:
+        template: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -1714,7 +1783,8 @@ tools:
     - management
     - tui
     download:
-    - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1730,7 +1800,8 @@ tools:
     - package
     - manager
     download:
-    - url: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
+    - url:
+        template: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -1746,7 +1817,8 @@ tools:
     - kubernetes
     - build
     download:
-    - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
+    - url:
+        template: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
       type: executable
 
   - name: kbrew
@@ -1758,7 +1830,8 @@ tools:
     - package
     - manager
     download:
-    - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1775,7 +1848,8 @@ tools:
     needs:
     - docker
     download:
-    - url: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
+    - url:
+        template: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -1791,7 +1865,8 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
+    - url:
+        template: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1810,7 +1885,8 @@ tools:
     - kubernetes
     - compose
     download:
-    - url: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
+    - url:
+        template: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -1823,7 +1899,8 @@ tools:
     binary: kubectl-kots
     check: ${binary} version | cut -d' ' -f3
     download:
-    - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -1844,7 +1921,8 @@ tools:
     - plugin
     - management
     download:
-    - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
       type: tarball
       strip: 1
       path: "${target}/bin"
@@ -1869,7 +1947,8 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
+    - url:
+        template: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
       type: executable
     post_install: |
       echo "Install completion"
@@ -1886,9 +1965,11 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
+    - url:
+        template: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
       type: executable
-    - url: https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert
+    - url:
+        template: https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert
       type: executable
       path: ${target}/bin/kubectl-convert
     post_install: |
@@ -2040,7 +2121,8 @@ tools:
     - plugin
     - analysis
     download:
-    - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2057,9 +2139,11 @@ tools:
     - vm
     - emulation
     download:
-    - url: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
+    - url:
+        template: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
       type: executable
-    - url: https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}
+    - url:
+        template: https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}
       type: executable
       path: ${target}/libexec/cni/host-local-rev
 
@@ -2070,7 +2154,8 @@ tools:
     - k8s
     - kubernetes
     download:
-    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
+    - url:
+        template: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
       type: executable
 
   - name: kubeletctl
@@ -2081,7 +2166,8 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
+    - url:
+        template: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
       type: executable
 
   - name: kubeswitch
@@ -2091,7 +2177,8 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2106,7 +2193,8 @@ tools:
     - templating
     - management
     download:
-    - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
     post_install: |
@@ -2125,7 +2213,8 @@ tools:
     - management
     - tui
     download:
-    - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2139,7 +2228,8 @@ tools:
     - management
     - tui
     download:
-    - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
+    - url:
+        template: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2247,7 +2337,8 @@ tools:
     - docker
     - registry
     download:
-    - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
+    - url:
+        template: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2263,7 +2354,8 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
+    - url:
+        template: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -2293,7 +2385,8 @@ tools:
     - network
     - storage
     download:
-    - url: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
+    - url:
+        template: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
       type: tarball
       path: ${target}/bin
     post_install: |
@@ -2333,7 +2426,8 @@ tools:
     - rootless
     - management
     download:
-    - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
 
@@ -2343,7 +2437,8 @@ tools:
     tags:
     - network
     download:
-    - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
+    - url:
+        template: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
       type: tarball
       path: ${target}/bin
       files:
@@ -2359,12 +2454,14 @@ tools:
     - plugin
     - security
     download:
-    - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
       - notation
-    - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/libexec/docker/cli-plugins
       files:
@@ -2453,7 +2550,8 @@ tools:
     - storage
     - cnab
     download:
-    - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2464,13 +2562,15 @@ tools:
     tags:
     - markdown
     download:
-    - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
+    - url:
+        template: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
       type: tarball
       path: ${target}/bin
       strip: 1
       files:
       - patat-v${version}-linux-${arch}/patat
-    - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
+    - url:
+        template: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
       type: tarball
       path: ${target}/share/man/man1
       strip: 1
@@ -2506,13 +2606,15 @@ tools:
     - kubernetes
     - management
     download:
-    - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       strip: 1
       files:
       - portainer/portainer
-    - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/share/portainer
       strip: 1
@@ -2718,7 +2820,8 @@ tools:
     tags:
     - cnab
     download:
-    - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
+    - url:
+        template: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
       type: executable
     post_install: |
       if test -z "${prefix}"; then
@@ -2739,7 +2842,8 @@ tools:
     - vm
     - emulation
     download:
-    - url: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz
       type: tarball
       strip: 2
       path: ${target}
@@ -2752,13 +2856,16 @@ tools:
     - registry
     - management
     download:
-    - url: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
+    - url:
+        template: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
       type: executable
       path: ${target}/bin/regctl
-    - url: https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}
+    - url:
+        template: https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}
       type: executable
       path: ${target}/bin/regbot
-    - url: https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}
+    - url:
+        template: https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}
       type: executable
       path: ${target}/bin/regsync
     post_install: |
@@ -2781,7 +2888,8 @@ tools:
     tags:
     - rootless
     download:
-    - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
+    - url:
+        template: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
       type: tarball
       path: ${target}/bin
 
@@ -2792,7 +2900,8 @@ tools:
     - runtime
     - oci
     download:
-    - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
+    - url:
+        template: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
     dockerfile: |
       FROM golang:${go_version}
@@ -2818,7 +2927,8 @@ tools:
     tags:
     - security
     download:
-    - url: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2851,7 +2961,8 @@ tools:
     - rootless
     - network
     download:
-    - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
+    - url:
+        template: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
     dockerfile: |
       FROM golang:${go_version}
@@ -2887,7 +2998,8 @@ tools:
     - network
     - storage
     download:
-    - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
+    - url:
+        template: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
       type: executable
 
   - name: stargz-snapshotter
@@ -2900,7 +3012,8 @@ tools:
     - containerd
     - storage
     download:
-    - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
     files:
@@ -2943,7 +3056,8 @@ tools:
     - sbom
     - security
     download:
-    - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
@@ -2960,12 +3074,14 @@ tools:
     tags:
     - development
     download:
-    - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
       - task
-    - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
+    - url:
+        template: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/share
       strip: 2
@@ -3032,7 +3148,8 @@ tools:
     tags:
     - oci
     download:
-    - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
+    - url:
+        template: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
       type: executable
 
   - name: util-linux
@@ -3088,7 +3205,8 @@ tools:
     tags:
     - development
     download:
-    - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
+    - url:
+        template: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
       type: executable
 
   - name: win-gpg-agent
@@ -3114,7 +3232,8 @@ tools:
     - package
     - manager
     download:
-    - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
+    - url:
+        template: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
@@ -3129,7 +3248,8 @@ tools:
     - conversion
     - format
     download:
-    - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
+    - url:
+        template: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
       type: executable
     post_install: |
       echo "Install completion"
