@@ -4,8 +4,8 @@ import (
 	"os"
 	"sort"
 
-	"github.com/spf13/cobra"
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/spf13/cobra"
 )
 
 func initTagCmd() {
@@ -32,7 +32,7 @@ var tagGetCmd = &cobra.Command{
 		for _, tool := range tools.Tools {
 			for _, name := range tool.Tags {
 				_, exists := tags[name]
-				if ! exists {
+				if !exists {
 					tags[name] = 0
 				}
 				tags[name]++

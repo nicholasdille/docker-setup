@@ -26,15 +26,15 @@ type Download struct {
 }
 
 type Tool struct {
-	Name        string      `yaml:"name"`
-	Version     string      `yaml:"version"`
-	Binary      string      `yaml:"binary"`
-	Check       string      `yaml:"check,omitempty"`
-	Tags        []string    `yaml:"tags"`
-	Needs       []string    `yaml:"needs"`
-	Download    []Download  `yaml:"download"`
-	Install     string      `yaml:"install"`
-	PostInstall string      `yaml:"post_install"`
+	Name        string     `yaml:"name"`
+	Version     string     `yaml:"version"`
+	Binary      string     `yaml:"binary"`
+	Check       string     `yaml:"check,omitempty"`
+	Tags        []string   `yaml:"tags"`
+	Needs       []string   `yaml:"needs"`
+	Download    []Download `yaml:"download"`
+	Install     string     `yaml:"install"`
+	PostInstall string     `yaml:"post_install"`
 }
 
 type Tools struct {
@@ -57,7 +57,7 @@ func LoadFromFile(filename string) (Tools, error) {
 
 func LoadFromBytes(data []byte) (Tools, error) {
 	var tools Tools
-	
+
 	err := yaml.Unmarshal(data, &tools)
 	if err != nil {
 		return Tools{}, err
@@ -82,7 +82,7 @@ func (tools *Tools) GetByName(name string) (*Tool, error) {
 	return nil, fmt.Errorf("Tool named %s not found", name)
 }
 
-func (tools *Tools) GetByTag(tagName string) (*Tools) {
+func (tools *Tools) GetByTag(tagName string) *Tools {
 	var toolList Tools
 
 	for _, tool := range tools.Tools {
@@ -141,7 +141,7 @@ func (tool *Tool) MatchesDependency(term string) bool {
 
 func (tool *Tool) List() {
 	t := table.NewWriter()
-    t.SetOutputMirror(os.Stdout)
+	t.SetOutputMirror(os.Stdout)
 
 	t.AppendHeader(table.Row{"#", "Name", "Version"})
 
@@ -149,7 +149,7 @@ func (tool *Tool) List() {
 		{1, tool.Name, tool.Version},
 	})
 
-    t.Render()
+	t.Render()
 }
 
 func (tool *Tool) Print() {
@@ -205,7 +205,7 @@ func (tool *Tool) Print() {
 
 func (tools *Tools) List() {
 	t := table.NewWriter()
-    t.SetOutputMirror(os.Stdout)
+	t.SetOutputMirror(os.Stdout)
 
 	t.AppendHeader(table.Row{"#", "Name", "Version"})
 
@@ -215,7 +215,7 @@ func (tools *Tools) List() {
 		})
 	}
 
-    t.Render()
+	t.Render()
 }
 
 func (tools *Tools) Describe(name string) error {

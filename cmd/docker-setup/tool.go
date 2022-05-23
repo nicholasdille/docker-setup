@@ -70,7 +70,7 @@ var toolGetCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			tool.List()
-			
+
 		} else {
 			tools.List()
 		}
@@ -172,17 +172,17 @@ var toolSearchCmd = &cobra.Command{
 			}
 
 			if (onlySearchInName && onlySearchInTags) ||
-			   (onlySearchInName && onlySearchInDeps) ||
-			   (onlySearchInTags && onlySearchInDeps) {
+				(onlySearchInName && onlySearchInDeps) ||
+				(onlySearchInTags && onlySearchInDeps) {
 				fmt.Printf("Error: Can only process one of only-names, only-tags and only-deps at the same time\n")
 				os.Exit(1)
 			}
 
 			results := tools.Find(
 				args[0],
-				! noSearchInName && ! onlySearchInTags && ! onlySearchInDeps,
-				! noSearchInTags && ! onlySearchInName && ! onlySearchInDeps,
-				! noSearchInDeps && ! onlySearchInName && ! onlySearchInTags,
+				!noSearchInName && !onlySearchInTags && !onlySearchInDeps,
+				!noSearchInTags && !onlySearchInName && !onlySearchInDeps,
+				!noSearchInDeps && !onlySearchInName && !onlySearchInTags,
 			)
 			if len(results.Tools) == 0 {
 				fmt.Printf("No tools found for term %s\n", args[0])
