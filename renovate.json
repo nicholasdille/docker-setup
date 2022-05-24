@@ -60,6 +60,30 @@
   "packageRules": [
     {
       "matchFiles": [
+        "^env/alpine-3.15/Dockerfile$"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "alpine"
+      ],
+      "allowedVersions": "<=3.15"
+    },
+    {
+      "matchFiles": [
+        "^env/alpine-3.16/Dockerfile$"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "alpine"
+      ],
+      "allowedVersions": "<=3.16"
+    },
+    {
+      "matchFiles": [
         "^env/amazonlinux-2022/Dockerfile$"
       ],
       "matchDatasources": [
