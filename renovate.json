@@ -155,18 +155,6 @@
     },
     {
       "matchFiles": [
-        "^env/ubuntu-21.04/Dockerfile$"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ubuntu"
-      ],
-      "allowedVersions": "21.04"
-    },
-    {
-      "matchFiles": [
         "^env/ubuntu-22.04/Dockerfile$"
       ],
       "matchDatasources": [
