@@ -3091,6 +3091,19 @@ tools:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
       type: executable
 
+  - name: win-gpg-agent
+    version: 1.6.3
+    check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1'
+    tags:
+    - wsl
+    download:
+    - url:
+        x86_64: https://github.com/rupor-github/win-gpg-agent/releases/download/v${version}/win-gpg-agent.zip
+      type: zip
+      path: ${target}/bin
+      files:
+      - sorelay.exe
+
   - name: ytt
     version: 0.40.1
     check: ${binary} version | cut -d' ' -f3
