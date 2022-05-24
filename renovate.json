@@ -11,7 +11,8 @@
   "baseBranches": [
     "main",
     "v1.3",
-    "v1.4"
+    "v1.4",
+    "v1.5"
   ],
   "useBaseBranchConfig": "merge",
   "docker": {
