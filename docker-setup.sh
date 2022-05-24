@@ -343,7 +343,7 @@ done
 
 debug "Finished dependency retrieval (@ ${SECONDS})"
 
-if ! ${only} && ! ${tags}; then
+if ! ${only} && ! ${tags} && ! ${only_installed}; then
     info "Defaulting to tag default"
     tags=true
     requested_names["default"]=true
