@@ -2098,7 +2098,7 @@ tools:
       - kubeswitch
 
   - name: kustomize
-    version: 4.5.4
+    version: 4.5.5
     check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
     tags:
     - k8s
