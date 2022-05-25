@@ -8,25 +8,39 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func initTagCmd() {
-	rootCmd.AddCommand(tagCmd)
+func initGetCmd() {
+	rootCmd.AddCommand(getCmd)
 
-	tagCmd.AddCommand(tagGetCmd)
-
-	tagGetCmd.Flags().StringP("sort", "s", "name", "Sort options: name")
+	getCmd.AddCommand(getToolCmd)
+	getCmd.AddCommand(getTagCmd)
 }
 
-var tagCmd = &cobra.Command{
+var getCmd = &cobra.Command{
+	Use:     "get",
+	Aliases: []string{"g"},
+	Short:   "List tools and tags",
+	Long:    header + "\nList tools and tags",
+}
+
+var getToolCmd = &cobra.Command{
+	Use:     "tool",
+	Aliases: []string{"t"},
+	Short:   "List tools",
+	Args:    cobra.NoArgs,
+	Run:     func(cmd *cobra.Command, args []string) {
+		//load()
+
+		tools.List()
+	},
+}
+
+var getTagCmd = &cobra.Command{
 	Use:     "tag",
 	Aliases: []string{"g"},
-	Short:   "Work with tags",
-}
-
-var tagGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get tags",
-	Run: func(cmd *cobra.Command, args []string) {
-		load()
+	Short:   "List tags",
+	Args:    cobra.NoArgs,
+	Run:     func(cmd *cobra.Command, args []string) {
+		//load()
 
 		tags := make(map[string]int)
 		for _, tool := range tools.Tools {
