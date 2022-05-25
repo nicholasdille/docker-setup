@@ -26,9 +26,6 @@ var (
 		Use:     "docker-setup",
 		Version: version,
 		Short:   header + "The container tools installer and updater",
-		PreRun: func(cmd *cobra.Command, args []string) {
-			load(cmd)
-		},
 	}
 )
 
@@ -48,8 +45,8 @@ func main() {
 
 var tools tool.Tools
 
-func load(cmd *cobra.Command) {
-	filename, err := cmd.PersistentFlags().GetString("file")
+func load() {
+	filename, err := rootCmd.PersistentFlags().GetString("file")
 	if err != nil {
 		fmt.Printf("Error retrieving file flag: %s\n", err)
 		os.Exit(1)

@@ -28,7 +28,7 @@ var getToolCmd = &cobra.Command{
 	Short:   "List tools",
 	Args:    cobra.NoArgs,
 	Run:     func(cmd *cobra.Command, args []string) {
-		//load()
+		load()
 
 		tools.List()
 	},
@@ -40,7 +40,7 @@ var getTagCmd = &cobra.Command{
 	Short:   "List tags",
 	Args:    cobra.NoArgs,
 	Run:     func(cmd *cobra.Command, args []string) {
-		//load()
+		load()
 
 		tags := make(map[string]int)
 		for _, tool := range tools.Tools {

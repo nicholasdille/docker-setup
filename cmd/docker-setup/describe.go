@@ -23,7 +23,7 @@ var describeCmd = &cobra.Command{
 	Long:    header + "\nShow detailed information about tools",
 	Args:    cobra.ExactArgs(1),
 	Run:     func(cmd *cobra.Command, args []string) {
-		//load()
+		load()
 
 		output, err := cmd.PersistentFlags().GetString("output")
 		if err != nil {
