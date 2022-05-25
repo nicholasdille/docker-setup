@@ -25,7 +25,7 @@ var describeCmd = &cobra.Command{
 	Run:     func(cmd *cobra.Command, args []string) {
 		load()
 
-		output, err := cmd.PersistentFlags().GetString("output")
+		output, err := cmd.Flags().GetString("output")
 		if err != nil {
 			fmt.Printf("Error retrieving output flag: %s\n", err)
 			os.Exit(1)
