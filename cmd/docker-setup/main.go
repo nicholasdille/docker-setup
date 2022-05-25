@@ -34,9 +34,10 @@ func init() {
 
 	initDescribeCmd()
 	initGenerateCmd()
-	initGetCmd()
 	initInstallCmd()
+	initListCmd()
 	initSearchCmd()
+	initTagsCmd()
 }
 
 func main() {

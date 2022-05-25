@@ -8,36 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func initGetCmd() {
-	rootCmd.AddCommand(getCmd)
-
-	getCmd.AddCommand(getToolCmd)
-	getCmd.AddCommand(getTagCmd)
+func initTagsCmd() {
+	rootCmd.AddCommand(tagsCmd)
 }
 
-var getCmd = &cobra.Command{
+var tagsCmd = &cobra.Command{
 	Use:     "get",
 	Aliases: []string{"g"},
 	Short:   "List tools and tags",
 	Long:    header + "\nList tools and tags",
-}
-
-var getToolCmd = &cobra.Command{
-	Use:     "tool",
-	Aliases: []string{"t"},
-	Short:   "List tools",
-	Args:    cobra.NoArgs,
-	Run:     func(cmd *cobra.Command, args []string) {
-		load()
-
-		tools.List()
-	},
-}
-
-var getTagCmd = &cobra.Command{
-	Use:     "tag",
-	Aliases: []string{"g"},
-	Short:   "List tags",
 	Args:    cobra.NoArgs,
 	Run:     func(cmd *cobra.Command, args []string) {
 		load()
