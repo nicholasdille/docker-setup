@@ -32,11 +32,11 @@ var (
 func init() {
 	rootCmd.PersistentFlags().StringP("file", "f", "tools.yaml", "File with tools definitions")
 
-	initGetCmd()
-	initSearchCmd()
 	initDescribeCmd()
-	initInstallCmd()
 	initGenerateCmd()
+	initGetCmd()
+	initInstallCmd()
+	initSearchCmd()
 }
 
 func main() {
