@@ -1869,7 +1869,7 @@ tools:
       type: executable
 
   - name: ytt
-    version: 0.41.0
+    version: 0.41.1
     check: ${binary} version | cut -d' ' -f3
     download:
     - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
