@@ -3105,7 +3105,7 @@ tools:
       - sorelay.exe
 
   - name: ytt
-    version: 0.40.1
+    version: 0.41.0
     check: ${binary} version | cut -d' ' -f3
     tags:
     - k8s
