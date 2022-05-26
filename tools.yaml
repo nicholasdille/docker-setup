@@ -1578,7 +1578,7 @@ tools:
       type: executable
 
   - name: kubeswitch
-    version: 1.4.0
+    version: 1.5.0
     tags:
     - k8s
     - kubernetes
