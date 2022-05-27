@@ -18,6 +18,7 @@ var header string = `
                                                                 |_|
 `
 var logLevel string = "warning"
+var target string
 
 var (
 	rootCmd = &cobra.Command{
@@ -51,7 +52,8 @@ func main() {
 		log.Debugf("Log level is now %s\n", logLevel)
 		return nil
 	}
-	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", log.WarnLevel.String(), "Log level (debug, info, warning, error)")
+	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", log.WarnLevel.String(), "Log level (trace, debug, info, warning, error)")
+	rootCmd.PersistentFlags().StringVarP(&target,   "target",    "t", "/usr/local",           "Target directory")
 
 	rootCmd.Execute()
 }

@@ -3,9 +3,11 @@ package tool
 import (
 	"fmt"
 	"regexp"
+
+	log "github.com/sirupsen/logrus"
 )
 
-func (tools *Tools) Contains(name string) bool {#
+func (tools *Tools) Contains(name string) bool {
 	for _, tool := range tools.Tools {
 		if tool.Name == name {
 			return true
@@ -104,4 +106,44 @@ func (tools *Tools) GetNames() []string {
 	}
 
 	return toolNames
+}
+
+func (tools *Tools) AddIfMissing(newTool *Tool) {
+	for _, tool := range tools.Tools {
+		if tool.Name == newTool.Name {
+			return
+		}
+	}
+
+	tools.Tools = append(tools.Tools, *newTool)
+}
+
+func (tools *Tools) ResolveDependencies(queue *Tools, toolName string) error {
+	log.Tracef("Resolving dependencies for %s", toolName)
+
+	tool, err := tools.GetByName(toolName)
+	if err != nil {
+		log.Errorf("Error resolving dependencies for %s", toolName)
+		return err
+	}
+
+	for _, depName := range tool.Needs {
+		log.Tracef("Recursing for dependency %s", depName)
+
+		dep, err := tools.GetByName(depName)
+		if err != nil {
+			log.Errorf("Unable to find dependency called %s for %s", depName, toolName)
+		}
+
+		err = tools.ResolveDependencies(queue, depName)
+		if err != nil {
+			return err
+		}
+
+		queue.AddIfMissing(dep)
+	}
+
+	queue.AddIfMissing(tool)
+
+	return nil
 }

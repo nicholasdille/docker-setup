@@ -29,3 +29,10 @@ type Tool struct {
 type Tools struct {
 	Tools []Tool `yaml:"tools"`
 }
+
+type ToolStatus struct {
+	Name           string
+	BinaryPresent  bool
+	Version        string
+	VersionMatches bool
+}
