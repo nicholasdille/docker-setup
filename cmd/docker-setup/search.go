@@ -25,8 +25,6 @@ var searchCmd = &cobra.Command{
 	Long:    header + "\nSearch for tools",
 	Args:    cobra.ExactArgs(1),
 	Run:     func(cmd *cobra.Command, args []string) {
-		load()
-
 		onlySearchInName, err := cmd.Flags().GetBool("only-names")
 		if err != nil {
 			fmt.Printf("Error retrieving only-names flag: %s\n", err)

@@ -15,8 +15,6 @@ var listCmd = &cobra.Command{
 	Long:    header + "\nList tools",
 	Args:    cobra.NoArgs,
 	Run:     func(cmd *cobra.Command, args []string) {
-		load()
-
 		tools.List()
 	},
 }

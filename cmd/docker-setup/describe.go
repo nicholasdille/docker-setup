@@ -10,10 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var describeOutput string
+
 func initDescribeCmd() {
 	rootCmd.AddCommand(describeCmd)
 
-	describeCmd.Flags().StringP("output", "o", "pretty", "Output options: pretty, json, yaml")
+	describeCmd.Flags().StringVarP(&describeOutput, "output", "o", "pretty", "Output options: pretty, json, yaml")
 }
 
 var describeCmd = &cobra.Command{
@@ -23,28 +25,20 @@ var describeCmd = &cobra.Command{
 	Long:    header + "\nShow detailed information about tools",
 	Args:    cobra.ExactArgs(1),
 	Run:     func(cmd *cobra.Command, args []string) {
-		load()
-
-		output, err := cmd.Flags().GetString("output")
-		if err != nil {
-			fmt.Printf("Error retrieving output flag: %s\n", err)
-			os.Exit(1)
-		}
-
 		tool, err := tools.GetByName(args[0])
 		if err != nil {
 			fmt.Printf("Error getting tool %s\n", args[0])
 			os.Exit(1)
 		}
 
-		if output == "pretty" {
+		if describeOutput == "pretty" {
 			tool.Print()
 
-		} else if output == "json" {
+		} else if describeOutput == "json" {
 			data, _ := json.Marshal(tool)
 			fmt.Println(string(data))
 
-		} else if output == "yaml" {
+		} else if describeOutput == "yaml" {
 			data, _ := yaml.Marshal(tool)
 			fmt.Println(string(data))
 		}

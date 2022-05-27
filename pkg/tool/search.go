@@ -5,6 +5,15 @@ import (
 	"regexp"
 )
 
+func (tools *Tools) Contains(name string) bool {#
+	for _, tool := range tools.Tools {
+		if tool.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
 func (tools *Tools) GetByName(name string) (*Tool, error) {
 	for _, tool := range tools.Tools {
 		if tool.Name == name {
@@ -25,6 +34,34 @@ func (tools *Tools) GetByTag(tagName string) *Tools {
 	}
 
 	return &toolList
+}
+
+func (tools *Tools) GetByNames(names []string) Tools {
+	var toolList Tools
+
+	for _, tool := range tools.Tools {
+		for _, name := range names {
+			if tool.Name == name {
+				toolList.Tools = append(toolList.Tools, tool)
+			}
+		}
+	}
+
+	return toolList
+}
+
+func (tools *Tools) GetByTags(tagNames []string) Tools {
+	var toolList Tools
+
+	for _, tool := range tools.Tools {
+		for _, tag := range tagNames {
+			if tool.HasTag(tag) {
+				toolList.Tools = append(toolList.Tools, tool)
+			}
+		}
+	}
+
+	return toolList
 }
 
 func (tools *Tools) Find(term string, searchInName bool, searchInTags bool, searchInDeps bool) Tools {
@@ -57,4 +94,14 @@ func (tools *Tools) Find(term string, searchInName bool, searchInTags bool, sear
 	}
 
 	return results
+}
+
+func (tools *Tools) GetNames() []string {
+	var toolNames []string
+
+	for _, tool := range tools.Tools {
+		toolNames = append(toolNames, tool.Name)
+	}
+
+	return toolNames
 }

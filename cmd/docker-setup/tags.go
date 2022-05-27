@@ -19,8 +19,6 @@ var tagsCmd = &cobra.Command{
 	Long:    header + "\nList tools and tags",
 	Args:    cobra.NoArgs,
 	Run:     func(cmd *cobra.Command, args []string) {
-		load()
-
 		tags := make(map[string]int)
 		for _, tool := range tools.Tools {
 			for _, name := range tool.Tags {
