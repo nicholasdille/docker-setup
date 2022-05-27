@@ -35,6 +35,22 @@ func (tools *Tools) List() {
 	t.Render()
 }
 
+func (tools *Tools) ListWithStatus(toolStatus map[string]ToolStatus) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+
+	t.AppendHeader(table.Row{"#", "Name", "Version", "Binary present", "Installed version", "Version matches"})
+
+	for index, tool := range tools.Tools {
+		status := toolStatus[tool.Name]
+		t.AppendRows([]table.Row{
+			{index + 1, tool.Name, tool.Version, status.BinaryPresent, status.Version, status.VersionMatches},
+		})
+	}
+
+	t.Render()
+}
+
 func (tool *Tool) Print() {
 	fmt.Printf("\n")
 	fmt.Printf("Name: %s\n", tool.Name)

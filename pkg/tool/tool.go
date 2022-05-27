@@ -66,6 +66,9 @@ func (tool *Tool) ReplaceVariables(target string) {
 				tool.Binary, "${name}", tool.Name, -1,
 			), "${target}", target, -1,
 		)
+	if tool.Binary[:1] != "/" {
+		tool.Binary = target + "/bin/" + tool.Binary
+	}
 			
 	//check
 	tool.Check = 
@@ -99,9 +102,9 @@ func (tool *Tool) GetStatus() (ToolStatus, error) {
 	}
 
 	// Retrieve version
-	if tool.Check != "" {
+	if status.BinaryPresent && tool.Check != "" {
 		log.Tracef("Running version check for %s: %s", tool.Name, tool.Check)
-		cmd := exec.Command("/bin/bash", "-c", tool.Check)
+		cmd := exec.Command("/bin/bash", "-c", tool.Check + " | tr -d '\n'")
 		version, err := cmd.CombinedOutput()
 		if err != nil {
 			return ToolStatus{}, fmt.Errorf("Unable to execute version check (%s): %s", tool.Check, err)
@@ -110,6 +113,7 @@ func (tool *Tool) GetStatus() (ToolStatus, error) {
 	}
 
 	// Check version
+	log.Tracef("Comparing requested version <%s> with installed version <%s>.", tool.Version, status.Version)
 	if status.Version == tool.Version {
 		status.VersionMatches = true
 	}

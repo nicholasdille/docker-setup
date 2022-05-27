@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"gopkg.in/yaml.v3"
 
@@ -24,11 +23,10 @@ var describeCmd = &cobra.Command{
 	Short:   "Show detailed information about tools",
 	Long:    header + "\nShow detailed information about tools",
 	Args:    cobra.ExactArgs(1),
-	Run:     func(cmd *cobra.Command, args []string) {
+	RunE:    func(cmd *cobra.Command, args []string) error {
 		tool, err := tools.GetByName(args[0])
 		if err != nil {
-			fmt.Printf("Error getting tool %s\n", args[0])
-			os.Exit(1)
+			return fmt.Errorf("Error getting tool %s\n", args[0])
 		}
 
 		if describeOutput == "pretty" {
@@ -42,5 +40,7 @@ var describeCmd = &cobra.Command{
 			data, _ := yaml.Marshal(tool)
 			fmt.Println(string(data))
 		}
+
+		return nil
 	},
 }

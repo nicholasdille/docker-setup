@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
-	log "github.com/sirupsen/logrus"
 )
 
 func initTestCmd() {
@@ -13,9 +12,7 @@ func initTestCmd() {
 var testCmd = &cobra.Command{
 	Use:     "test",
 	Short:   "Test",
-	Run:     func(cmd *cobra.Command, args []string) {
-		var err error
-
+	RunE:    func(cmd *cobra.Command, args []string) (err error) {
 		// Manpages
 		header := &doc.GenManHeader{
 			Title: "docker-setup",
@@ -23,26 +20,27 @@ var testCmd = &cobra.Command{
 		}
 		err = doc.GenManTree(rootCmd, header, "/tmp")
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		// Markdown
 		err = doc.GenMarkdownTree(rootCmd, "/tmp")
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		// ReST
 		err = doc.GenReSTTree(rootCmd, "/tmp")
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		// YAML
 		err = doc.GenYamlTree(rootCmd, "/tmp")
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
+		return nil
 	},
 }

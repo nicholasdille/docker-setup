@@ -18,7 +18,7 @@ var tagsCmd = &cobra.Command{
 	Short:   "List tools and tags",
 	Long:    header + "\nList tools and tags",
 	Args:    cobra.NoArgs,
-	Run:     func(cmd *cobra.Command, args []string) {
+	RunE:    func(cmd *cobra.Command, args []string) error {
 		tags := make(map[string]int)
 		for _, tool := range tools.Tools {
 			for _, name := range tool.Tags {
@@ -48,5 +48,7 @@ var tagsCmd = &cobra.Command{
 		}
 
 		t.Render()
+
+		return nil
 	},
 }

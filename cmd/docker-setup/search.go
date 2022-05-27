@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -24,56 +23,46 @@ var searchCmd = &cobra.Command{
 	Short:   "Search for tools",
 	Long:    header + "\nSearch for tools",
 	Args:    cobra.ExactArgs(1),
-	Run:     func(cmd *cobra.Command, args []string) {
+	RunE:    func(cmd *cobra.Command, args []string) error {
 		onlySearchInName, err := cmd.Flags().GetBool("only-names")
 		if err != nil {
-			fmt.Printf("Error retrieving only-names flag: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("Error retrieving only-names flag: %s\n", err)
 		}
 		noSearchInName, err := cmd.Flags().GetBool("no-names")
 		if err != nil {
-			fmt.Printf("Error retrieving no-names flag: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("Error retrieving no-names flag: %s\n", err)
 		}
 		onlySearchInTags, err := cmd.Flags().GetBool("only-tags")
 		if err != nil {
-			fmt.Printf("Error retrieving only-tags flag: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("Error retrieving only-tags flag: %s\n", err)
 		}
 		noSearchInTags, err := cmd.Flags().GetBool("no-tags")
 		if err != nil {
-			fmt.Printf("Error retrieving no-tags flag: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("Error retrieving no-tags flag: %s\n", err)
 		}
 		onlySearchInDeps, err := cmd.Flags().GetBool("only-deps")
 		if err != nil {
-			fmt.Printf("Error retrieving only-deps flag: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("Error retrieving only-deps flag: %s\n", err)
 		}
 		noSearchInDeps, err := cmd.Flags().GetBool("no-deps")
 		if err != nil {
-			fmt.Printf("Error retrieving no-deps flag: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("Error retrieving no-deps flag: %s\n", err)
 		}
 
 		if onlySearchInName && noSearchInName {
-			fmt.Printf("Error: Cannot process only-names and no-names at the same time\n")
-			os.Exit(1)
+			return fmt.Errorf("Error: Cannot process only-names and no-names at the same time\n")
 		}
 		if onlySearchInTags && noSearchInTags {
-			fmt.Printf("Error: Cannot process only-tags and no-tags at the same time\n")
-			os.Exit(1)
+			return fmt.Errorf("Error: Cannot process only-tags and no-tags at the same time\n")
 		}
 		if onlySearchInDeps && noSearchInDeps {
-			fmt.Printf("Error: Cannot process only-deps and no-deps at the same time\n")
-			os.Exit(1)
+			return fmt.Errorf("Error: Cannot process only-deps and no-deps at the same time\n")
 		}
 
 		if (onlySearchInName && onlySearchInTags) ||
 			(onlySearchInName && onlySearchInDeps) ||
 			(onlySearchInTags && onlySearchInDeps) {
-			fmt.Printf("Error: Can only process one of only-names, only-tags and only-deps at the same time\n")
-			os.Exit(1)
+			return fmt.Errorf("Error: Can only process one of only-names, only-tags and only-deps at the same time\n")
 		}
 
 		results := tools.Find(
@@ -88,5 +77,7 @@ var searchCmd = &cobra.Command{
 		} else {
 			results.List()
 		}
+
+		return nil
 	},
 }

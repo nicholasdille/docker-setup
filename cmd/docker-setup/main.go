@@ -17,8 +17,9 @@ var header string = `
  \____|\___/ \____)_| \_)_____)_|        (___/|_____)  \__)____/|  __/
                                                                 |_|
 `
-var logLevel string = "warning"
+var logLevel string
 var target string
+var no_color bool
 
 var (
 	rootCmd = &cobra.Command{
@@ -54,6 +55,7 @@ func main() {
 	}
 	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", log.WarnLevel.String(), "Log level (trace, debug, info, warning, error)")
 	rootCmd.PersistentFlags().StringVarP(&target,   "target",    "t", "/usr/local",           "Target directory")
+	rootCmd.PersistentFlags().BoolVarP(  &no_color, "no-color",  "",  false,                  "Suppress colored output")
 
 	rootCmd.Execute()
 }
