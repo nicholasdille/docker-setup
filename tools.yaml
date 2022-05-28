@@ -3110,7 +3110,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
 
   - name: yq
-    version: 4.25.1
+    version: 4.25.2
     check: ${binary} --version | cut -d' ' -f4
     tags:
     - conversion
