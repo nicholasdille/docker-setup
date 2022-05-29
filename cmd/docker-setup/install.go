@@ -60,7 +60,7 @@ var installCmd = &cobra.Command{
 		// Fill default values and replace variables
 		for index, tool := range tools.Tools {
 			log.Tracef("Getting status for requested tool %s", tool.Name)
-			tools.Tools[index].ReplaceVariables(target)
+			tools.Tools[index].ReplaceVariables(target, arch, alt_arch)
 
 			status, err := tools.Tools[index].GetStatus()
 			if err != nil {
@@ -106,7 +106,7 @@ var installCmd = &cobra.Command{
 		if check {
 			for _, tool := range plannedTools.Tools {
 				if ! toolStatus[tool.Name].BinaryPresent || ! toolStatus[tool.Name].VersionMatches {
-					return fmt.Errorf("Found missing or outdated tools")
+					return fmt.Errorf("Found missing or outdated tool")
 				}
 			}
 		}
@@ -120,10 +120,14 @@ var installCmd = &cobra.Command{
 			time.Sleep(10 * time.Second)
 		}
 
-		// https://pkg.go.dev/compress/gzip
-		// https://pkg.go.dev/compress/bzip2
-		// https://pkg.go.dev/golang.org/x/build/internal/untar#Untar
-		// https://pkg.go.dev/archive/zip
+		// Install
+		for _, tool := range plannedTools.Tools {
+			log.Infof("Installing %s", tool.Name)
+			err := tool.InstallDownloads(alt_arch)
+			if err != nil {
+				return fmt.Errorf("Unable to install downloads: %s", err)
+			}
+		}
 
 		return nil
 
