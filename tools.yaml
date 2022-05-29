@@ -1555,7 +1555,7 @@ tools:
         WantedBy=default.target
     post_install: |
       echo "Install completion"
-      ${binary} commands completion >"${target}/share/bash-completion/completions/ipfs"
+      ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
       IPFS_PATH=${prefix}/var/lib/ipfs ${binary} init
       IPFS_PATH=${prefix}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
       IPFS_PATH=${prefix}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
@@ -1734,9 +1734,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/kapp"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kapp.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kapp"
+      ${binary} completion bash | grep -v "^Succeeded$" >"${target}/share/bash-completion/completions/kapp"
+      ${binary} completion fish | grep -v "^Succeeded$" >"${target}/share/fish/vendor_completions.d/kapp.fish"
+      ${binary} completion zsh  | grep -v "^Succeeded$" >"${target}/share/zsh/vendor-completions/_kapp"
 
   - name: kbld
     version: 0.33.0
@@ -2950,9 +2950,9 @@ tools:
       - syft
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/syft"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/syft.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_syft"
+      ${binary} completion bash | sed -E 's/^(\s*complete.*)/\1 syft/'            >"${target}/share/bash-completion/completions/syft"
+      ${binary} completion fish | sed -E 's/complete -c  -e/complete -c syft -e/' >"${target}/share/fish/vendor_completions.d/syft.fish"
+      ${binary} completion zsh                                                    >"${target}/share/zsh/vendor-completions/_syft"
 
   - name: task
     version: 3.12.1
