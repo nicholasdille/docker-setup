@@ -266,7 +266,7 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-        "fileMatch": ["(^|\/Dockerfile($|\\.)"],
+        "fileMatch": ["(^|/)Dockerfile[^/]*$"],
         "matchStrings": [
             "#syntax=(?<depName>.*):(?<currentValue>.*)"
         ],
