@@ -266,6 +266,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
+        "fileMatch": ["^Dockerfile$"],
+        "matchStrings": [
+            "#syntax=(?<depName>.*):(?<currentValue>.*)"
+        ],
+        "datasourceTemplate": "docker"
+    },
+    {
       "fileMatch": [
         "^tools.yaml$"
       ],
