@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.4.0
+
 FROM clearlinux:latest@sha256:da4372410dedc047cafc56911ad7865d96ad3658868af7ed9debdeb6e70a4143
 RUN swupd bundle-add \
         git \

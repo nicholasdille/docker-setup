@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.4.0
+
 FROM archlinux:latest@sha256:5d67d1501faebe3af12711b30c7253246e5891cdf0a9c21add835a740a9a6266
 RUN pacman -Sy \
  && pacman -S --noconfirm \

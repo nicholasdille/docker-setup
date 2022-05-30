@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.4.0
+
 FROM debian:11.3@sha256:3f1d6c17773a45c97bd8f158d665c9709d7b29ed7917ac934086ad96f92e4510
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
