@@ -1145,7 +1145,7 @@ tools:
       type: executable
 
   - name: dyff
-    version: 1.5.3
+    version: 1.5.4
     check: ${binary} version | cut -d' ' -f3
     tags:
     - development
