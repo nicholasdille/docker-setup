@@ -298,7 +298,7 @@ fi
 debug "Finished parameter checks part 2 (@ ${SECONDS})"
 
 # shellcheck disable=SC2034
-go_version=1.18.2
+go_version=1.18.3
 # shellcheck disable=SC2034
 rust_version=1.59.0
 
