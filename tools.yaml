@@ -253,7 +253,7 @@ tools:
       - containerssh-testauthconfigserver
 
   - name: cosign
-    version: 1.8.0
+    version: 1.9.0
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
     needs:
     - docker
