@@ -1660,7 +1660,7 @@ tools:
       path: ${target}
 
   - name: regclient
-    version: 0.4.2
+    version: 0.4.3
     binary: regctl
     check: ${binary} version | jq -r .VCSTag | tr -d v
     download:
