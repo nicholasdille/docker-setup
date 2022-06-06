@@ -1016,7 +1016,7 @@ tools:
       type: executable
       
   - name: docker-credential-gcr
-    version: 2.1.4
+    version: 2.1.5
     needs:
     - docker
     tags:
