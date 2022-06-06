@@ -218,7 +218,7 @@ tools:
       fi
 
   - name: containerd
-    version: 1.6.5
+    version: 1.6.6
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     needs:
     - runc
