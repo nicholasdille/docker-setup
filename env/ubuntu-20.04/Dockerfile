@@ -1,4 +1,4 @@
-FROM ubuntu:20.04@sha256:601b42e93e201bab66dfa5dba2dd4108d75bc2d6f09fe9f22948535aa6676655
+FROM ubuntu:20.04@sha256:fd92c36d3cb9b1d027c4d2a72c6bf0125da82425fc2ca37c414d4f010180dc19
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
