@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.0
 
-FROM ubuntu:20.04@sha256:61748b23380753625449519a96eb448730966a86acb5453b2d857183c0cd651e
+FROM ubuntu:20.04@sha256:fd92c36d3cb9b1d027c4d2a72c6bf0125da82425fc2ca37c414d4f010180dc19
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
