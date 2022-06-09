@@ -1633,7 +1633,7 @@ tools:
       fi
 
   - name: porter
-    version: 0.38.11
+    version: 0.38.12
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
     download:
     - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
