@@ -713,7 +713,7 @@ tools:
       type: executable
   
   - name: fuse-overlayfs
-    version: 1.8.2
+    version: 1.9
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
     download:
     - url: https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}
