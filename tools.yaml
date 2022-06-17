@@ -2047,7 +2047,7 @@ tools:
       - kubectl-resources
 
   - name: kubefire
-    version: 0.3.6
+    version: 0.3.7
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2 | tr -d v
     tags:
     - k8s
