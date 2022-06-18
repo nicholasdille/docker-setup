@@ -1779,7 +1779,7 @@ tools:
       - mitmweb
 
   - name: nerdctl
-    version: 0.20.0
+    version: 0.21.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - containerd
