@@ -1516,10 +1516,10 @@ tools:
       path: ${target}
       strip: 1
     post_install: |
-      rm ${target}/LICENSE ${target}/install ${target}/etc/README.md
-      mv ${target}/hub.bash_completion.sh "${target}/share/bash-completion/completions/${name}"
-      mv ${target}/hub.fish_completion "${target}/share/fish/vendor_completions.d/${name}.fish"
-      mv ${target}/hub.zsh_completion "${target}/share/zsh/vendor-completions/_${name}"
+      rm ${target}/LICENSE ${target}/install ${target}/README.md
+      mv ${target}/etc/hub.bash_completion.sh "${target}/share/bash-completion/completions/${name}"
+      mv ${target}/etc/hub.fish_completion "${target}/share/fish/vendor_completions.d/${name}.fish"
+      mv ${target}/etc/hub.zsh_completion "${target}/share/zsh/vendor-completions/_${name}"
       rm -rf ${target}/share/doc/hub-doc ${target}/share/vim
 
   - name: hub-tool
