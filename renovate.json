@@ -837,8 +837,8 @@
       "matchStrings": [
         "name: glab\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
-      "depNameTemplate": "profclems/glab",
-      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gitlab-org/cli",
+      "datasourceTemplate": "gitlab-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
