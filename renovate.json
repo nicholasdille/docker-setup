@@ -835,6 +835,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: glab\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "profclems/glab",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "charmbracelet/glow",
