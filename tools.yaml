@@ -2084,6 +2084,19 @@ tools:
     - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
       type: executable
 
+  - name: kubesec
+    version: 2.11.4
+    tags:
+    - k8s
+    - kubernetes
+    - security
+    download:
+    - url: https://github.com/controlplaneio/kubesec/releases/download/v${version}/kubesec_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kubesec
+
   - name: kubeswitch
     version: 1.5.0
     tags:

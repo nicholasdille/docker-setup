@@ -1200,6 +1200,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: kubesec\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "controlplaneio/kubesec",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: kubeswitch\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "danielb42/kubeswitch",
