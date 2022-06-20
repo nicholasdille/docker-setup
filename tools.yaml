@@ -1334,9 +1334,10 @@ tools:
     tags:
     - development
     download:
-    - url: https://github.com/cli/cli/releases/download/v${name}/gh_${name}_linux_${alt_arch}.tar.gz
+    - url: https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}
+      strip: 1
     post_install: |
       rm ${target}/LICENSE
       echo "Install completion"
@@ -1367,7 +1368,8 @@ tools:
         x86_64: https://github.com/profclems/glab/releases/download/v${version}/glab_${version}_Linux_${arch}.tar.gz
         aarch64: https://github.com/profclems/glab/releases/download/v${version}/glab_${version}_Linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}
+      path: ${target}/bin
+      strip: 1
       files:
       - bin/glab
     post_install: |
@@ -1535,7 +1537,7 @@ tools:
       path: ${target}
       strip: 1
     post_install: |
-      rm ${target}/LICENSE ${target}/install ${target}/README.md
+      rm ${target}/LICENSE ${target}/install ${target}/README.md ${target}/etc/README.md
       mv ${target}/etc/hub.bash_completion.sh "${target}/share/bash-completion/completions/${name}"
       mv ${target}/etc/hub.fish_completion "${target}/share/fish/vendor_completions.d/${name}.fish"
       mv ${target}/etc/hub.zsh_completion "${target}/share/zsh/vendor-completions/_${name}"
