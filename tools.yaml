@@ -14,9 +14,9 @@ tools:
         aarch64: https://github.com/alexellis/arkade/releases/download/${version}/arkade-arm64
       type: executable
     post_install: |
-      ${binary} completion bash >"${target}/share/bash-completion/completions/ytt"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/ytt.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: buildah
     version: 1.26.1
@@ -307,9 +307,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/clusterawsadm"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/clusterawsadm.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_clusterawsadm"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: clusterctl
     version: 1.1.4
@@ -322,8 +322,8 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/clusterctl"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_clusterctl"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: cni
     version: 1.1.1
@@ -573,9 +573,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/cosign"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/cosign.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_cosign"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: crane
     version: 0.9.0
@@ -592,9 +592,9 @@ tools:
       - crane
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/crane"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/crane.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_crane"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: cri-dockerd
     version: 0.2.2
@@ -1176,9 +1176,9 @@ tools:
       - dyff
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/dyff"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/dyff.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_dyff"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: faas-cli
     version: 0.14.2
@@ -1336,9 +1336,9 @@ tools:
       - grype
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/grype"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/grype.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_grype"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: gvisor
     version: 20220606
@@ -1407,9 +1407,9 @@ tools:
       files:
       - linux-amd64/helm
     post_install: |
-      "${binary}" completion bash >"${target}/share/bash-completion/completions/helm"
-      "${binary}" completion fish >"${target}/share/fish/vendor_completions.d/helm.fish"
-      "${binary}" completion zsh >"${target}/share/zsh/vendor-completions/_helm"
+      "${binary}" completion bash >"${target}/share/bash-completion/completions/${name}"
+      "${binary}" completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      "${binary}" completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
       if test -z "${prefix}"; then
           echo "Install plugins"
           plugins=(
@@ -1654,9 +1654,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/k3d"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/k3d.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_k3d"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: k3s
     version: 1.23.4+k3s1
@@ -1752,9 +1752,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash | grep -v "^Succeeded$" >"${target}/share/bash-completion/completions/kapp"
-      ${binary} completion fish | grep -v "^Succeeded$" >"${target}/share/fish/vendor_completions.d/kapp.fish"
-      ${binary} completion zsh  | grep -v "^Succeeded$" >"${target}/share/zsh/vendor-completions/_kapp"
+      ${binary} completion bash | grep -v "^Succeeded$" >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish | grep -v "^Succeeded$" >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh  | grep -v "^Succeeded$" >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kbld
     version: 0.34.0
@@ -1797,9 +1797,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/kind"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kind.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kind"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kink
     version: 0.2.1
@@ -1816,9 +1816,9 @@ tools:
       - kink
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/kink"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kink.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kink"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kompose
     version: 1.26.1
@@ -1832,9 +1832,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/kompose"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kompose.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kompose"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kots
     version: 1.72.1
@@ -1875,9 +1875,9 @@ tools:
       export PATH="${HOME}/.krew/bin:${PATH}"
       EOF
       echo "Install completion"
-      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/krew"
-      ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/krew.fish"
-      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_krew"
+      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kubeadm
     version: 1.24.2
@@ -1911,8 +1911,8 @@ tools:
       path: ${target}/bin/kubectl-convert
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/kubectl"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kubectl"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
       echo "Add alias k"
       cat >"${prefix}/etc/profile.d/kubectl.sh" <<EOF
       alias k=kubectl
@@ -2146,9 +2146,9 @@ tools:
       path: ${target}/bin
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/kustomize"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/kustomize.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_kustomize"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: lazydocker
     version: 0.18.1
@@ -2302,9 +2302,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/minikube"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/minikube.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_minikube"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: mitmproxy
     version: 8.1.0
@@ -2798,9 +2798,9 @@ tools:
       path: ${target}/bin/regsync
     post_install: |
       echo "Install completion for regctl"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/regctl"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/regctl.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_regctl"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
       echo "Install completion for regbot"
       "${target}/bin/regbot" completion bash >"${target}/share/bash-completion/completions/regbot"
       "${target}/bin/regbot" completion fish >"${target}/share/fish/vendor_completions.d/regbot.fish"
@@ -2862,9 +2862,9 @@ tools:
       echo "Rename binary"
       mv "${target}/bin/scorecard-linux-${alt_arch}" "${target}/bin/scorecard"
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/scorecard"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/scorecard.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_scorecard"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: skopeo
     version: 1.8.0
@@ -2985,9 +2985,9 @@ tools:
       - syft
     post_install: |
       echo "Install completion"
-      ${binary} completion bash | sed -E 's/^(\s*complete.*)/\1 syft/'            >"${target}/share/bash-completion/completions/syft"
-      ${binary} completion fish | sed -E 's/complete -c  -e/complete -c syft -e/' >"${target}/share/fish/vendor_completions.d/syft.fish"
-      ${binary} completion zsh                                                    >"${target}/share/zsh/vendor-completions/_syft"
+      ${binary} completion bash | sed -E 's/^(\s*complete.*)/\1 syft/'            >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish | sed -E 's/complete -c  -e/complete -c syft -e/' >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh                                                    >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: task
     version: 3.13.0
@@ -3009,9 +3009,9 @@ tools:
       - completion/fish/task.fish
       - completion/zsh/_task
     post_install: |
-      mv "${target}/share/task.bash" "${target}/share/bash-completion/completions/task"
-      mv "${target}/share/task.fish" "${target}/share/fish/vendor_completions.d/task.fish"
-      mv "${target}/share/_task" "${target}/share/zsh/vendor-completions/_task"
+      mv "${target}/share/${name}.bash" "${target}/share/bash-completion/completions/${name}"
+      mv "${target}/share/${name}.fish" "${target}/share/fish/vendor_completions.d/${name}.fish"
+      mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"
 
   - name: trivy
     version: 0.29.1
@@ -3164,9 +3164,9 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} completion bash >"${target}/share/bash-completion/completions/ytt"
-      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/ytt.fish"
-      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: yq
     version: 4.25.2
@@ -3179,6 +3179,6 @@ tools:
       type: executable
     post_install: |
       echo "Install completion"
-      ${binary} shell-completion bash >"${target}/share/bash-completion/completions/yq"
-      ${binary} shell-completion fish >"${target}/share/fish/vendor_completions.d/yq.fish"
-      ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_yq"
+      ${binary} shell-completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} shell-completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
