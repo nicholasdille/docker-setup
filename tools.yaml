@@ -2235,6 +2235,23 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: lab
+    version: 0.24.0
+    check: ${binary} version | cut -d' ' -f3
+    tags:
+    - development
+    download:
+    - url: https://github.com/zaquestion/lab/releases/download/v${version}/lab_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - lab
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: lazydocker
     version: 0.18.1
     check: ${binary} --version | grep Version | cut -d' ' -f2

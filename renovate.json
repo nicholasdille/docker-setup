@@ -1310,6 +1310,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: lab\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "zaquestion/lab",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: lazydocker\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "jesseduffield/lazydocker",
