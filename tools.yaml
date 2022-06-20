@@ -1476,6 +1476,23 @@ tools:
       type: file
       path: ${target}/share/zsh/vendor-completions/_helmfile
 
+  - name: hub
+    version: 2.14.2
+    check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
+    tags:
+    - docker
+    download:
+    - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}
+      strip: 1
+    post_install: |
+      rm ${target}/LICENSE ${target}/etc/README.md
+      mv ${target}/hub.bash_completion.sh "${target}/share/bash-completion/completions/${name}"
+      mv ${target}/hub.fish_completion "${target}/share/fish/vendor_completions.d/${name}.fish"
+      mv ${target}/hub.zsh_completion "${target}/share/zsh/vendor-completions/_${name}"
+      rm -rf ${target}/share/doc/hub-doc ${target}/share/vim
+
   - name: hub-tool
     version: 0.4.4
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v

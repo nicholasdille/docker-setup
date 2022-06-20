@@ -913,6 +913,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: hub\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "github/hub",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: hub-tool\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "docker/hub-tool",
