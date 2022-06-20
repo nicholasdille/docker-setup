@@ -1,5 +1,23 @@
 tools:
 
+  - name: act
+    version: 0.2.26
+    check: ${binary} --version | cut -d' ' -f3
+    needs:
+    - docker
+    tags:
+    - development
+    - testing
+    - automation
+    download:
+    - url:
+        x86_64: https://github.com/nektos/act/releases/download/v${version}/act_Linux_${arch}.tar.gz
+        aarch64: https://github.com/nektos/act/releases/download/v${version}/act_Linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - act
+
   - name: arkade
     version: 0.8.28
     check: ${binary} version | grep "version" | cut -d' ' -f2
