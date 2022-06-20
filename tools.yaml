@@ -34,6 +34,24 @@ tools:
       type: tarball
       path: ${target}
 
+  - name: buildg
+    version: 0.2.0
+    check: ${binary} version | cut -d' ' -f2 | tr -d v
+    needs:
+    - runc
+    - cni
+    tags:
+    - build
+    - debug
+    - oci
+    download:
+    - url: https://github.com/ktock/buildg/releases/download/v${version}/buildg-v${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - ./buildg
+      - ./buildg.sh
+
   - name: buildkit
     version: 0.10.3
     binary: buildkitd
