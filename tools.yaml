@@ -3104,6 +3104,17 @@ tools:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
       type: executable
 
+  - name: webhookd
+    version: 1.15.0
+    tags:
+    - development
+    download:
+    - url: https://github.com/ncarlier/webhookd/releases/download/v${version}/webhookd-linux-${alt_arch}.tgz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - webhookd
+
   - name: win-gpg-agent
     version: 1.6.3
     check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1'

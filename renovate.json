@@ -1686,6 +1686,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: webhookd\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "ncarlier/webhookd",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: win-gpg-agent\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "rupor-github/win-gpg-agent",
