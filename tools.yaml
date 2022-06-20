@@ -1344,6 +1344,19 @@ tools:
       ${binary} completion -s fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion -s zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: gitlab-runner
+    version: 15.1.0
+    check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+    tags:
+    - development
+    - testing
+    - automation
+    download:
+    - url:
+        x86_64: https://gitlab.com/gitlab-org/gitlab-runner/-/releases/v${version}/downloads/binaries/gitlab-runner-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/gitlab-runner
+
   - name: glow
     version: 1.4.1
     check: ${binary} --version | cut -d' ' -f3

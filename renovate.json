@@ -824,6 +824,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: gitlab-runner\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "/gitlab-org/gitlab-runner",
+      "datasourceTemplate": "gitlab-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "charmbracelet/glow",
