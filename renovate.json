@@ -813,6 +813,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: gh\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "cli/cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "charmbracelet/glow",

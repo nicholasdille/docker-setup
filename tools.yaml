@@ -1328,6 +1328,22 @@ tools:
           fi
       fi
 
+  - name: gh
+    version: 2.12.1
+    check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    tags:
+    - development
+    download:
+    - url: https://github.com/cli/cli/releases/download/v${name}/gh_${name}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}
+    post_install: |
+      rm ${target}/LICENSE
+      echo "Install completion"
+      ${binary} completion -s bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion -s fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion -s zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: glow
     version: 1.4.1
     check: ${binary} --version | cut -d' ' -f3
