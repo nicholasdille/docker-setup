@@ -169,16 +169,16 @@ func (tool *Tool) InstallDownloads(alt_arch string) (err error) {
 		}
 
 		log.Tracef("Using url %s", url)
-	}
 
-	if download.Type == "executable" {
-		log.Tracef("Installing executable")
+		if download.Type == "executable" {
+			log.Tracef("Installing executable")
 
-	} else if download.Type == "tarball" {
-		log.Tracef("Installating tarball")
+		} else if download.Type == "tarball" {
+			log.Tracef("Installating tarball")
 
-	} else if download.Type == "zip" {
-		log.Trace("Installing zip")
+		} else if download.Type == "zip" {
+			log.Trace("Installing zip")
+		}
 	}
 
 	return nil
