@@ -3,18 +3,16 @@ module github.com/nicholasdille/docker-setup
 go 1.17
 
 require (
-	github.com/fatih/color v1.13.0
 	github.com/jedib0t/go-pretty/v6 v6.3.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
+	github.com/ulikunitz/xz v0.5.10
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 )
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/mattn/go-colorable v0.1.9 // indirect
-	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
