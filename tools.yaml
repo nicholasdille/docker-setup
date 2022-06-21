@@ -1,7 +1,7 @@
 tools:
 
   - name: act
-    version: 0.2.26
+    version: 0.2.27
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - docker
