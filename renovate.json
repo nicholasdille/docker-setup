@@ -826,7 +826,7 @@
       "matchStrings": [
         "name: gitlab-runner\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
-      "depNameTemplate": "/gitlab-org/gitlab-runner",
+      "depNameTemplate": "gitlab-org/gitlab-runner",
       "datasourceTemplate": "gitlab-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
