@@ -596,7 +596,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: crane
-    version: 0.9.0
+    version: 0.10.0
     check: ${binary} version
     tags:
     - registry
