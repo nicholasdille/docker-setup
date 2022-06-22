@@ -3107,6 +3107,26 @@ tools:
           fi
       fi
 
+  - name: stern
+    version: 1.21.0
+    check: ${binary} --version | grep ^version | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
+    - debugging
+    - analysis
+    download:
+    - url: https://github.com/stern/stern/releases/download/v${version}/stern_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - stern
+    post_install: |
+      echo "Install completion"
+      ${binary} --completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} --completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} --completion zsh  >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: syft
     version: 0.48.1
     check: ${binary} --version | cut -d' ' -f2

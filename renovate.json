@@ -1697,6 +1697,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: stern\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "stern/stern",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: syft\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "anchore/syft",
