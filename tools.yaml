@@ -267,7 +267,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_cosign"
 
   - name: crane
-    version: 0.9.0
+    version: 0.10.0
     check: ${binary} version
     download:
     - url: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
