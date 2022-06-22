@@ -1358,6 +1358,17 @@ tools:
       type: executable
       path: ${target}/bin/gitlab-runner
 
+  - name: gitsign
+    version: 0.1.1
+    check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - development
+    - security
+    download:
+    - url: https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}
+      type: executable
+      path: ${target}/bin/gitsign
+
   - name: glab
     version: 1.22.0
     check: ${binary} version | cut -d' ' -f3
@@ -2911,6 +2922,29 @@ tools:
       "${target}/bin/regsync" completion bash >"${target}/share/bash-completion/completions/regsync"
       "${target}/bin/regsync" completion fish >"${target}/share/fish/vendor_completions.d/regsync.fish"
       "${target}/bin/regsync" completion zsh >"${target}/share/zsh/vendor-completions/_regsync"
+
+  - name: rekor
+    version: 0.8.2
+    binary: rekor-cli
+    check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
+    tags:
+    - security
+    download:
+    - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-cli-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/rekor-cli
+    - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-server-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/rekor-server
+    post_install: |
+      echo "Install completion for rekor-cli"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+      echo "Install completion for rekor-server"
+      "${target}/bin/rekor-server" completion bash >"${target}/share/bash-completion/completions/rekor-server"
+      "${target}/bin/rekor-server" completion fish >"${target}/share/fish/vendor_completions.d/rekor-server.fish"
+      "${target}/bin/rekor-server" completion zsh >"${target}/share/zsh/vendor-completions/_rekor-server"
 
   - name: rootlesskit
     version: 1.0.1

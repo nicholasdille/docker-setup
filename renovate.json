@@ -835,6 +835,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: gitsign\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "sigstore/gitsign",
+      "datasourceTemplate": "gitlab-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: glab\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "gitlab-org/cli",
@@ -1568,6 +1579,17 @@
         "name: regclient\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "regclient/regclient",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: rekor\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "sigstore/rekor",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
