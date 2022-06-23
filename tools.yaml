@@ -146,7 +146,7 @@ tools:
       path: ${target}/libexec/cni
 
   - name: conmon
-    version: 2.1.0
+    version: 2.1.2
     check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
     download:
     - url: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
