@@ -1749,7 +1749,7 @@ tools:
       mv "${target}/bin/manifest-tool-linux-${alt_arch}" "${target}/bin/manifest-tool"
 
   - name: minikube
-    version: 1.25.2
+    version: 1.26.0
     check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
     tags:
     - k8s
