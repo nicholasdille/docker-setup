@@ -646,7 +646,7 @@ tools:
       type: executable
 
   - name: docker-compose-v2
-    version: 2.6.0
+    version: 2.6.1
     binary: ${target}/libexec/docker/cli-plugins/docker-compose
     check: ${binary} compose version --short
     needs:
