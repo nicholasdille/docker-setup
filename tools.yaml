@@ -3325,7 +3325,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: yq
-    version: 4.25.2
+    version: 4.25.3
     check: ${binary} --version | cut -d' ' -f4
     tags:
     - conversion
