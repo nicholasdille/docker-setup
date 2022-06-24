@@ -3128,7 +3128,7 @@ tools:
       ${binary} --completion zsh  >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: syft
-    version: 0.48.1
+    version: 0.49.0
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - sbom
