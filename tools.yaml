@@ -2640,6 +2640,18 @@ tools:
       type: tarball
       path: ${target}
 
+  - name: polaris
+    version: 6.0.0
+    tags:
+    - k8s
+    - kubernetes
+    download:
+    - url: https://github.com/FairwindsOps/polaris/releases/download/${version}/polaris_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - polaris
+
   - name: portainer
     version: 2.13.1
     check: ${binary} --version 2>&1

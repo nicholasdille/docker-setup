@@ -1577,6 +1577,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: polaris\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "FairwindsOps/polaris",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: portainer\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "portainer/portainer",
