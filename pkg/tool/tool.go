@@ -149,37 +149,66 @@ func (tool *Tool) GetStatus() (ToolStatus, error) {
 	return status, nil
 }
 
-func (tool *Tool) InstallDownloads(alt_arch string) (err error) {
-	log.Tracef("Operating on architecture %s", alt_arch)
-
-	for _, download := range tool.Download {
-		log.Tracef("Download: %+v", download)
-
-		var url string
-		if download.Url.Template != "" {
-			url = download.Url.Template
+func (downloadUrl *DownloadUrl) Download(alt_arch string) (path string, err error) {
+	var url string
+	if downloadUrl.Template != "" {
+		url = downloadUrl.Template
+	
+	} else {
+		if alt_arch == "amd64" {
+			url = downloadUrl.Amd64
 		
-		} else {
-			if alt_arch == "amd64" {
-				url = download.Url.Amd64
-			
-			} else if alt_arch == "arm64" {
-				url = download.Url.Arm64
-			}
-		}
-
-		log.Tracef("Using url %s", url)
-
-		if download.Type == "executable" {
-			log.Tracef("Installing executable")
-
-		} else if download.Type == "tarball" {
-			log.Tracef("Installating tarball")
-
-		} else if download.Type == "zip" {
-			log.Trace("Installing zip")
+		} else if alt_arch == "arm64" {
+			url = downloadUrl.Arm64
 		}
 	}
+
+	log.Tracef("Using url %s", url)
+
+	// TODO: Download to cache
+	// TODO: Return path to file in cache
+
+	return "", nil
+}
+
+func (download *Download) Install(alt_arch string) (err error) {
+	path, err := download.Url.Download(alt_arch)
+	if err != nil {
+		return fmt.Errorf("Error downloading: %s", err)
+	}
+
+	log.Tracef("Downloaded file is located at %s", path)
+
+	if download.Type == "executable" {
+		log.Tracef("Installing executable")
+
+	} else if download.Type == "tarball" {
+		log.Tracef("Installating tarball")
+
+	} else if download.Type == "zip" {
+		log.Trace("Installing zip")
+	}
+
+	// TODO: Use archive package
+
+	return nil
+}
+
+func (tool *Tool) Install(alt_arch string) (err error) {
+	log.Tracef("Operating on architecture %s", alt_arch)
+
+	// TODO: Check for `install` and run instead of downloads
+
+	for index, download := range tool.Download {
+		log.Tracef("Download: %+v", download)
+
+		err = download.Install(alt_arch)
+		if err != nil {
+			return fmt.Errorf("Error installing download at index %d (%+v): %s", index, download, err)
+		}
+	}
+
+	// TODO: Check for `post_install`
 
 	return nil
 }

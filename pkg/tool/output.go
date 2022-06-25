@@ -93,11 +93,11 @@ func (tool *Tool) Print() {
 		}
 	}
 
-	if tool.Install != "" {
+	if tool.InstallBlock != "" {
 		fmt.Printf("  Install: (provided)\n")
 	}
 
-	if tool.PostInstall != "" {
+	if tool.PostInstallBlock != "" {
 		fmt.Printf("  Post install: (provided)\n")
 	}
 }

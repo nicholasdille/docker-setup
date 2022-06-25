@@ -15,15 +15,15 @@ type Download struct {
 }
 
 type Tool struct {
-	Name        string     `yaml:"name"`
-	Version     string     `yaml:"version"`
-	Binary      string     `yaml:"binary"`
-	Check       string     `yaml:"check,omitempty"`
-	Tags        []string   `yaml:"tags"`
-	Needs       []string   `yaml:"needs"`
-	Download    []Download `yaml:"download"`
-	Install     string     `yaml:"install"`
-	PostInstall string     `yaml:"post_install"`
+	Name             string     `yaml:"name"`
+	Version          string     `yaml:"version"`
+	Binary           string     `yaml:"binary"`
+	Check            string     `yaml:"check,omitempty"`
+	Tags             []string   `yaml:"tags"`
+	Needs            []string   `yaml:"needs"`
+	Download         []Download `yaml:"download"`
+	InstallBlock     string     `yaml:"install"`
+	PostInstallBlock string     `yaml:"post_install"`
 }
 
 type Tools struct {

@@ -123,7 +123,7 @@ var installCmd = &cobra.Command{
 		// Install
 		for _, tool := range plannedTools.Tools {
 			log.Infof("Installing %s", tool.Name)
-			err := tool.InstallDownloads(alt_arch)
+			err := tool.Install(alt_arch)
 			if err != nil {
 				return fmt.Errorf("Unable to install downloads: %s", err)
 			}
