@@ -1920,6 +1920,25 @@ tools:
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: kube-bench
+    version: 0.6.8
+    check: ${binary} version
+    tags:
+    - k8s
+    - kubernetes
+    - security
+    download:
+    - url: https://github.com/aquasecurity/kube-bench/releases/download/v${version}/kube-bench_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: "${target}/bin"
+    post_install: |
+      mkdir -p "${prefix}/etc/kube-bench"
+      mv "${target}/bin/cfg" "${prefix}/etc/kube-bench"
+      echo "Install completion"
+      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: kubeadm
     version: 1.24.2
     check: ${binary} version --output short | tr -d v
