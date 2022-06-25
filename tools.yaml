@@ -3255,6 +3255,22 @@ tools:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
       type: executable
 
+  - name: watchtower
+    version: 1.4.0
+    needs:
+    - docker
+    tags:
+    - docker
+    - management
+    download:
+    - url:
+        x86_64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_amd64.tar.gz
+        aarch64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_arm64v8.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - watchtower
+
   - name: webhookd
     version: 1.15.0
     tags:

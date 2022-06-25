@@ -1818,6 +1818,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: watchtower\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "containrrr/watchtower",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: webhookd\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "ncarlier/webhookd",
