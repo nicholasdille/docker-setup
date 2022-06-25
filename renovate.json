@@ -1321,6 +1321,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: kubeclarity-cli\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "openclarity/kubeclarity",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: kustomize\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
