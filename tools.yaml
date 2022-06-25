@@ -391,6 +391,8 @@ tools:
   - name: conmon
     version: 2.1.2
     check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
+    needs:
+    - shortnames
     tags:
     - redhat
     - runtime
@@ -408,63 +410,6 @@ tools:
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
     files:
-    - path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
-      content: |
-        [aliases]
-          "almalinux" = "docker.io/library/almalinux"
-          "almalinux-minimal" = "docker.io/library/almalinux-minimal"
-          "centos" = "quay.io/centos/centos"
-          "skopeo" = "quay.io/skopeo/stable"
-          "buildah" = "quay.io/buildah/stable"
-          "podman" = "quay.io/podman/stable"
-          "alpine" = "docker.io/library/alpine"
-          "docker" = "docker.io/library/docker"
-          "registry" = "docker.io/library/registry"
-          "hello-world" = "docker.io/library/hello-world"
-          "swarm" = "docker.io/library/swarm"
-          "fedora-minimal" = "registry.fedoraproject.org/fedora-minimal"
-          "fedora" = "registry.fedoraproject.org/fedora"
-          "opensuse/tumbleweed" = "registry.opensuse.org/opensuse/tumbleweed"
-          "opensuse/tumbleweed-dnf" = "registry.opensuse.org/opensuse/tumbleweed-dnf"
-          "opensuse/tumbleweed-microdnf" = "registry.opensuse.org/opensuse/tumbleweed-microdnf"
-          "opensuse/leap" = "registry.opensuse.org/opensuse/leap"
-          "opensuse/busybox" = "registry.opensuse.org/opensuse/busybox"
-          "tumbleweed" = "registry.opensuse.org/opensuse/tumbleweed"
-          "tumbleweed-dnf" = "registry.opensuse.org/opensuse/tumbleweed-dnf"
-          "tumbleweed-microdnf" = "registry.opensuse.org/opensuse/tumbleweed-microdnf"
-          "leap" = "registry.opensuse.org/opensuse/leap"
-          "leap-dnf" = "registry.opensuse.org/opensuse/leap-dnf"
-          "leap-microdnf" = "registry.opensuse.org/opensuse/leap-microdnf"
-          "tw-busybox" = "registry.opensuse.org/opensuse/busybox"
-          "suse/sle15" = "registry.suse.com/suse/sle15"
-          "suse/sles12sp5" = "registry.suse.com/suse/sles12sp5"
-          "suse/sles12sp4" = "registry.suse.com/suse/sles12sp4"
-          "suse/sles12sp3" = "registry.suse.com/suse/sles12sp3"
-          "sle15" = "registry.suse.com/suse/sle15"
-          "sles12sp5" = "registry.suse.com/suse/sles12sp5"
-          "sles12sp4" = "registry.suse.com/suse/sles12sp4"
-          "sles12sp3" = "registry.suse.com/suse/sles12sp3"
-          "rhel" = "registry.access.redhat.com/rhel"
-          "rhel6" = "registry.access.redhat.com/rhel6"
-          "rhel7" = "registry.access.redhat.com/rhel7"
-          "ubi7" = "registry.access.redhat.com/ubi7"
-          "ubi7-init" = "registry.access.redhat.com/ubi7-init"
-          "ubi7-minimal" = "registry.access.redhat.com/ubi7-minimal"
-          "ubi8" = "registry.access.redhat.com/ubi8"
-          "ubi8-minimal" = "registry.access.redhat.com/ubi8-minimal"
-          "ubi8-init" = "registry.access.redhat.com/ubi8-init"
-          "ubi8-micro" = "registry.access.redhat.com/ubi8-micro"
-          "ubi8/ubi" = "registry.access.redhat.com/ubi8/ubi"
-          "ubi8/ubi-minimal" = "registry.access.redhat.com/ubi8-minimal"
-          "ubi8/ubi-init" = "registry.access.redhat.com/ubi8-init"
-          "ubi8/ubi-micro" = "registry.access.redhat.com/ubi8-micro"
-          "debian" = "docker.io/library/debian"
-          "ubuntu" = "docker.io/library/ubuntu"
-          "oraclelinux" = "container-registry.oracle.com/os/oraclelinux"
-          "busybox" = "docker.io/library/busybox"
-          "php" = "docker.io/library/php"
-          "python" = "docker.io/library/python"
-          "node" = "docker.io/library/node"
     - path: ${prefix}/etc/containers/registries.d/default.yaml
       content: |
         default-docker:
@@ -3001,6 +2946,15 @@ tools:
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
+  - name: shortnames
+    version: 2022.02.08
+    tags:
+    - redhat
+    download:
+    - url: https://github.com/containers/shortnames/raw/v2022.02.08/shortnames.conf
+      type: file
+      path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
 
   - name: skopeo
     version: 1.8.0

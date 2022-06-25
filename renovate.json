@@ -1642,6 +1642,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: shortnames\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "containers/shortnames",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: skopeo\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "nicholasdille/skopeo-static",
