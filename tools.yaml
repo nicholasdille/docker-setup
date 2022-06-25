@@ -2211,6 +2211,21 @@ tools:
       files:
       - kubeswitch
 
+  - name: kubeval
+    version: 0.16.1
+    check: ${binary} --version | grep ^Version | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kubeval
+
   - name: kustomize
     version: 4.5.5
     check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v

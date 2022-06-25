@@ -1332,6 +1332,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: kubeval\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "instrumenta/kubeval",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: kustomize\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
