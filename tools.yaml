@@ -2245,7 +2245,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: lab
-    version: 0.24.0
+    version: 0.25.0
     check: ${binary} version | cut -d' ' -f3
     tags:
     - development
