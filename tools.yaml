@@ -2401,6 +2401,24 @@ tools:
     post_install: |
       mv "${target}/bin/manifest-tool-linux-${alt_arch}" "${target}/bin/manifest-tool"
 
+  - name: minectl
+    version: 0.21.0
+    check: ${binary} version | grep ^Version | cut -d' ' -f2
+    tags:
+    - games
+    - management
+    download:
+    - url: https://github.com/dirien/minectl/releases/download/v${version}/minectl_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - minectl
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: minikube
     version: 1.26.0
     check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v

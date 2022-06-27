@@ -1432,6 +1432,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: minectl\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "dirien/minectl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: minikube\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "kubernetes/minikube",
