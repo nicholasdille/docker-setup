@@ -12,6 +12,7 @@ You can tweak the behaviour of `docker-setup` by passing parameters or environme
 | `--check`           | `check`                  | Only check if tools need to be installed or updated |
 | `--no-wait`         | `no_wait`                | Do not wait before installing |
 | `--reinstall`       | `reinstall`              | Install all tools again |
+| `--all`             | `all`                    | Install all tools instead of tag default |
 | `--only`            | `only`                   | Only install specified tools |
 | `--only-installed`  | `only_installed`         | Only process installed tools |
 | `--no-progressbar`  | `no_progressbar`         | Do not display progress bar |

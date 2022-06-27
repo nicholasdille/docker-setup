@@ -39,6 +39,7 @@ declare -a unknown_parameters
 : "${show_help:=false}"
 : "${no_wait:=false}"
 : "${reinstall:=false}"
+: "${all:=false}"
 : "${only:=false}"
 : "${only_installed:=false}"
 : "${tags:=false}"
@@ -70,6 +71,9 @@ while test "$#" -gt 0; do
             ;;
         --reinstall)
             reinstall=true
+            ;;
+        --all)
+            all=true
             ;;
         --only)
             only=true
@@ -203,6 +207,7 @@ are accepted:
 --check, $check                     Abort after checking versions
 --no-wait, $no_wait                 Skip wait before installation
 --reinstall, $reinstall             Reinstall all tools
+--all, $all                         Install all tools instead of tag default
 --only, $only                       Only install specified tools
 --only-installed, $only_installed   Only process installed tools
 --tags, $tags                       Only install tools with specified tags
@@ -343,7 +348,7 @@ done
 
 debug "Finished dependency retrieval (@ ${SECONDS})"
 
-if ! ${only} && ! ${tags} && ! ${only_installed}; then
+if ! ${only} && ! ${tags} && ! ${only_installed} && ! ${all}; then
     info "Defaulting to tag default"
     tags=true
     requested_names["default"]=true
