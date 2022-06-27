@@ -1920,6 +1920,20 @@ tools:
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: ktop
+    version: 0.3.0
+    tags:
+    - k8s
+    - kubernetes
+    - management
+    - tui
+    download:
+    - url: https://github.com/vladimirvivien/ktop/releases/download/v${version}/ktop_v${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - ktop
+
   - name: kube-bench
     version: 0.6.8
     check: ${binary} version

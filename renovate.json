@@ -1310,6 +1310,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: ktop\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "/vladimirvivien/ktop",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: kube-bench\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "aquasecurity/kube-bench",
