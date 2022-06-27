@@ -1920,6 +1920,17 @@
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: zot\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "project-zot",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     }
   ]
 }

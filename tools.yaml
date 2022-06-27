@@ -2047,6 +2047,7 @@ tools:
               graph
               grep
               hns
+              ice
               images
               janitor
               kniff
@@ -3423,3 +3424,33 @@ tools:
       ${binary} shell-completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} shell-completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
+  - name: zot
+    version: 1.4.1
+    tags:
+    - registry
+    - image
+    - oci
+    download:
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zot-linux-${alt_arch}
+      type: executable
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zli-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/zli
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zb-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/zb
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zxp-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/zxp
+    post_install: |
+      echo "Install completion"
+      ${binary} shell-completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} shell-completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+      zli shell-completion bash >"${target}/share/bash-completion/completions/zli"
+      zli shell-completion fish >"${target}/share/fish/vendor_completions.d/zli.fish"
+      zli shell-completion zsh >"${target}/share/zsh/vendor-completions/_zli"
+      zxp shell-completion bash >"${target}/share/bash-completion/completions/zxp"
+      zxp shell-completion fish >"${target}/share/fish/vendor_completions.d/zxp.fish"
+      zxp shell-completion zsh >"${target}/share/zsh/vendor-completions/_zxp"
