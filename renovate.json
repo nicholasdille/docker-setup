@@ -1773,6 +1773,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: switcher\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "danielfoehrKn/kubeswitch",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: syft\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "anchore/syft",

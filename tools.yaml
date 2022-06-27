@@ -3164,6 +3164,24 @@ tools:
       ${binary} --completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} --completion zsh  >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: switcher
+    version: 0.7.1
+    check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - k8s
+    - kubernetes
+    - management
+    download:
+    - url:
+        x86_64: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switcher_linux_${alt_arch}
+      type: executable
+    - url: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switch.sh
+      type: executable
+      path: ${target}/bin/switch.sh
+    - url: https://github.com/danielfoehrKn/kubeswitch/raw/0.7.1/scripts/_switch.bash
+      type: file
+      path: ${target}/share/bash-completion/completions/${name}
+
   - name: syft
     version: 0.49.0
     check: ${binary} --version | cut -d' ' -f2
