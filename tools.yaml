@@ -2322,7 +2322,7 @@ tools:
       - lazygit
 
   - name: libcap
-    version: 2.63
+    version: 2.64
     binary: ${target}/sbin/setcap
     needs:
     - docker
