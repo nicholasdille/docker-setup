@@ -2446,7 +2446,7 @@ tools:
       EOF
 
   - name: oras
-    version: 0.12.0
+    version: 0.13.0
     check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
     tags:
     - registry
