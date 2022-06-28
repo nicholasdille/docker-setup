@@ -1639,7 +1639,7 @@ tools:
       - lazygit
 
   - name: libcap
-    version: 2.63
+    version: 20071031
     binary: ${target}/sbin/setcap
     needs:
     - docker
