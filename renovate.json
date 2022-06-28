@@ -1414,7 +1414,7 @@
       ],
       "depNameTemplate": "git://git.kernel.org/pub/scm/libs/libcap/libcap.git",
       "datasourceTemplate": "git-tags",
-      "extractVersionTemplate": "^libcap-(?<version>.+)$",
+      "extractVersionTemplate": "^libcap-(?<version>\\d+\\.\\d+)$",
       "versioningTemplate": "loose"
     },
     {
