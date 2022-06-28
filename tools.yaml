@@ -973,7 +973,7 @@ tools:
       type: executable
 
   - name: docker-compose
-    version: 2.5.0
+    version: 2.6.1
     binary: ${target}/libexec/docker/cli-plugins/docker-compose
     check: ${binary} compose version --short
     needs:
