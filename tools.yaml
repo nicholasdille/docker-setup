@@ -1452,7 +1452,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_minikube"
 
   - name: mitmproxy
-    version: 8.1.0
+    version: 8.1.1
     download:
     - url:
         x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
