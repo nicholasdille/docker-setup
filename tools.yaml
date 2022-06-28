@@ -1556,7 +1556,7 @@ tools:
       fi
 
   - name: oras
-    version: 0.12.0
+    version: 0.13.0
     check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
     download:
     - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
