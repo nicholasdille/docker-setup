@@ -300,6 +300,21 @@ tools:
       cp bypass4netns{,d} /target/bin/
       EOF
 
+  - name: cas
+    version: 1.0.2
+    check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/codenotary/cas/releases/download/v${version}/cas-v${version}-linux-${alt_arch}-static
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: cinf
     version: 0.6.0
     tags:
