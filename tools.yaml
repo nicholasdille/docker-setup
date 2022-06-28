@@ -803,7 +803,7 @@ tools:
       type: executable
 
   - name: hcloud
-    version: 1.29.5
+    version: 1.30.0
     check: ${binary} version | cut -d' ' -f2
     download:
     - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
