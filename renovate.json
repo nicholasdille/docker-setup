@@ -1414,7 +1414,8 @@
       ],
       "depNameTemplate": "git://git.kernel.org/pub/scm/libs/libcap/libcap.git",
       "datasourceTemplate": "git-tags",
-      "extractVersionTemplate": "^libcap-(?<version>.+)$"
+      "extractVersionTemplate": "^libcap-(?<version>.+)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [
@@ -1547,7 +1548,8 @@
       ],
       "depNameTemplate": "rd235/nsutils",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [
@@ -1722,7 +1724,8 @@
       ],
       "depNameTemplate": "containers/shortnames",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [
@@ -1864,7 +1867,8 @@
       ],
       "depNameTemplate": "util-linux/util-linux",
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [
