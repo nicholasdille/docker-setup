@@ -2686,7 +2686,7 @@ tools:
       - polaris
 
   - name: portainer
-    version: 2.13.1
+    version: 2.14.0
     check: ${binary} --version 2>&1
     needs:
     - docker
