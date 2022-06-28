@@ -635,7 +635,7 @@ tools:
       echo "Finished after ${SECONDS} seconds."
 
   - name: docker-compose
-    version: 1.29.2
+    version: 2.6.1
     check: ${binary} version --short
     tags:
     - docker
