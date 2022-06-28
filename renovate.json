@@ -574,7 +574,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: docker-compose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+        "name: docker-compose-v1\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
@@ -597,7 +597,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: docker-compose-v2\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+        "name: docker-compose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "docker/compose",
       "datasourceTemplate": "github-releases",
