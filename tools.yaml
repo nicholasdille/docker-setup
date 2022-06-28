@@ -2466,7 +2466,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: mitmproxy
-    version: 8.1.0
+    version: 8.1.1
     tags:
     - network
     download:
