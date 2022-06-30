@@ -220,7 +220,8 @@
     {
       "matchDatasources": [
         "github-releases",
-        "github-tags"
+        "github-tags",
+        "git-tags"
       ],
       "updateTypes": [
         "pin",
