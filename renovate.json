@@ -221,7 +221,8 @@
       "matchDatasources": [
         "github-releases",
         "github-tags",
-        "git-tags"
+        "git-tags",
+        "gitlab-releases"
       ],
       "updateTypes": [
         "pin",
