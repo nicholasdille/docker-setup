@@ -53,7 +53,7 @@ tools:
       path: ${target}
 
   - name: buildg
-    version: 0.2.0
+    version: 0.3.0
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
     - runc
