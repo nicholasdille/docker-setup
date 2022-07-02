@@ -1995,7 +1995,7 @@ tools:
       fi
 
   - name: kubectl-build
-    version: 0.1.5
+    version: 0.1.6
     needs:
     - kubectl
     tags:
