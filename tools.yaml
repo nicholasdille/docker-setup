@@ -36,6 +36,17 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: bin
+    version: 0.15.1
+    check: ${binary} --version | grep ^bin | cut -d' ' -f3
+    tags:
+    - management
+    download:
+    - url:
+        x86_64: https://github.com/marcosnils/bin/releases/download/v${version}/bin_${version}_Linux_${arch}
+        aarch64: https://github.com/marcosnils/bin/releases/download/v${version}/bin_${version}_Linux_${alt_arch}
+      type: executable
+
   - name: buildah
     version: 1.26.1
     check: ${binary} --version | cut -d' ' -f3
