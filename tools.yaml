@@ -94,10 +94,10 @@ tools:
       type: tarball
       path: ${target}/bin
       strip: 1
-    - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.service
+    - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/system/buildkit.service
       type: file
       path: ${prefix}/etc/systemd/system/buildkit.service
-    - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/buildkit.socket
+    - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/system/buildkit.socket
       type: file
       path: ${prefix}/etc/systemd/system/buildkit.socket
     files:
@@ -426,15 +426,6 @@ tools:
     - url: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
-    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service
-      type: file
-      path: ${prefix}/etc/systemd/system/podman.service
-    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
-      type: file
-      path: ${prefix}/etc/systemd/system/podman.socket
-    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
-      type: file
-      path: ${target}/lib/tmpfiles.d/podman-docker.conf
     files:
     - path: ${prefix}/etc/containers/registries.d/default.yaml
       content: |
@@ -476,14 +467,6 @@ tools:
         mountopt = "nodev,metacopy=on"
 
         [storage.options.thinpool]
-    post_install: |
-      echo "Fix systemd unit"
-      sed -i "s|ExecStart=/usr/bin/podman|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
-              systemctl daemon-reload
-          fi
-      fi
 
   - name: containerd
     version: 1.6.6
@@ -588,13 +571,15 @@ tools:
   - name: cri-dockerd
     version: 0.2.3
     check: ${binary} --version 2>&1 | cut -d' ' -f2
+    needs:
+    - docker
     tags:
     - docker
     - k8s
     - kubernetes
     - runtime
     download:
-    - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-v${version}-linux-${alt_arch}.tar.gz
+    - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz
       type: tarball
       path: ${target}/bin
       files:
@@ -646,7 +631,7 @@ tools:
     needs:
     - docker
     download:
-    - url: https://github.com/bcicen/ctop/releases/download/${version}/ctop-${version}-linux-${alt_arch}
+    - url: https://github.com/bcicen/ctop/releases/download/v${version}/ctop-${version}-linux-${alt_arch}
       type: executable
 
   - name: cyclonedx-cli
@@ -2133,7 +2118,7 @@ tools:
       fi
 
   - name: kubectl-build
-    version: 0.1.6
+    version: 0.1.5
     needs:
     - kubectl
     tags:
@@ -2709,6 +2694,23 @@ tools:
         x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
+    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service.in
+      type: file
+      path: ${prefix}/etc/systemd/system/podman.service
+    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
+      type: file
+      path: ${prefix}/etc/systemd/system/podman.socket
+    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
+      type: file
+      path: ${target}/lib/tmpfiles.d/podman-docker.conf
+    post_install: |
+      echo "Fix systemd unit"
+      sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
+      if test -z "${prefix}"; then
+          if has_systemd; then
+              systemctl daemon-reload
+          fi
+      fi
 
   - name: polaris
     version: 6.0.0
@@ -3051,6 +3053,9 @@ tools:
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
+      elif ! is_installed "docker"; then
+          warning "Installation of manpages not possible because Docker is missing"
+
       else
           docker_run \
               --volume "${target}/share/man:/opt/man" \
@@ -3386,7 +3391,7 @@ tools:
     tags:
     - development
     download:
-    - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${arch}
+    - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${alt_arch}
       type: executable
 
   - name: watchtower
