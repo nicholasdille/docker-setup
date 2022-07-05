@@ -62,7 +62,7 @@
         "^env/alpine-3.15/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "alpine"
@@ -74,7 +74,7 @@
         "^env/alpine-3.16/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "alpine"
@@ -86,7 +86,7 @@
         "^env/amazonlinux-2022/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "amazonlinux"
@@ -98,7 +98,7 @@
         "^env/centos-7/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "centos"
@@ -110,7 +110,7 @@
         "^env/centos-8/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "centos"
@@ -122,7 +122,7 @@
         "^env/debian-11/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "debian"
@@ -134,7 +134,7 @@
         "^env/fedora-35/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "fedora"
@@ -146,7 +146,7 @@
         "^env/opensuse-leap-15/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "opensuse/leap"
@@ -158,7 +158,7 @@
         "^env/rockylinux-8/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "rockylinux"
@@ -170,7 +170,7 @@
         "^env/ubuntu-20.04/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "ubuntu"
@@ -182,7 +182,7 @@
         "^env/ubuntu-22.04/Dockerfile$"
       ],
       "matchDatasources": [
-        "docker"
+        "dockerfile"
       ],
       "matchPackageNames": [
         "ubuntu"
