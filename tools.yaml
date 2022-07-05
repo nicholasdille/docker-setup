@@ -2211,6 +2211,17 @@ tools:
     - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
       type: executable
 
+  - name: kubent
+    version: 0.5.1
+    tags:
+    - k8s
+    - kubernetes
+    - management
+    download:
+    - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+
   - name: kubesec
     version: 2.11.4
     tags:

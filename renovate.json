@@ -1356,6 +1356,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: kubent\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "doitintl/kube-no-trouble",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: kubeval\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "instrumenta/kubeval",
