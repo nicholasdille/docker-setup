@@ -689,6 +689,7 @@ last_update=false
 exit_code=0
 child_pid_count="${#tool_order[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
+log_timestamp="$(date +%Y%m%d-%H%M%S)"
 if ${no_progressbar}; then
     echo "installing..."
 fi
@@ -710,7 +711,7 @@ while ! ${last_update}; do
                 echo "============================================================"
                 date +"%Y-%m-%d %H:%M:%S %Z"
                 echo "------------------------------------------------------------"
-            } >>"${docker_setup_logs}/${name}.log"
+            } >>"${docker_setup_logs}/${name}-${log_timestamp}.log"
 
             (
                 set -o errexit
@@ -726,7 +727,7 @@ while ! ${last_update}; do
                 echo "${name};${start_time};${end_time}" >>"${docker_setup_logs}/profiling"
                 exit "${last_exit_code}"
 
-            ) >>"${docker_setup_logs}/${name}.log" 2>&1 || touch "${docker_setup_cache}/errors/${name}" &
+            ) >>"${docker_setup_logs}/${name}-${log_timestamp}.log" 2>&1 || touch "${docker_setup_cache}/errors/${name}" &
             child_pids[${name}]=$!
 
             started_index=$(( started_index + 1 ))
@@ -767,7 +768,7 @@ for error in $(find "${docker_setup_cache}/errors/" -type f); do
 done
 
 messages="$(
-    find "${docker_setup_logs}" -type f -name \*.log -exec grep -EH "\[(WARNING|ERROR)\]" {} \; \
+    find "${docker_setup_logs}" -type f -name "*-${log_timestamp}.log" -exec grep -EH "\[(WARNING|ERROR)\]" {} \; \
     | sed -E "s|${docker_setup_logs}/(.+).log|\1|"
 )"
 if test -n "${messages}"; then
