@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.2
 
-FROM fedora:35
+FROM fedora:35@sha256:f1e3a29da8990568c1da6a460cf9658ee7e9b409aa39c2aded67f7ac1dfe7e8a
 RUN dnf install -y \
         cpio \
  && dnf install -y \
