@@ -2706,7 +2706,7 @@ tools:
     - oci
     download:
     - url:
-        x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman.tar.gz
+        x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
 
