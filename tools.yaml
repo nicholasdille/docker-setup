@@ -59,7 +59,7 @@ tools:
     - oci
     download:
     - url:
-        x86_64: https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah.tar.gz
+        x86_64: https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
 
@@ -3100,7 +3100,7 @@ tools:
     - oci
     download:
     - url:
-        x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo.tar.gz
+        x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
 
