@@ -301,6 +301,7 @@ function install_tool() {
                         error "Path not specified."
                         return
                     fi
+                    mkdir -p "${path}"
                     echo "    Unpacking tarball"
                     local strip
                     local param_strip
