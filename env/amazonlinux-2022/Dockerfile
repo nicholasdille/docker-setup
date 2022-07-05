@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.0
+#syntax=docker/dockerfile:1.4.2
 
 FROM amazonlinux:2022@sha256:647e10ed1c463c59eea0b5ff50e2281976ac6f3a054f34084e4ff69ec3e54874
 RUN dnf install -y \
