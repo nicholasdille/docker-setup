@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.2
 
-FROM centos:8@sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177
+FROM centos:7
 RUN yum install -y epel-release \
  && yum install -y \
         curl \
