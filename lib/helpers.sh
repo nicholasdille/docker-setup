@@ -302,23 +302,29 @@ function wait_for_docker() {
 
 function get_file() {
     local url=$1
+    >&2 echo "Processing <${url}>"
 
     if ${no_cache}; then
+        &>2 echo "Caching disabled"
         curl -sL "${url}"
         return
     fi
 
     local hash
     hash="$(echo -n "${url}" | sha256sum | cut -d' ' -f1)"
+    >&2 echo "Got hash <${hash}>"
+
     local cache_path
     cache_path="${docker_setup_downloads}/${hash}"
     mkdir -p "${cache_path}"
+    >&2 echo "Using cache_apth <${cache_path}>"
 
     if ! test -f "${cache_path}/url"; then
         echo -n "${url}" >"${cache_path}/url"
     fi
 
     if ! test -f "${cache_path}/file"; then
+        >&2 echo "Downloading"
         if ! curl --silent --fail --location --continue-at - --output "${cache_path}/file" "${url}"; then
             error "Unable to download from ${url} (exit code $?)"
             exit 1
