@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.0
 
-FROM archlinux:latest@sha256:cf2d6abbc42d2799621f23d54ea7211a1d754d3a0bbe0fb8128e8fce14466640
+FROM archlinux:latest@sha256:52d3c26997e469e9c8ad6221da221f3ce1efe67ed3d6e8088aa1debf66948fd8
 RUN pacman -Sy \
  && pacman -S --noconfirm \
         git \
