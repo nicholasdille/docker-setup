@@ -318,7 +318,7 @@ function get_file() {
         echo -n "${url}" >"${cache_path}/url"
     fi
 
-    if ! curl --silent --location --continue-at - --output "${cache_path}/file" "${url}"; then
+    if ! curl --silent --fail --location --continue-at - --output "${cache_path}/file" "${url}"; then
         error "Unable to download from ${url} (exit code $?)"
         exit 1
     fi
