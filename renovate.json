@@ -12,7 +12,8 @@
     "main",
     "v1.3",
     "v1.4",
-    "v1.5"
+    "v1.5",
+    "v1.6"
   ],
   "useBaseBranchConfig": "merge",
   "docker": {
@@ -268,11 +269,13 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-        "fileMatch": ["(^|/)Dockerfile[^/]*$"],
-        "matchStrings": [
-            "#syntax=(?<depName>.*):(?<currentValue>.*)"
-        ],
-        "datasourceTemplate": "docker"
+      "fileMatch": [
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "#syntax=(?<depName>.*):(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "docker"
     },
     {
       "fileMatch": [
