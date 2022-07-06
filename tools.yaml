@@ -19,7 +19,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_ytt"
 
   - name: buildah
-    version: 1.26.1
+    version: 1.26.2
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - runc
