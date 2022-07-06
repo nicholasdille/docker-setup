@@ -2219,7 +2219,7 @@ tools:
       path: ${target}/bin
 
   - name: kubesec
-    version: 2.11.4
+    version: 2.11.5
     tags:
     - k8s
     - kubernetes
