@@ -48,7 +48,7 @@ tools:
       type: executable
 
   - name: buildah
-    version: 1.26.1
+    version: 1.26.2
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - runc
