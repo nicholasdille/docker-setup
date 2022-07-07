@@ -190,6 +190,13 @@ function install_tool() {
         return
     fi
 
+    echo "Waiting for dependencies: ${tool_deps[${tool}]}"
+    for dep in ${tool_deps[${tool}]}; do
+        if flags_are_satisfied "${dep}" && tool_conditions_satisfied "${dep}"; then
+            wait_for_tool "${dep}"
+        fi
+    done
+
     local pre_install
     pre_install="$(
         jq --raw-output 'select(.pre_install != null) | .pre_install' <<<"${tool_json}" \
