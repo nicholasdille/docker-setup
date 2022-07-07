@@ -497,11 +497,13 @@ for name in "${tools[@]}"; do
     if ! ${only} || test -n "${requested_tools[${name}]}"; then
         if ! is_installed "${name}" || ! matches_version "${name}" || ${reinstall}; then
 
-            resolve_deps "${name}"
+            if tool_conditions_satisfied "${name}"; then
+                resolve_deps "${name}"
 
-            if test -z "${tool_install[${name}]}" && flags_are_satisfied "${name}"; then
-                tool_order+=( "${name}" )
-                tool_install["${name}"]=true
+                if test -z "${tool_install[${name}]}" && flags_are_satisfied "${name}"; then
+                    tool_order+=( "${name}" )
+                    tool_install["${name}"]=true
+                fi
             fi
         fi
     fi

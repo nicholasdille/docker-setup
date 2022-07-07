@@ -142,6 +142,21 @@ function tool_will_be_installed() {
     test -n "${tool_install[${tool}]}"
 }
 
+function tool_conditions_satisfied() {
+    local name=$1
+
+    local condition
+    condition="$(
+        get_tool "${name}" | \
+        jq --raw-output 'select(.if != null) | .if'
+    )"
+    if test -z "${condition}" || eval "${condition}"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function docker_run() {
     docker run \
         --interactive \
@@ -423,7 +438,7 @@ function resolve_deps() {
 
         local dep
         for dep in ${tool_deps[${tool}]}; do
-            if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}" && flags_are_satisfied "${dep}"; then
+            if ! is_installed "${dep}" && ! matches_version "${dep}" && test -z "${tool_install[${dep}]}" && flags_are_satisfied "${dep}" && tool_conditions_satisfied "${dep}"; then
                 resolve_deps "${dep}"
                 tool_order+=( "${dep}" )
                 tool_install["${dep}"]=true
