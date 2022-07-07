@@ -491,6 +491,9 @@ tools:
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
+      elif ! tool_will_be_installed "docker"; then
+          warning "Installation of manpages not possible because Docker is missing"
+
       else
           docker_run \
               --workdir /go/src/github.com/containerd/containerd \
@@ -3053,7 +3056,7 @@ tools:
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
-      elif ! is_installed "docker"; then
+      elif ! tool_will_be_installed "docker"; then
           warning "Installation of manpages not possible because Docker is missing"
 
       else
@@ -3123,6 +3126,9 @@ tools:
     post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
+
+      elif ! tool_will_be_installed "docker"; then
+          warning "Installation of manpages not possible because Docker is missing"
 
       else
           docker_run \
