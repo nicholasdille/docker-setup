@@ -598,7 +598,7 @@ tools:
       path: ${target}/bin
 
   - name: crun
-    version: 1.4.3
+    version: 1.4.5
     check: ${binary} --version | grep "crun version" | cut -d' ' -f3
     needs:
     - docker
