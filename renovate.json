@@ -1104,7 +1104,7 @@
         "name: kubectl-build\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "vmware-tanzu/buildkit-cli-for-kubectl",
-      "datasourceTemplate": "github-tags",
+      "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
