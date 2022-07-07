@@ -300,6 +300,24 @@ function wait_for_docker() {
     fi
 }
 
+function wait_for_tool() {
+    local tool=$1
+    local sleep=10
+    local retries=$(( docker_max_wait / sleep ))
+
+    local retry=0
+    while ! has_tool "${tool}" && test "${retry}" -le "${retries}"; do
+        sleep "${sleep}"
+
+        retry=$(( retry + 1 ))
+    done
+
+    if ! has_tool "${tool}"; then
+        error "Failed to wait for ${tool} after $(( (retry - 1) * sleep )) seconds."
+        exit 1
+    fi
+}
+
 function get_file() {
     local url=$1
     >&2 echo "Processing <${url}>"

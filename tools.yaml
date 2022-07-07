@@ -485,27 +485,7 @@ tools:
     - url: https://github.com/containerd/containerd/raw/v${version}/containerd.service
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
-    dockerfile: |
-      FROM golang:${go_version}
     post_install: |
-      if ${skip_docs}; then
-          warning "Installation of manpages will be skipped."
-
-      elif ! tool_will_be_installed "docker"; then
-          warning "Installation of manpages not possible because Docker is missing"
-
-      else
-          docker_run \
-              --workdir /go/src/github.com/containerd/containerd \
-              <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/containerd .
-      go install github.com/cpuguy83/go-md2man@latest
-      export GO111MODULE=auto
-      make man
-      cp -r man/*.5 "/opt/man/man5"
-      cp -r man/*.8 "/opt/man/man8"
-      EOF
-      fi
       if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
           mkdir -p "${prefix}/etc/containerd"
@@ -521,6 +501,32 @@ tools:
           else
               warning "docker-setup does not offer an init script for containerd."
           fi
+      fi
+
+  - name: containerd-manpages
+    version: 1.6.6
+    binary: containerd
+    check: ${binary} --version | cut -d' ' -f3 | tr -d v
+    tags:
+    - runtime
+    - containerd
+    dockerfile: |
+      FROM golang:${go_version}
+    post_install: |
+      if ${skip_docs}; then
+          warning "Installation of manpages will be skipped."
+
+      else
+          docker_run \
+              --workdir /go/src/github.com/containerd/containerd \
+              <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/containerd .
+      go install github.com/cpuguy83/go-md2man@latest
+      export GO111MODULE=auto
+      make man
+      cp -r man/*.5 "/opt/man/man5"
+      cp -r man/*.8 "/opt/man/man8"
+      EOF
       fi
 
   - name: containerssh
@@ -888,6 +894,19 @@ tools:
           fi
           echo "Finished starting Docker after ${SECONDS} seconds."
       fi
+      echo "Finished after ${SECONDS} seconds."
+
+  - name: docker-manpages
+    version: 20.10.17
+    if: tool_will_be_installed "docker" || tool_will_be_installed "podman"
+    binary: dockerd
+    tags:
+    - default
+    - docker
+    - runtime
+    - build
+    - oci
+    post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
@@ -2688,6 +2707,8 @@ tools:
     - conmon
     - runc
     - cni
+    - fuse-overlayfs
+    - shortnames
     tags:
     - runtime
     - redhat
@@ -2706,7 +2727,15 @@ tools:
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
+    files:
+    - path: ${target}/bin/docker
+      content: |
+        #!/bin/bash
+
+        exec podman "$@"
     post_install: |
+      echo "Fix permissions"
+      chmod +x "${target}/bin/docker"
       echo "Fix systemd unit"
       sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
       if test -z "${prefix}"; then
@@ -2714,6 +2743,27 @@ tools:
               systemctl daemon-reload
           fi
       fi
+  
+  - name: podman-tui
+    version: 0.5.0
+    check: ${binary} version | cut -d' ' -f2 | tr -d v
+    needs:
+    - podman
+    tags:
+    - rootless
+    - network
+    dockerfile: |
+      FROM docker.io/library/golang:${go_version}
+      RUN mkdir -p /go/src/github.com/containers/podman-tui
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/containers/podman-tui \
+          --env CGO_ENABLED=0 \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/podman-tui .
+      go build -mod=vendor -o ./bin/linux/podman-tui -tags "containers_image_openpgp remote"
+      cp ./bin/linux/podman-tui /target/bin/
+      EOF
 
   - name: polaris
     version: 6.0.0
@@ -3050,16 +3100,23 @@ tools:
     download:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
+
+  - name: runc-manpages
+    version: 1.1.3
+    if: tool_will_be_installed "docker" || tool_will_be_installed "podman"
+    binary: runc    
+    check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    tags:
+    - runtime
+    - oci
     dockerfile: |
       FROM golang:${go_version}
     post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
-      elif ! tool_will_be_installed "docker"; then
-          warning "Installation of manpages not possible because Docker is missing"
-
       else
+          wait_for_tool "docker"
           docker_run \
               --volume "${target}/share/man:/opt/man" \
               --workdir /go/src/github.com/opencontainers/runc \
@@ -3121,14 +3178,18 @@ tools:
     download:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
+
+  - name: slirp4netns-manpages
+    version: 1.1.12
+    check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    tags:
+    - rootless
+    - network
     dockerfile: |
       FROM golang:${go_version}
     post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
-
-      elif ! tool_will_be_installed "docker"; then
-          warning "Installation of manpages not possible because Docker is missing"
 
       else
           docker_run \

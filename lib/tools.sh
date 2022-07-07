@@ -201,11 +201,24 @@ function install_tool() {
 
     local dockerfile
     dockerfile="$(jq --raw-output 'select(.dockerfile != null) | .dockerfile' <<<"${tool_json}")"
-    if test -n "${dockerfile}"; then
-        if docker_is_running || tool_will_be_installed "docker"; then
+    if ! ${skip_docs} && test -n "${dockerfile}"; then
+
+        docker_present=false
+        podman_present=false
+
+        if tool_will_be_installed "docker" || has_tool "docker"; then
             echo "Waiting for Docker daemon to start"
             wait_for_docker
-        
+            docker_present=true
+        fi
+        if tool_will_be_installed "podman" || has_tool "podman"; then
+            echo "Waiting for Podman to be present"
+            wait_for_tool "podman"
+            wait_for_tool "docker"
+            podman_present=true
+        fi
+
+        if ${docker_present} || ${podman_present}; then
             local image_name
             image_name="nicholasdille/docker-setup:${docker_setup_version}-${tool}"
 
@@ -233,9 +246,8 @@ function install_tool() {
                 | envsubst \
                 | docker build --tag "${image_name}" -
             fi
-
         else
-            warning "Unable to build image"
+            warning "Unable to build image because neither Docker nor Podman is present"
         fi
     fi
 
