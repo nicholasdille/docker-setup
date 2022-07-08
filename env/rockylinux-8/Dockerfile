@@ -1,4 +1,4 @@
-FROM rockylinux:8.6@sha256:e4dc1ae4eb263e3acd2009fee2d88d05b1174fed3dccd2a82eb4777cafbb41e1
+FROM rockylinux:8.6@sha256:afd392a691df0475390df77cb5486f226bc2b4cbaf87c41785115b9237f3203f
 RUN yum install -y \
         curl \
         ca-certificates \
