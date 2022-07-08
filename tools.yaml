@@ -617,7 +617,7 @@ tools:
     - oci
     download:
     - url:
-        x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun.tar.gz
+        x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
     post_install: |
