@@ -3156,7 +3156,7 @@ tools:
       type: executable
 
   - name: stargz-snapshotter
-    version: 0.11.4
+    version: 0.12.0
     binary: containerd-stargz-grpc
     check: ${binary} -version | cut -d' ' -f2 | tr -d v
     needs:
