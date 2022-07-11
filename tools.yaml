@@ -2713,7 +2713,7 @@ tools:
       fi
 
   - name: polaris
-    version: 6.0.0
+    version: 7.0.1
     tags:
     - k8s
     - kubernetes
