@@ -440,7 +440,7 @@ fi
 debug "Finished parameter checks part 2 (@ ${SECONDS})"
 
 # shellcheck disable=SC2034
-go_version=1.18.3
+go_version=1.18.4
 export go_version
 # shellcheck disable=SC2034
 rust_version=1.59.0
