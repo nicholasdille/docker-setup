@@ -3083,7 +3083,7 @@ tools:
       EOF
 
   - name: vendir
-    version: 0.28.1
+    version: 0.29.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
     - development
