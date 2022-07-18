@@ -1324,6 +1324,12 @@ tools:
     - url: https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}
       type: executable
       path: ${target}/bin/gitsign
+    - url: https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_windows_${alt_arch}.exe
+      type: executable
+      path: ${target}/bin/gitsign.exe
+    - url: https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign-credential-cache_${version}_linux_${alt_arch}
+      type: executable
+      path: ${target}/bin/gitsign-credential-cache
 
   - name: glab
     version: 1.22.0
