@@ -288,7 +288,7 @@ tools:
           echo "Enable multi-platform builds"
           "${target}/bin/docker" container run --privileged --rm tonistiigi/binfmt --install all
       fi
-  
+
   - name: bypass4netns
     version: 0.2.2
     needs:
@@ -817,7 +817,7 @@ tools:
               cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
               if has_tool "fuse-overlayfs"; then
                   info "Found fuse-overlayfs"
-                  
+
               elif tool_will_be_installed "fuse-overlayfs"; then
                   info "Waiting for fuse-overlayfs to be installed"
                   wait_for_tool "fuse-overlayfs" "${target}/bin"
@@ -936,7 +936,7 @@ tools:
   - name: docker-compose-v1
     version: 1.29.2
     check: ${binary} version --short
-    flags: 
+    flags:
     - docker-compose-v1
     tags:
     - default
@@ -1028,7 +1028,7 @@ tools:
     download:
     - url: https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${version}/linux-${alt_arch}/docker-credential-ecr-login
       type: executable
-      
+
   - name: docker-credential-gcr
     version: 2.1.5
     needs:
@@ -1042,7 +1042,7 @@ tools:
       path: ${target}/bin
       files:
       - docker-credential-gcr
-      
+
   - name: docker-credential-helpers
     version: 0.6.4
     binary: docker-credential-pass
@@ -1060,7 +1060,7 @@ tools:
         x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-secretservice-v${version}-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
-      
+
   - name: docker-credential-magic
     version: 0.8.1
     needs:
@@ -1248,7 +1248,7 @@ tools:
     download:
     - url: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
       type: executable
-  
+
   - name: fuse-overlayfs
     version: 1.9
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
@@ -1699,7 +1699,7 @@ tools:
     download:
     - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
       type: executable
-  
+
   - name: jwt
     version: 5.0.3
     check: ${binary} --version | cut -d' ' -f2
@@ -2749,7 +2749,7 @@ tools:
               systemctl daemon-reload
           fi
       fi
-  
+
   - name: podman-tui
     version: 0.5.0
     check: ${binary} version | cut -d' ' -f2 | tr -d v
