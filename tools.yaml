@@ -1315,7 +1315,7 @@ tools:
       path: ${target}/bin/gitlab-runner
 
   - name: gitsign
-    version: 0.1.1
+    version: 0.2.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - development
