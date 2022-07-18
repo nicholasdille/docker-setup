@@ -2002,7 +2002,7 @@ tools:
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_kubeadm"
 
   - name: kubeclarity-cli
-    version: 2.4.0
+    version: 2.5.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - k8s
