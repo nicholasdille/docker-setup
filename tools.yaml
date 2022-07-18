@@ -3128,7 +3128,7 @@ tools:
       fi
 
   - name: scorecard
-    version: 4.3.1
+    version: 4.4.0
     check: ${binary} version | grep "GitVersion" | cut -dv -f2
     tags:
     - security
