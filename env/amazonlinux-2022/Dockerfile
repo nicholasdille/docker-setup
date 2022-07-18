@@ -1,4 +1,4 @@
-FROM amazonlinux:2022@sha256:647e10ed1c463c59eea0b5ff50e2281976ac6f3a054f34084e4ff69ec3e54874
+FROM amazonlinux:2022@sha256:f612cc816e3eaffa3b591f89bf6321fd3e8c2a545cfb858433a66b5d34ec41a0
 RUN dnf install -y \
         cpio \
  && dnf install -y \
