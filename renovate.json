@@ -862,7 +862,7 @@
         "name: gitsign\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "sigstore/gitsign",
-      "datasourceTemplate": "gitlab-releases",
+      "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
