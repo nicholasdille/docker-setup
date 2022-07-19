@@ -1767,7 +1767,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "SLIRP4NETNS:\nversion: \"?(?<currentValue>.*?)\n"
+        "name: slirp4netns\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "rootless-containers/slirp4netns",
       "datasourceTemplate": "github-releases",
