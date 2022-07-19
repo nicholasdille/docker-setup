@@ -10,5 +10,12 @@ if test -z "${TOOL}"; then
 
 else
     docker-setup --no-wait --no-color --no-progressbar --only "${TOOL}"
-    docker-setup --no-wait --no-color --no-progressbar --only "${TOOL}" --check
+
+    if ! docker-setup --no-wait --no-color --no-progressbar --only "${TOOL}" --check; then
+        find "/var/log/docker-setup" -type f -name "${TOOL}*.log" \
+        | sort \
+        | tail -n 1 \
+        | xargs cat
+        exit 1
+    fi
 fi
