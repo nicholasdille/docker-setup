@@ -1405,6 +1405,16 @@ tools:
       files:
       - glow
 
+  - name: go-md2man
+    version: 2.0.2
+    tags:
+    - markdown
+    download:
+    - url:
+        x86_64: https://github.com/nicholasdille/go-md2man-static/releases/download/v${version}/go-md2man.tar.gz
+      type: tarball
+      path: ${target}
+
   - name: grype
     version: 0.43.0
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2

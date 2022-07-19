@@ -904,6 +904,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: go-md2man\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "nicholasdille/go-md2man-static",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: grype\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "anchore/grype",
