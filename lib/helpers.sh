@@ -87,27 +87,27 @@ function matches_version() {
 
 function has_tool() {
     local tool=$1
-    local path=$2
 
-    echo "Looking for tool ${tool} in path ${path}."
-    type "${tool}" >/dev/null 2>&1 || test -x "${path}/${tool}"
+    local binary="$(get_tool_binary "${tool}")"
+
+    echo "Looking for tool binary ${binary}."
+    type "${binary}" >/dev/null 2>&1 || test -x "${binary}"
 }
 
 function wait_for_tool() {
     local tool=$1
-    local path=$2
 
     local sleep=10
     local retries=60
 
     local retry=0
-    while ! has_tool "${tool}" "${path}" && test "${retry}" -le "${retries}"; do
+    while ! has_tool "${tool}" && test "${retry}" -le "${retries}"; do
         sleep "${sleep}"
 
         retry=$(( retry + 1 ))
     done
 
-    if ! has_tool "${tool}" "${path}"; then
+    if ! has_tool "${tool}"; then
         error "Failed to wait for ${tool} after $(( (retry - 1) * sleep )) seconds."
         exit 1
     fi
