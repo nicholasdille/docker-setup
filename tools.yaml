@@ -880,19 +880,6 @@ tools:
           fi
           echo "Finished starting Docker after ${SECONDS} seconds."
       fi
-      echo "Finished after ${SECONDS} seconds."
-
-  - name: docker-manpages
-    version: 20.10.17
-    if: tool_will_be_installed "docker" || tool_will_be_installed "podman"
-    binary: dockerd
-    tags:
-    - default
-    - docker
-    - runtime
-    - build
-    - oci
-    post_install: |
       if ${skip_docs}; then
           warning "Installation of manpages will be skipped."
 
