@@ -1406,7 +1406,7 @@ tools:
       - glow
 
   - name: grype
-    version: 0.42.0
+    version: 0.43.0
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
     tags:
     - security
