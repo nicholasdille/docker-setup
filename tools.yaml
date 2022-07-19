@@ -3203,29 +3203,9 @@ tools:
     download:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
-
-  - name: slirp4netns-manpages
-    version: 1.1.12
-    if: tool_will_be_installed "docker" || tool_will_be_installed "podman"
-    binary: slirp4netns
-    tags:
-    - rootless
-    - network
-    dockerfile: |
-      FROM golang:${go_version}
-    post_install: |
-      if ${skip_docs}; then
-          warning "Installation of manpages will be skipped."
-
-      else
-          docker_run \
-              --volume "${target}/share/man:/opt/man" \
-              --workdir /go/src/github.com/rootless-containers/slirp4netns \
-              <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/slirp4netns .
-      cp *.1 /opt/man/man1
-      EOF
-      fi
+    - url: https://github.com/rootless-containers/slirp4netns/raw/v1.2.0/slirp4netns.1
+      type: file
+      path: ${target}/share/man/man1/slirp4netns.1
 
   - name: sops
     version: 3.7.3
