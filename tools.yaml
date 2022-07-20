@@ -475,6 +475,7 @@ tools:
     - runc
     - cni
     - dasel
+    - go-md2man
     tags:
     - runtime
     - containerd
@@ -485,24 +486,18 @@ tools:
     - url: https://github.com/containerd/containerd/raw/v${version}/containerd.service
       type: file
       path: ${prefix}/etc/systemd/system/containerd.service
-    dockerfile: |
-      FROM golang:${go_version}
+    - url: https://github.com/containerd/containerd/raw/v${version}/docs/man/containerd-config.8.md
+      type: file
+      path: ${target}/share/man/man8/containerd-config.8.md
+    - url: https://github.com/containerd/containerd/raw/v${version}/docs/man/containerd-config.toml.5.md
+      type: file
+      path: ${target}/share/man/man5/containerd-config.toml.5.md
     post_install: |
-      if ${skip_docs}; then
-          warning "Installation of manpages will be skipped."
-
-      else
-          docker_run \
-              --workdir /go/src/github.com/containerd/containerd \
-              <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/containerd .
-      go install github.com/cpuguy83/go-md2man@latest
-      export GO111MODULE=auto
-      make man
-      cp -r man/*.5 "/opt/man/man5"
-      cp -r man/*.8 "/opt/man/man8"
-      EOF
-      fi
+      go-md2man -in "${target}/share/man/man8/containerd-config.8.md" -out "${target}/share/man/man8/containerd-config.8"
+      go-md2man -in "${target}/share/man/man5/containerd-config.toml.5.md" -out "${target}/share/man/man5/containerd-config.toml.5"
+      rm \
+          "${target}/share/man/man8/containerd-config.8.md" \
+          "${target}/share/man/man5/containerd-config.toml.5.md"
       if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
           mkdir -p "${prefix}/etc/containerd"
@@ -3077,32 +3072,75 @@ tools:
   - name: runc
     version: 1.1.3
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
+    needs:
+    - go-md2man
     tags:
     - runtime
     - oci
     download:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
-    dockerfile: |
-      FROM golang:${go_version}
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-checkpoint.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-checkpoint.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-create.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-create.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-delete.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-delete.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-events.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-events.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-exec.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-exec.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-kill.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-kill.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-list.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-list.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-pause.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-pause.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-ps.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-ps.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-restore.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-restore.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-resume.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-resume.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-run.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-run.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-spec.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-spec.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-start.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-start.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-state.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-state.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-update.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-update.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc.8.md
+      type: file
+      path: ${target}/share/man/man8/runc.8.md
     post_install: |
-      if ${skip_docs}; then
-          warning "Installation of manpages will be skipped."
-
-      elif ! is_installed "docker"; then
-          warning "Installation of manpages not possible because Docker is missing"
-
-      else
-          docker_run \
-              --volume "${target}/share/man:/opt/man" \
-              --workdir /go/src/github.com/opencontainers/runc \
-              <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runc .
-      go install github.com/cpuguy83/go-md2man@latest
-      man/md2man-all.sh -q
-      cp -r man/man8/ "/opt/man"
-      EOF
-      fi
+      find "${target}/share/man/man8" -type f -name \*.md \
+      | while read FILE; do
+          DEST_FILE="$(basename "${FILE}" .md)"
+          DEST_DIR="$(dirname "${FILE}")"
+          DEST="${DEST_DIR}/${DEST_FILE}"
+          echo "Converting ${FILE} to ${DEST}"
+          go-md2man -in "${FILE}" -out "${DEST}"
+          rm "${FILE}"
+      done
 
   - name: scorecard
     version: 4.4.0
