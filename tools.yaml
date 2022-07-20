@@ -1288,7 +1288,7 @@ tools:
       ${binary} completion -s zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: gitlab-runner
-    version: 15.1.0
+    version: 15.2.0
     check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
     tags:
     - development
