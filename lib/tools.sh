@@ -79,23 +79,6 @@ function get_tool_files_index() {
     get_tool "${tool}" | jq --raw-output --arg index "${index}" '.files[$index | tonumber]'
 }
 
-function get_tool_binary() {
-    local tool=$1
-
-    binary="$(
-        get_tool "${tool}" \
-        | jq --raw-output 'select(.binary != null) | .binary' \
-        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
-    )"
-    if test -z "${binary}"; then
-        binary="${target}/bin/${tool}"
-    fi
-    if ! test "${binary:0:1}" == "/"; then
-        binary="${target}/bin/${binary}"
-    fi
-    echo "${binary}"
-}
-
 function get_all_tool_binaries() {
     jq --raw-output '.tools[] | select(.binary != null) | "\(.name)=\(.binary)"' "${docker_setup_tools_file}"
 }
@@ -103,18 +86,22 @@ function get_all_tool_binaries() {
 function resolve_tool_binaries() {
     for name in "${tools[@]}"; do
         if test -z "${tool_binary[${name}]}"; then
+            debug "Tool ${name} has empty binary. Setting to default."
             tool_binary[${name}]="${target}/bin/${name}"
 
         else
+            debug "Expanding vars in binary for tool ${name}."
             tool_binary[${name}]="$(
                 echo "${tool_binary[${name}]}" \
                 | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
             )"
         fi
 
-        if ! test "${tool_binary[${name}]:0:1}" == "/"; then
+        if test "${tool_binary[${name}]}" != "false" && ! test "${tool_binary[${name}]:0:1}" == "/"; then
             tool_binary[${name}]="${target}/bin/${tool_binary[${name}]}"
         fi
+
+        debug "Tool ${name} has final binary ${tool_binary[${name}]}."
     done
 }
 

@@ -3194,10 +3194,11 @@ tools:
 
   - name: shortnames
     version: 2022.02.08
+    binary: false
     tags:
     - redhat
     download:
-    - url: https://github.com/containers/shortnames/raw/v2022.02.08/shortnames.conf
+    - url: https://github.com/containers/shortnames/raw/v${version}/shortnames.conf
       type: file
       path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
 
@@ -3516,6 +3517,7 @@ tools:
 
   - name: win-gpg-agent
     version: 1.6.3
+    binary: sorelay.exe
     check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1'
     tags:
     - wsl
