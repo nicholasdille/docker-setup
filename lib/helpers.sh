@@ -253,30 +253,6 @@ function is_centos_7() {
     esac
 }
 
-function is_centos_8() {
-    local lsb_version_id
-    lsb_version_id="$(get_centos_version)"
-    case "${lsb_version_id}" in
-        8)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
-
-function is_amzn_2() {
-    local lsb_dist
-    local lsb_vers
-    lsb_dist=$(get_lsb_distro_name)
-    lsb_vers=$(get_lsb_distro_version)
-    if test "${lsb_dist}" == "amzn" && test "${lsb_vers}" -eq 2; then
-        return 0
-    fi
-    return 1
-}
-
 function is_amzn_2022() {
     local lsb_dist
     local lsb_vers
