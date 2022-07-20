@@ -685,6 +685,7 @@ tools:
     needs:
     - iptables
     - fuse-overlayfs
+    - docker-manpages
     tags:
     - default
     - docker
@@ -880,27 +881,21 @@ tools:
           fi
           echo "Finished starting Docker after ${SECONDS} seconds."
       fi
-      echo "Install manpages for Docker CLI"
-      "${target}/bin/docker" container run \
-          --interactive \
-          --rm \
-          --volume "${target}/share/man:/opt/man" \
-          --env version \
-          --workdir /go/src/github.com/docker/cli \
-          "golang:${go_version}" bash \
-          <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/docker/cli .
-      export GO111MODULE=auto
-      export DISABLE_WARN_OUTSIDE_CONTAINER=1
-      sed -i -E 's|^(\s+)(log.Printf\("WARN:)|\1//\2|' man/generate.go
-      sed -i -E 's|^(\s+)"log"||' man/generate.go
-      make manpages
-      cp -r man/man1 /opt/man
-      cp -r man/man5 /opt/man
-      cp -r man/man8 /opt/man
-      EOF
-      fi
       echo "Finished after ${SECONDS} seconds."
+
+  - name: docker-manpages
+    version: 20.10.17
+    binary: false
+    tags:
+    - default
+    - docker
+    - runtime
+    - build
+    - oci
+    download:
+    - url: https://github.com/nicholasdille/docker-cli-manpages/releases/download/v${version}/docker-cli-manpages.tar.gz
+      type: tarball
+      path: ${target}
 
   - name: docker-compose-v1
     version: 1.29.2
@@ -913,7 +908,7 @@ tools:
     - compose
     download:
     - url:
-        x86_64: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        x86_64: https://github.com/docker/compose/releases/download/${version}/docker-compose-Linux-x86_64
       type: executable
     files:
     - path: ${target}/bin/docker-compose

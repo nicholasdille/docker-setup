@@ -687,7 +687,8 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+        "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n",
+        "name: docker-manpages\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "moby/moby",
       "datasourceTemplate": "github-tags",
