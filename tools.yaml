@@ -2739,14 +2739,17 @@ tools:
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
     files:
-    - path: ${target}/bin/docker
+    - path: ${target}/bin/podman-docker
       content: |
         #!/bin/bash
 
         exec podman "$@"
     post_install: |
       echo "Fix permissions"
-      chmod +x "${target}/bin/docker"
+      chmod +x "${target}/bin/podman-docker"
+      if ! tool_will_be_installed "docker"; then
+          ln -sf "${target}/bin/docker" "${target}/bin/podman-docker"
+      fi
       echo "Fix systemd unit"
       sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
       if test -z "${prefix}"; then
