@@ -1397,7 +1397,7 @@ tools:
     - security
     - sbom
     download:
-    - url: https://github.com/anchore/grype/releases/download/v0.34.3/grype_0.34.3_linux_amd64.tar.gz
+    - url: https://github.com/anchore/grype/releases/download/v${version}/grype_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
       files:
