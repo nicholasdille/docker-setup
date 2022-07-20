@@ -81,7 +81,7 @@ function get_tool_files_index() {
 
 function get_tool_binary() {
     local tool=$1
-    
+
     binary="$(
         get_tool "${tool}" \
         | jq --raw-output 'select(.binary != null) | .binary' \
@@ -159,11 +159,11 @@ function install_tool() {
     echo "Installing ${tool} (@ ${SECONDS} seconds)"
     local tool_json
     tool_json="$(get_tool "${tool}")"
-    
+
     local version
     version="${tool_version[${tool}]}"
     echo "  Version: ${version}."
-    
+
     local binary
     binary="${tool_binary[${tool}]}"
     echo "  Binary: ${tool_binary[${tool}]}."
@@ -270,7 +270,7 @@ function install_tool() {
                 jq --raw-output 'select(.path != null) | .path' <<<"${download_json}" \
                 | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
             )"
-            
+
             case "${type}" in
 
                 executable)
@@ -295,7 +295,7 @@ function install_tool() {
                     mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
                     ;;
-            
+
                 tarball)
                     if test -z "${path}"; then
                         error "Path not specified."
@@ -365,12 +365,12 @@ function install_tool() {
                         mv "${prefix}/tmp/${file}" "${path}"
                     done
                     ;;
-            
+
                 *)
                     error "Unknown installation type."
                     exit 1
                     ;;
-            
+
             esac
 
             index=$((index + 1))

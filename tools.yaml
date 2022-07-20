@@ -811,7 +811,7 @@ tools:
                   
               elif tool_will_be_installed "fuse-overlayfs"; then
                   info "Waiting for fuse-overlayfs to be installed"
-                  wait_for_tool "fuse-overlayfs" "${target}/bin"
+                  wait_for_tool "fuse-overlayfs"
 
               else
                   error "fuse-overlayfs must be planned for installation."
@@ -2050,7 +2050,7 @@ tools:
       EOF
       if test -z "${prefix}" && ( has_tool "krew" || tool_will_be_installed "krew" ); then
           echo "Waiting for krew"
-          wait_for_tool "krew" "${target}/bin"
+          wait_for_tool "krew"
           echo "Install krew for current user"
           # shellcheck source=/dev/null
           source "${prefix}/etc/profile.d/krew.sh"
