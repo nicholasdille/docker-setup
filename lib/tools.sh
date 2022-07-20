@@ -195,7 +195,7 @@ function install_tool() {
 
     local dockerfile
     dockerfile="$(jq --raw-output 'select(.dockerfile != null) | .dockerfile' <<<"${tool_json}")"
-    if ! ${skip_docs} && test -n "${dockerfile}"; then
+    if test -n "${dockerfile}"; then
 
         docker_present=false
         podman_present=false
@@ -204,12 +204,16 @@ function install_tool() {
             echo "Waiting for Docker daemon to start"
             wait_for_docker
             docker_present=true
-        fi
-        if tool_will_be_installed "podman" || has_tool "podman"; then
+        
+        elif tool_will_be_installed "podman" || has_tool "podman"; then
             echo "Waiting for Podman to be present"
             wait_for_tool "podman"
             wait_for_tool "docker"
             podman_present=true
+
+        else
+            echo "Neither Docker nor Podman are planned for installation. Cannot proceed with ${tool}."
+            exit 1
         fi
 
         if ${docker_present} || ${podman_present}; then
