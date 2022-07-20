@@ -53,7 +53,7 @@ declare -a unknown_parameters
 : "${no_cron:=false}"
 : "${debug:=false}"
 : "${no_cgroup_reboot:=false}"
-: "${docker_max_wait:=300}"
+: "${tool_max_wait:=300}"
 declare -A requested_names
 declare -A requested_tools
 declare -A flags

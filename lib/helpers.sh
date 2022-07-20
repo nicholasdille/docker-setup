@@ -133,7 +133,7 @@ function wait_for_tool() {
     local tool=$1
 
     local sleep=10
-    local retries=60
+    local retries=$(( tool_max_wait / sleep ))
 
     local retry=0
     while ! has_tool "${tool}" && test "${retry}" -le "${retries}"; do
@@ -318,7 +318,7 @@ function docker_is_running() {
 
 function wait_for_docker() {
     local sleep=10
-    local retries=$(( docker_max_wait / sleep ))
+    local retries=$(( tool_max_wait / sleep ))
     debug "wait_for_docker(): sleep=${sleep}, retries=${retries}"
 
     local retry=0
