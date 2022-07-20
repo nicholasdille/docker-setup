@@ -167,6 +167,18 @@
     },
     {
       "matchFiles": [
+        "^env/rockylinux-9/Dockerfile$"
+      ],
+      "matchDatasources": [
+        "dockerfile"
+      ],
+      "matchPackageNames": [
+        "rockylinux"
+      ],
+      "allowedVersions": "<=9"
+    },
+    {
+      "matchFiles": [
         "^env/ubuntu-20.04/Dockerfile$"
       ],
       "matchDatasources": [
