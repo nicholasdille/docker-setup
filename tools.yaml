@@ -1381,8 +1381,7 @@ tools:
     tags:
     - markdown
     download:
-    - url:
-        x86_64: https://github.com/nicholasdille/go-md2man-static/releases/download/v${version}/go-md2man.tar.gz
+    - url: https://github.com/nicholasdille/go-md2man-static/releases/download/v${version}/go-md2man-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
 
