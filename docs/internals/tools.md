@@ -45,7 +45,7 @@ tools:
 
 The fields `name` and `version` are mandatory.
 
-`binary` defaults to `${target}/bin/${name}` and relativ paths are resolved with `${target}/bin`.
+`binary` defaults to `${target}/bin/${name}` and relativ paths are resolved with `${target}/bin`. `binary` can also be set to `false` is the tool does not contain a binary, e.g. only configuration files. The availability will be tested using the marker file (see below).
 
 `needs` is a list of dependent tools that are automatically installed before the current tool. See [dependency resolution](dependency_information.md) for more information.
 

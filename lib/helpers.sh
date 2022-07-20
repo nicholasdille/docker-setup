@@ -15,18 +15,38 @@ function is_installed() {
 
     if test -n "${tool_is_installed[${tool}]}"; then
         if ${tool_is_installed[${tool}]}; then
+            debug "Tool ${tool} is installed (cached)"
             return 0
         else
+            debug "Tool ${tool} is not installed (cached)"
             return 1
         fi
     fi
 
+    local binary
     binary="${tool_binary[${tool}]}"
+    local version
+    version="${tool_version[${tool}]}"
 
-    if test -f "${binary}" && test -x "${binary}"; then
+    debug "Checking availability of tool ${tool} v${version} with binary ${binary}"
+
+    if test "${binary}" == "false" && test -f "${docker_setup_cache}/${tool}/${version}"; then
+        debug "Binary is false and touch file is present"
         tool_is_installed[${tool}]="true"
         return 0
+
+    elif test -f "${binary}" && test -x "${binary}"; then
+        debug "Binary is present"
+        tool_is_installed[${tool}]="true"
+        return 0
+
+    elif test -f "${docker_setup_cache}/${tool}/${version}"; then
+        debug "touch file is present"
+        tool_is_installed[${tool}]="true"
+        return 0
+
     else
+        debug "Tool is not available"
         tool_is_installed[${tool}]="false"
         return 1
     fi
@@ -88,7 +108,22 @@ function matches_version() {
 function has_tool() {
     local tool=$1
 
-    local binary="$(get_tool_binary "${tool}")"
+    local binary
+    binary="${tool_binary[${tool}]}"
+
+    if test "${binary}" == "false"; then
+        echo "Binary is false. Checking touched file."
+
+        local version
+        version="${tool_version[${tool}]}"
+
+        if test -f "${docker_setup_cache}/${tool}/${version}"; then
+            return 0
+
+        else
+            return 1
+        fi
+    fi
 
     echo "Looking for tool binary ${binary}."
     type "${binary}" >/dev/null 2>&1 || test -x "${binary}"
