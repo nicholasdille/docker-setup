@@ -18,7 +18,6 @@ You can tweak the behaviour of `docker-setup` by passing parameters or environme
 | `--no-progressbar`  | `no_progressbar`         | Do not display progress bar |
 | `--no-color`        | `no_color`               | Do not display colored output |
 | `--plan`            | `plan`                   | Show planned installations |
-| `--skip-docs`       | `skip_docs`              | Do not install documentation for faster installation |
 | `--no-cache`        | `no_cache`               | Disable caching of downloads |
 | `--no-cron`         | `no_cron`                | Disable creation of cron jobs for updates |
 |                     | `prefix`                 | Install into a subdirectory (see notes below) |

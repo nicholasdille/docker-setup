@@ -880,19 +880,15 @@ tools:
           fi
           echo "Finished starting Docker after ${SECONDS} seconds."
       fi
-      if ${skip_docs}; then
-          warning "Installation of manpages will be skipped."
-
-      else
-          echo "Install manpages for Docker CLI"
-          "${target}/bin/docker" container run \
-              --interactive \
-              --rm \
-              --volume "${target}/share/man:/opt/man" \
-              --env version \
-              --workdir /go/src/github.com/docker/cli \
-              "golang:${go_version}" bash \
-              <<EOF
+      echo "Install manpages for Docker CLI"
+      "${target}/bin/docker" container run \
+          --interactive \
+          --rm \
+          --volume "${target}/share/man:/opt/man" \
+          --env version \
+          --workdir /go/src/github.com/docker/cli \
+          "golang:${go_version}" bash \
+          <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/docker/cli .
       export GO111MODULE=auto
       export DISABLE_WARN_OUTSIDE_CONTAINER=1

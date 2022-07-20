@@ -198,7 +198,6 @@ jobs:
               --privileged \
               --env TERM \
               --env Europe/Berlin \
-              --env "SKIP_DOCS=${IS_PR}" \
               --env "TOOL=${TOOL}" \
               --volume "${PWD}/log:/var/log" \
               test bash run.sh

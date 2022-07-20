@@ -47,7 +47,6 @@ declare -a unknown_parameters
 : "${show_version:=false}"
 : "${no_color:=false}"
 : "${plan:=false}"
-: "${skip_docs:=false}"
 : "${max_parallel:=10}"
 : "${no_cache:=false}"
 : "${no_cron:=false}"
@@ -93,9 +92,6 @@ while test "$#" -gt 0; do
         --plan)
             no_wait=true
             plan=true
-            ;;
-        --skip-docs)
-            skip_docs=true
             ;;
         --no-cache)
             no_cache=true
@@ -214,8 +210,6 @@ are accepted:
 --no-progressbar, $no_progressbar   Disable progress bar
 --no-color, $no_color               Disable colored output
 --plan, $plan                       Show planned installations
---skip-docs, $skip_docs             Do not install documentation for faster
-                                    installation
 --no-cache, $no_cache               Do not cache downloads
 --no-cron, $no_cron                 Do not create cronjob for automated updates
 
@@ -574,11 +568,6 @@ debug "Finished state retrieval and output (@ ${SECONDS})"
 
 if test -n "${prefix}"; then
     info "Installation into ${prefix}. Will skip daemon start."
-    echo
-fi
-
-if ${skip_docs}; then
-    info "Some documentation is skipped to reduce the installation time."
     echo
 fi
 
