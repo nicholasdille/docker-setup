@@ -560,7 +560,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_cosign"
 
   - name: crane
-    version: 0.10.0
+    version: 0.11.0
     check: ${binary} version
     tags:
     - registry
