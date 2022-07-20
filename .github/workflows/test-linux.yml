@@ -43,6 +43,7 @@ jobs:
           "debian-11",
           "fedora-35",
           "rockylinux-8",
+          "rockylinux-9",
           "ubuntu-20.04",
           "ubuntu-22.04"
         ]
