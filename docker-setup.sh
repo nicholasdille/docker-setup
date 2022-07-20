@@ -698,9 +698,6 @@ while ! ${last_update}; do
         while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_order[@]}"; do
             name="${tool_order[${started_index}]}"
 
-            mkdir -p "${docker_setup_cache}/${name}"
-            touch "${docker_setup_cache}/${name}/started"
-
             {
                 echo "============================================================"
                 date +"%Y-%m-%d %H:%M:%S %Z"
@@ -718,9 +715,6 @@ while ! ${last_update}; do
                     version="${tool_version[${name}]}"
                     touch "${docker_setup_cache}/${name}/${version}"
                 fi
-
-                echo "New files (mind parallel installations):"
-                find "${target}" -type f -newer "${docker_setup_cache}/${name}/started"
 
                 end_time="$(date +%s)"
                 echo "${name};${start_time};${end_time}" >>"${docker_setup_logs}/profiling"
