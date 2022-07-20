@@ -60,7 +60,7 @@ jobs:
         sha="$(git rev-parse HEAD)"
         echo "Running on commit ${sha} for $(git describe)"
         tag="$(git describe --tags --abbrev=0)"
-        updates="$(git log "${tag}.." --author=".*bot@renovateapp.com.*" --oneline | wc -l)"
+        updates="$(git log "${tag}.." --author="renovate\[bot\]" --oneline | wc -l)"
         echo "Found ${updates} update(s) since tag ${tag}"
         echo "::set-output name=sha::${sha}"
         echo "::set-output name=tag::${tag}"
