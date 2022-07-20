@@ -352,8 +352,8 @@ function install_tool() {
                     | tar -xz \
                         --directory "${path}" \
                         --no-same-owner \
-                        "${param_strip}" \
-                        "${param_files[@]}"
+                        ${param_strip} \
+                        ${param_files[@]}
                     ;;
 
                 zip)
