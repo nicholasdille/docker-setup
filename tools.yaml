@@ -1345,6 +1345,8 @@ tools:
         export GITSIGN_LOG="${HOME}/tmp/gitsign.log"
 
         exec "${BIN}/${GITSIGN}" "$@"
+    post_install: |
+      chmod +x "${target}/bin/gitsign.sh"
 
   - name: glab
     version: 1.22.0
