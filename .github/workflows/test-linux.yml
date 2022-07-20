@@ -54,7 +54,6 @@ jobs:
         [
           "archlinux",
           "clearlinux",
-          "centos-8",
           "opensuse-leap-15",
           "opensuse-tumbleweed"
         ]

@@ -1678,13 +1678,13 @@ tools:
     tags:
     - network
     install: |
-      if is_centos_7 || is_amzn_2; then
+      if is_centos_7; then
           get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos7-${alt_arch}.tar.gz" \
           | tar -xz \
               --directory "${target}" \
               --no-same-owner
 
-      elif is_centos_8 || is_rockylinux; then
+      elif is_rockylinux; then
           get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos8-${alt_arch}.tar.gz" \
           | tar -xz \
               --directory "${target}" \
