@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.2
 
-FROM rockylinux:9.0@sha256:1be360c545172f1a451dfac8bab345c6aa5cc2c24ed42ba31239c394b8657795
+FROM rockylinux:9.0@sha256:589b293b63aa244aba2fdd20614b11cbe9905f94f657d7c62e7fcad8bffbb37a
 RUN yum install -y \
         curl \
         ca-certificates \
