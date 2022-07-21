@@ -1722,7 +1722,7 @@
         "^docker-setup.sh$"
       ],
       "matchStrings": [
-        "RUST_VERSION=(?<currentValue>.*?)\n"
+        "rust_version=(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "rust",
       "datasourceTemplate": "docker",
