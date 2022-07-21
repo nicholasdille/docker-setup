@@ -183,7 +183,7 @@ function is_redhat() {
     local lsb_dist
     lsb_dist=$(get_lsb_distro_name)
     case "${lsb_dist}" in
-        centos|rhel|sles|fedora|amzn|rocky)
+        rhel|sles|fedora|amzn|rocky)
             return 0
             ;;
         *)
@@ -223,28 +223,6 @@ function is_rockylinux() {
     lsb_dist=$(get_lsb_distro_name)
     case "${lsb_dist}" in
         rocky)
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
-
-function get_centos_version() {
-	local lsb_version_id=""
-	if test -r "${prefix}/etc/os-release"; then
-        # shellcheck disable=SC1091
-		lsb_version_id="$(source "${prefix}/etc/os-release" && echo "$VERSION_ID")"
-	fi
-	echo "${lsb_version_id}"
-}
-
-function is_centos_7() {
-    local lsb_version_id
-    lsb_version_id="$(get_centos_version)"
-    case "${lsb_version_id}" in
-        7)
             return 0
             ;;
         *)

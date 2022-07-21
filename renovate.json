@@ -95,18 +95,6 @@
     },
     {
       "matchFiles": [
-        "^env/centos-7/Dockerfile$"
-      ],
-      "matchDatasources": [
-        "dockerfile"
-      ],
-      "matchPackageNames": [
-        "centos"
-      ],
-      "allowedVersions": "<=7"
-    },
-    {
-      "matchFiles": [
         "^env/debian-11/Dockerfile$"
       ],
       "matchDatasources": [

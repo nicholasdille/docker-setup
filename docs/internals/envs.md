@@ -4,7 +4,6 @@
 
 - Alpine Linux 3.15, 3.16
 - Amazon Linux 2022
-- CentOS 7
 - Debian 11
 - Fedora 35
 - Rocky Linux 8

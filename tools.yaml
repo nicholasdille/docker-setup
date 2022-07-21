@@ -1668,23 +1668,13 @@ tools:
   - name: iptables
     version: 1.8.7
     binary: ${target}/sbin/iptables
-    if: |
-      is_centos_7 || is_rockylinux
+    if: is_rockylinux
     tags:
     - network
-    install: |
-      if is_centos_7; then
-          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos7-${alt_arch}.tar.gz" \
-          | tar -xz \
-              --directory "${target}" \
-              --no-same-owner
-
-      elif is_rockylinux; then
-          get_file "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-centos8-${alt_arch}.tar.gz" \
-          | tar -xz \
-              --directory "${target}" \
-              --no-same-owner
-      fi
+    download:
+    - url: https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-rockylinux8-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}
 
   - name: jp
     version: 0.2.1
