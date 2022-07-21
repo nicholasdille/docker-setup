@@ -1674,7 +1674,7 @@ tools:
       fi
 
   - name: iptables
-    version: 1.8.7
+    version: 1.8.8
     if: |
       is_centos_7 || is_amzn_2 || is_rockylinux
     tags:
