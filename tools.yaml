@@ -1399,7 +1399,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: gvisor
-    version: 20220713
+    version: 20220718
     binary: ${target}/bin/runsc
     check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
     needs:
