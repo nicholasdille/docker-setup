@@ -1534,7 +1534,7 @@ tools:
       rm -rf ${target}/share/doc/hub-doc ${target}/share/vim
 
   - name: hub-tool
-    version: 0.4.4
+    version: 0.4.5
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
     tags:
     - docker
