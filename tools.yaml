@@ -1441,7 +1441,7 @@ tools:
       path: ${target}/share/zsh/vendor-completions/_helmfile
 
   - name: hub-tool
-    version: 0.4.4
+    version: 0.4.5
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
     tags:
     - docker
