@@ -256,7 +256,7 @@
     },
     {
       "fileMatch": [
-        "(^|/)Dockerfile[^/]*$"
+        "(^|/|\\.)Dockerfile$"
       ],
       "matchStrings": [
         "#syntax=(?<depName>.*?):(?<currentValue>.*?)"
