@@ -4,7 +4,6 @@
     "config:base"
   ],
   "enabledManagers": [
-    "docker",
     "dockerfile",
     "github-actions",
     "regex"
