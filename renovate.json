@@ -1,7 +1,26 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:base",
+    
+    ":label(type/renovate)",
+
+    ":docker",
+    "docker:enableMajor",
+    "docker:pinDigests",
+
+    ":disableRateLimiting",
+    ":ignoreUnstable",
+    ":pinVersions",
+    ":separateMajorReleases",
+    ":automergePr",
+    ":automergeRequireAllStatusChecks",
+    ":automergeDigest",
+    ":automergePatch",
+    ":semanticCommits",
+    
+    ":enableVulnerabilityAlerts",
+    ":enableVulnerabilityAlertsWithLabel(security)"
   ],
   "enabledManagers": [
     "dockerfile",
@@ -14,45 +33,33 @@
     "v1.6"
   ],
   "useBaseBranchConfig": "merge",
-  "docker": {
-    "pinDigests": true
-  },
-  "automergeType": "pr",
   "platformAutomerge": true,
-  "ignoreTests": false,
   "rebaseWhen": "conflicted",
   "rebaseLabel": "renovate/rebase",
   "stopUpdatingLabel": "renovate/stop-updating",
   "recreateClosed": false,
-  "prHourlyLimit": 0,
-  "prConcurrentLimit": 0,
   "major": {
     "labels": [
-      "type/renovate",
       "bump/major"
     ]
   },
   "minor": {
     "labels": [
-      "type/renovate",
       "bump/minor"
     ]
   },
   "patch": {
     "labels": [
-      "type/renovate",
       "bump/patch"
     ]
   },
   "pin": {
     "labels": [
-      "type/renovate",
       "bump/pin"
     ]
   },
   "digest": {
     "labels": [
-      "type/renovate",
       "bump/digest"
     ]
   },
