@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.0
+#syntax=docker/dockerfile:1.4.2
 
 FROM alpine:3.15@sha256:0483110c51a764abe175a8cefb941541ca0bc0f628ce418d3a660338abf4622a
 RUN apk add --update-cache --no-cache \

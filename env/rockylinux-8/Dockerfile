@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.0
+#syntax=docker/dockerfile:1.4.2
 
 FROM rockylinux:8.6@sha256:afd392a691df0475390df77cb5486f226bc2b4cbaf87c41785115b9237f3203f
 RUN yum install -y \
