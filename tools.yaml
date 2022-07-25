@@ -3345,7 +3345,7 @@ tools:
       mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"
 
   - name: trivy
-    version: 0.30.2
+    version: 0.30.3
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - security
