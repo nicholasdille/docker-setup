@@ -2832,7 +2832,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_scorecard"
 
   - name: skopeo
-    version: 1.9.0
+    version: 1.9.1
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - registry
