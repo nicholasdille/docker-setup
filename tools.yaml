@@ -2495,7 +2495,7 @@ tools:
       path: ${target}
 
   - name: portainer
-    version: 2.14.1
+    version: 2.14.2
     check: ${binary} --version 2>&1
     needs:
     - docker
