@@ -3189,7 +3189,7 @@ tools:
       path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
 
   - name: skopeo
-    version: 1.9.0
+    version: 1.9.1
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - registry
