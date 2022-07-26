@@ -2438,7 +2438,7 @@ tools:
       ldconfig
 
   - name: manifest-tool
-    version: 2.0.4
+    version: 2.0.5
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - docker
