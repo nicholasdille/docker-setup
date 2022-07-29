@@ -1,9 +1,5 @@
 # shellcheck shell=bash
 
-: "${docker_setup_logs:=/var/log/docker-setup}"
-# shellcheck source=lib/vars.sh
-source "${docker_setup_cache}/lib/vars.sh"
-
 function replace_vars() {
     local tool=$1
     local binary=$2
@@ -177,12 +173,14 @@ function install_tool() {
         return
     fi
 
-    echo "Waiting for dependencies: ${tool_deps[${tool}]}"
-    for dep in ${tool_deps[${tool}]}; do
-        if flags_are_satisfied "${dep}" && tool_conditions_satisfied "${dep}"; then
-            wait_for_tool "${dep}"
-        fi
-    done
+    if ! ${skip_deps}; then
+        echo "Waiting for dependencies: ${tool_deps[${tool}]}"
+        for dep in ${tool_deps[${tool}]}; do
+            if flags_are_satisfied "${dep}" && tool_conditions_satisfied "${dep}"; then
+                wait_for_tool "${dep}"
+            fi
+        done
+    fi
 
     local pre_install
     pre_install="$(
@@ -204,11 +202,20 @@ function install_tool() {
             echo "Waiting for Docker daemon to start"
             wait_for_docker
             docker_present=true
+
+        elif type docker >/dev/null 2>&1; then
+            echo "Docker is already present. Checking Docker daemon"
+            wait_for_docker
+            docker_present=true
         
         elif tool_will_be_installed "podman" || has_tool "podman"; then
             echo "Waiting for Podman to be present"
             wait_for_tool "podman"
             wait_for_tool "docker"
+            podman_present=true
+
+        elif type podman >/dev/null 2>&1 && type docker >/dev/null 2>&1 && test -L "$(which docker)"; then
+            echo "Podman is already present"
             podman_present=true
 
         else

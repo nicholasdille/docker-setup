@@ -12,27 +12,49 @@ else
     docker_setup_repo_raw="${docker_setup_repo_base}/raw/v${docker_setup_version}"
 fi
 
-: "${docker_setup_cache:=/var/cache/docker-setup}"
-: "${docker_setup_logs:=/var/log/docker-setup}"
+: "${prefix:=}"
+: "${relative_target:=/usr/local}"
+: "${target:=${prefix}${relative_target}}"
+: "${docker_allow_restart:=false}"
+: "${docker_setup_cache:=${prefix}/var/cache/docker-setup}"
+: "${docker_setup_logs:=${prefix}/var/log/docker-setup}"
+: "${docker_setup_contrib:=${prefix}${docker_setup_cache}/contrib}"
+: "${docker_setup_downloads:=${prefix}/${docker_setup_cache}/downloads}"
 if [[ ${EUID} -ne 0 ]] && [[ ! -w "${docker_setup_logs}" ]]; then
     docker_setup_cache=${HOME}/.cache/docker-setup
     docker_setup_logs=${HOME}/.logs/docker-setup
 fi
 
-if test "${docker_setup_version}" != "main" && ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
+arch="$(uname -m)"
+case "${arch}" in
+    x86_64)
+        # shellcheck disable=SC2034
+        alt_arch=amd64
+        ;;
+    aarch64)
+        # shellcheck disable=SC2034
+        alt_arch=arm64
+        ;;
+esac
+
+if test "${docker_setup_version}" == "main"; then
+    if test -n "${prefix}"; then
+        if ! mkdir -p "${docker_setup_cache}"; then
+            echo "ERROR: Unable to create and populate prefix ${prefix}."
+            exit 1
+        fi
+        cp -r /var/cache/docker-setup/lib "${docker_setup_cache}"
+        cp -r /var/cache/docker-setup/tools.json "${docker_setup_cache}"
+    fi
+
+elif ! test -f "${docker_setup_cache}/${docker_setup_version}"; then
     rm -rf \
         "${docker_setup_cache:?}/lib" \
         "${docker_setup_cache:?}/tools.json"
 fi
+
 mkdir -p "${docker_setup_cache}"
 touch "${docker_setup_cache}/${docker_setup_version}"
-
-mkdir -p "${docker_setup_cache}/lib"
-if ! test -f "${docker_setup_cache}/lib/vars.sh"; then
-    curl -sLo "${docker_setup_cache}/lib/vars.sh" "${docker_setup_repo_raw}/lib/vars.sh"
-fi
-# shellcheck source=lib/vars.sh
-source "${docker_setup_cache}/lib/vars.sh"
 
 declare -a unknown_parameters
 : "${check:=false}"
@@ -51,6 +73,7 @@ declare -a unknown_parameters
 : "${no_cache:=false}"
 : "${no_cron:=false}"
 : "${debug:=false}"
+: "${skip_deps:=false}"
 : "${no_cgroup_reboot:=false}"
 : "${tool_max_wait:=300}"
 declare -A requested_names
@@ -109,6 +132,9 @@ while test "$#" -gt 0; do
         --debug)
             debug=true
             ;;
+        --skip-deps)
+            skip_deps=true
+            ;;
         --no-cgroup-reboot)
             no_cgroup_reboot=true
             ;;
@@ -158,6 +184,11 @@ fi
 source "${docker_setup_cache}/lib/helpers.sh"
 
 debug "Loaded library files (@ ${SECONDS})"
+
+debug "docker_setup_cache=${docker_setup_cache}"
+debug "docker_setup_logs=${docker_setup_logs}"
+debug "docker_setup_contrib=${docker_setup_contrib}"
+debug "docker_setup_downloads=${docker_setup_cache}"
 
 check_mark="✓" # Unicode=\u2713 UTF-8=\xE2\x9C\x93 (https://www.compart.com/de/unicode/U+2713)
 cross_mark="✗" # Unicode=\u2717 UTF-8=\xE2\x9C\x97 (https://www.compart.com/de/unicode/U+2717)
@@ -229,8 +260,6 @@ The following environment variables are processed:
 \$docker_registry_mirror   Specifies a host to be used as registry
                           mirror, e.g. https://proxy.my-domain.tld
 \$docker_allow_restart     Whether restarting dockerd is acceptable
-\$docker_plugins_path      Where to store Docker CLI plugins.
-                          Defaults to ${target}/libexec/docker/cli-plugins
 
 EOF
     exit
@@ -492,7 +521,9 @@ for name in "${tools[@]}"; do
         if ! is_installed "${name}" || ! matches_version "${name}" || ${reinstall}; then
 
             if tool_conditions_satisfied "${name}"; then
-                resolve_deps "${name}"
+                if ! ${skip_deps}; then
+                    resolve_deps "${name}"
+                fi
 
                 if test -z "${tool_install[${name}]}" && flags_are_satisfied "${name}"; then
                     tool_order+=( "${name}" )
@@ -594,9 +625,15 @@ if test "${#tool_install[@]}" -gt 0 && ! ${no_wait}; then
     echo -e "\r                                             "
 fi
 
-if test -n "${prefix}" && ( ! test -S "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version ); then
-    error "When installing into a subdirectory (${prefix}) Docker must be present via /var/run/docker.sock."
-    exit 1
+if test -n "${prefix}"; then
+    if ! test -S "/var/run/docker.sock" || ! curl -sfo /dev/null --unix-socket /var/run/docker.sock http://localhost/version; then
+        error "When installing into a subdirectory (${prefix}) Docker must be present via /var/run/docker.sock."
+        exit 1
+    fi
+    if ! type docker >/dev/null 2>&1; then
+        warning "When installing into a subdirectory (${prefix}) Docker CLI should be present."
+        exit 1
+    fi
 fi
 
 if test -n "${prefix}" && ! test -w "${prefix}"; then
@@ -627,23 +664,9 @@ mkdir -p \
     "${docker_setup_cache}" \
     "${docker_setup_cache}/errors" \
     "${docker_setup_downloads}" \
-    "${prefix}/etc/docker" \
     "${target}/share/bash-completion/completions" \
     "${target}/share/fish/vendor_completions.d" \
-    "${target}/share/zsh/vendor-completions" \
-    "${prefix}/etc/systemd/system" \
-    "${prefix}/etc/default" \
-    "${prefix}/etc/sysconfig" \
-    "${prefix}/etc/conf.d" \
-    "${prefix}/etc/init.d" \
-    "${docker_plugins_path}" \
-    "${target}/libexec/docker/bin" \
-    "${target}/libexec/cni" \
-    "${target}/bin" \
-    "${target}/sbin" \
-    "${target}/share/man" \
-    "${target}/lib" \
-    "${target}/libexec"
+    "${target}/share/zsh/vendor-completions"
 
 : "${cgroup_version:=v2}"
 current_cgroup_version="v1"

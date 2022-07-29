@@ -1,9 +1,5 @@
 # shellcheck shell=bash
 
-: "${docker_setup_logs:=/var/log/docker-setup}"
-# shellcheck source=lib/vars.sh
-source "${docker_setup_cache}/lib/vars.sh"
-
 function is_executable() {
     local file=$1
     test -f "${file}" && test -x "${file}"
@@ -261,7 +257,7 @@ function has_systemd() {
 }
 
 function docker_is_running() {
-    if "${target}/bin/docker" version >/dev/null 2>&1; then
+    if docker version >/dev/null 2>&1; then
         debug "docker_is_running(): yes"
         return 0
     else
