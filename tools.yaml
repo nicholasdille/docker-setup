@@ -2732,24 +2732,34 @@ tools:
     - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
-    files:
-    - path: ${target}/bin/podman-docker
-      content: |
-        #!/bin/bash
-
-        exec podman "$@"
     post_install: |
-      echo "Fix permissions"
-      chmod +x "${target}/bin/podman-docker"
-      if ! tool_will_be_installed "docker"; then
-          ln -sf "${target}/bin/docker" "${target}/bin/podman-docker"
-      fi
       echo "Fix systemd unit"
       sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
       if test -z "${prefix}"; then
           if has_systemd; then
               systemctl daemon-reload
           fi
+      fi
+
+  - name: podman-docker-shim
+    version: 0.1.0
+    needs:
+    - podman
+    tags:
+    - runtime
+    - redhat
+    - oci
+    files:
+    - path: ${target}/libexec/podman/docker
+      content: |
+        #!/bin/bash
+
+        exec podman "$@"
+    post_install: |
+      echo "Fix permissions"
+      chmod +x "${target}/libexec/podman/docker"
+      if ! tool_will_be_installed "docker"; then
+          ln -sf "${target}/libexec/podman/docker" "${target}/bin/docker"
       fi
 
   - name: podman-tui
