@@ -8,7 +8,7 @@ docker_setup_version="$(
 
 docker-setup --no-wait --only docker oras --skip-deps
 
-docker run -d --name registry --publish 127.0.0.1:5000:5000 registry
+oras login ghcr.io
 
 declare -a tools
 mapfile -t tools < <(jq --raw-output '.tools[].name' /var/cache/docker-setup/tools.json)
@@ -25,13 +25,24 @@ for name in "${tools[@]}"; do
     mkdir -p "/${name}"
     prefix="/${name}" docker-setup --no-wait --only "${name}" --skip-deps
 
-    cat >config.json <<EOF
+    cat >/config.json <<EOF
 {
     "name": "${name}",
     "version": "${tool_version}"
 }
 EOF
-    oras push "localhost:5000/nicholasdille/docker-setup-${name}:${docker_setup_version}-${tool_version}" \
-        --manifest-config config.json:application/vnd.nicholasdille.docker-setup.config.v1+json \
-        "/${name}/:application/vnd.nicholasdille.docker-setup.content.v1+tar"
+    cat >/annotations.json <<EOF
+{
+    "$manifest": {
+        "org.opencontainers.image.source": "https://github.com/nicholasdille/docker-setup",
+        "org.opencontainers.image.description": "docker-setup/${docker_setup_version}/${name}/${tool_version}"
+    }
+}
+EOF
+    pushd "/${name}"
+    oras push "ghcr.io/nicholasdille/docker-setup-${name}:${docker_setup_version}-${tool_version}" \
+        --manifest-annotations /annotations.json \
+        --manifest-config /config.json:application/vnd.nicholasdille.docker-setup.config.v1+json \
+        ".:application/vnd.nicholasdille.docker-setup.content.v1+tar"
+    popd
 done

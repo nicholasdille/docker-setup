@@ -1,0 +1,3 @@
+#syntax=docker/dockerfile:1.4.2
+FROM scratch
+COPY --from=ghcr.io/nicholasdille/docker-setup/trivy:oras-0.13.0 --link /usr/local/ /usr/local/

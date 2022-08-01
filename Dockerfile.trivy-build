@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.2
+
+FROM ghcr.io/nicholasdille/docker-setup/base:oras AS trivy
+
+# renovate: datasource=github-releases depName=aquasecurity/trivy
+ENV TRIVY_VERSION=0.30.4
+RUN curl --location --fail https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz | \
+        tar -xzC /usr/local/bin/ trivy \
+ && trivy --version
+
+FROM scratch
+COPY --from=trivy --link /usr/local/ /usr/local/
+
+LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
+      org.opencontainers.image.ref.name="oras" \
+      org.opencontainers.image.title="trivy" \
+      org.opencontainers.image.description="trivy packaged for installation" \
+      org.opencontainers.image.version="0.30.4"
