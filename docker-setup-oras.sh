@@ -6,7 +6,7 @@ docker_setup_version="$(
     | tr -d '"'
 )"
 
-docker-setup --no-wait --only docker oras
+docker-setup --no-wait --only docker oras --skip-deps
 
 docker run -d --name registry --publish 127.0.0.1:5000:5000 registry
 
@@ -14,8 +14,6 @@ declare -a tools
 mapfile -t tools < <(jq --raw-output '.tools[].name' /var/cache/docker-setup/tools.json)
 tools=(
     fuse-overlayfs
-    docker
-    docker-manpages
 )
 
 for name in "${tools[@]}"; do
