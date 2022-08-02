@@ -2,7 +2,6 @@
 
 FROM ghcr.io/nicholasdille/docker-setup/base:oras AS trivy
 
-# renovate: datasource=github-releases depName=aquasecurity/trivy
 ARG version=0.30.4
 RUN arch=$(uname -m) \
  && if test "${arch}" == "x86_64"; then alt_arch=amd64; alt_arch2=64bit; else alt_arch=arm64; alt_arch2=ARM64; fi \
