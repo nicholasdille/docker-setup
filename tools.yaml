@@ -2488,7 +2488,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: minikube
-    version: 1.26.0
+    version: 1.26.1
     check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
     tags:
     - k8s
