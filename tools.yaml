@@ -1392,7 +1392,7 @@ tools:
       path: ${target}
 
   - name: grype
-    version: 0.44.0
+    version: 0.45.0
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
     tags:
     - security
