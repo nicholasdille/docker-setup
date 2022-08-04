@@ -526,7 +526,160 @@ tools:
             }
           ]
         }
+    - path: ${prefix}/etc/init.d/containerd
+      content: |
+        #!/bin/sh
+        set -e
+
+        ### BEGIN INIT INFO
+        # Provides:           containerd
+        # Required-Start:     $syslog $remote_fs
+        # Required-Stop:      $syslog $remote_fs
+        # Should-Start:       cgroupfs-mount cgroup-lite
+        # Should-Stop:        cgroupfs-mount cgroup-lite
+        # Default-Start:      2 3 4 5
+        # Default-Stop:       0 1 6
+        # Short-Description:  Create lightweight, portable, self-sufficient containers.
+        # Description:
+        #  Docker is an open-source project to easily create lightweight, portable,
+        #  self-sufficient containers from any application. The same container that a
+        #  developer builds and tests on a laptop can run at scale, in production, on
+        #  VMs, bare metal, OpenStack clusters, public clouds and more.
+        ### END INIT INFO
+
+        export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+        BASE=containerd
+
+        # modify these in /etc/default/$BASE (/etc/default/containerd)
+        CONTAINERD=/usr/local/bin/containerd
+        # This is the pid file created/managed by start-stop-daemon
+        CONTAINERD_SSD_PIDFILE=/var/run/$BASE-ssd.pid
+        CONTAINERD_LOGFILE=/var/log/$BASE.log
+        CONTAINERD_DESC="containerd"
+
+        # Get lsb functions
+        . /lib/lsb/init-functions
+
+        if [ -f /etc/default/$BASE ]; then
+          . /etc/default/$BASE
+        fi
+
+        # Check containerd is present
+        if [ ! -x $CONTAINERD ]; then
+          log_failure_msg "$CONTAINERD not present or not executable"
+          exit 1
+        fi
+
+        check_init() {
+          # see also init_is_upstart in /lib/lsb/init-functions (which isn't available in Ubuntu 12.04, or we'd use it directly)
+          if [ -x /sbin/initctl ] && /sbin/initctl version 2> /dev/null | grep -q upstart; then
+            log_failure_msg "$CONTAINERD_DESC is managed via upstart, try using service $BASE $1"
+            exit 1
+          fi
+        }
+
+        fail_unless_root() {
+          if [ "$(id -u)" != '0' ]; then
+            log_failure_msg "$CONTAINERD_DESC must be run as root"
+            exit 1
+          fi
+        }
+
+        cgroupfs_mount() {
+          # see also https://github.com/tianon/cgroupfs-mount/blob/master/cgroupfs-mount
+          if grep -v '^#' /etc/fstab | grep -q cgroup \
+            || [ ! -e /proc/cgroups ] \
+            || [ ! -d /sys/fs/cgroup ]; then
+            return
+          fi
+          if ! mountpoint -q /sys/fs/cgroup; then
+            mount -t tmpfs -o uid=0,gid=0,mode=0755 cgroup /sys/fs/cgroup
+          fi
+          (
+            cd /sys/fs/cgroup
+            for sys in $(awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
+              mkdir -p $sys
+              if ! mountpoint -q $sys; then
+                if ! mount -n -t cgroup -o $sys cgroup $sys; then
+                  rmdir $sys || true
+                fi
+              fi
+            done
+          )
+        }
+
+        case "$1" in
+          start)
+            check_init
+
+            fail_unless_root
+
+            #cgroupfs_mount
+
+            touch "$CONTAINERD_LOGFILE"
+
+            ulimit -n 1048576
+
+            # Having non-zero limits causes performance problems due to accounting overhead
+            # in the kernel. We recommend using cgroups to do container-local accounting.
+            if [ "$BASH" ]; then
+              ulimit -u unlimited
+            else
+              ulimit -p unlimited
+            fi
+
+            log_begin_msg "Starting $CONTAINERD_DESC: $BASE"
+            start-stop-daemon --start --background \
+              --no-close \
+              --exec "$CONTAINERD" \
+              --pidfile "$CONTAINERD_SSD_PIDFILE" \
+              --make-pidfile \
+              -- \
+              >> "$CONTAINERD_LOGFILE" 2>&1
+            log_end_msg $?
+            ;;
+
+          stop)
+            check_init
+            fail_unless_root
+            if [ -f "$CONTAINERD_SSD_PIDFILE" ]; then
+              log_begin_msg "Stopping $CONTAINERD_DESC: $BASE"
+              start-stop-daemon --stop --pidfile "$CONTAINERD_SSD_PIDFILE" --retry 10
+              log_end_msg $?
+            else
+              log_warning_msg "Docker already stopped - file $CONTAINERD_SSD_PIDFILE not found."
+            fi
+            ;;
+
+          restart)
+            check_init
+            fail_unless_root
+            containerd_pid=$(cat "$CONTAINERD_SSD_PIDFILE" 2> /dev/null)
+            [ -n "$containerd_pid" ] \
+              && ps -p $containerd_pid > /dev/null 2>&1 \
+              && $0 stop
+            $0 start
+            ;;
+
+          force-reload)
+            check_init
+            fail_unless_root
+            $0 restart
+            ;;
+
+          status)
+            check_init
+            status_of_proc -p "$CONTAINERD_SSD_PIDFILE" "$CONTAINERD" "$CONTAINERD_DESC"
+            ;;
+
+          *)
+            echo "Usage: service containerd {start|stop|restart|status}"
+            exit 1
+            ;;
+        esac
     post_install: |
+      chmod +x "${prefix}/etc/init.d/containerd"
       go-md2man -in "${target}/share/man/man8/containerd-config.8.md" -out "${target}/share/man/man8/containerd-config.8"
       go-md2man -in "${target}/share/man/man5/containerd-config.toml.5.md" -out "${target}/share/man/man5/containerd-config.toml.5"
       rm \
