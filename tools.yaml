@@ -497,6 +497,21 @@ tools:
       type: file
       path: ${target}/share/man/man5/containerd-config.toml.5.md
     files:
+    - path: ${prefix}/etc/containerd/conf.d/oom-score-adjust.toml
+      content: |
+        [Service]
+        # Decreases the likelihood that containerd is killed due to memory
+        # pressure.
+        #
+        # Please see the following link for more information about the
+        # OOMScoreAdjust configuration property:
+        # https://www.freedesktop.org/software/systemd/man/systemd.exec.html#OOMScoreAdjust=
+        OOMScoreAdjust=-999
+    - path: ${prefix}/etc/containerd/conf.d/max-tasks.toml
+      content: |
+        [Service]
+        # Do not limit the number of tasks that can be spawned by containerd
+        TasksMax=infinity
     - path: ${prefix}/etc/cni/net.d/10-containerd-net.conflist
       content: |
         {
