@@ -1047,17 +1047,6 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: ipfs\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "ipfs/go-ipfs",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
         "name: iptables\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "nicholasdille/centos-iptables-legacy",
@@ -1391,6 +1380,17 @@
         "name: kubeval\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "instrumenta/kubeval",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: kubo\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "ipfs/kubo",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
