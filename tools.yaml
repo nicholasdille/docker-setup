@@ -717,6 +717,10 @@ tools:
               "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
               "${prefix}/etc/crictl.yaml"
       fi
+      if test -f "${prefix}/etc/group"; then
+          echo "Create group (@ ${SECONDS} seconds)"
+          groupadd --prefix "${prefix}" --system --force containerd
+      fi
       echo "Install systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${relative_target}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
       if test -z "${prefix}"; then
