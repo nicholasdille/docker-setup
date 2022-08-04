@@ -4185,7 +4185,7 @@ tools:
       type: tarball
       path: ${target}/bin
     files:
-    - path: contrib/${tool}/stargz-snapshotter.service
+    - path: "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       content: |
         [Unit]
         Description=stargz snapshotter
@@ -4219,12 +4219,7 @@ tools:
           snapshotter = "stargz"
           disable_snapshot_annotations = false
     post_install: |
-      echo "Add configuration to containerd"
-      cat >"${docker_setup_cache}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
-      "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."stargz" type=snapshot address=/var/run/containerd-stargz-grpc.sock
-      EOF
       echo "Install systemd units"
-      cp "${docker_setup_contrib}/${tool}/stargz-snapshotter.service" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       if test -z "${prefix}"; then
           if has_systemd; then
