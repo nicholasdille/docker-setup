@@ -819,6 +819,14 @@ tools:
         x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun-${alt_arch}.tar.gz
       type: tarball
       path: ${target}
+    files:
+    - path: ${prefix}/etc/containerd/conf.d/crun.toml
+      content: |
+        version = 2
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.crun]
+          runtime_type = "io.containerd.runc.v2"
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.crun.options]
+          BinaryName = "/usr/local/bin/crun"
     post_install: |
       if ! test -f "${prefix}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
           echo "Add runtime to Docker"
@@ -1636,6 +1644,14 @@ tools:
     - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/containerd-shim-runsc-v1
       type: executable
       path: ${target}/bin/containerd-shim-runsc-v1
+    files:
+    - path: ${prefix}/etc/containerd/conf.d/gvisor.toml
+      content: |
+        version = 2
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+          runtime_type = "io.containerd.runc.v2"
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
+          runtime_type = "io.containerd.runsc.v1"
     post_install: |
       if ! test -f "${prefix}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "runsc")' "${prefix}/etc/docker/daemon.json")" == "true"; then
           echo "Add runtime to Docker"
