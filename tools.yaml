@@ -477,6 +477,7 @@ tools:
     - cni
     - dasel
     - go-md2man
+    - crictl
     tags:
     - runtime
     - containerd
@@ -504,6 +505,13 @@ tools:
           mkdir -p "${prefix}/etc/containerd"
           "${target}/bin/containerd" config default >"${prefix}/etc/containerd/config.toml"
           sed -i "s|/opt/cni/bin|${relative_target}/libexec/cni|" "${prefix}/etc/containerd/config.toml"
+      fi
+      if test -f "${prefix}/etc/crictl.yaml"; then
+          echo "Fixing configuration for cticrl"
+          ENDPOINT=unix:///run/containerd/containerd.sock
+          sed -i \
+              "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
+              "${prefix}/etc/crictl.yaml"
       fi
       echo "Install systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${relative_target}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
@@ -569,6 +577,7 @@ tools:
     check: ${binary} --version 2>&1 | cut -d' ' -f2
     needs:
     - docker
+    - crictl
     tags:
     - docker
     - k8s
@@ -580,6 +589,14 @@ tools:
       path: ${target}/bin
       files:
       - cri-dockerd
+    post_install: |
+      if test -f "${prefix}/etc/crictl.yaml"; then
+          echo "Fixing configuration for cticrl"
+          ENDPOINT=unix:///var/run/cri-dockerd.sock
+          sed -i \
+              "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
+              "${prefix}/etc/crictl.yaml"
+      fi
 
   - name: crictl
     version: 1.24.2
@@ -592,6 +609,19 @@ tools:
     - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
+    files:
+    - path: ${prefix}/etc/crictl.yaml
+      content: |
+        # Possible values for runtime-endpoint and image-endpoint
+        # dockershim: unix:///var/run/dockershim.sock
+        # containerd: unix:///run/containerd/containerd.sock
+        # crio: unix:///run/crio/crio.sock
+        # cri-dockerd: unix:///var/run/cri-dockerd.sock
+        #runtime-endpoint: YOUR-CHOICE
+        #image-endpoint: YOUR-CHOICE
+        timeout: 2
+        debug: false
+        pull-image-on-create: false
 
   - name: crun
     version: 1.5
