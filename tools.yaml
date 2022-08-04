@@ -482,6 +482,7 @@ tools:
     tags:
     - runtime
     - containerd
+    - cri
     download:
     - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -767,6 +768,7 @@ tools:
     - k8s
     - kubernetes
     - runtime
+    - cri
     download:
     - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz
       type: tarball
@@ -782,6 +784,95 @@ tools:
               "${prefix}/etc/crictl.yaml"
       fi
 
+  - name: cri-o
+    version: 1.24.1
+    #check: ${binary}
+    needs:
+    - runc
+    - go-md2man
+    - crictl
+    tags:
+    - redhat
+    - runtime
+    - oci
+    - cri
+    download:
+    - url: https://github.com/cri-o/cri-o/releases/download/v${version}/cri-o.${alt_arch}.v${version}.tar.gz
+      type: tarball
+      path: ${target}
+      strip: 1
+      files:
+      - cri-o/bin/crio
+      - cri-o/bin/crio-status
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.8.md
+      type: file
+      path: ${target}/share/man/man8/crio.8.md
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/docs/crio-status.8.md
+      type: file
+      path: ${target}/share/man/man8/crio-status.8.md
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.conf.5.md
+      type: file
+      path: ${target}/share/man/man5/crio.conf.5.md
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.conf.d.5.md
+      type: file
+      path: ${target}/share/man/man5/crio.conf.d.5.md
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/completions/bash/crio
+      type: file
+      path: ${target}/share/bash-completion/completions/crio
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/completions/bash/crio-status
+      type: file
+      path: ${target}/share/bash-completion/completions/crio-status
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/completions/fish/crio.fish
+      type: file
+      path: ${target}/share/fish/vendor_completions.d/crio.fish
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/completions/fish/crio-status.fish
+      type: file
+      path: ${target}/share/fish/vendor_completions.d/crio-status.fish
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/completions/zsh/_crio
+      type: file
+      path: ${target}/share/zsh/vendor-completions/_crio
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/completions/zsh/_crio-status
+      type: file
+      path: ${target}/share/zsh/vendor-completions/_crio-status
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/contrib/systemd/crio.service
+      type: file
+      path: ${prefix}/etc/systemd/system/crio.service
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/contrib/systemd/crio-wipe.service
+      type: file
+      path: ${prefix}/etc/systemd/system/crio-wipe.service
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/contrib/sysconfig/crio
+      type: file
+      path: ${prefix}/etc/sysconfig/crio
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/10-crio-bridge.conf
+      type: file
+      path: ${prefix}/etc/cni/net.d/10-crio-bridge.conf
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/11-crio-ipv4-bridge.conf
+      type: file
+      path: ${prefix}/etc/cni/net.d/11-crio-ipv4-bridge.conf
+    - url: https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/99-loopback.conf
+      type: file
+      path: ${prefix}/etc/cni/net.d/99-loopback.conf
+    post_install: |
+      echo "Building manpages"
+      go-md2man -in "${target}/share/man/man8/crio.8.md"        -out "${target}/share/man/man8/crio.8"
+      go-md2man -in "${target}/share/man/man8/crio-status.8.md" -out "${target}/share/man/man8/crio-status.8"
+      go-md2man -in "${target}/share/man/man5/crio.conf.5.md"   -out "${target}/share/man/man5/crio.conf.5"
+      go-md2man -in "${target}/share/man/man5/crio.conf.d.5.md" -out "${target}/share/man/man5/crio.conf.d.5"
+      rm \
+          "${target}/share/man/man8/crio.8.md" \      
+          "${target}/share/man/man8/crio-status.8.md" \
+          "${target}/share/man/man5/crio.conf.5.md" \
+          "${target}/share/man/man5/crio.conf.d.5.md"
+      echo "Install systemd unit"
+      sed -i "s|ExecStart=/usr/local/bin/crio|ExecStart=${relative_target}/bin/crio|" "${prefix}/etc/systemd/system/crio.service"
+      sed -i "s|ExecStart=/usr/local/bin/crio|ExecStart=${relative_target}/bin/crio|" "${prefix}/etc/systemd/system/crio-wipe.service"
+      if test -z "${prefix}"; then
+          if has_systemd; then
+              echo "Reload systemd"
+              systemctl daemon-reload
+          fi
+      fi
+
   - name: crictl
     version: 1.24.2
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
@@ -789,6 +880,7 @@ tools:
     - k8s
     - kubernetes
     - runtime
+    - cri
     download:
     - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
