@@ -769,12 +769,18 @@ while ! ${last_update}; do
         percent=$(( done * 100 / child_pid_count ))
 
         echo -e -n "\rInstalled ${done}/${child_pid_count} [${done_chars}${todo_chars}] ${percent}%"
+
+    else
+        if test "$(( $(date +%s) % 5 ))" -eq 0; then
+            echo "${running} installations running"
+            sleep 1
+        fi
     fi
 
     if ${last_update} || test -f "${docker_setup_cache}/errors/${name}.log"; then
         break
     fi
-    if test "${started_index}" -eq "${#tool_install[@]}" && test "$(count_sub_processes)" -eq 0; then
+    if test "${started_index}" -eq "${#tool_install[@]}" && test "${running}" -eq 0; then
         last_update=true
     fi
 
