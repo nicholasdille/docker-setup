@@ -707,6 +707,7 @@ tools:
           mkdir -p "${prefix}/etc/containerd/conf.d" "${prefix}/etc/containerd/certs.d"
           "${target}/bin/containerd" config default >"${prefix}/etc/containerd/config.toml"
           sed -i "s|/opt/cni/bin|${relative_target}/libexec/cni|" "${prefix}/etc/containerd/config.toml"
+          sed -i 's|imports = []|imports = ["/etc/containerd/conf.d/*.toml"]|' "${prefix}/etc/containerd/config.toml"
       fi
       if test -f "${prefix}/etc/crictl.yaml"; then
           echo "Fixing configuration for cticrl"
