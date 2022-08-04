@@ -40,11 +40,6 @@ function is_installed() {
         tool_is_installed[${tool}]="true"
         return 0
 
-    elif test -f "${docker_setup_cache}/${tool}/${version}"; then
-        debug "touch file is present"
-        tool_is_installed[${tool}]="true"
-        return 0
-
     else
         debug "Tool is not available"
         tool_is_installed[${tool}]="false"
