@@ -614,6 +614,11 @@ if ${check}; then
     exit "${check_only_exit_code}"
 fi
 
+if [[ ${EUID} -ne 0 ]] && [[ ! -w "${target}" ]]; then
+    error "Unable to continue because ${target} is not writable for current user."
+    exit 1
+fi
+
 if test "${#tool_install[@]}" -gt 0 && ! ${no_wait}; then
     echo "Please press ctrl-c to abort."
     seconds_remaining=10
