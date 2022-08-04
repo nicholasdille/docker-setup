@@ -1519,59 +1519,6 @@ tools:
     - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
       type: executable
 
-  - name: ipfs
-    version: 0.14.0
-    check: ${binary} version --number
-    needs:
-    - containerd
-    tags:
-    - storage
-    - network
-    - containerd
-    download:
-    - url: https://github.com/ipfs/go-ipfs/releases/download/v${version}/go-ipfs_v${version}_linux-${alt_arch}.tar.gz
-      type: tarball
-      path: ${target}/bin
-      strip: 1
-      files:
-      - go-ipfs/ipfs
-    files:
-    - path: ${prefix}/etc/systemd/system/ipfs.service
-      content: |
-        [Unit]
-        Description=ipfs daemon
-        PartOf=containerd
-
-        [Service]
-        Environment=IPFS_PATH=/var/lib/ipfs
-        ExecStart=/usr/local/bin/ipfs daemon $@
-        ExecReload=/bin/kill -s HUP \$MAINPID
-        RestartSec=2
-        Restart=always
-        Type=simple
-        KillMode=mixed
-
-        [Install]
-        WantedBy=default.target
-    post_install: |
-      echo "Install completion"
-      ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
-      IPFS_PATH=${prefix}/var/lib/ipfs ${binary} init
-      IPFS_PATH=${prefix}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
-      IPFS_PATH=${prefix}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
-      echo "Add configuration to containerd"
-      cat >"${docker_setup_cache}/containerd-config.toml-ipfs.sh" <<EOF
-      "${target}/bin/dasel" put bool --file "${prefix}/etc/containerd/config.toml" --parser toml .ipfs true
-      EOF
-      echo "Fix systemd units"
-      sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${relative_target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
-      fi
-
   - name: iptables
     version: 1.8.8
     if: |
@@ -2096,6 +2043,73 @@ tools:
       path: ${target}/bin
       files:
       - kubeswitch
+
+  - name: kubeval
+    version: 0.16.1
+    check: ${binary} --version | grep ^Version | cut -d' ' -f2
+    tags:
+    - k8s
+    - kubernetes
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
+      type: tarball
+      path: ${target}/bin
+      files:
+      - kubeval
+
+  - name: kubo
+    version: 0.14.0
+    check: ${binary} version --number
+    needs:
+    - containerd
+    tags:
+    - storage
+    - network
+    - containerd
+    download:
+    - url: https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+      strip: 1
+      files:
+      - kubo/ipfs
+    files:
+    - path: ${prefix}/etc/systemd/system/ipfs.service
+      content: |
+        [Unit]
+        Description=ipfs daemon
+        PartOf=containerd
+
+        [Service]
+        Environment=IPFS_PATH=/var/lib/ipfs
+        ExecStart=/usr/local/bin/ipfs daemon $@
+        ExecReload=/bin/kill -s HUP \$MAINPID
+        RestartSec=2
+        Restart=always
+        Type=simple
+        KillMode=mixed
+
+        [Install]
+        WantedBy=default.target
+    - path: ${prefix}/etc/containerd/conf.d/ipfs.toml
+      content: |
+        ipfs = true
+    post_install: |
+      echo "Install completion"
+      ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
+      echo "Preconfigure ipfs"
+      IPFS_PATH=${target}/var/lib/ipfs ${binary} init
+      IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
+      IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
+      echo "Patch systemd units"
+      sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${relative_target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
+      if test -z "${prefix}" && has_systemd; then
+              echo "Reload systemd"
+              systemctl daemon-reload
+          fi
+      fi
 
   - name: kustomize
     version: 4.5.7
