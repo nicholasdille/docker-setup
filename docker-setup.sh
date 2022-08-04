@@ -838,7 +838,7 @@ if ! test -d "${cron_weekly_path}"; then
 fi
 if ! ${no_cron}; then
     # Weekly update of docker-setup into current location
-    rm "${cron_weekly_path}/docker-setup-update" "${cron_weekly_path}/docker-setup-upgrade"
+    rm -f "${cron_weekly_path}/docker-setup-update" "${cron_weekly_path}/docker-setup-upgrade"
     cat >"${cron_weekly_path}/docker-setup" <<EOF
 #!/bin/bash
 set -o errexit
