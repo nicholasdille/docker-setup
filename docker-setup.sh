@@ -426,22 +426,25 @@ if ( ${only} || ${tags} ) && test "${#requested_tools[@]}" -eq 0; then
 fi
 
 echo -e "docker-setup version $(if test "${docker_setup_version}" == "main"; then echo "${red}"; fi)${docker_setup_version}${reset}"
-if test "${docker_setup_version}" != "main" && github_ensure_rate_limit; then
+if test "${docker_setup_version}" != "main" && echo "${docker_setup_version}" | grep -qvP '^\d+\.\d+\.\d+-' && github_ensure_rate_limit; then
     release_tags="$(
         github_api "/repos/${docker_setup_repo_name}/releases" \
         | jq --raw-output '.[] | select(.prerelease == false) | .tag_name'
     )"
+    debug "Release tags: ${release_tags}"
 
     minor_version="$(
         echo "${docker_setup_version}" \
         | sed -E 's/^([0-9]+\.[0-9]+)\.[0-9]+$/\1/'
     )"
+    debug "Minor version: ${minor_version}"
     new_patch="$(
         echo "${release_tags}" \
         | grep "^v${minor_version}." \
         | sort -Vr \
         | head -n 1
     )"
+    debug "New patch: ${new_patch}"
     if test -n "${new_patch}" && test "${new_patch#v}" != "${docker_setup_version}"; then
         warning "New patch available: ${new_patch}"
     fi
@@ -451,9 +454,13 @@ if test "${docker_setup_version}" != "main" && github_ensure_rate_limit; then
         | sort -Vr \
         | head -n 1
     )"
+    debug "New version: ${new_version}"
     if test -n "${new_version}" && test "${new_version}" != "${docker_setup_version}" && test "${new_version}" != "${new_patch}"; then
         error "New version available: ${new_version}"
     fi
+
+else
+    warning "Skipping version check."
 fi
 echo
 if ${show_version}; then
