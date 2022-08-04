@@ -328,6 +328,23 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: cilium
+    version: 0.12.1
+    check: ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
+    tag:
+    - kubernetes
+    - k8s
+    - network
+    download:
+    - url: https://github.com/cilium/cilium-cli/releases/download/v${version}/cilium-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/bin
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: cinf
     version: 0.6.0
     tags:
