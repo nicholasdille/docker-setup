@@ -475,7 +475,6 @@ tools:
     needs:
     - runc
     - cni
-    - dasel
     - go-md2man
     - crictl
     tags:
