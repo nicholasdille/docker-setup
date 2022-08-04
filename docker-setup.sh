@@ -710,7 +710,7 @@ child_pid_count="${#tool_order[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
 log_timestamp="$(date +%Y%m%d-%H%M%S)"
 if ${no_progressbar}; then
-    echo "installing..."
+    echo "Installing..."
 fi
 rm -f "${docker_setup_logs}/PROFILING"
 while ! ${last_update}; do
