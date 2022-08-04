@@ -254,11 +254,11 @@ tools:
             ;;
         esac
     post_install: |
-      echo "Install systemd units"
-      sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
-      echo "Install init script"
+      echo "Patch init script"
       sed -i "s|/usr/local/bin/buildkitd|${relative_target}/bin/buildkitd|" "${prefix}/etc/init.d/buildkit"
       chmod +x "${prefix}/etc/init.d/buildkit"
+      echo "Patch systemd units"
+      sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
       if test -z "${prefix}" && has_systemd; then
           echo "Reload systemd"
           systemctl daemon-reload
@@ -278,6 +278,7 @@ tools:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
     post_install: |
+      echo "Make buildx the default builder on login"
       cat >"${prefix}/etc/profile.d/docker-buildx-install" <<EOF
       #!/bin/bash
 
@@ -694,7 +695,7 @@ tools:
             ;;
         esac
     post_install: |
-      chmod +x "${prefix}/etc/init.d/containerd"
+      echo "Create manpages"
       go-md2man -in "${target}/share/man/man8/containerd-config.8.md" -out "${target}/share/man/man8/containerd-config.8"
       go-md2man -in "${target}/share/man/man5/containerd-config.toml.5.md" -out "${target}/share/man/man5/containerd-config.toml.5"
       rm \
@@ -719,10 +720,12 @@ tools:
           echo "Create group (@ ${SECONDS} seconds)"
           groupadd --prefix "${prefix}" --system --force containerd
       fi
-      echo "Install systemd unit"
+      echo "Patch init script"
+      chmod +x "${prefix}/etc/init.d/containerd"
+      sed -i "s|CONTAINERD=/usr/local/bin/containerd|CONTAINERD=${relative_target}/bin/containerd|" "${prefix}/etc/init.d/containerd"
+      echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${relative_target}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -1447,7 +1450,7 @@ tools:
         # If set to 0, the stats are collected on-demand instead.
         # stats_collection_period = 0
     post_install: |
-      echo "Building manpages"
+      echo "Build manpages"
       go-md2man -in "${target}/share/man/man8/crio.8.md"        -out "${target}/share/man/man8/crio.8"
       go-md2man -in "${target}/share/man/man8/crio-status.8.md" -out "${target}/share/man/man8/crio-status.8"
       go-md2man -in "${target}/share/man/man5/crio.conf.5.md"   -out "${target}/share/man/man5/crio.conf.5"
@@ -1457,11 +1460,10 @@ tools:
           "${target}/share/man/man8/crio-status.8.md" \
           "${target}/share/man/man5/crio.conf.5.md" \
           "${target}/share/man/man5/crio.conf.d.5.md"
-      echo "Install systemd unit"
+      echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/crio|ExecStart=${relative_target}/bin/crio|" "${prefix}/etc/systemd/system/crio.service"
       sed -i "s|ExecStart=/usr/local/bin/crio|ExecStart=${relative_target}/bin/crio|" "${prefix}/etc/systemd/system/crio-wipe.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -2181,10 +2183,9 @@ tools:
             type = "snapshot"
             address = "/run/containerd-fuse-overlayfs.sock"
     post_install: |
-      echo "Install systemd units"
+      echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -2201,6 +2202,7 @@ tools:
       path: ${target}
       strip: 1
     post_install: |
+      echo "Remove unwanted files"
       rm ${target}/LICENSE
       echo "Install completion"
       ${binary} completion -s bash >"${target}/share/bash-completion/completions/${name}"
@@ -2257,6 +2259,7 @@ tools:
 
         exec "${BIN}/${GITSIGN}" "$@"
     post_install: |
+      echo "Fix permissions on gitsign.sh"
       chmod +x "${target}/bin/gitsign.sh"
 
   - name: glab
@@ -2393,6 +2396,7 @@ tools:
       files:
       - linux-amd64/helm
     post_install: |
+      echo "Install completion"
       "${binary}" completion bash >"${target}/share/bash-completion/completions/${name}"
       "${binary}" completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       "${binary}" completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
@@ -2580,13 +2584,13 @@ tools:
     post_install: |
       echo "Install completion"
       ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
+      echo "Preconfigure ipfs"
       IPFS_PATH=${target}/var/lib/ipfs ${binary} init
       IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
       IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
-      echo "Fix systemd units"
+      echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${relative_target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -2694,10 +2698,9 @@ tools:
         ExecStartPre=-/sbin/modprobe overlay
         ExecStart=/usr/local/bin/k3s
     post_install: |
-      echo "Fix systemd unit"
+      echo "Patch systemd unit"
       sed -i "s|/usr/local/bin/k3s|${relative_target}/bin/k3s|g" "${prefix}/etc/systemd/system/k3s.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -2840,6 +2843,7 @@ tools:
       files:
       - kots
     post_install: |
+      echo "Fix filename"
       mv "${target}/bin/kots" "${target}/bin/kubectl-kots"
       echo "Install completion"
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
@@ -2862,6 +2866,7 @@ tools:
       files:
       - ./krew-linux_${alt_arch}
     post_install: |
+      echo "Fix filename"
       mv "${target}/bin/krew-linux_${alt_arch}" "${target}/bin/krew"
       echo "Add to path"
       cat >"${prefix}/etc/profile.d/krew.sh" <<"EOF"
@@ -2898,6 +2903,7 @@ tools:
       type: tarball
       path: "${target}/bin"
     post_install: |
+      echo "Install configuration"
       mkdir -p "${prefix}/etc/kube-bench"
       mv "${target}/bin/cfg" "${prefix}/etc/kube-bench"
       echo "Install completion"
@@ -3172,6 +3178,7 @@ tools:
       files:
       - kubesec
     post_install: |
+      echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
@@ -3445,7 +3452,7 @@ tools:
           --file "${target}/bin/mutagen-agents.tar.gz" \
           --directory "${target}/libexec/mutagen"
       rm "${target}/bin/mutagen-agents.tar.gz"
-      echo "Install completion for ${name}"
+      echo "Install completion"
       ${binary} generate \
           "--bash-completion-script=${target}/share/bash-completion/completions/${name}" \
           "--fish-completion-script=${target}/share/fish/vendor_completions.d/${name}.fish" \
@@ -3534,7 +3541,6 @@ tools:
               libbsd-dev \
               libcap2-bin
     install: |
-      echo "nsutils ${version}"
       docker_run \
           --workdir /nsutils \
           <<EOF
@@ -3557,7 +3563,6 @@ tools:
     dockerfile: |
       FROM golang:${go_version}
     install: |
-      echo "oci-image-tool ${version}"
       docker_run \
           --env GO111MODULE=auto \
           --workdir /go/src/github.com/opencontainers/image-tools \
@@ -3577,7 +3582,6 @@ tools:
     dockerfile: |
       FROM golang:${go_version}
     install: |
-      echo "oci-runtime-tool ${version}"
       docker_run \
           --env GO111MODULE=auto \
           --workdir /go/src/github.com/opencontainers/runtime-tools \
@@ -3647,10 +3651,9 @@ tools:
       type: file
       path: ${target}/lib/tmpfiles.d/podman-docker.conf
     post_install: |
-      echo "Fix systemd unit"
+      echo "Patch systemd unit"
       sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               systemctl daemon-reload
           fi
       fi
@@ -3915,13 +3918,12 @@ tools:
     post_install: |
       echo "Install dedicated docker-compose v1"
       cp "${target}/bin/docker-compose" "${target}/share/portainer/docker-compose"
-      echo "Fix systemd unit"
-      sed -i "s|/usr/local/bin/portainer|${relative_target}/bin/portainer|g" "${prefix}/etc/systemd/system/portainer.service"
-      echo "Fix init script"
+      echo "Patch init script"
       sed -i "s|/usr/local/bin/portainer|${relative_target}/bin/portainer|g" "${prefix}/etc/init.d/portainer"
       chmod +x "${prefix}/etc/init.d/portainer"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      echo "Patch systemd unit"
+      sed -i "s|/usr/local/bin/portainer|${relative_target}/bin/portainer|g" "${prefix}/etc/systemd/system/portainer.service"
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -4086,6 +4088,7 @@ tools:
       type: file
       path: ${target}/share/man/man8/runc.8.md
     post_install: |
+      echo "Create manpages"
       find "${target}/share/man/man8" -type f -name \*.md \
       | while read FILE; do
           DEST_FILE="$(basename "${FILE}" .md)"
@@ -4108,7 +4111,7 @@ tools:
       files:
       - scorecard-linux-${alt-arch}
     post_install: |
-      echo "Rename binary"
+      echo "Fix filename"
       mv "${target}/bin/scorecard-linux-${alt_arch}" "${target}/bin/scorecard"
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
@@ -4220,10 +4223,9 @@ tools:
           snapshotter = "stargz"
           disable_snapshot_annotations = false
     post_install: |
-      echo "Install systemd units"
+      echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
-      if test -z "${prefix}"; then
-          if has_systemd; then
+      if test -z "${prefix}" && has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
           fi
@@ -4305,6 +4307,7 @@ tools:
       - completion/fish/task.fish
       - completion/zsh/_task
     post_install: |
+      echo "Install completion"
       mv "${target}/share/${name}.bash" "${target}/share/bash-completion/completions/${name}"
       mv "${target}/share/${name}.fish" "${target}/share/fish/vendor_completions.d/${name}.fish"
       mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"
