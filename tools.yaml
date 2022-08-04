@@ -703,8 +703,6 @@ tools:
           if has_systemd; then
               echo "Reload systemd"
               systemctl daemon-reload
-          else
-              warning "docker-setup does not offer an init script for containerd."
           fi
       fi
 
