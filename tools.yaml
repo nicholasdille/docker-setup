@@ -2172,6 +2172,12 @@ tools:
 
         [Install]
         WantedBy=default.target
+    - path: ${prefix}/etc/containerd/conf.d/fuse-overlayfs-snapshotter.toml
+      content: |
+        [proxy_plugins]
+          [proxy_plugins."fuse-overlayfs"]
+            type = "snapshot"
+            address = "/run/containerd-fuse-overlayfs.sock"
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
