@@ -89,7 +89,7 @@ Downloads have one of the following types in `type`:
 
 - `file` requires `path` to point to a filename
 - `executable` works like `file` but executes `chmod` to set `0755`
-- `tarball` requires `path` to point to a directory. Adding `strip` removes the specified number of path components from extracted files. Adding `files` specifies a list of files to extract
+- `tarball` will unpack to `${target}/bin` by default which can be overridden by `path` pointing to a directory. Adding `strip` removes the specified number of path components from extracted files. Adding `files` specifies a list of files to extract
 - `zip` requires `path` to point to a directory and `files` to list the files to extract
 
 See [download cache](download_cache.md) about the integrated caching of downloads.

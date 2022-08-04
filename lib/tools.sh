@@ -338,9 +338,12 @@ function install_tool() {
 
                 tarball)
                     if test -z "${path}"; then
-                        error "Path not specified."
-                        return
+                        path="$(
+                            echo "${target}/bin" \
+                            | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+                        )"
                     fi
+                    echo "    Using path ${path}"
                     mkdir -p "${path}"
                     echo "    Unpacking tarball"
                     local strip
@@ -377,9 +380,12 @@ function install_tool() {
 
                 zip)
                     if test -z "${path}"; then
-                        error "Path not specified."
-                        return
+                        path="$(
+                            echo "${target}/bin" \
+                            | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+                        )"
                     fi
+                    echo "    Using path ${path}"
                     local files
                     local param_files
                     files="$(

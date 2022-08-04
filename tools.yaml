@@ -14,7 +14,6 @@ tools:
         x86_64: https://github.com/nektos/act/releases/download/v${version}/act_Linux_${arch}.tar.gz
         aarch64: https://github.com/nektos/act/releases/download/v${version}/act_Linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - act
 
@@ -76,7 +75,6 @@ tools:
     download:
     - url: https://github.com/ktock/buildg/releases/download/v${version}/buildg-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - ./buildg
       - ./buildg.sh
@@ -92,7 +90,6 @@ tools:
     download:
     - url: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
     - url: https://github.com/moby/buildkit/raw/v${version}/examples/systemd/system/buildkit.service
       type: file
@@ -338,7 +335,6 @@ tools:
     download:
     - url: https://github.com/cilium/cilium-cli/releases/download/v${version}/cilium-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
@@ -354,7 +350,6 @@ tools:
     download:
     - url: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - cinf
 
@@ -740,7 +735,6 @@ tools:
     download:
     - url: https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - containerssh
       - containerssh-auditlog-decoder
@@ -772,7 +766,6 @@ tools:
     download:
     - url: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - crane
     post_install: |
@@ -1483,7 +1476,6 @@ tools:
     download:
     - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
     files:
     - path: ${prefix}/etc/crictl.yaml
       content: |
@@ -1562,7 +1554,6 @@ tools:
     download:
     - url: https://github.com/dagger/dagger/releases/download/v${version}/dagger_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - dagger
 
@@ -1588,7 +1579,6 @@ tools:
     download:
     - url: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - dive
 
@@ -1609,12 +1599,12 @@ tools:
     download:
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
       type: tarball
-      strip: 1
       path: ${target}/libexec/docker/bin
+      strip: 1
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz
       type: tarball
-      strip: 1
       path: ${target}/libexec/docker/bin
+      strip: 1
     - url: https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker
       type: file
       path: ${target}/share/bash-completion/completions/docker
@@ -1902,7 +1892,6 @@ tools:
     download:
     - url: https://github.com/chrismellard/docker-credential-acr-env/releases/download/${version}/docker-credential-acr-env_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - docker-credential-acr-env
 
@@ -1927,7 +1916,6 @@ tools:
     download:
     - url: https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${version}/docker-credential-gcr_linux_${alt_arch}-${version}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - docker-credential-gcr
 
@@ -1943,11 +1931,9 @@ tools:
     - url:
         x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-pass-v${version}-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
     - url:
         x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-secretservice-v${version}-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
 
   - name: docker-credential-magic
     version: 0.8.1
@@ -1961,7 +1947,6 @@ tools:
         x86_64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${arch}.tar.gz
         aarch64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - docker-credential-magic
       - docker-credential-magician
@@ -2055,7 +2040,6 @@ tools:
     download:
     - url: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - dyff
     post_install: |
@@ -2101,7 +2085,6 @@ tools:
     download:
     - url: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-${arch}.tgz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - release-v${version}-${arch}/firecracker-v${version}-${arch}
@@ -2161,7 +2144,6 @@ tools:
     download:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
     files:
     - path: ${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service
       content: |
@@ -2275,7 +2257,6 @@ tools:
         x86_64: https://github.com/profclems/glab/releases/download/v${version}/glab_${version}_Linux_${arch}.tar.gz
         aarch64: https://github.com/profclems/glab/releases/download/v${version}/glab_${version}_Linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - bin/glab
@@ -2293,7 +2274,6 @@ tools:
     download:
     - url: https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - glow
 
@@ -2315,7 +2295,6 @@ tools:
     download:
     - url: https://github.com/anchore/grype/releases/download/v${version}/grype_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - grype
     post_install: |
@@ -2378,7 +2357,6 @@ tools:
     download:
     - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - hcloud
 
@@ -2394,7 +2372,6 @@ tools:
     download:
     - url: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - linux-amd64/helm
@@ -2476,7 +2453,6 @@ tools:
     download:
     - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - hub-tool/hub-tool
@@ -2681,7 +2657,6 @@ tools:
     download:
     - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - k9s
 
@@ -2725,7 +2700,6 @@ tools:
     download:
     - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kbrew
 
@@ -2758,7 +2732,6 @@ tools:
     download:
     - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kink
     post_install: |
@@ -2790,7 +2763,6 @@ tools:
     download:
     - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kots
     post_install: |
@@ -2813,7 +2785,6 @@ tools:
     - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
       type: tarball
       strip: 1
-      path: "${target}/bin"
       files:
       - ./krew-linux_${alt_arch}
     post_install: |
@@ -2838,7 +2809,6 @@ tools:
     download:
     - url: https://github.com/vladimirvivien/ktop/releases/download/v${version}/ktop_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - ktop
 
@@ -2852,7 +2822,6 @@ tools:
     download:
     - url: https://github.com/aquasecurity/kube-bench/releases/download/v${version}/kube-bench_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: "${target}/bin"
     post_install: |
       echo "Install configuration"
       mkdir -p "${prefix}/etc/kube-bench"
@@ -2887,7 +2856,6 @@ tools:
     download:
     - url: https://github.com/openclarity/kubeclarity/releases/download/v${version}/kubeclarity-cli-${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: "${target}/bin"
       files:
       - kubeclarity-cli
     post_install: |
@@ -3029,7 +2997,6 @@ tools:
     - url:
         x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
       type: tarball
-      path: ${target}/bin
 
   - name: kubectl-free
     version: 0.2.0
@@ -3046,7 +3013,6 @@ tools:
     - url:
         x86_64: https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip
       type: zip
-      path: ${target}/bin
       files:
       - kubectl-free_${version}_Linux_${arch}/kubectl-free
 
@@ -3063,7 +3029,6 @@ tools:
     download:
     - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kubectl-resources
 
@@ -3114,7 +3079,6 @@ tools:
     download:
     - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
 
   - name: kubesec
     version: 2.11.5
@@ -3125,7 +3089,6 @@ tools:
     download:
     - url: https://github.com/controlplaneio/kubesec/releases/download/v${version}/kubesec_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kubesec
     post_install: |
@@ -3143,7 +3106,6 @@ tools:
     download:
     - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kubeswitch
 
@@ -3158,7 +3120,6 @@ tools:
     - url:
         x86_64: https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - kubeval
 
@@ -3174,7 +3135,6 @@ tools:
     download:
     - url: https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - kubo/ipfs
@@ -3225,7 +3185,6 @@ tools:
     download:
     - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
@@ -3240,7 +3199,6 @@ tools:
     download:
     - url: https://github.com/zaquestion/lab/releases/download/v${version}/lab_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - lab
     post_install: |
@@ -3261,7 +3219,6 @@ tools:
     download:
     - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - lazydocker
 
@@ -3275,7 +3232,6 @@ tools:
     download:
     - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - lazygit
 
@@ -3383,7 +3339,6 @@ tools:
     download:
     - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - manifest-tool-linux-${alt_arch}
     post_install: |
@@ -3398,7 +3353,6 @@ tools:
     download:
     - url: https://github.com/dirien/minectl/releases/download/v${version}/minectl_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - minectl
     post_install: |
@@ -3431,7 +3385,6 @@ tools:
     - url:
         x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - mitmproxy
       - mitmdump
@@ -3447,7 +3400,6 @@ tools:
     download:
     - url: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
       type: tarball
-      path: ${target}/bin
     post_install: |
       echo "Install agents"
       mkdir -p "${target}/libexec/mutagen"
@@ -3487,7 +3439,6 @@ tools:
     download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
 
   - name: norouter
     version: 0.6.4
@@ -3497,7 +3448,6 @@ tools:
     download:
     - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
       type: tarball
-      path: ${target}/bin
       files:
       - norouter
 
@@ -3513,7 +3463,6 @@ tools:
     download:
     - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - notation
     - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
@@ -3604,7 +3553,6 @@ tools:
     download:
     - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - oras
 
@@ -3615,7 +3563,6 @@ tools:
     download:
     - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - patat-v${version}-linux-${arch}/patat
@@ -3711,7 +3658,6 @@ tools:
     download:
     - url: https://github.com/FairwindsOps/polaris/releases/download/${version}/polaris_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - polaris
 
@@ -3729,7 +3675,6 @@ tools:
     download:
     - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       strip: 1
       files:
       - portainer/portainer
@@ -4026,7 +3971,6 @@ tools:
     download:
     - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
       type: tarball
-      path: ${target}/bin
 
   - name: runc
     version: 1.1.3
@@ -4110,7 +4054,6 @@ tools:
     download:
     - url: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - scorecard-linux-${alt_arch}
     post_install: |
@@ -4190,7 +4133,6 @@ tools:
     download:
     - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
     files:
     - path: "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       content: |
@@ -4245,7 +4187,6 @@ tools:
     download:
     - url: https://github.com/stern/stern/releases/download/v${version}/stern_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - stern
     post_install: |
@@ -4281,7 +4222,6 @@ tools:
     download:
     - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - syft
     post_install: |
@@ -4298,7 +4238,6 @@ tools:
     download:
     - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - task
     - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
@@ -4326,7 +4265,6 @@ tools:
         x86_64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz
         aarch64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-ARM64.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - trivy
 
@@ -4440,7 +4378,6 @@ tools:
         x86_64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_amd64.tar.gz
         aarch64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_arm64v8.tar.gz
       type: tarball
-      path: ${target}/bin
       files:
       - watchtower
 
@@ -4451,7 +4388,6 @@ tools:
     download:
     - url: https://github.com/ncarlier/webhookd/releases/download/v${version}/webhookd-linux-${alt_arch}.tgz
       type: tarball
-      path: ${target}/bin
       files:
       - webhookd
 
@@ -4465,7 +4401,6 @@ tools:
     - url:
         x86_64: https://github.com/rupor-github/win-gpg-agent/releases/download/v${version}/win-gpg-agent.zip
       type: zip
-      path: ${target}/bin
       files:
       - sorelay.exe
 
