@@ -2156,7 +2156,7 @@ tools:
       type: tarball
       path: ${target}/bin
     files:
-    - path: contrib/${tool}/fuse-overlayfs-snapshotter.service
+    - path: ${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service
       content: |
         [Unit]
         Description=containerd-fuse-overlayfs
@@ -2179,12 +2179,7 @@ tools:
             type = "snapshot"
             address = "/run/containerd-fuse-overlayfs.sock"
     post_install: |
-      echo "Add configuration to containerd"
-      cat >"${docker_setup_cache}/containerd-config.toml-fuse-overlayfs-snapshotter.sh" <<EOF
-      "${target}/bin/dasel" put object --file "${prefix}/etc/containerd/config.toml" --parser toml --type string --type string proxy_plugins."fuse_overlayfs" type=snapshot address=/var/run/containerd-fuse-overlayfs.sock
-      EOF
       echo "Install systemd units"
-      cp "${docker_setup_contrib}/${tool}/fuse-overlayfs-snapshotter.service" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
       if test -z "${prefix}"; then
           if has_systemd; then
