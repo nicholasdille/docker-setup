@@ -40,9 +40,7 @@ jobs:
           "alpine-3.16",
           "amazonlinux-2022",
           "debian-11",
-          "fedora-35",
           "rockylinux-8",
-          "rockylinux-9",
           "ubuntu-20.04",
           "ubuntu-22.04"
         ]
@@ -54,8 +52,10 @@ jobs:
         [
           "archlinux",
           "clearlinux",
+          "fedora-35",
           "opensuse-leap-15",
-          "opensuse-tumbleweed"
+          "opensuse-tumbleweed",
+          "rockylinux-9"
         ]
       future_archs: |
         [
