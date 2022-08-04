@@ -312,6 +312,10 @@ function install_tool() {
                     echo "    Executable ${path}"
                     mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
+                    if test "$?" -gt 0; then
+                        echo "Failed to download executable"
+                        exit 1
+                    fi
                     chmod +x "${path}"
                     ;;
 
@@ -326,6 +330,10 @@ function install_tool() {
                     echo "    File ${path}"
                     mkdir -p "$(dirname "${path}")"
                     get_file "${url}" >"${path}"
+                    if test "$?" -gt 0; then
+                        echo "Failed to download file"
+                        exit 1
+                    fi
                     ;;
 
                 tarball)
@@ -361,6 +369,10 @@ function install_tool() {
                         --no-same-owner \
                         ${param_strip} \
                         ${param_files[@]}
+                    if test "$?" -gt 0; then
+                        echo "Failed to download or unpack tarball"
+                        exit 1
+                    fi
                     ;;
 
                 zip)
@@ -390,6 +402,10 @@ function install_tool() {
                     filename="$(basename "${url}")"
                     echo "    Downloading ZIP to ${prefix}/tmp/${filename}"
                     get_file "${url}" >"${prefix}/tmp/${filename}"
+                    if test "$?" -gt 0; then
+                        echo "Failed to download zip"
+                        exit 1
+                    fi
                     echo "      Unpacking into ${prefix}/tmp"
                     unzip -d "${prefix}/tmp" "${prefix}/tmp/${filename}"
                     echo "      Moving files to ${path}"
