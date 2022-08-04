@@ -283,6 +283,8 @@ tools:
 
       cat <<< "$(jq '. * {"aliases": {"builder": "buildx"}}' "${HOME}/.docker/config.json")" >"${HOME}/.docker/config.json"
       EOF
+      echo "Register buildx as default builder"
+      docker buildx install
       if docker_is_running || tool_will_be_installed "docker"; then
           echo "Wait for Docker daemon to start"
           wait_for_docker
