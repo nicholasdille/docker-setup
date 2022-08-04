@@ -3036,7 +3036,7 @@ tools:
       type: executable
 
   - name: util-linux
-    version: 2.38
+    version: 2.38.1
     binary: lsns
     needs:
     - docker
