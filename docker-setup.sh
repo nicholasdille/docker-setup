@@ -709,9 +709,6 @@ exit_code=0
 child_pid_count="${#tool_order[@]}"
 info_around_progress_bar="Installed xxx/yyy [] zzz%"
 log_timestamp="$(date +%Y%m%d-%H%M%S)"
-if ${no_progressbar}; then
-    echo "Installing..."
-fi
 rm -f "${docker_setup_logs}/PROFILING"
 while ! ${last_update}; do
     progress_bar_width=$(( $(get_display_cols) - ${#info_around_progress_bar} ))
@@ -726,12 +723,16 @@ while ! ${last_update}; do
         while test "${started_index}" -le "${end_index}" && test "${started_index}" -lt "${#tool_order[@]}"; do
             name="${tool_order[${started_index}]}"
 
-            {
+            (
                 echo "============================================================"
                 date +"%Y-%m-%d %H:%M:%S %Z"
                 echo "PID $$"
                 echo "------------------------------------------------------------"
-            } >>"${docker_setup_logs}/${name}-${log_timestamp}.log"
+            ) >>"${docker_setup_logs}/${name}-${log_timestamp}.log"
+
+            if ${no_progressbar}; then
+                echo "Installing ${name}"
+            fi
 
             (
                 set -o errexit
