@@ -2169,10 +2169,9 @@ tools:
         WantedBy=default.target
     - path: ${prefix}/etc/containerd/conf.d/fuse-overlayfs-snapshotter.toml
       content: |
-        [proxy_plugins]
-          [proxy_plugins."fuse-overlayfs"]
-            type = "snapshot"
-            address = "/run/containerd-fuse-overlayfs.sock"
+        [proxy_plugins."fuse-overlayfs"]
+          type = "snapshot"
+          address = "/run/containerd-fuse-overlayfs.sock"
     post_install: |
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
@@ -2327,9 +2326,6 @@ tools:
     files:
     - path: ${prefix}/etc/containerd/conf.d/gvisor.toml
       content: |
-        version = 2
-        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-          runtime_type = "io.containerd.runc.v2"
         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
           runtime_type = "io.containerd.runsc.v1"
     post_install: |
@@ -4159,17 +4155,10 @@ tools:
         WantedBy=default.target
     - path:
       content: |
-        version = 2
+        [proxy_plugins.stargz]
+          type = "snapshot"
+          address = "/run/containerd-stargz-grpc/containerd-stargz-grpc.sock"
 
-        # Plug stargz snapshotter into containerd
-        # Containerd recognizes stargz snapshotter through specified socket address.
-        # The specified address below is the default which stargz snapshotter listen to.
-        [proxy_plugins]
-          [proxy_plugins.stargz]
-            type = "snapshot"
-            address = "/run/containerd-stargz-grpc/containerd-stargz-grpc.sock"
-
-        # Use stargz snapshotter through CRI
         [plugins."io.containerd.grpc.v1.cri".containerd]
           snapshotter = "stargz"
           disable_snapshot_annotations = false
