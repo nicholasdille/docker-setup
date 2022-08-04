@@ -3321,7 +3321,7 @@ tools:
       ${binary} completion zsh                                                    >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: task
-    version: 3.14.0
+    version: 3.14.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - development
