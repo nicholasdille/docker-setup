@@ -4202,6 +4202,22 @@ tools:
 
         [Install]
         WantedBy=default.target
+    - path:
+      content: |
+        version = 2
+
+        # Plug stargz snapshotter into containerd
+        # Containerd recognizes stargz snapshotter through specified socket address.
+        # The specified address below is the default which stargz snapshotter listen to.
+        [proxy_plugins]
+          [proxy_plugins.stargz]
+            type = "snapshot"
+            address = "/run/containerd-stargz-grpc/containerd-stargz-grpc.sock"
+
+        # Use stargz snapshotter through CRI
+        [plugins."io.containerd.grpc.v1.cri".containerd]
+          snapshotter = "stargz"
+          disable_snapshot_annotations = false
     post_install: |
       echo "Add configuration to containerd"
       cat >"${docker_setup_cache}/containerd-config.toml-stargz-snapshotter.sh" <<EOF
