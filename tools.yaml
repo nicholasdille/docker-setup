@@ -2572,16 +2572,15 @@ tools:
 
         [Install]
         WantedBy=default.target
+    - path: ${prefix}/etc/containerd/conf.d/ipfs.toml
+      content: |
+        ipfs = true
     post_install: |
       echo "Install completion"
       ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
       IPFS_PATH=${target}/var/lib/ipfs ${binary} init
       IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
       IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
-      echo "Add configuration to containerd"
-      cat >"${docker_setup_cache}/containerd-config.toml-ipfs.sh" <<EOF
-      "${target}/bin/dasel" put bool --file "${prefix}/etc/containerd/config.toml" --parser toml .ipfs true
-      EOF
       echo "Fix systemd units"
       sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${relative_target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
       if test -z "${prefix}"; then
