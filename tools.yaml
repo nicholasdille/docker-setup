@@ -704,7 +704,7 @@ tools:
           "${target}/bin/containerd" config default >"${prefix}/etc/containerd/config.toml"
           sed -i "s|/opt/cni/bin|${relative_target}/libexec/cni|" "${prefix}/etc/containerd/config.toml"
           sed -i 's|imports = \[\]|imports = ["/etc/containerd/conf.d/*.toml"]|' "${prefix}/etc/containerd/config.toml"
-          sed 's|config_path = ""|config_path = "/etc/containerd/certs.d"|' "${prefix}/etc/containerd/config.toml"
+          sed -i 's|config_path = ""|config_path = "/etc/containerd/certs.d"|' "${prefix}/etc/containerd/config.toml"
       fi
       if test -f "${prefix}/etc/crictl.yaml"; then
           echo "Fixing configuration for cticrl"
@@ -712,6 +712,16 @@ tools:
           sed -i \
               "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
               "${prefix}/etc/crictl.yaml"
+      fi
+      if test -n "${docker_hub_mirror}"; then
+          echo "Adding registry mirror"
+          mkdir -p "${prefix}/etc/containerd/certs.d/docker.io"
+          cat >"${prefix}/etc/containerd/certs.d/docker.io/hosts.toml" <<EOF
+      server = "https://docker.io"
+
+      [host."https://${docker_hub_mirror}"]
+        capabilities = ["pull", "resolve"]
+      EOF
       fi
       if test -f "${prefix}/etc/group"; then
           echo "Create group (@ ${SECONDS} seconds)"
@@ -1720,11 +1730,11 @@ tools:
           touch "${docker_setup_cache}/docker_restart"
       fi
       # shellcheck disable=SC2016
-      if test -n "${docker_registry_mirror}" && ! test "$(jq --arg mirror "${docker_registry_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
-          echo "Add registry mirror ${docker_registry_mirror}"
+      if test -n "${docker_hub_mirror}" && ! test "$(jq --arg mirror "${docker_hub_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+          echo "Add registry mirror ${docker_hub_mirror}"
           # shellcheck disable=SC2094
           # shellcheck disable=SC2016
-          cat <<< "$(jq --args mirror "${docker_registry_mirror}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+          cat <<< "$(jq --args mirror "${docker_hub_mirror}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
           touch "${docker_setup_cache}/docker_restart"
       fi
       if ! test "$(jq --raw-output '.features.buildkit // false' "${prefix}/etc/docker/daemon.json")" == true; then

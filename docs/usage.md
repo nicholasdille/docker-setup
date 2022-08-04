@@ -25,7 +25,7 @@ You can tweak the behaviour of `docker-setup` by passing parameters or environme
 |                     | `cgroup_version`         | Specifies which version of cgroup to use. Defaults to v2 |
 |                     | `docker_address_base`    | Specifies the address pool for networks, e.g. 192.168.0.0/16 |
 |                     | `docker_address_size`    | Specifies the size of each network, e.g. 24 |
-|                     | `docker_registry_mirror` | Specifies a host to be used as registry mirror, e.g. https://proxy.my-domain.tld |
+|                     | `docker_hub_mirror`      | Specifies a host to be used as registry mirror, e.g. https://proxy.my-domain.tld |
 
 Before installing any tools, `docker-setup` displays a list of all supported tools to visualize the current status and what will happen. All tools show the following indicators:
 

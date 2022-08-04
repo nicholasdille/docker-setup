@@ -257,7 +257,7 @@ The following environment variables are processed:
                           e.g. 192.168.0.0/16
 \$docker_address_size      Specifies the size of each network,
                           e.g. 24
-\$docker_registry_mirror   Specifies a host to be used as registry
+\$docker_hub_mirror       Specifies a host to be used as registry
                           mirror, e.g. https://proxy.my-domain.tld
 \$docker_allow_restart     Whether restarting dockerd is acceptable
 
