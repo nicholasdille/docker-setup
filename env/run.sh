@@ -5,6 +5,8 @@ echo "run.sh: TOOL=${TOOL}"
 
 if test -z "${TOOL}"; then
     docker-setup --no-wait --no-color --no-progressbar --only docker
+    ps faux
+    docker version
     docker-setup --no-wait --no-color --no-progressbar --all
     docker-setup --no-wait --no-color --no-progressbar --check
 
