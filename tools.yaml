@@ -687,7 +687,7 @@ tools:
           "${target}/share/man/man5/containerd-config.toml.5.md"
       if ! test -f "${prefix}/etc/containerd/config.toml"; then
           echo "Adding default configuration"
-          mkdir -p "${prefix}/etc/containerd"
+          mkdir -p "${prefix}/etc/containerd/conf.d" "${prefix}/etc/containerd/certs.d"
           "${target}/bin/containerd" config default >"${prefix}/etc/containerd/config.toml"
           sed -i "s|/opt/cni/bin|${relative_target}/libexec/cni|" "${prefix}/etc/containerd/config.toml"
       fi
