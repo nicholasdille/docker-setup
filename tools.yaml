@@ -4126,7 +4126,7 @@ tools:
       type: tarball
       path: ${target}/bin
       files:
-      - scorecard-linux-${alt-arch}
+      - scorecard-linux-${alt_arch}
     post_install: |
       echo "Fix filename"
       mv "${target}/bin/scorecard-linux-${alt_arch}" "${target}/bin/scorecard"
