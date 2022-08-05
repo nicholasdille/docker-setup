@@ -715,6 +715,23 @@ tools:
             # kata-containers
             [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.kata]
               runtime_type = "io.containerd.kata.v2"
+    - path: ${prefix}/etc/containerd/conf.d/snapshotters.toml
+      content: |
+        # fuse-overlayfs
+        [proxy_plugins."fuse-overlayfs"]
+          type = "snapshot"
+          address = "/var/run/containerd-fuse-overlayfs.sock"
+
+        # stargz
+        [proxy_plugins.stargz]
+          type = "snapshot"
+          address = "/run/containerd-stargz-grpc/containerd-stargz-grpc.sock"
+        [plugins."io.containerd.grpc.v1.cri".containerd]
+          snapshotter = "stargz"
+          disable_snapshot_annotations = false
+
+        # ipfs
+        ipfs = true
     post_install: |
       echo "Create manpages"
       go-md2man -in "${target}/share/man/man8/containerd-config.8.md" -out "${target}/share/man/man8/containerd-config.8"
@@ -2196,11 +2213,6 @@ tools:
 
         [Install]
         WantedBy=default.target
-    - path: ${prefix}/etc/containerd/conf.d/fuse-overlayfs-snapshotter.toml
-      content: |
-        [proxy_plugins."fuse-overlayfs"]
-          type = "snapshot"
-          address = "/var/run/containerd-fuse-overlayfs.sock"
     post_install: |
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
@@ -3182,9 +3194,6 @@ tools:
 
         [Install]
         WantedBy=default.target
-    - path: ${prefix}/etc/containerd/conf.d/ipfs.toml
-      content: |
-        ipfs = true
     post_install: |
       echo "Install completion"
       ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
@@ -4177,15 +4186,6 @@ tools:
 
         [Install]
         WantedBy=default.target
-    - path:
-      content: |
-        [proxy_plugins.stargz]
-          type = "snapshot"
-          address = "/run/containerd-stargz-grpc/containerd-stargz-grpc.sock"
-
-        [plugins."io.containerd.grpc.v1.cri".containerd]
-          snapshotter = "stargz"
-          disable_snapshot_annotations = false
     post_install: |
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
