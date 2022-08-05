@@ -799,6 +799,12 @@ tools:
       strip: 1
       files:
       - cri-dockerd
+    - url: https://github.com/Mirantis/cri-dockerd/raw/v${version}/packaging/systemd/cri-docker.service
+      type: file
+      path: ${prefix}/etc/systems/system/cri-docker.service
+    - url: https://github.com/Mirantis/cri-dockerd/raw/v${version}/packaging/systemd/cri-docker.socket
+      type: file
+      path: ${prefix}/etc/systems/system/cri-docker.socket
     post_install: |
       if test -f "${prefix}/etc/crictl.yaml"; then
           echo "Fixing configuration for cticrl"
@@ -806,6 +812,13 @@ tools:
           sed -i \
               "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
               "${prefix}/etc/crictl.yaml"
+      fi
+      echo "Patch systemd unit"
+      sed -i "s|ExecStart=/usr/bin/cri-dockerd|ExecStart=${relative_target}/bin/cri-dockerd|" "${prefix}/etc/systemd/system/cri-docker.service"
+      if test -z "${prefix}" && has_systemd; then
+              echo "Reload systemd"
+              systemctl daemon-reload
+          fi
       fi
 
   - name: cri-o
