@@ -2184,7 +2184,7 @@ tools:
       content: |
         [proxy_plugins."fuse-overlayfs"]
           type = "snapshot"
-          address = "/run/containerd-fuse-overlayfs.sock"
+          address = "/var/run/containerd-fuse-overlayfs.sock"
     post_install: |
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
