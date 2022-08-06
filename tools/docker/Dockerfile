@@ -7,14 +7,21 @@ ARG ref=main
 ARG name=docker
 ARG version=20.10.17
 
-RUN printenv | sort
-
+RUN mkdir -p \
+        "${prefix}${target}/libexec/docker/bin" \
+        "${prefix}${target}/share/bash-completion/completions" \
+        "${prefix}${target}/share/fish/vendor_completions.d" \
+        "${prefix}${target}/share/zsh/vendor-completions" \
+        "${prefix}/etc/systemd/system" \
+        "${docker_setup_contrib}/${tool}/sysvinit/debian" \
+        "${docker_setup_contrib}/${tool}/sysvinit/redhat" \
+        "${docker_setup_contrib}/${tool}/openrc"
 RUN curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz" \
-    | tar -xz --directory=${prefix}${target}/libexec/docker/bin --no-same-owner --strip-components=1
+    | tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
 RUN curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz" \
-    | tar -xz --directory=${prefix}${target}/libexec/docker/bin --no-same-owner --strip-components=1
+    | tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
 RUN curl -sL "https://github.com/nicholasdille/docker-cli-manpages/releases/download/v${version}/docker-cli-manpages.tar.gz" \
-    | tar -xz --directory=${prefix}${target} --no-same-owner
+    | tar -xz --directory="${prefix}${target}" --no-same-owner
 RUN curl -sLo "${prefix}${target}/share/bash-completion/completions/docker" \
         "https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker"
 RUN curl -sLo "${prefix}${target}/share/fish/vendor_completions.d/docker.fish" \
@@ -37,10 +44,10 @@ RUN curl -sLo "${docker_setup_contrib}/${tool}/openrc/docker.confd" \
         "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd"
 RUN curl -sLo "${docker_setup_contrib}/${tool}/openrc/docker.initd" \
         "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd"
-COPY post_install.sh ${docker_setup_post_install}/${name}/
+COPY post_install.sh "${docker_setup_post_install}/${name}/"
 
 FROM scratch
-COPY --from=prepare --link /usr/local/ /usr/local/
+COPY --from=prepare ${prefix} /
 
 LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
       org.opencontainers.image.ref.name="${ref}" \
