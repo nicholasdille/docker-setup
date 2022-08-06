@@ -1,0 +1,11 @@
+name: docker
+version: 20.10.17
+dependencies:
+  runtime:
+  - fuse-overlayfs
+tags:
+- default
+- docker
+- runtime
+- build
+- oci

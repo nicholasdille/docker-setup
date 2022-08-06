@@ -1,0 +1,17 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "regexManagers": [
+        {
+            "fileMatch": [
+                "^tools.yaml$"
+            ],
+            "matchStrings": [
+                "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n",
+                "name: docker-manpages\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+            ],
+            "depNameTemplate": "moby/moby",
+            "datasourceTemplate": "github-tags",
+            "extractVersionTemplate": "^v(?<version>.+?)$"
+        }
+    ]
+}
