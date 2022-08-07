@@ -26,16 +26,38 @@ EOF
 
 ARG prefix_override=/docker_setup_install
 ARG target_override=/usr/local
-ENV docker_setup_cache=/var/cache/docker_setup \
-    docker_setup_contrib=/var/lib/docker_setup/contrib \
+ENV docker_setup_cache=/var/cache/docker-setup \
+    docker_setup_contrib=/var/lib/docker-setup/contrib \
+    docker_setup_post_install=/var/lib/docker-setup/post_install \
     prefix=${prefix_override} \
     target=${target_override} \
     arch=x86_64 \
     alt_arch=amd64
 
-RUN mkdir -p \
-        "${prefix}" \
-        "${prefix}/etc/systemd/system"
+RUN <<EOF
+mkdir -p \
+    "${prefix}" \
+    "${prefix}/etc/systemd/system" \
+    "${docker_setup_cache}" \
+    "${docker_setup_contrib}" \
+    "${docker_setup_post_install}" \
+    "${prefix}${target}/bin" \
+    "${prefix}${target}/etc" \
+    "${prefix}${target}/include" \
+    "${prefix}${target}/lib" \
+    "${prefix}${target}/libexec" \
+    "${prefix}${target}/sbin" \
+    "${prefix}${target}/var" \
+    "${prefix}${target}/share/man/man1" \
+    "${prefix}${target}/share/man/man2" \
+    "${prefix}${target}/share/man/man3" \
+    "${prefix}${target}/share/man/man4" \
+    "${prefix}${target}/share/man/man5" \
+    "${prefix}${target}/share/man/man6" \
+    "${prefix}${target}/share/man/man7" \
+    "${prefix}${target}/share/man/man8" \
+    "${prefix}${target}/share/man/man9"
+EOF
 
 ARG ref=main
 LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \

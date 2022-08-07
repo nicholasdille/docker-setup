@@ -3,15 +3,16 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG version=0.30.4
+ARG version=1.9
 
-RUN arch=$(uname -m) \
- && if test "${arch}" == "x86_64"; then alt_arch=amd64; alt_arch2=64bit; else alt_arch=arm64; alt_arch2=ARM64; fi \
- && curl --location --fail https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz | \
-        tar -xzC "${prefix}${target}/bin" trivy
+RUN <<EOF
+curl -sLo "${prefix}${target}/bin/fuse-overlayfs" \
+    "https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}"
+chmod +x "${prefix}${target}/bin/fuse-overlayfs"
+EOF
 
 # TODO: Add variable for /var/lib/docker-setup/installed
-COPY trivy.yaml "/var/lib/docker-setup/installed/trivy.yaml"
+COPY fuse-overlayfs.yaml "/var/lib/docker-setup/installed/fuse-overlayfs.yaml"
 
 FROM scratch
 # TODO: $prefix=/docker_setup_install
@@ -23,6 +24,6 @@ COPY --from=prepare /var/lib/docker-setup/contrib /var/lib/docker-setup/contrib
 COPY --from=prepare /var/lib/docker-setup/installed /var/lib/docker-setup/installed
 
 LABEL org.opencontainers.image.ref.name="${ref}" \
-      org.opencontainers.image.title="trivy" \
-      org.opencontainers.image.description="trivy packaged for installation" \
+      org.opencontainers.image.title="fuse-overlayfs" \
+      org.opencontainers.image.description="fuse-overlayfs packaged for installation" \
       org.opencontainers.image.version="${version}"

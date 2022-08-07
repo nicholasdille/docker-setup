@@ -1,30 +1,20 @@
 #!/bin/bash
 
-echo "Move binaries (@ ${SECONDS} seconds)"
-mv "${target}/libexec/docker/bin/dockerd" "${target}/bin"
-mv "${target}/libexec/docker/bin/docker" "${target}/bin"
-mv "${target}/libexec/docker/bin/docker-proxy" "${target}/bin"
-
-echo "Move rootless scripts (@ ${SECONDS} seconds)"
-mv "${target}/libexec/docker/bin/dockerd-rootless.sh" "${target}/bin"
-mv "${target}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${target}/bin"
-echo "Binaries installed after ${SECONDS} seconds."
-
 echo "Patch paths in systemd unit files (@ ${SECONDS} seconds)"
 sed -i "/^\[Service\]/a Environment=PATH=${relative_target}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}/etc/systemd/system/docker.service"
 sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
 
 echo "Patch paths in init scripts (@ ${SECONDS} seconds)"
-sed -i -E "s|^(export PATH=)|\1${relative_target}/libexec/docker/bin:|" "${docker_setup_contrib}/${tool}/sysvinit/debian/docker"
-sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/sysvinit/debian/docker"
-chmod +x "${docker_setup_contrib}/${tool}/sysvinit/debian/docker"
-sed -i -E "s|(^prog=)|export PATH="${relative_target}/libexec/docker/bin:${relative_target}/sbin:${relative_target}/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker"
-sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker"
-chmod +x "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker"
-sed -i -E "s|^(command=)|export PATH="${relative_target}/libexec/docker/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/${tool}/openrc/docker.initd"
-sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/openrc/docker.initd"
-sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/openrc/docker.confd"
-chmod +x "${docker_setup_contrib}/${tool}/openrc/docker.initd"
+sed -i -E "s|^(export PATH=)|\1${relative_target}/libexec/docker/bin:|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"
+sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"
+chmod +x "${docker_setup_contrib}/docker/sysvinit/debian/docker"
+sed -i -E "s|(^prog=)|export PATH="${relative_target}/libexec/docker/bin:${relative_target}/sbin:${relative_target}/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
+sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
+chmod +x "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
+sed -i -E "s|^(command=)|export PATH="${relative_target}/libexec/docker/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/docker/openrc/docker.initd"
+sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.initd"
+sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.confd"
+chmod +x "${docker_setup_contrib}/docker/openrc/docker.initd"
 
 if test -f "${prefix}/etc/group"; then
     echo "Create group (@ ${SECONDS} seconds)"
@@ -110,20 +100,20 @@ else
     if is_debian || is_clearlinux; then
         echo "Install init script for debian"
         mkdir -p "${prefix}/etc/default" "${prefix}/etc/init.d"
-        cp "${docker_setup_contrib}/${tool}/sysvinit/debian/docker.default" "${prefix}/etc/default/docker"
-        cp "${docker_setup_contrib}/${tool}/sysvinit/debian/docker" "${prefix}/etc/init.d/docker"
+        cp "${docker_setup_contrib}/docker/sysvinit/debian/docker.default" "${prefix}/etc/default/docker"
+        cp "${docker_setup_contrib}/docker/sysvinit/debian/docker" "${prefix}/etc/init.d/docker"
         
     elif is_redhat; then
         echo "Install init script for redhat"
         mkdir -p "${prefix}/etc/sysconfig" "${prefix}/etc/init.d"
-        cp "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker.sysconfig" "${prefix}/etc/sysconfig/docker"
-        cp "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker" "${prefix}/etc/init.d/docker"
+        cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker.sysconfig" "${prefix}/etc/sysconfig/docker"
+        cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker" "${prefix}/etc/init.d/docker"
         
     elif is_alpine; then
         echo "Install openrc script for alpine"
         mkdir -p "${prefix}/etc/conf.d" "${prefix}/etc/init.d"
-        cp "${docker_setup_contrib}/${tool}/openrc/docker.confd" "${prefix}/etc/conf.d/docker"
-        cp "${docker_setup_contrib}/${tool}/openrc/docker.initd" "${prefix}/etc/init.d/docker"
+        cp "${docker_setup_contrib}/docker/openrc/docker.confd" "${prefix}/etc/conf.d/docker"
+        cp "${docker_setup_contrib}/docker/openrc/docker.initd" "${prefix}/etc/init.d/docker"
         openrc
     else
         warning "Unable to install init script because the distributon is unknown."

@@ -1,56 +1,78 @@
 #syntax=docker/dockerfile:1.4.2
 
-ARG branch=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${branch} AS prepare
-
 ARG ref=main
-ARG name=docker
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
 ARG version=20.10.17
 
-RUN mkdir -p \
-        "${prefix}${target}/libexec/docker/bin" \
-        "${prefix}${target}/share/bash-completion/completions" \
-        "${prefix}${target}/share/fish/vendor_completions.d" \
-        "${prefix}${target}/share/zsh/vendor-completions" \
-        "${prefix}/etc/systemd/system" \
-        "${docker_setup_contrib}/${tool}/sysvinit/debian" \
-        "${docker_setup_contrib}/${tool}/sysvinit/redhat" \
-        "${docker_setup_contrib}/${tool}/openrc"
-RUN curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz" \
-    | tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
-RUN curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz" \
-    | tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
-RUN curl -sL "https://github.com/nicholasdille/docker-cli-manpages/releases/download/v${version}/docker-cli-manpages.tar.gz" \
-    | tar -xz --directory="${prefix}${target}" --no-same-owner
-RUN curl -sLo "${prefix}${target}/share/bash-completion/completions/docker" \
-        "https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker"
-RUN curl -sLo "${prefix}${target}/share/fish/vendor_completions.d/docker.fish" \
-        "https://github.com/docker/cli/raw/v${version}/contrib/completion/fish/docker.fish"
-RUN curl -sLo "${prefix}${target}/share/zsh/vendor-completions/_docker" \
-        "https://github.com/docker/cli/raw/v${version}/contrib/completion/zsh/_docker"
-RUN curl -sLo "${prefix}/etc/systemd/system/docker.service" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service"
-RUN curl -sLo "${prefix}/etc/systemd/system/docker.socket" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.socket"
-RUN curl -sLo "${docker_setup_contrib}/${tool}/sysvinit/debian/docker.default" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default"
-RUN curl -sLo "${docker_setup_contrib}/${tool}/sysvinit/debian/docker" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker"
-RUN curl -sLo "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker.sysconfig" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig"
-RUN curl -sLo "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker"
-RUN curl -sLo "${docker_setup_contrib}/${tool}/openrc/docker.confd" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd"
-RUN curl -sLo "${docker_setup_contrib}/${tool}/openrc/docker.initd" \
-        "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd"
-COPY post_install.sh "${docker_setup_post_install}/${name}/"
+RUN <<EOF
+mkdir -p \
+    "${prefix}${target}/libexec/docker/bin" \
+    "${prefix}${target}/share/bash-completion/completions" \
+    "${prefix}${target}/share/fish/vendor_completions.d" \
+    "${prefix}${target}/share/zsh/vendor-completions" \
+    "${prefix}/etc/systemd/system" \
+    "${docker_setup_contrib}/docker/sysvinit/debian" \
+    "${docker_setup_contrib}/docker/sysvinit/redhat" \
+    "${docker_setup_contrib}/docker/openrc"
+EOF
+
+RUN <<EOF
+curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz" \
+| tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
+mv "${prefix}${target}/libexec/docker/bin/dockerd"      "${prefix}${target}/bin/"
+mv "${prefix}${target}/libexec/docker/bin/docker"       "${prefix}${target}/bin/"
+mv "${prefix}${target}/libexec/docker/bin/docker-proxy" "${prefix}${target}/bin/"
+curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz" \
+| tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
+mv "${prefix}${target}/libexec/docker/bin/dockerd-rootless.sh"           "${prefix}${target}/bin/"
+mv "${prefix}${target}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${prefix}${target}/bin/"
+curl -sL "https://github.com/nicholasdille/docker-cli-manpages/releases/download/v${version}/docker-cli-manpages.tar.gz" \
+| tar -xz --directory="${prefix}${target}" --no-same-owner
+EOF
+
+RUN <<EOF
+curl -sLo "${prefix}${target}/share/bash-completion/completions/docker" \
+    "https://github.com/docker/cli/raw/v${version}/contrib/completion/bash/docker"
+curl -sLo "${prefix}${target}/share/fish/vendor_completions.d/docker.fish" \
+    "https://github.com/docker/cli/raw/v${version}/contrib/completion/fish/docker.fish"
+curl -sLo "${prefix}${target}/share/zsh/vendor-completions/_docker" \
+    "https://github.com/docker/cli/raw/v${version}/contrib/completion/zsh/_docker"
+curl -sLo "${prefix}/etc/systemd/system/docker.service" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service"
+curl -sLo "${prefix}/etc/systemd/system/docker.socket" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.socket"
+EOF
+
+RUN <<EOF
+curl -sLo "${docker_setup_contrib}/docker/sysvinit/debian/docker.default" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default"
+curl -sLo "${docker_setup_contrib}/docker/sysvinit/debian/docker" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker"
+curl -sLo "${docker_setup_contrib}/docker/sysvinit/redhat/docker.sysconfig" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig"
+curl -sLo "${docker_setup_contrib}/docker/sysvinit/redhat/docker" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker"
+curl -sLo "${docker_setup_contrib}/docker/openrc/docker.confd" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd"
+curl -sLo "${docker_setup_contrib}/docker/openrc/docker.initd" \
+    "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd"
+EOF
+
+COPY post_install.sh "${docker_setup_post_install}/docker.sh"
+# TODO: Add variable for /var/lib/docker-setup/installed
+COPY docker.yaml "/var/lib/docker-setup/installed/docker.yaml"
 
 FROM scratch
-COPY --from=prepare ${prefix} /
+# TODO: $prefix=/docker_setup_install
+COPY --from=prepare /docker_setup_install /
+# TODO: $docker_setup_post_install=/var/lib/docker-setup/post_install
+COPY --from=prepare /var/lib/docker-setup/post_install /var/lib/docker-setup/post_install
+# TODO: $docker_setup_contrib=/var/lib/docker-setup/contrib
+COPY --from=prepare /var/lib/docker-setup/contrib /var/lib/docker-setup/contrib
+COPY --from=prepare /var/lib/docker-setup/installed /var/lib/docker-setup/installed
 
-LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
-      org.opencontainers.image.ref.name="${ref}" \
-      org.opencontainers.image.title="${name}" \
-      org.opencontainers.image.description="${name} packaged for installation" \
+LABEL org.opencontainers.image.ref.name="${ref}" \
+      org.opencontainers.image.title="docker" \
+      org.opencontainers.image.description="docker packaged for installation" \
       org.opencontainers.image.version="${version}"
