@@ -3,6 +3,7 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+ARG name=docker
 ARG version=20.10.17
 
 RUN <<EOF
@@ -45,23 +46,22 @@ curl -sLo "${prefix}/etc/systemd/system/docker.socket" \
 EOF
 
 RUN <<EOF
-curl -sLo "${docker_setup_contrib}/docker/sysvinit/debian/docker.default" \
+curl -sLo "${docker_setup_contrib}/${name}/sysvinit/debian/docker.default" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default"
-curl -sLo "${docker_setup_contrib}/docker/sysvinit/debian/docker" \
+curl -sLo "${docker_setup_contrib}/${name}/sysvinit/debian/docker" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker"
-curl -sLo "${docker_setup_contrib}/docker/sysvinit/redhat/docker.sysconfig" \
+curl -sLo "${docker_setup_contrib}/${name}/sysvinit/redhat/docker.sysconfig" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig"
-curl -sLo "${docker_setup_contrib}/docker/sysvinit/redhat/docker" \
+curl -sLo "${docker_setup_contrib}/${name}/sysvinit/redhat/docker" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker"
-curl -sLo "${docker_setup_contrib}/docker/openrc/docker.confd" \
+curl -sLo "${docker_setup_contrib}/${name}/openrc/docker.confd" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd"
-curl -sLo "${docker_setup_contrib}/docker/openrc/docker.initd" \
+curl -sLo "${docker_setup_contrib}/${name}/openrc/docker.initd" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd"
 EOF
 
-COPY post_install.sh "${docker_setup_post_install}/docker.sh"
-# TODO: Add variable for /var/lib/docker-setup/installed
-COPY docker.yaml "/var/lib/docker-setup/installed/docker.yaml"
+COPY post_install.sh "${docker_setup_post_install}/${name}.sh"
+COPY manifest.yaml "${docker_setup_manifests}/${name}.yaml"
 
 FROM scratch
 # TODO: $prefix=/docker_setup_install
@@ -70,9 +70,14 @@ COPY --from=prepare /docker_setup_install /
 COPY --from=prepare /var/lib/docker-setup/post_install /var/lib/docker-setup/post_install
 # TODO: $docker_setup_contrib=/var/lib/docker-setup/contrib
 COPY --from=prepare /var/lib/docker-setup/contrib /var/lib/docker-setup/contrib
-COPY --from=prepare /var/lib/docker-setup/installed /var/lib/docker-setup/installed
+# TODO: $docker_setup_manifests=/var/lib/docker-setup/manifests
+COPY --from=prepare /var/lib/docker-setup/manifests /var/lib/docker-setup/manifests
 
 LABEL org.opencontainers.image.ref.name="${ref}" \
       org.opencontainers.image.title="docker" \
       org.opencontainers.image.description="docker packaged for installation" \
-      org.opencontainers.image.version="${version}"
+      org.opencontainers.image.version="${version}" \
+      io.dille.docker-setup.name="docker" \
+      io.dille.docker-setup.version="${version}" \
+      io.dille.docker-setup.needs="fuse-overlayfs" \
+      io.dille.docker-setup.tags="default,docker,runtime,build,oci"

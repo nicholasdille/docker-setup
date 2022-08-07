@@ -28,6 +28,7 @@ ARG prefix_override=/docker_setup_install
 ARG target_override=/usr/local
 ENV docker_setup_cache=/var/cache/docker-setup \
     docker_setup_contrib=/var/lib/docker-setup/contrib \
+    docker_setup_manifests=/var/lib/docker-setup/manifests \
     docker_setup_post_install=/var/lib/docker-setup/post_install \
     prefix=${prefix_override} \
     target=${target_override} \

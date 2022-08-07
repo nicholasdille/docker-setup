@@ -3,15 +3,12 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=fuse-overlayfs
-ARG version=1.9
+ARG name=foo
+ARG version=0.0.1
 
-RUN <<EOF
-curl -sLo "${prefix}${target}/bin/${name}" \
-    "https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}"
-chmod +x "${prefix}${target}/bin/${name}"
-EOF
+RUN true
 
+COPY post_install.sh "${docker_setup_post_install}/${name}.sh"
 COPY manifest.yaml "${docker_setup_manifests}/${name}.yaml"
 
 FROM scratch
@@ -30,5 +27,5 @@ LABEL org.opencontainers.image.ref.name="${ref}" \
       org.opencontainers.image.version="${version}" \
       io.dille.docker-setup.name="${name}" \
       io.dille.docker-setup.version="${version}" \
-      io.dille.docker-setup.needs="" \
-      io.dille.docker-setup.tags="default,docker,storage,containerd"
+      io.dille.docker-setup.needs="tool1,tool2" \
+      io.dille.docker-setup.tags="tag1,tag2"
