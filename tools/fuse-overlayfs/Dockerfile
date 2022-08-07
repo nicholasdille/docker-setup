@@ -12,7 +12,7 @@ curl -sLo "${prefix}${target}/bin/${name}" \
 chmod +x "${prefix}${target}/bin/${name}"
 EOF
 
-COPY manifest.yaml "${docker_setup_manifests}/${name}.yaml"
+COPY manifest.yaml "${docker_setup_manifests}/${name}.json"
 
 FROM scratch
 # TODO: $prefix=/docker_setup_install

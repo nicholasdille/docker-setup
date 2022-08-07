@@ -11,7 +11,7 @@ RUN arch=$(uname -m) \
  && curl --location --fail https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz | \
         tar -xzC "${prefix}${target}/bin" "${name}"
 
-COPY manifest.yaml "${docker_setup_manifests}/${name}.yaml"
+COPY manifest.yaml "${docker_setup_manifests}/${name}.json"
 
 FROM scratch
 # TODO: $prefix=/docker_setup_install

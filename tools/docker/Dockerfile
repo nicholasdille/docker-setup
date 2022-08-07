@@ -61,7 +61,7 @@ curl -sLo "${docker_setup_contrib}/${name}/openrc/docker.initd" \
 EOF
 
 COPY post_install.sh "${docker_setup_post_install}/${name}.sh"
-COPY manifest.yaml "${docker_setup_manifests}/${name}.yaml"
+COPY manifest.yaml "${docker_setup_manifests}/${name}.json"
 
 FROM scratch
 # TODO: $prefix=/docker_setup_install

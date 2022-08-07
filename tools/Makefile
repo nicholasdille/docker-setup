@@ -9,8 +9,31 @@ OWNER          = nicholasdille
 PROJECT        = docker-setup
 REGISTRY       = ghcr.io
 
+YQ             = ../bin/yq
+
+.PHONY:
+all: test
+
+.PHONY:
+clean:
+	@\
+	rm -f tools.json; \
+	for TOOL in $(TOOLS); do \
+		rm -f $${TOOL}/manifest.json; \
+	done
+
 renovate.json: $(MANIFESTS) ; $(info $(M) Updating $@...)
 	@echo "NOT IMPLEMENTED YET"
+
+tools.json: $(MANIFESTS) ; $(info $(M) Creating $@...)
+	@\
+	echo '{"tools": []}' >tools.json; \
+	for TOOL in $(TOOLS); do \
+		cat <<< "$$(jq --slurp '.[0].tools += [.[1]]' tools.json $${TOOL}/manifest.json)" >tools.json; \
+	done
+
+%.json: %.yaml $(YQ) ; $(info $(M) Creating $*.json...)
+	@$(YQ) --output-format json eval . $*.yaml >$*.json
 
 .PHONY:
 login: ; $(info $(M) Logging in to $(REGISTRY)...)
@@ -31,7 +54,7 @@ base: login ; $(info $(M) Building base image...)
 .PHONY:
 tools: $(TOOLS)
 
-$(TOOLS): base ; $(info $(M) Building image for $@...)
+$(TOOLS):%: base %/manifest.json ; $(info $(M) Building image for $@...)
 	@\
 	docker buildx build $@ \
 		--build-arg branch=$(GIT_BRANCH) \
