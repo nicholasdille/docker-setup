@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.2
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=fuse-overlayfs
+ARG version=1.9
+
+RUN <<EOF
+curl -sLo "${prefix}${target}/bin/${name}" \
+    "https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}"
+chmod +x "${prefix}${target}/bin/${name}"
+EOF

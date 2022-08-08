@@ -1,17 +1,4 @@
-#syntax=docker/dockerfile:1.4.2
-
-ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
-ARG name=fuse-overlayfs
-ARG version=1.9
-
-RUN <<EOF
-curl -sLo "${prefix}${target}/bin/${name}" \
-    "https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}"
-chmod +x "${prefix}${target}/bin/${name}"
-EOF
-
+COPY post_install.sh "${docker_setup_post_install}/${name}.sh"
 COPY manifest.yaml "${docker_setup_manifests}/${name}.json"
 
 FROM scratch
@@ -25,10 +12,10 @@ COPY --from=prepare /var/lib/docker-setup/contrib /var/lib/docker-setup/contrib
 COPY --from=prepare /var/lib/docker-setup/manifests /var/lib/docker-setup/manifests
 
 LABEL org.opencontainers.image.ref.name="${ref}" \
-      org.opencontainers.image.title="${name}" \
-      org.opencontainers.image.description="${name} packaged for installation" \
+      org.opencontainers.image.title="docker" \
+      org.opencontainers.image.description="docker packaged for installation" \
       org.opencontainers.image.version="${version}" \
-      io.dille.docker-setup.name="${name}" \
+      io.dille.docker-setup.name="docker" \
       io.dille.docker-setup.version="${version}" \
-      io.dille.docker-setup.needs="" \
-      io.dille.docker-setup.tags="default,docker,storage,containerd"
+      io.dille.docker-setup.needs="fuse-overlayfs" \
+      io.dille.docker-setup.tags="default,docker,runtime,build,oci"
