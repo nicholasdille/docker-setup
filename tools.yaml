@@ -1163,7 +1163,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_dyff"
 
   - name: faas-cli
-    version: 0.14.2
+    version: 0.14.5
     check: ${binary} version | grep "version:" | cut -d' ' -f3
     tags:
     - serverless
