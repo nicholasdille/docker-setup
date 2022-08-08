@@ -483,7 +483,7 @@ tools:
         [storage.options.thinpool]
 
   - name: containerd
-    version: 1.6.7
+    version: 1.6.8
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     needs:
     - runc
