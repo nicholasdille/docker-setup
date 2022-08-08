@@ -1,6 +1,7 @@
 M              = $(shell printf "\033[34;1m▶\033[0m")
 GIT_BRANCH     = $(shell git branch --show-current)
 TOOLS          = $(shell find . -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | grep -v ^@ | sort)
+MANIFESTS      = $(addsuffix /manifest.json,$(TOOLS))
 DOCKERFILES    = $(addsuffix /Dockerfile,$(TOOLS))
 PREFIX         = /docker_setup_install
 TARGET         = /usr/local
@@ -26,11 +27,10 @@ renovate.json: $(MANIFESTS) ; $(info $(M) Updating $@...)
 	@echo "NOT IMPLEMENTED YET"
 
 tools.json: $(MANIFESTS) ; $(info $(M) Creating $@...)
-	@\
-	echo '{"tools": []}' >tools.json; \
-	for TOOL in $(TOOLS); do \
-		cat <<< "$$(jq --slurp '.[0].tools += [.[1]]' tools.json $${TOOL}/manifest.json)" >tools.json; \
-	done
+	@jq --slurp '{"tools": map(.tools[])}' $(MANIFESTS) >tools.json
+
+$(MANIFESTS):%.json: %.yaml $(YQ) ; $(info $(M) Creating $*.json...)
+	@$(YQ) --output-format json eval '{"tools":[.]}' $*.yaml >$*.json
 
 $(DOCKERFILES):%: %.template
 	@cat $@.template Dockerfile.tail >$@
