@@ -1,7 +1,7 @@
 M              = $(shell printf "\033[34;1m▶\033[0m")
 GIT_BRANCH     = $(shell git branch --show-current)
-TOOLS          = $(shell find . -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | grep -v ^@)
-MANIFESTS      = $()
+TOOLS          = $(shell find . -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | grep -v ^@ | sort)
+DOCKERFILES    = $(addsuffix /Dockerfile,$(TOOLS))
 PREFIX         = /docker_setup_install
 TARGET         = /usr/local
 
@@ -19,7 +19,7 @@ clean:
 	@\
 	rm -f tools.json; \
 	for TOOL in $(TOOLS); do \
-		rm -f $${TOOL}/manifest.json; \
+		rm -f $${TOOL}/manifest.json $${TOOL}/Dockerfile; \
 	done
 
 renovate.json: $(MANIFESTS) ; $(info $(M) Updating $@...)
@@ -32,8 +32,8 @@ tools.json: $(MANIFESTS) ; $(info $(M) Creating $@...)
 		cat <<< "$$(jq --slurp '.[0].tools += [.[1]]' tools.json $${TOOL}/manifest.json)" >tools.json; \
 	done
 
-%.json: %.yaml $(YQ) ; $(info $(M) Creating $*.json...)
-	@$(YQ) --output-format json eval . $*.yaml >$*.json
+$(DOCKERFILES):%: %.template
+	@cat $@.template Dockerfile.tail >$@
 
 .PHONY:
 login: ; $(info $(M) Logging in to $(REGISTRY)...)
