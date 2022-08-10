@@ -7,7 +7,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name=containerd
 ARG version=1.6.8
 
-COPY --from=go-md2man / /
+COPY --link --from=go-md2man / /
 
 RUN <<EOF
 curl -sL "https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz" \
