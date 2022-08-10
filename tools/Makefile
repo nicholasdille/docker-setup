@@ -80,7 +80,9 @@ debug-%: base %/manifest.json %/Dockerfile ; $(info $(M) Debugging image for $*.
 		--cache-from $(REGISTRY)/$(OWNER)/$(PROJECT)/$*:$(GIT_BRANCH) \
 		--tag $(REGISTRY)/$(OWNER)/$(PROJECT)/$*:$(GIT_BRANCH) \
 		--target prepare \
-		--load && \
+		--load \
+		--progress plain \
+		--no-cache && \
 	docker container run \
 		--interactive \
 		--tty \

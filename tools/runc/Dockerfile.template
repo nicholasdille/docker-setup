@@ -1,10 +1,13 @@
 #syntax=docker/dockerfile:1.4.2
 
 ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
 ARG name=runc
 ARG version=1.1.3
+
+COPY --from=go-md2man / /
 
 RUN <<EOF
 curl -sLo "${prefix}${target}/bin/runc" \
@@ -46,8 +49,8 @@ curl -sLo "${prefix}${target}/share/man/man8/runc-update.8.md" \
     "https://github.com/opencontainers/runc/raw/v${version}/man/runc-update.8.md"
 curl -sLo "${prefix}${target}/share/man/man8/runc.8.md" \
     "https://github.com/opencontainers/runc/raw/v${version}/man/runc.8.md"
-find "${target}/share/man/man8" -type f -name \*.md \
-| while read FILE; do
+MANPAGES="$(find "${prefix}${target}/share/man/man8" -type f -name \*.md)"
+for FILE in ${MANPAGES}; do
     DEST_FILE="$(basename "${FILE}" .md)"
     DEST_DIR="$(dirname "${FILE}")"
     DEST="${DEST_DIR}/${DEST_FILE}"
