@@ -13,7 +13,7 @@ REGISTRY       = ghcr.io
 YQ             = ../bin/yq
 
 .PHONY:
-all: test
+all: $(TOOLS)
 
 .PHONY:
 clean:
@@ -32,8 +32,11 @@ tools.json: $(MANIFESTS) ; $(info $(M) Creating $@...)
 $(MANIFESTS):%.json: %.yaml $(YQ) ; $(info $(M) Creating $*.json...)
 	@$(YQ) --output-format json eval '{"tools":[.]}' $*.yaml >$*.json
 
-$(DOCKERFILES):%: %.template
-	@cat $@.template Dockerfile.tail >$@
+$(DOCKERFILES):%: %.template ; $(info $(M) Creating $@...)
+	@\
+	cat $@.template >$@; \
+	echo >>$@; \
+	cat Dockerfile.tail >>$@
 
 .PHONY:
 login: ; $(info $(M) Logging in to $(REGISTRY)...)
@@ -49,12 +52,14 @@ base: login ; $(info $(M) Building base image...)
 		--cache-from $(REGISTRY)/$(OWNER)/$(PROJECT)/base:$(GIT_BRANCH) \
 		--tag $(REGISTRY)/$(OWNER)/$(PROJECT)/base:$(GIT_BRANCH) \
 		--push \
-		--quiet
+		--progress plain \
+		>@base/build.log 2>&1 || \
+	cat @base/build.log
 
 .PHONY:
 tools: $(TOOLS)
 
-$(TOOLS):%: base %/manifest.json ; $(info $(M) Building image for $@...)
+$(TOOLS):%: base %/manifest.json %/Dockerfile ; $(info $(M) Building image for $@...)
 	@\
 	docker buildx build $@ \
 		--build-arg branch=$(GIT_BRANCH) \
@@ -62,7 +67,31 @@ $(TOOLS):%: base %/manifest.json ; $(info $(M) Building image for $@...)
 		--cache-from $(REGISTRY)/$(OWNER)/$(PROJECT)/$@:$(GIT_BRANCH) \
 		--tag $(REGISTRY)/$(OWNER)/$(PROJECT)/$@:$(GIT_BRANCH) \
 		--push \
-		--quiet
+		--progress plain \
+		>$@/build.log 2>&1 || \
+	cat $@/build.log
+
+.PHONY:
+debug-%: base %/manifest.json %/Dockerfile ; $(info $(M) Debugging image for $*...)
+	@\
+	docker buildx build $* \
+		--build-arg branch=$(GIT_BRANCH) \
+		--build-arg ref=$(GIT_BRANCH) \
+		--cache-from $(REGISTRY)/$(OWNER)/$(PROJECT)/$*:$(GIT_BRANCH) \
+		--tag $(REGISTRY)/$(OWNER)/$(PROJECT)/$*:$(GIT_BRANCH) \
+		--target prepare \
+		--load && \
+	docker container run \
+		--interactive \
+		--tty \
+		--privileged \
+		--rm \
+		$(REGISTRY)/$(OWNER)/$(PROJECT)/$*:$(GIT_BRANCH) \
+			bash
+
+.PHONY:
+usage: $(TOOLS)
+	@echo "XXX NOT IMPLEMENTED YET"
 
 .PHONY:
 test: $(TOOLS) ; $(info $(M) Testing image for all tools...)

@@ -1,0 +1,10 @@
+# Possible values for runtime-endpoint and image-endpoint
+# dockershim: unix:///var/run/dockershim.sock
+# containerd: unix:///run/containerd/containerd.sock
+# crio: unix:///run/crio/crio.sock
+# cri-dockerd: unix:///var/run/cri-dockerd.sock
+#runtime-endpoint: YOUR-CHOICE
+#image-endpoint: YOUR-CHOICE
+timeout: 2
+debug: false
+pull-image-on-create: false

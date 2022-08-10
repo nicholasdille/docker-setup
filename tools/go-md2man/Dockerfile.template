@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.2
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=go-md2man
+ARG version=2.0.2
+
+RUN <<EOF
+curl -sL "https://github.com/nicholasdille/go-md2man-static/releases/download/v${version}/go-md2man-${alt_arch}.tar.gz" \
+| tar -xz --directory "${prefix}${target}" --no-same-owner
+EOF

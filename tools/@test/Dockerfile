@@ -1,8 +1,13 @@
 #syntax=docker/dockerfile:1.4.2
 
 ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/cni:${ref}            AS cni
+FROM ghcr.io/nicholasdille/docker-setup/containerd:${ref}     AS containerd
+FROM ghcr.io/nicholasdille/docker-setup/crictl:${ref}         AS crictl
 FROM ghcr.io/nicholasdille/docker-setup/docker:${ref}         AS docker
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref}      AS go-md2man
 FROM ghcr.io/nicholasdille/docker-setup/fuse-overlayfs:${ref} AS fuse-overlayfs
+FROM ghcr.io/nicholasdille/docker-setup/runc:${ref}           AS runc
 FROM ghcr.io/nicholasdille/docker-setup/trivy:${ref}          AS trivy
 
 FROM ubuntu:22.04 AS base
@@ -15,8 +20,13 @@ no-recommends
 APT::Install-Suggests "false";
 no-suggests
 
+COPY --link --from=cni            / /
+COPY --link --from=containerd     / /
+COPY --link --from=crictl         / /
 COPY --link --from=docker         / /
+COPY --link --from=go-md2man      / /
 COPY --link --from=fuse-overlayfs / /
+COPY --link --from=runc           / /
 COPY --link --from=trivy          / /
 
 # TODO: Replace jq with dasel?

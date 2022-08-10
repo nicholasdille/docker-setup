@@ -1,0 +1,7 @@
+name: crictl
+version: 1.24.2
+tags:
+- k8s
+- kubernetes
+- runtime
+- cri

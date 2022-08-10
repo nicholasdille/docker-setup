@@ -1,0 +1,11 @@
+name: containerd
+version: 1.6.8
+needs:
+- runc
+- cni
+- go-md2man
+- crictl
+tags:
+- runtime
+- containerd
+- cri

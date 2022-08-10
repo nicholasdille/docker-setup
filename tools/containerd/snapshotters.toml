@@ -1,0 +1,15 @@
+        # fuse-overlayfs
+        [proxy_plugins."fuse-overlayfs"]
+          type = "snapshot"
+          address = "/var/run/containerd-fuse-overlayfs.sock"
+
+        # stargz
+        [proxy_plugins.stargz]
+          type = "snapshot"
+          address = "/run/containerd-stargz-grpc/containerd-stargz-grpc.sock"
+        [plugins."io.containerd.grpc.v1.cri".containerd]
+          snapshotter = "stargz"
+          disable_snapshot_annotations = false
+
+        # ipfs
+        ipfs = true
