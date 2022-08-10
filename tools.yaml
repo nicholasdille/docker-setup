@@ -2851,7 +2851,7 @@ tools:
       - ktop
 
   - name: kube-bench
-    version: 0.6.8
+    version: 0.6.9
     check: ${binary} version
     tags:
     - k8s
