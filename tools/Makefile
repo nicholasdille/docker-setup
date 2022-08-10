@@ -92,8 +92,17 @@ debug-%: base %/manifest.json %/Dockerfile ; $(info $(M) Debugging image for $*.
 			bash
 
 .PHONY:
-usage: $(TOOLS)
-	@echo "XXX NOT IMPLEMENTED YET"
+usage:
+	@\
+	for TOOL in $(TOOLS); do \
+		regctl manifest get $(REGISTRY)/$(OWNER)/$(PROJECT)/$${TOOL}:$(GIT_BRANCH) --format raw-body \
+		| jq -r '.layers[].size' \
+		| paste -sd+ \
+		| bc \
+		| numfmt --to=iec-i --suffix=B --padding=7 \
+		| xargs echo -n; \
+		echo " $${TOOL}"; \
+	done
 
 .PHONY:
 test: $(TOOLS) ; $(info $(M) Testing image for all tools...)
