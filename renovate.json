@@ -1728,6 +1728,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: registry\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "distribution/distribution",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: rekor\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "sigstore/rekor",

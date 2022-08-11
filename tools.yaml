@@ -4082,6 +4082,18 @@ tools:
       "${target}/bin/regsync" completion fish >"${target}/share/fish/vendor_completions.d/regsync.fish"
       "${target}/bin/regsync" completion zsh >"${target}/share/zsh/vendor-completions/_regsync"
 
+  - name: registry
+    version: 2.8.1
+    check: ${binary} --version | cut -d' ' -f3 | cut -d+ -f1 | tr -d v
+    tags:
+    - registry
+    - oci
+    download:
+    - url: https://github.com/distribution/distribution/releases/download/v${version}/registry_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - registry
+
   - name: rekor
     version: 0.10.0
     binary: rekor-cli
