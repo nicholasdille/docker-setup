@@ -2719,7 +2719,7 @@ tools:
       type: executable
 
   - name: k9s
-    version: 0.25.21
+    version: 0.26.3
     check: ${binary} version --short | grep "^Version" | cut -dv -f2
     tags:
     - k8s
