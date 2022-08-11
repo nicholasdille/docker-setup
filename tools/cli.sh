@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ! test -f tools/tools.json; then
+if ! test -f tools.json; then
     echo "No releaeses published yet."
     exit 1
 fi
@@ -9,7 +9,7 @@ docker_setup_version=oras
 
 function generate() {
     CONTENT="$(
-        cat tools/Dockerfile.template \
+        cat Dockerfile.template \
         | sed -E "s|^ARG ref=main|ARG ref=${docker_setup_version}|"
     )"
     while test "$#" -gt 0; do
@@ -29,7 +29,7 @@ command=$1
 shift
 case "${command}" in
     ls)
-        jq --raw-output '.tools[].name' tools/tools.json
+        jq --raw-output '.tools[].name' tools.json
         ;;
 
     info)
@@ -39,7 +39,7 @@ case "${command}" in
             echo "No tool name specified"
             exit 1
         fi
-        cat "tools/${tool}/manifest.yaml"
+        cat "${tool}/manifest.yaml"
         echo
         ;;
 

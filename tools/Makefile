@@ -32,7 +32,7 @@ tools.json: $(MANIFESTS) ; $(info $(M) Creating $@...)
 $(MANIFESTS):%.json: %.yaml $(YQ) ; $(info $(M) Creating $*.json...)
 	@$(YQ) --output-format json eval '{"tools":[.]}' $*.yaml >$*.json
 
-$(DOCKERFILES):%: %.template ; $(info $(M) Creating $@...)
+$(DOCKERFILES):%: %.template Dockerfile.tail ; $(info $(M) Creating $@...)
 	@\
 	cat $@.template >$@; \
 	echo >>$@; \
@@ -106,12 +106,9 @@ usage:
 	| column --table --table-right=1
 
 .PHONY:
-test: $(TOOLS) ; $(info $(M) Testing image for all tools...)
+test: $(TOOLS) tools.json; $(info $(M) Testing image for all tools...)
 	@\
-	docker buildx build @test \
-		--build-arg ref=$(GIT_BRANCH) \
-		--tag $(REGISTRY)/$(OWNER)/$(PROJECT)/test:$(GIT_BRANCH) \
-		--load && \
+	bash cli.sh build-image $(REGISTRY)/$(OWNER)/$(PROJECT)/test:$(GIT_BRANCH) $(TOOLS) && \
 	docker container run \
 		--interactive \
 		--tty \

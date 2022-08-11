@@ -1,13 +1,4 @@
-#echo "Creating manpages"
-#go-md2man \
-#    -in "${prefix}${target}/share/man/man8/containerd-config.8.md" \
-#    -out "${prefix}${target}/share/man/man8/containerd-config.8"
-#go-md2man \
-#    -in "${prefix}${target}/share/man/man5/containerd-config.toml.5.md" \
-#    -out "${prefix}${target}/share/man/man5/containerd-config.toml.5"
-#rm \
-#    "${prefix}${target}/share/man/man8/containerd-config.8.md" \
-#    "${prefix}${target}/share/man/man5/containerd-config.toml.5.md"
+#!/bin/bash
 
 if ! test -f "${prefix}/etc/containerd/config.toml"; then
     echo "Adding default configuration"
