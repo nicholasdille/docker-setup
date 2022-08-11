@@ -125,8 +125,7 @@ jobs:
       - name: Prepare matrix
         id: matrix
         run: |
-          echo "has_label? ${{ contains(github.event.pull_request.labels.*.name, 'full_tests') }}."
-          if ${{ steps.release.outputs.is_release }}; then
+          if ${{ steps.release.outputs.is_release }} || ${{ contains(github.event.pull_request.labels.*.name, 'full_tests') }}; then
               echo "Returning all distros and archs"
               distros_json="$(echo "${all_distros}" | jq --compact-output '.')"
               archs_json="$(echo "${all_archs}" | jq --compact-output '.')"
