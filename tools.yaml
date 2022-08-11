@@ -3489,7 +3489,7 @@ tools:
         hosts_dir         = ["/etc/containerd/certs.d"]
     post_install: |
       echo "Patch CNI path"
-      sed -i -E 's|/opt/cni/bin|${relative_target}/libexec/cni|' "${prefix}/etc/nerdctl/nerdctl.toml"
+      sed -i -E "s|/opt/cni/bin|${relative_target}/libexec/cni|" "${prefix}/etc/nerdctl/nerdctl.toml"
 
   - name: norouter
     version: 0.6.4
