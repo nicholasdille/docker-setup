@@ -2258,6 +2258,35 @@ tools:
         x86_64: https://gitlab.com/gitlab-org/gitlab-runner/-/releases/v${version}/downloads/binaries/gitlab-runner-linux-${alt_arch}
       type: executable
       path: ${target}/bin/gitlab-runner
+    files:
+    - path: ${prefix}/etc/systemd/system/gitlab-runner.service
+      content: |
+        [Unit]
+        Description=GitLab Runner
+        After=syslog.target network.target
+        [Service]
+        StartLimitInterval=5
+        StartLimitBurst=10
+        ExecStart=/usr/local/bin/gitlab-runner "run" "--working-directory" "/home/gitlab-runner" "--config" "/etc/gitlab-runner/config.toml" "--service" "gitlab-runner" "--user" "gitlab-runner"
+        Restart=always
+        RestartSec=120
+        EnvironmentFile=-/etc/sysconfig/gitlab-runner
+        [Install]
+        WantedBy=multi-user.target
+    - path: ${prefix}/etc/gitlab-runner/config.toml
+      content: |
+        concurrent = 1
+        check_interval = 0
+
+        [session_server]
+          session_timeout = 1800
+    post_install: |
+      echo "Patch systemd unit"
+      sed -i "s|ExecStart=/usr/local/bin/gitlab-runner|${relative_target}/bin/gitlab-runner|g" "${prefix}/etc/systemd/system/gitlab-runner.service"
+      if test -z "${prefix}" && has_systemd; then
+          echo "Reload systemd"
+          systemctl daemon-reload
+      fi
 
   - name: gitsign
     version: 0.2.0
