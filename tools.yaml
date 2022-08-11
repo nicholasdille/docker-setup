@@ -770,9 +770,8 @@ tools:
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${relative_target}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: containerssh
@@ -857,9 +856,8 @@ tools:
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/bin/cri-dockerd|ExecStart=${relative_target}/bin/cri-dockerd|" "${prefix}/etc/systemd/system/cri-docker.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: cri-o
@@ -2226,9 +2224,8 @@ tools:
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc|ExecStart=${relative_target}/bin/containerd-fuse-overlayfs-grpc|" "${prefix}/etc/systemd/system/fuse-overlayfs-snapshotter.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: gh
@@ -2675,9 +2672,8 @@ tools:
       echo "Patch systemd unit"
       sed -i "s|/usr/local/bin/k3s|${relative_target}/bin/k3s|g" "${prefix}/etc/systemd/system/k3s.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: k3sup
@@ -3250,9 +3246,8 @@ tools:
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${relative_target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: kustomize
@@ -3701,8 +3696,8 @@ tools:
       echo "Patch systemd unit"
       sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
       if test -z "${prefix}" && has_systemd; then
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: podman-docker-shim
@@ -3969,9 +3964,8 @@ tools:
       echo "Patch systemd unit"
       sed -i "s|/usr/local/bin/portainer|${relative_target}/bin/portainer|g" "${prefix}/etc/systemd/system/portainer.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: porter
@@ -4275,9 +4269,8 @@ tools:
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: stern
