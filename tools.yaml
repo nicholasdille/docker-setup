@@ -2881,6 +2881,8 @@ tools:
   - name: kubeadm
     version: 1.24.3
     check: ${binary} version --output short | tr -d v
+    needs:
+    - kubelet
     tags:
     - k8s
     - kubernetes
@@ -2888,7 +2890,22 @@ tools:
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
       type: executable
+    files:
+    - path: ${prefix}/etc/systemd/system/kubelet.service
+      content: |
+        [Service]
+        Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+        Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
+        # This is a file that "kubeadm init" and "kubeadm join" generate at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
+        # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably,
+        # the user should use the .NodeRegistration.KubeletExtraArgs object in the configuration files instead.
+        # KUBELET_EXTRA_ARGS should be sourced from this file.
+        EnvironmentFile=-/etc/default/kubelet
+        ExecStart=
+        ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
     post_install: |
+      echo "Patch systemd units"
+      sed -i "s|ExecStart=/usr/bin/kubelet|ExecStart=${relative_target}/bin/kubelet|" "${prefix}/etc/systemd/system/kubelet.service"
       echo "Install completion"
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/kubeadm"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_kubeadm"
@@ -3105,6 +3122,26 @@ tools:
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
       type: executable
+    files:
+    - path: ${prefix}/etc/systemd/system/kubelet.service
+      content: |
+        [Unit]
+        Description=kubelet: The Kubernetes Node Agent
+        Documentation=https://kubernetes.io/docs/home/
+        Wants=network-online.target
+        After=network-online.target
+
+        [Service]
+        ExecStart=/usr/bin/kubelet
+        Restart=always
+        StartLimitInterval=0
+        RestartSec=10
+
+        [Install]
+        WantedBy=multi-user.target
+    post_install: |
+      echo "Patch systemd units"
+      sed -i "s|ExecStart=/usr/bin/kubelet|ExecStart=${relative_target}/bin/kubelet|" "${prefix}/etc/systemd/system/kubelet.service"
 
   - name: kubeletctl
     version: 1.8
