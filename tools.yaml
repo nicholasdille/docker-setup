@@ -861,7 +861,7 @@ tools:
       fi
 
   - name: cri-o
-    version: 1.24.1
+    version: 1.24.2
     check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
     needs:
     - runc
