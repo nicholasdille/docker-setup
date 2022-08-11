@@ -4050,7 +4050,26 @@ tools:
     - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-server-linux-${alt_arch}
       type: executable
       path: ${target}/bin/rekor-server
+    files:
+    - path: ${prefix}/etc/systemd/system/rekor.service
+      content: |
+        [Unit]
+        Description=rekor
+        After=network-online.target
+        Wants=network-online.target
+        StartLimitIntervalSec=600
+        StartLimitBurst=5
+
+        [Service]
+        ExecStart=/usr/local/bin/rekor-server serve --rekor_server.address=0.0.0.0 --trillian_log_server.port=8091
+        Restart=on-failure
+        RestartSec=5s
+
+        [Install]
+        WantedBy=multi-user.target
     post_install: |
+      echo "Patch systemd unit"
+      sed -i "s|ExecStart=/usr/local/bin/rekor-server|ExecStart=${relative_target}/bin/rekor-server|" "${prefix}/etc/systemd/system/rekor.service"
       echo "Install completion for rekor-cli"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
@@ -4059,6 +4078,10 @@ tools:
       "${target}/bin/rekor-server" completion bash >"${target}/share/bash-completion/completions/rekor-server"
       "${target}/bin/rekor-server" completion fish >"${target}/share/fish/vendor_completions.d/rekor-server.fish"
       "${target}/bin/rekor-server" completion zsh >"${target}/share/zsh/vendor-completions/_rekor-server"
+      if test -z "${prefix}" && has_systemd; then
+          echo "Reload systemd"
+          systemctl daemon-reload
+      fi
 
   - name: rootlesskit
     version: 1.0.1
