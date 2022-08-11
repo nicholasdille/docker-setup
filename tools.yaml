@@ -383,6 +383,27 @@ tools:
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: cmctl
+    version: 1.9.1
+    check: ${binary} version --client --short | cut -dv -f2
+    tags:
+    - management
+    - security
+    download:
+    - url: https://github.com/cert-manager/cert-manager/releases/download/v${version}/cmctl-linux-${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - cmctl
+    - url: https://github.com/cert-manager/cert-manager/releases/download/v${version}/kubectl-cert_manager-linux-${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - kubectl-cert_manager
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: cni
     version: 1.1.1
     binary: ${target}/libexec/cni/loopback

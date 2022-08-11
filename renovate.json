@@ -417,6 +417,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: cmctl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cert-manager/cert-manager",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: cni-isolation\\n\\s+version: \"?(?<currentValue>.*?)`\"?\\n"
       ],
       "depNameTemplate": "AkihiroSuda/cni-isolation",
