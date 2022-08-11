@@ -1828,6 +1828,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: slides\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "maaslalani/slides",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: slirp4netns\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "rootless-containers/slirp4netns",

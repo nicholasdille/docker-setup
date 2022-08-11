@@ -4277,6 +4277,16 @@ tools:
       type: tarball
       path: ${target}
 
+  - name: slides
+    version: 0.8.0
+    tags:
+    - markdown
+    download:
+    - url: https://github.com/maaslalani/slides/releases/download/v0.8.0/slides_0.8.0_linux_amd64.tar.gz
+      type: tarball
+      files:
+      - slides
+
   - name: slirp4netns
     version: 1.2.0
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
