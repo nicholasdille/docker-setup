@@ -99,10 +99,11 @@ usage:
 		| jq -r '.layers[].size' \
 		| paste -sd+ \
 		| bc \
-		| numfmt --to=iec-i --suffix=B --padding=7 \
-		| xargs echo -n; \
+		| numfmt --to=iec-i --suffix=B --padding=20 \
+		| xargs -I{} echo -n "{}"; \
 		echo " $${TOOL}"; \
-	done
+	done \
+	| column --table --table-right=1
 
 .PHONY:
 test: $(TOOLS) ; $(info $(M) Testing image for all tools...)
