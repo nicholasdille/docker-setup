@@ -844,7 +844,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "fuse_overlayfs_snapshotter:\nversion: \"?(?<currentValue>.*?)\n"
+        "name: fuse_overlayfs_snapshotter\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "containerd/fuse-overlayfs-snapshotter",
       "datasourceTemplate": "github-releases",
@@ -1108,7 +1108,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k3d:\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k3d\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "rancher/k3d",
       "datasourceTemplate": "github-releases",
@@ -1119,7 +1119,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k3s:\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k3s\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases",
@@ -1131,7 +1131,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k3sup:\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k3sup\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "alexellis/k3sup",
       "datasourceTemplate": "github-releases"
@@ -1141,7 +1141,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k9s:\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k9s\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "derailed/k9s",
       "datasourceTemplate": "github-releases",
@@ -1608,7 +1608,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "oci_image_tool:\nversion: \"?(?<currentValue>.*?)\n"
+        "name: oci_image_tool\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "opencontainers/image-tools",
       "datasourceTemplate": "github-releases",
@@ -1619,7 +1619,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "oci_runtime_tool:\nversion: \"?(?<currentValue>.*?)\n"
+        "name: oci_runtime_tool\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "opencontainers/runtime-tools",
       "datasourceTemplate": "github-releases",
