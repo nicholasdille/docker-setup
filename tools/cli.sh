@@ -50,6 +50,7 @@ case "${command}" in
             echo "No image name specified"
             exit 1
         fi
+        # TODO: Resolve dependencies
         generate "$@" \
         | docker buildx build --tag "${image}" --load -
         ;;
@@ -61,6 +62,7 @@ case "${command}" in
             echo "No image name specified"
             exit 1
         fi
+        # TODO: Resolve dependencies
         generate "$@" \
         | docker buildx build -
         ;;
@@ -80,6 +82,7 @@ case "${command}" in
         if ! regctl registry config | jq --exit-status 'to_entries[] | select(.key == "ghcr.io")' >/dev/null 2>&1; then
             regctl registry login ghcr.io
         fi
+        # TODO: Resolve dependencies
         while test "$#" -gt 0; do
             tool=$1
             shift

@@ -51,10 +51,12 @@ function wait_for_tool() {
     exit 1
 }
 function docker_is_running() {
-    true
+    echo "docker_is_running(): THIS IS NOT SUPPORTED ANYMORE."
+    false
 }
 function wait_for_docker() {
-    true
+    echo "wait_for_docker(): THIS IS NOT SUPPORTED ANYMORE."
+    false
 }
 function info() {
     echo "$@"
