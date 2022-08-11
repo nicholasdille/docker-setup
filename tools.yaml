@@ -3467,6 +3467,9 @@ tools:
   - name: nerdctl
     version: 0.22.2
     check: ${binary} --version | cut -d' ' -f3
+    needs:
+    - containerd
+    - buildkit
     tags:
     - containerd
     - rootless
@@ -3474,6 +3477,19 @@ tools:
     download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
+    files:
+    - path: ${prefix}/etc/nerdctl/nerdctl.toml
+      content: |
+        debug             = false
+        debug_full        = false
+        address           = "unix:///run/containerd/containerd.sock"
+        snapshotter       = "native"
+        cni_path          = "/opt/cni/bin"
+        cgroup_manager    = "systemd"
+        hosts_dir         = ["/etc/containerd/certs.d"]
+    post_install: |
+      echo "Patch CNI path"
+      sed -i -E 's|/opt/cni/bin|${relative_target}/libexec/cni|' "${prefix}/etc/nerdctl/nerdctl.toml"
 
   - name: norouter
     version: 0.6.4
