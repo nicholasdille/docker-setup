@@ -473,7 +473,7 @@ debug "Finished parameter checks part 2 (@ ${SECONDS})"
 go_version=1.19.0
 export go_version
 # shellcheck disable=SC2034
-rust_version=1.62.1
+rust_version=1.63.0
 export rust_version
 
 declare -A tool_version
