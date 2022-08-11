@@ -1668,7 +1668,7 @@ tools:
       - k9s
 
   - name: kapp
-    version: 0.51.0
+    version: 0.52.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
     - k8s
