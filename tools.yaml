@@ -2677,7 +2677,7 @@ tools:
       fi
 
   - name: k3sup
-    version: 0.11.3
+    version: 0.12.0
     check: ${binary} version | grep Version | cut -d' ' -f2
     tags:
     - k8s
