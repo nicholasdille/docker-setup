@@ -1638,6 +1638,19 @@ tools:
     - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
       type: executable
 
+  - name: diun
+    version: 4.22.0
+    check: ${binary} --version
+    tags:
+    - registry
+    - oci
+    - management
+    download:
+    - url: https://github.com/crazy-max/diun/releases/download/v${version}/diun_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - diun
+
   - name: dive
     version: 0.10.0
     check: ${binary} --version | cut -d' ' -f2
