@@ -1512,7 +1512,7 @@ tools:
       go-md2man -in "${target}/share/man/man5/crio.conf.5.md"   -out "${target}/share/man/man5/crio.conf.5"
       go-md2man -in "${target}/share/man/man5/crio.conf.d.5.md" -out "${target}/share/man/man5/crio.conf.d.5"
       rm \
-          "${target}/share/man/man8/crio.8.md" \      
+          "${target}/share/man/man8/crio.8.md" \
           "${target}/share/man/man8/crio-status.8.md" \
           "${target}/share/man/man5/crio.conf.5.md" \
           "${target}/share/man/man5/crio.conf.d.5.md"
@@ -1520,9 +1520,8 @@ tools:
       sed -i "s|ExecStart=/usr/local/bin/crio|ExecStart=${relative_target}/bin/crio|" "${prefix}/etc/systemd/system/crio.service"
       sed -i "s|ExecStart=/usr/local/bin/crio|ExecStart=${relative_target}/bin/crio|" "${prefix}/etc/systemd/system/crio-wipe.service"
       if test -z "${prefix}" && has_systemd; then
-              echo "Reload systemd"
-              systemctl daemon-reload
-          fi
+          echo "Reload systemd"
+          systemctl daemon-reload
       fi
 
   - name: crictl
