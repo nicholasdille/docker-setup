@@ -8,7 +8,7 @@ on:
     types:
       - opened
       - synchronize
-      #- labeled
+      - labeled
       #- reopened
     paths:
       - docker-setup.sh
@@ -125,6 +125,7 @@ jobs:
       - name: Prepare matrix
         id: matrix
         run: |
+          echo "has_label? ${{ contains(github.event.pull_request.labels.*.name, 'full_tests') }}."
           if ${{ steps.release.outputs.is_release }}; then
               echo "Returning all distros and archs"
               distros_json="$(echo "${all_distros}" | jq --compact-output '.')"
