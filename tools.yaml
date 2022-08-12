@@ -2227,6 +2227,26 @@ tools:
         x86_64: https://github.com/chanwit/ekz/releases/download/v${version}/ekz_${version}_linux_${alt_arch}.tar.gz
       type: tarball
 
+  - name: emojisum
+    version: master
+    needs:
+    - docker
+    tags:
+    - security
+    dockerfile: |
+      FROM golang:${go_version}
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/emojisum/emojisum \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/emojisum/emojisum .
+      export CGO_ENABLED=0
+      export GO111MODULE=auto
+      go mod init
+      go mod tidy
+      go build -ldflags "-w -s" -o "/target/bin/emojisum" .
+      EOF
+
   - name: envcli
     version: 0.7.1
     check: ${binary} --version | cut -d' ' -f3
@@ -2236,6 +2256,23 @@ tools:
     - url:
         x86_64: https://github.com/EnvCLI/EnvCLI/releases/download/v${version}/linux_${alt_arch}
       type: executable
+
+  - name: envsub
+    version: 0.1.3
+    #check: ${binary}
+    needs:
+    - docker
+    tags:
+    - management
+    dockerfile: |
+      FROM rust:${rust_version}
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/stephenc/envsub \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/stephenc/envsub .
+      cargo install --path /target/bin/
+      EOF
 
   - name: faas-cli
     version: 0.14.5
@@ -2308,6 +2345,33 @@ tools:
     - url:
         x86_64: https://firectl-release.s3.amazonaws.com/firectl-v${version}
       type: executable
+
+  - name: firejail
+    version: 0.9.70
+    #check: ${binary}
+    needs:
+    - docker
+    tags:
+    - security
+    dockerfile: |
+      FROM ubuntu:22.04
+      RUN apt-get update \
+       && apt-get -y install \
+              build-essential \
+              git
+    # firejail, firecfg, firemon
+    # https://github.com/netblue30/firejail/tree/0.9.70/src/bash_completion
+    # https://github.com/netblue30/firejail/tree/0.9.70/src/zsh_completion
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/netblue30/firejail \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/netblue30/firejail .
+      ./configure --prefix=/target
+      make
+      make install-strip
+      ls -l
+      EOF
 
   - name: footloose
     version: 0.6.3
@@ -4334,6 +4398,32 @@ tools:
           systemctl daemon-reload
       fi
 
+  - name: reptyr
+    version: 0.9.0
+    #check: ${binary}
+    needs:
+    - docker
+    tags:
+    - XXX
+    dockerfile: |
+      FROM ubuntu:22.04
+      RUN apt-get update \
+       && apt-get -y install \
+              build-essential \
+              git
+    # https://github.com/nelhage/reptyr/blob/reptyr-0.9.0/reptyr.bash
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/nelhage/reptyr \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/nelhage/reptyr .
+      export LDFLAGS=-static
+      make reptyr
+      mkdir -p /target/bin /target/share/man/man1
+      cp reptyr /target/bin/
+      cp reptyr.1 /target/share/man/man1/
+      EOF
+
   - name: rootlesskit
     version: 1.0.1
     check: ${binary} --version | cut -d' ' -f3
@@ -4568,6 +4658,28 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
+
+  - name: su-exec
+    version: 0.2
+    #check: ${binary}
+    needs:
+    - docker
+    tags:
+    - XXX
+    dockerfile: |
+      FROM ubuntu:22.04
+      RUN apt-get update \
+       && apt-get -y install \
+              build-essential \
+              git
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/ncopa/su-exec \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/ncopa/su-exec .
+      make su-exec-static
+      cp su-exec-static /target/bin/su-exec
+      EOF
 
   - name: stern
     version: 1.21.0

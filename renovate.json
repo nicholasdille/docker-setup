@@ -865,11 +865,31 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: emojisum\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "emojisum/emojisum",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: envcli\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "EnvCLI/EnvCLI",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: envsub\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "stephenc/envsub",
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [
@@ -910,6 +930,16 @@
         "name: firectl\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "firecracker-microvm/firectl",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: firejail\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "netblue30/firejail",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -1890,6 +1920,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: reptyr\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "nelhage/reptyr",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^reptyr-(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: rootlesskit\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "rootless-containers/rootlesskit",
@@ -2040,6 +2081,18 @@
       "depNameTemplate": "containerd/stargz-snapshotter",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: su-exec\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "ncopa/su-exec",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [
