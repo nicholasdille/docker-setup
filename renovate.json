@@ -1063,6 +1063,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: havener\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "homeport/havener",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: ignite\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "weaveworks/ignite",

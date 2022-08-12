@@ -2539,6 +2539,20 @@ tools:
         x86_64: https://github.com/hadolint/hadolint/releases/download/v${version}/hadolint-Linux-${arch}
       type: executable
 
+  - name: havener
+    version: 2.0.8
+    check: ${binary} version | cut -d, -f1 | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    - management
+    - tui
+    download:
+    - url: https://github.com/homeport/havener/releases/download/v${version}/havener_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - havener
+
   - name: hcloud
     version: 1.30.2
     check: ${binary} version | cut -d' ' -f2
