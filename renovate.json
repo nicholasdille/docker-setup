@@ -1536,6 +1536,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: kustomizer\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "stefanprodan/kustomizer",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: lab\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "zaquestion/lab",

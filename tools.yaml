@@ -3433,6 +3433,26 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: kustomizer
+    version: 2.1.2
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    - templating
+    - package
+    - manager
+    download:
+    - url: https://github.com/stefanprodan/kustomizer/releases/download/v2.1.2/kustomizer_2.1.2_linux_amd64.tar.gz
+      type: tarball
+      files:
+      - kustomizer
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: lab
     version: 0.25.1
     check: ${binary} version | cut -d' ' -f3
