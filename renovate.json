@@ -1670,6 +1670,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: mp3binder\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "crra/mp3binder",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: mutagen\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "mutagen-io/mutagen",

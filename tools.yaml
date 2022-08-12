@@ -3667,6 +3667,18 @@ tools:
       - mitmdump
       - mitmweb
 
+  - name: mp3binder
+    version: 5.0.0
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - mp3
+    download:
+    - url:
+        x86_64: https://github.com/crra/mp3binder/releases/download/${version}/linux_${alt_arch}.zip
+      type: zip
+      files:
+      - mp3binder
+
   - name: mutagen
     version: 0.15.1
     check: ${binary} version
