@@ -2145,6 +2145,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: vcluster\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "loft-sh/vcluster",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: vendir\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "vmware-tanzu/carvel-vendir",

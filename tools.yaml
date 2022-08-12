@@ -4727,6 +4727,21 @@ tools:
           /target/share/bash-completion/completions
       EOF
 
+  - name: vcluster
+    version: 0.11.1
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - kubernetes
+    - k8s
+    download:
+    - url: https://github.com/loft-sh/vcluster/releases/download/v${version}/vcluster-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: vendir
     version: 0.30.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
