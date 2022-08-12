@@ -4615,6 +4615,17 @@ tools:
       files:
       - sorelay.exe
 
+  - name: yasu
+    version: 1.19.0
+    check: ${binary} --version | cut -d' ' -f1
+    tags:
+    - init
+    download:
+    - url: https://github.com/crazy-max/yasu/releases/download/v${version}/yasu_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - yasu
+
   - name: ytt
     version: 0.42.0
     check: ${binary} version | cut -d' ' -f3

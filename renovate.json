@@ -2060,6 +2060,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: yasu\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "crazy-max/yasu",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: ytt\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
