@@ -1937,6 +1937,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: tini\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "krallin/tini",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: trivy\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "aquasecurity/trivy",

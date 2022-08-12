@@ -4447,6 +4447,15 @@ tools:
       mv "${target}/share/${name}.fish" "${target}/share/fish/vendor_completions.d/${name}.fish"
       mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: tini
+    version: 0.19.0
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - init
+    download:
+    - url: https://github.com/krallin/tini/releases/download/v0.19.0/tini-amd64
+      type: executable
+
   - name: trivy
     version: 0.30.4
     check: ${binary} --version | cut -d' ' -f2
