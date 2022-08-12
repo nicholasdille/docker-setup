@@ -4479,6 +4479,15 @@ tools:
         x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
       type: executable
 
+  - name: ssh-key-confirmer
+    version: 0.1
+    tags:
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/benjojo/ssh-key-confirmer/releases/download/v${version}/ssh-key-confirmer-${alt_arch}
+      type: executable
+
   - name: sshocker
     version: 0.3.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v

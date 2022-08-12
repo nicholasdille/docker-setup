@@ -2001,6 +2001,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: ssh-key-confirmer\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "benjojo/ssh-key-confirmer",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: sshocker\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "lima-vm/sshocker",
