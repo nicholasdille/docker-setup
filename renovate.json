@@ -965,6 +965,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: gosu\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "tianon/gosu",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: grype\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "anchore/grype",
