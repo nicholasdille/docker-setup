@@ -1923,6 +1923,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: semver\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "fsaintjacques/semver-tool",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: shortnames\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "containers/shortnames",

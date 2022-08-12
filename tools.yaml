@@ -4403,6 +4403,15 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: semver
+    version: 3.3.0
+    check: ${binary} --version | cut -d' ' -f2
+    tags:
+    - development
+    download:
+    - url: https://github.com/fsaintjacques/semver-tool/raw/${version}/src/semver
+      type: executable
+
   - name: shortnames
     version: 2022.02.08
     binary: false
