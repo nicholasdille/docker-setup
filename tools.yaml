@@ -325,6 +325,16 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: catatonit
+    version: 0.1.7
+    check: ${binary} --version | cut -d' ' -f3 | cut -d_ -f1
+    tags:
+    - init
+    download:
+    - url:
+        x86_64: https://github.com/openSUSE/catatonit/releases/download/v${version}/catatonit.x86_64
+      type: executable
+
   - name: cilium
     version: 0.12.1
     check: ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
