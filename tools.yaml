@@ -3443,7 +3443,7 @@ tools:
     - package
     - manager
     download:
-    - url: https://github.com/stefanprodan/kustomizer/releases/download/v2.1.2/kustomizer_2.1.2_linux_amd64.tar.gz
+    - url: https://github.com/stefanprodan/kustomizer/releases/download/v${version}/kustomizer_${version}_linux_${alt_arch}.tar.gz
       type: tarball
       files:
       - kustomizer
