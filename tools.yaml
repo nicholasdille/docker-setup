@@ -827,6 +827,37 @@ tools:
           systemctl daemon-reload
       fi
 
+  - name: containers-common
+    version: 0.49.1
+    needs:
+    - go-md2man
+    tags:
+    - redhat
+    download:
+    - url: https://github.com/containers/common/raw/v${version}/docs/Containerfile.5.md
+      type: file
+      path: ${target}/share/man/man5/Containerfile.5.md
+    - url: https://github.com/containers/common/raw/v${version}/docs/containerignore.5.md
+      type: file
+      path: ${target}/share/man/man5/containerignore.5.md
+    - url: https://github.com/containers/common/raw/v${version}/docs/containers-mounts.conf.5.md
+      type: file
+      path: ${target}/share/man/man5/containers-mounts.conf.5.md
+    - url: https://github.com/containers/common/raw/v${version}/docs/containers.conf.5.md
+      type: file
+      path: ${target}/share/man/man5/containers.conf.5.md
+    post_install: |
+      echo "Create manpages"
+      go-md2man -in "${target}/share/man/man5/Containerfile.5.md"          -out "${target}/share/man/man5/Containerfile.5"
+      go-md2man -in "${target}/share/man/man5/containerignore.5.md"        -out "${target}/share/man/man5/containerignore.5"
+      go-md2man -in "${target}/share/man/man5/containers-mounts.conf.5.md" -out "${target}/share/man/man5/containers-mounts.conf.5"
+      go-md2man -in "${target}/share/man/man5/containers.conf.5.md"        -out "${target}/share/man/man5/containers.conf.5"
+      rm \
+          "${target}/share/man/man5/Containerfile.5.md" \
+          "${target}/share/man/man5/containerignore.5.md" \
+          "${target}/share/man/man5/containers-mounts.conf.5.md" \
+          "${target}/share/man/man5/containers.conf.5.md"
+
   - name: containerssh
     version: 0.4.1
     tags:
@@ -3887,6 +3918,7 @@ tools:
     - cni
     - fuse-overlayfs
     - shortnames
+    - containers-common
     tags:
     - runtime
     - redhat
