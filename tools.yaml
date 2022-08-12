@@ -3592,6 +3592,21 @@ tools:
       EOF
       ldconfig
 
+  - name: loft
+    version: 2.2.2
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    download:
+    - url: https://github.com/loft-sh/loft/releases/download/v${version}/loft-linux-${alt_arch}
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: manifest-tool
     version: 2.0.5
     check: ${binary} --version | cut -d' ' -f3

@@ -1615,6 +1615,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: loft\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "loft-sh/loft",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "estesp/manifest-tool",
