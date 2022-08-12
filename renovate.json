@@ -483,6 +483,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: cntr\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "Mic92/cntr",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: conmon\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/conmon-static",
