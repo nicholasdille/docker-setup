@@ -1679,8 +1679,8 @@ tools:
     - security
     download:
     - url:
-        x86_64: https://github.com/datreeio/datree/releases/download/1.6.6/datree-cli_1.6.6_Linux_x86_64.zip
-        aarch64: https://github.com/datreeio/datree/releases/download/1.6.6/datree-cli_1.6.6_Linux_arm64.zip
+        x86_64: https://github.com/datreeio/datree/releases/download/${version}/datree-cli_${version}_Linux_${arch}.zip
+        aarch64: https://github.com/datreeio/datree/releases/download/${version}/datree-cli_${version}_Linux_${alt_arch}.zip
       type: zip
       files:
       - datree
