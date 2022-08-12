@@ -844,6 +844,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: ekz\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "chanwit/ekz",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: faas-cli\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "openfaas/faas-cli",

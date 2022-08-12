@@ -2184,6 +2184,18 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: ekz
+    version: 0.8.0
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - kubernetes
+    - k8s
+    - cloud
+    download:
+    - url:
+        x86_64: https://github.com/chanwit/ekz/releases/download/v${version}/ekz_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+
   - name: faas-cli
     version: 0.14.5
     check: ${binary} version | grep "version:" | cut -d' ' -f3
