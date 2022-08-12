@@ -1978,6 +1978,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: sloop\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "salesforce/sloop",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: sops\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "mozilla/sops",

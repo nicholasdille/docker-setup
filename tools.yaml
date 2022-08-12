@@ -4458,6 +4458,17 @@ tools:
       type: file
       path: ${target}/share/man/man1/slirp4netns.1
 
+  - name: sloop
+    version: 1.1
+    tags:
+    - kubernetes
+    - k8s
+    - management
+    download:
+    - url:
+        x86_64: https://github.com/salesforce/sloop/releases/download/v1.1/sloop_1.1_linux_amd64.tar.gz
+      type: tarball
+
   - name: sops
     version: 3.7.3
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
