@@ -1670,6 +1670,26 @@ tools:
     - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
       type: executable
 
+  - name: datree
+    version: 1.6.6
+    check: ${binary} version
+    tags:
+    - kubernetes
+    - k8s
+    - security
+    download:
+    - url:
+        x86_64: https://github.com/datreeio/datree/releases/download/1.6.6/datree-cli_1.6.6_Linux_x86_64.zip
+        aarch64: https://github.com/datreeio/datree/releases/download/1.6.6/datree-cli_1.6.6_Linux_arm64.zip
+      type: zip
+      files:
+      - datree
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: diun
     version: 4.22.0
     check: ${binary} --version
