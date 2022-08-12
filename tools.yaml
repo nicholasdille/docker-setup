@@ -35,6 +35,18 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: artifactory-cleanup
+    version: 1.6.0
+    check: ${binary} --version
+    tags:
+    - management
+    - storage
+    download:
+    - url: https://github.com/crazy-max/artifactory-cleanup/releases/download/v${version}/artifactory-cleanup_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - artifactory-cleanup
+
   - name: bin
     version: 0.15.1
     check: ${binary} --version | grep ^bin | cut -d' ' -f3
