@@ -474,7 +474,8 @@ tools:
   - name: cntr
     version: 1.5.1
     tags:
-    - XXX
+    - runtime
+    - analysis
     download:
     - url:
         x86_64: https://github.com/Mic92/cntr/releases/download/${version}/cntr-bin-${version}-${arch}-unknown-linux-musl
