@@ -854,6 +854,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: envcli\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "EnvCLI/EnvCLI",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: faas-cli\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "openfaas/faas-cli",

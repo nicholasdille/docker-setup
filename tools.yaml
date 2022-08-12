@@ -2196,6 +2196,16 @@ tools:
         x86_64: https://github.com/chanwit/ekz/releases/download/v${version}/ekz_${version}_linux_${alt_arch}.tar.gz
       type: tarball
 
+  - name: envcli
+    version: 0.7.1
+    check: ${binary} --version | cut -d' ' -f3
+    tags:
+    - management
+    download:
+    - url:
+        x86_64: https://github.com/EnvCLI/EnvCLI/releases/download/v${version}/linux_${alt_arch}
+      type: executable
+
   - name: faas-cli
     version: 0.14.5
     check: ${binary} version | grep "version:" | cut -d' ' -f3
