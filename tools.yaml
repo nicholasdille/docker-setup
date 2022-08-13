@@ -2593,7 +2593,6 @@ tools:
     renovate:
       datasource: github-releases
       package: netblue30/firejail
-      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
@@ -2856,7 +2855,6 @@ tools:
     renovate:
       datasource: github-releases
       package: tianon/gosu
-      extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
     - url: https://github.com/tianon/gosu/releases/download/${version}/gosu-${alt_arch}
@@ -4013,7 +4011,7 @@ tools:
     renovate:
       datasource: github-releases
       package: stefanprodan/kustomizer
-      extractVersion: ^kustomize/v(?<version>.+)$
+      extractVersion: ^v(?<version>.+)$
     download:
     - url: https://github.com/stefanprodan/kustomizer/releases/download/v${version}/kustomizer_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -5331,7 +5329,7 @@ tools:
     tags:
     - sudo
     renovate:
-      datasource: github-releases
+      datasource: github-tags
       package: ncopa/su-exec
       extractVersion: ^v(?<version>.+?)$
       versioning: loose

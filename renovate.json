@@ -967,8 +967,7 @@
         "name: firejail\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "netblue30/firejail",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [
@@ -1078,7 +1077,6 @@
       ],
       "depNameTemplate": "tianon/gosu",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
@@ -1189,7 +1187,7 @@
         "name: ignite\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "weaveworks/ignite",
-      "datasourceTemplate": "github-tags",
+      "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
@@ -1585,7 +1583,7 @@
       ],
       "depNameTemplate": "stefanprodan/kustomizer",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^kustomize/v(?<version>.+)$"
+      "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "fileMatch": [
@@ -2094,7 +2092,7 @@
         "name: su-exec\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "ncopa/su-exec",
-      "datasourceTemplate": "github-releases",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
