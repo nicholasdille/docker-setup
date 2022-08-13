@@ -122,7 +122,12 @@ jobs:
               --include-pulls \
               --since "${LATEST_RELEASE_PUBLISHED}" \
               --format "- %t ([%i](%U))%n" \
-              >>body.txt
+          | while read LINE; do 
+              if echo "${LINE}" | grep -vq "chore(deps)" || echo "${LINE}" | grep -q " (${{ github.event.workflow_run.head_branch }}) "; then
+                  echo ${LINE}
+              fi
+          done
+          >>body.txt
           cat body.txt
 
       - name: Create release
