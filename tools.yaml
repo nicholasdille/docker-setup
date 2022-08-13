@@ -4774,7 +4774,7 @@ tools:
       type: executable
 
   - name: trillian
-    version: master
+    version: 1.4.2
     needs:
     - docker
     tags:
@@ -4785,7 +4785,7 @@ tools:
       docker_run \
           --workdir /go/src/github.com/google/trillian \
           <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/google/trillian .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/trillian .
       export CGO_ENABLED=0
       go build -ldflags "-w -s" -o "/target/bin/trillian_log_server" ./cmd/trillian_log_server
       go build -ldflags "-w -s" -o "/target/bin/trillian_log_signer" ./cmd/trillian_log_signer
