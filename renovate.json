@@ -2137,6 +2137,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: tasker\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "stevegrubb/tasker",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: tini\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "krallin/tini",

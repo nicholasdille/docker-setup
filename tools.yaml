@@ -4763,6 +4763,32 @@ tools:
       mv "${target}/share/${name}.fish" "${target}/share/fish/vendor_completions.d/${name}.fish"
       mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: tasker
+    version: 0.9
+    #check: ${binary}
+    needs:
+    - docker
+    tags:
+    - management
+    dockerfile: |
+      FROM ubuntu:22.04
+      RUN apt-get update \
+       && apt-get -y install --no-install-recommends \
+              build-essential \
+              autoconf \
+              automake \
+              git
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/stevegrubb/tasker \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stevegrubb/tasker .
+      ./autogen.sh
+      ./configure --prefix=/target
+      make
+      make install
+      EOF
+
   - name: tini
     version: 0.19.0
     check: ${binary} --version | cut -d' ' -f3
