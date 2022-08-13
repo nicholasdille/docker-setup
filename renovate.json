@@ -468,17 +468,6 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: cni-isolation\\n\\s+version: \"?(?<currentValue>.*?)`\"?\\n"
-      ],
-      "depNameTemplate": "AkihiroSuda/cni-isolation",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
         "name: cni\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containernetworking/plugins",
@@ -493,6 +482,17 @@
         "name: cnitool\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containernetworking/cni",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: cni-isolation\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "AkihiroSuda/cni-isolation",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -566,6 +566,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: crane\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "google/go-containerregistry",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: cri-dockerd\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "Mirantis/cri-dockerd",
@@ -591,17 +602,6 @@
         "name: crictl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes-sigs/cri-tools",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: crane\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "google/go-containerregistry",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -690,6 +690,28 @@
       ],
       "depNameTemplate": "wagoodman/dive",
       "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "moby/moby",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: docker-manpages\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "moby/moby",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
@@ -795,18 +817,6 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: docker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n",
-        "name: docker-manpages\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "moby/moby",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
         "name: docker-sbom\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "docker/sbom-cli-plugin",
@@ -861,7 +871,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: dyff\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: dyff\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "homeport/dyff",
       "datasourceTemplate": "github-releases",
@@ -872,7 +882,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: ekz\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: ekz\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "chanwit/ekz",
       "datasourceTemplate": "github-releases"
@@ -882,7 +892,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: emojisum\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: emojisum\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "emojisum/emojisum",
       "datasourceTemplate": "github-tags"
@@ -892,7 +902,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: envcli\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: envcli\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "EnvCLI/EnvCLI",
       "datasourceTemplate": "github-releases",
@@ -903,7 +913,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: envsub\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: envsub\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "stephenc/envsub",
       "datasourceTemplate": "github-releases"
@@ -913,7 +923,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: faas-cli\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: faas-cli\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "openfaas/faas-cli",
       "datasourceTemplate": "github-releases"
@@ -923,7 +933,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: faasd\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: faasd\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "openfaas/faasd",
       "datasourceTemplate": "github-releases"
@@ -933,7 +943,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: firecracker\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: firecracker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "firecracker-microvm/firecracker",
       "datasourceTemplate": "github-releases",
@@ -944,7 +954,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: firectl\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: firectl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "firecracker-microvm/firectl",
       "datasourceTemplate": "github-releases"
@@ -954,7 +964,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: firejail\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: firejail\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "netblue30/firejail",
       "datasourceTemplate": "github-releases",
@@ -965,7 +975,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: footloose\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: footloose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "weaveworks/footloose",
       "datasourceTemplate": "github-releases"
@@ -975,7 +985,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: fuse-overlayfs\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: fuse-overlayfs\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containers/fuse-overlayfs",
       "datasourceTemplate": "github-releases",
@@ -987,7 +997,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: fuse_overlayfs_snapshotter\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: fuse-overlayfs-snapshotter\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containerd/fuse-overlayfs-snapshotter",
       "datasourceTemplate": "github-releases",
@@ -998,7 +1008,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: gh\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: gh\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "cli/cli",
       "datasourceTemplate": "github-releases",
@@ -1009,7 +1019,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: gitlab-runner\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: gitlab-runner\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "gitlab-org/gitlab-runner",
       "datasourceTemplate": "gitlab-releases",
@@ -1020,7 +1030,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: gitsign\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: gitsign\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "sigstore/gitsign",
       "datasourceTemplate": "github-releases",
@@ -1031,7 +1041,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: glab\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: glab\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "gitlab-org/cli",
       "datasourceTemplate": "gitlab-releases",
@@ -1042,7 +1052,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: glow\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "charmbracelet/glow",
       "datasourceTemplate": "github-releases",
@@ -1053,7 +1063,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: go-md2man\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: go-md2man\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/go-md2man-static",
       "datasourceTemplate": "github-releases",
@@ -1064,7 +1074,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: gosu\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: gosu\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "tianon/gosu",
       "datasourceTemplate": "github-releases",
@@ -1076,7 +1086,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: grype\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: grype\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "anchore/grype",
       "datasourceTemplate": "github-releases",
@@ -1087,7 +1097,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: gvisor\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: gvisor\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "google/gvisor",
       "datasourceTemplate": "github-tags",
@@ -1099,7 +1109,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: hadolint\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: hadolint\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "hadolint/hadolint",
       "datasourceTemplate": "github-releases",
@@ -1110,7 +1120,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: havener\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: havener\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "homeport/havener",
       "datasourceTemplate": "github-releases",
@@ -1121,29 +1131,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: ignite\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "weaveworks/ignite",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: helm\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "helm/helm",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: hcloud\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: hcloud\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "hetznercloud/cli",
       "datasourceTemplate": "github-releases",
@@ -1154,7 +1142,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: helmfile\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: helm\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "helm/helm",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: helmfile\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "roboll/helmfile",
       "datasourceTemplate": "github-releases",
@@ -1165,7 +1164,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: hub\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: hub\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "github/hub",
       "datasourceTemplate": "github-releases",
@@ -1176,7 +1175,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: hub-tool\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: hub-tool\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "docker/hub-tool",
       "datasourceTemplate": "github-releases",
@@ -1187,10 +1186,10 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: imgcrypt\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: ignite\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "containerd/imgcrypt",
-      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "weaveworks/ignite",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
@@ -1198,18 +1197,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: imgpkg\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "vmware-tanzu/carvel-imgpkg",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: img\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: img\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "genuinetools/img",
       "datasourceTemplate": "github-releases",
@@ -1220,7 +1208,29 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: iptables\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: imgcrypt\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "containerd/imgcrypt",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: imgpkg\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vmware-tanzu/carvel-imgpkg",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: iptables\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/centos-iptables-legacy",
       "datasourceTemplate": "github-releases",
@@ -1231,19 +1241,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: jq\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "stedolan/jq",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^jq-(?<version>.+?)$",
-      "versioningTemplate": "loose"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: jp\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: jp\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "jmespath/jp",
       "datasourceTemplate": "github-releases"
@@ -1253,7 +1251,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: jwt\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: jwt\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "mike-engel/jwt-cli",
       "datasourceTemplate": "github-releases"
@@ -1263,7 +1261,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k3d\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k3d\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "rancher/k3d",
       "datasourceTemplate": "github-releases",
@@ -1274,7 +1272,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k3s\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k3s\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases",
@@ -1286,7 +1284,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k3sup\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k3sup\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "alexellis/k3sup",
       "datasourceTemplate": "github-releases"
@@ -1296,7 +1294,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: k9s\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: k9s\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "derailed/k9s",
       "datasourceTemplate": "github-releases",
@@ -1307,7 +1305,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kapp\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kapp\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "vmware-tanzu/carvel-kapp",
       "datasourceTemplate": "github-releases",
@@ -1318,7 +1316,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kbld\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kbld\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "vmware-tanzu/carvel-kbld",
       "datasourceTemplate": "github-releases",
@@ -1329,7 +1327,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kbrew\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kbrew\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kbrew-dev/kbrew",
       "datasourceTemplate": "github-releases",
@@ -1340,7 +1338,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kind\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kind\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes-sigs/kind",
       "datasourceTemplate": "github-releases",
@@ -1351,7 +1349,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kink\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kink\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "Trendyol/kink",
       "datasourceTemplate": "github-releases",
@@ -1362,7 +1360,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kompose\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kompose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes/kompose",
       "datasourceTemplate": "github-releases",
@@ -1374,7 +1372,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kots\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kots\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "replicatedhq/kots",
       "datasourceTemplate": "github-releases",
@@ -1385,7 +1383,40 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubeadm\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: krew\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/krew",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: ktop\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vladimirvivien/ktop",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: kube-bench\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "aquasecurity/kube-bench",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: kubeadm\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
@@ -1396,7 +1427,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubectl\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubeclarity-cli\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "openclarity/kubeclarity",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: kubectl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
@@ -1407,7 +1449,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubectl-build\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubectl-build\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "vmware-tanzu/buildkit-cli-for-kubectl",
       "datasourceTemplate": "github-releases",
@@ -1418,7 +1460,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubectl-free\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubectl-free\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "makocchi-git/kubectl-free",
       "datasourceTemplate": "github-releases",
@@ -1429,7 +1471,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubectl-resources\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubectl-resources\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "howardjohn/kubectl-resources",
       "datasourceTemplate": "github-releases",
@@ -1440,7 +1482,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubefire\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubefire\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "innobead/kubefire",
       "datasourceTemplate": "github-releases",
@@ -1451,7 +1493,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubelet\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubelet\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
@@ -1462,7 +1504,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubeletctl\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubeletctl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "cyberark/kubeletctl",
       "datasourceTemplate": "github-releases",
@@ -1474,7 +1516,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubesec\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubent\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "doitintl/kube-no-trouble",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: kubesec\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "controlplaneio/kubesec",
       "datasourceTemplate": "github-releases",
@@ -1485,7 +1537,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubeswitch\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubeswitch\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "danielb42/kubeswitch",
       "datasourceTemplate": "github-releases",
@@ -1496,61 +1548,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: krew\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "kubernetes-sigs/krew",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: ktop\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "vladimirvivien/ktop",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: kube-bench\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "aquasecurity/kube-bench",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: kubeclarity-cli\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "openclarity/kubeclarity",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: kubent\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "doitintl/kube-no-trouble",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: kubeval\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubeval\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "instrumenta/kubeval",
       "datasourceTemplate": "github-releases",
@@ -1561,7 +1559,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kubo\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kubo\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "ipfs/kubo",
       "datasourceTemplate": "github-releases",
@@ -1572,7 +1570,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kustomize\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kustomize\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases",
@@ -1583,7 +1581,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: kustomizer\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: kustomizer\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "stefanprodan/kustomizer",
       "datasourceTemplate": "github-releases",
@@ -1594,7 +1592,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: lab\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: lab\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "zaquestion/lab",
       "datasourceTemplate": "github-releases",
@@ -1605,7 +1603,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: lazydocker\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: lazydocker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "jesseduffield/lazydocker",
       "datasourceTemplate": "github-releases",
@@ -1617,7 +1615,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: lazygit\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: lazygit\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "jesseduffield/lazygit",
       "datasourceTemplate": "github-releases",
@@ -1628,7 +1626,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: libcap\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: libcap\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "git://git.kernel.org/pub/scm/libs/libcap/libcap.git",
       "datasourceTemplate": "git-tags",
@@ -1640,7 +1638,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: libcap-ng\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: libcap-ng\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "stevegrubb/libcap-ng",
       "datasourceTemplate": "github-releases",
@@ -1651,7 +1649,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: libcgroup\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: libcgroup\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "libcgroup/libcgroup",
       "datasourceTemplate": "github-releases",
@@ -1662,7 +1660,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: loft\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: loft\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "loft-sh/loft",
       "datasourceTemplate": "github-releases",
@@ -1673,7 +1671,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\\n"
+        "name: manifest-tool\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",
@@ -1684,7 +1682,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: minectl\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: minectl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "dirien/minectl",
       "datasourceTemplate": "github-releases",
@@ -1695,7 +1693,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: minikube\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: minikube\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes/minikube",
       "datasourceTemplate": "github-releases",
@@ -1706,7 +1704,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: mitmproxy\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: mitmproxy\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "mitmproxy/mitmproxy",
       "datasourceTemplate": "github-releases",
@@ -1717,7 +1715,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: mp3binder\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: mp3binder\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "crra/mp3binder",
       "datasourceTemplate": "github-releases"
@@ -1727,7 +1725,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: mutagen\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: mutagen\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "mutagen-io/mutagen",
       "datasourceTemplate": "github-releases",
@@ -1738,7 +1736,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: mutagen\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: mutagen-compose\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "mutagen-io/mutagen-compose",
       "datasourceTemplate": "github-releases",
@@ -1750,7 +1748,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: nerdctl\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: nerdctl\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containerd/nerdctl",
       "datasourceTemplate": "github-releases",
@@ -1761,7 +1759,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: norouter\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: norouter\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "norouter/norouter",
       "datasourceTemplate": "github-releases",
@@ -1772,7 +1770,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: notation\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: notation\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "notaryproject/notation",
       "datasourceTemplate": "github-releases",
@@ -1783,7 +1781,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: nsutils\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: nsutils\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "rd235/nsutils",
       "datasourceTemplate": "github-tags",
@@ -1795,7 +1793,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: oci_image_tool\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: oci-image-tool\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "opencontainers/image-tools",
       "datasourceTemplate": "github-releases",
@@ -1806,7 +1804,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: oci_runtime_tool\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: oci-runtime-tool\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "opencontainers/runtime-tools",
       "datasourceTemplate": "github-releases",
@@ -1817,7 +1815,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: oras\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: oras\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "oras-project/oras",
       "datasourceTemplate": "github-releases",
@@ -1828,7 +1826,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: patat\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: patat\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "jaspervdj/patat",
       "datasourceTemplate": "github-releases",
@@ -1840,7 +1838,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: podman\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: podman\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/podman-static",
       "datasourceTemplate": "github-releases",
@@ -1851,7 +1849,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: polaris\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: podman-tui\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "containers/podman-tui",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: polaris\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "FairwindsOps/polaris",
       "datasourceTemplate": "github-releases"
@@ -1861,7 +1870,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: portainer\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: portainer\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "portainer/portainer",
       "datasourceTemplate": "github-releases"
@@ -1871,7 +1880,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: porter\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: porter\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "getporter/porter",
       "datasourceTemplate": "github-releases",
@@ -1882,7 +1891,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: qemu\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: qemu\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/qemu-static",
       "datasourceTemplate": "github-releases",
@@ -1893,7 +1902,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: regclient\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: regclient\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "regclient/regclient",
       "datasourceTemplate": "github-releases",
@@ -1904,7 +1913,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: registry\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: registry\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "distribution/distribution",
       "datasourceTemplate": "github-releases",
@@ -1915,7 +1924,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: rekor\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: rekor\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "sigstore/rekor",
       "datasourceTemplate": "github-releases",
@@ -1926,7 +1935,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: reptyr\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: reptyr\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nelhage/reptyr",
       "datasourceTemplate": "github-tags",
@@ -1937,7 +1946,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: rootlesskit\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: rootlesskit\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "rootless-containers/rootlesskit",
       "datasourceTemplate": "github-releases",
@@ -1948,7 +1957,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: runc\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: runc\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "opencontainers/runc",
       "datasourceTemplate": "github-releases",
@@ -1959,7 +1968,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: scorecard\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: scorecard\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "ossf/scorecard",
       "datasourceTemplate": "github-releases",
@@ -1970,7 +1979,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: semver\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: semver\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "fsaintjacques/semver-tool",
       "datasourceTemplate": "github-releases"
@@ -1980,7 +1989,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: shortnames\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: shortnames\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containers/shortnames",
       "datasourceTemplate": "github-releases",
@@ -1992,7 +2001,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: skopeo\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: skopeo\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/skopeo-static",
       "datasourceTemplate": "github-releases",
@@ -2003,7 +2012,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: slides\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: slides\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "maaslalani/slides",
       "datasourceTemplate": "github-releases",
@@ -2014,7 +2023,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: slirp4netns\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: slirp4netns\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "rootless-containers/slirp4netns",
       "datasourceTemplate": "github-releases",
@@ -2025,7 +2034,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: sloop\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: sloop\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "salesforce/sloop",
       "datasourceTemplate": "github-releases",
@@ -2037,7 +2046,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: sops\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: sops\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "mozilla/sops",
       "datasourceTemplate": "github-releases",
@@ -2048,7 +2057,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: ssh-key-confirmer\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: ssh-key-confirmer\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "benjojo/ssh-key-confirmer",
       "datasourceTemplate": "github-releases",
@@ -2060,7 +2069,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: sshocker\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: sshocker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "lima-vm/sshocker",
       "datasourceTemplate": "github-releases",
@@ -2071,7 +2080,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: stargz-snapshotter\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: stargz-snapshotter\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containerd/stargz-snapshotter",
       "datasourceTemplate": "github-releases",
@@ -2082,7 +2091,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: su-exec\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: su-exec\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "ncopa/su-exec",
       "datasourceTemplate": "github-releases",
@@ -2094,7 +2103,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: stern\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: stern\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "stern/stern",
       "datasourceTemplate": "github-releases",
@@ -2105,7 +2114,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: switcher\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: switcher\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "danielfoehrKn/kubeswitch",
       "datasourceTemplate": "github-releases"
@@ -2115,7 +2124,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: syft\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: syft\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "anchore/syft",
       "datasourceTemplate": "github-releases",
@@ -2126,7 +2135,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: task\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: task\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "go-task/task",
       "datasourceTemplate": "github-releases",
@@ -2137,7 +2146,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: tasker\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: tasker\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "stevegrubb/tasker",
       "datasourceTemplate": "github-releases",
@@ -2149,7 +2158,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: tini\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: tini\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "krallin/tini",
       "datasourceTemplate": "github-releases",
@@ -2160,7 +2169,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: trillian\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: trillian\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "google/trillian",
       "datasourceTemplate": "github-releases",
@@ -2171,7 +2180,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: trivy\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: trivy\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "aquasecurity/trivy",
       "datasourceTemplate": "github-releases",
@@ -2182,7 +2191,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: uidmap\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: uidmap\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "shadow-maint/shadow",
       "datasourceTemplate": "github-releases",
@@ -2193,7 +2202,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: umoci\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: umoci\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "opencontainers/umoci",
       "datasourceTemplate": "github-releases",
@@ -2204,7 +2213,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: util-linux\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: util-linux\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "util-linux/util-linux",
       "datasourceTemplate": "github-tags",
@@ -2216,18 +2225,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: yq\\n\\s+version: \"?(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "mikefarah/yq",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
-        "name: vcluster\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: vcluster\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "loft-sh/vcluster",
       "datasourceTemplate": "github-releases",
@@ -2238,7 +2236,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: vendir\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: vendir\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "vmware-tanzu/carvel-vendir",
       "datasourceTemplate": "github-releases",
@@ -2249,7 +2247,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: watchtower\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: watchtower\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "containrrr/watchtower",
       "datasourceTemplate": "github-releases",
@@ -2260,7 +2258,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: webhookd\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: webhookd\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "ncarlier/webhookd",
       "datasourceTemplate": "github-releases",
@@ -2271,7 +2269,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: win-gpg-agent\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: win-gpg-agent\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "rupor-github/win-gpg-agent",
       "datasourceTemplate": "github-releases",
@@ -2282,7 +2280,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: yasu\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: yasu\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "crazy-max/yasu",
       "datasourceTemplate": "github-releases",
@@ -2293,7 +2291,7 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: ytt\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: ytt\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "vmware-tanzu/carvel-ytt",
       "datasourceTemplate": "github-releases",
@@ -2304,7 +2302,18 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: zot\\n\\s+version: \"?(?<currentValue>.*?)\n"
+        "name: yq\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "mikefarah/yq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: zot\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "project-zot/zot",
       "datasourceTemplate": "github-releases",

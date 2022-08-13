@@ -9,6 +9,10 @@ tools:
     - development
     - testing
     - automation
+    renovate:
+      datasource: github-releases
+      package: nektos/act
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/nektos/act/releases/download/v${version}/act_Linux_${arch}.tar.gz
@@ -25,6 +29,9 @@ tools:
     - kubernetes
     - package
     - management
+    renovate:
+      package: alexellis/arkade
+      datasource: github-releases
     download:
     - url:
         x86_64: https://github.com/alexellis/arkade/releases/download/${version}/arkade
@@ -41,6 +48,10 @@ tools:
     tags:
     - management
     - storage
+    renovate:
+      datasource: github-releases
+      package: crazy-max/artifactory-cleanup
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/crazy-max/artifactory-cleanup/releases/download/v${version}/artifactory-cleanup_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -52,6 +63,10 @@ tools:
     check: ${binary} --version | grep ^bin | cut -d' ' -f3
     tags:
     - management
+    renovate:
+      datasource: github-releases
+      package: marcosnils/bin
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/marcosnils/bin/releases/download/v${version}/bin_${version}_Linux_${arch}
@@ -68,6 +83,10 @@ tools:
     - build
     - redhat
     - oci
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/buildah-static
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah-${alt_arch}.tar.gz
@@ -84,6 +103,10 @@ tools:
     - build
     - debug
     - oci
+    renovate:
+      datasource: github-releases
+      package: ktock/buildg
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/ktock/buildg/releases/download/v${version}/buildg-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -98,6 +121,10 @@ tools:
     - docker
     - build
     - oci
+    renovate:
+      datasource: github-releases
+      package: moby/buildkit
+      extractVersion: ^v(?<version>.+?)$
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     download:
     - url: https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz
@@ -283,6 +310,10 @@ tools:
     - default
     - docker
     - plugin
+    renovate:
+      datasource: github-releases
+      package: docker/buildx
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}
       type: executable
@@ -308,6 +339,10 @@ tools:
     tags:
     - rootless
     - network
+    renovate:
+      datasource: github-tags
+      package: rootless-containers/bypass4netns
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM golang:${go_version}
       RUN apt-get update \
@@ -327,6 +362,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: codenotary/cas
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/codenotary/cas/releases/download/v${version}/cas-v${version}-linux-${alt_arch}-static
@@ -342,6 +381,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3 | cut -d_ -f1
     tags:
     - init
+    renovate:
+      datasource: github-releases
+      package: openSUSE/catatonit
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/openSUSE/catatonit/releases/download/v${version}/catatonit.x86_64
@@ -350,10 +393,14 @@ tools:
   - name: cilium
     version: 0.12.1
     check: ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
-    tag:
+    tags:
     - kubernetes
     - k8s
     - network
+    renovate:
+      datasource: github-releases
+      package: cilium/cilium-cli
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/cilium/cilium-cli/releases/download/v${version}/cilium-linux-${alt_arch}.tar.gz
       type: tarball
@@ -369,6 +416,10 @@ tools:
     - kernel
     - cgroups
     - caps
+    renovate:
+      datasource: github-releases
+      package: mhausenblas/cinf
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
       type: tarball
@@ -382,6 +433,10 @@ tools:
     - k8s
     - kubernetes
     - cloud
+    renovate:
+      datasource: github-releases
+      package: kubernetes-sigs/cluster-api-provider-aws
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-amd64
       type: executable
@@ -397,6 +452,10 @@ tools:
     tags:
     - k8s
     - kubernetes
+    renovate:
+      datasource: github-releases
+      package: kubernetes-sigs/cluster-api
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}
       type: executable
@@ -411,6 +470,10 @@ tools:
     tags:
     - management
     - security
+    renovate:
+      datasource: github-releases
+      package: cert-manager/cert-manager
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/cert-manager/cert-manager/releases/download/v${version}/cmctl-linux-${alt_arch}.tar.gz
       type: tarball
@@ -434,6 +497,10 @@ tools:
     - k8s
     - kubernetes
     - network
+    renovate:
+      datasource: github-releases
+      package: containernetworking/plugins
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz
       type: tarball
@@ -447,6 +514,10 @@ tools:
     - k8s
     - kubernetes
     - network
+    renovate:
+      datasource: github-releases
+      package: containernetworking/cni
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM golang:${go_version}
     install: |
@@ -466,6 +537,10 @@ tools:
     - k8s
     - kubernetes
     - network
+    renovate:
+      datasource: github-releases
+      package: AkihiroSuda/cni-isolation
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/AkihiroSuda/cni-isolation/releases/download/v${version}/cni-isolation-${alt_arch}.tgz
       type: tarball
@@ -476,6 +551,9 @@ tools:
     tags:
     - runtime
     - analysis
+    renovate:
+      datasource: github-releases
+      package: Mic92/cntr
     download:
     - url:
         x86_64: https://github.com/Mic92/cntr/releases/download/${version}/cntr-bin-${version}-${arch}-unknown-linux-musl
@@ -489,6 +567,10 @@ tools:
     tags:
     - redhat
     - runtime
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/conmon-static
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz
       type: tarball
@@ -547,6 +629,10 @@ tools:
     - runtime
     - containerd
     - cri
+    renovate:
+      datasource: github-releases
+      package: containerd/containerd
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -834,6 +920,10 @@ tools:
     - go-md2man
     tags:
     - redhat
+    renovate:
+      datasource: github-releases
+      package: containers/common
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/containers/common/raw/v${version}/docs/Containerfile.5.md
       type: file
@@ -863,6 +953,10 @@ tools:
     version: 0.4.1
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: ContainerSSH/ContainerSSH
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -878,6 +972,10 @@ tools:
     - docker
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: sigstore/cosign
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}
       type: executable
@@ -894,6 +992,10 @@ tools:
     - registry
     - image
     - oci
+    renovate:
+      datasource: github-releases
+      package: google/go-containerregistry
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz
       type: tarball
@@ -917,6 +1019,10 @@ tools:
     - kubernetes
     - runtime
     - cri
+    renovate:
+      datasource: github-releases
+      package: Mirantis/cri-dockerd
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz
       type: tarball
@@ -959,6 +1065,10 @@ tools:
     - runtime
     - oci
     - cri
+    renovate:
+      datasource: github-releases
+      package: cri-o/cri-o
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz
       type: tarball
@@ -1616,6 +1726,10 @@ tools:
     - kubernetes
     - runtime
     - cri
+    renovate:
+      datasource: github-releases
+      package: kubernetes-sigs/cri-tools
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -1642,6 +1756,10 @@ tools:
     - runtime
     - redhat
     - oci
+    renovate:
+      datasource: github-releases
+      package: containers/crun
+      versioning: loose
     download:
     - url: https://github.com/containers/crun/releases/download/${version}/crun-${version}-linux-${alt_arch}
       type: executable
@@ -1662,6 +1780,10 @@ tools:
     - analysis
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: bcicen/ctop
+      extractVersion: ^v(?<version>.+?)$
     needs:
     - docker
     download:
@@ -1673,6 +1795,10 @@ tools:
     tags:
     - security
     - sbom
+    renovate:
+      datasource: github-releases
+      package: CycloneDX/cyclonedx-cli
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/CycloneDX/cyclonedx-cli/releases/download/v${version}/cyclonedx-linux-x64
@@ -1684,6 +1810,10 @@ tools:
     check: ${binary} version | cut -d' ' -f2
     tags:
     - management
+    renovate:
+      datasource: github-releases
+      package: dagger/dagger
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/dagger/dagger/releases/download/v${version}/dagger_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1696,6 +1826,10 @@ tools:
     tags:
     - conversion
     - format
+    renovate:
+      datasource: github-releases
+      package: TomWright/dasel
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}
       type: executable
@@ -1707,6 +1841,9 @@ tools:
     - kubernetes
     - k8s
     - security
+    renovate:
+      datasource: github-releases
+      package: datreeio/datree
     download:
     - url:
         x86_64: https://github.com/datreeio/datree/releases/download/${version}/datree-cli_${version}_Linux_${arch}.zip
@@ -1727,6 +1864,10 @@ tools:
     - registry
     - oci
     - management
+    renovate:
+      datasource: github-releases
+      package: crazy-max/diun
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/crazy-max/diun/releases/download/v${version}/diun_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1742,6 +1883,10 @@ tools:
     - analysis
     - build
     - tui
+    renovate:
+      datasource: github-releases
+      package: wagoodman/dive
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/wagoodman/dive/releases/download/v${version}/dive_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -1762,6 +1907,10 @@ tools:
     - runtime
     - build
     - oci
+    renovate:
+      datasource: github-tags
+      package: moby/moby
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz
       type: tarball
@@ -1966,6 +2115,10 @@ tools:
   - name: docker-manpages
     version: 20.10.17
     binary: false
+    renovate:
+      datasource: github-tags
+      package: moby/moby
+      extractVersion: ^v(?<version>.+?)$
     tags:
     - default
     - docker
@@ -1986,6 +2139,10 @@ tools:
     - default
     - docker
     - compose
+    renovate:
+      datasource: github-releases
+      package: docker/compose
+      extractVersion: regex:^(?<major>1?)\.(?<minor>\d+?)\.(?<patch>\d+?)$
     download:
     - url:
         x86_64: https://github.com/docker/compose/releases/download/${version}/docker-compose-Linux-x86_64
@@ -2026,6 +2183,10 @@ tools:
     - not-docker-compose-v1
     tags:
     - default
+    renovate:
+      datasource: github-releases
+      package: docker/compose-switch
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}
       type: executable
@@ -2044,6 +2205,10 @@ tools:
     - docker
     - compose
     - plugin
+    renovate:
+      datasource: github-releases
+      package: docker/compose
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}
       type: executable
@@ -2055,6 +2220,9 @@ tools:
     tags:
     - docker
     - security
+    renovate:
+      datasource: github-releases
+      package: chrismellard/docker-credential-acr-env
     download:
     - url: https://github.com/chrismellard/docker-credential-acr-env/releases/download/${version}/docker-credential-acr-env_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -2068,6 +2236,10 @@ tools:
     tags:
     - docker
     - security
+    renovate:
+      datasource: github-releases
+      package: awslabs/amazon-ecr-credential-helper
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${version}/linux-${alt_arch}/docker-credential-ecr-login
       type: executable
@@ -2079,6 +2251,10 @@ tools:
     tags:
     - docker
     - security
+    renovate:
+      datasource: github-releases
+      package: GoogleCloudPlatform/docker-credential-gcr
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${version}/docker-credential-gcr_linux_${alt_arch}-${version}.tar.gz
       type: tarball
@@ -2093,6 +2269,10 @@ tools:
     tags:
     - docker
     - security
+    renovate:
+      datasource: github-releases
+      package: docker/docker-credential-helpers
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-pass-v${version}-${alt_arch}.tar.gz
@@ -2108,6 +2288,10 @@ tools:
     tags:
     - docker
     - security
+    renovate:
+      datasource: github-releases
+      package: docker-credential-magic/docker-credential-magic
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${arch}.tar.gz
@@ -2122,6 +2306,10 @@ tools:
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     tags:
     - docker
+    renovate:
+      datasource: github-releases
+      package: docker/machine
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
       type: executable
@@ -2135,6 +2323,10 @@ tools:
     - docker
     - security
     - sbom
+    renovate:
+      datasource: github-releases
+      package: docker/sbom-cli-plugin
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/sbom-cli-plugin/releases/download/v${version}/sbom-cli-plugin_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -2151,6 +2343,10 @@ tools:
     - docker
     - security
     - plugin
+    renovate:
+      datasource: github-releases
+      package: docker/scan-cli-plugin
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/scan-cli-plugin/releases/download/v${version}/docker-scan_linux_${alt_arch}
       type: executable
@@ -2163,6 +2359,10 @@ tools:
     tags:
     - docker
     - management
+    renovate:
+      datasource: github-releases
+      package: stepchowfun/docuum
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM rust:${rust_version}
     install: |
@@ -2184,6 +2384,10 @@ tools:
     - analysis
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: moncho/dry
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/moncho/dry/releases/download/v${version}/dry-linux-${alt_arch}
       type: executable
@@ -2193,6 +2397,9 @@ tools:
     check: ${binary} version
     tags:
     - cnab
+    renovate:
+      datasource: github-releases
+      package: cnabio/duffle
     download:
     - url: https://github.com/cnabio/duffle/releases/download/${version}/duffle-linux-${alt_arch}
       type: executable
@@ -2203,6 +2410,10 @@ tools:
     tags:
     - development
     - dev
+    renovate:
+      datasource: github-releases
+      package: homeport/dyff
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/homeport/dyff/releases/download/v${version}/dyff_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -2221,6 +2432,9 @@ tools:
     - kubernetes
     - k8s
     - cloud
+    renovate:
+      datasource: github-releases
+      package: chanwit/ekz
     download:
     - url:
         x86_64: https://github.com/chanwit/ekz/releases/download/v${version}/ekz_${version}_linux_${alt_arch}.tar.gz
@@ -2232,6 +2446,9 @@ tools:
     - docker
     tags:
     - security
+    renovate:
+      datasource: github-tags
+      package: emojisum/emojisum
     dockerfile: |
       FROM golang:${go_version}
     install: |
@@ -2251,6 +2468,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - management
+    renovate:
+      datasource: github-releases
+      package: EnvCLI/EnvCLI
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/EnvCLI/EnvCLI/releases/download/v${version}/linux_${alt_arch}
@@ -2263,6 +2484,9 @@ tools:
     - docker
     tags:
     - management
+    renovate:
+      datasource: github-releases
+      package: stephenc/envsub
     dockerfile: |
       FROM rust:${rust_version}
     install: |
@@ -2280,6 +2504,9 @@ tools:
     tags:
     - serverless
     - faas
+    renovate:
+      datasource: github-releases
+      package: openfaas/faas-cli
     download:
     - url:
         x86_64: https://github.com/openfaas/faas-cli/releases/download/${version}/faas-cli
@@ -2295,6 +2522,9 @@ tools:
     tags:
     - serverless
     - faas
+    renovate:
+      datasource: github-releases
+      package: openfaas/faasd
     download:
     - url:
         x86_64: https://github.com/openfaas/faasd/releases/download/${version}/faasd
@@ -2318,6 +2548,10 @@ tools:
     - kvm
     - vm
     - emulation
+    renovate:
+      datasource: github-releases
+      package: firecracker-microvm/firecracker
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/firecracker-microvm/firecracker/releases/download/v${version}/firecracker-v${version}-${arch}.tgz
       type: tarball
@@ -2341,6 +2575,9 @@ tools:
     - management
     - vm
     - emulation
+    renovate:
+      datasource: github-releases
+      package: firecracker-microvm/firectl
     download:
     - url:
         x86_64: https://firectl-release.s3.amazonaws.com/firectl-v${version}
@@ -2353,6 +2590,10 @@ tools:
     - docker
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: netblue30/firejail
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
@@ -2377,6 +2618,10 @@ tools:
     tags:
     - vm
     - emulation
+    renovate:
+      pattern: "name: footloose\\\\n\\\\s+version: \\\"?(?<currentValue>.*?)\\\\n"
+      datasource: github-releases
+      package: weaveworks/footloose
     download:
     - url: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
       type: executable
@@ -2389,6 +2634,12 @@ tools:
     - docker
     - storage
     - containerd
+    renovate:
+      pattern: "name: fuse-overlayfs\\n\\s+version: \"?(?<currentValue>.*?)\\n"
+      datasource: github-releases
+      package: containers/fuse-overlayfs
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url: https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}
       type: executable
@@ -2402,6 +2653,10 @@ tools:
     tags:
     - storage
     - containerd
+    renovate:
+      datasource: github-releases
+      package: containerd/fuse-overlayfs-snapshotter
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -2435,6 +2690,10 @@ tools:
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: cli/cli
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -2455,6 +2714,10 @@ tools:
     - development
     - testing
     - automation
+    renovate:
+      datasource: gitlab-releases
+      package: gitlab-org/gitlab-runner
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://gitlab.com/gitlab-org/gitlab-runner/-/releases/v${version}/downloads/binaries/gitlab-runner-linux-${alt_arch}
@@ -2496,6 +2759,10 @@ tools:
     tags:
     - development
     - security
+    renovate:
+      datasource: github-releases
+      package: sigstore/gitsign
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}
       type: executable
@@ -2535,6 +2802,10 @@ tools:
     check: ${binary} version | cut -d' ' -f3
     tags:
     - development
+    renovate:
+      datasource: gitlab-releases
+      package: gitlab-org/cli
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/profclems/glab/releases/download/v${version}/glab_${version}_Linux_${arch}.tar.gz
@@ -2554,6 +2825,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - markdown
+    renovate:
+      datasource: github-releases
+      package: charmbracelet/glow
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_linux_${arch}.tar.gz
       type: tarball
@@ -2564,6 +2839,10 @@ tools:
     version: 2.0.2
     tags:
     - markdown
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/go-md2man-static
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/nicholasdille/go-md2man-static/releases/download/v${version}/go-md2man-${alt_arch}.tar.gz
       type: tarball
@@ -2574,6 +2853,11 @@ tools:
     check: ${binary} --version | cut -d' ' -f1
     tags:
     - init
+    renovate:
+      datasource: github-releases
+      package: tianon/gosu
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url: https://github.com/tianon/gosu/releases/download/${version}/gosu-${alt_arch}
       type: executable
@@ -2584,6 +2868,10 @@ tools:
     tags:
     - security
     - sbom
+    renovate:
+      datasource: github-releases
+      package: anchore/grype
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/anchore/grype/releases/download/v${version}/grype_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -2604,6 +2892,11 @@ tools:
     tags:
     - runtime
     - security
+    renovate:
+      datasource: github-tags
+      package: google/gvisor
+      extractVersion: ^release-(?<version>.+?)\.0$
+      versioning: loose
     download:
     - url: https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc
       type: executable
@@ -2627,6 +2920,10 @@ tools:
     - docker
     - build
     - analysis
+    renovate:
+      datasource: github-releases
+      package: hadolint/hadolint
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/hadolint/hadolint/releases/download/v${version}/hadolint-Linux-${arch}
@@ -2640,6 +2937,10 @@ tools:
     - kubernetes
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: homeport/havener
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/homeport/havener/releases/download/v${version}/havener_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -2657,6 +2958,10 @@ tools:
     tags:
     - cloud
     - management
+    renovate:
+      datasource: github-releases
+      package: hetznercloud/cli
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
       type: tarball
@@ -2677,6 +2982,10 @@ tools:
     - templating
     - package
     - manager
+    renovate:
+      datasource: github-releases
+      package: helm/helm
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -2726,6 +3035,10 @@ tools:
     - k8s
     - kubernetes
     - templating
+    renovate:
+      datasource: github-releases
+      package: roboll/helmfile
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}
       type: executable
@@ -2741,6 +3054,10 @@ tools:
     check: ${binary} --version | grep ^hub | cut -d' ' -f3
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: github/hub
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/github/hub/releases/download/v${version}/hub-linux-${alt_arch}-${version}.tgz
       type: tarball
@@ -2758,6 +3075,10 @@ tools:
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
     tags:
     - docker
+    renovate:
+      datasource: github-releases
+      package: docker/hub-tool
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz
       type: tarball
@@ -2776,6 +3097,10 @@ tools:
     - management
     - vm
     - emulation
+    renovate:
+      datasource: github-releases
+      package: weaveworks/ignite
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/weaveworks/ignite/releases/download/v${version}/ignite-${alt_arch}
       type: executable
@@ -2793,6 +3118,10 @@ tools:
     tags:
     - build
     - oci
+    renovate:
+      datasource: github-releases
+      package: genuinetools/img
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
       type: executable
@@ -2807,6 +3136,10 @@ tools:
     tags:
     - containerd
     - security
+    renovate:
+      datasource: github-releases
+      package: containerd/imgcrypt
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM golang:${go_version}
     install: |
@@ -2827,6 +3160,10 @@ tools:
     - oci
     - registry
     - management
+    renovate:
+      datasource: github-releases
+      package: vmware-tanzu/carvel-imgpkg
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
       type: executable
@@ -2837,6 +3174,10 @@ tools:
     if: is_rockylinux
     tags:
     - network
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/centos-iptables-legacy
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-rockylinux8-${alt_arch}.tar.gz
       type: tarball
@@ -2848,6 +3189,9 @@ tools:
     tags:
     - conversion
     - format
+    renovate:
+      datasource: github-releases
+      package: jmespath/jp
     download:
     - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
       type: executable
@@ -2859,6 +3203,9 @@ tools:
     - docker
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: mike-engel/jwt-cli
     dockerfile: |
       FROM rust:${rust_version}
     install: |
@@ -2881,6 +3228,10 @@ tools:
     - kubernetes
     - docker
     - management
+    renovate:
+      datasource: github-releases
+      package: rancher/k3d
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
       type: executable
@@ -2896,6 +3247,11 @@ tools:
     tags:
     - k8s
     - kubernetes
+    renovate:
+      datasource: github-releases
+      package: k3s-io/k3s
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url:
         x86_64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s
@@ -2947,6 +3303,9 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: alexellis/k3sup
     download:
     - url:
         x86_64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup
@@ -2961,6 +3320,10 @@ tools:
     - kubernetes
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: derailed/k9s
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
       type: tarball
@@ -2976,6 +3339,10 @@ tools:
     - templating
     - package
     - manager
+    renovate:
+      datasource: github-releases
+      package: vmware-tanzu/carvel-kapp
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
       type: executable
@@ -2992,6 +3359,10 @@ tools:
     - k8s
     - kubernetes
     - build
+    renovate:
+      datasource: github-releases
+      package: vmware-tanzu/carvel-kbld
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
       type: executable
@@ -3004,6 +3375,10 @@ tools:
     - kubernetes
     - package
     - manager
+    renovate:
+      datasource: github-releases
+      package: kbrew-dev/kbrew
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -3020,6 +3395,10 @@ tools:
     - management
     needs:
     - docker
+    renovate:
+      datasource: github-releases
+      package: kubernetes-sigs/kind
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
       type: executable
@@ -3036,6 +3415,10 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: Trendyol/kink
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
       type: tarball
@@ -3054,6 +3437,11 @@ tools:
     - k8s
     - kubernetes
     - compose
+    renovate:
+      datasource: github-releases
+      package: kubernetes/kompose
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
       type: executable
@@ -3067,6 +3455,16 @@ tools:
     version: 1.81.0
     binary: kubectl-kots
     check: ${binary} version | cut -d' ' -f3
+    tags:
+    - k8s
+    - kubernetes
+    - templating
+    - package
+    - manager
+    renovate:
+      datasource: github-releases
+      package: replicatedhq/kots
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3088,6 +3486,10 @@ tools:
     - kubernetes
     - plugin
     - management
+    renovate:
+      datasource: github-releases
+      package: kubernetes-sigs/krew
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
       type: tarball
@@ -3113,6 +3515,10 @@ tools:
     - kubernetes
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: vladimirvivien/ktop
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/vladimirvivien/ktop/releases/download/v${version}/ktop_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3126,6 +3532,10 @@ tools:
     - k8s
     - kubernetes
     - security
+    renovate:
+      datasource: github-releases
+      package: aquasecurity/kube-bench
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/aquasecurity/kube-bench/releases/download/v${version}/kube-bench_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3147,6 +3557,10 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: kubernetes/kubernetes
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
       type: executable
@@ -3177,6 +3591,10 @@ tools:
     - k8s
     - kubernetes
     - security
+    renovate:
+      datasource: github-releases
+      package: openclarity/kubeclarity
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/openclarity/kubeclarity/releases/download/v${version}/kubeclarity-cli-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -3197,6 +3615,10 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: kubernetes/kubernetes
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
       type: executable
@@ -3317,6 +3739,10 @@ tools:
     - management
     - plugin
     - build
+    renovate:
+      datasource: github-releases
+      package: vmware-tanzu/buildkit-cli-for-kubectl
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
@@ -3333,6 +3759,10 @@ tools:
     - management
     - plugin
     - analysis
+    renovate:
+      datasource: github-releases
+      package: makocchi-git/kubectl-free
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip
@@ -3350,6 +3780,10 @@ tools:
     - management
     - plugin
     - analysis
+    renovate:
+      datasource: github-releases
+      package: howardjohn/kubectl-resources
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -3366,6 +3800,10 @@ tools:
     - management
     - vm
     - emulation
+    renovate:
+      datasource: github-releases
+      package: innobead/kubefire
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
       type: executable
@@ -3379,6 +3817,10 @@ tools:
     tags:
     - k8s
     - kubernetes
+    renovate:
+      datasource: github-releases
+      package: kubernetes/kubernetes
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
       type: executable
@@ -3410,6 +3852,11 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: cyberark/kubeletctl
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
       type: executable
@@ -3420,6 +3867,9 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: doitintl/kube-no-trouble
     download:
     - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -3430,6 +3880,10 @@ tools:
     - k8s
     - kubernetes
     - security
+    renovate:
+      datasource: github-releases
+      package: controlplaneio/kubesec
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/controlplaneio/kubesec/releases/download/v${version}/kubesec_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3447,6 +3901,10 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: danielb42/kubeswitch
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3460,6 +3918,10 @@ tools:
     - k8s
     - kubernetes
     - security
+    renovate:
+      datasource: github-releases
+      package: instrumenta/kubeval
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
@@ -3476,6 +3938,10 @@ tools:
     - storage
     - network
     - containerd
+    renovate:
+      datasource: github-releases
+      package: ipfs/kubo
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz
       type: tarball
@@ -3522,6 +3988,10 @@ tools:
     - kubernetes
     - templating
     - management
+    renovate:
+      datasource: github-releases
+      package: kubernetes-sigs/kustomize
+      extractVersion: ^kustomize/v(?<version>.+)$
     download:
     - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3540,6 +4010,10 @@ tools:
     - templating
     - package
     - manager
+    renovate:
+      datasource: github-releases
+      package: stefanprodan/kustomizer
+      extractVersion: ^kustomize/v(?<version>.+)$
     download:
     - url: https://github.com/stefanprodan/kustomizer/releases/download/v${version}/kustomizer_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3556,6 +4030,10 @@ tools:
     check: ${binary} version | cut -d' ' -f3
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: zaquestion/lab
+      extractVersion: ^v(?<version>.+)$
     download:
     - url: https://github.com/zaquestion/lab/releases/download/v${version}/lab_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3576,6 +4054,11 @@ tools:
     - docker
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: jesseduffield/lazydocker
+      extractVersion: ^v(?<version>.+)$
+      versioning: loose
     download:
     - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -3589,6 +4072,10 @@ tools:
     - development
     - management
     - tui
+    renovate:
+      datasource: github-releases
+      package: jesseduffield/lazygit
+      extractVersion: ^v(?<version>.+)$
     download:
     - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
       type: tarball
@@ -3603,6 +4090,11 @@ tools:
     tags:
     - kernel
     - caps
+    renovate:
+      datasource: git-tags
+      package: git://git.kernel.org/pub/scm/libs/libcap/libcap.git
+      extractVersion: ^libcap-(?<version>\d+\.\d+)$
+      versioning: loose
     dockerfile: |
       FROM ubuntu:latest
       RUN apt-get update \
@@ -3631,6 +4123,10 @@ tools:
     tags:
     - kernel
     - caps
+    renovate:
+      datasource: github-releases
+      package: stevegrubb/libcap-ng
+      extractVersion: ^v(?<version>.+)$
     dockerfile: |
       FROM ubuntu:latest
       RUN apt-get update \
@@ -3661,6 +4157,10 @@ tools:
     tags:
     - kernel
     - cgroup
+    renovate:
+      datasource: github-releases
+      package: libcgroup/libcgroup
+      extractVersion: ^v(?<version>.+)$
     dockerfile: |
       FROM ubuntu:latest
       RUN apt-get update \
@@ -3696,6 +4196,10 @@ tools:
     tags:
     - k8s
     - kubernetes
+    renovate:
+      datasource: github-releases
+      package: loft-sh/loft
+      extractVersion: ^v(?<version>.+)$
     download:
     - url: https://github.com/loft-sh/loft/releases/download/v${version}/loft-linux-${alt_arch}
       type: executable
@@ -3711,6 +4215,10 @@ tools:
     tags:
     - docker
     - registry
+    renovate:
+      datasource: github-releases
+      package: estesp/manifest-tool
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
       type: tarball
@@ -3725,6 +4233,10 @@ tools:
     tags:
     - games
     - management
+    renovate:
+      datasource: github-releases
+      package: dirien/minectl
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/dirien/minectl/releases/download/v${version}/minectl_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3743,6 +4255,10 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: kubernetes/minikube
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
       type: executable
@@ -3756,6 +4272,10 @@ tools:
     version: 8.1.1
     tags:
     - network
+    renovate:
+      datasource: github-releases
+      package: mitmproxy/mitmproxy
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
@@ -3770,6 +4290,9 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - mp3
+    renovate:
+      datasource: github-releases
+      package: crra/mp3binder
     download:
     - url:
         x86_64: https://github.com/crra/mp3binder/releases/download/${version}/linux_${alt_arch}.zip
@@ -3784,6 +4307,10 @@ tools:
     - security
     - network
     - storage
+    renovate:
+      datasource: github-releases
+      package: mutagen-io/mutagen
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
       type: tarball
@@ -3808,6 +4335,11 @@ tools:
     - security
     - network
     - storage
+    renovate:
+      datasource: github-releases
+      package: mutagen-io/mutagen-compose
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     install: |
       curl https://github.com/mutagen-io/mutagen-compose/releases/download/v${version}/mutagen-compose_linux_${alt_arch}_v${version%-*}.tar.gz \
           --silent \
@@ -3826,6 +4358,10 @@ tools:
     - containerd
     - rootless
     - management
+    renovate:
+      datasource: github-releases
+      package: containerd/nerdctl
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -3848,6 +4384,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - network
+    renovate:
+      datasource: github-releases
+      package: norouter/norouter
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
       type: tarball
@@ -3863,6 +4403,10 @@ tools:
     - docker
     - plugin
     - security
+    renovate:
+      datasource: github-releases
+      package: notaryproject/notation
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3883,6 +4427,11 @@ tools:
     tags:
     - kernel
     - namespaces
+    renovate:
+      datasource: github-tags
+      package: rd235/nsutils
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     dockerfile: |
       FROM ubuntu:latest
       RUN apt-get update \
@@ -3915,6 +4464,10 @@ tools:
     - docker
     tags:
     - oci
+    renovate:
+      datasource: github-releases
+      package: opencontainers/image-tools
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM golang:${go_version}
     install: |
@@ -3934,6 +4487,10 @@ tools:
     - docker
     tags:
     - oci
+    renovate:
+      datasource: github-releases
+      package: opencontainers/runtime-tools
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM golang:${go_version}
     install: |
@@ -3953,6 +4510,10 @@ tools:
     - registry
     - storage
     - cnab
+    renovate:
+      datasource: github-releases
+      package: oras-project/oras
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -3963,6 +4524,11 @@ tools:
     version: 0.8.7.0
     tags:
     - markdown
+    renovate:
+      datasource: github-releases
+      package: jaspervdj/patat
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
       type: tarball
@@ -3990,6 +4556,10 @@ tools:
     - runtime
     - redhat
     - oci
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/podman-static
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman-${alt_arch}.tar.gz
@@ -4041,6 +4611,10 @@ tools:
     tags:
     - rootless
     - network
+    renovate:
+      datasource: github-releases
+      package: containers/podman-tui
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM docker.io/library/golang:${go_version}
       RUN mkdir -p /go/src/github.com/containers/podman-tui
@@ -4059,6 +4633,9 @@ tools:
     tags:
     - k8s
     - kubernetes
+    renovate:
+      datasource: github-releases
+      package: FairwindsOps/polaris
     download:
     - url: https://github.com/FairwindsOps/polaris/releases/download/${version}/polaris_linux_${alt_arch}.tar.gz
       type: tarball
@@ -4076,6 +4653,9 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: portainer/portainer
     download:
     - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -4285,6 +4865,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
     tags:
     - cnab
+    renovate:
+      datasource: github-releases
+      package: getporter/porter
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
       type: executable
@@ -4306,6 +4890,10 @@ tools:
     tags:
     - vm
     - emulation
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/qemu-static
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz
       type: tarball
@@ -4319,6 +4907,10 @@ tools:
     tags:
     - registry
     - management
+    renovate:
+      datasource: github-releases
+      package: regclient/regclient
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
       type: executable
@@ -4349,6 +4941,10 @@ tools:
     tags:
     - registry
     - oci
+    renovate:
+      datasource: github-releases
+      package: distribution/distribution
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/distribution/distribution/releases/download/v${version}/registry_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -4361,6 +4957,10 @@ tools:
     check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: sigstore/rekor
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-cli-linux-${alt_arch}
       type: executable
@@ -4408,6 +5008,10 @@ tools:
     - docker
     tags:
     - management
+    renovate:
+      datasource: github-tags
+      package: nelhage/reptyr
+      extractVersion: ^reptyr-(?<version>.+?)$
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
@@ -4436,6 +5040,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - rootless
+    renovate:
+      datasource: github-releases
+      package: rootless-containers/rootlesskit
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
       type: tarball
@@ -4448,6 +5056,10 @@ tools:
     tags:
     - runtime
     - oci
+    renovate:
+      datasource: github-releases
+      package: opencontainers/runc
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
       type: executable
@@ -4519,6 +5131,10 @@ tools:
     check: ${binary} version | grep "GitVersion" | cut -dv -f2
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: ossf/scorecard
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -4537,6 +5153,9 @@ tools:
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: fsaintjacques/semver-tool
     download:
     - url: https://github.com/fsaintjacques/semver-tool/raw/${version}/src/semver
       type: executable
@@ -4546,6 +5165,11 @@ tools:
     binary: false
     tags:
     - redhat
+    renovate:
+      datasource: github-releases
+      package: containers/shortnames
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url: https://github.com/containers/shortnames/raw/v${version}/shortnames.conf
       type: file
@@ -4558,6 +5182,10 @@ tools:
     - registry
     - redhat
     - oci
+    renovate:
+      datasource: github-releases
+      package: nicholasdille/skopeo-static
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz
@@ -4568,6 +5196,10 @@ tools:
     version: 0.8.0
     tags:
     - markdown
+    renovate:
+      datasource: github-releases
+      package: maaslalani/slides
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/maaslalani/slides/releases/download/v0.8.0/slides_0.8.0_linux_amd64.tar.gz
       type: tarball
@@ -4580,6 +5212,10 @@ tools:
     tags:
     - rootless
     - network
+    renovate:
+      datasource: github-releases
+      package: rootless-containers/slirp4netns
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
       type: executable
@@ -4593,6 +5229,11 @@ tools:
     - kubernetes
     - k8s
     - management
+    renovate:
+      datasource: github-releases
+      package: salesforce/sloop
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url:
         x86_64: https://github.com/salesforce/sloop/releases/download/v1.1/sloop_1.1_linux_amd64.tar.gz
@@ -4603,6 +5244,10 @@ tools:
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: mozilla/sops
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
@@ -4612,6 +5257,11 @@ tools:
     version: 0.1
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: benjojo/ssh-key-confirmer
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     download:
     - url:
         x86_64: https://github.com/benjojo/ssh-key-confirmer/releases/download/v${version}/ssh-key-confirmer-${alt_arch}
@@ -4624,6 +5274,10 @@ tools:
     - security
     - network
     - storage
+    renovate:
+      datasource: github-releases
+      package: lima-vm/sshocker
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
       type: executable
@@ -4637,6 +5291,10 @@ tools:
     tags:
     - containerd
     - storage
+    renovate:
+      datasource: github-releases
+      package: containerd/stargz-snapshotter
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
@@ -4672,6 +5330,11 @@ tools:
     - docker
     tags:
     - sudo
+    renovate:
+      datasource: github-releases
+      package: ncopa/su-exec
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
@@ -4696,6 +5359,10 @@ tools:
     - kubernetes
     - debugging
     - analysis
+    renovate:
+      datasource: github-releases
+      package: stern/stern
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/stern/stern/releases/download/v${version}/stern_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -4714,6 +5381,9 @@ tools:
     - k8s
     - kubernetes
     - management
+    renovate:
+      datasource: github-releases
+      package: danielfoehrKn/kubeswitch
     download:
     - url:
         x86_64: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switcher_linux_${alt_arch}
@@ -4731,6 +5401,10 @@ tools:
     tags:
     - sbom
     - security
+    renovate:
+      datasource: github-releases
+      package: anchore/syft
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -4747,6 +5421,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: go-task/task
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
       type: tarball
@@ -4773,6 +5451,11 @@ tools:
     - docker
     tags:
     - management
+    renovate:
+      datasource: github-releases
+      package: stevegrubb/tasker
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
@@ -4799,6 +5482,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - init
+    renovate:
+      datasource: github-releases
+      package: krallin/tini
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/krallin/tini/releases/download/v${version}/tini-${alt_arch}
       type: executable
@@ -4809,6 +5496,10 @@ tools:
     - docker
     tags:
     - security
+    renovate:
+      datasource: github-releases
+      package: google/trillian
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM golang:${go_version}
     install: |
@@ -4827,6 +5518,10 @@ tools:
     tags:
     - security
     - analysis
+    renovate:
+      datasource: github-releases
+      package: aquasecurity/trivy
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz
@@ -4842,6 +5537,10 @@ tools:
     - docker
     tags:
     - kernel
+    renovate:
+      datasource: github-releases
+      package: shadow-maint/shadow
+      extractVersion: ^v(?<version>.+?)$
     dockerfile: |
       FROM ubuntu:latest
       RUN apt-get update \
@@ -4873,6 +5572,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - oci
+    renovate:
+      datasource: github-releases
+      package: opencontainers/umoci
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
       type: executable
@@ -4885,6 +5588,11 @@ tools:
     tags:
     - kernel
     - namespaces
+    renovate:
+      datasource: github-tags
+      package: util-linux/util-linux
+      extractVersion: ^v(?<version>.+?)$
+      versioning: loose
     dockerfile: |
       FROM ubuntu:latest
       ENV DEBIAN_FRONTEND=noninteractive
@@ -4930,6 +5638,10 @@ tools:
     tags:
     - kubernetes
     - k8s
+    renovate:
+      datasource: github-releases
+      package: loft-sh/vcluster
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/loft-sh/vcluster/releases/download/v${version}/vcluster-linux-${alt_arch}
       type: executable
@@ -4944,6 +5656,10 @@ tools:
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: vmware-tanzu/carvel-vendir
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${alt_arch}
       type: executable
@@ -4955,6 +5671,10 @@ tools:
     tags:
     - docker
     - management
+    renovate:
+      datasource: github-releases
+      package: containrrr/watchtower
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_amd64.tar.gz
@@ -4967,6 +5687,10 @@ tools:
     version: 1.15.0
     tags:
     - development
+    renovate:
+      datasource: github-releases
+      package: ncarlier/webhookd
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/ncarlier/webhookd/releases/download/v${version}/webhookd-linux-${alt_arch}.tgz
       type: tarball
@@ -4979,6 +5703,10 @@ tools:
     check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1'
     tags:
     - wsl
+    renovate:
+      datasource: github-releases
+      package: rupor-github/win-gpg-agent
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url:
         x86_64: https://github.com/rupor-github/win-gpg-agent/releases/download/v${version}/win-gpg-agent.zip
@@ -4991,6 +5719,10 @@ tools:
     check: ${binary} --version | cut -d' ' -f1
     tags:
     - init
+    renovate:
+      datasource: github-releases
+      package: crazy-max/yasu
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/crazy-max/yasu/releases/download/v${version}/yasu_${version}_linux_${alt_arch}.tar.gz
       type: tarball
@@ -5006,6 +5738,10 @@ tools:
     - templating
     - package
     - manager
+    renovate:
+      datasource: github-releases
+      package: vmware-tanzu/carvel-ytt
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
       type: executable
@@ -5021,6 +5757,10 @@ tools:
     tags:
     - conversion
     - format
+    renovate:
+      datasource: github-releases
+      package: mikefarah/yq
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
       type: executable
@@ -5036,6 +5776,10 @@ tools:
     - registry
     - image
     - oci
+    renovate:
+      datasource: github-releases
+      package: project-zot/zot
+      extractVersion: ^v(?<version>.+?)$
     download:
     - url: https://github.com/project-zot/zot/releases/download/v${version}/zot-linux-${alt_arch}
       type: executable
