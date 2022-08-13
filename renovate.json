@@ -2,13 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
-    
     ":label(type/renovate)",
-
     ":docker",
     "docker:enableMajor",
     "docker:pinDigests",
-
     ":disableRateLimiting",
     ":ignoreUnstable",
     ":pinVersions",
@@ -18,7 +15,6 @@
     ":automergeDigest",
     ":automergePatch",
     ":semanticCommits",
-    
     ":enableVulnerabilityAlerts",
     ":enableVulnerabilityAlertsWithLabel(security)"
   ],
@@ -29,7 +25,8 @@
   ],
   "baseBranches": [
     "main",
-    "v1.6"
+    "v1.6",
+    "v1.7"
   ],
   "useBaseBranchConfig": "merge",
   "platformAutomerge": true,
