@@ -2259,7 +2259,7 @@ tools:
 
   - name: envsub
     version: 0.1.3
-    #check: ${binary}
+    check: ${binary} --version
     needs:
     - docker
     tags:
@@ -2271,7 +2271,8 @@ tools:
           --workdir /go/src/github.com/stephenc/envsub \
           <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/stephenc/envsub .
-      cargo install --path /target/bin/
+      cargo install --path .
+      cp /usr/local/cargo/bin/envsub /target/bin/
       EOF
 
   - name: faas-cli
