@@ -166,7 +166,7 @@
       "matchPackageNames": [
         "ubuntu"
       ],
-      "allowedVersions": "~20.04"
+      "allowedVersions": "20.04"
     },
     {
       "matchPaths": [
@@ -178,7 +178,7 @@
       "matchPackageNames": [
         "ubuntu"
       ],
-      "allowedVersions": "~22.04"
+      "allowedVersions": "22.04"
     },
     {
       "matchDatasources": [
