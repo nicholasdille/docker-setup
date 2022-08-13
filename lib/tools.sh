@@ -378,6 +378,48 @@ function install_tool() {
                     fi
                     ;;
 
+                tarball-xz)
+                    if test -z "${path}"; then
+                        path="$(
+                            echo "${target}/bin" \
+                            | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+                        )"
+                    fi
+                    echo "    Using path ${path}"
+                    mkdir -p "${path}"
+                    echo "    Unpacking tarball"
+                    local strip
+                    local param_strip
+                    strip="$(jq --raw-output 'select(.strip != null) | .strip' <<<"${download_json}")"
+                    if test -n "${strip}"; then
+                        param_strip="--strip-components=${strip}"
+                    fi
+                    local files
+                    local param_files
+                    files="$(
+                        jq --raw-output 'select(.files != null) | .files[]' <<<"${download_json}" \
+                        | tr '\n' ' ' \
+                        | replace_vars "${tool}" "${binary}" "${version}" "${arch}" "${alt_arch}" "${target}" "${prefix}"
+                    )"
+                    if test -n "${files}"; then
+                        param_files=()
+                        for file in ${files}; do
+                            param_files+=( "${file}" )
+                        done
+                    fi
+                    mkdir -p "$(dirname "${path}")"
+                    get_file "${url}" \
+                    | tar -xJ \
+                        --directory "${path}" \
+                        --no-same-owner \
+                        ${param_strip} \
+                        ${param_files[@]}
+                    if test "$?" -gt 0; then
+                        echo "Failed to download or unpack tarball"
+                        exit 1
+                    fi
+                    ;;
+
                 zip)
                     if test -z "${path}"; then
                         path="$(
