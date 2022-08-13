@@ -4228,7 +4228,7 @@ tools:
       mv "${target}/bin/manifest-tool-linux-${alt_arch}" "${target}/bin/manifest-tool"
 
   - name: minectl
-    version: 0.23.0
+    version: 0.24.0
     check: ${binary} version | grep ^Version | cut -d' ' -f2
     tags:
     - games
