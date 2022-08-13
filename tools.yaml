@@ -3165,27 +3165,30 @@ tools:
     version: 0.5.11
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
     tags:
-      - build
-      - oci
+    - build
+    - oci
+    homepage: https://github.com/genuinetools/img
+    description: Standalone, daemon-less, unprivileged Dockerfile and OCI compatible container image builder
     renovate:
       datasource: github-releases
       package: genuinetools/img
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
-        type: executable
-    homepage: https://github.com/genuinetools/img
-    description: ""
+    - url: https://github.com/genuinetools/img/releases/download/v${version}/img-linux-${alt_arch}
+      type: executable
+
   - name: imgcrypt
     version: 1.1.6
     binary: ctr-enc
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     needs:
-      - containerd
-      - docker
+    - containerd
+    - docker
     tags:
-      - containerd
-      - security
+    - containerd
+    - security
+    homepage: https://github.com/containerd/imgcrypt
+    description: OCI Image Encryption Package
     renovate:
       datasource: github-releases
       package: containerd/imgcrypt
@@ -3202,61 +3205,65 @@ tools:
       make
       make install DESTDIR=/target
       EOF
-    homepage: https://github.com/containerd/imgcrypt
-    description: ""
+
   - name: imgpkg
     version: 0.30.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
-      - oci
-      - registry
-      - management
+    - oci
+    - registry
+    - management
+    homepage: https://github.com/vmware-tanzu/carvel-imgpkg
+    description: Store application configuration files in Docker/OCI registries
     renovate:
       datasource: github-releases
       package: vmware-tanzu/carvel-imgpkg
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
-        type: executable
-    homepage: https://github.com/vmware-tanzu/carvel-imgpkg
-    description: ""
+    - url: https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}
+      type: executable
+
   - name: iptables
     version: 1.8.8
     binary: ${target}/sbin/iptables
     if: is_rockylinux
     tags:
-      - network
+    - network
+    homepage: https://www.netfilter.org/projects/iptables/index.html
+    description: Userspace command line program used to configure kernel packet filtering ruleset
     renovate:
       datasource: github-releases
       package: nicholasdille/centos-iptables-legacy
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-rockylinux8-${alt_arch}.tar.gz
-        type: tarball
-        path: ${target}
-    homepage: https://github.com/nicholasdille/centos-iptables-legacy
-    description: ""
+    - url: https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-rockylinux8-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}
+
   - name: jp
     version: 0.2.1
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - conversion
-      - format
+    - conversion
+    - format
+    homepage: https://github.com/jmespath/jp
+    description: Command line interface to JMESPath
     renovate:
       datasource: github-releases
       package: jmespath/jp
     download:
-      - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
-        type: executable
-    homepage: https://github.com/jmespath/jp
-    description: ""
+    - url: https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}
+      type: executable
+  
   - name: jwt
     version: 5.0.3
     check: ${binary} --version | cut -d' ' -f2
     needs:
-      - docker
+    - docker
     tags:
-      - security
+    - security
+    homepage: https://github.com/mike-engel/jwt-cli
+    description: Super fast CLI tool to decode and encode JWTs
     renovate:
       datasource: github-releases
       package: mike-engel/jwt-cli
@@ -3271,79 +3278,81 @@ tools:
       cargo build --release --target x86_64-unknown-linux-gnu
       cp target/x86_64-unknown-linux-gnu/release/jwt /target/bin/
       EOF
-    homepage: https://github.com/mike-engel/jwt-cli
-    description: ""
+
   - name: k3d
     version: 5.4.4
     check: ${binary} version | head -n 1 | cut -d' ' -f3 | tr -d v
     needs:
-      - docker
+    - docker
     tags:
-      - k8s
-      - kubernetes
-      - docker
-      - management
+    - k8s
+    - kubernetes
+    - docker
+    - management
+    homepage: https://github.com/rancher/k3d
+    description: Little helper to run CNCF's k3s in Docker
     renovate:
       datasource: github-releases
       package: rancher/k3d
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/rancher/k3d
-    description: ""
+
   - name: k3s
     version: 1.24.3+k3s1
     check: ${binary} --version | head -n 1 | cut -d' ' -f3 | tr -d v
     tags:
-      - k8s
-      - kubernetes
+    - k8s
+    - kubernetes
+    homepage: https://github.com/k3s-io/k3s
+    description: Lightweight Kubernetes
     renovate:
       datasource: github-releases
       package: k3s-io/k3s
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url:
-          x86_64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s
-          aarch64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s-arm64
-        type: executable
+    - url:
+        x86_64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s
+        aarch64: https://github.com/k3s-io/k3s/releases/download/v${version}/k3s-arm64
+      type: executable
     files:
-      - path: ${prefix}/etc/init.d/k3s
-        content: |
-          [Unit]
-          Description=Lightweight Kubernetes
-          Documentation=https://k3s.io
-          Wants=network-online.target
-          After=network-online.target
+    - path: ${prefix}/etc/init.d/k3s
+      content: |
+        [Unit]
+        Description=Lightweight Kubernetes
+        Documentation=https://k3s.io
+        Wants=network-online.target
+        After=network-online.target
 
-          [Install]
-          WantedBy=multi-user.target
+        [Install]
+        WantedBy=multi-user.target
 
-          [Service]
-          Type=notify
-          EnvironmentFile=-/etc/default/%N
-          EnvironmentFile=-/etc/sysconfig/%N
-          KillMode=process
-          Delegate=yes
-          # Having non-zero Limit*s causes performance problems due to accounting overhead
-          # in the kernel. We recommend using cgroups to do container-local accounting.
-          LimitNOFILE=1048576
-          LimitNPROC=infinity
-          LimitCORE=infinity
-          TasksMax=infinity
-          TimeoutStartSec=0
-          Restart=always
-          RestartSec=5s
-          ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
-          ExecStartPre=-/sbin/modprobe br_netfilter
-          ExecStartPre=-/sbin/modprobe overlay
-          ExecStart=/usr/local/bin/k3s
+        [Service]
+        Type=notify
+        EnvironmentFile=-/etc/default/%N
+        EnvironmentFile=-/etc/sysconfig/%N
+        KillMode=process
+        Delegate=yes
+        # Having non-zero Limit*s causes performance problems due to accounting overhead
+        # in the kernel. We recommend using cgroups to do container-local accounting.
+        LimitNOFILE=1048576
+        LimitNPROC=infinity
+        LimitCORE=infinity
+        TasksMax=infinity
+        TimeoutStartSec=0
+        Restart=always
+        RestartSec=5s
+        ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
+        ExecStartPre=-/sbin/modprobe br_netfilter
+        ExecStartPre=-/sbin/modprobe overlay
+        ExecStart=/usr/local/bin/k3s
     post_install: |
       echo "Patch systemd unit"
       sed -i "s|/usr/local/bin/k3s|${relative_target}/bin/k3s|g" "${prefix}/etc/systemd/system/k3s.service"
@@ -3351,190 +3360,199 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
-    homepage: https://github.com/k3s-io/k3s
-    description: ""
+
   - name: k3sup
     version: 0.12.0
     check: ${binary} version | grep Version | cut -d' ' -f2
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/alexellis/k3sup
+    description: Bootstrap Kubernetes with k3s over SSH
     renovate:
       datasource: github-releases
       package: alexellis/k3sup
     download:
-      - url:
-          x86_64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup
-          aarch64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup.${alt_arch}
-        type: executable
-    homepage: https://github.com/alexellis/k3sup
-    description: ""
+    - url:
+        x86_64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup
+        aarch64: https://github.com/alexellis/k3sup/releases/download/${version}/k3sup.${alt_arch}
+      type: executable
+
   - name: k9s
     version: 0.26.3
     check: ${binary} version --short | grep "^Version" | cut -dv -f2
     tags:
-      - k8s
-      - kubernetes
-      - management
-      - tui
+    - k8s
+    - kubernetes
+    - management
+    - tui
+    homepage: https://github.com/derailed/k9s
+    description: CLI To Manage Your Clusters In Style
     renovate:
       datasource: github-releases
       package: derailed/k9s
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
-        type: tarball
-        files:
-          - k9s
-    homepage: https://github.com/derailed/k9s
-    description: ""
+    - url: https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz
+      type: tarball
+      files:
+      - k9s
+
   - name: kapp
     version: 0.52.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
-      - templating
-      - package
-      - manager
+    - k8s
+    - kubernetes
+    - templating
+    - package
+    - manager
+    homepage: https://github.com/vmware-tanzu/carvel-kapp
+    description: Simple deployment tool focused on the concept of "Kubernetes application" — a set of resources with the same label
     renovate:
       datasource: github-releases
       package: vmware-tanzu/carvel-kapp
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash | grep -v "^Succeeded$" >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish | grep -v "^Succeeded$" >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh  | grep -v "^Succeeded$" >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/vmware-tanzu/carvel-kapp
-    description: ""
+
   - name: kbld
     version: 0.34.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
-      - build
+    - k8s
+    - kubernetes
+    - build
+    homepage: https://github.com/vmware-tanzu/carvel-kbld
+    description: Seamlessly incorporates image building and image pushing into your development and deployment workflows
     renovate:
       datasource: github-releases
       package: vmware-tanzu/carvel-kbld
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
-        type: executable
-    homepage: https://github.com/vmware-tanzu/carvel-kbld
-    description: ""
+    - url: https://github.com/vmware-tanzu/carvel-kbld/releases/download/v${version}/kbld-linux-${alt_arch}
+      type: executable
+
   - name: kbrew
     version: 0.1.0
     check: ${binary} version | cut -d, -f1 | cut -d'"' -f4 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - package
-      - manager
+    - k8s
+    - kubernetes
+    - package
+    - manager
+    homepage: https://github.com/kbrew-dev/kbrew
+    description: Homebrew for Kubernetes
     renovate:
       datasource: github-releases
       package: kbrew-dev/kbrew
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
-        type: tarball
-        files:
-          - kbrew
-    homepage: https://github.com/kbrew-dev/kbrew
-    description: ""
+    - url: https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      files:
+      - kbrew
+
   - name: kind
     version: 0.14.0
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - docker
-      - management
+    - k8s
+    - kubernetes
+    - docker
+    - management
     needs:
-      - docker
+    - docker
+    homepage: https://github.com/kubernetes-sigs/kind
+    description: Kubernetes IN Docker - local clusters for testing Kubernetes
     renovate:
       datasource: github-releases
       package: kubernetes-sigs/kind
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/kubernetes-sigs/kind
-    description: ""
+
   - name: kink
     version: 0.2.1
     check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/Trendyol/kink
+    description: CLI to manage KinD clusters as Kubernetes pods
     renovate:
       datasource: github-releases
       package: Trendyol/kink
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
-        type: tarball
-        files:
-          - kink
+    - url: https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz
+      type: tarball
+      files:
+      - kink
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/Trendyol/kink
-    description: ""
+
   - name: kompose
     version: 1.26.1
     check: ${binary} version | cut -d' ' -f1
     tags:
-      - k8s
-      - kubernetes
-      - compose
+    - k8s
+    - kubernetes
+    - compose
+    homepage: https://github.com/kubernetes/kompose
+    description: Go from Docker Compose to Kubernetes
     renovate:
       datasource: github-releases
       package: kubernetes/kompose
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/kubernetes/kompose/releases/download/v${version}/kompose-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/kubernetes/kompose
-    description: ""
+
   - name: kots
     version: 1.81.0
     binary: kubectl-kots
     check: ${binary} version | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
-      - templating
-      - package
-      - manager
+    - k8s
+    - kubernetes
+    - templating
+    - package
+    - manager
+    homepage: https://github.com/replicatedhq/kots
+    description: Framework, tools and integrations that enable the delivery and management of 3rd-party Kubernetes applications
     renovate:
       datasource: github-releases
       package: replicatedhq/kots
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - kots
+    - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - kots
     post_install: |
       echo "Fix filename"
       mv "${target}/bin/kots" "${target}/bin/kubectl-kots"
@@ -3542,26 +3560,27 @@ tools:
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/replicatedhq/kots
-    description: ""
+
   - name: krew
     version: 0.4.3
     check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - plugin
-      - management
+    - k8s
+    - kubernetes
+    - plugin
+    - management
+    homepage: https://github.com/kubernetes-sigs/krew
+    description: Find and install kubectl plugins
     renovate:
       datasource: github-releases
       package: kubernetes-sigs/krew
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
-        type: tarball
-        strip: 1
-        files:
-          - ./krew-linux_${alt_arch}
+    - url: https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - ./krew-linux_${alt_arch}
     post_install: |
       echo "Fix filename"
       mv "${target}/bin/krew-linux_${alt_arch}" "${target}/bin/krew"
@@ -3573,40 +3592,42 @@ tools:
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/kubernetes-sigs/krew
-    description: ""
+
   - name: ktop
     version: 0.3.0
     tags:
-      - k8s
-      - kubernetes
-      - management
-      - tui
+    - k8s
+    - kubernetes
+    - management
+    - tui
+    homepage: https://github.com/vladimirvivien/ktop
+    description: top-like tool for your Kubernetes clusters
     renovate:
       datasource: github-releases
       package: vladimirvivien/ktop
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/vladimirvivien/ktop/releases/download/v${version}/ktop_v${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - ktop
-    homepage: https://github.com/vladimirvivien/ktop
-    description: ""
+    - url: https://github.com/vladimirvivien/ktop/releases/download/v${version}/ktop_v${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - ktop
+
   - name: kube-bench
     version: 0.6.9
     check: ${binary} version
     tags:
-      - k8s
-      - kubernetes
-      - security
+    - k8s
+    - kubernetes
+    - security
+    homepage: https://github.com/aquasecurity/kube-bench
+    description: Checks whether Kubernetes is deployed according to security best practices
     renovate:
       datasource: github-releases
       package: aquasecurity/kube-bench
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/aquasecurity/kube-bench/releases/download/v${version}/kube-bench_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
+    - url: https://github.com/aquasecurity/kube-bench/releases/download/v${version}/kube-bench_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
     post_install: |
       echo "Install configuration"
       mkdir -p "${prefix}/etc/kube-bench"
@@ -3615,87 +3636,90 @@ tools:
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/aquasecurity/kube-bench
-    description: ""
+
   - name: kubeadm
     version: 1.24.3
     check: ${binary} version --output short | tr -d v
     needs:
-      - kubelet
+    - kubelet
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/kubernetes/kubernetes
+    description: Create a minimum viable Kubernetes cluster that conforms to best practices
     renovate:
       datasource: github-releases
       package: kubernetes/kubernetes
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
-        type: executable
+    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm
+      type: executable
     files:
-      - path: ${prefix}/etc/systemd/system/kubelet.service
-        content: |
-          [Service]
-          Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
-          Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
-          # This is a file that "kubeadm init" and "kubeadm join" generate at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
-          # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably,
-          # the user should use the .NodeRegistration.KubeletExtraArgs object in the configuration files instead.
-          # KUBELET_EXTRA_ARGS should be sourced from this file.
-          EnvironmentFile=-/etc/default/kubelet
-          ExecStart=
-          ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
+    - path: ${prefix}/etc/systemd/system/kubelet.service
+      content: |
+        [Service]
+        Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+        Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
+        # This is a file that "kubeadm init" and "kubeadm join" generate at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
+        # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably,
+        # the user should use the .NodeRegistration.KubeletExtraArgs object in the configuration files instead.
+        # KUBELET_EXTRA_ARGS should be sourced from this file.
+        EnvironmentFile=-/etc/default/kubelet
+        ExecStart=
+        ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
     post_install: |
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/bin/kubelet|ExecStart=${relative_target}/bin/kubelet|" "${prefix}/etc/systemd/system/kubelet.service"
       echo "Install completion"
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/kubeadm"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_kubeadm"
-    homepage: https://github.com/kubernetes/kubernetes
-    description: ""
+
   - name: kubeclarity-cli
     version: 2.5.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
-      - security
+    - k8s
+    - kubernetes
+    - security
+    homepage: https://github.com/openclarity/kubeclarity
+    description: tool for detection and management of Software Bill Of Materials and vulnerabilities of container images and filesystems 
     renovate:
       datasource: github-releases
       package: openclarity/kubeclarity
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/openclarity/kubeclarity/releases/download/v${version}/kubeclarity-cli-${version}-linux-${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - kubeclarity-cli
+    - url: https://github.com/openclarity/kubeclarity/releases/download/v${version}/kubeclarity-cli-${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - kubeclarity-cli
     post_install: |
       echo "Install completion"
       ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/openclarity/kubeclarity
-    description: ""
+
   - name: kubectl
     version: 1.24.3
     check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
     needs:
-      - krew
+    - krew
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/kubernetes/kubernetes
+    description: Run commands against Kubernetes clusters
     renovate:
       datasource: github-releases
       package: kubernetes/kubernetes
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
-        type: executable
-      - url: https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert
-        type: executable
-        path: ${target}/bin/kubectl-convert
+    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl
+      type: executable
+    - url: https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert
+      type: executable
+      path: ${target}/bin/kubectl-convert
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
@@ -3799,255 +3823,266 @@ tools:
           warning "kubectl is missing krew. Plugins will not be installed."
           false
       fi
-    homepage: https://github.com/kubernetes/kubernetes
-    description: ""
+
   - name: kubectl-build
     version: 0.1.6
     needs:
-      - kubectl
+    - kubectl
     tags:
-      - k8s
-      - kubernetes
-      - management
-      - plugin
-      - build
+    - k8s
+    - kubernetes
+    - management
+    - plugin
+    - build
+    homepage: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl
+    description: Tool for building container images with your Kubernetes cluster
     renovate:
       datasource: github-releases
       package: vmware-tanzu/buildkit-cli-for-kubectl
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
-        type: tarball
-    homepage: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl
-    description: ""
+    - url:
+        x86_64: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v${version}/linux-v${version}.tgz
+      type: tarball
+
   - name: kubectl-free
     version: 0.2.0
     check: ${binary} --version | cut -d' ' -f2 | tr -d ','
     needs:
-      - kubectl
+    - kubectl
     tags:
-      - k8s
-      - kubernetes
-      - management
-      - plugin
-      - analysis
+    - k8s
+    - kubernetes
+    - management
+    - plugin
+    - analysis
+    homepage: https://github.com/makocchi-git/kubectl-free
+    description: Show various requested resources on Kubernetes nodes
     renovate:
       datasource: github-releases
       package: makocchi-git/kubectl-free
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip
-        type: zip
-        files:
-          - kubectl-free_${version}_Linux_${arch}/kubectl-free
-    homepage: https://github.com/makocchi-git/kubectl-free
-    description: ""
+    - url:
+        x86_64: https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip
+      type: zip
+      files:
+      - kubectl-free_${version}_Linux_${arch}/kubectl-free
+
   - name: kubectl-resources
     version: 0.2.0
     needs:
-      - kubectl
+    - kubectl
     tags:
-      - k8s
-      - kubernetes
-      - management
-      - plugin
-      - analysis
+    - k8s
+    - kubernetes
+    - management
+    - plugin
+    - analysis
+    homepage: https://github.com/howardjohn/kubectl-resources
+    description: Access Kubernetes resource requests, limits, and usage
     renovate:
       datasource: github-releases
       package: howardjohn/kubectl-resources
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
-        type: tarball
-        files:
-          - kubectl-resources
-    homepage: https://github.com/howardjohn/kubectl-resources
-    description: ""
+    - url: https://github.com/howardjohn/kubectl-resources/releases/download/v${version}/kubectl-resources_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      files:
+      - kubectl-resources
+
   - name: kubefire
     version: 0.3.8
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - kvm
-      - management
-      - vm
-      - emulation
+    - k8s
+    - kubernetes
+    - kvm
+    - management
+    - vm
+    - emulation
+    homepage: https://github.com/innobead/kubefire
+    description: Creates and manages Kubernetes Clusters using Firecracker microVMs
     renovate:
       datasource: github-releases
       package: innobead/kubefire
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
-        type: executable
-      - url: https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}
-        type: executable
-        path: ${target}/libexec/cni/host-local-rev
-    homepage: https://github.com/innobead/kubefire
-    description: ""
+    - url: https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}
+      type: executable
+    - url: https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}
+      type: executable
+      path: ${target}/libexec/cni/host-local-rev
+
   - name: kubelet
     version: 1.24.3
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
     tags:
-      - k8s
-      - kubernetes
+    - k8s
+    - kubernetes
+    homepage: https://github.com/kubernetes/kubernetes
+    description: Kubernetes primary node agent that runs on each node
     renovate:
       datasource: github-releases
       package: kubernetes/kubernetes
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
-        type: executable
+    - url: https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet
+      type: executable
     files:
-      - path: ${prefix}/etc/systemd/system/kubelet.service
-        content: |
-          [Unit]
-          Description=kubelet: The Kubernetes Node Agent
-          Documentation=https://kubernetes.io/docs/home/
-          Wants=network-online.target
-          After=network-online.target
+    - path: ${prefix}/etc/systemd/system/kubelet.service
+      content: |
+        [Unit]
+        Description=kubelet: The Kubernetes Node Agent
+        Documentation=https://kubernetes.io/docs/home/
+        Wants=network-online.target
+        After=network-online.target
 
-          [Service]
-          ExecStart=/usr/bin/kubelet
-          Restart=always
-          StartLimitInterval=0
-          RestartSec=10
+        [Service]
+        ExecStart=/usr/bin/kubelet
+        Restart=always
+        StartLimitInterval=0
+        RestartSec=10
 
-          [Install]
-          WantedBy=multi-user.target
+        [Install]
+        WantedBy=multi-user.target
     post_install: |
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/bin/kubelet|ExecStart=${relative_target}/bin/kubelet|" "${prefix}/etc/systemd/system/kubelet.service"
-    homepage: https://github.com/kubernetes/kubernetes
-    description: ""
+
   - name: kubeletctl
     version: 1.8
     check: ${binary} version | grep "^Version:" | cut -d' ' -f2
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/cyberark/kubeletctl
+    description: Client for kubelet 
     renovate:
       datasource: github-releases
       package: cyberark/kubeletctl
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
-        type: executable
-    homepage: https://github.com/cyberark/kubeletctl
-    description: ""
+    - url: https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}
+      type: executable
+
   - name: kubent
     version: 0.5.1
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/doitintl/kube-no-trouble
+    description: Easily check your clusters for use of deprecated APIs
     renovate:
       datasource: github-releases
       package: doitintl/kube-no-trouble
     download:
-      - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
-        type: tarball
-    homepage: https://github.com/doitintl/kube-no-trouble
-    description: ""
+    - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+
   - name: kubesec
     version: 2.11.5
     tags:
-      - k8s
-      - kubernetes
-      - security
+    - k8s
+    - kubernetes
+    - security
+    homepage: https://github.com/controlplaneio/kubesec
+    description: Security risk analysis for Kubernetes resources
     renovate:
       datasource: github-releases
       package: controlplaneio/kubesec
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/controlplaneio/kubesec/releases/download/v${version}/kubesec_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - kubesec
+    - url: https://github.com/controlplaneio/kubesec/releases/download/v${version}/kubesec_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - kubesec
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/controlplaneio/kubesec
-    description: ""
+
   - name: kubeswitch
     version: 1.5.0
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/danielb42/kubeswitch
+    description: Visually select kubernetes context/namespace from tree
     renovate:
       datasource: github-releases
       package: danielb42/kubeswitch
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - kubeswitch
-    homepage: https://github.com/danielb42/kubeswitch
-    description: ""
+    - url: https://github.com/danielb42/kubeswitch/releases/download/v${version}/kubeswitch_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - kubeswitch
+
   - name: kubeval
     version: 0.16.1
     check: ${binary} --version | grep ^Version | cut -d' ' -f2
     tags:
-      - k8s
-      - kubernetes
-      - security
+    - k8s
+    - kubernetes
+    - security
+    homepage: https://github.com/instrumenta/kubeval
+    description: Validate your Kubernetes configuration files
     renovate:
       datasource: github-releases
       package: instrumenta/kubeval
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
-        type: tarball
-        files:
-          - kubeval
-    homepage: https://github.com/instrumenta/kubeval
-    description: ""
+    - url:
+        x86_64: https://github.com/instrumenta/kubeval/releases/download/v0.16.1/kubeval-linux-amd64.tar.gz
+      type: tarball
+      files:
+      - kubeval
+
   - name: kubo
     version: 0.14.0
     check: ${binary} version --number
     needs:
-      - containerd
+    - containerd
     tags:
-      - storage
-      - network
-      - containerd
+    - storage
+    - network
+    - containerd
+    homepage: https://github.com/ipfs/kubo
+    description: IPFS implementation in Go
     renovate:
       datasource: github-releases
       package: ipfs/kubo
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz
-        type: tarball
-        strip: 1
-        files:
-          - kubo/ipfs
+    - url: https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - kubo/ipfs
     files:
-      - path: ${prefix}/etc/systemd/system/ipfs.service
-        content: |
-          [Unit]
-          Description=ipfs daemon
-          PartOf=containerd
+    - path: ${prefix}/etc/systemd/system/ipfs.service
+      content: |
+        [Unit]
+        Description=ipfs daemon
+        PartOf=containerd
 
-          [Service]
-          Environment=IPFS_PATH=/var/lib/ipfs
-          ExecStart=/usr/local/bin/ipfs daemon $@
-          ExecReload=/bin/kill -s HUP \$MAINPID
-          RestartSec=2
-          Restart=always
-          Type=simple
-          KillMode=mixed
+        [Service]
+        Environment=IPFS_PATH=/var/lib/ipfs
+        ExecStart=/usr/local/bin/ipfs daemon $@
+        ExecReload=/bin/kill -s HUP \$MAINPID
+        RestartSec=2
+        Restart=always
+        Type=simple
+        KillMode=mixed
 
-          [Install]
-          WantedBy=default.target
+        [Install]
+        WantedBy=default.target
     post_install: |
       echo "Install completion"
       ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
@@ -4061,123 +4096,129 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
-    homepage: https://github.com/ipfs/kubo
-    description: ""
+
   - name: kustomize
     version: 4.5.7
     check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - templating
-      - management
+    - k8s
+    - kubernetes
+    - templating
+    - management
+    homepage: https://github.com/kubernetes-sigs/kustomize
+    description: Customization of kubernetes YAML configurations
     renovate:
       datasource: github-releases
       package: kubernetes-sigs/kustomize
       extractVersion: ^kustomize/v(?<version>.+)$
     download:
-      - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
-        type: tarball
+    - url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz
+      type: tarball
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/kubernetes-sigs/kustomize
-    description: ""
+
   - name: kustomizer
     version: 2.1.2
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
-      - templating
-      - package
-      - manager
+    - k8s
+    - kubernetes
+    - templating
+    - package
+    - manager
+    homepage: https://github.com/stefanprodan/kustomizer
+    description: Experimental package manager for distributing Kubernetes configuration as OCI artifacts
     renovate:
       datasource: github-releases
       package: stefanprodan/kustomizer
       extractVersion: ^v(?<version>.+)$
     download:
-      - url: https://github.com/stefanprodan/kustomizer/releases/download/v${version}/kustomizer_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - kustomizer
+    - url: https://github.com/stefanprodan/kustomizer/releases/download/v${version}/kustomizer_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - kustomizer
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/stefanprodan/kustomizer
-    description: ""
+
   - name: lab
     version: 0.25.1
     check: ${binary} version | cut -d' ' -f3
     tags:
-      - development
+    - development
+    homepage: https://github.com/zaquestion/lab
+    description: Wraps Git or Hub, making it simple to clone, fork, and interact with repositories on GitLab
     renovate:
       datasource: github-releases
       package: zaquestion/lab
       extractVersion: ^v(?<version>.+)$
     download:
-      - url: https://github.com/zaquestion/lab/releases/download/v${version}/lab_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - lab
+    - url: https://github.com/zaquestion/lab/releases/download/v${version}/lab_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - lab
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/zaquestion/lab
-    description: ""
+
   - name: lazydocker
     version: 0.18.1
     check: ${binary} --version | grep Version | cut -d' ' -f2
     needs:
-      - docker
+    - docker
     tags:
-      - docker
-      - management
-      - tui
+    - docker
+    - management
+    - tui
+    homepage: https://github.com/jesseduffield/lazydocker
+    description: The lazier way to manage everything docker
     renovate:
       datasource: github-releases
       package: jesseduffield/lazydocker
       extractVersion: ^v(?<version>.+)$
       versioning: loose
     download:
-      - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
-        type: tarball
-        files:
-          - lazydocker
-    homepage: https://github.com/jesseduffield/lazydocker
-    description: ""
+    - url: https://github.com/jesseduffield/lazydocker/releases/download/v${version}/lazydocker_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      files:
+      - lazydocker
+
   - name: lazygit
     version: 0.32.2
     check: ${binary} --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,
     tags:
-      - development
-      - management
-      - tui
+    - development
+    - management
+    - tui
+    homepage: https://github.com/jesseduffield/lazygit
+    description: Simple terminal UI for git commands
     renovate:
       datasource: github-releases
       package: jesseduffield/lazygit
       extractVersion: ^v(?<version>.+)$
     download:
-      - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
-        type: tarball
-        files:
-          - lazygit
-    homepage: https://github.com/jesseduffield/lazygit
-    description: ""
+    - url: https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz
+      type: tarball
+      files:
+      - lazygit
+
   - name: libcap
     version: 2.65
     binary: ${target}/sbin/setcap
     needs:
-      - docker
+    - docker
     tags:
-      - kernel
-      - caps
+    - kernel
+    - caps
+    homepage: https://git.kernel.org/pub/scm/libs/libcap/libcap.git/about/
+    description: Library for getting and setting POSIX.1e (formerly POSIX 6) draft 15 capabilities.
     renovate:
       datasource: git-tags
       package: git://git.kernel.org/pub/scm/libs/libcap/libcap.git
@@ -4202,16 +4243,17 @@ tools:
       cp doc/getpcaps.8 /target/share/man/man8
       cp doc/setcap.8 /target/share/man/man8
       EOF
-    homepage: https://github.com/git://git.kernel.org/pub/scm/libs/libcap/libcap.git
-    description: ""
+
   - name: libcap-ng
     version: 0.8.3
     binary: captest
     needs:
-      - docker
+    - docker
     tags:
-      - kernel
-      - caps
+    - kernel
+    - caps
+    homepage: https://github.com/stevegrubb/libcap-ng
+    description: Library for Linux that makes using posix capabilities easy
     renovate:
       datasource: github-releases
       package: stevegrubb/libcap-ng
@@ -4237,16 +4279,17 @@ tools:
       make LDFLAGS=--static
       make install
       EOF
-    homepage: https://github.com/stevegrubb/libcap-ng
-    description: ""
+
   - name: libcgroup
     version: 2.0.2
     binary: ${target}/bin/lscgroup
     needs:
-      - docker
+    - docker
     tags:
-      - kernel
-      - cgroup
+    - kernel
+    - cgroup
+    homepage: https://github.com/libcgroup/libcgroup
+    description: Library and tools to manage cgroups
     renovate:
       datasource: github-releases
       package: libcgroup/libcgroup
@@ -4279,138 +4322,145 @@ tools:
       ${target}/lib
       EOF
       ldconfig
-    homepage: https://github.com/libcgroup/libcgroup
-    description: ""
+
   - name: loft
     version: 2.2.2
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
+    - k8s
+    - kubernetes
+    homepage: https://github.com/loft-sh/loft
+    description: Namespace & Virtual Cluster Manager for Kubernetes
     renovate:
       datasource: github-releases
       package: loft-sh/loft
       extractVersion: ^v(?<version>.+)$
     download:
-      - url: https://github.com/loft-sh/loft/releases/download/v${version}/loft-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/loft-sh/loft/releases/download/v${version}/loft-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/loft-sh/loft
-    description: ""
+
   - name: manifest-tool
     version: 2.0.5
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - docker
-      - registry
+    - docker
+    - registry
+    homepage: https://github.com/estesp/manifest-tool
+    description: Command line tool to create and query container image manifest list/indexes
     renovate:
       datasource: github-releases
       package: estesp/manifest-tool
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
-        type: tarball
-        files:
-          - manifest-tool-linux-${alt_arch}
+    - url: https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz
+      type: tarball
+      files:
+      - manifest-tool-linux-${alt_arch}
     post_install: |
       mv "${target}/bin/manifest-tool-linux-${alt_arch}" "${target}/bin/manifest-tool"
-    homepage: https://github.com/estesp/manifest-tool
-    description: ""
+
   - name: minectl
     version: 0.24.0
     check: ${binary} version | grep ^Version | cut -d' ' -f2
     tags:
-      - games
-      - management
+    - games
+    - management
+    homepage: https://github.com/dirien/minectl
+    description: CLI for creating Minecraft server on different cloud provider
     renovate:
       datasource: github-releases
       package: dirien/minectl
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/dirien/minectl/releases/download/v${version}/minectl_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - minectl
+    - url: https://github.com/dirien/minectl/releases/download/v${version}/minectl_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - minectl
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/dirien/minectl
-    description: ""
+
   - name: minikube
     version: 1.26.1
     check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/kubernetes/minikube
+    description: Run Kubernetes locally
     renovate:
       datasource: github-releases
       package: kubernetes/minikube
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/kubernetes/minikube
-    description: ""
+
   - name: mitmproxy
     version: 8.1.1
     tags:
-      - network
+    - network
+    homepage: https://github.com/mitmproxy/mitmproxy
+    description: Interactive TLS-capable intercepting HTTP proxy for penetration testers and software developers
     renovate:
       datasource: github-releases
       package: mitmproxy/mitmproxy
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
-        type: tarball
-        files:
-          - mitmproxy
-          - mitmdump
-          - mitmweb
-    homepage: https://github.com/mitmproxy/mitmproxy
-    description: ""
+    - url:
+        x86_64: https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz
+      type: tarball
+      files:
+      - mitmproxy
+      - mitmdump
+      - mitmweb
+
   - name: mp3binder
     version: 5.0.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - mp3
+    - mp3
+    homepage: https://github.com/crra/mp3binder
+    description: Concatenating, joining, binding MP3 files without re-encoding
     renovate:
       datasource: github-releases
       package: crra/mp3binder
     download:
-      - url:
-          x86_64: https://github.com/crra/mp3binder/releases/download/${version}/linux_${alt_arch}.zip
-        type: zip
-        files:
-          - mp3binder
-    homepage: https://github.com/crra/mp3binder
-    description: ""
+    - url:
+        x86_64: https://github.com/crra/mp3binder/releases/download/${version}/linux_${alt_arch}.zip
+      type: zip
+      files:
+      - mp3binder
+
   - name: mutagen
     version: 0.15.1
     check: ${binary} version
     tags:
-      - security
-      - network
-      - storage
+    - security
+    - network
+    - storage
+    homepage: https://github.com/mutagen-io/mutagen
+    description: Fast file synchronization and network forwarding for remote development
     renovate:
       datasource: github-releases
       package: mutagen-io/mutagen
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
-        type: tarball
+    - url: https://github.com/mutagen-io/mutagen/releases/download/v${version}/mutagen_linux_${alt_arch}_v${version}.tar.gz
+      type: tarball
     post_install: |
       echo "Install agents"
       mkdir -p "${target}/libexec/mutagen"
@@ -4423,16 +4473,17 @@ tools:
           "--bash-completion-script=${target}/share/bash-completion/completions/${name}" \
           "--fish-completion-script=${target}/share/fish/vendor_completions.d/${name}.fish" \
           "--zsh-completion-script=${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/mutagen-io/mutagen
-    description: ""
+
   - name: mutagen-compose
     version: 0.15.1
     needs:
-      - mutagen
+    - mutagen
     tags:
-      - security
-      - network
-      - storage
+    - security
+    - network
+    - storage
+    homepage: https://github.com/mutagen-io/mutagen-compose
+    description: Compose with Mutagen integration
     renovate:
       datasource: github-releases
       package: mutagen-io/mutagen-compose
@@ -4445,90 +4496,94 @@ tools:
       | tar -xz \
           --directory "${target}/bin" \
           --no-same-owner
-    homepage: https://github.com/mutagen-io/mutagen-compose
-    description: ""
+
   - name: nerdctl
     version: 0.22.2
     check: ${binary} --version | cut -d' ' -f3
     needs:
-      - containerd
-      - buildkit
+    - containerd
+    - buildkit
     tags:
-      - containerd
-      - rootless
-      - management
+    - containerd
+    - rootless
+    - management
+    homepage: https://github.com/containerd/nerdctl
+    description: Docker-compatible CLI for containerd, with support for Compose, Rootless, eStargz, OCIcrypt, IPFS
     renovate:
       datasource: github-releases
       package: containerd/nerdctl
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
-        type: tarball
+    - url: https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz
+      type: tarball
     files:
-      - path: ${prefix}/etc/nerdctl/nerdctl.toml
-        content: |
-          debug             = false
-          debug_full        = false
-          address           = "unix:///run/containerd/containerd.sock"
-          snapshotter       = "native"
-          cni_path          = "/opt/cni/bin"
-          cgroup_manager    = "systemd"
-          hosts_dir         = ["/etc/containerd/certs.d"]
+    - path: ${prefix}/etc/nerdctl/nerdctl.toml
+      content: |
+        debug             = false
+        debug_full        = false
+        address           = "unix:///run/containerd/containerd.sock"
+        snapshotter       = "native"
+        cni_path          = "/opt/cni/bin"
+        cgroup_manager    = "systemd"
+        hosts_dir         = ["/etc/containerd/certs.d"]
     post_install: |
       echo "Patch CNI path"
       sed -i -E "s|/opt/cni/bin|${relative_target}/libexec/cni|" "${prefix}/etc/nerdctl/nerdctl.toml"
-    homepage: https://github.com/containerd/nerdctl
-    description: ""
+
   - name: norouter
     version: 0.6.4
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - network
+    - network
+    homepage: https://github.com/norouter/norouter
+    description: IP-over-Stdio
     renovate:
       datasource: github-releases
       package: norouter/norouter
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
-        type: tarball
-        files:
-          - norouter
-    homepage: https://github.com/norouter/norouter
-    description: ""
+    - url: https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz
+      type: tarball
+      files:
+      - norouter
+
   - name: notation
     version: 0.7.1-alpha.1
     check: ${binary} --version | cut -d' ' -f3
     needs:
-      - docker
+    - docker
     tags:
-      - docker
-      - plugin
-      - security
+    - docker
+    - plugin
+    - security
+    homepage: https://github.com/notaryproject/notation
+    description: Add signatures as standard items in the registry ecosystem
     renovate:
       datasource: github-releases
       package: notaryproject/notation
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - notation
-      - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        path: ${target}/libexec/docker/cli-plugins
-        files:
-          - docker-generate
-          - docker-notation
-    homepage: https://github.com/notaryproject/notation
-    description: ""
+    - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - notation
+    - url: https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/libexec/docker/cli-plugins
+      files:
+      - docker-generate
+      - docker-notation
+
   - name: nsutils
     version: 0.2
     binary: nslist
     needs:
-      - docker
+    - docker
     tags:
-      - kernel
-      - namespaces
+    - kernel
+    - namespaces
+    homepage: https://github.com/rd235/nsutils
+    description: Linux namespace utilities
     renovate:
       datasource: github-tags
       package: rd235/nsutils
@@ -4558,15 +4613,16 @@ tools:
           /target/share/man/man1
       make install
       EOF
-    homepage: https://github.com/rd235/nsutils
-    description: ""
+
   - name: oci-image-tool
     version: 1.0.0-rc3
     check: ${binary} --version | cut -d' ' -f3
     needs:
-      - docker
+    - docker
     tags:
-      - oci
+    - oci
+    homepage: https://github.com/opencontainers/image-tools
+    description: OCI Image Tooling
     renovate:
       datasource: github-releases
       package: opencontainers/image-tools
@@ -4582,15 +4638,16 @@ tools:
       make tool
       cp oci-image-tool /target/bin/
       EOF
-    homepage: https://github.com/opencontainers/image-tools
-    description: ""
+
   - name: oci-runtime-tool
     version: 0.9.0
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
-      - docker
+    - docker
     tags:
-      - oci
+    - oci
+    homepage: https://github.com/opencontainers/runtime-tools
+    description: OCI Runtime Tools
     renovate:
       datasource: github-releases
       package: opencontainers/runtime-tools
@@ -4606,81 +4663,84 @@ tools:
       make tool
       cp oci-runtime-tool /target/bin/
       EOF
-    homepage: https://github.com/opencontainers/runtime-tools
-    description: ""
+
   - name: oras
     version: 0.13.0
     check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
     tags:
-      - registry
-      - storage
-      - cnab
+    - registry
+    - storage
+    - cnab
+    homepage: https://github.com/oras-project/oras
+    description: ORAS CLI
     renovate:
       datasource: github-releases
       package: oras-project/oras
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - oras
-    homepage: https://github.com/oras-project/oras
-    description: ""
+    - url: https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - oras
+
   - name: patat
     version: 0.8.7.0
     tags:
-      - markdown
+    - markdown
+    homepage: https://github.com/jaspervdj/patat
+    description: Terminal-based presentations using Pandoc
     renovate:
       datasource: github-releases
       package: jaspervdj/patat
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
-        type: tarball
-        strip: 1
-        files:
-          - patat-v${version}-linux-${arch}/patat
-      - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
-        type: tarball
-        path: ${target}/share/man/man1
-        strip: 1
-        files:
-          - patat-v${version}-linux-${arch}/patat.1
-    homepage: https://github.com/jaspervdj/patat
-    description: ""
+    - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - patat-v${version}-linux-${arch}/patat
+    - url: https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz
+      type: tarball
+      path: ${target}/share/man/man1
+      strip: 1
+      files:
+      - patat-v${version}-linux-${arch}/patat.1
+
   - name: podman
     version: 4.2.0
     check: ${binary} --version | cut -d' ' -f3
     needs:
-      - conmon
-      - runc
-      - cni
-      - fuse-overlayfs
-      - shortnames
-      - containers-common
+    - conmon
+    - runc
+    - cni
+    - fuse-overlayfs
+    - shortnames
+    - containers-common
     tags:
-      - runtime
-      - redhat
-      - oci
+    - runtime
+    - redhat
+    - oci
+    homepage: https://github.com/containers/podman
+    description: Tool for managing OCI containers and pods
     renovate:
       datasource: github-releases
       package: nicholasdille/podman-static
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman-${alt_arch}.tar.gz
-        type: tarball
-        path: ${target}
-      - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service.in
-        type: file
-        path: ${prefix}/etc/systemd/system/podman.service
-      - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
-        type: file
-        path: ${prefix}/etc/systemd/system/podman.socket
-      - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
-        type: file
-        path: ${target}/lib/tmpfiles.d/podman-docker.conf
+    - url:
+        x86_64: https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}
+    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.service.in
+      type: file
+      path: ${prefix}/etc/systemd/system/podman.service
+    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman.socket
+      type: file
+      path: ${prefix}/etc/systemd/system/podman.socket
+    - url: https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf
+      type: file
+      path: ${target}/lib/tmpfiles.d/podman-docker.conf
     post_install: |
       echo "Patch systemd unit"
       sed -i "s|@@PODMAN@@|ExecStart=${relative_target}/bin/podman|" "${prefix}/etc/systemd/system/podman.service"
@@ -4688,38 +4748,38 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
-    homepage: https://github.com/nicholasdille/podman-static
-    description: ""
+
   - name: podman-docker-shim
     version: 0.1.0
     needs:
-      - podman
+    - podman
     tags:
-      - runtime
-      - redhat
-      - oci
+    - runtime
+    - redhat
+    - oci
     files:
-      - path: ${target}/libexec/podman/docker
-        content: |
-          #!/bin/bash
+    - path: ${target}/libexec/podman/docker
+      content: |
+        #!/bin/bash
 
-          exec podman "$@"
+        exec podman "$@"
     post_install: |
       echo "Fix permissions"
       chmod +x "${target}/libexec/podman/docker"
       if ! tool_will_be_installed "docker"; then
           ln -sf "${target}/libexec/podman/docker" "${target}/bin/docker"
       fi
-    homepage: null
-    description: ""
+
   - name: podman-tui
     version: 0.5.0
     check: ${binary} version | cut -d' ' -f2 | tr -d v
     needs:
-      - podman
+    - podman
     tags:
-      - rootless
-      - network
+    - rootless
+    - network
+    homepage: https://github.com/containers/podman-tui
+    description: Podman Terminal UI
     renovate:
       datasource: github-releases
       package: containers/podman-tui
@@ -4736,228 +4796,230 @@ tools:
       go build -mod=vendor -o ./bin/linux/podman-tui -tags "containers_image_openpgp remote"
       cp ./bin/linux/podman-tui /target/bin/
       EOF
-    homepage: https://github.com/containers/podman-tui
-    description: ""
+
   - name: polaris
     version: 7.0.1
     tags:
-      - k8s
-      - kubernetes
+    - k8s
+    - kubernetes
+    homepage: https://github.com/FairwindsOps/polaris
+    description: Validation of best practices in your Kubernetes clusters
     renovate:
       datasource: github-releases
       package: FairwindsOps/polaris
     download:
-      - url: https://github.com/FairwindsOps/polaris/releases/download/${version}/polaris_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - polaris
-    homepage: https://github.com/FairwindsOps/polaris
-    description: ""
+    - url: https://github.com/FairwindsOps/polaris/releases/download/${version}/polaris_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - polaris
+
   - name: portainer
     version: 2.14.2
     check: ${binary} --version 2>&1
     needs:
-      - docker
-      - docker-compose-v1
+    - docker
+    - docker-compose-v1
     tags:
-      - docker
-      - k8s
-      - kubernetes
-      - management
+    - docker
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/portainer/portainer
+    description: Making Docker and Kubernetes management easy
     renovate:
       datasource: github-releases
       package: portainer/portainer
     download:
-      - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
-        type: tarball
-        strip: 1
-        files:
-          - portainer/portainer
-      - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
-        type: tarball
-        path: ${target}/share/portainer
-        strip: 1
-        files:
-          - portainer/public
+    - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - portainer/portainer
+    - url: https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/share/portainer
+      strip: 1
+      files:
+      - portainer/public
     files:
-      - path: ${prefix}/etc/systemd/system/portainer.service
-        content: |
-          [Unit]
-          Description=portainer
-          Documentation=https://www.portainer.io/
-          After=network.target local-fs.target
+    - path: ${prefix}/etc/systemd/system/portainer.service
+      content: |
+        [Unit]
+        Description=portainer
+        Documentation=https://www.portainer.io/
+        After=network.target local-fs.target
 
-          [Service]
-          ExecStart=/usr/local/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
+        [Service]
+        ExecStart=/usr/local/bin/portainer --assets=${TARGET}/share/portainer --data=${TARGET}/lib/portainer --bind=127.0.0.1:9000 --bind-https=127.0.0.1:9443 --tunnel-addr=127.0.0.1
 
-          Type=exec
-          Delegate=yes
-          KillMode=process
-          Restart=always
-          RestartSec=5
-          # Having non-zero Limit*s causes performance problems due to accounting overhead
-          # in the kernel. We recommend using cgroups to do container-local accounting.
-          LimitNPROC=infinity
-          LimitCORE=infinity
-          LimitNOFILE=1048576
-          # Comment TasksMax if your systemd version does not supports it.
-          # Only systemd 226 and above support this version.
-          TasksMax=infinity
+        Type=exec
+        Delegate=yes
+        KillMode=process
+        Restart=always
+        RestartSec=5
+        # Having non-zero Limit*s causes performance problems due to accounting overhead
+        # in the kernel. We recommend using cgroups to do container-local accounting.
+        LimitNPROC=infinity
+        LimitCORE=infinity
+        LimitNOFILE=1048576
+        # Comment TasksMax if your systemd version does not supports it.
+        # Only systemd 226 and above support this version.
+        TasksMax=infinity
 
-          [Install]
-          WantedBy=multi-user.target
-      - path: ${prefix}/etc/init.d/portainer
-        content: |
-          #!/bin/sh
-          set -e
+        [Install]
+        WantedBy=multi-user.target
+    - path: ${prefix}/etc/init.d/portainer
+      content: |
+        #!/bin/sh
+        set -e
 
-          ### BEGIN INIT INFO
-          # Provides:           portainer
-          # Required-Start:     $syslog $remote_fs
-          # Required-Stop:      $syslog $remote_fs
-          # Should-Start:       cgroupfs-mount cgroup-lite
-          # Should-Stop:        cgroupfs-mount cgroup-lite
-          # Default-Start:      2 3 4 5
-          # Default-Stop:       0 1 6
-          # Short-Description:  Create lightweight, portable, self-sufficient containers.
-          # Description:
-          #  Docker is an open-source project to easily create lightweight, portable,
-          #  self-sufficient containers from any application. The same container that a
-          #  developer builds and tests on a laptop can run at scale, in production, on
-          #  VMs, bare metal, OpenStack clusters, public clouds and more.
-          ### END INIT INFO
+        ### BEGIN INIT INFO
+        # Provides:           portainer
+        # Required-Start:     $syslog $remote_fs
+        # Required-Stop:      $syslog $remote_fs
+        # Should-Start:       cgroupfs-mount cgroup-lite
+        # Should-Stop:        cgroupfs-mount cgroup-lite
+        # Default-Start:      2 3 4 5
+        # Default-Stop:       0 1 6
+        # Short-Description:  Create lightweight, portable, self-sufficient containers.
+        # Description:
+        #  Docker is an open-source project to easily create lightweight, portable,
+        #  self-sufficient containers from any application. The same container that a
+        #  developer builds and tests on a laptop can run at scale, in production, on
+        #  VMs, bare metal, OpenStack clusters, public clouds and more.
+        ### END INIT INFO
 
-          export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+        export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 
-          BASE=portainer
+        BASE=portainer
 
-          # modify these in /etc/default/$BASE (/etc/default/portainer)
-          PORTAINER=/usr/local/bin/portainer
-          # This is the pid file created/managed by start-stop-daemon
-          PORTAINER_SSD_PIDFILE=/var/run/$BASE-ssd.pid
-          PORTAINER_LOGFILE=/var/log/$BASE.log
-          PORTAINER_DESC="Portainer"
+        # modify these in /etc/default/$BASE (/etc/default/portainer)
+        PORTAINER=/usr/local/bin/portainer
+        # This is the pid file created/managed by start-stop-daemon
+        PORTAINER_SSD_PIDFILE=/var/run/$BASE-ssd.pid
+        PORTAINER_LOGFILE=/var/log/$BASE.log
+        PORTAINER_DESC="Portainer"
 
-          # Get lsb functions
-          . /lib/lsb/init-functions
+        # Get lsb functions
+        . /lib/lsb/init-functions
 
-          if [ -f /etc/default/$BASE ]; then
-            . /etc/default/$BASE
-          fi
+        if [ -f /etc/default/$BASE ]; then
+          . /etc/default/$BASE
+        fi
 
-          # Check portainer is present
-          if [ ! -x $PORTAINER ]; then
-            log_failure_msg "$PORTAINER not present or not executable"
+        # Check portainer is present
+        if [ ! -x $PORTAINER ]; then
+          log_failure_msg "$PORTAINER not present or not executable"
+          exit 1
+        fi
+
+        check_init() {
+          # see also init_is_upstart in /lib/lsb/init-functions (which isn't available in Ubuntu 12.04, or we'd use it directly)
+          if [ -x /sbin/initctl ] && /sbin/initctl version 2> /dev/null | grep -q upstart; then
+            log_failure_msg "$PORTAINER_DESC is managed via upstart, try using service $BASE $1"
             exit 1
           fi
+        }
 
-          check_init() {
-            # see also init_is_upstart in /lib/lsb/init-functions (which isn't available in Ubuntu 12.04, or we'd use it directly)
-            if [ -x /sbin/initctl ] && /sbin/initctl version 2> /dev/null | grep -q upstart; then
-              log_failure_msg "$PORTAINER_DESC is managed via upstart, try using service $BASE $1"
-              exit 1
-            fi
-          }
+        fail_unless_root() {
+          if [ "$(id -u)" != '0' ]; then
+            log_failure_msg "$PORTAINER_DESC must be run as root"
+            exit 1
+          fi
+        }
 
-          fail_unless_root() {
-            if [ "$(id -u)" != '0' ]; then
-              log_failure_msg "$PORTAINER_DESC must be run as root"
-              exit 1
-            fi
-          }
-
-          cgroupfs_mount() {
-            # see also https://github.com/tianon/cgroupfs-mount/blob/master/cgroupfs-mount
-            if grep -v '^#' /etc/fstab | grep -q cgroup \
-              || [ ! -e /proc/cgroups ] \
-              || [ ! -d /sys/fs/cgroup ]; then
-              return
-            fi
-            if ! mountpoint -q /sys/fs/cgroup; then
-              mount -t tmpfs -o uid=0,gid=0,mode=0755 cgroup /sys/fs/cgroup
-            fi
-            (
-              cd /sys/fs/cgroup
-              for sys in $(awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
-                mkdir -p $sys
-                if ! mountpoint -q $sys; then
-                  if ! mount -n -t cgroup -o $sys cgroup $sys; then
-                    rmdir $sys || true
-                  fi
+        cgroupfs_mount() {
+          # see also https://github.com/tianon/cgroupfs-mount/blob/master/cgroupfs-mount
+          if grep -v '^#' /etc/fstab | grep -q cgroup \
+            || [ ! -e /proc/cgroups ] \
+            || [ ! -d /sys/fs/cgroup ]; then
+            return
+          fi
+          if ! mountpoint -q /sys/fs/cgroup; then
+            mount -t tmpfs -o uid=0,gid=0,mode=0755 cgroup /sys/fs/cgroup
+          fi
+          (
+            cd /sys/fs/cgroup
+            for sys in $(awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
+              mkdir -p $sys
+              if ! mountpoint -q $sys; then
+                if ! mount -n -t cgroup -o $sys cgroup $sys; then
+                  rmdir $sys || true
                 fi
-              done
-            )
-          }
-
-          case "$1" in
-            start)
-              check_init
-
-              fail_unless_root
-
-              cgroupfs_mount
-
-              touch "$PORTAINER_LOGFILE"
-
-              ulimit -n 1048576
-
-              # Having non-zero limits causes performance problems due to accounting overhead
-              # in the kernel. We recommend using cgroups to do container-local accounting.
-              if [ "$BASH" ]; then
-                ulimit -u unlimited
-              else
-                ulimit -p unlimited
               fi
+            done
+          )
+        }
 
-              log_begin_msg "Starting $PORTAINER_DESC: $BASE"
-              start-stop-daemon --start --background \
-                --no-close \
-                --exec "$PORTAINER" \
-                --pidfile "$PORTAINER_SSD_PIDFILE" \
-                --make-pidfile \
-                -- \
-                >> "$PORTAINER_LOGFILE" 2>&1
+        case "$1" in
+          start)
+            check_init
+
+            fail_unless_root
+
+            cgroupfs_mount
+
+            touch "$PORTAINER_LOGFILE"
+
+            ulimit -n 1048576
+
+            # Having non-zero limits causes performance problems due to accounting overhead
+            # in the kernel. We recommend using cgroups to do container-local accounting.
+            if [ "$BASH" ]; then
+              ulimit -u unlimited
+            else
+              ulimit -p unlimited
+            fi
+
+            log_begin_msg "Starting $PORTAINER_DESC: $BASE"
+            start-stop-daemon --start --background \
+              --no-close \
+              --exec "$PORTAINER" \
+              --pidfile "$PORTAINER_SSD_PIDFILE" \
+              --make-pidfile \
+              -- \
+              >> "$PORTAINER_LOGFILE" 2>&1
+            log_end_msg $?
+            ;;
+
+          stop)
+            check_init
+            fail_unless_root
+            if [ -f "$PORTAINER_SSD_PIDFILE" ]; then
+              log_begin_msg "Stopping $PORTAINER_DESC: $BASE"
+              start-stop-daemon --stop --pidfile "$PORTAINER_SSD_PIDFILE" --retry 10
               log_end_msg $?
-              ;;
+            else
+              log_warning_msg "Docker already stopped - file $PORTAINER_SSD_PIDFILE not found."
+            fi
+            ;;
 
-            stop)
-              check_init
-              fail_unless_root
-              if [ -f "$PORTAINER_SSD_PIDFILE" ]; then
-                log_begin_msg "Stopping $PORTAINER_DESC: $BASE"
-                start-stop-daemon --stop --pidfile "$PORTAINER_SSD_PIDFILE" --retry 10
-                log_end_msg $?
-              else
-                log_warning_msg "Docker already stopped - file $PORTAINER_SSD_PIDFILE not found."
-              fi
-              ;;
+          restart)
+            check_init
+            fail_unless_root
+            portainer_pid=$(cat "$PORTAINER_SSD_PIDFILE" 2> /dev/null)
+            [ -n "$portainer_pid" ] \
+              && ps -p $portainer_pid > /dev/null 2>&1 \
+              && $0 stop
+            $0 start
+            ;;
 
-            restart)
-              check_init
-              fail_unless_root
-              portainer_pid=$(cat "$PORTAINER_SSD_PIDFILE" 2> /dev/null)
-              [ -n "$portainer_pid" ] \
-                && ps -p $portainer_pid > /dev/null 2>&1 \
-                && $0 stop
-              $0 start
-              ;;
+          force-reload)
+            check_init
+            fail_unless_root
+            $0 restart
+            ;;
 
-            force-reload)
-              check_init
-              fail_unless_root
-              $0 restart
-              ;;
+          status)
+            check_init
+            status_of_proc -p "$PORTAINER_SSD_PIDFILE" "$PORTAINER" "$PORTAINER_DESC"
+            ;;
 
-            status)
-              check_init
-              status_of_proc -p "$PORTAINER_SSD_PIDFILE" "$PORTAINER" "$PORTAINER_DESC"
-              ;;
-
-            *)
-              echo "Usage: service portainer {start|stop|restart|status}"
-              exit 1
-              ;;
-          esac
+          *)
+            echo "Usage: service portainer {start|stop|restart|status}"
+            exit 1
+            ;;
+        esac
     post_install: |
       echo "Install dedicated docker-compose v1"
       cp "${target}/bin/docker-compose" "${target}/share/portainer/docker-compose"
@@ -4970,20 +5032,21 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
-    homepage: https://github.com/portainer/portainer
-    description: ""
+
   - name: porter
     version: 0.38.12
     check: ${binary} --version | cut -d' ' -f2 | tr -d v
     tags:
-      - cnab
+    - cnab
+    homepage: https://github.com/getporter/porter
+    description: Package your application artifact, client tools, configuration and deployment logic
     renovate:
       datasource: github-releases
       package: getporter/porter
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}
+      type: executable
     post_install: |
       if test -z "${prefix}"; then
           echo "Install mixins"
@@ -4994,47 +5057,49 @@ tools:
           echo "Install plugins"
           ${binary} plugins install kubernetes
       fi
-    homepage: https://github.com/getporter/porter
-    description: ""
+
   - name: qemu
     version: 7.0.0
     binary: qemu-img
     check: ${binary} --version | grep qemu-img | cut -d' ' -f3
     tags:
-      - vm
-      - emulation
+    - vm
+    - emulation
+    homepage: https://github.com/qemu/qemu
+    description: Generic and open source machine & userspace emulator and virtualizer
     renovate:
       datasource: github-releases
       package: nicholasdille/qemu-static
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz
-        type: tarball
-        strip: 2
-        path: ${target}
-    homepage: https://github.com/nicholasdille/qemu-static
-    description: ""
+    - url: https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz
+      type: tarball
+      strip: 2
+      path: ${target}
+
   - name: regclient
     version: 0.4.4
     binary: regctl
     check: ${binary} version | jq -r .VCSTag | tr -d v
     tags:
-      - registry
-      - management
+    - registry
+    - management
+    homepage: https://github.com/regclient/regclient
+    description: Docker and OCI Registry Client in Go and tooling using those libraries
     renovate:
       datasource: github-releases
       package: regclient/regclient
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/regctl
-      - url: https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/regbot
-      - url: https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/regsync
+    - url: https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/regctl
+    - url: https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/regbot
+    - url: https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/regsync
     post_install: |
       echo "Install completion for regctl"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
@@ -5048,59 +5113,61 @@ tools:
       "${target}/bin/regsync" completion bash >"${target}/share/bash-completion/completions/regsync"
       "${target}/bin/regsync" completion fish >"${target}/share/fish/vendor_completions.d/regsync.fish"
       "${target}/bin/regsync" completion zsh >"${target}/share/zsh/vendor-completions/_regsync"
-    homepage: https://github.com/regclient/regclient
-    description: ""
+
   - name: registry
     version: 2.8.1
     check: ${binary} --version | cut -d' ' -f3 | cut -d+ -f1 | tr -d v
     tags:
-      - registry
-      - oci
+    - registry
+    - oci
+    homepage: https://github.com/distribution/distribution
+    description: Toolkit to pack, ship, store, and deliver container content
     renovate:
       datasource: github-releases
       package: distribution/distribution
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/distribution/distribution/releases/download/v${version}/registry_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - registry
-    homepage: https://github.com/distribution/distribution
-    description: ""
+    - url: https://github.com/distribution/distribution/releases/download/v${version}/registry_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - registry
+
   - name: rekor
     version: 0.10.0
     binary: rekor-cli
     check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
     tags:
-      - security
+    - security
+    homepage: https://github.com/sigstore/rekor
+    description: Software Supply Chain Transparency Log
     renovate:
       datasource: github-releases
       package: sigstore/rekor
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-cli-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/rekor-cli
-      - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-server-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/rekor-server
+    - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-cli-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/rekor-cli
+    - url: https://github.com/sigstore/rekor/releases/download/v${version}/rekor-server-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/rekor-server
     files:
-      - path: ${prefix}/etc/systemd/system/rekor.service
-        content: |
-          [Unit]
-          Description=rekor
-          After=network-online.target
-          Wants=network-online.target
-          StartLimitIntervalSec=600
-          StartLimitBurst=5
+    - path: ${prefix}/etc/systemd/system/rekor.service
+      content: |
+        [Unit]
+        Description=rekor
+        After=network-online.target
+        Wants=network-online.target
+        StartLimitIntervalSec=600
+        StartLimitBurst=5
 
-          [Service]
-          ExecStart=/usr/local/bin/rekor-server serve --rekor_server.address=0.0.0.0 --trillian_log_server.port=8091
-          Restart=on-failure
-          RestartSec=5s
+        [Service]
+        ExecStart=/usr/local/bin/rekor-server serve --rekor_server.address=0.0.0.0 --trillian_log_server.port=8091
+        Restart=on-failure
+        RestartSec=5s
 
-          [Install]
-          WantedBy=multi-user.target
+        [Install]
+        WantedBy=multi-user.target
     post_install: |
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/rekor-server|ExecStart=${relative_target}/bin/rekor-server|" "${prefix}/etc/systemd/system/rekor.service"
@@ -5116,15 +5183,16 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
-    homepage: https://github.com/sigstore/rekor
-    description: ""
+
   - name: reptyr
     version: 0.9.0
     check: ${binary} -v | head -n 1 | cut -d' ' -f5 | cut -d. -f1-3
     needs:
-      - docker
+    - docker
     tags:
-      - management
+    - management
+    homepage: https://github.com/nelhage/reptyr
+    description: Reparent a running program to a new terminal
     renovate:
       datasource: github-tags
       package: nelhage/reptyr
@@ -5137,9 +5205,9 @@ tools:
               git \
               ca-certificates
     download:
-      - url: https://github.com/nelhage/reptyr/raw/reptyr-${version}/reptyr.bash
-        type: file
-        path: ${target}/share/bash-completion/completions/reptyr
+    - url: https://github.com/nelhage/reptyr/raw/reptyr-${version}/reptyr.bash
+      type: file
+      path: ${target}/share/bash-completion/completions/reptyr
     post_install: |
       docker_run \
           --workdir /go/src/github.com/nelhage/reptyr \
@@ -5151,88 +5219,90 @@ tools:
       cp reptyr /target/bin/
       cp reptyr.1 /target/share/man/man1/
       EOF
-    homepage: https://github.com/nelhage/reptyr
-    description: ""
+
   - name: rootlesskit
     version: 1.0.1
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - rootless
+    - rootless
+    homepage: https://github.com/rootless-containers/rootlesskit
+    description: Linux-native "fake root" for implementing rootless containers
     renovate:
       datasource: github-releases
       package: rootless-containers/rootlesskit
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
-        type: tarball
-    homepage: https://github.com/rootless-containers/rootlesskit
-    description: ""
+    - url: https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz
+      type: tarball
+
   - name: runc
     version: 1.1.3
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
     needs:
-      - go-md2man
+    - go-md2man
     tags:
-      - runtime
-      - oci
+    - runtime
+    - oci
+    homepage: https://github.com/opencontainers/runc
+    description: CLI tool for spawning and running containers according to the OCI specification 
     renovate:
       datasource: github-releases
       package: opencontainers/runc
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
-        type: executable
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-checkpoint.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-checkpoint.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-create.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-create.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-delete.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-delete.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-events.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-events.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-exec.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-exec.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-kill.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-kill.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-list.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-list.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-pause.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-pause.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-ps.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-ps.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-restore.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-restore.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-resume.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-resume.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-run.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-run.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-spec.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-spec.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-start.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-start.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-state.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-state.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-update.8.md
-        type: file
-        path: ${target}/share/man/man8/runc-update.8.md
-      - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc.8.md
-        type: file
-        path: ${target}/share/man/man8/runc.8.md
+    - url: https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}
+      type: executable
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-checkpoint.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-checkpoint.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-create.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-create.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-delete.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-delete.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-events.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-events.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-exec.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-exec.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-kill.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-kill.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-list.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-list.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-pause.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-pause.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-ps.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-ps.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-restore.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-restore.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-resume.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-resume.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-run.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-run.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-spec.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-spec.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-start.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-start.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-state.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-state.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc-update.8.md
+      type: file
+      path: ${target}/share/man/man8/runc-update.8.md
+    - url: https://github.com/opencontainers/runc/raw/v${version}/man/runc.8.md
+      type: file
+      path: ${target}/share/man/man8/runc.8.md
     post_install: |
       echo "Create manpages"
       find "${target}/share/man/man8" -type f -name \*.md \
@@ -5244,22 +5314,23 @@ tools:
           go-md2man -in "${FILE}" -out "${DEST}"
           rm "${FILE}"
       done
-    homepage: https://github.com/opencontainers/runc
-    description: ""
+
   - name: scorecard
     version: 4.4.0
     check: ${binary} version | grep "GitVersion" | cut -dv -f2
     tags:
-      - security
+    - security
+    homepage: https://github.com/ossf/scorecard
+    description: Security health metrics for Open Source
     renovate:
       datasource: github-releases
       package: ossf/scorecard
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - scorecard-linux-${alt_arch}
+    - url: https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - scorecard-linux-${alt_arch}
     post_install: |
       echo "Fix filename"
       mv "${target}/bin/scorecard-linux-${alt_arch}" "${target}/bin/scorecard"
@@ -5267,185 +5338,195 @@ tools:
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/ossf/scorecard
-    description: ""
+
   - name: semver
     version: 3.3.0
     check: ${binary} --version | cut -d' ' -f2
     tags:
-      - development
+    - development
+    homepage: https://github.com/fsaintjacques/semver-tool
+    description: Semver bash implementation 
     renovate:
       datasource: github-releases
       package: fsaintjacques/semver-tool
     download:
-      - url: https://github.com/fsaintjacques/semver-tool/raw/${version}/src/semver
-        type: executable
-    homepage: https://github.com/fsaintjacques/semver-tool
-    description: ""
+    - url: https://github.com/fsaintjacques/semver-tool/raw/${version}/src/semver
+      type: executable
+
   - name: shortnames
     version: 2022.02.08
     binary: false
     tags:
-      - redhat
+    - redhat
+    homepage: https://github.com/containers/shortnames
+    description: Collecting registry alias names for shortnames to fully specified container image names
     renovate:
       datasource: github-releases
       package: containers/shortnames
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url: https://github.com/containers/shortnames/raw/v${version}/shortnames.conf
-        type: file
-        path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
-    homepage: https://github.com/containers/shortnames
-    description: ""
+    - url: https://github.com/containers/shortnames/raw/v${version}/shortnames.conf
+      type: file
+      path: ${prefix}/etc/containers/registries.conf.d/00-shortnames.conf
+
   - name: skopeo
     version: 1.9.2
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - registry
-      - redhat
-      - oci
+    - registry
+    - redhat
+    - oci
+    homepage: https://github.com/containers/skopeo
+    description: Work with remote images registries
     renovate:
       datasource: github-releases
       package: nicholasdille/skopeo-static
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz
-        type: tarball
-        path: ${target}
-    homepage: https://github.com/nicholasdille/skopeo-static
-    description: ""
+    - url:
+        x86_64: https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}
+
   - name: slides
     version: 0.8.0
     tags:
-      - markdown
+    - markdown
+    homepage: https://github.com/maaslalani/slides
+    description: Terminal based presentation tool
     renovate:
       datasource: github-releases
       package: maaslalani/slides
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/maaslalani/slides/releases/download/v0.8.0/slides_0.8.0_linux_amd64.tar.gz
-        type: tarball
-        files:
-          - slides
-    homepage: https://github.com/maaslalani/slides
-    description: ""
+    - url: https://github.com/maaslalani/slides/releases/download/v0.8.0/slides_0.8.0_linux_amd64.tar.gz
+      type: tarball
+      files:
+      - slides
+
   - name: slirp4netns
     version: 1.2.0
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
     tags:
-      - rootless
-      - network
+    - rootless
+    - network
+    homepage: https://github.com/rootless-containers/slirp4netns
+    description: User-mode networking for unprivileged network namespaces
     renovate:
       datasource: github-releases
       package: rootless-containers/slirp4netns
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
-        type: executable
-      - url: https://github.com/rootless-containers/slirp4netns/raw/v1.2.0/slirp4netns.1
-        type: file
-        path: ${target}/share/man/man1/slirp4netns.1
-    homepage: https://github.com/rootless-containers/slirp4netns
-    description: ""
+    - url: https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}
+      type: executable
+    - url: https://github.com/rootless-containers/slirp4netns/raw/v1.2.0/slirp4netns.1
+      type: file
+      path: ${target}/share/man/man1/slirp4netns.1
+
   - name: sloop
     version: 1.1
     tags:
-      - kubernetes
-      - k8s
-      - management
+    - kubernetes
+    - k8s
+    - management
+    homepage: https://github.com/salesforce/sloop
+    description: Kubernetes History Visualization
     renovate:
       datasource: github-releases
       package: salesforce/sloop
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url:
-          x86_64: https://github.com/salesforce/sloop/releases/download/v1.1/sloop_1.1_linux_amd64.tar.gz
-        type: tarball
-    homepage: https://github.com/salesforce/sloop
-    description: ""
+    - url:
+        x86_64: https://github.com/salesforce/sloop/releases/download/v1.1/sloop_1.1_linux_amd64.tar.gz
+      type: tarball
+
   - name: sops
     version: 3.7.3
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
     tags:
-      - security
+    - security
+    homepage: https://github.com/mozilla/sops
+    description: Simple and flexible tool for managing secrets
     renovate:
       datasource: github-releases
       package: mozilla/sops
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
-        type: executable
-    homepage: https://github.com/mozilla/sops
-    description: ""
+    - url:
+        x86_64: https://github.com/mozilla/sops/releases/download/v${version}/sops-v${version}.linux
+      type: executable
+
   - name: ssh-key-confirmer
     version: 0.1
     tags:
-      - security
+    - security
+    homepage: https://github.com/benjojo/ssh-key-confirmer
+    description: Test SSH login key acceptance without having the private key
     renovate:
       datasource: github-releases
       package: benjojo/ssh-key-confirmer
       extractVersion: ^v(?<version>.+?)$
       versioning: loose
     download:
-      - url:
-          x86_64: https://github.com/benjojo/ssh-key-confirmer/releases/download/v${version}/ssh-key-confirmer-${alt_arch}
-        type: executable
-    homepage: https://github.com/benjojo/ssh-key-confirmer
-    description: ""
+    - url:
+        x86_64: https://github.com/benjojo/ssh-key-confirmer/releases/download/v${version}/ssh-key-confirmer-${alt_arch}
+      type: executable
+
   - name: sshocker
     version: 0.3.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
-      - security
-      - network
-      - storage
+    - security
+    - network
+    - storage
+    homepage: https://github.com/lima-vm/sshocker
+    description: SSH + reverse sshfs + port forwarder in Docker-like CLI
     renovate:
       datasource: github-releases
       package: lima-vm/sshocker
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
-        type: executable
-    homepage: https://github.com/lima-vm/sshocker
-    description: ""
+    - url: https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}
+      type: executable
+
   - name: stargz-snapshotter
     version: 0.12.0
     binary: containerd-stargz-grpc
     check: ${binary} -version | cut -d' ' -f2 | tr -d v
     needs:
-      - containerd
+    - containerd
     tags:
-      - containerd
-      - storage
+    - containerd
+    - storage
+    homepage: https://github.com/containerd/stargz-snapshotter
+    description: Fast container image distribution plugin with lazy pulling
     renovate:
       datasource: github-releases
       package: containerd/stargz-snapshotter
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
-        type: tarball
+    - url: https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz
+      type: tarball
     files:
-      - path: "${prefix}/etc/systemd/system/stargz-snapshotter.service"
-        content: |
-          [Unit]
-          Description=stargz snapshotter
-          PartOf=containerd
+    - path: "${prefix}/etc/systemd/system/stargz-snapshotter.service"
+      content: |
+        [Unit]
+        Description=stargz snapshotter
+        PartOf=containerd
 
-          [Service]
-          Environment=IPFS_PATH=${XDG_DATA_HOME}/ipfs
-          ExecStart=/usr/local/bin/containerd-stargz-grpc -address "${XDG_RUNTIME_DIR}/containerd-stargz-grpc/containerd-stargz-grpc.sock" -root "${XDG_DATA_HOME}/containerd-stargz-grpc" -config "${XDG_CONFIG_HOME}/containerd-stargz-grpc/config.toml"
-          ExecReload=/bin/kill -s HUP \$MAINPID
-          RestartSec=2
-          Restart=always
-          Type=simple
-          KillMode=mixed
+        [Service]
+        Environment=IPFS_PATH=${XDG_DATA_HOME}/ipfs
+        ExecStart=/usr/local/bin/containerd-stargz-grpc -address "${XDG_RUNTIME_DIR}/containerd-stargz-grpc/containerd-stargz-grpc.sock" -root "${XDG_DATA_HOME}/containerd-stargz-grpc" -config "${XDG_CONFIG_HOME}/containerd-stargz-grpc/config.toml"
+        ExecReload=/bin/kill -s HUP \$MAINPID
+        RestartSec=2
+        Restart=always
+        Type=simple
+        KillMode=mixed
 
-          [Install]
-          WantedBy=default.target
+        [Install]
+        WantedBy=default.target
     post_install: |
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd-stargz-grpc|ExecStart=${relative_target}/bin/containerd-stargz-grpc|" "${prefix}/etc/systemd/system/stargz-snapshotter.service"
@@ -5453,14 +5534,15 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
-    homepage: https://github.com/containerd/stargz-snapshotter
-    description: ""
+
   - name: su-exec
     version: 0.2
     needs:
-      - docker
+    - docker
     tags:
-      - sudo
+    - sudo
+    homepage: https://github.com/ncopa/su-exec
+    description: Switch user and group id and exec
     renovate:
       datasource: github-tags
       package: ncopa/su-exec
@@ -5481,112 +5563,117 @@ tools:
       make su-exec-static
       cp su-exec-static /target/bin/su-exec
       EOF
-    homepage: https://github.com/ncopa/su-exec
-    description: ""
+
   - name: stern
     version: 1.21.0
     check: ${binary} --version | grep ^version | cut -d' ' -f2
     tags:
-      - k8s
-      - kubernetes
-      - debugging
-      - analysis
+    - k8s
+    - kubernetes
+    - debugging
+    - analysis
+    homepage: https://github.com/stern/stern
+    description: Multi pod and container log tailing for Kubernetes
     renovate:
       datasource: github-releases
       package: stern/stern
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/stern/stern/releases/download/v${version}/stern_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - stern
+    - url: https://github.com/stern/stern/releases/download/v${version}/stern_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - stern
     post_install: |
       echo "Install completion"
       ${binary} --completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} --completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} --completion zsh  >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/stern/stern
-    description: ""
+
   - name: switcher
     version: 0.7.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
-      - k8s
-      - kubernetes
-      - management
+    - k8s
+    - kubernetes
+    - management
+    homepage: https://github.com/danielfoehrKn/kubeswitch
+    description: The kubectx for operators
     renovate:
       datasource: github-releases
       package: danielfoehrKn/kubeswitch
     download:
-      - url:
-          x86_64: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switcher_linux_${alt_arch}
-        type: executable
-      - url: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switch.sh
-        type: executable
-        path: ${target}/bin/switch.sh
-      - url: https://github.com/danielfoehrKn/kubeswitch/raw/0.7.1/scripts/_switch.bash
-        type: file
-        path: ${target}/share/bash-completion/completions/${name}
-    homepage: https://github.com/danielfoehrKn/kubeswitch
-    description: ""
+    - url:
+        x86_64: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switcher_linux_${alt_arch}
+      type: executable
+    - url: https://github.com/danielfoehrKn/kubeswitch/releases/download/${version}/switch.sh
+      type: executable
+      path: ${target}/bin/switch.sh
+    - url: https://github.com/danielfoehrKn/kubeswitch/raw/0.7.1/scripts/_switch.bash
+      type: file
+      path: ${target}/share/bash-completion/completions/${name}
+
   - name: syft
     version: 0.53.4
     check: ${binary} --version | cut -d' ' -f2
     tags:
-      - sbom
-      - security
+    - sbom
+    - security
+    homepage: https://github.com/anchore/syft
+    description: CLI tool and library for generating a Software Bill of Materials from container images and filesystems
     renovate:
       datasource: github-releases
       package: anchore/syft
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - syft
+    - url: https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - syft
     post_install: |
       echo "Install completion"
       ${binary} completion bash | sed -E 's/^(\s*complete.*)/\1 syft/'            >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish | sed -E 's/complete -c  -e/complete -c syft -e/' >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh                                                    >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/anchore/syft
-    description: ""
+
   - name: task
     version: 3.14.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
-      - development
+    - development
+    homepage: https://github.com/go-task/task
+    description: Task runner and simpler Make alternative written in Go
     renovate:
       datasource: github-releases
       package: go-task/task
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - task
-      - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
-        type: tarball
-        path: ${target}/share
-        strip: 2
-        files:
-          - completion/bash/task.bash
-          - completion/fish/task.fish
-          - completion/zsh/_task
+    - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - task
+    - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
+      type: tarball
+      path: ${target}/share
+      strip: 2
+      files:
+      - completion/bash/task.bash
+      - completion/fish/task.fish
+      - completion/zsh/_task
     post_install: |
       echo "Install completion"
       mv "${target}/share/${name}.bash" "${target}/share/bash-completion/completions/${name}"
       mv "${target}/share/${name}.fish" "${target}/share/fish/vendor_completions.d/${name}.fish"
       mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/go-task/task
-    description: ""
+
   - name: tasker
     version: 0.9
     check: ${binary} --version
     needs:
-      - docker
+    - docker
     tags:
-      - management
+    - management
+    homepage: https://github.com/stevegrubb/tasker
+    description: Parallelizes tasks from a list on stdin
     renovate:
       datasource: github-releases
       package: stevegrubb/tasker
@@ -5612,28 +5699,30 @@ tools:
       make LDFLAGS=--static
       make install
       EOF
-    homepage: https://github.com/stevegrubb/tasker
-    description: ""
+
   - name: tini
     version: 0.19.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - init
+    - init
+    homepage: https://github.com/krallin/tini
+    description: Tiny but valid init for containers 
     renovate:
       datasource: github-releases
       package: krallin/tini
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/krallin/tini/releases/download/v${version}/tini-${alt_arch}
-        type: executable
-    homepage: https://github.com/krallin/tini
-    description: ""
+    - url: https://github.com/krallin/tini/releases/download/v${version}/tini-${alt_arch}
+      type: executable
+
   - name: trillian
     version: 1.4.2
     needs:
-      - docker
+    - docker
     tags:
-      - security
+    - security
+    homepage: https://github.com/google/trillian
+    description: Transparent, highly scalable and cryptographically verifiable data store
     renovate:
       datasource: github-releases
       package: google/trillian
@@ -5649,34 +5738,36 @@ tools:
       go build -ldflags "-w -s" -o "/target/bin/trillian_log_server" ./cmd/trillian_log_server
       go build -ldflags "-w -s" -o "/target/bin/trillian_log_signer" ./cmd/trillian_log_signer
       EOF
-    homepage: https://github.com/google/trillian
-    description: ""
+
   - name: trivy
     version: 0.30.4
     check: ${binary} --version | cut -d' ' -f2
     tags:
-      - security
-      - analysis
+    - security
+    - analysis
+    homepage: https://github.com/aquasecurity/trivy
+    description: Scanner for vulnerabilities in container images, file systems, and Git repositories
     renovate:
       datasource: github-releases
       package: aquasecurity/trivy
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz
-          aarch64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-ARM64.tar.gz
-        type: tarball
-        files:
-          - trivy
-    homepage: https://github.com/aquasecurity/trivy
-    description: ""
+    - url:
+        x86_64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz
+        aarch64: https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-ARM64.tar.gz
+      type: tarball
+      files:
+      - trivy
+
   - name: uidmap
     version: 4.11.1
     binary: newuidmap
     needs:
-      - docker
+    - docker
     tags:
-      - kernel
+    - kernel
+    homepage: https://github.com/shadow-maint/shadow
+    description: Programs to help use subuids
     renovate:
       datasource: github-releases
       package: shadow-maint/shadow
@@ -5706,30 +5797,32 @@ tools:
       cp man/man1/newuidmap.1 /target/share/man/man1
       cp man/man1/newgidmap.1 /target/share/man/man1
       EOF
-    homepage: https://github.com/shadow-maint/shadow
-    description: ""
+
   - name: umoci
     version: 0.4.7
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - oci
+    - oci
+    homepage: https://github.com/opencontainers/umoci
+    description: Modifies Open Container images
     renovate:
       datasource: github-releases
       package: opencontainers/umoci
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
-        type: executable
-    homepage: https://github.com/opencontainers/umoci
-    description: ""
+    - url: https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}
+      type: executable
+
   - name: util-linux
     version: 2.38.1
     binary: lsns
     needs:
-      - docker
+    - docker
     tags:
-      - kernel
-      - namespaces
+    - kernel
+    - namespaces
+    homepage: https://github.com/util-linux/util-linux
+    description: Tools for managing namespaces
     renovate:
       datasource: github-tags
       package: util-linux/util-linux
@@ -5773,176 +5866,185 @@ tools:
           bash-completion/lsns bash-completion/nsenter bash-completion/unshare \
           /target/share/bash-completion/completions
       EOF
-    homepage: https://github.com/util-linux/util-linux
-    description: ""
+
   - name: vcluster
     version: 0.11.1
     check: ${binary} --version | cut -d' ' -f3
     tags:
-      - kubernetes
-      - k8s
+    - kubernetes
+    - k8s
+    homepage: https://github.com/loft-sh/vcluster
+    description: Create fully functional virtual Kubernetes clusters
     renovate:
       datasource: github-releases
       package: loft-sh/vcluster
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/loft-sh/vcluster/releases/download/v${version}/vcluster-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/loft-sh/vcluster/releases/download/v${version}/vcluster-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/loft-sh/vcluster
-    description: ""
+
   - name: vendir
     version: 0.30.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
-      - development
+    - development
+    homepage: https://github.com/vmware-tanzu/carvel-vendir
+    description: Easy way to vendor declaratively
     renovate:
       datasource: github-releases
       package: vmware-tanzu/carvel-vendir
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${alt_arch}
-        type: executable
-    homepage: https://github.com/vmware-tanzu/carvel-vendir
-    description: ""
+    - url: https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${alt_arch}
+      type: executable
+
   - name: watchtower
     version: 1.4.0
     needs:
-      - docker
+    - docker
     tags:
-      - docker
-      - management
+    - docker
+    - management
+    homepage: https://github.com/containrrr/watchtower
+    description: Process for automating Docker container base image updates
     renovate:
       datasource: github-releases
       package: containrrr/watchtower
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_amd64.tar.gz
-          aarch64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_arm64v8.tar.gz
-        type: tarball
-        files:
-          - watchtower
-    homepage: https://github.com/containrrr/watchtower
-    description: ""
+    - url:
+        x86_64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_amd64.tar.gz
+        aarch64: https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_arm64v8.tar.gz
+      type: tarball
+      files:
+      - watchtower
+
   - name: webhookd
     version: 1.15.0
     tags:
-      - development
+    - development
+    homepage: https://github.com/ncarlier/webhookd
+    description: Very simple webhook server launching shell scripts
     renovate:
       datasource: github-releases
       package: ncarlier/webhookd
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/ncarlier/webhookd/releases/download/v${version}/webhookd-linux-${alt_arch}.tgz
-        type: tarball
-        files:
-          - webhookd
-    homepage: https://github.com/ncarlier/webhookd
-    description: ""
+    - url: https://github.com/ncarlier/webhookd/releases/download/v${version}/webhookd-linux-${alt_arch}.tgz
+      type: tarball
+      files:
+      - webhookd
+
   - name: win-gpg-agent
     version: 1.6.3
     binary: sorelay.exe
     check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1'
     tags:
-      - wsl
+    - wsl
+    homepage: https://github.com/rupor-github/win-gpg-agent
+    description: Windows helpers for GnuPG tools suite
     renovate:
       datasource: github-releases
       package: rupor-github/win-gpg-agent
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url:
-          x86_64: https://github.com/rupor-github/win-gpg-agent/releases/download/v${version}/win-gpg-agent.zip
-        type: zip
-        files:
-          - sorelay.exe
-    homepage: https://github.com/rupor-github/win-gpg-agent
-    description: ""
+    - url:
+        x86_64: https://github.com/rupor-github/win-gpg-agent/releases/download/v${version}/win-gpg-agent.zip
+      type: zip
+      files:
+      - sorelay.exe
+
   - name: yasu
     version: 1.19.0
     check: ${binary} --version | cut -d' ' -f1
     tags:
-      - init
+    - init
+    homepage: https://github.com/crazy-max/yasu
+    description: Yet Another Switch User
     renovate:
       datasource: github-releases
       package: crazy-max/yasu
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/crazy-max/yasu/releases/download/v${version}/yasu_${version}_linux_${alt_arch}.tar.gz
-        type: tarball
-        files:
-          - yasu
-    homepage: https://github.com/crazy-max/yasu
-    description: ""
+    - url: https://github.com/crazy-max/yasu/releases/download/v${version}/yasu_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - yasu
+
   - name: ytt
     version: 0.42.0
     check: ${binary} version | cut -d' ' -f3
     tags:
-      - k8s
-      - kubernetes
-      - templating
-      - package
-      - manager
+    - k8s
+    - kubernetes
+    - templating
+    - package
+    - manager
+    homepage: https://github.com/vmware-tanzu/carvel-ytt
+    description: YAML templating tool that works on YAML structure instead of text
     renovate:
       datasource: github-releases
       package: vmware-tanzu/carvel-ytt
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
-        type: executable
+    - url: https://github.com/vmware-tanzu/carvel-ytt/releases/download/v${version}/ytt-linux-${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/vmware-tanzu/carvel-ytt
-    description: ""
+
   - name: yq
     version: 4.27.2
     check: ${binary} --version | cut -d' ' -f4
     tags:
-      - conversion
-      - format
+    - conversion
+    - format
+    homepage: https://github.com/mikefarah/yq
+    description: Portable command-line YAML, JSON, XML, CSV and properties processor
     renovate:
       datasource: github-releases
       package: mikefarah/yq
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
-        type: executable
+    - url: https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}
+      type: executable
     post_install: |
       echo "Install completion"
       ${binary} shell-completion bash >"${target}/share/bash-completion/completions/${name}"
       ${binary} shell-completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
-    homepage: https://github.com/mikefarah/yq
-    description: ""
+
   - name: zot
     version: 1.4.1
     tags:
-      - registry
-      - image
-      - oci
+    - registry
+    - image
+    - oci
+    homepage: https://github.com/project-zot/zot
+    description: Production-ready vendor-neutral OCI image registry server purely based on OCI Distribution Specification
     renovate:
       datasource: github-releases
       package: project-zot/zot
       extractVersion: ^v(?<version>.+?)$
     download:
-      - url: https://github.com/project-zot/zot/releases/download/v${version}/zot-linux-${alt_arch}
-        type: executable
-      - url: https://github.com/project-zot/zot/releases/download/v${version}/zli-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/zli
-      - url: https://github.com/project-zot/zot/releases/download/v${version}/zb-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/zb
-      - url: https://github.com/project-zot/zot/releases/download/v${version}/zxp-linux-${alt_arch}
-        type: executable
-        path: ${target}/bin/zxp
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zot-linux-${alt_arch}
+      type: executable
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zli-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/zli
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zb-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/zb
+    - url: https://github.com/project-zot/zot/releases/download/v${version}/zxp-linux-${alt_arch}
+      type: executable
+      path: ${target}/bin/zxp
     post_install: |
       echo "Install completion"
       ${binary} shell-completion bash >"${target}/share/bash-completion/completions/${name}"
@@ -5954,5 +6056,3 @@ tools:
       zxp shell-completion bash >"${target}/share/bash-completion/completions/zxp"
       zxp shell-completion fish >"${target}/share/fish/vendor_completions.d/zxp.fish"
       zxp shell-completion zsh >"${target}/share/zsh/vendor-completions/_zxp"
-    homepage: https://github.com/project-zot/zot
-    description: ""
