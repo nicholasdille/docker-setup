@@ -4768,7 +4768,7 @@ tools:
 
   - name: tasker
     version: 0.9
-    #check: ${binary}
+    check: ${binary} --version
     needs:
     - docker
     tags:
@@ -4780,15 +4780,17 @@ tools:
               build-essential \
               autoconf \
               automake \
-              git
+              libtool \
+              git \
+              ca-certificates
     install: |
       docker_run \
           --workdir /go/src/github.com/stevegrubb/tasker \
           <<EOF
       git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stevegrubb/tasker .
       ./autogen.sh
-      ./configure --prefix=/target
-      make
+      ./configure --prefix=/target --disable-shared --enable-static
+      make LDFLAGS=--static
       make install
       EOF
 
