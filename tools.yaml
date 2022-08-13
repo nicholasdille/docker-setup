@@ -4664,11 +4664,10 @@ tools:
 
   - name: su-exec
     version: 0.2
-    #check: ${binary}
     needs:
     - docker
     tags:
-    - XXX
+    - sudo
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
@@ -4679,7 +4678,7 @@ tools:
       docker_run \
           --workdir /go/src/github.com/ncopa/su-exec \
           <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/ncopa/su-exec .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/ncopa/su-exec .
       make su-exec-static
       cp su-exec-static /target/bin/su-exec
       EOF
