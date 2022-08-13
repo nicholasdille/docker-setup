@@ -117,6 +117,7 @@ jobs:
           echo >>body.txt
           echo "## Closed issues and pull requests" >>body.txt
           echo >>body.txt
+          echo "Generating changelog for ${{ github.event.workflow_run.head_branch }}"
           hub issue \
               --state closed \
               --include-pulls \
