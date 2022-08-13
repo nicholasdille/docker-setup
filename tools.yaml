@@ -2349,7 +2349,7 @@ tools:
 
   - name: firejail
     version: 0.9.70
-    #check: ${binary}
+    check: ${binary} --version | head -n 1 | cut -d' ' -f3
     needs:
     - docker
     tags:
@@ -2359,10 +2359,8 @@ tools:
       RUN apt-get update \
        && apt-get -y install \
               build-essential \
+              gawk \
               git
-    # firejail, firecfg, firemon
-    # https://github.com/netblue30/firejail/tree/0.9.70/src/bash_completion
-    # https://github.com/netblue30/firejail/tree/0.9.70/src/zsh_completion
     install: |
       docker_run \
           --workdir /go/src/github.com/netblue30/firejail \
@@ -2371,7 +2369,6 @@ tools:
       ./configure --prefix=/target
       make
       make install-strip
-      ls -l
       EOF
 
   - name: footloose
