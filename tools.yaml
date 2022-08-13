@@ -4403,23 +4403,26 @@ tools:
 
   - name: reptyr
     version: 0.9.0
-    #check: ${binary}
+    check: ${binary} -v | head -n 1 | cut -d' ' -f5 | cut -d. -f1-3
     needs:
     - docker
     tags:
-    - XXX
+    - management
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
        && apt-get -y install \
               build-essential \
               git
-    # https://github.com/nelhage/reptyr/blob/reptyr-0.9.0/reptyr.bash
-    install: |
+    download:
+    - url: https://github.com/nelhage/reptyr/raw/reptyr-${version}/reptyr.bash
+      type: file
+      path: ${target}/share/bash-completion/completions/reptyr
+    post_install: |
       docker_run \
           --workdir /go/src/github.com/nelhage/reptyr \
           <<EOF
-      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/nelhage/reptyr .
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "reptyr-${version}" https://github.com/nelhage/reptyr .
       export LDFLAGS=-static
       make reptyr
       mkdir -p /target/bin /target/share/man/man1
