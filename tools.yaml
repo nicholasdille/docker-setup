@@ -1643,10 +1643,8 @@ tools:
     - redhat
     - oci
     download:
-    - url:
-        x86_64: https://github.com/nicholasdille/crun-static/releases/download/v${version}/crun-${alt_arch}.tar.gz
-      type: tarball
-      path: ${target}
+    - url: https://github.com/containers/crun/releases/download/${version}/crun-${version}-linux-${alt_arch}
+      type: executable
     post_install: |
       if ! test -f "${prefix}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
           echo "Add runtime to Docker"

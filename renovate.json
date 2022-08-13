@@ -593,9 +593,8 @@
       "matchStrings": [
         "name: crun\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "nicholasdille/crun-static",
+      "depNameTemplate": "containers/crun",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
       "versioningTemplate": "loose"
     },
     {
