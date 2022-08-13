@@ -73,7 +73,7 @@
       "matchPackageNames": [
         "alpine"
       ],
-      "allowedVersions": "<=3.15"
+      "allowedVersions": "<=3.15.0"
     },
     {
       "matchFiles": [
@@ -169,7 +169,7 @@
       "matchPackageNames": [
         "ubuntu"
       ],
-      "allowedVersions": "<=20.04"
+      "allowedVersions": "~20.04"
     },
     {
       "matchFiles": [
@@ -181,7 +181,7 @@
       "matchPackageNames": [
         "ubuntu"
       ],
-      "allowedVersions": "<=22.04"
+      "allowedVersions": "~22.04"
     },
     {
       "matchDatasources": [
