@@ -268,6 +268,28 @@
     },
     {
       "fileMatch": [
+        "^docker-setup.sh$"
+      ],
+      "matchStrings": [
+        "go_version=(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "golang",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
+    },
+    {
+      "fileMatch": [
+        "^docker-setup.sh$"
+      ],
+      "matchStrings": [
+        "rust_version=(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "rust",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools.yaml$"
       ],
       "matchStrings": [
@@ -1025,17 +1047,6 @@
       "depNameTemplate": "charmbracelet/glow",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^docker-setup.sh$"
-      ],
-      "matchStrings": [
-        "go_version=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "golang",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
     },
     {
       "fileMatch": [
@@ -1942,17 +1953,6 @@
       "depNameTemplate": "opencontainers/runc",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^docker-setup.sh$"
-      ],
-      "matchStrings": [
-        "rust_version=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "rust",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
     },
     {
       "fileMatch": [
