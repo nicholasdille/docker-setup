@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.2
 
-FROM opensuse/tumbleweed:latest@sha256:18ed3a005866d439cd5ccc6501ed695c78dd0b76036bcab8a7538d54211579cf
+FROM opensuse/tumbleweed:latest@sha256:51cdb44e4c8978313c11da5ee80e1607e149a24b0fce2fbee86e56322d82dd99
 RUN zypper install -y \
         curl \
         tar \
