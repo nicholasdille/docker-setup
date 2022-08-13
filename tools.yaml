@@ -4769,6 +4769,24 @@ tools:
     - url: https://github.com/krallin/tini/releases/download/v${version}/tini-${alt_arch}
       type: executable
 
+  - name: trillian
+    version: master
+    needs:
+    - docker
+    tags:
+    - security
+    dockerfile: |
+      FROM golang:${go_version}
+    install: |
+      docker_run \
+          --workdir /go/src/github.com/google/trillian \
+          <<EOF
+      git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/google/trillian .
+      export CGO_ENABLED=0
+      go build -ldflags "-w -s" -o "/target/bin/trillian_log_server" ./cmd/trillian_log_server
+      go build -ldflags "-w -s" -o "/target/bin/trillian_log_signer" ./cmd/trillian_log_signer
+      EOF
+
   - name: trivy
     version: 0.30.4
     check: ${binary} --version | cut -d' ' -f2

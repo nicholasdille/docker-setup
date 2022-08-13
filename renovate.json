@@ -2153,6 +2153,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: trillian\\n\\s+version: \"?(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "google/trillian",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: trivy\\n\\s+version: \"?(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "aquasecurity/trivy",
