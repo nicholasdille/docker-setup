@@ -311,7 +311,7 @@ tools:
     dockerfile: |
       FROM golang:${go_version}
       RUN apt-get update \
-       && apt-get -y install \
+       && apt-get -y install --no-install-recommends \
               libseccomp-dev
     install: |
       docker_run \
@@ -2356,7 +2356,7 @@ tools:
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
-       && apt-get -y install \
+       && apt-get -y install --no-install-recommends \
               build-essential \
               gawk \
               git
@@ -4410,7 +4410,7 @@ tools:
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
-       && apt-get -y install \
+       && apt-get -y install --no-install-recommends \
               build-essential \
               git
     download:
@@ -4673,7 +4673,7 @@ tools:
     dockerfile: |
       FROM ubuntu:22.04
       RUN apt-get update \
-       && apt-get -y install \
+       && apt-get -y install --no-install-recommends \
               build-essential \
               git
     install: |
