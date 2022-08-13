@@ -29,7 +29,6 @@
   ],
   "baseBranches": [
     "main",
-    "v1.5",
     "v1.6"
   ],
   "useBaseBranchConfig": "merge",
