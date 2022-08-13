@@ -2441,7 +2441,7 @@ tools:
       type: tarball
 
   - name: emojisum
-    version: master
+    version: 2
     needs:
     - docker
     tags:
@@ -2449,6 +2449,8 @@ tools:
     renovate:
       datasource: github-tags
       package: emojisum/emojisum
+      extractVersion: ^draft\+(?<version>.+?)$
+      versioning: loose
     dockerfile: |
       FROM golang:${go_version}
     install: |

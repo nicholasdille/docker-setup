@@ -895,7 +895,9 @@
         "name: emojisum\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "emojisum/emojisum",
-      "datasourceTemplate": "github-tags"
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^draft\\+(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [
