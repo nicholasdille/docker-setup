@@ -65,6 +65,8 @@ declare -a unknown_parameters
 : "${only:=false}"
 : "${only_installed:=false}"
 : "${tags:=false}"
+: "${list:=false}"
+: "${info:=false}"
 : "${no_progressbar:=false}"
 : "${show_version:=false}"
 : "${no_color:=false}"
@@ -105,6 +107,12 @@ while test "$#" -gt 0; do
             ;;
         --tags)
             tags=true
+            ;;
+        --list)
+            list=true
+            ;;
+        --info)
+            info=true
             ;;
         --no-progressbar)
             no_progressbar=true
@@ -238,6 +246,8 @@ are accepted:
 --only, $only                       Only install specified tools
 --only-installed, $only_installed   Only process installed tools
 --tags, $tags                       Only install tools with specified tags
+--list, $list                       List available tools
+--info, $info                       Show info for a tool
 --no-progressbar, $no_progressbar   Disable progress bar
 --no-color, $no_color               Disable colored output
 --plan, $plan                       Show planned installations
@@ -334,6 +344,26 @@ declare -a all_tags
 mapfile -t all_tags < <(get_tags)
 
 debug "Finished tools retrieval (@ ${SECONDS})"
+
+if ${info}; then
+    if test "${#requested_names[@]}" -ne 1; then
+        error "You must specify exactly one argument for --info."
+        exit 1
+    fi
+    for name in "${!requested_names[@]}"; do
+        jq --arg name "${name}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}"
+    done
+    exit
+fi
+
+if ${list}; then
+    (
+        echo "Name;Version;Description"
+        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}"
+    ) \
+    | column --table --separator ';' --table-truncate 3
+    exit
+fi
 
 declare -A tool_deps
 for deps in $(get_all_tool_deps); do
