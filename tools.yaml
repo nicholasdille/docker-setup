@@ -4029,7 +4029,8 @@ tools:
     post_install: |
       echo "Fix permissions"
       chmod +x "${target}/libexec/podman/docker"
-      if ! tool_will_be_installed "docker"; then
+      if ! has_tool "docker" && ! tool_will_be_installed "docker"; then
+          echo "Installing docker shim for podman"
           ln -sf "${target}/libexec/podman/docker" "${target}/bin/docker"
       fi
 
