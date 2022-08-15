@@ -4868,6 +4868,8 @@ tools:
       cp man/man1/newuidmap.1 /target/share/man/man1
       cp man/man1/newgidmap.1 /target/share/man/man1
       EOF
+      chmod u+s "${target}/bin/newuidmap"
+      chmod u+s "${target}/bin/newgidmap"
 
   - name: umoci
     version: 0.4.7
