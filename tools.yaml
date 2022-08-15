@@ -392,7 +392,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: clusterctl
-    version: 1.2.0
+    version: 1.2.1
     check: ${binary} version --output short | tr -d v
     tags:
     - k8s
