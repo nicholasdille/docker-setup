@@ -357,11 +357,19 @@ if ${info}; then
 fi
 
 if ${list}; then
-    (
-        echo "Name;Version;Description"
-        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}"
-    ) \
-    | column --table --separator ';' --table-truncate 3
+    if ${tags}; then
+        jq --raw-output '.tools[] | .tags[]' "${docker_setup_tools_file}" \
+        | sort \
+        | uniq \
+        | while read -r TAG; do
+            jq --raw-output --arg tag "${TAG}" '.tools[] | select(.tags[] | contains($tag)) | "\($tag);\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}"
+        done \
+        | column --separator ';' --table --table-columns Tag,Name,Version,Description --table-truncate 4
+    
+    else
+        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}" \
+        | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
+    fi
     exit
 fi
 
