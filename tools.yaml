@@ -4360,6 +4360,8 @@ tools:
     version: 0.10.0
     binary: rekor-cli
     check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
+    needs:
+    - trillian
     tags:
     - security
     download:
