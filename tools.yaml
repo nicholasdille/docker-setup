@@ -2894,7 +2894,7 @@ tools:
     version: 1.14
     check: ${binary} --version | cut -d' ' -f1
     tags:
-    - init
+    - su
     homepage: https://github.com/tianon/gosu
     description: Simple Go-based setuid+setgid+setgroups+exec
     renovate:
@@ -5554,7 +5554,7 @@ tools:
     needs:
     - docker
     tags:
-    - sudo
+    - su
     homepage: https://github.com/ncopa/su-exec
     description: Switch user and group id and exec
     renovate:
@@ -5977,7 +5977,7 @@ tools:
     version: 1.19.0
     check: ${binary} --version | cut -d' ' -f1
     tags:
-    - init
+    - su
     homepage: https://github.com/crazy-max/yasu
     description: Yet Another Switch User
     renovate:
