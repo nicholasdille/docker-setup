@@ -5734,6 +5734,7 @@ tools:
 
   - name: trillian
     version: 1.4.2
+    binary: trillian_log_server
     needs:
     - docker
     tags:
