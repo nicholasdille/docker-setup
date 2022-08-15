@@ -2393,6 +2393,20 @@ tools:
     - url: https://github.com/cnabio/duffle/releases/download/${version}/duffle-linux-${alt_arch}
       type: executable
 
+  - name: dumb-init
+    version: 1.2.5
+    check: ${binary} --version 2>&1 | cut -d' ' -f2 | tr -d v
+    tags:
+    - su
+    renovate:
+      datasource: github-releases
+      package: Yelp/dumb-init
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url:
+        x86_64: https://github.com/Yelp/dumb-init/releases/download/v${version}/dumb-init_${version}_${arch}
+      type: executable
+
   - name: dyff
     version: 1.5.5
     check: ${binary} version | cut -d' ' -f3
