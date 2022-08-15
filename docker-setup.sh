@@ -351,7 +351,7 @@ if ${info}; then
         exit 1
     fi
     for name in "${!requested_names[@]}"; do
-        jq --arg name "${name}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}"
+        jq --arg name "${name}" '.tools[] | select(.name == $name) | del(.download,.dockerfile,.install,.post_install)' "${docker_setup_tools_file}"
     done
     exit
 fi
