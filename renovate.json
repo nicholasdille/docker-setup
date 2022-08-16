@@ -1485,6 +1485,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: kubeaudit\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "Shopify/kubeaudit",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: kubeclarity-cli\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "openclarity/kubeclarity",
