@@ -2609,7 +2609,6 @@ tools:
     tags:
     - category/serverless
     - type/cli
-    - faas
     homepage: https://github.com/openfaas/faas-cli
     description: Official CLI for OpenFaaS
     renovate:
@@ -2630,7 +2629,6 @@ tools:
     tags:
     - category/serverless
     - type/daemon
-    - faas
     homepage: https://github.com/openfaas/faasd
     description: Lightweight & portable faas engine
     renovate:
