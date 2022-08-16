@@ -392,7 +392,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - type/cli
-    - security
+    - category/security
+    - cicd
     homepage: https://github.com/codenotary/cas
     description: Codenotary Community Attestation Service (CAS) for notarization and authentication of digital artifacts
     renovate:
@@ -610,7 +611,7 @@ tools:
     tags:
     - container/runtime
     - type/cli
-    - analysis
+    - troubleshooting
     homepage: https://github.com/Mic92/cntr
     description: Container debugging tool based on FUSE
     renovate:
@@ -1048,8 +1049,10 @@ tools:
     needs:
     - docker
     tags:
-    - type/cli
+    - container/sign
     - category/security
+    - type/cli
+    - cicd
     homepage: https://github.com/sigstore/cosign
     description: Container Signing
     renovate:
@@ -1772,7 +1775,7 @@ tools:
     tags:
     - standard/docker
     - type/tui
-    - analysis
+    - troubleshooting
     - management
     homepage: https://github.com/bcicen/ctop
     description: Top-like interface for container metrics
@@ -1792,6 +1795,7 @@ tools:
     - type/cli
     - category/security
     - sbom
+    - cicd
     homepage: https://github.com/CycloneDX/cyclonedx-cli
     description: CycloneDX CLI tool for SBOM analysis, merging, diffs and format conversions
     renovate:
@@ -1846,6 +1850,7 @@ tools:
     - category/security
     - type/cli
     - kubernetes
+    - cicd
     homepage: https://github.com/datreeio/datree
     description: Prevent Kubernetes misconfigurations from reaching production
     renovate:
@@ -2372,6 +2377,7 @@ tools:
     - type/plugin
     - type/cli
     - sbom
+    - cicd
     homepage: https://github.com/docker/sbom-cli-plugin
     description: Plugin for Docker CLI to support SBOM creation using Syft
     renovate:
@@ -2396,6 +2402,7 @@ tools:
     - category/security
     - type/plugin
     - type/cli
+    - cicd
     homepage: https://github.com/docker/scan-cli-plugin
     description: CLI to run vulnerability detection on your Dockerfiles and Docker images
     renovate:
@@ -2814,8 +2821,9 @@ tools:
     - org/github
     - category/development
     - type/cli
+    - cicd
     homepage: https://github.com/cli/cli
-    description: GitHub’s official command line tool
+    description: GitHub's official command line tool
     renovate:
       datasource: github-releases
       package: cli/cli
@@ -2934,6 +2942,7 @@ tools:
     - org/gitlab
     - category/development
     - type/cli
+    - cicd
     homepage: https://gitlab.com/gitlab-org/cli
     description: CLI tool bringing GitLab to your command line
     renovate:
@@ -3011,6 +3020,7 @@ tools:
     - category/security
     - type/cli
     - sbom
+    - cicd
     homepage: https://github.com/anchore/grype
     description: Vulnerability scanner for container images and filesystems 
     renovate:
@@ -3069,6 +3079,7 @@ tools:
     - category/development
     - type/cli
     - troubleshooting
+    - cicd
     homepage: https://github.com/hadolint/hadolint
     description: Dockerfile linter, validate inline bash
     renovate:
@@ -3215,6 +3226,7 @@ tools:
     - org/github
     - type/cli
     - category/development
+    - cicd
     homepage: https://github.com/github/hub
     description: Command-line tool that makes git easier to use with GitHub
     renovate:
@@ -3819,8 +3831,9 @@ tools:
     - type/cli
     - category/security
     - kubernetes
+    - cicd
     homepage: https://github.com/openclarity/kubeclarity
-    description: tool for detection and management of Software Bill Of Materials and vulnerabilities of container images and filesystems 
+    description: Tool for detection and management of Software Bill Of Materials and vulnerabilities of container images and filesystems 
     renovate:
       datasource: github-releases
       package: openclarity/kubeclarity
@@ -4116,6 +4129,7 @@ tools:
     - type/cli
     - kubernetes
     - management
+    - cicd
     homepage: https://github.com/doitintl/kube-no-trouble
     description: Easily check your clusters for use of deprecated APIs
     renovate:
@@ -4298,6 +4312,7 @@ tools:
     tags:
     - category/development
     - type/cli
+    - cicd
     homepage: https://github.com/zaquestion/lab
     description: Wraps Git or Hub, making it simple to clone, fork, and interact with repositories on GitLab
     renovate:
@@ -4718,6 +4733,7 @@ tools:
     - type/cli
     - type/plugin
     - category/security
+    - container/sign
     homepage: https://github.com/notaryproject/notation
     description: Add signatures as standard items in the registry ecosystem
     renovate:
@@ -4786,6 +4802,7 @@ tools:
     - standard/oci
     - container/image
     - type/cli
+    - state/deprecated
     homepage: https://github.com/opencontainers/image-tools
     description: OCI Image Tooling
     renovate:
@@ -5326,6 +5343,7 @@ tools:
     - category/security
     - type/cli
     - type/daemon
+    - container/sign
     homepage: https://github.com/sigstore/rekor
     description: Software Supply Chain Transparency Log
     renovate:
@@ -5538,6 +5556,7 @@ tools:
     tags:
     - category/development
     - type/cli
+    - cicd
     homepage: https://github.com/fsaintjacques/semver-tool
     description: Semver bash implementation 
     renovate:
@@ -5629,6 +5648,7 @@ tools:
     - type/cli
     - kubernetes
     - management
+    - troubleshooting
     homepage: https://github.com/salesforce/sloop
     description: Kubernetes History Visualization
     renovate:
@@ -5648,6 +5668,7 @@ tools:
     - org/mozilla
     - category/security
     - type/cli
+    - cicd
     homepage: https://github.com/mozilla/sops
     description: Simple and flexible tool for managing secrets
     renovate:
@@ -5825,6 +5846,7 @@ tools:
     tags:
     - category/security
     - sbom
+    - cicd
     homepage: https://github.com/anchore/syft
     description: CLI tool and library for generating a Software Bill of Materials from container images and filesystems
     renovate:
@@ -5848,6 +5870,7 @@ tools:
     tags:
     - category/development
     - type/cli
+    - cicd
     homepage: https://github.com/go-task/task
     description: Task runner and simpler Make alternative written in Go
     renovate:
@@ -5881,6 +5904,7 @@ tools:
     tags:
     - type/cli
     - management
+    - cicd
     homepage: https://github.com/stevegrubb/tasker
     description: Parallelizes tasks from a list on stdin
     renovate:
@@ -5958,7 +5982,9 @@ tools:
     tags:
     - category/security
     - type/cli
-    - analysis
+    - troubleshooting
+    - cicd
+    - sbom
     homepage: https://github.com/aquasecurity/trivy
     description: Scanner for vulnerabilities in container images, file systems, and Git repositories
     renovate:
@@ -5980,6 +6006,7 @@ tools:
     - docker
     tags:
     - kernel/pid
+    - type/cli
     homepage: https://github.com/shadow-maint/shadow
     description: Programs to help use subuids
     renovate:
@@ -6114,6 +6141,7 @@ tools:
     - org/vmware
     - category/development
     - type/cli
+    - cicd
     homepage: https://github.com/vmware-tanzu/carvel-vendir
     description: Easy way to vendor declaratively
     renovate:
