@@ -335,7 +335,7 @@ function install_tool() {
                         exit 1
                     fi
                     local mode
-                    mode="$(jq --raw-output '.mode' <<<"${download_json}")"
+                    mode="$(jq --raw-output 'select(.mode != null) | .mode' <<<"${download_json}")"
                     if test -n "${mode}"; then
                         echo "  mode: ${mode}"
                         chmod ${mode} "${path}"
@@ -504,7 +504,7 @@ function install_tool() {
         jq --raw-output '.content' <<<"${file_json}" >"${path}"
 
         local mode
-        mode="$(jq --raw-output '.mode' <<<"${file_json}")"
+        mode="$(jq --raw-output 'select(.mode != null) | .mode' <<<"${file_json}")"
         if test -n "${mode}"; then
             echo "  mode: ${mode}"
             chmod ${mode} "${path}"
