@@ -152,6 +152,7 @@ tools:
       path: ${prefix}/etc/systemd/system/buildkit.socket
     files:
     - path: ${prefix}/etc/init.d/buildkit
+      mode: "0755"
       content: |
         #!/bin/sh
         set -e
@@ -306,7 +307,6 @@ tools:
     post_install: |
       echo "Patch init script"
       sed -i "s|/usr/local/bin/buildkitd|${relative_target}/bin/buildkitd|" "${prefix}/etc/init.d/buildkit"
-      chmod +x "${prefix}/etc/init.d/buildkit"
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
       if test -z "${prefix}" && has_systemd; then
@@ -723,6 +723,7 @@ tools:
           ]
         }
     - path: ${prefix}/etc/init.d/containerd
+      mode: "0755"
       content: |
         #!/bin/sh
         set -e
@@ -947,8 +948,6 @@ tools:
         capabilities = ["pull", "resolve"]
       EOF
       fi
-      echo "Patch init script"
-      chmod +x "${prefix}/etc/init.d/containerd"
       sed -i "s|CONTAINERD=/usr/local/bin/containerd|CONTAINERD=${relative_target}/bin/containerd|" "${prefix}/etc/init.d/containerd"
       echo "Patch systemd unit"
       sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${relative_target}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
@@ -1914,18 +1913,21 @@ tools:
     - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker
       type: file
       path: contrib/${tool}/sysvinit/debian/docker
+      mode: "0755"
     - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig
       type: file
       path: contrib/${tool}/sysvinit/redhat/docker.sysconfig
     - url: https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker
       type: file
       path: contrib/${tool}/sysvinit/redhat/docker
+      mode: "0755"
     - url: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd
       type: file
       path: contrib/${tool}/openrc/docker.confd
     - url: https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd
       type: file
       path: contrib/${tool}/openrc/docker.initd
+      mode: "0755"
     post_install: |
       echo "Move binaries (@ ${SECONDS} seconds)"
       mv "${target}/libexec/docker/bin/dockerd" "${target}/bin"
@@ -1941,14 +1943,11 @@ tools:
       echo "Patch paths in init scripts (@ ${SECONDS} seconds)"
       sed -i -E "s|^(export PATH=)|\1${relative_target}/libexec/docker/bin:|" "${docker_setup_contrib}/${tool}/sysvinit/debian/docker"
       sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/sysvinit/debian/docker"
-      chmod +x "${docker_setup_contrib}/${tool}/sysvinit/debian/docker"
       sed -i -E "s|(^prog=)|export PATH="${relative_target}/libexec/docker/bin:${relative_target}/sbin:${relative_target}/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker"
       sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker"
-      chmod +x "${docker_setup_contrib}/${tool}/sysvinit/redhat/docker"
       sed -i -E "s|^(command=)|export PATH="${relative_target}/libexec/docker/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/${tool}/openrc/docker.initd"
       sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/openrc/docker.initd"
       sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/${tool}/openrc/docker.confd"
-      chmod +x "${docker_setup_contrib}/${tool}/openrc/docker.initd"
       if test -f "${prefix}/etc/group"; then
           echo "Create group (@ ${SECONDS} seconds)"
           groupadd --prefix "${prefix}" --system --force docker
@@ -2808,6 +2807,7 @@ tools:
       path: ${target}/bin/gitsign-credential-cache
     files:
     - path: ${target}/bin/gitsign.sh
+      mode: "0755"
       content: |
         #!/bin/bash
         set -o errexit
@@ -2826,9 +2826,6 @@ tools:
         export GITSIGN_LOG="${HOME}/tmp/gitsign.log"
 
         exec "${BIN}/${GITSIGN}" "$@"
-    post_install: |
-      echo "Fix permissions on gitsign.sh"
-      chmod +x "${target}/bin/gitsign.sh"
 
   - name: glab
     version: 1.22.0
@@ -4770,13 +4767,12 @@ tools:
     - oci
     files:
     - path: ${target}/libexec/podman/docker
+      mode: "0755"
       content: |
         #!/bin/bash
 
         exec podman "$@"
     post_install: |
-      echo "Fix permissions"
-      chmod +x "${target}/libexec/podman/docker"
       if ! has_tool "docker" && ! tool_will_be_installed "docker"; then
           echo "Installing docker shim for podman"
           ln -sf "${target}/libexec/podman/docker" "${target}/bin/docker"
@@ -4881,6 +4877,7 @@ tools:
         [Install]
         WantedBy=multi-user.target
     - path: ${prefix}/etc/init.d/portainer
+      mode: "0755"
       content: |
         #!/bin/sh
         set -e
@@ -5037,7 +5034,6 @@ tools:
       cp "${target}/bin/docker-compose" "${target}/share/portainer/docker-compose"
       echo "Patch init script"
       sed -i "s|/usr/local/bin/portainer|${relative_target}/bin/portainer|g" "${prefix}/etc/init.d/portainer"
-      chmod +x "${prefix}/etc/init.d/portainer"
       echo "Patch systemd unit"
       sed -i "s|/usr/local/bin/portainer|${relative_target}/bin/portainer|g" "${prefix}/etc/systemd/system/portainer.service"
       if test -z "${prefix}" && has_systemd; then

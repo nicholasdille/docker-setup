@@ -334,6 +334,12 @@ function install_tool() {
                         echo "Failed to download file"
                         exit 1
                     fi
+                    local mode
+                    mode="$(jq --raw-output '.mode' <<<"${download_json}")"
+                    if test -n "${mode}"; then
+                        echo "  mode: ${mode}"
+                        chmod ${mode} "${path}"
+                    fi
                     ;;
 
                 tarball)
@@ -496,6 +502,13 @@ function install_tool() {
         mkdir -p "$(dirname "${path}")"
 
         jq --raw-output '.content' <<<"${file_json}" >"${path}"
+
+        local mode
+        mode="$(jq --raw-output '.mode' <<<"${file_json}")"
+        if test -n "${mode}"; then
+            echo "  mode: ${mode}"
+            chmod ${mode} "${path}"
+        fi
 
         files_index=$((files_index + 1))
     done
