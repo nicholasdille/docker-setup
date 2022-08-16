@@ -1982,6 +1982,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: pwru\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cilium/pwru",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: qemu\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nicholasdille/qemu-static",

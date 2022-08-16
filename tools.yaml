@@ -5398,6 +5398,20 @@ tools:
           ${binary} plugins install kubernetes
       fi
 
+  - name: pwru
+    version: 0.0.4
+    check: ${binary} --version | cut -d' ' -f2 | tr -d v
+    tags:
+    - type/cli
+    - component/network
+    renovate:
+      datasource: github-releases
+      package: cilium/pwru
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url: https://github.com/cilium/pwru/releases/download/v${version}/pwru-linux-${alt_arch}.tar.gz
+      type: tarball
+
   - name: qemu
     version: 7.0.0
     binary: qemu-img
