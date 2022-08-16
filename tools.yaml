@@ -3257,6 +3257,22 @@ tools:
       type: file
       path: ${target}/share/zsh/vendor-completions/_helmfile
 
+  - name: helmify
+    version: 0.3.18
+    check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+    tags:
+    - type/cli
+    - kubernetes
+    renovate:
+      datasource: github-releases
+      package: arttor/helmify
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url:
+        x86_64: https://github.com/arttor/helmify/releases/download/v${version}/helmify_${version}_Linux_64-bit.tar.gz
+        aarch64: https://github.com/arttor/helmify/releases/download/v${version}/helmify_${version}_Linux_arm64.tar.gz
+      type: tarball
+
   - name: hub
     version: 2.14.2
     check: ${binary} --version | grep ^hub | cut -d' ' -f3
