@@ -494,17 +494,6 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
-        "name: cni-isolation\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "AkihiroSuda/cni-isolation",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools.yaml$"
-      ],
-      "matchStrings": [
         "name: cntr\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "Mic92/cntr",
@@ -945,6 +934,17 @@
       ],
       "depNameTemplate": "stephenc/envsub",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
+        "name: etcd\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "etcd-io/etcd",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [

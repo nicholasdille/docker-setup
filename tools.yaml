@@ -2600,6 +2600,25 @@ tools:
       cp /usr/local/cargo/bin/envsub /target/bin/
       EOF
 
+  - name: etcd
+    version: 3.4.20
+    check: ${binary} --version | grep ^etcd | cut -d' ' -f3
+    tags:
+    - type/cli
+    - type/daemon
+    - kubernetes
+    renovate:
+      datasource: github-releases
+      package: etcd-io/etcd
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url: https://github.com/etcd-io/etcd/releases/download/v${version}/etcd-v${version}-linux-${alt_arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - etcd-v${version}-linux-${alt_arch}/etcd
+      - etcd-v${version}-linux-${alt_arch}/etcdctl
+
   - name: faas-cli
     version: 0.14.5
     check: ${binary} version | grep "version:" | cut -d' ' -f3
