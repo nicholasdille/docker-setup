@@ -3658,6 +3658,39 @@ tools:
       files:
       - kbrew
 
+  - name: kcp
+    version: 0.7.5
+    check: ${binary} --version | cut -d' ' -f3 | cut -dv -f3
+    tags:
+    - type/cli
+    - type/daemon
+    - type/plugin
+    - kubernetes
+    renovate:
+      datasource: github-releases
+      package: kcp-dev/kcp
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url: https://github.com/kcp-dev/kcp/releases/download/v${version}/kcp_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - bin/kcp
+    - url: https://github.com/kcp-dev/kcp/releases/download/v${version}/kubectl-kcp-plugin_${version}_linux_${alt_arch}.tar.gz
+      type: tarball
+      strip: 1
+      files:
+      - bin/kubectl-kcp
+      - bin/kubectl-ws
+      - bin/kubectl-workspaces
+    post_install: |
+      echo "Install completion"
+      for binary_name in kcp kubectl-kcp kubectl-ws kubectl-workspaces; do
+          ${binary_name} completion bash | grep -v "^Succeeded$" >"${target}/share/bash-completion/completions/${binary_name}"
+          ${binary_name} completion fish | grep -v "^Succeeded$" >"${target}/share/fish/vendor_completions.d/${binary_name}.fish"
+          ${binary_name} completion zsh  | grep -v "^Succeeded$" >"${target}/share/zsh/vendor-completions/_${binary_name}"
+      done
+
   - name: kind
     version: 0.14.0
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
