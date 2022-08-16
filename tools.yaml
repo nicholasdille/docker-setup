@@ -3838,6 +3838,20 @@ tools:
       ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: kube-score
+    version: 1.14.0
+    check: ${binary} version | cut -d' ' -f3 | tr -d ,
+    tags:
+    - type/cli
+    - kubernetes
+    renovate:
+      datasource: github-releases
+      package: zegl/kube-score
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url: https://github.com/zegl/kube-score/releases/download/v${version}/kube-score_${version}_linux_${alt_arch}
+      type: executable
+
   - name: kubeadm
     version: 1.24.3
     check: ${binary} version --output short | tr -d v
