@@ -2601,7 +2601,7 @@ tools:
       EOF
 
   - name: etcd
-    version: 3.4.20
+    version: 3.5.4
     check: ${binary} --version | grep ^etcd | cut -d' ' -f3
     tags:
     - type/cli
