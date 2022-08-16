@@ -2,7 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
-    ":label(type/renovate)",
     ":docker",
     "docker:enableMajor",
     "docker:pinDigests",
@@ -36,27 +35,32 @@
   "recreateClosed": false,
   "major": {
     "labels": [
-      "bump/major"
+      "bump/major",
+      "type/renovate"
     ]
   },
   "minor": {
     "labels": [
-      "bump/minor"
+      "bump/minor",
+      "type/renovate"
     ]
   },
   "patch": {
     "labels": [
-      "bump/patch"
+      "bump/patch",
+      "type/renovate"
     ]
   },
   "pin": {
     "labels": [
-      "bump/pin"
+      "bump/pin",
+      "type/renovate"
     ]
   },
   "digest": {
     "labels": [
-      "bump/digest"
+      "bump/digest",
+      "type/renovate"
     ]
   },
   "packageRules": [
