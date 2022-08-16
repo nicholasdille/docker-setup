@@ -1869,6 +1869,22 @@ tools:
       ${binary} completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
+  - name: dbui
+    version: 0.7.0
+    tags:
+    - component/database
+    - type/tui
+    renovate:
+      datasource: github-releases
+      package: KenanBek/dbui
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url:
+        x86_64: https://github.com/KenanBek/dbui/releases/download/v${version}/dbui_Linux_${arch}.tar.gz
+      type: tarball
+      files:
+      - dbui
+
   - name: diun
     version: 4.22.0
     check: ${binary} --version
