@@ -3154,7 +3154,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: hcloud
-    version: 1.30.2
+    version: 1.30.3
     check: ${binary} version | cut -d' ' -f2
     tags:
     - cloud/hetzner
