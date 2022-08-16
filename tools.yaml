@@ -1444,7 +1444,7 @@ tools:
       type: executable
 
   - name: hcloud
-    version: 1.30.2
+    version: 1.30.3
     check: ${binary} version | cut -d' ' -f2
     tags:
     - cloud
