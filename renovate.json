@@ -2282,6 +2282,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: ttyd\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "tsl0922/ttyd",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: uidmap\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "shadow-maint/shadow",

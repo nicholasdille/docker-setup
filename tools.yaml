@@ -6144,6 +6144,18 @@ tools:
       files:
       - trivy
 
+  - name: ttyd
+    version: 1.7.0
+    check: ${binary} --version | cut -d' ' -f3 | cut -d- -f1
+    tags:
+    - type/daemon
+    renovate:
+      datasource: github-releases
+      package: tsl0922/ttyd
+    download:
+    - url: https://github.com/tsl0922/ttyd/releases/download/${version}/ttyd.${arch}
+      type: executable
+
   - name: uidmap
     version: 4.11.1
     binary: newuidmap
