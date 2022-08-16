@@ -1035,6 +1035,16 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: fzf\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "junegunn/fzf",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: gh\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "cli/cli",

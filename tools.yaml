@@ -2762,6 +2762,18 @@ tools:
     - url: https://github.com/weaveworks/footloose/releases/download/${version}/footloose-${version}-linux-${arch}
       type: executable
 
+  - name: forgit
+    version: master
+    needs:
+    - fzf
+    tags:
+    - type/cli
+    - category/development
+    download:
+    - url: https://github.com/wfxr/forgit/raw/${version}/forgit.plugin.zsh
+      type: file
+      path: ${prefix}/etc/profile.d/forgit.sh
+
   - name: fuse-overlayfs
     version: 1.9
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
@@ -2827,6 +2839,18 @@ tools:
           echo "Reload systemd"
           systemctl daemon-reload
       fi
+
+  - name: fzf
+    version: 0.32.1
+    check: ${binary} --version | cut -d' ' -f1
+    tags:
+    - type/cli
+    renovate:
+      datasource: github-releases
+      package: junegunn/fzf
+    download:
+    - url: https://github.com/junegunn/fzf/releases/download/${version}/fzf-${version}-linux_${alt_arch}.tar.gz
+      type: tarball
 
   - name: gh
     version: 2.14.4
