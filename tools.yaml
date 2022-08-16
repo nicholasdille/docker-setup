@@ -1103,7 +1103,6 @@ tools:
     - standard/cri
     - container/runtime
     - type/daemon
-    - docker
     - kubernetes
     homepage: https://github.com/Mirantis/cri-dockerd
     description: ""
@@ -1771,6 +1770,7 @@ tools:
     version: 0.7.7
     check: ${binary} -v | cut -d, -f1 | cut -d' ' -f3
     tags:
+    - standard/docker
     - type/tui
     - analysis
     - management
@@ -1891,6 +1891,7 @@ tools:
     - docker
     tags:
     - standard/oci
+    - standard/docker
     - container/build
     - type/tui
     - troubleshooting
@@ -2244,7 +2245,6 @@ tools:
     - container/runtime
     - category/security
     - cloud/azure
-    - docker
     homepage: https://github.com/chrismellard/docker-credential-acr-env
     description: Alternative to the existing file store based ACR helper
     renovate:
@@ -2265,7 +2265,6 @@ tools:
     - container/runtime
     - category/security
     - cloud/aws
-    - docker
     homepage: https://github.com/awslabs/amazon-ecr-credential-helper
     description: Automatically gets credentials for Amazon ECR on docker push/pull
     renovate:
@@ -2285,7 +2284,6 @@ tools:
     - container/runtime
     - category/security
     - cloud/google
-    - docker
     homepage: https://github.com/GoogleCloudPlatform/docker-credential-gcr
     description: Docker credential helper for GCR users
     renovate:
@@ -2306,9 +2304,9 @@ tools:
     - docker
     tags:
     - org/docker
+    - standard/docker
     - container/runtime
     - category/security
-    - docker
     homepage: https://github.com/docker/docker-credential-helpers
     description: Programs to keep Docker login credentials safe
     renovate:
@@ -2329,7 +2327,6 @@ tools:
     - container/runtime
     - category/security
     - cloud/google
-    - docker
     homepage: https://github.com/docker-credential-magic/docker-credential-magic
     description: Magic shim for Docker credential helpers
     renovate:
@@ -2418,7 +2415,6 @@ tools:
     - standard/docker
     - container/runtime
     - type/daemon
-    - docker
     - management
     homepage: https://github.com/stepchowfun/docuum
     description: Performs least recently used eviction of Docker images
@@ -2444,9 +2440,10 @@ tools:
     needs:
     - docker
     tags:
+    - standard/docker
     - container/runtime
     - type/tui
-    - docker
+    - management
     - troubleshooting
     homepage: https://github.com/moncho/dry
     description: Docker manager for the terminal
@@ -3599,14 +3596,12 @@ tools:
     version: 0.14.0
     check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
     tags:
-    - k8s
-    - kubernetes
-    - docker
-    - management
-    needs:
     - org/cncf
     - standard/docker
+    - type/cli
     - kubernetes
+    needs:
+    - docker
     homepage: https://github.com/kubernetes-sigs/kind
     description: Kubernetes IN Docker - local clusters for testing Kubernetes
     renovate:
@@ -4326,8 +4321,8 @@ tools:
     needs:
     - docker
     tags:
+    - standard/docker
     - type/tui
-    - docker
     - management
     - troubleshooting
     homepage: https://github.com/jesseduffield/lazydocker
@@ -6134,7 +6129,10 @@ tools:
     needs:
     - docker
     tags:
-    - docker
+    - standard/docker
+    - container/image
+    - container/registry
+    - type/daemon
     - management
     homepage: https://github.com/containrrr/watchtower
     description: Process for automating Docker container base image updates
