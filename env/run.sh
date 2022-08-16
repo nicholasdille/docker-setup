@@ -3,6 +3,7 @@ set -o errexit
 
 echo "run.sh: TOOL=${TOOL}"
 
+export tool_max_wait=600
 if test -z "${TOOL}"; then
     docker-setup --no-wait --no-color --no-progressbar --only docker
     docker-setup --no-wait --no-color --no-progressbar --all
