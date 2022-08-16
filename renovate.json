@@ -1122,6 +1122,17 @@
         "^tools.yaml$"
       ],
       "matchStrings": [
+        "name: govc\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vmware/govmomi",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools.yaml$"
+      ],
+      "matchStrings": [
         "name: grype\\n\\s+version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "anchore/grype",

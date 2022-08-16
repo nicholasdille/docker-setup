@@ -3051,6 +3051,25 @@ tools:
     - url: https://github.com/tianon/gosu/releases/download/${version}/gosu-${alt_arch}
       type: executable
 
+  - name: govc
+    version: 0.29.0
+    check: ${binary} version | cut -d' ' -f2
+    tags:
+    - org/vmware
+    - type/cli
+    - vm
+    renovate:
+      datasource: github-releases
+      package: vmware/govmomi
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url:
+        x86_64: https://github.com/vmware/govmomi/releases/download/v${version}/govc_Linux_${arch}.tar.gz
+        aarch64: https://github.com/vmware/govmomi/releases/download/v${version}/govc_Linux_${alt_arch}.tar.gz
+      type: tarball
+      files:
+      - govc
+
   - name: grype
     version: 0.46.0
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
