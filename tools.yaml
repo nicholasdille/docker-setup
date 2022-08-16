@@ -587,25 +587,6 @@ tools:
       cp cnitool /target/bin/
       EOF
 
-  - name: cni-isolation
-    version: 0.0.4
-    binary: ${target}/libexec/cni/isolation
-    tags:
-    - standard/cni
-    - component/network
-    - type/plugin
-    - kubernetes
-    homepage: https://github.com/AkihiroSuda/cni-isolation
-    description: CNI Bridge Isolation Plugin
-    renovate:
-      datasource: github-releases
-      package: AkihiroSuda/cni-isolation
-      extractVersion: ^v(?<version>.+?)$
-    download:
-    - url: https://github.com/AkihiroSuda/cni-isolation/releases/download/v${version}/cni-isolation-${alt_arch}.tgz
-      type: tarball
-      path: ${target}/libexec/cni
-
   - name: cntr
     version: 1.5.1
     tags:
