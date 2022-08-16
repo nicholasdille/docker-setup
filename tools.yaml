@@ -4177,6 +4177,27 @@ tools:
     - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
       type: tarball
 
+  - name: kubescape
+    version: 2.0.167
+    check: ${binary} version | cut -d' ' -f5 | tr -d v
+    tags:
+    - type/cli
+    - category/security
+    - kubernetes
+    renovate:
+      datasource: github-releases
+      package: armosec/kubescape
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url:
+        x86_64: https://github.com/armosec/kubescape/releases/download/v${version}/kubescape-ubuntu-latest
+      type: executable
+    post_install: |
+      echo "Install completion"
+      ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
+      ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
+      ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
+
   - name: kubesec
     version: 2.11.5
     tags:
