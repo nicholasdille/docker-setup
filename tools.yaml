@@ -3123,7 +3123,7 @@ tools:
       - govc
 
   - name: grype
-    version: 0.46.0
+    version: 0.47.0
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
     tags:
     - category/security
