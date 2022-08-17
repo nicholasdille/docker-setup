@@ -6071,7 +6071,7 @@ tools:
       path: ${target}/share/bash-completion/completions/${name}
 
   - name: syft
-    version: 0.53.4
+    version: 0.54.0
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - category/security
