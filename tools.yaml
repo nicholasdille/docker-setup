@@ -3730,7 +3730,7 @@ tools:
       - kbrew
 
   - name: kcp
-    version: 0.7.6
+    version: 0.7.7
     check: ${binary} --version | cut -d' ' -f3 | cut -dv -f3
     tags:
     - type/cli
