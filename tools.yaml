@@ -2689,7 +2689,7 @@ tools:
       type: executable
 
   - name: faasd
-    version: 0.16.2
+    version: 0.16.5
     check: ${binary} version | grep faasd | tr '\t' ' ' | cut -d' ' -f3
     needs:
     - containerd
