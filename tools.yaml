@@ -2140,7 +2140,7 @@ tools:
       - docker-sbom
 
   - name: docker-scan
-    version: 0.17.0
+    version: 0.18.0
     binary: ${target}/libexec/docker/cli-plugins/docker-scan
     needs:
     - docker
