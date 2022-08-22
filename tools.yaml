@@ -5208,7 +5208,7 @@ tools:
       EOF
 
   - name: polaris
-    version: 7.0.1
+    version: 7.0.2
     tags:
     - type/cli
     - kubernetes
