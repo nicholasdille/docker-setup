@@ -3775,7 +3775,7 @@ tools:
       - mp3binder
 
   - name: mutagen
-    version: 0.15.1
+    version: 0.15.2
     check: ${binary} version
     tags:
     - security
@@ -3798,7 +3798,7 @@ tools:
           "--zsh-completion-script=${target}/share/zsh/vendor-completions/_${name}"
 
   - name: mutagen-compose
-    version: 0.15.1
+    version: 0.15.2
     needs:
     - mutagen
     tags:
