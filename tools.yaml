@@ -1691,7 +1691,7 @@ tools:
       - dagger
 
   - name: dasel
-    version: 1.26.0
+    version: 1.26.1
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - conversion
