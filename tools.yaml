@@ -4333,7 +4333,7 @@ tools:
       type: tarball
 
   - name: kubescape
-    version: 2.0.167
+    version: 2.0.168
     check: ${binary} version | cut -d' ' -f5 | tr -d v
     tags:
     - type/cli
