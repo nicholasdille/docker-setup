@@ -4018,7 +4018,7 @@ tools:
       ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kubeclarity-cli
-    version: 2.5.0
+    version: 2.6.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - type/cli
