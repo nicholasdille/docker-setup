@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.2
 
-FROM amazonlinux:2022@sha256:2e7aa9246021b49f25eb4d608b201c5f0d76729b3b96c066349ada3ec0fa5538
+FROM amazonlinux:2022@sha256:496028061202e8a8c2cfce3be1569b67af168a583ddf5e5a6fc9937007042216
 RUN dnf install -y \
         cpio \
  && dnf install -y \
