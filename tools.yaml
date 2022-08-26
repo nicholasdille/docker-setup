@@ -1713,7 +1713,7 @@ tools:
       fi
 
   - name: crictl
-    version: 1.24.2
+    version: 1.25.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - org/cncf
