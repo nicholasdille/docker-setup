@@ -2488,7 +2488,7 @@ tools:
       fi
 
   - name: gitsign
-    version: 0.2.0
+    version: 0.3.0
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - development
