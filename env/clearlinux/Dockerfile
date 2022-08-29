@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.2
 
-FROM clearlinux:latest@sha256:2ff048cc5ead7c511a6590d0a461b16d9d2542f5bad8a3f80b8f66ebac24f0f1
+FROM clearlinux:latest@sha256:5edd490729b4499fca3299130b175d115618315821f7d94dce95f32e38c60ae9
 RUN swupd bundle-add \
         git \
         unzip \
