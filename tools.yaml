@@ -4821,7 +4821,7 @@ tools:
       EOF
 
   - name: trivy
-    version: 0.31.2
+    version: 0.31.3
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - security
