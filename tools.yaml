@@ -2893,7 +2893,7 @@ tools:
       fi
 
   - name: fzf
-    version: 0.32.1
+    version: 0.33.0
     check: ${binary} --version | cut -d' ' -f1
     tags:
     - type/cli
