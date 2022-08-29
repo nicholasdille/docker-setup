@@ -482,7 +482,7 @@ tools:
       type: executable
 
   - name: conmon
-    version: 2.1.3
+    version: 2.1.4
     check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
     needs:
     - shortnames
