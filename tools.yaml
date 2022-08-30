@@ -4813,7 +4813,7 @@ tools:
       - mitmweb
 
   - name: mp3binder
-    version: 5.0.0
+    version: v5.1.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - category/music
