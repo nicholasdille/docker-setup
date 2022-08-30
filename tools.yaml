@@ -609,6 +609,8 @@ tools:
     tags:
     - type/cli
     - kubernetes
+    homepage: https://github.com/open-policy-agent/conftest
+    description: Write tests against structured configuration data
     renovate:
       datasource: github-releases
       package: open-policy-agent/conftest
@@ -1878,6 +1880,8 @@ tools:
     tags:
     - component/database
     - type/tui
+    homepage: https://github.com/KenanBek/dbui
+    description: Universal Database CLI for MySQL, PostgreSQL, and SQLite
     renovate:
       datasource: github-releases
       package: KenanBek/dbui
@@ -1894,6 +1898,8 @@ tools:
     check: ${binary} version
     tags:
     - type/cli
+    homepage: https://github.com/direnv/direnv/
+    description: Unclutter your .profile
     renovate:
       datasource: github-releases
       package: direnv/direnv
@@ -2531,6 +2537,8 @@ tools:
     check: ${binary} --version 2>&1 | cut -d' ' -f2 | tr -d v
     tags:
     - container/init
+    homepage: https://github.com/Yelp/dumb-init
+    description: Minimal init system for Linux containers
     renovate:
       datasource: github-releases
       package: Yelp/dumb-init
@@ -2659,6 +2667,8 @@ tools:
     - type/cli
     - type/daemon
     - kubernetes
+    homepage: https://github.com/etcd-io/etcd
+    description: Distributed reliable key-value store
     renovate:
       datasource: github-releases
       package: etcd-io/etcd
@@ -2821,6 +2831,8 @@ tools:
     tags:
     - type/cli
     - category/development
+    homepage: https://github.com/wfxr/forgit
+    description: Utility tool powered by fzf for using git interactively
     download:
     - url: https://github.com/wfxr/forgit/raw/${version}/forgit.plugin.zsh
       type: file
@@ -2897,6 +2909,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f1
     tags:
     - type/cli
+    homepage: https://github.com/junegunn/fzf
+    description: Command-line fuzzy finder
     renovate:
       datasource: github-releases
       package: junegunn/fzf
@@ -3110,6 +3124,8 @@ tools:
     - org/vmware
     - type/cli
     - vm
+    homepage: https://github.com/vmware/govmomi/
+    description: vSphere CLI built on top of govmomi
     renovate:
       datasource: github-releases
       package: vmware/govmomi
@@ -3334,6 +3350,8 @@ tools:
     tags:
     - type/cli
     - kubernetes
+    homepage: https://github.com/arttor/helmify
+    description: Creates Helm chart from Kubernetes yaml
     renovate:
       datasource: github-releases
       package: arttor/helmify
@@ -3737,6 +3755,8 @@ tools:
     - type/daemon
     - type/plugin
     - kubernetes
+    homepage: https://github.com/kcp-dev/kcp
+    description: Prototype of a multi-tenant Kubernetes control plane
     renovate:
       datasource: github-releases
       package: kcp-dev/kcp
@@ -3948,6 +3968,8 @@ tools:
     tags:
     - type/cli
     - kubernetes
+    homepage: https://github.com/zegl/kube-score
+    description: Kubernetes object analysis with recommendations for improved reliability and security
     renovate:
       datasource: github-releases
       package: zegl/kube-score
@@ -4002,6 +4024,8 @@ tools:
     tags:
     - type/cli
     - category/security
+    homepage: https://github.com/Shopify/kubeaudit
+    description: Audit your Kubernetes clusters against common security controls
     renovate:
       datasource: github-releases
       package: Shopify/kubeaudit
@@ -4339,6 +4363,8 @@ tools:
     - type/cli
     - category/security
     - kubernetes
+    homepage: https://github.com/kubescape/kubescape
+    description: Risk analysis, security compliance, RBAC visualizer and image vulnerabilities scanning
     renovate:
       datasource: github-releases
       package: armosec/kubescape
@@ -5164,6 +5190,8 @@ tools:
     - type/cli
     - type/daemon
     - rootless
+    homepage: https://github.com/containers/podman
+    description: Shim to call Podman instead of Docker
     files:
     - path: ${target}/libexec/podman/docker
       mode: "0755"
@@ -5475,6 +5503,8 @@ tools:
     tags:
     - type/cli
     - component/network
+    homepage: https://github.com/cilium/pwru
+    description: eBPF-based Linux kernel networking debugger
     renovate:
       datasource: github-releases
       package: cilium/pwru
@@ -6250,6 +6280,8 @@ tools:
     check: ${binary} --version | cut -d' ' -f3 | cut -d- -f1
     tags:
     - type/daemon
+    homepage: https://github.com/tsl0922/ttyd
+    description: Share your terminal over the web
     renovate:
       datasource: github-releases
       package: tsl0922/ttyd
