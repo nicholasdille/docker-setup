@@ -2719,10 +2719,10 @@ tools:
       type: executable
     - url: https://github.com/openfaas/faasd/raw/${version}/hack/faasd.service
       type: file
-      target: ${prefix}/etc/systemd/system/faasd.service
+      path: ${prefix}/etc/systemd/system/faasd.service
     - url: https://github.com/openfaas/faasd/raw/${version}/hack/faasd-provider.service
       type: file
-      target: ${prefix}/etc/systemd/system/faasd-provider.service
+      path: ${prefix}/etc/systemd/system/faasd-provider.service
     post_install: |
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/faasd|ExecStart=${relative_target}/bin/faasd|" "${prefix}/etc/systemd/system/faasd.service"
