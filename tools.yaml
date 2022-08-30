@@ -5891,6 +5891,22 @@ tools:
         x86_64: https://github.com/salesforce/sloop/releases/download/v1.1/sloop_1.1_linux_amd64.tar.gz
       type: tarball
 
+  - name: slsa-verifier
+    version: 1.0.3
+    tags:
+    - category/security
+    - type/cli
+    homepage: https://github.com/slsa-framework/slsa-verifier
+    description: Implementation for verifying SLSA provenance
+    renovate:
+      datasource: github-releases
+      package: slsa-framework/slsa-verifier
+      extractVersion: ^v(?<version>.+?)$
+    download:
+    - url:
+        x86_64: https://github.com/slsa-framework/slsa-verifier/releases/download/v${version}/slsa-verifier-linux-${alt_arch}
+      type: executable
+
   - name: sops
     version: 3.7.3
     check: ${binary} --version | head -n 1 | cut -d' ' -f2
