@@ -5922,7 +5922,7 @@ tools:
       type: tarball
 
   - name: slsa-verifier
-    version: 1.0.3
+    version: 1.3.0
     tags:
     - category/security
     - type/cli
