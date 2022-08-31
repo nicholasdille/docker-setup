@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.2
+#syntax=docker/dockerfile:1.4.3
 
 FROM clearlinux:latest@sha256:5edd490729b4499fca3299130b175d115618315821f7d94dce95f32e38c60ae9
 RUN swupd bundle-add \
