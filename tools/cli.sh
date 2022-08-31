@@ -28,6 +28,9 @@ function generate() {
 command=$1
 shift
 case "${command}" in
+    version)
+        echo "docker-setup version ${docker_setup_version}"
+        ;;
     ls)
         jq --raw-output '.tools[].name' tools.json
         ;;
