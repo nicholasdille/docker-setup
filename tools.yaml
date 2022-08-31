@@ -323,7 +323,7 @@ tools:
       EOF
 
   - name: cas
-    version: 1.0.2
+    version: 1.0.3
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - security
