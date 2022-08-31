@@ -358,7 +358,7 @@ tools:
       fi
 
   - name: bypass4netns
-    version: 0.2.2
+    version: 0.2.3
     needs:
     - docker
     - slirp4netns
