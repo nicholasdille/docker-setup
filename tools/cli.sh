@@ -6,6 +6,45 @@ if ! test -f tools.json; then
 fi
 
 docker_setup_version=oras
+docker_setup_tools_file="${docker_setup_cache}/tools.json"
+if test -f "${PWD}/tools.json"; then
+    docker_setup_tools_file="${PWD}/tools.json"
+fi
+if ! test -f "${docker_setup_tools_file}"; then
+    echo "ERROR: Missing tools.json (${docker_setup_tools_file})"
+    exit 1
+fi
+
+function get_tools() {
+    jq --raw-output '.tools[] | .name' "${docker_setup_tools_file}"
+}
+
+declare -a tools
+mapfile -t tools < <(get_tools)
+declare -A tools_install
+declare -a tools_ordered
+
+function resolve_dependencies() {
+    local tool=$1
+
+    if test -z "${tools_install[${tool}]}"; then
+        echo "Resolving dependencies of ${tool}"
+
+        local tool_deps
+        tool_deps="$(jq --raw-output '.tools[] | select(.needs != null) | .needs[]' ${tool}/manifest.json | xargs echo)"
+
+        local dep
+        for dep in ${tool_deps}; do
+            echo "Processing dependency ${dep} of ${tool}"
+            if test -z "${tools_install[${dep}]}"; then
+                echo "Adding dependency ${dep} of ${tool}"
+                resolve_dependencies "${dep}"
+                tools_ordered+=( "${dep}" )
+                tool_install["${dep}"]=true
+            fi
+        done
+    fi
+}
 
 function generate() {
     CONTENT="$(
@@ -53,8 +92,13 @@ case "${command}" in
             echo "No image name specified"
             exit 1
         fi
-        # TODO: Resolve dependencies
-        generate "$@" \
+        for tool in "$@"; do
+            echo "Processing dependencies of ${tool}"
+            resolve_dependencies "${tool}"
+            tools_ordered+=( "${tool}" )
+            tool_install["${tool}"]=true
+        done
+        generate "${tools_ordered[@]}" \
         | docker buildx build --tag "${image}" --load -
         ;;
 
@@ -65,8 +109,13 @@ case "${command}" in
             echo "No image name specified"
             exit 1
         fi
-        # TODO: Resolve dependencies
-        generate "$@" \
+        for tool in "$@"; do
+            echo "Processing dependencies of ${tool}"
+            resolve_dependencies "${tool}"
+            tools_ordered+=( "${tool}" )
+            tool_install["${tool}"]=true
+        done
+        generate "${tools_ordered[@]}" \
         | docker buildx build -
         ;;
 
@@ -105,7 +154,13 @@ case "${command}" in
             echo "No tools specified"
             exit 1
         fi
-        generate "$@"
+        for tool in "$@"; do
+            echo "Processing dependencies of ${tool}"
+            resolve_dependencies "${tool}"
+            tools_ordered+=( "${tool}" )
+            tool_install["${tool}"]=true
+        done
+        generate "${tools_ordered[@]}"
         ;;
 
     *)
