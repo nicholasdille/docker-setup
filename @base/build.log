@@ -1,0 +1,60 @@
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 32B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 resolve image config for docker.io/docker/dockerfile:1.4.2
+#3 DONE 0.5s
+
+#4 docker-image://docker.io/docker/dockerfile:1.4.2@sha256:443aab4ca21183e069e7d8b2dc68006594f40bddf1b15bbd83f5137bd93e80e2
+#4 CACHED
+
+#5 [internal] load .dockerignore
+#5 DONE 0.0s
+
+#6 [internal] load build definition from Dockerfile
+#6 DONE 0.0s
+
+#7 [internal] load metadata for docker.io/library/ubuntu:22.04
+#7 DONE 0.0s
+
+#8 [internal] preparing inline document
+#8 DONE 0.0s
+
+#9 importing cache manifest from ghcr.io/nicholasdille/docker-setup/base:oras
+#9 DONE 0.0s
+
+#10 [internal] preparing inline document
+#10 DONE 0.0s
+
+#11 [base 1/4] FROM docker.io/library/ubuntu:22.04
+#11 DONE 0.0s
+
+#12 [base 3/4] RUN --mount=type=cache,target=/var/lib/apt/lists     --mount=type=cache,target=/var/cache     --mount=type=cache,target=/var/log     --mount=type=cache,target=/usr/lib/python3/dist-packages/__pycache__     <<EOF (apt-get update...)
+#12 CACHED
+
+#13 [base 2/4] COPY <<no-recommends <<no-suggests /etc/apt/apt.conf.d/
+#13 CACHED
+
+#14 [base 4/4] RUN <<EOF (mkdir -p ...)
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 writing image sha256:e176bc6db47d6e39794fcb2d98abd941f786e3be32e4a91f156ab68a7ce2620e done
+#15 naming to ghcr.io/nicholasdille/docker-setup/base:oras done
+#15 DONE 0.0s
+
+#16 pushing ghcr.io/nicholasdille/docker-setup/base:oras with docker
+#16 pushing layer 98030ec6e951
+#16 pushing layer 75e37240971d
+#16 pushing layer 3c7998f31820
+#16 pushing layer a790f937a6ae
+#16 pushing layer 98030ec6e951 1.9s done
+#16 pushing layer 75e37240971d 1.9s done
+#16 pushing layer 3c7998f31820 1.9s done
+#16 pushing layer a790f937a6ae 1.9s done
+#16 DONE 1.9s
