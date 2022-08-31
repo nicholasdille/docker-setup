@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.2
+#syntax=docker/dockerfile:1.4.3
 
 FROM opensuse/tumbleweed:latest@sha256:99be5b38dcb006c358ec717b7839b424c6445e173d9831e73bbed02f3db0a38d
 RUN zypper install -y \
