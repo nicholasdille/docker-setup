@@ -1,5 +1,9 @@
-name: trivy
-version: 0.30.4
+name: tool_name
+version: 0.1.2
+dependencies:
+- docker
 tags:
-- security
-- analysis
+- tag1
+- tag2
+homepage: https://www.google.de
+description: Some description
