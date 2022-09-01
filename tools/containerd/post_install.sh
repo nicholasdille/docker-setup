@@ -29,7 +29,6 @@ EOF
 fi
 
 echo "Patch init script"
-chmod +x "${prefix}/etc/init.d/containerd"
 sed -i "s|CONTAINERD=/usr/local/bin/containerd|CONTAINERD=${relative_target}/bin/containerd|" "${prefix}/etc/init.d/containerd"
 echo "Patch systemd unit"
 sed -i "s|ExecStart=/usr/local/bin/containerd|ExecStart=${relative_target}/bin/containerd|" "${prefix}/etc/systemd/system/containerd.service"
