@@ -163,7 +163,8 @@ case "${command}" in
         ;;
 
     *)
-        echo "Unknown command <${command}>"
+        echo "ERROR: Unknown or empty command <${command}>"
+        echo "       Supported commands are: version, ls, info, "
         exit 1
         ;;
 esac
