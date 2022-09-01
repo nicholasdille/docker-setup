@@ -98,10 +98,15 @@ case "${command}" in
         ;;
 
     install-from-image)
-        image=$1
+        target=$1
         shift
-        if test -z "${image}"; then
-            echo "No image name specified"
+        if test -z "${target}"; then
+            echo "No target specified"
+            exit 1
+        fi
+        echo "Using target ${target}"
+        if test "$#" == 0; then
+            echo "No tools specified"
             exit 1
         fi
         for tool in "$@"; do
@@ -110,7 +115,7 @@ case "${command}" in
             tool_install["${tool}"]=true
         done
         generate "${tools_ordered[@]}" \
-        | docker buildx build -
+        | docker buildx build --output "${target}" -
         ;;
 
     install-from-registry)
