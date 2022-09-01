@@ -144,7 +144,7 @@ case "${command}" in
             | while read DIGEST; do
                 echo "Unpacking ${DIGEST}"
                 regctl blob get "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" "${DIGEST}" \
-                | tar -xz --directory=${target} --no-same-owner
+                | tar --extract --gzip --directory=${target} --no-same-owner
             done
         done
         ;;
