@@ -28,16 +28,12 @@ function resolve_dependencies() {
     local tool=$1
 
     if test -z "${tools_install[${tool}]}"; then
-        echo "Resolving dependencies of ${tool}"
-
         local tool_deps
-        tool_deps="$(jq --raw-output '.tools[] | select(.needs != null) | .needs[]' ${tool}/manifest.json | xargs echo)"
+        tool_deps="$(jq --raw-output '.tools[] | select(.dependencies != null) | .dependencies[]' tools/${tool}/manifest.json | xargs echo)"
 
         local dep
         for dep in ${tool_deps}; do
-            echo "Processing dependency ${dep} of ${tool}"
             if test -z "${tools_install[${dep}]}"; then
-                echo "Adding dependency ${dep} of ${tool}"
                 resolve_dependencies "${dep}"
                 tools_ordered+=( "${dep}" )
                 tool_install["${dep}"]=true
@@ -93,7 +89,6 @@ case "${command}" in
             exit 1
         fi
         for tool in "$@"; do
-            echo "Processing dependencies of ${tool}"
             resolve_dependencies "${tool}"
             tools_ordered+=( "${tool}" )
             tool_install["${tool}"]=true
@@ -110,7 +105,6 @@ case "${command}" in
             exit 1
         fi
         for tool in "$@"; do
-            echo "Processing dependencies of ${tool}"
             resolve_dependencies "${tool}"
             tools_ordered+=( "${tool}" )
             tool_install["${tool}"]=true
@@ -155,7 +149,6 @@ case "${command}" in
             exit 1
         fi
         for tool in "$@"; do
-            echo "Processing dependencies of ${tool}"
             resolve_dependencies "${tool}"
             tools_ordered+=( "${tool}" )
             tool_install["${tool}"]=true
