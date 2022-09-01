@@ -78,7 +78,7 @@ case "${command}" in
             echo "No tool name specified"
             exit 1
         fi
-        cat "${tool}/manifest.yaml"
+        cat "tools/${tool}/manifest.yaml"
         echo
         ;;
 
