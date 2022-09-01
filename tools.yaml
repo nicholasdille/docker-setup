@@ -18,7 +18,7 @@ tools:
       - act
 
   - name: arkade
-    version: 0.8.38
+    version: 0.8.39
     check: ${binary} version | grep "version" | cut -d' ' -f2
     tags:
     - k8s
