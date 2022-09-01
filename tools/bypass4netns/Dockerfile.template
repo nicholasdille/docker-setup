@@ -1,0 +1,24 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.18.4 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    libseccomp-dev
+EOF
+WORKDIR /go/src/github.com/rootless-containers/bypass4netns
+ARG name=foo
+ARG version=0.0.1
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/bypass4netns .
+  make static
+  cp bypass4netns /usr/local/bin/
+  cp bypass4netnsd /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+COPY --from=build /usr/local/bin/bypass4netns ${prefix}${target}/bin/
+COPY --from=build /usr/local/bin/bypass4netnsd ${prefix}${target}/bin/

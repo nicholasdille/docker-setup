@@ -1,0 +1,18 @@
+name: artifactory-cleanup
+version: 1.6.0
+check: ${binary} --version
+tags:
+- type/cli
+- management
+- storage
+homepage: https://github.com/crazy-max/artifactory-cleanup
+description: Cleanup artifacts on Jfrog Artifactory with advanced settings
+renovate:
+  datasource: github-releases
+  package: crazy-max/artifactory-cleanup
+  extractVersion: ^v(?<version>.+?)$
+download:
+- url: https://github.com/crazy-max/artifactory-cleanup/releases/download/v${version}/artifactory-cleanup_${version}_linux_${alt_arch}.tar.gz
+  type: tarball
+  files:
+  - artifactory-cleanup

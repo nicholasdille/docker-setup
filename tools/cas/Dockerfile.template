@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=foo
+ARG version=0.0.1
+
+RUN <<EOF
+curl -sLo "${prefix}${target}/bin/cas" \
+    "https://github.com/codenotary/cas/releases/download/v${version}/cas-v${version}-linux-${alt_arch}-static"
+chmod +x "${prefix}${target}/bin/cas"
+"${prefix}${target}/bin/cas" completion bash >"${prefix}${target}/share/bash-completion/completions/cas"
+"${prefix}${target}/bin/cas" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/cas.fish"
+"${prefix}${target}/bin/cas" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_cas"
+EOF

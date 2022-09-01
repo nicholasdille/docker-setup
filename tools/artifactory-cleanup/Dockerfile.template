@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=foo
+ARG version=0.0.1
+
+RUN <<EOF
+curl -sL "https://github.com/crazy-max/artifactory-cleanup/releases/download/v${version}/artifactory-cleanup_${version}_linux_${alt_arch}.tar.gz" \
+| tar -xz --directory="${prefix}${target}/bin" --no-same-owner artifactory-cleanup
+EOF

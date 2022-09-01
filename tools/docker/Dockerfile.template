@@ -9,9 +9,6 @@ ARG version=20.10.17
 RUN <<EOF
 mkdir -p \
     "${prefix}${target}/libexec/docker/bin" \
-    "${prefix}${target}/share/bash-completion/completions" \
-    "${prefix}${target}/share/fish/vendor_completions.d" \
-    "${prefix}${target}/share/zsh/vendor-completions" \
     "${prefix}/etc/systemd/system" \
     "${docker_setup_contrib}/docker/sysvinit/debian" \
     "${docker_setup_contrib}/docker/sysvinit/redhat" \

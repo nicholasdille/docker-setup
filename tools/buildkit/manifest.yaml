@@ -1,0 +1,16 @@
+name: buildkit
+version: 0.10.4
+binary: buildkitd
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+- org/moby
+- standard/oci
+- container/build
+- type/cli
+- type/daemon
+homepage: https://github.com/moby/buildkit
+description: Concurrent, cache-efficient, and Dockerfile-agnostic builder toolkit
+renovate:
+  datasource: github-releases
+  package: moby/buildkit
+  extractVersion: ^v(?<version>.+?)$

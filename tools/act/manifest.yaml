@@ -1,0 +1,17 @@
+name: act
+version: 0.2.31
+check: ${binary} --version | cut -d' ' -f3
+dependencies:
+- docker
+tags:
+- standard/docker
+- category/development
+- type/cli
+- testing
+- cicd
+homepage: https://github.com/nektos/act
+description: Run your GitHub Actions locally
+renovate:
+  datasource: github-releases
+  package: nektos/act
+  extractVersion: ^v(?<version>.+?)$

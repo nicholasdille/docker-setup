@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=foo
+ARG version=0.0.1
+
+RUN <<EOF
+curl -sL "https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah-${alt_arch}.tar.gz" \
+| tar -xz --directory="${prefix}${target}" --no-same-owner
+EOF

@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=act
+ARG version=0.2.31
+
+RUN <<EOF
+curl -sL "https://github.com/nektos/act/releases/download/v${version}/act_Linux_${arch}.tar.gz" \
+| tar -xz --directory="${prefix}${target}/bin" --no-same-owner act
+EOF

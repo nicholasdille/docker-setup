@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name=foo
+ARG version=0.0.1
+
+RUN <<EOF
+curl -sLo "${prefix}${target}/bin/catatonit" \
+    "https://github.com/openSUSE/catatonit/releases/download/v${version}/catatonit.${arch}"
+chmod +x "${prefix}${target}/bin/catatonit"
+EOF

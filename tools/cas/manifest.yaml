@@ -1,0 +1,13 @@
+name: cas
+version: 1.0.3
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+- type/cli
+- category/security
+- cicd
+homepage: https://github.com/codenotary/cas
+description: Codenotary Community Attestation Service (CAS) for notarization and authentication of digital artifacts
+renovate:
+  datasource: github-releases
+  package: codenotary/cas
+  extractVersion: ^v(?<version>.+?)$
