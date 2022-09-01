@@ -67,7 +67,8 @@ case "${command}" in
         echo "docker-setup version ${docker_setup_version}"
         ;;
     ls)
-        jq --raw-output '.tools[].name' tools.json
+        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' tools.json \
+        | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
         ;;
 
     info)
