@@ -2360,7 +2360,7 @@ tools:
     version: 0.6.4
     binary: docker-credential-pass
     needs:
-    - standard/docker
+    - docker
     - docker
     tags:
     - org/docker
