@@ -1,4 +1,11 @@
 name: go-md2man
 version: 2.0.2
 tags:
+- type/cli
 - markdown
+homepage: https://github.com/cpuguy83/go-md2man
+description: Converts markdown into roff (man pages)
+renovate:
+  datasource: github-releases
+  package: nicholasdille/go-md2man-static
+  extractVersion: ^v(?<version>.+?)$

@@ -1,11 +1,21 @@
 name: containerd
 version: 1.6.8
-needs:
+dependencies:
 - runc
 - cni
 - go-md2man
 - crictl
 tags:
-- runtime
-- containerd
-- cri
+- org/cncf
+- org/containerd
+- standard/oci
+- standard/cri
+- type/cli
+- type/daemon
+- container/runtime
+homepage: https://github.com/containerd/containerd
+description: Open and reliable container runtime
+renovate:
+  datasource: github-releases
+  package: containerd/containerd
+  extractVersion: ^v(?<version>.+?)$

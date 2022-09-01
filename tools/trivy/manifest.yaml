@@ -1,5 +1,14 @@
 name: trivy
 version: 0.30.4
 tags:
-- security
-- analysis
+- category/security
+- type/cli
+- troubleshooting
+- cicd
+- sbom
+homepage: https://github.com/aquasecurity/trivy
+description: Scanner for vulnerabilities in container images, file systems, and Git repositories
+renovate:
+  datasource: github-releases
+  package: aquasecurity/trivy
+  extractVersion: ^v(?<version>.+?)$

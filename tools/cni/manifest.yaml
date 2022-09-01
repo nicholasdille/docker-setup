@@ -4,3 +4,9 @@ tags:
 - k8s
 - kubernetes
 - network
+homepage: https://github.com/containernetworking/plugins
+description: Some reference and example networking plugins
+renovate:
+  datasource: github-releases
+  package: containernetworking/plugins
+  extractVersion: ^v(?<version>.+?)$
