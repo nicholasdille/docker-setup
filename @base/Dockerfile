@@ -57,7 +57,11 @@ mkdir -p \
     "${prefix}${target}/share/man/man6" \
     "${prefix}${target}/share/man/man7" \
     "${prefix}${target}/share/man/man8" \
-    "${prefix}${target}/share/man/man9"
+    "${prefix}${target}/share/man/man9" \
+    "${prefix}${target}/share/bash-completion/completions" \
+    "${prefix}${target}/share/fish/vendor_completions.d" \
+    "${prefix}${target}/share/zsh/vendor-completions" \
+    "${prefix}${target}/libexec/docker/cli-plugins"
 EOF
 
 ARG ref=main
