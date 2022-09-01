@@ -23,9 +23,7 @@
     "regex"
   ],
   "baseBranches": [
-    "main",
-    "v1.6",
-    "v1.7"
+    "main"
   ],
   "useBaseBranchConfig": "merge",
   "platformAutomerge": true,
