@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.2
+#syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
 # INSERT FROM

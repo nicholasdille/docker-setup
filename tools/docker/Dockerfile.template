@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.2
+#syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
