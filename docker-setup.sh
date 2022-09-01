@@ -81,7 +81,7 @@ case "${command}" in
         echo
         ;;
 
-    build-image)
+    build)
         image=$1
         shift
         if test -z "${image}"; then
@@ -118,7 +118,7 @@ case "${command}" in
         | docker buildx build --output "${target}" -
         ;;
 
-    install-from-registry)
+    install)
         target=$1
         shift
         if test -z "${target}"; then
