@@ -4,8 +4,8 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=containerd
-ARG version=1.6.8
+ARG name
+ARG version
 
 COPY --link --from=go-md2man / /
 

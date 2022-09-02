@@ -3,7 +3,7 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=foo
-ARG version=0.0.1
+ARG name
+ARG version
 
 RUN true

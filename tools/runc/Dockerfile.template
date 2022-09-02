@@ -4,8 +4,8 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=runc
-ARG version=1.1.3
+ARG name
+ARG version
 
 COPY --link --from=go-md2man / /
 

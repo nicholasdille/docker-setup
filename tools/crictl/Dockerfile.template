@@ -3,8 +3,8 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=crictl
-ARG version=1.24.2
+ARG name
+ARG version
 
 RUN <<EOF
 curl -sL "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz" \

@@ -9,8 +9,8 @@ apt-get -y install --no-install-recommends \
     libseccomp-dev
 EOF
 WORKDIR /go/src/github.com/rootless-containers/bypass4netns
-ARG name=foo
-ARG version=0.0.1
+ARG name
+ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/bypass4netns .
   make static

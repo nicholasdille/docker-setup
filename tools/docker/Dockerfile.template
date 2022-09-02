@@ -3,8 +3,8 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=docker
-ARG version=20.10.17
+ARG name
+ARG version
 
 RUN <<EOF
 mkdir -p \

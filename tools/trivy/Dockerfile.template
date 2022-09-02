@@ -3,8 +3,8 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=trivy
-ARG version=0.30.4
+ARG name
+ARG version
 
 RUN arch=$(uname -m) \
  && if test "${arch}" == "x86_64"; then alt_arch=amd64; alt_arch2=64bit; else alt_arch=arm64; alt_arch2=ARM64; fi \
