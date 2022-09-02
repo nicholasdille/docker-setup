@@ -9,4 +9,5 @@ ARG version
 RUN arch=$(uname -m) \
  && if test "${arch}" == "x86_64"; then alt_arch=amd64; alt_arch2=64bit; else alt_arch=arm64; alt_arch2=ARM64; fi \
  && curl --location --fail https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz | \
-        tar -xzC "${prefix}${target}/bin" "${name}"
+        tar --extract --gzip --directory="${prefix}${target}/bin" \
+              trivy

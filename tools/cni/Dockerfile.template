@@ -9,5 +9,5 @@ ARG version
 RUN <<EOF
 mkdir -p "${prefix}${target}/libexec/cni"
 curl -sL "https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz" \
-| tar -xz --directory="${prefix}${target}/libexec/cni" --no-same-owner
+| tar --extract --gzip --directory="${prefix}${target}/libexec/cni" --no-same-owner
 EOF

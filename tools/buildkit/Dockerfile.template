@@ -10,7 +10,7 @@ COPY init-buildkit "${prefix}/etc/init.d/buildkit"
 
 RUN <<EOF
 curl -sL "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz" \
-| tar -xz --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner
 curl -sLo "${prefix}/etc/systemd/system/buildkit.service" \
     "https://github.com/moby/buildkit/raw/v${version}/examples/systemd/system/buildkit.service"
 curl -sLo "${prefix}/etc/systemd/system/buildkit.socket" \

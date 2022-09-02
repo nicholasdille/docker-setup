@@ -16,7 +16,7 @@ COPY init-containerd "${prefix}/etc/init.d/containerd"
 
 RUN <<EOF
 curl -sL "https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz" \
-| tar -xz --directory="${prefix}${target}" --no-same-owner
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 curl -sLo "${prefix}/etc/systemd/system/containerd.service" \
     "https://github.com/containerd/containerd/raw/v${version}/containerd.service"
 chmod +x "${prefix}/etc/init.d/containerd"

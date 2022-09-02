@@ -8,7 +8,8 @@ ARG version
 
 RUN <<EOF
 curl -sL "https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz" \
-| tar -xz --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner cri-dockerd
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    cri-dockerd
 curl -sLo "${prefix}/etc/systemd/system/cri-docker.service" \
     "https://github.com/Mirantis/cri-dockerd/raw/v${version}/packaging/systemd/cri-docker.service"
 curl -sLo "${prefix}/etc/systemd/system/cri-docker.socket" \

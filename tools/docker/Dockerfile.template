@@ -17,16 +17,16 @@ EOF
 
 RUN <<EOF
 curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-${version}.tgz" \
-| tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
+| tar --extract --gzip --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
 mv "${prefix}${target}/libexec/docker/bin/dockerd"      "${prefix}${target}/bin/"
 mv "${prefix}${target}/libexec/docker/bin/docker"       "${prefix}${target}/bin/"
 mv "${prefix}${target}/libexec/docker/bin/docker-proxy" "${prefix}${target}/bin/"
 curl -sL "https://download.docker.com/linux/static/stable/${arch}/docker-rootless-extras-${version}.tgz" \
-| tar -xz --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
+| tar --extract --gzip --directory="${prefix}${target}/libexec/docker/bin" --no-same-owner --strip-components=1
 mv "${prefix}${target}/libexec/docker/bin/dockerd-rootless.sh"           "${prefix}${target}/bin/"
 mv "${prefix}${target}/libexec/docker/bin/dockerd-rootless-setuptool.sh" "${prefix}${target}/bin/"
 curl -sL "https://github.com/nicholasdille/docker-cli-manpages/releases/download/v${version}/docker-cli-manpages.tar.gz" \
-| tar -xz --directory="${prefix}${target}" --no-same-owner
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 EOF
 
 RUN <<EOF

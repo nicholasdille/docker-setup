@@ -8,6 +8,6 @@ ARG version
 
 RUN <<EOF
 curl -sL "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-${alt_arch}.tar.gz" \
-| tar -xz --directory "${prefix}${target}" --no-same-owner
+| tar --extract --gzip --directory "${prefix}${target}" --no-same-owner
 EOF
 COPY crictl.yaml "${prefix}/etc/"

@@ -14,5 +14,5 @@ COPY storage.conf ${prefix}/etc/containers/storage.conf
 
 RUN <<EOF
 curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz" \
-| tar -xz --directory="${prefix}${target}" --no-same-owner
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 EOF

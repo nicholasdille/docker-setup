@@ -13,7 +13,7 @@ COPY crio.conf ${prefix}/etc/crio.conf
 
 RUN <<EOF
 curl -sL "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz" \
-| tar -xz --directory="${prefix}${target}" --no-same-owner \
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner \
     cri-o/bin/crio \
     cri-o/bin/crio-status
 EOF

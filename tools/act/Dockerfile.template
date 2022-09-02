@@ -8,5 +8,6 @@ ARG version
 
 RUN <<EOF
 curl -sL "https://github.com/nektos/act/releases/download/v${version}/act_Linux_${arch}.tar.gz" \
-| tar -xz --directory="${prefix}${target}/bin" --no-same-owner act
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    act
 EOF
