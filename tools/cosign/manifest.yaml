@@ -1,0 +1,16 @@
+name: cosign
+version: 1.11.1
+check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+dependencies:
+- docker
+tags:
+- container/sign
+- category/security
+- type/cli
+- cicd
+homepage: https://github.com/sigstore/cosign
+description: Container Signing
+renovate:
+  datasource: github-releases
+  package: sigstore/cosign
+  extractVersion: ^v(?<version>.+?)$

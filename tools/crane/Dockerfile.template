@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl -sL "https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz" \
+| tar -xz --directory="${prefix}${target}/bin" --no-same-owner crane
+"${prefix}${target}/bin/crane" completion bash >"${prefix}${target}/share/bash-completion/completions/crane"
+"${prefix}${target}/bin/crane" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/crane.fish"
+"${prefix}${target}/bin/crane" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_crane"
+EOF

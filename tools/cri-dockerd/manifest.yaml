@@ -1,0 +1,19 @@
+name: cri-dockerd
+version: 0.2.5
+check: ${binary} --version 2>&1 | cut -d' ' -f2
+dependencies:
+- docker
+- crictl
+tags:
+- org/mirantis
+- standard/docker
+- standard/cri
+- container/runtime
+- type/daemon
+- kubernetes
+homepage: https://github.com/Mirantis/cri-dockerd
+description: ""
+renovate:
+  datasource: github-releases
+  package: Mirantis/cri-dockerd
+  extractVersion: ^v(?<version>.+?)$
