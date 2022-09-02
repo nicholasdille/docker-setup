@@ -1,0 +1,16 @@
+name: conmon
+version: 2.1.4
+check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
+dependencies:
+- shortnames
+tags:
+- org/redhat
+- standard/oci
+- container/runtime
+- type/cli
+homepage: https://github.com/containers/conmon
+description: OCI container runtime monitor
+renovate:
+  datasource: github-releases
+  package: nicholasdille/conmon-static
+  extractVersion: ^v(?<version>.+?)$

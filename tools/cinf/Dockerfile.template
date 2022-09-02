@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl -sL "https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz" \
+| tar -xz --directory="${prefix}${target}/bin" --no-same-owner cinf
+EOF

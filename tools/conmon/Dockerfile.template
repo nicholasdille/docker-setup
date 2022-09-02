@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY default.yaml ${prefix}/etc/containers/registries.d/default.yaml
+COPY policy.json ${prefix}/etc/containers/policy.json
+COPY policy.conf ${prefix}/etc/containers/policy.conf
+COPY registry.json ${prefix}/etc/containers/registries.json
+COPY storage.conf ${prefix}/etc/containers/storage.conf
+
+RUN <<EOF
+curl -sL "https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz" \
+| tar -xz --directory="${prefix}${target}" --no-same-owner
+EOF

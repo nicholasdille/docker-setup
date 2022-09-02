@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl -sLo "${prefix}${target}/bin/cntr" \
+    "https://github.com/Mic92/cntr/releases/download/${version}/cntr-bin-${version}-${arch}-unknown-linux-musl"
+chmod +x "${prefix}${target}/bin/cntr"
+EOF

@@ -1,0 +1,13 @@
+name: shortnames
+version: 2022.02.08
+binary: false
+tags:
+- org/redhat
+- type/configuration
+homepage: https://github.com/containers/shortnames
+description: Collecting registry alias names for shortnames to fully specified container image names
+renovate:
+  datasource: github-releases
+  package: containers/shortnames
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

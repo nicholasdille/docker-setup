@@ -1,0 +1,12 @@
+name: conftest
+version: 0.34.0
+check: ${binary} --version | grep ^Conftest | cut -d' ' -f2
+tags:
+  - type/cli
+  - kubernetes
+homepage: https://github.com/open-policy-agent/conftest
+description: Write tests against structured configuration data
+renovate:
+  datasource: github-releases
+  package: open-policy-agent/conftest
+  extractVersion: ^v(?<version>.+?)$

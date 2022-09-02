@@ -1,0 +1,11 @@
+name: cntr
+version: 1.5.1
+tags:
+  - container/runtime
+  - type/cli
+  - troubleshooting
+homepage: https://github.com/Mic92/cntr
+description: Container debugging tool based on FUSE
+renovate:
+  datasource: github-releases
+  package: Mic92/cntr
