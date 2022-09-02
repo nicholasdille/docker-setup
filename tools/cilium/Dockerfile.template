@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl -sL "https://github.com/cilium/cilium-cli/releases/download/v${version}/cilium-linux-${alt_arch}.tar.gz" \
+curl --silent --location "https://github.com/cilium/cilium-cli/releases/download/v${version}/cilium-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 "${prefix}${target}/bin/cilium" completion bash >"${prefix}${target}/share/bash-completion/completions/cilium"
 "${prefix}${target}/bin/cilium" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/cilium.fish"

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl -sLo "${prefix}${target}/bin/cosign" \
+curl --silent --location --output "${prefix}${target}/bin/cosign" \
     "https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/cosign"
 "${prefix}${target}/bin/cosign" completion bash >"${prefix}${target}/share/bash-completion/completions/cosign"

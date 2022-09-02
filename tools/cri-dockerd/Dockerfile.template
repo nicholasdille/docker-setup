@@ -7,12 +7,12 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl -sL "https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz" \
+curl --silent --location "https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     cri-dockerd
-curl -sLo "${prefix}/etc/systemd/system/cri-docker.service" \
+curl --silent --location --output "${prefix}/etc/systemd/system/cri-docker.service" \
     "https://github.com/Mirantis/cri-dockerd/raw/v${version}/packaging/systemd/cri-docker.service"
-curl -sLo "${prefix}/etc/systemd/system/cri-docker.socket" \
+curl --silent --location --output "${prefix}/etc/systemd/system/cri-docker.socket" \
     "https://github.com/Mirantis/cri-dockerd/raw/v${version}/packaging/systemd/cri-docker.socket"
 sed -i "s|ExecStart=/usr/bin/cri-dockerd|ExecStart=${target}/bin/cri-dockerd|" "${prefix}/etc/systemd/system/cri-docker.service"
 EOF

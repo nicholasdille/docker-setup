@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl -sLo "${prefix}${target}/bin/clusterctl" \
+curl --silent --location --output "${prefix}${target}/bin/clusterctl" \
     "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/clusterctl"
 "${prefix}${target}/bin/clusterctl" completion bash >"${prefix}${target}/share/bash-completion/completions/clusterctl"

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl -sLo "${prefix}${target}/bin/clusterawsadm" \
+curl --silent --location --output "${prefix}${target}/bin/clusterawsadm" \
     "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/clusterawsadm"
 "${prefix}${target}/bin/clusterawsadm" completion bash >"${prefix}${target}/share/bash-completion/completions/clusterawsadm"

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl -sL "https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz" \
+curl --silent --location "https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     cinf
 EOF
