@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.3
 
-FROM opensuse/leap:15@sha256:df279248ab2807841b021bcc3187f318d4eeb38d641bc10b4cdba512570babac
+FROM opensuse/leap:15@sha256:8f13db0ed93292654df10920c48910c00e3109d3719c9babac7425170d341d50
 RUN zypper install -y \
         curl \
         tar \
