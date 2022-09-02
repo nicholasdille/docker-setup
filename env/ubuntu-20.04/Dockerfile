@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.3
 
-FROM ubuntu:22.04@sha256:86181188d631f0699afaefb177631b21a6d692629679443197472a3df6355012
+FROM ubuntu:22.04@sha256:20fa2d7bb4de7723f542be5923b06c4d704370f0390e4ae9e1c833c8785644c1
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y install --no-install-recommends \
