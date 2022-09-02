@@ -1,0 +1,13 @@
+name: cyclonedx-cli
+version: 0.24.0
+tags:
+- type/cli
+- category/security
+- sbom
+- cicd
+homepage: https://github.com/CycloneDX/cyclonedx-cli
+description: CycloneDX CLI tool for SBOM analysis, merging, diffs and format conversions
+renovate:
+  datasource: github-releases
+  package: CycloneDX/cyclonedx-cli
+  extractVersion: ^v(?<version>.+?)$

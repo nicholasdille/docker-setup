@@ -1,0 +1,12 @@
+name: dasel
+version: 1.26.1
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+  - type/cli
+  - format
+homepage: https://github.com/TomWright/dasel
+description: Select, put and delete data from JSON, TOML, YAML, XML and CSV files
+renovate:
+  datasource: github-releases
+  package: TomWright/dasel
+  extractVersion: ^v(?<version>.+?)$
