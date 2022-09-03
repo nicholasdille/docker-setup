@@ -37,7 +37,7 @@ ENV docker_setup_cache=/var/cache/docker-setup \
 
 RUN <<EOF
 mkdir -p \
-    "${prefix}" \
+    "${prefix}/etc/profile.d" \
     "${prefix}/etc/systemd/system" \
     "${docker_setup_cache}" \
     "${docker_setup_contrib}" \
@@ -46,7 +46,7 @@ mkdir -p \
     "${prefix}${target}/etc" \
     "${prefix}${target}/include" \
     "${prefix}${target}/lib" \
-    "${prefix}${target}/libexec" \
+    "${prefix}${target}/libexec/docker/cli-plugins" \
     "${prefix}${target}/sbin" \
     "${prefix}${target}/var" \
     "${prefix}${target}/share/man/man1" \
@@ -60,8 +60,7 @@ mkdir -p \
     "${prefix}${target}/share/man/man9" \
     "${prefix}${target}/share/bash-completion/completions" \
     "${prefix}${target}/share/fish/vendor_completions.d" \
-    "${prefix}${target}/share/zsh/vendor-completions" \
-    "${prefix}${target}/libexec/docker/cli-plugins"
+    "${prefix}${target}/share/zsh/vendor-completions"
 EOF
 
 ARG ref=main

@@ -1,0 +1,15 @@
+name: gosu
+version: 1.14
+check: ${binary} --version | cut -d' ' -f1
+tags:
+  - container/su
+  - type/cli
+homepage: https://github.com/tianon/gosu
+description: Simple Go-based setuid+setgid+setgroups+exec
+renovate:
+  datasource: github-releases
+  package: tianon/gosu
+  versioning: loose
+download:
+  - url: https://github.com/tianon/gosu/releases/download/${version}/gosu-${alt_arch}
+    type: executable

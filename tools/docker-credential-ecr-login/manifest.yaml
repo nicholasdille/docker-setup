@@ -1,0 +1,15 @@
+name: docker-credential-ecr-login
+version: 0.6.0
+dependencies:
+  - docker
+tags:
+  - standard/docker
+  - container/runtime
+  - category/security
+  - cloud/aws
+homepage: https://github.com/awslabs/amazon-ecr-credential-helper
+description: Automatically gets credentials for Amazon ECR on docker push/pull
+renovate:
+  datasource: github-releases
+  package: awslabs/amazon-ecr-credential-helper
+  extractVersion: ^v(?<version>.+?)$

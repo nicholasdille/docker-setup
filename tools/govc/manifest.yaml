@@ -1,0 +1,13 @@
+name: govc
+version: 0.29.0
+check: ${binary} version | cut -d' ' -f2
+tags:
+  - org/vmware
+  - type/cli
+  - vm
+homepage: https://github.com/vmware/govmomi/
+description: vSphere CLI built on top of govmomi
+renovate:
+  datasource: github-releases
+  package: vmware/govmomi
+  extractVersion: ^v(?<version>.+?)$

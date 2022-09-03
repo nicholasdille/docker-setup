@@ -1,0 +1,17 @@
+name: docker-compose-switch
+version: 1.0.5
+binary: docker-compose
+flags:
+  - not-docker-compose-v1
+tags:
+  - org/docker
+  - standard/docker
+  - category/default
+  - container/compose
+  - type/cli
+homepage: https://github.com/docker/compose-switch
+description: Replacement to the Compose v1 executable
+renovate:
+  datasource: github-releases
+  package: docker/compose-switch
+  extractVersion: ^v(?<version>.+?)$

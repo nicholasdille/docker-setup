@@ -1,0 +1,14 @@
+[Unit]
+Description=containerd-fuse-overlayfs
+PartOf=containerd
+
+[Service]
+ExecStart=/usr/local/bin/containerd-fuse-overlayfs-grpc "/var/run/containerd-fuse-overlayfs.sock" "/var/lib/containerd-fuse-overlayfs"
+ExecReload=/bin/kill -s HUP \$MAINPID
+RestartSec=2
+Restart=always
+Type=simple
+KillMode=mixed
+
+[Install]
+WantedBy=default.target

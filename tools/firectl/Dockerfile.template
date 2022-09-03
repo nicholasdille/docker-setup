@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/firectl" \
+    "https://firectl-release.s3.amazonaws.com/firectl-v${version}"
+chmod +x "${prefix}${target}/bin/firectl"
+EOF

@@ -1,0 +1,19 @@
+name: docker-sbom
+version: 0.6.1
+binary: ${target}/libexec/docker/cli-plugins/docker-sbom
+dependencies:
+  - docker
+tags:
+  - standard/docker
+  - org/docker
+  - category/security
+  - type/plugin
+  - type/cli
+  - sbom
+  - cicd
+homepage: https://github.com/docker/sbom-cli-plugin
+description: Plugin for Docker CLI to support SBOM creation using Syft
+renovate:
+  datasource: github-releases
+  package: docker/sbom-cli-plugin
+  extractVersion: ^v(?<version>.+?)$

@@ -2,6 +2,7 @@ name: docker
 version: 20.10.17
 dependencies:
 - fuse-overlayfs
+- docker-manpages
 tags:
 - org/docker
 - standard/docker

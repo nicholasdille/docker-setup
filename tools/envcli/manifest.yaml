@@ -1,0 +1,14 @@
+name: envcli
+version: 0.7.1
+check: ${binary} --version | cut -d' ' -f3
+tags:
+  - standard/docker
+  - category/development
+  - type/cli
+  - management
+homepage: https://github.com/EnvCLI/EnvCLI
+description: Don't install locally, use containers you define within your project
+renovate:
+  datasource: github-releases
+  package: EnvCLI/EnvCLI
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,17 @@
+name: gvisor
+version: 20220822
+binary: ${target}/bin/runsc
+check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
+dependencies:
+  - docker
+tags:
+  - org/google
+  - container/runtime
+  - category/security
+homepage: https://github.com/google/gvisor
+description: Application Kernel for Containers
+renovate:
+  datasource: github-tags
+  package: google/gvisor
+  extractVersion: ^release-(?<version>.+?)\.0$
+  versioning: loose

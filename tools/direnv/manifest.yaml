@@ -1,0 +1,30 @@
+name: direnv
+version: 2.32.1
+check: ${binary} version
+tags:
+  - type/cli
+homepage: https://github.com/direnv/direnv/
+description: Unclutter your .profile
+renovate:
+  datasource: github-releases
+  package: direnv/direnv
+  extractVersion: ^v(?<version>.+?)$
+download:
+  - url: https://github.com/direnv/direnv/releases/download/v${version}/direnv.linux-${alt_arch}
+    type: executable
+  - url: https://github.com/direnv/direnv/raw/v${version}/man/direnv-fetchurl.1
+    type: file
+    path: ${target}/share/man/man1/direnv-fetchurl.1
+  - url: https://github.com/direnv/direnv/raw/v${version}/man/direnv-stdlib.1
+    type: file
+    path: ${target}/share/man/man1/direnv-stdlib.1
+  - url: https://github.com/direnv/direnv/raw/v${version}/man/direnv.1
+    type: file
+    path: ${target}/share/man/man1/direnv.1
+  - url: https://github.com/direnv/direnv/raw/v${version}/man/direnv.toml.1
+    type: file
+    path: ${target}/share/man/man1/direnv.toml.1
+files:
+  - path: ${prefix}/etc/profile.d/direnv.sh
+    content: |
+      eval "\$(direnv hook bash)"

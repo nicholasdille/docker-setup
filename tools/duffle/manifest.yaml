@@ -1,0 +1,11 @@
+name: duffle
+version: 0.3.5-beta.1
+check: ${binary} version
+tags:
+  - type/cli
+  - cnab
+homepage: https://github.com/cnabio/duffle
+description: CNAB installer
+renovate:
+  datasource: github-releases
+  package: cnabio/duffle

@@ -1,0 +1,17 @@
+name: fuse-overlayfs-snapshotter
+version: 1.0.4
+binary: containerd-fuse-overlayfs-grpc
+dependencies:
+  - fuse-overlayfs
+  - containerd
+tags:
+  - org/cncf
+  - org/containerd
+  - component/storage
+  - type/daemon
+homepage: https://github.com/containerd/fuse-overlayfs-snapshotter
+description: fuse-overlayfs plugin for rootless containerd
+renovate:
+  datasource: github-releases
+  package: containerd/fuse-overlayfs-snapshotter
+  extractVersion: ^v(?<version>.+?)$

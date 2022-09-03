@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner
+rm "${prefix}${target}/LICENSE"
+"${prefix}${target}/bin/gh" completion -s bash >"${prefix}${target}/share/bash-completion/completions/gh"
+"${prefix}${target}/bin/gh" completion -s fish >"${prefix}${target}/share/fish/vendor_completions.d/gh.fish"
+"${prefix}${target}/bin/gh" completion -s zsh >"${prefix}${target}/share/zsh/vendor-completions/_gh"
+EOF

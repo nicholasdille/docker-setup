@@ -1,0 +1,10 @@
+name: fzf
+version: 0.33.0
+check: ${binary} --version | cut -d' ' -f1
+tags:
+  - type/cli
+homepage: https://github.com/junegunn/fzf
+description: Command-line fuzzy finder
+renovate:
+  datasource: github-releases
+  package: junegunn/fzf

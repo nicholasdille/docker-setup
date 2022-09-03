@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}/etc/profile.d/forgit.sh" \
+    "https://github.com/wfxr/forgit/raw/${version}/forgit.plugin.zsh"
+EOF
