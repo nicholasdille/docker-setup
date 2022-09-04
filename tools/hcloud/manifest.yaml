@@ -1,0 +1,23 @@
+name: hcloud
+version: 1.30.3
+check: ${binary} version | cut -d' ' -f2
+tags:
+  - cloud/hetzner
+  - type/cli
+  - management
+homepage: https://github.com/hetznercloud/cli
+description: command-line interface for Hetzner Cloud
+renovate:
+  datasource: github-releases
+  package: hetznercloud/cli
+  extractVersion: ^v(?<version>.+?)$
+download:
+  - url: https://github.com/hetznercloud/cli/releases/download/v${version}/hcloud-linux-${alt_arch}.tar.gz
+    type: tarball
+    files:
+      - hcloud
+post_install: |
+  echo "Install completion"
+  "${binary}" completion bash >"${target}/share/bash-completion/completions/${name}"
+  "${binary}" completion fish >"${target}/share/fish/vendor_completions.d/${name}.fish"
+  "${binary}" completion zsh >"${target}/share/zsh/vendor-completions/_${name}"

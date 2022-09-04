@@ -1,0 +1,17 @@
+name: helmify
+version: 0.3.18
+check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+tags:
+  - type/cli
+  - kubernetes
+homepage: https://github.com/arttor/helmify
+description: Creates Helm chart from Kubernetes yaml
+renovate:
+  datasource: github-releases
+  package: arttor/helmify
+  extractVersion: ^v(?<version>.+?)$
+download:
+  - url:
+      x86_64: https://github.com/arttor/helmify/releases/download/v${version}/helmify_${version}_Linux_64-bit.tar.gz
+      aarch64: https://github.com/arttor/helmify/releases/download/v${version}/helmify_${version}_Linux_arm64.tar.gz
+    type: tarball

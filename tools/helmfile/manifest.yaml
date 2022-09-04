@@ -1,0 +1,13 @@
+name: helmfile
+version: 0.144.0
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+  - type/cli
+  - kubernetes
+  - templating
+homepage: https://github.com/roboll/helmfile
+description: Deploy Kubernetes Helm Charts
+renovate:
+  datasource: github-releases
+  package: roboll/helmfile
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/homeport/havener/releases/download/v${version}/havener_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    havener
+"${prefix}${target}/bin/havener" completion bash >"${prefix}${target}/share/bash-completion/completions/havener"
+"${prefix}${target}/bin/havener" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/havener.fish"
+"${prefix}${target}/bin/havener" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_havener"
+EOF
