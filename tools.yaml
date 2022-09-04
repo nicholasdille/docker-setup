@@ -130,7 +130,7 @@ tools:
       type: tarball
       files:
       - ./buildg
-      - ./buildg.s
+      - ./buildg.sh
 
   - name: buildkit
     version: 0.10.4
