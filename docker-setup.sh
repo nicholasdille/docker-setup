@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o errexit
 
 if ! test -f tools.json; then
     echo "No releaeses published yet."
@@ -13,6 +14,10 @@ fi
 if ! test -f "${docker_setup_tools_file}"; then
     echo "ERROR: Missing tools.json (${docker_setup_tools_file})"
     exit 1
+fi
+
+if test -z "${DOCKER_CONFIG}"; then
+    export DOCKER_CONFIG="${HOME}/.docker"
 fi
 
 function get_tools() {
@@ -82,6 +87,19 @@ case "${command}" in
         echo
         ;;
 
+    generate)
+        if test "$#" == 0; then
+            echo "No tools specified"
+            exit 1
+        fi
+        for tool in "$@"; do
+            resolve_dependencies "${tool}"
+            tools_ordered+=( "${tool}" )
+            tool_install["${tool}"]=true
+        done
+        generate "${tools_ordered[@]}"
+        ;;
+
     build)
         image=$1
         shift
@@ -96,27 +114,6 @@ case "${command}" in
         done
         generate "${tools_ordered[@]}" \
         | docker buildx build --tag "${image}" --load -
-        ;;
-
-    install-from-image)
-        target=$1
-        shift
-        if test -z "${target}"; then
-            echo "No target specified"
-            exit 1
-        fi
-        echo "Using target ${target}"
-        if test "$#" == 0; then
-            echo "No tools specified"
-            exit 1
-        fi
-        for tool in "$@"; do
-            resolve_dependencies "${tool}"
-            tools_ordered+=( "${tool}" )
-            tool_install["${tool}"]=true
-        done
-        generate "${tools_ordered[@]}" \
-        | docker buildx build --output "${target}" -
         ;;
 
     install)
@@ -144,12 +141,19 @@ case "${command}" in
             | while read DIGEST; do
                 echo "Unpacking ${DIGEST}"
                 regctl blob get "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" "${DIGEST}" \
-                | tar --extract --gzip --directory=${target} --no-same-owner
+                | sudo tar --extract --gzip --directory=${target} --no-same-owner
             done
         done
         ;;
 
-    generate)
+    install-from-registry)
+        target=$1
+        shift
+        if test -z "${target}"; then
+            echo "No target specified"
+            exit 1
+        fi
+        echo "Using target ${target}"
         if test "$#" == 0; then
             echo "No tools specified"
             exit 1
@@ -159,12 +163,52 @@ case "${command}" in
             tools_ordered+=( "${tool}" )
             tool_install["${tool}"]=true
         done
-        generate "${tools_ordered[@]}"
+        generate "${tools_ordered[@]}" \
+        | docker buildx build --output "${target}" -
+        ;;
+
+    install-from-image)
+        target=$1
+        shift
+        if test -z "${target}"; then
+            echo "No target specified"
+            exit 1
+        fi
+        echo "Using target ${target}"
+        if test "$#" == 0; then
+            echo "No tools specified"
+            exit 1
+        fi
+        if ! jq --exit-status '.auths | to_entries[] | select(.key == "ghcr.io")' "${DOCKER_CONFIG}/config.json" >/dev/null 2>&1; then
+            echo "Logging in to ghcr.io"
+            docker login ghcr.io
+        fi
+        for tool in "$@"; do
+            resolve_dependencies "${tool}"
+            tools_ordered+=( "${tool}" )
+            tool_install["${tool}"]=true
+        done
+        for tool in "${tools_ordered[@]}"; do
+            echo "Processing ${tool}"
+            echo "+ Pulling image ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}"
+            docker image pull --quiet "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}"
+            echo "+ Reading layers"
+            docker image save "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" \
+            | tar --extract --to-stdout manifest.json \
+            | jq --raw-output '.[].Layers[]' \
+            | while read FILE; do
+                echo "+ Extracting layer $(dirname "${FILE}")"
+                docker image save "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" \
+                | tar --extract --to-stdout "${FILE}" \
+                | sudo tar --extract --directory="${target}" --strip-components=2
+            done
+            echo "+ Done"
+        done
         ;;
 
     *)
         echo "ERROR: Unknown or empty command <${command}>"
-        echo "       Supported commands are: version, ls, info, "
+        echo "       Supported commands are: version, ls, info, generate, build, install, install-from-registry, install-from-image"
         exit 1
         ;;
 esac
