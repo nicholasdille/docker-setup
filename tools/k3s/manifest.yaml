@@ -1,0 +1,15 @@
+name: k3s
+version: 1.24.4+k3s1
+check: ${binary} --version | head -n 1 | cut -d' ' -f3 | tr -d v
+tags:
+  - org/cncf
+  - type/cli
+  - type/daemon
+  - kubernetes
+homepage: https://github.com/k3s-io/k3s
+description: Lightweight Kubernetes
+renovate:
+  datasource: github-releases
+  package: k3s-io/k3s
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

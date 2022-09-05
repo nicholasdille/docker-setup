@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/k3d" \
+    "https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/k3d"
+"${prefix}${target}/bin/k3d" completion bash >"${prefix}${target}/share/bash-completion/completions/k3d"
+"${prefix}${target}/bin/k3d" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/k3d.fish"
+"${prefix}${target}/bin/k3d" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_k3d"
+EOF

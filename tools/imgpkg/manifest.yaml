@@ -1,0 +1,14 @@
+name: imgpkg
+version: 0.31.0
+check: ${binary} version | head -n 1 | cut -d' ' -f3
+tags:
+  - standard/oci
+  - container/registry
+  - type/cli
+  - management
+homepage: https://github.com/vmware-tanzu/carvel-imgpkg
+description: Store application configuration files in Docker/OCI registries
+renovate:
+  datasource: github-releases
+  package: vmware-tanzu/carvel-imgpkg
+  extractVersion: ^v(?<version>.+?)$
