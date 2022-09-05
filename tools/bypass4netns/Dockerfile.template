@@ -13,12 +13,11 @@ ARG name
 ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/rootless-containers/bypass4netns .
-  make static
-  cp bypass4netns /usr/local/bin/
-  cp bypass4netnsd /usr/local/bin/
+make static
+cp bypass4netns /usr/local/bin/
+cp bypass4netnsd /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
 COPY --from=build /usr/local/bin/bypass4netns ${prefix}${target}/bin/
 COPY --from=build /usr/local/bin/bypass4netnsd ${prefix}${target}/bin/

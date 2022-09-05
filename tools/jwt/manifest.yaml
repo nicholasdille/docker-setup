@@ -1,0 +1,13 @@
+name: jwt
+version: 5.0.3
+check: ${binary} --version | cut -d' ' -f2
+dependencies:
+  - docker
+tags:
+  - category/security
+  - type/cli
+homepage: https://github.com/mike-engel/jwt-cli
+description: Super fast CLI tool to decode and encode JWTs
+renovate:
+  datasource: github-releases
+  package: mike-engel/jwt-cli

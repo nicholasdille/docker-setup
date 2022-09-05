@@ -1,0 +1,26 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+        build-essential \
+        gawk \
+        git \
+        ca-certificates
+EOF
+WORKDIR /tmp/github.com/netblue30/firejail
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/netblue30/firejail .
+./configure --prefix=/usr/local
+make
+make install-strip
+rm -f /usr/local/sbin/unminimize
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/local/ ${prefix}${target}/

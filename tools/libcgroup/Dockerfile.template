@@ -1,0 +1,35 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential \
+    autoconf \
+    automake \
+    libtool \
+    git \
+    ca-certificates \
+    m4 \
+    bison \
+    flex \
+    curl
+EOF
+WORKDIR /tmp/libcgroup
+ARG name
+ARG version
+RUN <<EOF
+curl -sL https://github.com/libcgroup/libcgroup/releases/download/v${version}/libcgroup-${version}.tar.gz \
+| tar -xz --strip-components 1
+./configure --prefix=/opt/libcgroup --disable-pam --disable-daemon
+make
+make install
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY <<EOF >${prefix}/etc/ld.so.conf.d/libcgroup.conf
+${target}/lib
+EOF
+COPY --from=build /opt/libcgroup/ ${prefix}${target}/

@@ -1,0 +1,32 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+        build-essential \
+        git \
+        ca-certificates
+EOF
+WORKDIR /tmp/libcap
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "libcap-${version}" https://git.kernel.org/pub/scm/libs/libcap/libcap.git .
+make -C progs
+make -C progs install FAKEROOT=/usr/local
+mkdir -p \
+    /usr/local/share/man/man1 \
+    /usr/local/share/man/man8
+cp doc/capsh.1 /usr/local/share/man/man1/
+cp doc/getcap.8 /usr/local/share/man/man8/
+cp doc/getpcaps.8 /usr/local/share/man/man8/
+cp doc/setcap.8 /usr/local/share/man/man8/
+rm -f /usr/local/sbin/unminimize
+find /usr/local
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/local/ ${prefix}${target}/

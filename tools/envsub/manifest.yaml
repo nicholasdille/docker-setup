@@ -1,0 +1,14 @@
+name: envsub
+version: 0.1.3
+check: ${binary} --version
+dependencies:
+  - docker
+tags:
+  - type/cli
+  - category/development
+  - management
+homepage: https://github.com/stephenc/envsub
+description: alternative envsubst that allows for ${foo:-default} expansion too
+renovate:
+  datasource: github-releases
+  package: stephenc/envsub

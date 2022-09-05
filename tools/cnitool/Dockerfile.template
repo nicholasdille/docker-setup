@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.18.5 AS build
+WORKDIR /go/src/github.com/containernetworking/cni
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containernetworking/cni .
+cd cnitool
+CGO_ENABLED=0 go build -ldflags '-s -w' -o cnitool .
+cp cnitool /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+COPY --from=build /usr/local/bin/cnitool ${prefix}${target}/bin/

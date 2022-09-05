@@ -1,0 +1,14 @@
+name: emojisum
+version: 2
+dependencies:
+  - docker
+tags:
+  - category/security
+  - type/cli
+homepage: https://github.com/emojisum/emojisum
+description: Easier way to compare hashes/fingerprints when dealing human weak link
+renovate:
+  datasource: github-tags
+  package: emojisum/emojisum
+  extractVersion: ^draft\+(?<version>.+?)$
+  versioning: loose
