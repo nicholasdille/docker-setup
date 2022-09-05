@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --remote-name "https://github.com/rupor-github/win-gpg-agent/releases/download/v${version}/win-gpg-agent.zip"
+unzip -q -o -d "/tmp" "win-gpg-agent.zip"
+rm "win-gpg-agent.zip"
+mv "/tmp/sorelay.exe" "${prefix}${target}/bin"
+EOF

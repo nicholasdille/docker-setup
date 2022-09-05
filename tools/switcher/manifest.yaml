@@ -1,0 +1,12 @@
+name: switcher
+version: 0.7.1
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+  - type/cli
+  - kubernetes
+  - management
+homepage: https://github.com/danielfoehrKn/kubeswitch
+description: The kubectx for operators
+renovate:
+  datasource: github-releases
+  package: danielfoehrKn/kubeswitch

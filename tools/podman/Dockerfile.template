@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/nicholasdille/podman-static/releases/download/v${version}/podman-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
+cp "${prefix}${target}/lib/systemd/system/podman.service" "${prefix}/etc/systemd/system/"
+cp "${prefix}${target}/lib/systemd/system/podman.socket" "${prefix}/etc/systemd/system/"
+
+mkdir -p "${prefix}${target}/lib/tmpfiles.d"
+curl --silent --location --output "${prefix}${target}/lib/tmpfiles.d/podman-docker.conf" \
+    "https://github.com/containers/podman/raw/v${version}/contrib/systemd/system/podman-docker.conf"
+EOF

@@ -1,0 +1,17 @@
+name: nerdctl
+version: 0.22.2
+check: ${binary} --version | cut -d' ' -f3
+dependencies:
+  - containerd
+  - buildkit
+tags:
+  - org/cncf
+  - org/containerd
+  - rootless
+  - management
+homepage: https://github.com/containerd/nerdctl
+description: Docker-compatible CLI for containerd, with support for Compose, Rootless, eStargz, OCIcrypt, IPFS
+renovate:
+  datasource: github-releases
+  package: containerd/nerdctl
+  extractVersion: ^v(?<version>.+?)$

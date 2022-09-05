@@ -1,0 +1,14 @@
+name: sshocker
+version: 0.3.0
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+  - category/security
+  - component/network
+  - component/storage
+  - type/cli
+homepage: https://github.com/lima-vm/sshocker
+description: SSH + reverse sshfs + port forwarder in Docker-like CLI
+renovate:
+  datasource: github-releases
+  package: lima-vm/sshocker
+  extractVersion: ^v(?<version>.+?)$

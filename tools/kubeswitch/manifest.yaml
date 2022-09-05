@@ -1,0 +1,12 @@
+name: kubeswitch
+version: 1.5.0
+tags:
+  - type/cli
+  - kubernetes
+  - management
+homepage: https://github.com/danielb42/kubeswitch
+description: Visually select kubernetes context/namespace from tree
+renovate:
+  datasource: github-releases
+  package: danielb42/kubeswitch
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,11 @@
+name: webhookd
+version: 1.15.0
+tags:
+  - category/development
+  - type/daemon
+homepage: https://github.com/ncarlier/webhookd
+description: Very simple webhook server launching shell scripts
+renovate:
+  datasource: github-releases
+  package: ncarlier/webhookd
+  extractVersion: ^v(?<version>.+?)$

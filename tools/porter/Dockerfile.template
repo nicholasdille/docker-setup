@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/porter" \
+    "https://github.com/getporter/porter/releases/download/v${version}/porter-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/porter"
+"${prefix}${target}/bin/porter" completion bash >"${prefix}${target}/share/bash-completion/completions/porter"
+"${prefix}${target}/bin/porter" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/porter.fish"
+"${prefix}${target}/bin/porter" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_porter"
+EOF

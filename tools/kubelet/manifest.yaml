@@ -1,0 +1,14 @@
+name: kubelet
+version: 1.25.0
+check: ${binary} --version | cut -d' ' -f2 | tr -d v
+tags:
+  - org/cncf
+  - org/kubernetes
+  - type/daemon
+  - kubernetes
+homepage: https://github.com/kubernetes/kubernetes
+description: Kubernetes primary node agent that runs on each node
+renovate:
+  datasource: github-releases
+  package: kubernetes/kubernetes
+  extractVersion: ^v(?<version>.+?)$

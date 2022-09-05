@@ -1,0 +1,16 @@
+name: ytt
+version: 0.42.0
+check: ${binary} version | cut -d' ' -f3
+tags:
+  - org/vmware
+  - type/cli
+  - kubernetes
+  - templating
+  - package
+  - management
+homepage: https://github.com/vmware-tanzu/carvel-ytt
+description: YAML templating tool that works on YAML structure instead of text
+renovate:
+  datasource: github-releases
+  package: vmware-tanzu/carvel-ytt
+  extractVersion: ^v(?<version>.+?)$

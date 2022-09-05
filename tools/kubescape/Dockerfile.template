@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kubescape" \
+    "https://github.com/armosec/kubescape/releases/download/v${version}/kubescape-ubuntu-latest"
+chmod +x "${prefix}${target}/bin/kubescape"
+"${prefix}${target}/bin/kubescape" completion bash >"${prefix}${target}/share/bash-completion/completions/kubescape"
+"${prefix}${target}/bin/kubescape" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kubescape.fish"
+"${prefix}${target}/bin/kubescape" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubescape"
+EOF

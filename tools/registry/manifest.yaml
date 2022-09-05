@@ -1,0 +1,14 @@
+name: registry
+version: 2.8.1
+check: ${binary} --version | cut -d' ' -f3 | cut -d+ -f1 | tr -d v
+tags:
+  - org/cncf
+  - standard/oci
+  - container/registry
+  - type/daemon
+homepage: https://github.com/distribution/distribution
+description: Toolkit to pack, ship, store, and deliver container content
+renovate:
+  datasource: github-releases
+  package: distribution/distribution
+  extractVersion: ^v(?<version>.+?)$

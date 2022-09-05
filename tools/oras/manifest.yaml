@@ -1,0 +1,14 @@
+name: oras
+version: 0.14.0
+check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
+tags:
+  - container/registry
+  - component/storage
+  - type/cli
+  - cnab
+homepage: https://github.com/oras-project/oras
+description: ORAS CLI
+renovate:
+  datasource: github-releases
+  package: oras-project/oras
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    patat-v${version}-linux-${arch}/patat
+curl --silent --location "https://github.com/jaspervdj/patat/releases/download/v${version}/patat-v${version}-linux-${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/man/man1" --strip-components=1 --no-same-owner \
+    patat-v${version}-linux-${arch}/patat.1
+EOF

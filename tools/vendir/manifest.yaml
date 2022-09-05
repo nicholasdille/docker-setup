@@ -1,0 +1,14 @@
+name: vendir
+version: 0.30.0
+check: ${binary} version | head -n 1 | cut -d' ' -f3
+tags:
+  - org/vmware
+  - category/development
+  - type/cli
+  - cicd
+homepage: https://github.com/vmware-tanzu/carvel-vendir
+description: Easy way to vendor declaratively
+renovate:
+  datasource: github-releases
+  package: vmware-tanzu/carvel-vendir
+  extractVersion: ^v(?<version>.+?)$

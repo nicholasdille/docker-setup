@@ -1,0 +1,14 @@
+name: sops
+version: 3.7.3
+check: ${binary} --version | head -n 1 | cut -d' ' -f2
+tags:
+  - org/mozilla
+  - category/security
+  - type/cli
+  - cicd
+homepage: https://github.com/mozilla/sops
+description: Simple and flexible tool for managing secrets
+renovate:
+  datasource: github-releases
+  package: mozilla/sops
+  extractVersion: ^v(?<version>.+?)$

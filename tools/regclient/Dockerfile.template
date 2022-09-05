@@ -1,0 +1,30 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/regctl" \
+    "https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/regctl"
+"${prefix}${target}/bin/regctl" completion bash >"${prefix}${target}/share/bash-completion/completions/regctl"
+"${prefix}${target}/bin/regctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/regctl.fish"
+"${prefix}${target}/bin/regctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_regctl"
+
+curl --silent --location --output "${prefix}${target}/bin/regbot" \
+    "https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/regbot"
+"${prefix}${target}/bin/regbot" completion bash >"${prefix}${target}/share/bash-completion/completions/regbot"
+"${prefix}${target}/bin/regbot" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/regbot.fish"
+"${prefix}${target}/bin/regbot" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_regbot"
+
+curl --silent --location --output "${prefix}${target}/bin/regsync" \
+    "https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/regsync"
+"${prefix}${target}/bin/regsync" completion bash >"${prefix}${target}/share/bash-completion/completions/regsync"
+"${prefix}${target}/bin/regsync" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/regsync.fish"
+"${prefix}${target}/bin/regsync" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_regsync"
+EOF

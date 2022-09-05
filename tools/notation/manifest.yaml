@@ -1,0 +1,16 @@
+name: notation
+version: 0.7.1-alpha.1
+check: ${binary} --version | cut -d' ' -f3
+dependencies:
+  - docker
+tags:
+  - type/cli
+  - type/plugin
+  - category/security
+  - container/sign
+homepage: https://github.com/notaryproject/notation
+description: Add signatures as standard items in the registry ecosystem
+renovate:
+  datasource: github-releases
+  package: notaryproject/notation
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,17 @@
+name: kubo
+version: 0.14.0
+check: ${binary} version --number
+dependencies:
+  - containerd
+tags:
+  - component/storage
+  - component/network
+  - container/registry
+  - type/cli
+  - containerd
+homepage: https://github.com/ipfs/kubo
+description: IPFS implementation in Go
+renovate:
+  datasource: github-releases
+  package: ipfs/kubo
+  extractVersion: ^v(?<version>.+?)$

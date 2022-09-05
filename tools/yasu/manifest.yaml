@@ -1,0 +1,12 @@
+name: yasu
+version: 1.19.0
+check: ${binary} --version | cut -d' ' -f1
+tags:
+  - container/su
+  - type/cli
+homepage: https://github.com/crazy-max/yasu
+description: Yet Another Switch User
+renovate:
+  datasource: github-releases
+  package: crazy-max/yasu
+  extractVersion: ^v(?<version>.+?)$

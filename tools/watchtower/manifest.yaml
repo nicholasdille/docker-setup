@@ -1,0 +1,16 @@
+name: watchtower
+version: 1.4.0
+dependencies:
+  - docker
+tags:
+  - standard/docker
+  - container/image
+  - container/registry
+  - type/daemon
+  - management
+homepage: https://github.com/containrrr/watchtower
+description: Process for automating Docker container base image updates
+renovate:
+  datasource: github-releases
+  package: containrrr/watchtower
+  extractVersion: ^v(?<version>.+?)$

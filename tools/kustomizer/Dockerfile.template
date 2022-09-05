@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/stefanprodan/kustomizer/releases/download/v${version}/kustomizer_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    kustomizer
+"${prefix}${target}/bin/kustomizer" completion bash >"${prefix}${target}/share/bash-completion/completions/kustomizer"
+"${prefix}${target}/bin/kustomizer" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kustomizer.fish"
+"${prefix}${target}/bin/kustomizer" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kustomizer"
+EOF

@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    task
+curl --silent --location "https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share" --strip-components=2 --no-same-owner \
+    completion/bash/task.bash \
+    completion/fish/task.fish \
+    completion/zsh/_task
+mv "${prefix}${target}/share/task.bash" "${prefix}${target}/share/bash-completion/completions/task"
+mv "${prefix}${target}/share/task.fish" "${prefix}${target}/share/fish/vendor_completions.d/task.fish"
+mv "${prefix}${target}/share/_task" "${prefix}${target}/share/zsh/vendor-completions/_task"
+EOF

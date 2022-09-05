@@ -1,0 +1,15 @@
+name: mutagen
+version: 0.15.2
+check: ${binary} version
+tags:
+  - component/network
+  - component/storage
+  - category/development
+  - type/cli
+  - type/daemon
+homepage: https://github.com/mutagen-io/mutagen
+description: Fast file synchronization and network forwarding for remote development
+renovate:
+  datasource: github-releases
+  package: mutagen-io/mutagen
+  extractVersion: ^v(?<version>.+?)$

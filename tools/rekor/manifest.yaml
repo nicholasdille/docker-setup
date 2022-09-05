@@ -1,0 +1,17 @@
+name: rekor
+version: 0.11.0
+binary: rekor-cli
+check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
+dependencies:
+  - trillian
+tags:
+  - category/security
+  - type/cli
+  - type/daemon
+  - container/sign
+homepage: https://github.com/sigstore/rekor
+description: Software Supply Chain Transparency Log
+renovate:
+  datasource: github-releases
+  package: sigstore/rekor
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,14 @@
+name: kubeletctl
+version: 1.8
+check: ${binary} version | grep "^Version:" | cut -d' ' -f2
+tags:
+  - type/cli
+  - kubernetes
+  - management
+homepage: https://github.com/cyberark/kubeletctl
+description: Client for kubelet
+renovate:
+  datasource: github-releases
+  package: cyberark/kubeletctl
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

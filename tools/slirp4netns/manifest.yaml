@@ -1,0 +1,13 @@
+name: slirp4netns
+version: 1.2.0
+check: ${binary} --version | head -n 1 | cut -d' ' -f3
+tags:
+- type/cli
+- component/network
+- rootless
+homepage: https://github.com/rootless-containers/slirp4netns
+description: User-mode networking for unprivileged network namespaces
+renovate:
+  datasource: github-releases
+  package: rootless-containers/slirp4netns
+  extractVersion: ^v(?<version>.+?)$

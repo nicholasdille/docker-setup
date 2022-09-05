@@ -1,0 +1,15 @@
+name: skopeo
+version: 1.9.2
+check: ${binary} --version | cut -d' ' -f3
+tags:
+  - org/redhat
+  - standard/oci
+  - container/registry
+  - container/image
+  - type/cli
+homepage: https://github.com/containers/skopeo
+description: Work with remote images registries
+renovate:
+  datasource: github-releases
+  package: nicholasdille/skopeo-static
+  extractVersion: ^v(?<version>.+?)$

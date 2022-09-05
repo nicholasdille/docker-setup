@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    scorecard-linux-${alt_arch}
+mv "${prefix}${target}/bin/scorecard-linux-${alt_arch}" "${prefix}${target}/bin/scorecard"
+"${prefix}${target}/bin/scorecard" completion bash >"${prefix}${target}/share/bash-completion/completions/scorecard"
+"${prefix}${target}/bin/scorecard" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/scorecard.fish"
+"${prefix}${target}/bin/scorecard" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_scorecard"
+EOF

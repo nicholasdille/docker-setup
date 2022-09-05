@@ -1,0 +1,15 @@
+name: regclient
+version: 0.4.4
+binary: regctl
+check: ${binary} version | jq -r .VCSTag | tr -d v
+tags:
+  - standard/oci
+  - container/registry
+  - type/cli
+  - management
+homepage: https://github.com/regclient/regclient
+description: Docker and OCI Registry Client in Go and tooling using those libraries
+renovate:
+  datasource: github-releases
+  package: regclient/regclient
+  extractVersion: ^v(?<version>.+?)$
