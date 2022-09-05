@@ -45,7 +45,7 @@ jobs:
       env:
         SEMVER_VERSION: 3.3.0
       run: |
-        curl -sLo /usr/local/bin/semver "https://github.com/fsaintjacques/semver-tool/raw/${SEMVER_VERSION}/src/semver"
+        curl --silent --location --output /usr/local/bin/semver "https://github.com/fsaintjacques/semver-tool/raw/${SEMVER_VERSION}/src/semver"
         chmod +x /usr/local/bin/semver
 
     - name: Checkout
