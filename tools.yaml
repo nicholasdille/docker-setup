@@ -4521,7 +4521,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kustomizer
-    version: 2.1.3
+    version: 2.2.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - type/cli
