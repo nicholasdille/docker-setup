@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/docker/hub-tool/releases/download/v${version}/hub-tool-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    hub-tool/hub-tool
+EOF
