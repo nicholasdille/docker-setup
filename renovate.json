@@ -1453,8 +1453,7 @@
       ],
       "depNameTemplate": "kubernetes/kompose",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "versioningTemplate": "loose"
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
