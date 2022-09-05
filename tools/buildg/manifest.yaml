@@ -15,9 +15,3 @@ renovate:
   datasource: github-releases
   package: ktock/buildg
   extractVersion: ^v(?<version>.+?)$
-download:
-- url: https://github.com/ktock/buildg/releases/download/v${version}/buildg-v${version}-linux-${alt_arch}.tar.gz
-  type: tarball
-  files:
-  - ./buildg
-  - ./buildg.s

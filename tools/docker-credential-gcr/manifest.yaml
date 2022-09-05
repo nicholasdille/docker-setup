@@ -13,8 +13,3 @@ renovate:
   datasource: github-releases
   package: GoogleCloudPlatform/docker-credential-gcr
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url: https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${version}/docker-credential-gcr_linux_${alt_arch}-${version}.tar.gz
-    type: tarball
-    files:
-      - docker-credential-gcr

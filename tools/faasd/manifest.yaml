@@ -12,18 +12,3 @@ description: Lightweight & portable faas engine
 renovate:
   datasource: github-releases
   package: openfaas/faasd
-download:
-  - url:
-      x86_64: https://github.com/openfaas/faasd/releases/download/${version}/faasd
-      aarch64: https://github.com/openfaas/faasd/releases/download/${version}/faasd-${alt_arch}
-    type: executable
-  - url: https://github.com/openfaas/faasd/raw/${version}/hack/faasd.service
-    type: file
-    path: ${prefix}/etc/systemd/system/faasd.service
-  - url: https://github.com/openfaas/faasd/raw/${version}/hack/faasd-provider.service
-    type: file
-    path: ${prefix}/etc/systemd/system/faasd-provider.service
-post_install: |
-  echo "Patch systemd units"
-  sed -i "s|ExecStart=/usr/local/bin/faasd|ExecStart=${target}/bin/faasd|" "${prefix}/etc/systemd/system/faasd.service"
-  sed -i "s|ExecStart=/usr/local/bin/faasd|ExecStart=${target}/bin/faasd|" "${prefix}/etc/systemd/system/faasd-provider.service"

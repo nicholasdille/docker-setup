@@ -12,6 +12,3 @@ renovate:
   datasource: github-releases
   package: docker/machine
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url: https://github.com/docker/machine/releases/download/v${version}/docker-machine-Linux-${arch}
-    type: executable

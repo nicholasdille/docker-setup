@@ -13,11 +13,3 @@ renovate:
   datasource: github-releases
   package: docker-credential-magic/docker-credential-magic
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url:
-      x86_64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${arch}.tar.gz
-      aarch64: https://github.com/docker-credential-magic/docker-credential-magic/releases/download/v${version}/docker-credential-magic_Linux_${alt_arch}.tar.gz
-    type: tarball
-    files:
-      - docker-credential-magic
-      - docker-credential-magician

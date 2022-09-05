@@ -10,6 +10,3 @@ renovate:
   datasource: github-releases
   package: tianon/gosu
   versioning: loose
-download:
-  - url: https://github.com/tianon/gosu/releases/download/${version}/gosu-${alt_arch}
-    type: executable

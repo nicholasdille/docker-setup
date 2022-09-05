@@ -10,8 +10,3 @@ renovate:
   datasource: github-releases
   package: arttor/helmify
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url:
-      x86_64: https://github.com/arttor/helmify/releases/download/v${version}/helmify_${version}_Linux_64-bit.tar.gz
-      aarch64: https://github.com/arttor/helmify/releases/download/v${version}/helmify_${version}_Linux_arm64.tar.gz
-    type: tarball

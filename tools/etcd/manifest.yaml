@@ -11,10 +11,3 @@ renovate:
   datasource: github-releases
   package: etcd-io/etcd
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url: https://github.com/etcd-io/etcd/releases/download/v${version}/etcd-v${version}-linux-${alt_arch}.tar.gz
-    type: tarball
-    strip: 1
-    files:
-      - etcd-v${version}-linux-${alt_arch}/etcd
-      - etcd-v${version}-linux-${alt_arch}/etcdctl

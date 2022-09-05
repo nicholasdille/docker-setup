@@ -3,11 +3,11 @@
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
-ARG name=foo
-ARG version=0.0.1
+ARG name
+ARG version
 
 RUN <<EOF
 mkdir -p "${prefix}/etc/containers/registries.conf.d"
-curl -sLo "${prefix}/etc/containers/registries.conf.d/00-shortnames.conf" \
+curl --silent --location --output "${prefix}/etc/containers/registries.conf.d/00-shortnames.conf" \
     "https://github.com/containers/shortnames/raw/v${version}/shortnames.conf"
 EOF

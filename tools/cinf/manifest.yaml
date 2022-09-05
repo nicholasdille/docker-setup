@@ -10,8 +10,3 @@ renovate:
   datasource: github-releases
   package: mhausenblas/cinf
   extractVersion: ^v(?<version>.+?)$
-download:
-- url: https://github.com/mhausenblas/cinf/releases/download/v${version}/cinf_linux_${alt_arch}.tar.gz
-  type: tarball
-  files:
-  - cinf
