@@ -6,4 +6,4 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
-RUN true
+RUN false
