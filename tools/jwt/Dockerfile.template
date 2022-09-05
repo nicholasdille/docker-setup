@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM rust:1.63.0 AS build
+FROM rust:1.63.0@sha256:8307760c6dc650fa8a1586ebd7c96a9845b571015667aa44bf5e7f7c0b1de324 AS build
 WORKDIR /tmp/github.com/mike-engel/jwt-cli
 ARG name
 ARG version
