@@ -1,0 +1,12 @@
+name: kube-score
+version: 1.14.0
+check: ${binary} version | cut -d' ' -f3 | tr -d ,
+tags:
+  - type/cli
+  - kubernetes
+homepage: https://github.com/zegl/kube-score
+description: Kubernetes object analysis with recommendations for improved reliability and security
+renovate:
+  datasource: github-releases
+  package: zegl/kube-score
+  extractVersion: ^v(?<version>.+?)$

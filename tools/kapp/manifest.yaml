@@ -1,0 +1,16 @@
+name: kapp
+version: 0.52.0
+check: ${binary} version | head -n 1 | cut -d' ' -f3
+tags:
+  - org/vmware
+  - type/cli
+  - kubernetes
+  - templating
+  - package
+  - management
+homepage: https://github.com/vmware-tanzu/carvel-kapp
+description: Simple deployment tool focused on the concept of "Kubernetes application" — a set of resources with the same label
+renovate:
+  datasource: github-releases
+  package: vmware-tanzu/carvel-kapp
+  extractVersion: ^v(?<version>.+?)$

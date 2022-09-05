@@ -1,0 +1,14 @@
+name: kbrew
+version: 0.1.0
+check: ${binary} version | cut -d, -f1 | cut -d'"' -f4 | tr -d v
+tags:
+  - type/cli
+  - kubernetes
+  - package
+  - management
+homepage: https://github.com/kbrew-dev/kbrew
+description: Homebrew for Kubernetes
+renovate:
+  datasource: github-releases
+  package: kbrew-dev/kbrew
+  extractVersion: ^v(?<version>.+?)$

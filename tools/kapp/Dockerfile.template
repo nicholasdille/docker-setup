@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kapp" \
+    "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/kapp"
+"${prefix}${target}/bin/kapp" completion bash >"${prefix}${target}/share/bash-completion/completions/kapp"
+"${prefix}${target}/bin/kapp" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kapp.fish"
+"${prefix}${target}/bin/kapp" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kapp"
+EOF

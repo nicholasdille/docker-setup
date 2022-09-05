@@ -20,7 +20,8 @@ apt-get -y install \
     git \
     curl \
     ca-certificates \
-    jq
+    jq \
+    unzip
 rm /usr/local/sbin/unminimize
 EOF
 

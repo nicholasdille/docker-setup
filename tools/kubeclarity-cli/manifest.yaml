@@ -1,0 +1,14 @@
+name: kubeclarity-cli
+version: 2.6.0
+check: ${binary} --version | cut -d' ' -f3
+tags:
+  - type/cli
+  - category/security
+  - kubernetes
+  - cicd
+homepage: https://github.com/openclarity/kubeclarity
+description: Tool for detection and management of Software Bill Of Materials and vulnerabilities of container images and filesystems
+renovate:
+  datasource: github-releases
+  package: openclarity/kubeclarity
+  extractVersion: ^v(?<version>.+?)$

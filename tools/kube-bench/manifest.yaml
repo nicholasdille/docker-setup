@@ -1,0 +1,13 @@
+name: kube-bench
+version: 0.6.9
+check: ${binary} version
+tags:
+  - type/cli
+  - category/security
+  - kubernetes
+homepage: https://github.com/aquasecurity/kube-bench
+description: Checks whether Kubernetes is deployed according to security best practices
+renovate:
+  datasource: github-releases
+  package: aquasecurity/kube-bench
+  extractVersion: ^v(?<version>.+?)$

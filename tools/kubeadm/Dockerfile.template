@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY kubelet.service ${prefix}/etc/systemd/system/
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kubeadm" \
+    "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm"
+chmod +x "${prefix}${target}/bin/kubeadm"
+"${prefix}${target}/bin/kubeadm" completion bash >"${prefix}${target}/share/bash-completion/completions/kubeadm"
+"${prefix}${target}/bin/kubeadm" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubeadm"
+EOF
