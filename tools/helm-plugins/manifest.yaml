@@ -1,13 +1,12 @@
-name: kubectl-plugins
+name: helm-plugins
 version: 0.1.0
 dependencies:
-- kubectl
-- krew
+- helm
 tags:
-- org/cncf
-- org/kubernetes
 - type/plugin
 - kubernetes
+- templating
+- package
 - management
 homepage: https://github.com/nicholasdille/docker-setup
-description: kubectl plugins
+description: Helm plugins
