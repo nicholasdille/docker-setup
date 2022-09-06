@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential \
+    git \
+    ca-certificates
+EOF
+WORKDIR /tmp/github.com/ncopa/su-exec
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/ncopa/su-exec .
+make su-exec-static
+cp su-exec-static /usr/local/bin/su-exec
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/local/bin/su-exec ${prefix}${target}/bin/

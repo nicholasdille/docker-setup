@@ -1,0 +1,34 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    curl \
+    ca-certificates \
+    xz-utils \
+    build-essential
+EOF
+WORKDIR /tmp/uidmap
+ARG name
+ARG version
+RUN <<EOF
+curl -sL https://github.com/shadow-maint/shadow/releases/download/v${version}/shadow-${version}.tar.xz \
+| tar -xJ --strip-components 1
+./configure --prefix=/opt/uidmap --enable-static --disable-shared
+make LDFLAGS=--static
+mkdir -p \
+    /opt/uidmap/bin \
+    /opt/uidmap/share/man/man1
+cp src/newuidmap /opt/uidmap/bin
+cp src/newgidmap /opt/uidmap/bin
+cp man/man1/newuidmap.1 /opt/uidmap/share/man/man1
+cp man/man1/newgidmap.1 /opt/uidmap/share/man/man1
+chmod u+s /opt/uidmap/bin/newuidmap
+chmod u+s /opt/uidmap/bin/newgidmap
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /opt/uidmap/ ${prefix}${target}/

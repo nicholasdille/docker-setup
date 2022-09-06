@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.18.5 AS build
+WORKDIR /go/src/github.com/opencontainers/runtime-tools
+ARG name
+ARG version
+RUN <<EOF
+export GO111MODULE=auto
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runtime-tools .
+make tool
+cp oci-runtime-tool /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/local/bin/oci-runtime-tool ${prefix}${target}/bin/

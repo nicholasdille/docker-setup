@@ -1,0 +1,15 @@
+name: util-linux
+version: 2.38.1
+binary: lsns
+dependencies:
+  - docker
+tags:
+  - kernel/namespaces
+  - type/cli
+homepage: https://github.com/util-linux/util-linux
+description: Tools for managing namespaces
+renovate:
+  datasource: github-tags
+  package: util-linux/util-linux
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

@@ -1,0 +1,14 @@
+name: uidmap
+version: 4.11.1
+binary: newuidmap
+dependencies:
+  - docker
+tags:
+  - kernel/pid
+  - type/cli
+homepage: https://github.com/shadow-maint/shadow
+description: Programs to help use subuids
+renovate:
+  datasource: github-releases
+  package: shadow-maint/shadow
+  extractVersion: ^v(?<version>.+?)$

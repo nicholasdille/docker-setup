@@ -1,0 +1,17 @@
+name: oci-image-tool
+version: 1.0.0-rc3
+check: ${binary} --version | cut -d' ' -f3
+dependencies:
+  - docker
+tags:
+  - org/oci
+  - standard/oci
+  - container/image
+  - type/cli
+  - state/deprecated
+homepage: https://github.com/opencontainers/image-tools
+description: OCI Image Tooling
+renovate:
+  datasource: github-releases
+  package: opencontainers/image-tools
+  extractVersion: ^v(?<version>.+?)$

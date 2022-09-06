@@ -1,0 +1,30 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential \
+    git \
+    ca-certificates
+EOF
+WORKDIR /tmp/github.com/nelhage/reptyr
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "reptyr-${version}" https://github.com/nelhage/reptyr .
+export LDFLAGS=-static
+make reptyr
+mkdir -p /opt/reptyr/bin /opt/reptyr/share/man/man1
+cp reptyr /opt/reptyr/bin/
+cp reptyr.1 /opt/reptyr/share/man/man1/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /opt/reptyr/ ${prefix}${target}/
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/share/bash-completion/completions/reptyr" \
+    "https://github.com/nelhage/reptyr/raw/reptyr-${version}/reptyr.bash"
+EOF

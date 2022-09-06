@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.18.5 AS build
+WORKDIR /go/src/github.com/google/trillian
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/trillian .
+export CGO_ENABLED=0
+mkdir -p /opt/trillian/bin
+go build -ldflags "-w -s" -o "/opt/trillian/bin/trillian_log_server" ./cmd/trillian_log_server
+go build -ldflags "-w -s" -o "/opt/trillian/bin/trillian_log_signer" ./cmd/trillian_log_signer
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /opt/trillian/ ${prefix}${target}/

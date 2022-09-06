@@ -1,0 +1,16 @@
+name: tasker
+version: 0.9
+check: ${binary} --version
+dependencies:
+  - docker
+tags:
+  - type/cli
+  - management
+  - cicd
+homepage: https://github.com/stevegrubb/tasker
+description: Parallelizes tasks from a list on stdin
+renovate:
+  datasource: github-releases
+  package: stevegrubb/tasker
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose
