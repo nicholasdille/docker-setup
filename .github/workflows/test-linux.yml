@@ -1,9 +1,6 @@
 name: Test-Linux
 
 on:
-  push:
-    tags:
-      - "v*"
   pull_request:
     types:
       - opened
@@ -38,8 +35,7 @@ jobs:
           DOCKER_BUILDKIT: 1
           IS_PR: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "GITHUB_REF=${GITHUB_REF}"
-          GIT_BRANCH="${GITHUB_REF##*/}" make base
+          GIT_BRANCH=test make base
           if ${IS_PR}; then
               echo "This is a PR"
               TOOLS="$(
@@ -55,7 +51,7 @@ jobs:
               echo "TOOLS=${TOOLS}"
           fi
           if test -n "${TOOLS}"; then
-              docker_setup_version=age ./docker-setup.sh build bar ${TOOLS}
+              docker_setup_version=test ./docker-setup.sh build bar ${TOOLS}
           else
               make
           fi
