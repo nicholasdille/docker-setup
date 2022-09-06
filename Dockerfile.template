@@ -19,7 +19,8 @@ no-suggests
 # TODO: Replace jq with dasel?
 RUN <<EOF
 apt-get update
-apt-get -y install jq
+apt-get -y install \
+    jq
 EOF
 
 # TODO: Use dedicated sub-shell for each post_install script
@@ -32,9 +33,6 @@ export relative_target=/usr/local
 export docker_setup_cache=/var/cache/docker-setup
 export docker_setup_contrib=/var/lib/docker-setup/contrib
 export docker_setup_manifests=/var/lib/docker-setup/manifests
-export docker_hub_mirror=
-export docker_address_base=
-export docker_address_size=
 function has_tool() {
     local tool=$1
     if test -z "${tool}"; then
