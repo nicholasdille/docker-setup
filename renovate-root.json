@@ -31,264 +31,114 @@
   "rebaseLabel": "renovate/rebase",
   "stopUpdatingLabel": "renovate/stop-updating",
   "recreateClosed": false,
-  "major": {
-    "labels": [
-      "bump/major",
-      "type/renovate"
-    ]
-  },
-  "minor": {
-    "labels": [
-      "bump/minor",
-      "type/renovate"
-    ]
-  },
-  "patch": {
-    "labels": [
-      "bump/patch",
-      "type/renovate"
-    ]
-  },
-  "pin": {
-    "labels": [
-      "bump/pin",
-      "type/renovate"
-    ]
-  },
-  "digest": {
-    "labels": [
-      "bump/digest",
-      "type/renovate"
-    ]
-  },
+  "major":  { "labels": [ "bump/major", "type/renovate" ] },
+  "minor":  { "labels": [ "bump/minor", "type/renovate" ] },
+  "patch":  { "labels": [ "bump/patch", "type/renovate" ] },
+  "pin":    { "labels": [ "bump/pin",   "type/renovate" ] },
+  "digest": { "labels": [ "bump/digest", "type/renovate" ] },
   "packageRules": [
     {
-      "matchPaths": [
-        "env/alpine-3.15/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "alpine"
-      ],
-      "allowedVersions": "<=3.15.0"
+      "matchPaths":        [ "env/alpine-3.15/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "alpine" ],
+      "allowedVersions":     "<=3.15.0"
     },
     {
-      "matchPaths": [
-        "env/alpine-3.16/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "alpine"
-      ],
-      "allowedVersions": "<=3.16"
+      "matchPaths":        [ "env/alpine-3.16/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "alpine" ],
+      "allowedVersions":     "<=3.16"
     },
     {
-      "matchPaths": [
-        "env/amazonlinux-2022/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "amazonlinux"
-      ],
-      "allowedVersions": "<=2022"
+      "matchPaths":        [ "env/amazonlinux-2022/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "amazonlinux" ],
+      "allowedVersions":     "<=2022"
     },
     {
-      "matchPaths": [
-        "env/debian-11/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "debian"
-      ],
-      "allowedVersions": "<=11"
+      "matchPaths":        [ "env/debian-11/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "debian" ],
+      "allowedVersions":     "<=11"
     },
     {
-      "matchPaths": [
-        "env/fedora-35/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "fedora"
-      ],
-      "allowedVersions": "<=35"
+      "matchPaths":        [ "env/fedora-35/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "fedora" ],
+      "allowedVersions":     "<=35"
     },
     {
-      "matchPaths": [
-        "env/opensuse-leap-15/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "opensuse/leap"
-      ],
-      "allowedVersions": "/^[0-9]+\\.[0-9]+(\\.[0-9]+)?$/"
+      "matchPaths":        [ "env/opensuse-leap-15/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "opensuse/leap" ],
+      "allowedVersions":     "/^[0-9]+\\.[0-9]+(\\.[0-9]+)?$/"
     },
     {
-      "matchPaths": [
-        "env/rockylinux-8/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "rockylinux"
-      ],
-      "allowedVersions": "<=8"
+      "matchPaths":        [ "env/rockylinux-8/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "rockylinux" ],
+      "allowedVersions":     "<=8"
     },
     {
-      "matchPaths": [
-        "env/rockylinux-9/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "rockylinux"
-      ],
-      "allowedVersions": "<=9"
+      "matchPaths":        [ "env/rockylinux-9/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "rockylinux" ],
+      "allowedVersions":     "<=9"
     },
     {
-      "matchPaths": [
-        "env/ubuntu-20.04/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ubuntu"
-      ],
-      "allowedVersions": "20.04"
+      "matchPaths":        [ "env/ubuntu-20.04/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "ubuntu" ],
+      "allowedVersions":     "20.04"
     },
     {
-      "matchPaths": [
-        "env/ubuntu-22.04/**"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ubuntu"
-      ],
-      "allowedVersions": "22.04"
+      "matchPaths":        [ "env/ubuntu-22.04/**" ],
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "ubuntu" ],
+      "allowedVersions":     "22.04"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "golang",
-        "rust"
-      ],
-      "updateTypes": [
-        "pin",
-        "digest",
-        "patch",
-        "minor",
-        "major"
-      ],
-      "automerge": true
+      "matchDatasources":  [ "docker" ],
+      "matchPackageNames": [ "golang", "rust" ],
+      "updateTypes":       [ "pin", "digest", "patch", "minor", "major" ],
+      "automerge":           true
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "updateTypes": [
-        "pin",
-        "digest"
-      ],
-      "automerge": true
+      "matchDatasources": [ "docker" ],
+      "updateTypes":      [ "pin", "digest" ],
+      "automerge":          true
     },
     {
-      "matchDatasources": [
-        "github-releases",
-        "github-tags",
-        "git-tags",
-        "gitlab-releases"
-      ],
-      "updateTypes": [
-        "pin",
-        "digest",
-        "patch",
-        "minor",
-        "major"
-      ],
-      "automerge": true
+      "matchDatasources": [ "github-releases", "github-tags", "git-tags", "gitlab-releases" ],
+      "updateTypes":      [ "pin", "digest", "patch", "minor", "major" ],
+      "automerge":          true
     }
   ],
   "regexManagers": [
     {
-      "fileMatch": [
-        "^.github/workflows/release.yml$"
-      ],
-      "matchStrings": [
-        "SEMVER_VERSION=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "fsaintjacques/semver-tool",
+      "fileMatch":        [ "^.github/workflows/release.yml$" ],
+      "matchStrings":     [ "SEMVER_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate":    "fsaintjacques/semver-tool",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": [
-        "^.github/workflows/release.yml$"
-      ],
-      "matchStrings": [
-        "SHELLCHECK_VERSION=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "koalaman/shellcheck",
-      "datasourceTemplate": "github-releases",
+      "fileMatch":            [ "^.github/workflows/release.yml$" ],
+      "matchStrings":         [ "SHELLCHECK_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate":        "koalaman/shellcheck",
+      "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [
-        "^.github/workflows/release.yml$"
-      ],
-      "matchStrings": [
-        "YQ_VERSION=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "mikefarah/yq",
-      "datasourceTemplate": "github-releases",
+      "fileMatch":            [ "^.github/workflows/release.yml$" ],
+      "matchStrings":         [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate":        "mikefarah/yq",
+      "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile[^/]*$"
-      ],
-      "matchStrings": [
-        "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n"
-      ],
-      "datasourceTemplate": "docker"
-    },
-    {
-      "fileMatch": [
-        "^docker-setup.sh$"
-      ],
-      "matchStrings": [
-        "go_version=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "golang",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
-    },
-    {
-      "fileMatch": [
-        "^docker-setup.sh$"
-      ],
-      "matchStrings": [
-        "rust_version=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "rust",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
+      "fileMatch":          [ "(^|/|\\.)Dockerfile[^/]*$" ],
+      "matchStrings":       [ "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n" ],
+      "datasourceTemplate":   "docker"
     }
   ]
 }
