@@ -38,7 +38,7 @@ jobs:
           DOCKER_BUILDKIT: 1
           IS_PR: ${{ github.event_name == 'pull_request' }}
         run: |
-          make base
+          GIT_BRANCH="${GITHUB_REF##*/}" make base
           echo "IS_PR=${IS_PR}"
           if ${IS_PR}; then
               echo "This is a PR"
