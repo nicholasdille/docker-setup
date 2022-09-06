@@ -7,3 +7,7 @@ tags:
 - tag2
 homepage: https://www.google.de
 description: Some description
+renovate:
+  datasource: github-releases
+  package: foo/bar
+  extractVersion: ^v(?<version>.+?)$
