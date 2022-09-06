@@ -64,7 +64,6 @@ plugins=(
     rbac-lookup
     rbac-tool
     rbac-view
-    reliably
     resource-capacity
     resource-snapshot
     rolesum
