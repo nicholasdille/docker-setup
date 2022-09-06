@@ -32,21 +32,27 @@ mapfile -t tools < <(get_tools)
 declare -A tools_install
 declare -a tools_ordered
 
-function resolve_dependencies() {
-    local tool=$1
+all_tools="$(
+    jq --raw-output '.tools[].name' tools.json \
+    | xargs echo
+)"
 
-    if test -z "${tools_install[${tool}]}"; then
+function resolve_dependencies() {
+    local name=$1
+
+    if test -z "${tools_install[${name}]}"; then
         local tool_deps
-        tool_deps="$(jq --raw-output '.tools[] | select(.dependencies != null) | .dependencies[]' tools/${tool}/manifest.json | xargs echo)"
+        tool_deps="$(jq --raw-output '.tools[] | select(.dependencies != null) | .dependencies[]' tools/${name}/manifest.json | xargs echo)"
 
         local dep
         for dep in ${tool_deps}; do
             if test -z "${tools_install[${dep}]}"; then
                 resolve_dependencies "${dep}"
-                tools_ordered+=( "${dep}" )
-                tool_install["${dep}"]=true
             fi
         done
+
+        tools_ordered+=( "${name}" )
+        tools_install["${name}"]=true
     fi
 }
 
@@ -81,24 +87,21 @@ case "${command}" in
 
     info)
         tool=$1
-        shift
         if test -z "${tool}"; then
             echo "No tool name specified"
             exit 1
         fi
+        shift
         cat "tools/${tool}/manifest.yaml"
         echo
         ;;
 
     generate)
-        if test "$#" == 0; then
-            echo "No tools specified"
-            exit 1
+        if test "$#" -eq 0; then
+            set -- ${all_tools}
         fi
-        for tool in "$@"; do
-            resolve_dependencies "${tool}"
-            tools_ordered+=( "${tool}" )
-            tool_install["${tool}"]=true
+        for name in "$@"; do
+            resolve_dependencies "${name}"
         done
         generate "${tools_ordered[@]}"
         ;;
@@ -109,15 +112,16 @@ case "${command}" in
             exit 1
         fi
         image=$1
-        shift
         if test -z "${image}"; then
             echo "No image name specified"
             exit 1
         fi
-        for tool in "$@"; do
-            resolve_dependencies "${tool}"
-            tools_ordered+=( "${tool}" )
-            tool_install["${tool}"]=true
+        shift
+        if test "$#" -eq 0; then
+            set -- ${all_tools}
+        fi
+        for name in "$@"; do
+            resolve_dependencies "${name}"
         done
         generate "${tools_ordered[@]}" \
         | docker buildx build --tag "${image}" --load -
@@ -129,11 +133,11 @@ case "${command}" in
             exit 1
         fi
         target=$1
-        shift
         if test -z "${target}"; then
             echo "No target specified"
             exit 1
         fi
+        shift
         echo "Using target ${target}"
         if test "$#" == 0; then
             echo "No tools specified"
@@ -142,10 +146,9 @@ case "${command}" in
         if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
             regctl registry login ${REGISTRY}
         fi
-        for tool in "$@"; do
-            resolve_dependencies "${tool}"
-            tools_ordered+=( "${tool}" )
-            tool_install["${tool}"]=true
+        mkdir -p "${target}"
+        for name in "$@"; do
+            resolve_dependencies "${name}"
         done
         for tool in "${tools_ordered[@]}"; do
             echo "Processing ${tool}"
@@ -164,20 +167,19 @@ case "${command}" in
             exit 1
         fi
         target=$1
-        shift
         if test -z "${target}"; then
             echo "No target specified"
             exit 1
         fi
+        shift
         echo "Using target ${target}"
         if test "$#" == 0; then
             echo "No tools specified"
             exit 1
         fi
-        for tool in "$@"; do
-            resolve_dependencies "${tool}"
-            tools_ordered+=( "${tool}" )
-            tool_install["${tool}"]=true
+        mkdir -p "${target}"
+        for name in "$@"; do
+            resolve_dependencies "${name}"
         done
         generate "${tools_ordered[@]}" \
         | docker buildx build --output "${target}" -
@@ -189,11 +191,11 @@ case "${command}" in
             exit 1
         fi
         target=$1
-        shift
         if test -z "${target}"; then
             echo "No target specified"
             exit 1
         fi
+        shift
         echo "Using target ${target}"
         if test "$#" == 0; then
             echo "No tools specified"
@@ -203,10 +205,8 @@ case "${command}" in
             echo "Logging in to ${REGISTRY}"
             docker login ${REGISTRY}
         fi
-        for tool in "$@"; do
-            resolve_dependencies "${tool}"
-            tools_ordered+=( "${tool}" )
-            tool_install["${tool}"]=true
+        for name in "$@"; do
+            resolve_dependencies "${name}"
         done
         for tool in "${tools_ordered[@]}"; do
             echo "Processing ${tool}"
