@@ -108,20 +108,6 @@ jobs:
           echo "has_release=${has_release}"
           echo "::set-output name=has_release::${has_release}"
 
-      - name: Check magic tag
-        id: tag
-        run: |
-          has_tag=false
-
-          tags="$(git tag --points-at HEAD)"
-          echo "Got tags: ${tags}."
-          if echo "${tags}" | grep -q "^skip-tests$"; then
-              has_tag=true
-          fi
-
-          echo "has_tag=${has_tag}"
-          echo "::set-output name=has_tag::${has_tag}"
-
       - name: Prepare matrix
         id: matrix
         run: |
@@ -143,7 +129,7 @@ jobs:
     name: Tests
     needs:
     - check
-    if: needs.check.outputs.has_release != 'true' && needs.check.outputs.has_tag != 'true'
+    if: needs.check.outputs.has_release != 'true'
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
