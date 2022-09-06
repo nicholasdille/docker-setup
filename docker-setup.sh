@@ -101,6 +101,10 @@ case "${command}" in
         ;;
 
     build)
+        if ! type regctl >/dev/null 2>&1; then
+            echo "ERROR: Command <install> required regclient."
+            exit 1
+        fi
         image=$1
         shift
         if test -z "${image}"; then
@@ -117,6 +121,10 @@ case "${command}" in
         ;;
 
     install)
+        if ! type regctl >/dev/null 2>&1; then
+            echo "ERROR: Command <install> required regclient."
+            exit 1
+        fi
         target=$1
         shift
         if test -z "${target}"; then
@@ -147,6 +155,10 @@ case "${command}" in
         ;;
 
     install-from-registry)
+        if ! type docker >/dev/null 2>&1; then
+            echo "ERROR: Command <install> required docker."
+            exit 1
+        fi
         target=$1
         shift
         if test -z "${target}"; then
@@ -168,6 +180,10 @@ case "${command}" in
         ;;
 
     install-from-image)
+        if ! type docker >/dev/null 2>&1; then
+            echo "ERROR: Command <install> required docker."
+            exit 1
+        fi
         target=$1
         shift
         if test -z "${target}"; then
