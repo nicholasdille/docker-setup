@@ -150,7 +150,7 @@ case "${command}" in
             | while read DIGEST; do
                 echo "Unpacking ${DIGEST}"
                 regctl blob get "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" "${DIGEST}" \
-                | sudo tar --extract --gzip --directory=${target} --no-same-owner
+                | tar --extract --gzip --directory=${target} --no-same-owner
             done
         done
         ;;
@@ -217,7 +217,7 @@ case "${command}" in
                 echo "+ Extracting layer $(dirname "${FILE}")"
                 docker image save "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" \
                 | tar --extract --to-stdout "${FILE}" \
-                | sudo tar --extract --directory="${target}" --strip-components=2
+                | tar --extract --directory="${target}" --strip-components=2
             done
             echo "+ Done"
         done
