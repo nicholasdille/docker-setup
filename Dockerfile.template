@@ -1,9 +1,10 @@
 #syntax=docker/dockerfile:1.4.3
 
+ARG image=ubuntu:22.04
 ARG ref=main
 # INSERT FROM
 
-FROM ubuntu:22.04@sha256:20fa2d7bb4de7723f542be5923b06c4d704370f0390e4ae9e1c833c8785644c1 AS base
+FROM ${image} AS base
 
 SHELL [ "bash", "-e", "-c"]
 
@@ -41,31 +42,6 @@ function has_tool() {
         exit 1
     fi
     test -f "${docker_setup_manifests}/${tool}.yaml"
-}
-function tool_will_be_installed() {
-    echo "tool_will_be_installed(): THIS IS NOT SUPPORTED ANYMORE. USE has_tool()."
-    exit 1
-}
-function wait_for_tool() {
-    echo "wait_for_tool(): THIS IS NOT SUPPORTED ANYMORE. USE has_tool()."
-    exit 1
-}
-function docker_is_running() {
-    echo "docker_is_running(): THIS IS NOT SUPPORTED ANYMORE."
-    false
-}
-function wait_for_docker() {
-    echo "wait_for_docker(): THIS IS NOT SUPPORTED ANYMORE."
-    false
-}
-function info() {
-    echo "$@"
-}
-function warning() {
-    echo "$@"
-}
-function error() {
-    echo "$@"
 }
 function get_lsb_distro_name() {
 	local lsb_dist=""
@@ -122,10 +98,6 @@ function is_alpine() {
             return 1
             ;;
     esac
-}
-function has_systemd() {
-    # TODO: Must be determined by CLI and passed along "somehow"
-    false
 }
 FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
 for FILE in ${FILES}; do

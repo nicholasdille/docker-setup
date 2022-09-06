@@ -38,15 +38,12 @@ if test -f "${prefix}/etc/fstab"; then
     if test "${root_fs}" == "overlay"; then
 
         if has_tool "fuse-overlayfs"; then
-            info "Waiting for fuse-overlayfs to be installed"
-            wait_for_tool "fuse-overlayfs"
-
             echo "Configuring storage driver for DinD"
             # shellcheck disable=SC2094
             cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
 
         else
-            warning "fuse-overlayfs should be planned for installation."
+            echo "fuse-overlayfs should be planned for installation."
         fi
     fi
 fi
@@ -104,7 +101,7 @@ elif is_alpine; then
     cp "${docker_setup_contrib}/docker/openrc/docker.initd" "${prefix}/etc/init.d/docker"
     openrc
 else
-    warning "Unable to install init script because the distributon is unknown."
+    echo "Unable to install init script because the distributon is unknown."
 fi
 
 if test -z "${prefix}" && has_systemd; then

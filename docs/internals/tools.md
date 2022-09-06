@@ -125,13 +125,8 @@ Tool-specific variables:
 
 `docker-setup` comes with several functions to support installation commands:
 
-- `info`, `warning`, `error`, `debug` - formatted and colored output
 - `is_debian`, `is_redhat`, `is_alpine` - checks for distribution flavors
 - `has_tool` - check whether a tool is installed
-- `wait_for_tool` - wait for a tool to be installed (timeout after 60 * 10 seconds)
-- `tool_will_be_installed` - check whether a tool is planned to be installed
-- `wait_for_docker` - wait for the Docker daemon to be available
-- `docker_is_running` - check whether the Docker daemon is already running
 - `has_systemd` - check whether the system offers `systemd`
 - `docker_run` - execute commands in a container based on the image built by `dockerfile`, see [image cache](image_cache.md)
 
