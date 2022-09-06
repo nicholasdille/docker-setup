@@ -1,0 +1,11 @@
+name: age
+version: 1.0.0
+tags:
+- category/security
+- type/cli
+homepage: https://github.com/FiloSottile/age
+description: Simple, modern and secure encryption tool
+renovate:
+  datasource: github-releases
+  package: FiloSottile/age
+  extractVersion: ^v(?<version>.+?)$
