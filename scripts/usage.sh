@@ -3,13 +3,13 @@
 : "${REGISTRY:=ghcr.io}"
 : "${OWNER:=nicholasdille}"
 : "${PROJECT:=docker-setup}"
-: "${GIT_BRANCH:=main}"
+: "${VERSION:=main}"
 
 SUM=0
 (
     for TOOL in $@; do
         SIZE="$(
-            regctl manifest get ${REGISTRY}/${OWNER}/${PROJECT}/${TOOL}:${GIT_BRANCH} --format raw-body \
+            regctl manifest get ${REGISTRY}/${OWNER}/${PROJECT}/${TOOL}:${VERSION} --format raw-body \
             | jq -r '.layers[].size' \
             | paste -sd+ \
             | bc
