@@ -19,120 +19,9 @@ on:
 
 jobs:
 
-  check:
-    name: Checks
-    runs-on: ubuntu-20.04
-    env:
-      core_distros: |
-        [ 
-          "ubuntu-22.04"
-        ]
-      core_archs: |
-        [
-          "amd64"
-        ]
-      all_distros: |
-        [
-          "alpine-3.15",
-          "alpine-3.16",
-          "amazonlinux-2022",
-          "debian-11",
-          "fedora-35",
-          "rockylinux-8",
-          "rockylinux-9",
-          "ubuntu-20.04",
-          "ubuntu-22.04"
-        ]
-      all_archs: |
-        [
-          "amd64"
-        ]
-      future_distros: |
-        [
-          "archlinux",
-          "clearlinux",
-          "opensuse-leap-15",
-          "opensuse-tumbleweed"
-        ]
-      future_archs: |
-        [
-          "amd64",
-          "arm64"
-        ]
-    outputs:
-      is_release: ${{ steps.release.outputs.is_release }}
-      has_release: ${{ steps.check.outputs.has_release }}
-      has_tag: ${{ steps.tag.outputs.has_tag }}
-      distros: ${{ steps.matrix.outputs.distros }}
-      archs: ${{ steps.matrix.outputs.archs }}
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-
-      - name: Is release
-        id: release
-        run: |
-          is_release=false
-          echo "Check GITHUB_REF for tag: ${GITHUB_REF:0:11}"
-          if test "${GITHUB_REF:0:11}" == "refs/tags/v"; then
-              echo "This is a release"
-              is_release=true
-          fi
-          echo "::set-output name=is_release::${is_release}"
-
-      - name: Check release
-        id: check
-        run: |
-          has_release=false
-
-          tags="$(git tag --points-at HEAD)"
-          echo "Got tags: ${tags}."
-          if test "$(echo "${tags}" | wc -l)" -gt 0; then
-
-              for tag in ${tags}; do
-                  echo "Checking tag ${tag} for release"
-                  if curl -sfo /dev/null "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${tag}"; then
-                      echo "Found release for current commit/tag, can skip tests"
-                      has_release=true
-                      break
-                  fi
-              done
-          fi
-
-          echo "has_release=${has_release}"
-          echo "::set-output name=has_release::${has_release}"
-
-      - name: Prepare matrix
-        id: matrix
-        run: |
-          if ${{ steps.release.outputs.is_release }} || ${{ contains(github.event.pull_request.labels.*.name, 'full_tests') }}; then
-              echo "Returning all distros and archs"
-              distros_json="$(echo "${all_distros}" | jq --compact-output '.')"
-              archs_json="$(echo "${all_archs}" | jq --compact-output '.')"
-          else
-              echo "Returning core distros and archs"
-              distros_json="$(echo "${core_distros}" | jq --compact-output '.')"
-              archs_json="$(echo "${core_archs}" | jq --compact-output '.')"
-          fi
-          echo "distros_json=${distros_json}"
-          echo "archs_json=${archs_json}"
-          echo "::set-output name=distros::${distros_json}"
-          echo "::set-output name=archs::${archs_json}"
-
   test:
-    name: Tests
-    needs:
-    - check
-    if: needs.check.outputs.has_release != 'true'
+    name: Test
     runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        distro: ${{ fromJSON(needs.check.outputs.distros) }}
-        arch: ${{ fromJSON(needs.check.outputs.archs) }}
     steps:
 
       - name: Checkout code
@@ -147,17 +36,9 @@ jobs:
       - name: Test
         env:
           DOCKER_BUILDKIT: 1
-          TERM: xterm
           IS_PR: ${{ github.event_name == 'pull_request' }}
-          PR: ${{ github.event.pull_request.number }}
         run: |
-          make tools.json; \
-          docker build \
-              --platform linux/${{ matrix.arch }} \
-              --file env/${{ matrix.distro }}/Dockerfile \
-              --tag test \
-              .; \
-          mkdir -p "${PWD}/log"; \
+          make base
           echo "IS_PR=${IS_PR}"
           if ${IS_PR}; then
               echo "This is a PR"
@@ -173,16 +54,11 @@ jobs:
               )"
               echo "TOOL=${TOOL}"
           fi
-          docker run \
-              --platform linux/${{ matrix.arch }} \
-              --interactive \
-              --rm \
-              --privileged \
-              --env TERM \
-              --env Europe/Berlin \
-              --env "TOOL=${TOOL}" \
-              --volume "${PWD}/log:/var/log" \
-              test bash run.sh
+          if test -n "${TOOL}"; then
+              docker_setup_version=age ./docker-setup.sh build bar age
+          else
+              make
+          fi
 
       - name: Store logs
         uses: actions/upload-artifact@v3
