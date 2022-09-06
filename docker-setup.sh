@@ -16,6 +16,9 @@ if ! test -f "${docker_setup_tools_file}"; then
     exit 1
 fi
 
+: "${REGISTRY:=ghcr.io}"
+: "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
+
 if test -z "${DOCKER_CONFIG}"; then
     export DOCKER_CONFIG="${HOME}/.docker"
 fi
@@ -58,8 +61,8 @@ function generate() {
 
         CONTENT="$(
             echo "${CONTENT}" \
-            | sed -E "s|^(# INSERT FROM)|\1\nFROM ghcr.io/nicholasdille/docker-setup/${tool}:\${ref} AS ${tool}|" \
-            | sed -E "s|^(# INSERT COPY)|\1\nCOPY --link --from=${tool} / /|"
+            | sed -E "s|^(# INSERT FROM)|FROM ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:\${ref} AS ${tool}\n\1|" \
+            | sed -E "s|^(# INSERT COPY)|COPY --link --from=${tool} / /\n\1|"
         )"
     done
     echo "${CONTENT}"
@@ -136,8 +139,8 @@ case "${command}" in
             echo "No tools specified"
             exit 1
         fi
-        if ! regctl registry config | jq --exit-status 'to_entries[] | select(.key == "ghcr.io")' >/dev/null 2>&1; then
-            regctl registry login ghcr.io
+        if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
+            regctl registry login ${REGISTRY}
         fi
         for tool in "$@"; do
             resolve_dependencies "${tool}"
@@ -146,10 +149,10 @@ case "${command}" in
         done
         for tool in "${tools_ordered[@]}"; do
             echo "Processing ${tool}"
-            regctl manifest get "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+            regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
             | while read DIGEST; do
                 echo "Unpacking ${DIGEST}"
-                regctl blob get "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" "${DIGEST}" \
+                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                 | tar --extract --gzip --directory=${target} --no-same-owner
             done
         done
@@ -196,9 +199,9 @@ case "${command}" in
             echo "No tools specified"
             exit 1
         fi
-        if ! jq --exit-status '.auths | to_entries[] | select(.key == "ghcr.io")' "${DOCKER_CONFIG}/config.json" >/dev/null 2>&1; then
-            echo "Logging in to ghcr.io"
-            docker login ghcr.io
+        if ! jq --exit-status --arg registry "${REGISTRY}" '.auths | to_entries[] | select(.key == $registry)' "${DOCKER_CONFIG}/config.json" >/dev/null 2>&1; then
+            echo "Logging in to ${REGISTRY}"
+            docker login ${REGISTRY}
         fi
         for tool in "$@"; do
             resolve_dependencies "${tool}"
@@ -207,15 +210,15 @@ case "${command}" in
         done
         for tool in "${tools_ordered[@]}"; do
             echo "Processing ${tool}"
-            echo "+ Pulling image ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}"
-            docker image pull --quiet "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}"
+            echo "+ Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
+            docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
             echo "+ Reading layers"
-            docker image save "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" \
+            docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
             | tar --extract --to-stdout manifest.json \
             | jq --raw-output '.[].Layers[]' \
             | while read FILE; do
                 echo "+ Extracting layer $(dirname "${FILE}")"
-                docker image save "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" \
+                docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
                 | tar --extract --to-stdout "${FILE}" \
                 | tar --extract --directory="${target}" --strip-components=2
             done
