@@ -45,7 +45,7 @@ jobs:
                       --header "Accept: application/vnd.github.v3+json" \
                       --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
                   | jq --raw-output '.[].filename' \
-                  | -E '^tools/[^/]+/manifest.yaml$' \
+                  | grep -E '^tools/[^/]+/manifest.yaml$' \
                   | cut -d/ -f2
               )"
               echo "TOOLS=${TOOLS}"
