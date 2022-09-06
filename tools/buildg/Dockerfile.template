@@ -8,7 +8,5 @@ ARG version
 
 RUN <<EOF
 curl --silent --location "https://github.com/ktock/buildg/releases/download/v${version}/buildg-v${version}-linux-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
-    ./buildg \
-    ./buildg.sh
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF
