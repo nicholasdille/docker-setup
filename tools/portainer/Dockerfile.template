@@ -1,0 +1,26 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/docker-compose-v1:${ref} AS docker-compose-v1
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY portainer.service ${prefix}/etc/systemd/system/
+COPY init-portainer ${prefix}/etc/init.d/portainer
+
+RUN <<EOF
+curl --silent --location "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    portainer/portainer
+
+mkdir -p "${prefix}${target}/share/portainer"
+curl --silent --location "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/portainer" --strip-components=1 --no-same-owner \
+    portainer/public
+EOF
+
+COPY --from=docker-compose-v1 ${target}/bin/docker-compose ${prefix}${target}/bin/
