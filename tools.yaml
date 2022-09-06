@@ -2425,7 +2425,7 @@ tools:
       fi
 
   - name: gh
-    version: 2.14.7
+    version: 2.15.0
     check: ${binary} --version | head -n 1 | cut -d' ' -f3
     tags:
     - development
