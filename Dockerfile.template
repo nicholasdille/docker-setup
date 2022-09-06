@@ -97,11 +97,13 @@ function is_alpine() {
             ;;
     esac
 }
-FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
-for FILE in ${FILES}; do
-    echo "Running post install for $(basename "${FILE}" .sh)"
-    source ${FILE}
-done
+if test -d /var/lib/docker-setup/post_install; then
+    FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
+    for FILE in ${FILES}; do
+        echo "Running post install for $(basename "${FILE}" .sh)"
+        source ${FILE}
+    done
+fi
 rm -rf /var/cache/docker-setup
 EOF
 

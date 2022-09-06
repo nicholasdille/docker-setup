@@ -6,7 +6,8 @@ if ! test -f tools.json; then
     exit 1
 fi
 
-docker_setup_version=oras
+: "${docker_setup_version:=oras}"
+
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if test -f "${PWD}/tools.json"; then
     docker_setup_tools_file="${PWD}/tools.json"
