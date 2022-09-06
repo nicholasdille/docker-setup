@@ -34,17 +34,11 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
           IS_PR: ${{ github.event_name == 'pull_request' }}
+          PR: ${{ github.event.pull_request.number }}
         run: |
           GIT_BRANCH=test make base
           if ${IS_PR}; then
-              echo "This is a PR"
-              curl https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
-                  --silent \
-                  --fail \
-                  --header "Accept: application/vnd.github.v3+json" \
-                  --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-              | jq --raw-output '.[].filename' \
-              | grep -E '^tools/[^/]+/manifest.yaml$'
+              echo "This is PR ${PR}"
               TOOLS="$(
                   curl https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
                       --silent \
