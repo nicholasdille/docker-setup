@@ -12,13 +12,10 @@ on:
       #- reopened
     paths:
       - docker-setup.sh
-      - tools.yaml
       - env/**
-      - Dockerfile
-      - docker/*
+      - tools/**
       - .github/workflows/test-linux.yml
       - .github/workflows/release.yml
-      - .github/workflows/patch.yml
 
 jobs:
 
