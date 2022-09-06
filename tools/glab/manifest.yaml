@@ -2,10 +2,10 @@ name: glab
 version: 1.22.0
 check: ${binary} version | cut -d' ' -f3
 tags:
-  - org/gitlab
-  - category/development
-  - type/cli
-  - cicd
+- org/gitlab
+- category/development
+- type/cli
+- cicd
 homepage: https://gitlab.com/gitlab-org/cli
 description: CLI tool bringing GitLab to your command line
 renovate:

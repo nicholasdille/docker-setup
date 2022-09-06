@@ -1,14 +1,14 @@
 name: kubectl-build
 version: 0.1.6
 dependencies:
-  - kubectl
+- kubectl
 tags:
-  - org/vmware
-  - container/build
-  - type/cli
-  - type/plugin
-  - kubernetes
-  - management
+- org/vmware
+- container/build
+- type/cli
+- type/plugin
+- kubernetes
+- management
 homepage: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl
 description: Tool for building container images with your Kubernetes cluster
 renovate:

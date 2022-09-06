@@ -2,12 +2,12 @@ name: docuum
 version: 0.21.1
 check: ${binary} --version | cut -d' ' -f2
 dependencies:
-  - docker
+- docker
 tags:
-  - standard/docker
-  - container/runtime
-  - type/daemon
-  - management
+- standard/docker
+- container/runtime
+- type/daemon
+- management
 homepage: https://github.com/stepchowfun/docuum
 description: Performs least recently used eviction of Docker images
 renovate:

@@ -2,8 +2,8 @@ name: faas-cli
 version: 0.14.6
 check: ${binary} version | grep "version:" | cut -d' ' -f3
 tags:
-  - category/serverless
-  - type/cli
+- category/serverless
+- type/cli
 homepage: https://github.com/openfaas/faas-cli
 description: Official CLI for OpenFaaS
 renovate:

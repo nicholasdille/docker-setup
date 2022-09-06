@@ -3,10 +3,10 @@ version: 7.0.0
 binary: qemu-img
 check: ${binary} --version | grep qemu-img | cut -d' ' -f3
 tags:
-  - type/cli
-  - type/daemon
-  - vm
-  - emulation
+- type/cli
+- type/daemon
+- vm
+- emulation
 homepage: https://github.com/qemu/qemu
 description: Generic and open source machine & userspace emulator and virtualizer
 renovate:

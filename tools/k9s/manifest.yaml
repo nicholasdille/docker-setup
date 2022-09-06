@@ -2,9 +2,9 @@ name: k9s
 version: 0.26.3
 check: ${binary} version --short | grep "^Version" | cut -dv -f2
 tags:
-  - type/tui
-  - kubernetes
-  - management
+- type/tui
+- kubernetes
+- management
 homepage: https://github.com/derailed/k9s
 description: CLI To Manage Your Clusters In Style
 renovate:

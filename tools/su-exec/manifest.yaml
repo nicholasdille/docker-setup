@@ -1,10 +1,10 @@
 name: su-exec
 version: 0.2
 dependencies:
-  - docker
+- docker
 tags:
-  - container/su
-  - type/cli
+- container/su
+- type/cli
 homepage: https://github.com/ncopa/su-exec
 description: Switch user and group id and exec
 renovate:

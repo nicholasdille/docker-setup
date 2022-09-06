@@ -1,10 +1,10 @@
 name: emojisum
 version: 2
 dependencies:
-  - docker
+- docker
 tags:
-  - category/security
-  - type/cli
+- category/security
+- type/cli
 homepage: https://github.com/emojisum/emojisum
 description: Easier way to compare hashes/fingerprints when dealing human weak link
 renovate:

@@ -2,10 +2,10 @@ name: hub
 version: 2.14.2
 check: ${binary} --version | grep ^hub | cut -d' ' -f3
 tags:
-  - org/github
-  - type/cli
-  - category/development
-  - cicd
+- org/github
+- type/cli
+- category/development
+- cicd
 homepage: https://github.com/github/hub
 description: Command-line tool that makes git easier to use with GitHub
 renovate:

@@ -1,12 +1,12 @@
 name: cnitool
 version: 1.1.2
 dependencies:
-  - docker
+- docker
 tags:
-  - standard/cni
-  - component/network
-  - type/cli
-  - kubernetes
+- standard/cni
+- component/network
+- type/cli
+- kubernetes
 homepage: https://github.com/containernetworking/cni
 description: Container Network Interface - networking for Linux containers
 renovate:

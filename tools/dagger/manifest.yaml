@@ -2,9 +2,9 @@ name: dagger
 version: 0.2.32
 check: ${binary} version | cut -d' ' -f2
 tags:
-  - type/cli
-  - management
-  - cicd
+- type/cli
+- management
+- cicd
 homepage: https://github.com/dagger/dagger
 description: Portable devkit for CI/CD pipelines
 renovate:

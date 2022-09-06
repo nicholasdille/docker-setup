@@ -2,8 +2,8 @@ name: dyff
 version: 1.5.5
 check: ${binary} version | cut -d' ' -f3
 tags:
-  - category/development
-  - type/cli
+- category/development
+- type/cli
 homepage: https://github.com/homeport/dyff
 description: Diff tool for YAML files
 renovate:

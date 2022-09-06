@@ -2,10 +2,10 @@ name: kompose
 version: 1.26.1
 check: ${binary} version | cut -d' ' -f1
 tags:
-  - org/kubernetes
-  - container/compose
-  - type/cli
-  - kubernetes
+- org/kubernetes
+- container/compose
+- type/cli
+- kubernetes
 homepage: https://github.com/kubernetes/kompose
 description: Go from Docker Compose to Kubernetes
 renovate:

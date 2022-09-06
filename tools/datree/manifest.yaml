@@ -2,10 +2,10 @@ name: datree
 version: 1.6.16
 check: ${binary} version
 tags:
-  - category/security
-  - type/cli
-  - kubernetes
-  - cicd
+- category/security
+- type/cli
+- kubernetes
+- cicd
 homepage: https://github.com/datreeio/datree
 description: Prevent Kubernetes misconfigurations from reaching production
 renovate:

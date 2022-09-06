@@ -2,10 +2,10 @@ name: libcgroup
 version: 2.0.2
 binary: ${target}/bin/lscgroup
 dependencies:
-  - docker
+- docker
 tags:
-  - kernel/cgroups
-  - type/cli
+- kernel/cgroups
+- type/cli
 homepage: https://github.com/libcgroup/libcgroup
 description: Library and tools to manage cgroups
 renovate:

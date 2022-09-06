@@ -2,13 +2,13 @@ name: docker-manpages
 version: 20.10.17
 binary: false
 tags:
-  - org/docker
-  - standard/docker
-  - standard/oci
-  - container/runtime
-  - container/build
-  - category/default
-  - type/configuration
+- org/docker
+- standard/docker
+- standard/oci
+- container/runtime
+- container/build
+- category/default
+- type/configuration
 renovate:
   datasource: github-tags
   package: moby/moby

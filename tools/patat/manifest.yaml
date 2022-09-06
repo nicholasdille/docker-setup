@@ -1,8 +1,8 @@
 name: patat
 version: 0.8.7.0
 tags:
-  - type/cli
-  - markdown
+- type/cli
+- markdown
 homepage: https://github.com/jaspervdj/patat
 description: Terminal-based presentations using Pandoc
 renovate:

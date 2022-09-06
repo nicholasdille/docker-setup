@@ -2,10 +2,10 @@ name: libcap
 version: 2.65
 binary: ${target}/sbin/setcap
 dependencies:
-  - docker
+- docker
 tags:
-  - kernel/capabilities
-  - type/cli
+- kernel/capabilities
+- type/cli
 homepage: https://git.kernel.org/pub/scm/libs/libcap/libcap.git/about/
 description: Library for getting and setting POSIX.1e (formerly POSIX 6) draft 15 capabilities.
 renovate:

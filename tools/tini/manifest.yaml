@@ -2,8 +2,8 @@ name: tini
 version: 0.19.0
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - container/init
-  - type/cli
+- container/init
+- type/cli
 homepage: https://github.com/krallin/tini
 description: Tiny but valid init for containers
 renovate:

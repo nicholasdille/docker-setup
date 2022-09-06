@@ -1,8 +1,8 @@
 name: slides
 version: 0.8.0
 tags:
-  - type/cli
-  - markdown
+- type/cli
+- markdown
 homepage: https://github.com/maaslalani/slides
 description: Terminal based presentation tool
 renovate:

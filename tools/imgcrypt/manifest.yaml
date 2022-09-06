@@ -3,14 +3,14 @@ version: 1.1.6
 binary: ctr-enc
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 dependencies:
-  - containerd
-  - docker
+- containerd
+- docker
 tags:
-  - org/cncf
-  - org/containerd
-  - standard/oci
-  - category/security
-  - type/plugin
+- org/cncf
+- org/containerd
+- standard/oci
+- category/security
+- type/plugin
 homepage: https://github.com/containerd/imgcrypt
 description: OCI Image Encryption Package
 renovate:

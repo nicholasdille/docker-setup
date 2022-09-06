@@ -2,11 +2,11 @@ name: crane
 version: 0.11.0
 check: ${binary} version
 tags:
-  - org/google
-  - standard/oci
-  - container/registry
-  - container/image
-  - type/cli
+- org/google
+- standard/oci
+- container/registry
+- container/image
+- type/cli
 homepage: https://github.com/google/go-containerregistry
 description: Go library and CLIs for working with container registries
 renovate:

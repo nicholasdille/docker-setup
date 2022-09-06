@@ -2,10 +2,10 @@ name: kcp
 version: 0.8.0
 check: ${binary} --version | cut -d' ' -f3 | cut -dv -f3
 tags:
-  - type/cli
-  - type/daemon
-  - type/plugin
-  - kubernetes
+- type/cli
+- type/daemon
+- type/plugin
+- kubernetes
 homepage: https://github.com/kcp-dev/kcp
 description: Prototype of a multi-tenant Kubernetes control plane
 renovate:

@@ -2,9 +2,9 @@ name: jp
 version: 0.2.1
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - standard/jmespath
-  - type/cli
-  - format
+- standard/jmespath
+- type/cli
+- format
 homepage: https://github.com/jmespath/jp
 description: Command line interface to JMESPath
 renovate:

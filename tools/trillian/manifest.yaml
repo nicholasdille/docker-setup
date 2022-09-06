@@ -2,11 +2,11 @@ name: trillian
 version: 1.5.0
 binary: trillian_log_server
 dependencies:
-  - docker
+- docker
 tags:
-  - org/google
-  - category/security
-  - type/daemon
+- org/google
+- category/security
+- type/daemon
 homepage: https://github.com/google/trillian
 description: Transparent, highly scalable and cryptographically verifiable data store
 renovate:

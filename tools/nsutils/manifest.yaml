@@ -2,10 +2,10 @@ name: nsutils
 version: 0.2
 binary: nslist
 dependencies:
-  - docker
+- docker
 tags:
-  - kernel/namespaces
-  - type/cli
+- kernel/namespaces
+- type/cli
 homepage: https://github.com/rd235/nsutils
 description: Linux namespace utilities
 renovate:

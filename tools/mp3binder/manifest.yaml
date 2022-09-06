@@ -2,8 +2,8 @@ name: mp3binder
 version: v5.1.0
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - category/music
-  - mp3
+- category/music
+- mp3
 homepage: https://github.com/crra/mp3binder
 description: Concatenating, joining, binding MP3 files without re-encoding
 renovate:

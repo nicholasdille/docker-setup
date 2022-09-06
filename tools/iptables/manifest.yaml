@@ -3,8 +3,8 @@ version: 1.8.8
 binary: ${target}/sbin/iptables
 if: is_rockylinux
 tags:
-  - component/network
-  - type/cli
+- component/network
+- type/cli
 homepage: https://www.netfilter.org/projects/iptables/index.html
 description: Userspace command line program used to configure kernel packet filtering ruleset
 renovate:

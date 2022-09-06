@@ -2,30 +2,12 @@ name: task
 version: 3.15.0
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
-  - category/development
-  - type/cli
-  - cicd
+- category/development
+- type/cli
+- cicd
 homepage: https://github.com/go-task/task
 description: Task runner and simpler Make alternative written in Go
 renovate:
   datasource: github-releases
   package: go-task/task
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
-    type: tarball
-    files:
-      - task
-  - url: https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz
-    type: tarball
-    path: ${target}/share
-    strip: 2
-    files:
-      - completion/bash/task.bash
-      - completion/fish/task.fish
-      - completion/zsh/_task
-post_install: |
-  echo "Install completion"
-  mv "${target}/share/${name}.bash" "${target}/share/bash-completion/completions/${name}"
-  mv "${target}/share/${name}.fish" "${target}/share/fish/vendor_completions.d/${name}.fish"
-  mv "${target}/share/_${name}" "${target}/share/zsh/vendor-completions/_${name}"

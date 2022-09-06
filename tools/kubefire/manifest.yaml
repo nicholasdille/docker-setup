@@ -2,12 +2,12 @@ name: kubefire
 version: 0.3.8
 check: ${binary} version | grep "^Version:" | cut -d' ' -f2 | tr -d v
 tags:
-  - type/cli
-  - kubernetes
-  - kvm
-  - management
-  - vm
-  - emulation
+- type/cli
+- kubernetes
+- kvm
+- management
+- vm
+- emulation
 homepage: https://github.com/innobead/kubefire
 description: Creates and manages Kubernetes Clusters using Firecracker microVMs
 renovate:

@@ -2,13 +2,13 @@ name: kubectl-free
 version: 0.2.0
 check: ${binary} --version | cut -d' ' -f2 | tr -d ','
 dependencies:
-  - kubectl
+- kubectl
 tags:
-  - type/cli
-  - type/plugin
-  - kubernetes
-  - management
-  - troubleshooting
+- type/cli
+- type/plugin
+- kubernetes
+- management
+- troubleshooting
 homepage: https://github.com/makocchi-git/kubectl-free
 description: Show various requested resources on Kubernetes nodes
 renovate:

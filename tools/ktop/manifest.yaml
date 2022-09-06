@@ -1,10 +1,10 @@
 name: ktop
 version: 0.3.0
 tags:
-  - type/tui
-  - kubernetes
-  - management
-  - troubleshooting
+- type/tui
+- kubernetes
+- management
+- troubleshooting
 homepage: https://github.com/vladimirvivien/ktop
 description: top-like tool for your Kubernetes clusters
 renovate:

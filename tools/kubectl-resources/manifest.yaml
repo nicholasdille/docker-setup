@@ -1,13 +1,13 @@
 name: kubectl-resources
 version: 0.2.0
 dependencies:
-  - kubectl
+- kubectl
 tags:
-  - type/cli
-  - type/plugin
-  - kubernetes
-  - management
-  - troubleshooting
+- type/cli
+- type/plugin
+- kubernetes
+- management
+- troubleshooting
 homepage: https://github.com/howardjohn/kubectl-resources
 description: Access Kubernetes resource requests, limits, and usage
 renovate:

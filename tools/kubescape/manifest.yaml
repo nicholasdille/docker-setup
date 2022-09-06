@@ -2,9 +2,9 @@ name: kubescape
 version: 2.0.170
 check: ${binary} version | cut -d' ' -f5 | tr -d v
 tags:
-  - type/cli
-  - category/security
-  - kubernetes
+- type/cli
+- category/security
+- kubernetes
 homepage: https://github.com/kubescape/kubescape
 description: Risk analysis, security compliance, RBAC visualizer and image vulnerabilities scanning
 renovate:

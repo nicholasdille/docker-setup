@@ -2,11 +2,11 @@ name: faasd
 version: 0.16.5
 check: ${binary} version | grep faasd | tr '\t' ' ' | cut -d' ' -f3
 dependencies:
-  - containerd
-  - faas-cli
+- containerd
+- faas-cli
 tags:
-  - category/serverless
-  - type/daemon
+- category/serverless
+- type/daemon
 homepage: https://github.com/openfaas/faasd
 description: Lightweight & portable faas engine
 renovate:

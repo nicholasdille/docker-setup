@@ -2,13 +2,13 @@ name: firectl
 version: 0.1.0
 check: ${binary} --version
 dependencies:
-  - firecracker
+- firecracker
 tags:
-  - type/cli
-  - kvm
-  - management
-  - vm
-  - emulation
+- type/cli
+- kvm
+- management
+- vm
+- emulation
 homepage: https://github.com/firecracker-microvm/firectl
 description: Command-line tool to run Firecracker microVMs
 renovate:

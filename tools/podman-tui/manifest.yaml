@@ -2,13 +2,13 @@ name: podman-tui
 version: 0.5.0
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 dependencies:
-  - podman
+- podman
 tags:
-  - org/redhat
-  - standard/oci
-  - container/runtime
-  - type/tui
-  - rootless
+- org/redhat
+- standard/oci
+- container/runtime
+- type/tui
+- rootless
 homepage: https://github.com/containers/podman-tui
 description: Podman Terminal UI
 renovate:

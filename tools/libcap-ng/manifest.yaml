@@ -2,10 +2,10 @@ name: libcap-ng
 version: 0.8.3
 binary: captest
 dependencies:
-  - docker
+- docker
 tags:
-  - kernel/capabilities
-  - type/cli
+- kernel/capabilities
+- type/cli
 homepage: https://github.com/stevegrubb/libcap-ng
 description: Library for Linux that makes using posix capabilities easy
 renovate:

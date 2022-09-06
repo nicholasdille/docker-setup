@@ -2,10 +2,10 @@ name: umoci
 version: 0.4.7
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - org/oci
-  - standard/oci
-  - container/image
-  - type/cli
+- org/oci
+- standard/oci
+- container/image
+- type/cli
 homepage: https://github.com/opencontainers/umoci
 description: Modifies Open Container images
 renovate:

@@ -2,9 +2,9 @@ name: syft
 version: 0.55.0
 check: ${binary} --version | cut -d' ' -f2
 tags:
-  - category/security
-  - sbom
-  - cicd
+- category/security
+- sbom
+- cicd
 homepage: https://github.com/anchore/syft
 description: CLI tool and library for generating a Software Bill of Materials from container images and filesystems
 renovate:

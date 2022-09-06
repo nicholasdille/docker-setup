@@ -2,13 +2,13 @@ name: kubectl
 version: 1.25.0
 check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
 dependencies:
-  - krew
+- krew
 tags:
-  - org/cncf
-  - org/kubernetes
-  - type/cli
-  - kubernetes
-  - management
+- org/cncf
+- org/kubernetes
+- type/cli
+- kubernetes
+- management
 homepage: https://github.com/kubernetes/kubernetes
 description: Run commands against Kubernetes clusters
 renovate:

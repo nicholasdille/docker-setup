@@ -2,8 +2,8 @@ name: glow
 version: 1.4.1
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - type/cli
-  - markdown
+- type/cli
+- markdown
 homepage: https://github.com/charmbracelet/glow
 description: Render markdown on the CLI
 renovate:

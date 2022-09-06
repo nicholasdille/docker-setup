@@ -2,8 +2,8 @@ name: loft
 version: 2.2.2
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - type/cli
-  - kubernetes
+- type/cli
+- kubernetes
 homepage: https://github.com/loft-sh/loft
 description: Namespace & Virtual Cluster Manager for Kubernetes
 renovate:

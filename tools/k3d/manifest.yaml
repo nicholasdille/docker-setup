@@ -2,12 +2,12 @@ name: k3d
 version: 5.4.6
 check: ${binary} version | head -n 1 | cut -d' ' -f3 | tr -d v
 dependencies:
-  - docker
+- docker
 tags:
-  - standard/docker
-  - type/cli
-  - kubernetes
-  - management
+- standard/docker
+- type/cli
+- kubernetes
+- management
 homepage: https://github.com/rancher/k3d
 description: Little helper to run CNCF's k3s in Docker
 renovate:

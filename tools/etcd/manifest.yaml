@@ -2,9 +2,9 @@ name: etcd
 version: 3.5.4
 check: ${binary} --version | grep ^etcd | cut -d' ' -f3
 tags:
-  - type/cli
-  - type/daemon
-  - kubernetes
+- type/cli
+- type/daemon
+- kubernetes
 homepage: https://github.com/etcd-io/etcd
 description: Distributed reliable key-value store
 renovate:

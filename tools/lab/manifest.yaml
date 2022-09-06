@@ -2,9 +2,9 @@ name: lab
 version: 0.25.1
 check: ${binary} version | cut -d' ' -f3
 tags:
-  - category/development
-  - type/cli
-  - cicd
+- category/development
+- type/cli
+- cicd
 homepage: https://github.com/zaquestion/lab
 description: Wraps Git or Hub, making it simple to clone, fork, and interact with repositories on GitLab
 renovate:

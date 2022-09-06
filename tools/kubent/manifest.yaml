@@ -1,15 +1,12 @@
 name: kubent
 version: 0.5.1
 tags:
-  - type/cli
-  - kubernetes
-  - management
-  - cicd
+- type/cli
+- kubernetes
+- management
+- cicd
 homepage: https://github.com/doitintl/kube-no-trouble
 description: Easily check your clusters for use of deprecated APIs
 renovate:
   datasource: github-releases
   package: doitintl/kube-no-trouble
-download:
-  - url: https://github.com/doitintl/kube-no-trouble/releases/download/${version}/kubent-${version}-linux-${alt_arch}.tar.gz
-    type: tarball

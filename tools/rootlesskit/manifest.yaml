@@ -2,8 +2,8 @@ name: rootlesskit
 version: 1.0.1
 check: ${binary} --version | cut -d' ' -f3
 tags:
-  - type/helper
-  - rootless
+- type/helper
+- rootless
 homepage: https://github.com/rootless-containers/rootlesskit
 description: Linux-native "fake root" for implementing rootless containers
 renovate:

@@ -2,10 +2,10 @@ name: firecracker
 version: 1.1.1
 check: ${binary} --version | grep "^Firecracker" | cut -d' ' -f2 | tr -d v
 tags:
-  - type/daemon
-  - kvm
-  - vm
-  - emulation
+- type/daemon
+- kvm
+- vm
+- emulation
 homepage: https://github.com/firecracker-microvm/firecracker
 description: Secure and fast microVMs for serverless computing
 renovate:

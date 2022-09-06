@@ -2,11 +2,11 @@ name: minikube
 version: 1.26.1
 check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
 tags:
-  - org/cncf
-  - org/kubernetes
-  - type/cli
-  - kubernetes
-  - management
+- org/cncf
+- org/kubernetes
+- type/cli
+- kubernetes
+- management
 homepage: https://github.com/kubernetes/minikube
 description: Run Kubernetes locally
 renovate:

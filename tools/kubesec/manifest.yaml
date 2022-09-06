@@ -1,9 +1,9 @@
 name: kubesec
 version: 2.11.5
 tags:
-  - catgory/security
-  - type/cli
-  - kubernetes
+- catgory/security
+- type/cli
+- kubernetes
 homepage: https://github.com/controlplaneio/kubesec
 description: Security risk analysis for Kubernetes resources
 renovate:

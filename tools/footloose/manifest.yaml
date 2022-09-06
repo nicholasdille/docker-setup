@@ -2,9 +2,9 @@ name: footloose
 version: 0.6.3
 check: ${binary} version | cut -d' ' -f2
 tags:
-  - type/cli
-  - vm
-  - emulation
+- type/cli
+- vm
+- emulation
 homepage: https://github.com/weaveworks/footloose
 description: Containers that look like Virtual Machines
 renovate:

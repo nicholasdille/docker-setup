@@ -2,14 +2,14 @@ name: ignite
 version: 0.10.0
 check: ${binary} version --output short | tr -d v
 dependencies:
-  - containerd
-  - cni
+- containerd
+- cni
 tags:
-  - type/cli
-  - kvm
-  - management
-  - vm
-  - emulation
+- type/cli
+- kvm
+- management
+- vm
+- emulation
 homepage: https://github.com/weaveworks/ignite
 description: Ignite a Firecracker microVM
 renovate:

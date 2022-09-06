@@ -2,10 +2,10 @@ name: diun
 version: 4.22.0
 check: ${binary} --version
 tags:
-  - standard/oci
-  - type/daemon
-  - container/registry
-  - management
+- standard/oci
+- type/daemon
+- container/registry
+- management
 homepage: https://github.com/crazy-max/diun
 description: Receive notifications when an image is updated on a Docker registry
 renovate:

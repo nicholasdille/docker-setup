@@ -3,26 +3,14 @@ version: 1.83.0
 binary: kubectl-kots
 check: ${binary} version | cut -d' ' -f3
 tags:
-  - type/cli
-  - kubernetes
-  - templating
-  - package
-  - management
+- type/cli
+- kubernetes
+- templating
+- package
+- management
 homepage: https://github.com/replicatedhq/kots
 description: Framework, tools and integrations that enable the delivery and management of 3rd-party Kubernetes applications
 renovate:
   datasource: github-releases
   package: replicatedhq/kots
   extractVersion: ^v(?<version>.+?)$
-download:
-  - url: https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz
-    type: tarball
-    files:
-      - kots
-post_install: |
-  echo "Fix filename"
-  mv "${target}/bin/kots" "${target}/bin/kubectl-kots"
-  echo "Install completion"
-  ${binary} completion bash 2>/dev/null >"${target}/share/bash-completion/completions/${name}"
-  ${binary} completion fish 2>/dev/null >"${target}/share/fish/vendor_completions.d/${name}.fish"
-  ${binary} completion zsh 2>/dev/null >"${target}/share/zsh/vendor-completions/_${name}"

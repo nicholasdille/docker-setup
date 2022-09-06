@@ -2,7 +2,7 @@ name: ttyd
 version: 1.7.1
 check: ${binary} --version | cut -d' ' -f3 | cut -d- -f1
 tags:
-  - type/daemon
+- type/daemon
 homepage: https://github.com/tsl0922/ttyd
 description: Share your terminal over the web
 renovate:

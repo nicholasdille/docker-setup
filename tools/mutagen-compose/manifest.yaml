@@ -1,13 +1,13 @@
 name: mutagen-compose
 version: 0.15.2
 dependencies:
-  - mutagen
+- mutagen
 tags:
-  - component/network
-  - component/storage
-  - category/development
-  - container/compose
-  - type/cli
+- component/network
+- component/storage
+- category/development
+- container/compose
+- type/cli
 homepage: https://github.com/mutagen-io/mutagen-compose
 description: Compose with Mutagen integration
 renovate:

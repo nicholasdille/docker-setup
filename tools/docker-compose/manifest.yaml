@@ -3,17 +3,17 @@ version: 2.10.2
 binary: ${target}/libexec/docker/cli-plugins/docker-compose
 check: ${binary} compose version --short
 dependencies:
-  - docker
-  - docker-compose-switch
+- docker
+- docker-compose-switch
 flags:
-  - not-docker-compose-v1
+- not-docker-compose-v1
 tags:
-  - org/docker
-  - standard/docker
-  - category/default
-  - container/compose
-  - type/cli
-  - type/plugin
+- org/docker
+- standard/docker
+- category/default
+- container/compose
+- type/cli
+- type/plugin
 homepage: https://github.com/docker/compose
 description: Define and run multi-container applications with Docker (v2)
 renovate:

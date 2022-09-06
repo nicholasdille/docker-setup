@@ -3,11 +3,11 @@ version: 20220822
 binary: ${target}/bin/runsc
 check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
 dependencies:
-  - docker
+- docker
 tags:
-  - org/google
-  - container/runtime
-  - category/security
+- org/google
+- container/runtime
+- category/security
 homepage: https://github.com/google/gvisor
 description: Application Kernel for Containers
 renovate:

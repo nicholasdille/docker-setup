@@ -2,10 +2,10 @@ name: reptyr
 version: 0.9.0
 check: ${binary} -v | head -n 1 | cut -d' ' -f5 | cut -d. -f1-3
 dependencies:
-  - docker
+- docker
 tags:
-  - type/cli
-  - management
+- type/cli
+- management
 homepage: https://github.com/nelhage/reptyr
 description: Reparent a running program to a new terminal
 renovate:

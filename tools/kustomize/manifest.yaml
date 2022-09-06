@@ -2,12 +2,12 @@ name: kustomize
 version: 4.5.7
 check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
 tags:
-  - org/cncf
-  - org/kubernetes
-  - type/cli
-  - kubernetes
-  - templating
-  - management
+- org/cncf
+- org/kubernetes
+- type/cli
+- kubernetes
+- templating
+- management
 homepage: https://github.com/kubernetes-sigs/kustomize
 description: Customization of kubernetes YAML configurations
 renovate:

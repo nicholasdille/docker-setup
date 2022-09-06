@@ -2,10 +2,10 @@ name: gitlab-runner
 version: 15.3.0
 check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 tags:
-  - org/gitlab
-  - category/development
-  - type/daemon
-  - cicd
+- org/gitlab
+- category/development
+- type/daemon
+- cicd
 homepage: https://gitlab.com/gitlab-org/gitlab-runner
 description: open source project to run your CI/CD jobs and send the results back to GitLab
 renovate:

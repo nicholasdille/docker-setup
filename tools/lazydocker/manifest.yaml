@@ -2,12 +2,12 @@ name: lazydocker
 version: 0.18.1
 check: ${binary} --version | grep Version | cut -d' ' -f2
 dependencies:
-  - docker
+- docker
 tags:
-  - standard/docker
-  - type/tui
-  - management
-  - troubleshooting
+- standard/docker
+- type/tui
+- management
+- troubleshooting
 homepage: https://github.com/jesseduffield/lazydocker
 description: The lazier way to manage everything docker
 renovate:

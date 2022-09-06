@@ -2,9 +2,9 @@ name: gitsign
 version: 0.3.0
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
-  - category/development
-  - category/security
-  - type/cli
+- category/development
+- category/security
+- type/cli
 homepage: https://github.com/sigstore/gitsign
 description: Keyless Git signing using Sigstore
 renovate:
