@@ -77,9 +77,6 @@ tools:
     - url: https://github.com/ktock/buildg/releases/download/v${version}/buildg-v${version}-linux-${alt_arch}.tar.gz
       type: tarball
       path: ${target}/bin
-      files:
-      - ./buildg
-      - ./buildg.sh
 
   - name: buildkit
     version: 0.10.4
