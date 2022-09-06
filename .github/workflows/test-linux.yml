@@ -38,6 +38,13 @@ jobs:
           GIT_BRANCH=test make base
           if ${IS_PR}; then
               echo "This is a PR"
+              curl https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
+                  --silent \
+                  --fail \
+                  --header "Accept: application/vnd.github.v3+json" \
+                  --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+              | jq --raw-output '.[].filename' \
+              | grep -E '^tools/[^/]+/manifest.yaml$'
               TOOLS="$(
                   curl https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
                       --silent \
@@ -53,7 +60,7 @@ jobs:
           if test -n "${TOOLS}"; then
               docker_setup_version=test ./docker-setup.sh build bar ${TOOLS}
           else
-              make
+              GIT_BRANCH=test make
           fi
 
       - name: Store logs
