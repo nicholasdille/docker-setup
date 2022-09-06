@@ -139,11 +139,12 @@ case "${command}" in
         if ! regctl registry config | jq --exit-status 'to_entries[] | select(.key == "ghcr.io")' >/dev/null 2>&1; then
             regctl registry login ghcr.io
         fi
-        # TODO: Resolve dependencies
-        while test "$#" -gt 0; do
-            tool=$1
-            shift
-
+        for tool in "$@"; do
+            resolve_dependencies "${tool}"
+            tools_ordered+=( "${tool}" )
+            tool_install["${tool}"]=true
+        done
+        for tool in "${tools_ordered[@]}"; do
             echo "Processing ${tool}"
             regctl manifest get "ghcr.io/nicholasdille/docker-setup/${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
             | while read DIGEST; do
