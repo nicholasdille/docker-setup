@@ -52,6 +52,7 @@ jobs:
               echo "TOOLS=${TOOLS}"
           fi
           if test -n "${TOOLS}"; then
+              make tools.json
               docker_setup_version=test ./docker-setup.sh build bar ${TOOLS}
           else
               GIT_BRANCH=test make
