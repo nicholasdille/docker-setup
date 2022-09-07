@@ -125,7 +125,7 @@ case "${command}" in
             resolve_dependencies "${name}"
         done
         generate "${tools_ordered[@]}" \
-        | docker buildx build --tag "${image}" --load -
+        | docker build --tag "${image}" -
         ;;
 
     install)
@@ -183,7 +183,7 @@ case "${command}" in
             resolve_dependencies "${name}"
         done
         generate "${tools_ordered[@]}" \
-        | docker buildx build --output "${target}" -
+        | docker build --output "${target}" -
         ;;
 
     install-from-image)
