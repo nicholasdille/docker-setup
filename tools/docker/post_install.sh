@@ -1,19 +1,13 @@
 #!/bin/bash
 
 echo "Patch paths in systemd unit files (@ ${SECONDS} seconds)"
-sed -i "/^\[Service\]/a Environment=PATH=${relative_target}/libexec/docker/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}/etc/systemd/system/docker.service"
-sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
+sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
 
 echo "Patch paths in init scripts (@ ${SECONDS} seconds)"
-sed -i -E "s|^(export PATH=)|\1${relative_target}/libexec/docker/bin:|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"
-sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"
-chmod +x "${docker_setup_contrib}/docker/sysvinit/debian/docker"
-sed -i -E "s|(^prog=)|export PATH="${relative_target}/libexec/docker/bin:${relative_target}/sbin:${relative_target}/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
-sed -i -E "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
-chmod +x "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
-sed -i -E "s|^(command=)|export PATH="${relative_target}/libexec/docker/bin:\${PATH}"\n\n\1|" "${docker_setup_contrib}/docker/openrc/docker.initd"
-sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.initd"
-sed -i "s|/usr/bin/dockerd|${relative_target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.confd"
+sed -i -E "s|^DOCKERD=/usr/local/bin/dockerd|DOCKERD=${target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"
+sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
+sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.initd"
+sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.confd"
 chmod +x "${docker_setup_contrib}/docker/openrc/docker.initd"
 
 if test -f "${prefix}/etc/group"; then
