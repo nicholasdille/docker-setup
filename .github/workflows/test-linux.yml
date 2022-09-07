@@ -71,5 +71,5 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: logs-${{ matrix.distro }}.zip
-          path: log/**
+          name: logs.zip
+          path: "**/build.log"
