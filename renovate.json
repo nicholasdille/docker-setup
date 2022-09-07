@@ -270,34 +270,23 @@
     },
     {
       "fileMatch": [
-        "^docker-setup.sh$"
-      ],
-      "matchStrings": [
-        "go_version=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "golang",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
-    },
-    {
-      "fileMatch": [
-        "^docker-setup.sh$"
-      ],
-      "matchStrings": [
-        "rust_version=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "rust",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+?)$"
-    },
-    {
-      "fileMatch": [
         "^tools/act/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "nektos/act",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/age/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "FiloSottile/age",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -835,6 +824,17 @@
       "depNameTemplate": "moby/moby",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/docker-prerelease/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "moby/moby",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)-"
     },
     {
       "fileMatch": [
