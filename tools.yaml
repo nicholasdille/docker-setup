@@ -1847,7 +1847,7 @@ tools:
       type: executable
 
   - name: datree
-    version: 1.6.16
+    version: 1.6.18
     check: ${binary} version
     tags:
     - category/security
