@@ -59,7 +59,9 @@ jobs:
               echo "TOOLS=${TOOLS}"
           fi
           if test -n "${TOOLS}"; then
-              GIT_BRANCH=test make ${TOOLS}
+              for TOOL in ${TOOLS}; do
+                  GIT_BRANCH=test make ${TOOL}--deep
+              done
               GIT_BRANCH=test make tools.json bin/regctl
               cp bin/regctl /usr/local/bin/
               docker_setup_version=test ./docker-setup.sh build bar ${TOOLS}

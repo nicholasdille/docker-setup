@@ -8,7 +8,8 @@ fi
 
 : "${docker_setup_version:=oras}"
 
-cat <<"EOF"
+function show_banner() {
+    cat <<"EOF"
      _            _                           _
   __| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
  / _` |/ _ \ / __| |/ / _ \ '__|____/ __|/ _ \ __| | | | '_ \
@@ -22,6 +23,7 @@ This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
 EOF
+}
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if test -f "${PWD}/tools.json"; then
@@ -97,11 +99,13 @@ case "${command}" in
         echo "docker-setup version ${docker_setup_version}"
         ;;
     ls)
+        show_banner
         jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' tools.json \
         | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
         ;;
 
     info)
+        show_banner
         tool=$1
         if test -z "${tool}"; then
             echo "No tool name specified"
@@ -110,6 +114,17 @@ case "${command}" in
         shift
         cat "tools/${tool}/manifest.yaml"
         echo
+        ;;
+
+    dependencies)
+        for name in "$@"; do
+            if ! test -f "tools/${name}/manifest.json"; then
+                echo "ERROR: Tool <${name}> is unknown."
+                exit 1
+            fi
+            resolve_dependencies "${name}"
+        done
+        echo "${tools_ordered[@]}"
         ;;
 
     generate)
@@ -123,6 +138,7 @@ case "${command}" in
         ;;
 
     build)
+        show_banner
         if ! type regctl >/dev/null 2>&1; then
             echo "ERROR: Command <install> requires regclient."
             exit 1
@@ -144,6 +160,7 @@ case "${command}" in
         ;;
 
     install)
+        show_banner
         if ! type regctl >/dev/null 2>&1; then
             echo "ERROR: Command <install> requires regclient."
             exit 1
@@ -178,6 +195,7 @@ case "${command}" in
         ;;
 
     install-from-registry)
+        show_banner
         if ! type docker >/dev/null 2>&1; then
             echo "ERROR: Command <install> requires docker."
             exit 1
@@ -202,6 +220,7 @@ case "${command}" in
         ;;
 
     install-from-image)
+        show_banner
         if ! type docker >/dev/null 2>&1; then
             echo "ERROR: Command <install> requires docker."
             exit 1
