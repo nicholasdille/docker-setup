@@ -43,7 +43,6 @@ jobs:
           IS_PR: ${{ github.event_name == 'pull_request' }}
           PR: ${{ github.event.pull_request.number }}
         run: |
-          GIT_BRANCH=test make base
           if ${IS_PR}; then
               echo "This is PR ${PR}"
               TOOLS="$(
@@ -60,11 +59,13 @@ jobs:
           fi
           if test -n "${TOOLS}"; then
               for TOOL in ${TOOLS}; do
+                  echo "Building tool ${TOOL}--deep"
                   GIT_BRANCH=test make ${TOOL}--deep
               done
               GIT_BRANCH=test make tools.json bin/regctl
               cp bin/regctl /usr/local/bin/
               docker_setup_version=test ./docker-setup.sh build bar ${TOOLS}
+
           else
               GIT_BRANCH=test make
           fi
