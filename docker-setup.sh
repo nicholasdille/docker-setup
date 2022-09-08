@@ -25,6 +25,20 @@ from the container ecosystem.
 EOF
 }
 
+# https://unicode.org/emoji/charts-14.0/full-emoji-list.html
+tool="$(echo -e "\U0001F6E0")"
+auth="$(echo -e "\U0001F513")"
+whale="$(echo -e "\U0001F433")"
+container=$(echo -e "\U0001F5C3")
+image="$(echo -e "\U0001F4E6")"
+layer="$(echo -e "\U0001F4C2")"
+archive="$(echo -e "\U0001F4E5")"
+sign="$(echo -e "\U00002712")"
+push="$(echo -e "\U0001F4E4")"
+pull="$(echo -e "\U0001F4E5")"
+build="$(echo -e "\U0001F9F1")"
+inspect="$(echo -e "\U0001F50D")"
+
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if test -f "${PWD}/tools.json"; then
     docker_setup_tools_file="${PWD}/tools.json"
@@ -119,7 +133,7 @@ case "${command}" in
     dependencies)
         for name in "$@"; do
             if ! test -f "tools/${name}/manifest.json"; then
-                echo "ERROR: Tool <${name}> is unknown."
+                >&2 echo "ERROR: Tool <${name}> is unknown."
                 exit 1
             fi
             resolve_dependencies "${name}"
@@ -177,6 +191,7 @@ case "${command}" in
             exit 1
         fi
         if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
+            echo "${auth} Logging in to ${REGISTRY}"
             regctl registry login ${REGISTRY}
         fi
         mkdir -p "${target}"
@@ -184,10 +199,10 @@ case "${command}" in
             resolve_dependencies "${name}"
         done
         for tool in "${tools_ordered[@]}"; do
-            echo "Processing ${tool}"
+            echo "${tool} Processing ${tool}"
             regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
             | while read DIGEST; do
-                echo "Unpacking ${DIGEST}"
+                echo "${archive} Unpacking ${DIGEST}"
                 regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                 | tar --extract --gzip --directory=${target} --no-same-owner
             done
@@ -237,28 +252,75 @@ case "${command}" in
             exit 1
         fi
         if ! jq --exit-status --arg registry "${REGISTRY}" '.auths | to_entries[] | select(.key == $registry)' "${DOCKER_CONFIG}/config.json" >/dev/null 2>&1; then
-            echo "Logging in to ${REGISTRY}"
+            echo "${auth} Logging in to ${REGISTRY}"
             docker login ${REGISTRY}
         fi
         for name in "$@"; do
             resolve_dependencies "${name}"
         done
         for tool in "${tools_ordered[@]}"; do
-            echo "Processing ${tool}"
-            echo "+ Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
+            echo "${tool} Processing ${tool}"
+            echo "${image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
             docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
-            echo "+ Reading layers"
+            echo "${layer} Reading layers"
             docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
             | tar --extract --to-stdout manifest.json \
             | jq --raw-output '.[].Layers[]' \
             | while read FILE; do
-                echo "+ Extracting layer $(dirname "${FILE}")"
+                echo "${archive} Extracting layer $(dirname "${FILE}")"
                 docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
                 | tar --extract --to-stdout "${FILE}" \
                 | tar --extract --directory="${target}" --strip-components=2
             done
             echo "+ Done"
         done
+        ;;
+    
+    install-flat)
+        show_banner
+        if ! type regctl >/dev/null 2>&1; then
+            echo "ERROR: Command <install> requires regclient."
+            exit 1
+        fi
+        if ! type docker >/dev/null 2>&1; then
+            echo "ERROR: Command <install> requires regclient."
+            exit 1
+        fi
+        base=$1
+        if test -z "${base}"; then
+            echo "No base image name specified"
+            exit 1
+        fi
+        shift
+        image=$1
+        if test -z "${image}"; then
+            echo "No target image name specified"
+            exit 1
+        fi
+        shift
+        if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
+            regctl registry login ${REGISTRY}
+        fi
+        if test "$#" -eq 0; then
+            set -- ${all_tools}
+        fi
+        for name in "$@"; do
+            resolve_dependencies "${name}"
+        done
+        docker create --name docker-setup-install-flat ${base}
+        for tool in "${tools_ordered[@]}"; do
+            echo "${tool} Processing ${tool}"
+            regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+            | while read DIGEST; do
+                echo "${archive} Unpacking ${DIGEST}"
+                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                | gunzip \
+                | docker cp - docker-setup-install-flat:/
+            done
+        done
+        echo "${whale} Creating image ${image}"
+        docker commit docker-setup-install-flat ${image}
+        docker rm docker-setup-install-flat >/dev/null 2>&1
         ;;
 
     *)
