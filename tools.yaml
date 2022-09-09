@@ -4724,7 +4724,7 @@ tools:
       ldconfig
 
   - name: loft
-    version: 2.2.2
+    version: 2.3.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - type/cli
