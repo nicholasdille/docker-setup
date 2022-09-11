@@ -3811,7 +3811,7 @@ tools:
           --no-same-owner
 
   - name: nerdctl
-    version: 0.22.2
+    version: 0.23.0
     check: ${binary} --version | cut -d' ' -f3
     needs:
     - containerd
