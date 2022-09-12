@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: Download tools.json
+
 declare -a tools
 mapfile -t tools < <(jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' /var/cache/docker-setup/tools.json)
 
@@ -7,24 +9,16 @@ declare -a flags
 mapfile -t flags < <(jq --raw-output '.tools[] | select(.flags != null) | .flags[]' /var/cache/docker-setup/tools.json | grep -v ^not-)
 
 parameters=(
-    --check
-    --help
-    --no-wait
-    --reinstall
-    --all
-    --only
-    --only-installed
-    --tags
-    --no-progressbar
-    --no-color
-    --plan
-    --no-cache
-    --no-cron
-    --version
-    --bash-completion
-    --debug
-    --skip-deps
-    --no-cgroup-reboot
+    version
+    ls
+    info
+    dependencies
+    generate
+    build
+    install
+    install-from-registry
+    install-from-image
+    imstall-flat
 )
 
 function _docker_setup_completion() {
@@ -57,4 +51,3 @@ function _docker_setup_completion() {
 }
 
 complete -F _docker_setup_completion docker-setup
-complete -F _docker_setup_completion docker-setup.sh

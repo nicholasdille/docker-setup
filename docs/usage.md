@@ -39,7 +39,7 @@ Before installing any tools, `docker-setup` displays a list of all supported too
 Install tools for the first time:
 
 ```bash
-bash docker-setup.sh
+bash docker-setup
 ```
 
 [![asciicast](https://asciinema.org/a/469752.svg)](https://asciinema.org/a/469752)
@@ -49,7 +49,7 @@ The same command updates outdated tools.
 Check if tools are outdated. `docker-setup` will return with exit code 1 if one or more tools are outdated:
 
 ```bash
-bash docker-setup.sh --check
+bash docker-setup --check
 ```
 
 ## Scenario 2: You want some tools
@@ -57,7 +57,7 @@ bash docker-setup.sh --check
 Install or update selected tools, e.g. `docker`:
 
 ```bash
-bash docker-setup.sh --only docker yq
+bash docker-setup --only docker yq
 ```
 
 [![asciicast](https://asciinema.org/a/469759.svg)](https://asciinema.org/a/469759)
@@ -65,7 +65,7 @@ bash docker-setup.sh --only docker yq
 Check if tools are outdated:
 
 ```bash
-bash docker-setup.sh --only docker yq --check
+bash docker-setup --only docker yq --check
 ```
 
 [![asciicast](https://asciinema.org/a/469763.svg)](https://asciinema.org/a/469763)
@@ -75,13 +75,13 @@ bash docker-setup.sh --only docker yq --check
 By adding the `--reinstall` parameter, all tools can be reinstalled regardless if they are outdated:
 
 ```bash
-bash docker-setup.sh --reinstall
+bash docker-setup --reinstall
 ```
 
 The same applies when combining `--reinstall` with `--only`:
 
 ```bash
-bash docker-setup.sh --only docker --reinstall
+bash docker-setup --only docker --reinstall
 ```
 
 [![asciicast](https://asciinema.org/a/469765.svg)](https://asciinema.org/a/469765)
@@ -91,7 +91,7 @@ bash docker-setup.sh --only docker --reinstall
 If you have previously installed tools using `docker-setup`, you can choose to update only installed tools:
 
 ```bash
-bash docker-setup.sh --only-installed
+bash docker-setup --only-installed
 ```
 
 [![asciicast](https://asciinema.org/a/469767.svg)](https://asciinema.org/a/469767)
@@ -103,13 +103,13 @@ You cannot combine this with `--only`/`only`.
 If you are used to running `docker-setup` with `--check` before installing or updating, you can also skip the delay by adding `--no-wait`:
 
 ```bash
-bash docker-setup.sh --no-wait
+bash docker-setup --no-wait
 ```
 
 This can also be used when installing or updating some tools:
 
 ```bash
-bash docker-setup.sh --only docker --no-wait
+bash docker-setup --only docker --no-wait
 ```
 
 [![asciicast](https://asciinema.org/a/469927.svg)](https://asciinema.org/a/469927)
@@ -119,7 +119,7 @@ bash docker-setup.sh --only docker --no-wait
 Specifying `--check` will display outdated tools and return with exit code 1 if any tools are outdated. `--plan` will do neither and stop execution before any installation takes place:
 
 ```bash
-bash docker-setup.sh --only docker --plan
+bash docker-setup --only docker --plan
 ```
 
 [![asciicast](https://asciinema.org/a/469928.svg)](https://asciinema.org/a/469928)
@@ -129,13 +129,13 @@ bash docker-setup.sh --only docker --plan
 All parameters are mapped to environment variables internally. Therefore you can supply environment variables instead of parameters. For a reference, see [usage](#usage) above.
 
 ```bash
-curl -sL https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh | NO_WAIT=true bash
+curl -sL https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup | NO_WAIT=true bash
 ```
 
 If you prefer parameters, `bash` requires the parameter `-s` before any parameters for `docker-setup` can be supplied:
 
 ```bash
-curl -sL https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh | bash -s --no-wait
+curl -sL https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup | bash -s --no-wait
 ```
 
 ## Scenario 8: Container Image

@@ -8,7 +8,7 @@ on:
       - labeled
       #- reopened
     paths:
-      - docker-setup.sh
+      - docker-setup
       - env/**
       - tools/**
       - .github/workflows/test-linux.yml
