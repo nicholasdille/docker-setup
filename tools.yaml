@@ -2515,7 +2515,7 @@ tools:
       - mitmweb
 
   - name: mutagen
-    version: 0.15.2
+    version: 0.15.3
     check: ${binary} version
     tags:
     - security
