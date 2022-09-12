@@ -1965,7 +1965,7 @@ tools:
       - dive
 
   - name: docker
-    version: 20.10.17
+    version: 20.10.18
     binary: dockerd
     check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
     needs:
@@ -2175,7 +2175,7 @@ tools:
       echo "Finished after ${SECONDS} seconds."
 
   - name: docker-manpages
-    version: 20.10.17
+    version: 20.10.18
     binary: false
     homepage: https://www.docker.com/
     description: The Docker CLI
