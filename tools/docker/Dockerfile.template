@@ -25,8 +25,6 @@ curl --silent --location "https://download.docker.com/linux/static/stable/${arch
 | tar --extract --gzip --directory="${prefix}${target}/libexec/${name}/bin" --no-same-owner --strip-components=1
 mv "${prefix}${target}/libexec/${name}/bin/dockerd-rootless.sh"           "${prefix}${target}/bin/"
 mv "${prefix}${target}/libexec/${name}/bin/dockerd-rootless-setuptool.sh" "${prefix}${target}/bin/"
-curl --silent --location "https://github.com/nicholasdille/docker-cli-manpages/releases/download/v${version}/docker-cli-manpages.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 EOF
 
 RUN <<EOF
