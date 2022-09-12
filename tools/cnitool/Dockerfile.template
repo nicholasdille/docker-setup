@@ -14,5 +14,4 @@ cp cnitool /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
 COPY --from=build /usr/local/bin/cnitool ${prefix}${target}/bin/

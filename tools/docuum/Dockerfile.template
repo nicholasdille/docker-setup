@@ -14,5 +14,4 @@ cp target/x86_64-unknown-linux-gnu/release/docuum /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
 COPY --from=build /usr/local/bin/docuum ${prefix}${target}/bin/
