@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/direnv" \
+    "https://github.com/direnv/direnv/releases/download/v${version}/direnv.linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/direnv"
+curl --silent --location --output "${prefix}${target}/share/man/man1/direnv-fetchurl.1" \
+    "https://github.com/direnv/direnv/raw/v${version}/man/direnv-fetchurl.1"
+curl --silent --location --output "${prefix}${target}/share/man/man1/direnv-stdlib.1" \
+    "https://github.com/direnv/direnv/raw/v${version}/man/direnv-stdlib.1"
+curl --silent --location --output "${prefix}${target}/share/man/man1/direnv.1" \
+    "https://github.com/direnv/direnv/raw/v${version}/man/direnv.1"
+curl --silent --location --output "${prefix}${target}/share/man/man1/direnv.toml.1" \
+    "https://github.com/direnv/direnv/raw/v${version}/man/direnv.toml.1"
+EOF
+
+COPY direnv.sh ${prefix}/etc/profile.d/

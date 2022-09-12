@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${version}/kustomize_v${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
+"${prefix}${target}/bin/kustomize" completion bash >"${prefix}${target}/share/bash-completion/completions/kustomize"
+"${prefix}${target}/bin/kustomize" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kustomize.fish"
+"${prefix}${target}/bin/kustomize" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kustomize"
+EOF

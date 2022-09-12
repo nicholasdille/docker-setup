@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/kcp-dev/kcp/releases/download/v${version}/kcp_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    bin/kcp
+curl --silent --location "https://github.com/kcp-dev/kcp/releases/download/v${version}/kubectl-kcp-plugin_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    bin/kubectl-kcp \
+    bin/kubectl-ws \
+    bin/kubectl-workspaces
+for binary_name in kcp kubectl-kcp kubectl-ws kubectl-workspaces; do
+    "${prefix}${target}/bin/${binary_name}" completion bash >"${prefix}${target}/share/bash-completion/completions/${binary_name}"
+    "${prefix}${target}/bin/${binary_name}" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/${binary_name}.fish"
+    "${prefix}${target}/bin/${binary_name}" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_${binary_name}"
+done
+EOF

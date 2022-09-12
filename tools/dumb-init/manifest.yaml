@@ -1,0 +1,11 @@
+name: dumb-init
+version: 1.2.5
+check: ${binary} --version 2>&1 | cut -d' ' -f2 | tr -d v
+tags:
+- container/init
+homepage: https://github.com/Yelp/dumb-init
+description: Minimal init system for Linux containers
+renovate:
+  datasource: github-releases
+  package: Yelp/dumb-init
+  extractVersion: ^v(?<version>.+?)$

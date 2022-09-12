@@ -1,0 +1,21 @@
+name: cri-o
+version: 1.25.0
+binary: crio
+check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+dependencies:
+- runc
+- cni
+- go-md2man
+- crictl
+tags:
+- org/redhat
+- standard/oci
+- standard/cri
+- container/runtime
+- type/daemon
+homepage: https://github.com/cri-o/cri-o
+description: Open Container Initiative-based implementation of Kubernetes Container Runtime Interface
+renovate:
+  datasource: github-releases
+  package: cri-o/cri-o
+  extractVersion: ^v(?<version>.+?)$

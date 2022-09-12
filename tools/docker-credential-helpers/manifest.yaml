@@ -1,0 +1,17 @@
+name: docker-credential-helpers
+version: 0.6.4
+binary: docker-credential-pass
+dependencies:
+- docker
+- docker
+tags:
+- org/docker
+- standard/docker
+- container/runtime
+- category/security
+homepage: https://github.com/docker/docker-credential-helpers
+description: Programs to keep Docker login credentials safe
+renovate:
+  datasource: github-releases
+  package: docker/docker-credential-helpers
+  extractVersion: ^v(?<version>.+?)$

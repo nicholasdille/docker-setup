@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    oras
+"${prefix}${target}/bin/oras" completion bash >"${prefix}${target}/share/bash-completion/completions/oras"
+"${prefix}${target}/bin/oras" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/oras.fish"
+"${prefix}${target}/bin/oras" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_oras"
+EOF

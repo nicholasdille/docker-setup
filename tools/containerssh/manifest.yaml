@@ -1,0 +1,11 @@
+name: containerssh
+version: 0.4.1
+tags:
+- type/daemon
+- category/security
+homepage: https://github.com/ContainerSSH/ContainerSSH
+description: Launch containers on demand
+renovate:
+  datasource: github-releases
+  package: ContainerSSH/ContainerSSH
+  extractVersion: ^v(?<version>.+?)$

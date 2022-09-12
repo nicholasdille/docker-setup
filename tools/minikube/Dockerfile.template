@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/minikube" \
+    "https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/minikube"
+"${prefix}${target}/bin/minikube" completion bash >"${prefix}${target}/share/bash-completion/completions/minikube"
+"${prefix}${target}/bin/minikube" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/minikube.fish"
+"${prefix}${target}/bin/minikube" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_minikube"
+EOF

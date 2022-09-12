@@ -1,0 +1,11 @@
+name: slides
+version: 0.8.0
+tags:
+- type/cli
+- markdown
+homepage: https://github.com/maaslalani/slides
+description: Terminal based presentation tool
+renovate:
+  datasource: github-releases
+  package: maaslalani/slides
+  extractVersion: ^v(?<version>.+?)$

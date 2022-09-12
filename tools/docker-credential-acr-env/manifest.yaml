@@ -1,0 +1,14 @@
+name: docker-credential-acr-env
+version: 0.7.0
+dependencies:
+- docker
+tags:
+- standard/docker
+- container/runtime
+- category/security
+- cloud/azure
+homepage: https://github.com/chrismellard/docker-credential-acr-env
+description: Alternative to the existing file store based ACR helper
+renovate:
+  datasource: github-releases
+  package: chrismellard/docker-credential-acr-env

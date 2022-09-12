@@ -1,0 +1,17 @@
+name: buildg
+version: 0.4.1
+check: ${binary} version | cut -d' ' -f2 | tr -d v
+dependencies:
+- runc
+- cni
+tags:
+- standard/oci
+- container/build
+- category/development
+- type/cli
+homepage: https://github.com/ktock/buildg
+description: Interactive debugger for Dockerfile
+renovate:
+  datasource: github-releases
+  package: ktock/buildg
+  extractVersion: ^v(?<version>.+?)$

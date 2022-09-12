@@ -1,0 +1,16 @@
+name: fuse-overlayfs
+version: 1.9
+tags:
+- org/redhat
+- type/plugin
+- category/default
+- component/storage
+- containerd
+homepage: https://github.com/containers/fuse-overlayfs
+description: FUSE implementation for overlayfs
+renovate:
+  pattern: "name: fuse-overlayfs\\n\\s+version: \"?(?<currentValue>.*?)\\n"
+  datasource: github-releases
+  package: containers/fuse-overlayfs
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

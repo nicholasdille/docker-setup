@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kind" \
+    "https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/kind"
+"${prefix}${target}/bin/kind" completion bash >"${prefix}${target}/share/bash-completion/completions/kind"
+"${prefix}${target}/bin/kind" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kind.fish"
+"${prefix}${target}/bin/kind" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kind"
+EOF

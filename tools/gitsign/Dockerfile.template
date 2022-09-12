@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY gitsign.sh ${prefix}${target}/bin/
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/gitsign" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/gitsign"
+curl --silent --location --output "${prefix}${target}/bin/gitsign.exe" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_windows_${alt_arch}.exe"
+chmod +x "${prefix}${target}/bin/gitsign.exe"
+curl --silent --location --output "${prefix}${target}/bin/gitsign-credential-cache" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign-credential-cache_${version}_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/gitsign"
+EOF

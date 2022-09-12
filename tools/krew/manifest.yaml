@@ -1,0 +1,16 @@
+name: krew
+version: 0.4.3
+check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
+tags:
+- org/cncf
+- org/kubernetes
+- type/cli
+- type/plugin
+- kubernetes
+- management
+homepage: https://github.com/kubernetes-sigs/krew
+description: Find and install kubectl plugins
+renovate:
+  datasource: github-releases
+  package: kubernetes-sigs/krew
+  extractVersion: ^v(?<version>.+?)$

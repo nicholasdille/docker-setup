@@ -1,0 +1,2 @@
+default-docker:
+  sigstore-staging: file:///var/lib/containers/sigstore

@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY k3s.service ${prefix}/etc/systemd/system/
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/k3s" \
+    "https://github.com/k3s-io/k3s/releases/download/v${version}/k3s"
+chmod +x "${prefix}${target}/bin/k3s"
+"${prefix}${target}/bin/k3s" completion bash >"${prefix}${target}/share/bash-completion/completions/k3s"
+"${prefix}${target}/bin/k3s" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_k3s"
+EOF

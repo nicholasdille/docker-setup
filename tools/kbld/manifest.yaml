@@ -1,0 +1,14 @@
+name: kbld
+version: 0.34.0
+check: ${binary} version | head -n 1 | cut -d' ' -f3
+tags:
+- org/vmware
+- type/cli
+- container/build
+- kubernetes
+homepage: https://github.com/vmware-tanzu/carvel-kbld
+description: Seamlessly incorporates image building and image pushing into your development and deployment workflows
+renovate:
+  datasource: github-releases
+  package: vmware-tanzu/carvel-kbld
+  extractVersion: ^v(?<version>.+?)$

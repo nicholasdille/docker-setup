@@ -1,0 +1,14 @@
+[Unit]
+Description=rekor
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+ExecStart=/usr/local/bin/rekor-server serve --rekor_server.address=0.0.0.0 --trillian_log_server.port=8091
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

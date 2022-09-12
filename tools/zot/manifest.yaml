@@ -1,0 +1,13 @@
+name: zot
+version: 1.4.1
+tags:
+- standard/oci
+- container/registry
+- container/image
+- tyep/daemon
+homepage: https://github.com/project-zot/zot
+description: Production-ready vendor-neutral OCI image registry server purely based on OCI Distribution Specification
+renovate:
+  datasource: github-releases
+  package: project-zot/zot
+  extractVersion: ^v(?<version>.+?)$

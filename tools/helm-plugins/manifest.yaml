@@ -1,0 +1,12 @@
+name: helm-plugins
+version: 0.1.0
+dependencies:
+- helm
+tags:
+- type/plugin
+- kubernetes
+- templating
+- package
+- management
+homepage: https://github.com/nicholasdille/docker-setup
+description: Helm plugins

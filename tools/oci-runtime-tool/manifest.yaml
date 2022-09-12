@@ -1,0 +1,16 @@
+name: oci-runtime-tool
+version: 0.9.0
+check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
+dependencies:
+- docker
+tags:
+- org/oci
+- standard/oci
+- container/runtime
+- type/cli
+homepage: https://github.com/opencontainers/runtime-tools
+description: OCI Runtime Tools
+renovate:
+  datasource: github-releases
+  package: opencontainers/runtime-tools
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,72 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY --from=go-md2man / /
+
+COPY crio.conf ${prefix}/etc/crio.conf
+
+RUN <<EOF
+curl --silent --location "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner \
+    cri-o/bin/crio \
+    cri-o/bin/crio-status
+EOF
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/share/bash-completion/completions/crio" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/completions/bash/crio"
+curl --silent --location --output "${prefix}${target}/share/bash-completion/completions/crio-status" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/completions/bash/crio-status"
+curl --silent --location --output "${prefix}${target}/share/fish/vendor_completions.d/crio.fish" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/completions/fish/crio.fish"
+curl --silent --location --output "${prefix}${target}/share/fish/vendor_completions.d/crio-status.fish" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/completions/fish/crio-status.fish"
+curl --silent --location --output "${prefix}${target}/share/zsh/vendor-completions/_crio" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/completions/zsh/_crio"
+curl --silent --location --output "${prefix}${target}/share/zsh/vendor-completions/_crio-status" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/completions/zsh/_crio-status"
+EOF
+
+RUN <<EOF
+mkdir -p \
+    "${prefix}/etc/sysconfig" \
+    "${prefix}/etc/cni/net.d"
+curl --silent --location --output "${prefix}/etc/systemd/system/crio.service" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/contrib/systemd/crio.service"
+curl --silent --location --output "${prefix}/etc/systemd/system/crio-wipe.service" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/contrib/systemd/crio-wipe.service"
+curl --silent --location --output "${prefix}/etc/sysconfig/crio" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/contrib/sysconfig/crio"
+curl --silent --location --output "${prefix}/etc/cni/net.d/10-crio-bridge.conf" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/10-crio-bridge.conf"
+curl --silent --location --output "${prefix}/etc/cni/net.d/11-crio-ipv4-bridge.conf" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/11-crio-ipv4-bridge.conf"
+curl --silent --location --output "${prefix}/etc/cni/net.d/99-loopback.conf" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/99-loopback.conf"
+EOF
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/share/man/man8/crio.8.md" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.8.md"
+curl --silent --location --output "${prefix}${target}/share/man/man8/crio-status.8.md" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/docs/crio-status.8.md"
+curl --silent --location --output "${prefix}${target}/share/man/man5/crio.conf.5.md" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.conf.5.md"
+curl --silent --location --output "${prefix}${target}/share/man/man5/crio.conf.d.5.md" \
+    "https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.conf.d.5.md"
+go-md2man -in "${prefix}${target}/share/man/man8/crio.8.md"        -out "${prefix}${target}/share/man/man8/crio.8"
+go-md2man -in "${prefix}${target}/share/man/man8/crio-status.8.md" -out "${prefix}${target}/share/man/man8/crio-status.8"
+go-md2man -in "${prefix}${target}/share/man/man5/crio.conf.5.md"   -out "${prefix}${target}/share/man/man5/crio.conf.5"
+go-md2man -in "${prefix}${target}/share/man/man5/crio.conf.d.5.md" -out "${prefix}${target}/share/man/man5/crio.conf.d.5"
+rm \
+    "${prefix}${target}/share/man/man8/crio.8.md" \
+    "${prefix}${target}/share/man/man8/crio-status.8.md" \
+    "${prefix}${target}/share/man/man5/crio.conf.5.md" \
+    "${prefix}${target}/share/man/man5/crio.conf.d.5.md"
+EOF

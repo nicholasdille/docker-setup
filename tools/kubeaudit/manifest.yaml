@@ -1,0 +1,12 @@
+name: kubeaudit
+version: 0.20.0
+check: ${binary} version
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/Shopify/kubeaudit
+description: Audit your Kubernetes clusters against common security controls
+renovate:
+  datasource: github-releases
+  package: Shopify/kubeaudit
+  extractVersion: ^v(?<version>.+?)$

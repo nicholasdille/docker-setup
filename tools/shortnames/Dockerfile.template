@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+mkdir -p "${prefix}/etc/containers/registries.conf.d"
+curl --silent --location --output "${prefix}/etc/containers/registries.conf.d/00-shortnames.conf" \
+    "https://github.com/containers/shortnames/raw/v${version}/shortnames.conf"
+EOF

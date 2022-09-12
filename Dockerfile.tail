@@ -1,0 +1,25 @@
+RUN <<EOF
+find ${prefix} -type f \
+| grep -v "${prefix}${docker_setup_manifests}/${name}.txt" \
+>"${prefix}${docker_setup_manifests}/${name}.txt"
+EOF
+COPY manifest.json "${prefix}${docker_setup_manifests}/${name}.json"
+
+FROM scratch
+ARG ref
+ARG name
+ARG version
+ARG deps
+ARG tags
+ARG prefix_override=/docker_setup_install
+ENV prefix=${prefix_override}
+COPY --from=prepare ${prefix} /
+LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
+      org.opencontainers.image.ref.name="${ref}" \
+      org.opencontainers.image.title="${name}" \
+      org.opencontainers.image.description="${name} packaged for installation" \
+      org.opencontainers.image.version="${version}" \
+      io.dille.docker-setup.name="${name}" \
+      io.dille.docker-setup.version="${version}" \
+      io.dille.docker-setup.needs="${deps}" \
+      io.dille.docker-setup.tags="${tags}"

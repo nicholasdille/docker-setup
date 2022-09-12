@@ -1,0 +1,17 @@
+name: dive
+version: 0.10.0
+check: ${binary} --version | cut -d' ' -f2
+dependencies:
+- docker
+tags:
+- standard/oci
+- standard/docker
+- container/build
+- type/tui
+- troubleshooting
+homepage: https://github.com/wagoodman/dive
+description: Tool for exploring each layer in a docker image
+renovate:
+  datasource: github-releases
+  package: wagoodman/dive
+  extractVersion: ^v(?<version>.+?)$

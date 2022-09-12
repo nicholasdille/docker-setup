@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --remote-name "https://github.com/crra/mp3binder/releases/download/${version}/linux_${alt_arch}.zip"
+unzip -q -o -d "/tmp" "linux_${alt_arch}.zip"
+rm "linux_${alt_arch}.zip"
+mv "/tmp/mp3binder" "${prefix}${target}/bin"
+EOF

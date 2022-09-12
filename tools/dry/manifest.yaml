@@ -1,0 +1,17 @@
+name: dry
+version: 0.11.1
+check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
+dependencies:
+- docker
+tags:
+- standard/docker
+- container/runtime
+- type/tui
+- management
+- troubleshooting
+homepage: https://github.com/moncho/dry
+description: Docker manager for the terminal
+renovate:
+  datasource: github-releases
+  package: moncho/dry
+  extractVersion: ^v(?<version>.+?)$

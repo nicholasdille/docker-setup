@@ -1,0 +1,12 @@
+name: ssh-key-confirmer
+version: 0.1
+tags:
+- category/security
+- type/cli
+homepage: https://github.com/benjojo/ssh-key-confirmer
+description: Test SSH login key acceptance without having the private key
+renovate:
+  datasource: github-releases
+  package: benjojo/ssh-key-confirmer
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

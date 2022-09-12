@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/runsc" \
+    "https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/runsc"
+chmod +x "${prefix}${target}/bin/runsc"
+curl --silent --location --output "${prefix}${target}/bin/containerd-shim-runsc-v1" \
+    "https://storage.googleapis.com/gvisor/releases/release/${version}/${arch}/containerd-shim-runsc-v1"
+chmod +x "${prefix}${target}/bin/containerd-shim-runsc-v1"
+EOF

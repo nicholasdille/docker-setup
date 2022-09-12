@@ -1,0 +1,17 @@
+name: docker-manpages
+version: 20.10.18
+binary: false
+tags:
+- org/docker
+- standard/docker
+- standard/oci
+- container/runtime
+- container/build
+- category/default
+- type/configuration
+renovate:
+  datasource: github-tags
+  package: docker/cli
+  extractVersion: ^v(?<version>.+?)$
+homepage: https://www.docker.com/
+description: The Docker CLI

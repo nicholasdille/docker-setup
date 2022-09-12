@@ -1,0 +1,13 @@
+name: firejail
+version: 0.9.70
+check: ${binary} --version | head -n 1 | cut -d' ' -f3
+dependencies:
+- docker
+tags:
+- category/security
+- type/cli
+homepage: https://github.com/netblue30/firejail
+description: Linux namespaces and seccomp-bpf sandbox
+renovate:
+  datasource: github-releases
+  package: netblue30/firejail

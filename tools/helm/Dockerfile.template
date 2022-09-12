@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://get.helm.sh/helm-v${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    linux-amd64/helm
+"${prefix}${target}/bin/helm" completion bash >"${prefix}${target}/share/bash-completion/completions/helm"
+"${prefix}${target}/bin/helm" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/helm.fish"
+"${prefix}${target}/bin/helm" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm"
+EOF

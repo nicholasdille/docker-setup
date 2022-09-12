@@ -1,0 +1,15 @@
+name: nsutils
+version: 0.2
+binary: nslist
+dependencies:
+- docker
+tags:
+- kernel/namespaces
+- type/cli
+homepage: https://github.com/rd235/nsutils
+description: Linux namespace utilities
+renovate:
+  datasource: github-tags
+  package: rd235/nsutils
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

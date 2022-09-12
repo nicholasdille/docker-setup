@@ -1,0 +1,13 @@
+name: dagger
+version: 0.2.33
+check: ${binary} version | cut -d' ' -f2
+tags:
+- type/cli
+- management
+- cicd
+homepage: https://github.com/dagger/dagger
+description: Portable devkit for CI/CD pipelines
+renovate:
+  datasource: github-releases
+  package: dagger/dagger
+  extractVersion: ^v(?<version>.+?)$

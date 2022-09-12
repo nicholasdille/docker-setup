@@ -1,0 +1,14 @@
+name: crictl
+version: 1.25.0
+tags:
+- org/cncf
+- standard/cri
+- container/runtime
+- type/cli
+- kubernetes
+homepage: https://github.com/kubernetes-sigs/cri-tools
+description: CLI and validation tools for Kubelet Container Runtime Interface
+renovate:
+  datasource: github-releases
+  package: kubernetes-sigs/cri-tools
+  extractVersion: ^v(?<version>.+?)$

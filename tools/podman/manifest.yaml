@@ -1,0 +1,23 @@
+name: podman
+version: 4.2.1
+check: ${binary} --version | cut -d' ' -f3
+dependencies:
+- conmon
+- runc
+- cni
+- fuse-overlayfs
+- shortnames
+- containers-common
+tags:
+- org/redhat
+- standard/oci
+- container/runtime
+- type/cli
+- type/daemon
+- rootless
+homepage: https://github.com/containers/podman
+description: Tool for managing OCI containers and pods
+renovate:
+  datasource: github-releases
+  package: nicholasdille/podman-static
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/slsa-verifier" \
+    "https://github.com/slsa-framework/slsa-verifier/releases/download/v${version}/slsa-verifier-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/slsa-verifier"
+EOF

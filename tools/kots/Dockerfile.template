@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    kots
+mv "${prefix}${target}/bin/kots" "${prefix}${target}/bin/kubectl-kots"
+"${prefix}${target}/bin/kubectl-kots" completion bash >"${prefix}${target}/share/bash-completion/completions/kubectl-kots"
+"${prefix}${target}/bin/kubectl-kots" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kubectl-kots.fish"
+"${prefix}${target}/bin/kubectl-kots" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubectl-kots"
+EOF

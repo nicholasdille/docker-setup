@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.19.1@sha256:4c8f4b8402a868dc6fb3902c97032b971d0179fbe007be408b455697e98d194a AS build
+WORKDIR /go/src/github.com/containerd/imgcrypt
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/imgcrypt .
+sed -i -E 's/ -v / /' Makefile
+sed -i -E "s/ --dirty='.m' / /" Makefile
+make
+make install DESTDIR=/opt/imgcrypt
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /opt/imgcrypt/ ${prefix}${target}/

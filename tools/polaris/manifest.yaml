@@ -1,0 +1,10 @@
+name: polaris
+version: 7.0.2
+tags:
+- type/cli
+- kubernetes
+homepage: https://github.com/FairwindsOps/polaris
+description: Validation of best practices in your Kubernetes clusters
+renovate:
+  datasource: github-releases
+  package: FairwindsOps/polaris

@@ -1,0 +1,14 @@
+name: cmctl
+version: 1.9.1
+check: ${binary} version --client --short | cut -dv -f2
+tags:
+- type/cli
+- kubernetes
+- management
+- category/security
+homepage: https://github.com/cert-manager/cert-manager
+description: Automatically provision and manage TLS certificates in Kubernetes
+renovate:
+  datasource: github-releases
+  package: cert-manager/cert-manager
+  extractVersion: ^v(?<version>.+?)$

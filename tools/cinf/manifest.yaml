@@ -1,0 +1,12 @@
+name: cinf
+version: 0.6.0
+tags:
+- kernel/cgroups
+- kernel/capabilities
+- type/cli
+homepage: https://github.com/mhausenblas/cinf
+description: Command line tool to view namespaces and cgroups
+renovate:
+  datasource: github-releases
+  package: mhausenblas/cinf
+  extractVersion: ^v(?<version>.+?)$

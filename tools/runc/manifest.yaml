@@ -1,0 +1,15 @@
+name: runc
+version: 1.1.4
+dependencies:
+- go-md2man
+tags:
+- org/oci
+- standard/oci
+- container/runtime
+- type/cli
+homepage: https://github.com/opencontainers/runc
+description: CLI tool for spawning and running containers according to the OCI specification 
+renovate:
+  datasource: github-releases
+  package: opencontainers/runc
+  extractVersion: ^v(?<version>.+?)$

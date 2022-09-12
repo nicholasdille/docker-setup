@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.19.1@sha256:4c8f4b8402a868dc6fb3902c97032b971d0179fbe007be408b455697e98d194a AS build
+WORKDIR /go/src/github.com/emojisum/emojisum
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "draft+${version}" https://github.com/emojisum/emojisum .
+export CGO_ENABLED=0
+export GO111MODULE=auto
+go mod init
+go mod tidy
+go build -ldflags "-w -s" -o "/usr/local/bin/emojisum" .
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/local/bin/emojisum ${prefix}${target}/bin/

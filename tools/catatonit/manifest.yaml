@@ -1,0 +1,12 @@
+name: catatonit
+version: 0.1.7
+check: ${binary} --version | cut -d' ' -f3 | cut -d_ -f1
+tags:
+- type/cli
+- container/init
+homepage: https://github.com/openSUSE/catatonit
+description: Container init that is so simple it's effectively brain-dead
+renovate:
+  datasource: github-releases
+  package: openSUSE/catatonit
+  extractVersion: ^v(?<version>.+?)$

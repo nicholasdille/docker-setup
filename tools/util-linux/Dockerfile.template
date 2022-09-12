@@ -1,0 +1,45 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04@sha256:20fa2d7bb4de7723f542be5923b06c4d704370f0390e4ae9e1c833c8785644c1 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    git \
+    ca-certificates \
+    autoconf \
+    automake \
+    autopoint \
+    gettext \
+    bison \
+    libtool \
+    pkg-config \
+    make \
+    asciidoctor
+EOF
+WORKDIR /tmp/util-linux
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/util-linux/util-linux .
+./autogen.sh
+./configure --disable-shared
+make LDFLAGS=--static
+mkdir -p \
+    /opt/util-linux/bin \
+    /opt/util-linux/share/man/man1 \
+    /opt/util-linux/share/man/man8 \
+    /opt/util-linux/share/bash-completion/completions
+cp lsns nsenter unshare /opt/util-linux/bin
+cp \
+    sys-utils/nsenter.1 sys-utils/unshare.1 \
+    /opt/util-linux/share/man/man1/
+cp sys-utils/lsns.8 /opt/util-linux/share/man/man8/
+cp \
+    bash-completion/lsns bash-completion/nsenter bash-completion/unshare \
+    /opt/util-linux/share/bash-completion/completions
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /opt/util-linux/ ${prefix}${target}/

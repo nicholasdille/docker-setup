@@ -1,0 +1,20 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kubefire" \
+    "https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/kubefire"
+EOF
+
+RUN <<EOF
+mkdir -p "${prefix}${target}/libexec/cni"
+curl --silent --location --output "${prefix}${target}/libexec/cni/host-local-rev" \
+    "https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}"
+chmod +x "${prefix}${target}/libexec/cni/host-local-rev"
+EOF

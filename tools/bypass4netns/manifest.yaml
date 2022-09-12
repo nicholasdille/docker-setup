@@ -1,0 +1,16 @@
+name: bypass4netns
+version: 0.3.0
+dependencies:
+- docker
+- slirp4netns
+tags:
+- component/network
+- type/cli
+- type/daemon
+- rootless
+homepage: https://github.com/rootless-containers/bypass4netns
+description: Accelerates slirp4netns using SECCOMP_IOCTL_NOTIF_ADDFD
+renovate:
+  datasource: github-tags
+  package: rootless-containers/bypass4netns
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/open-policy-agent/conftest/releases/download/v${version}/conftest_${version}_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    conftest
+"${prefix}${target}/bin/conftest" completion bash >"${prefix}${target}/share/bash-completion/completions/conftest"
+"${prefix}${target}/bin/conftest" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/conftest.fish"
+"${prefix}${target}/bin/conftest" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_conftest"
+EOF

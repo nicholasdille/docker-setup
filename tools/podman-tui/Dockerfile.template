@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.19.1@sha256:4c8f4b8402a868dc6fb3902c97032b971d0179fbe007be408b455697e98d194a AS build
+WORKDIR /go/src/github.com/containers/podman-tui
+ARG name
+ARG version
+RUN <<EOF
+export CGO_ENABLED=0
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/podman-tui .
+go build -mod=vendor -o ./bin/linux/podman-tui -tags "containers_image_openpgp remote"
+cp ./bin/linux/podman-tui /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/local/bin/podman-tui ${prefix}${target}/bin/

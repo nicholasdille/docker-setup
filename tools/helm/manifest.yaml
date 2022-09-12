@@ -1,0 +1,15 @@
+name: helm
+version: 3.9.4
+check: ${binary} version --short | cut -d+ -f1 | tr -d v
+tags:
+- type/cli
+- kubernetes
+- templating
+- package
+- management
+homepage: https://github.com/helm/helm
+description: The Kubernetes Package Manager
+renovate:
+  datasource: github-releases
+  package: helm/helm
+  extractVersion: ^v(?<version>.+?)$

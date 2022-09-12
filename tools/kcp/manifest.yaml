@@ -1,0 +1,14 @@
+name: kcp
+version: 0.8.2
+check: ${binary} --version | cut -d' ' -f3 | cut -dv -f3
+tags:
+- type/cli
+- type/daemon
+- type/plugin
+- kubernetes
+homepage: https://github.com/kcp-dev/kcp
+description: Prototype of a multi-tenant Kubernetes control plane
+renovate:
+  datasource: github-releases
+  package: kcp-dev/kcp
+  extractVersion: ^v(?<version>.+?)$

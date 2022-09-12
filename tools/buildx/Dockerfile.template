@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" \
+    "https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}"
+chmod +x "${prefix}${target}/libexec/docker/cli-plugins/docker-buildx"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-buildx"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/docker-buildx.fish"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_docker-buildx"
+EOF

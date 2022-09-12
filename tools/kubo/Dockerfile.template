@@ -1,0 +1,24 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY ipfs.service ${prefix}/etc/systemd/system
+
+RUN <<EOF
+curl --silent --location "https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    kubo/ipfs
+"${prefix}${target}/bin/ipfs" commands completion bash >"${prefix}${target}/share/bash-completion/completions/ipfs"
+EOF
+
+RUN <<EOF
+export IPFS_PATH="${prefix}${target}/var/lib/ipfs"
+mkdir -p "${IPFS_PATH}"
+"${prefix}${target}/bin/ipfs" init
+"${prefix}${target}/bin/ipfs" config Addresses.API "/ip4/127.0.0.1/tcp/5888"
+"${prefix}${target}/bin/ipfs" config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
+EOF

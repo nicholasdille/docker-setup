@@ -1,0 +1,12 @@
+name: norouter
+version: 0.6.4
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- component/network
+- type/cli
+homepage: https://github.com/norouter/norouter
+description: IP-over-Stdio
+renovate:
+  datasource: github-releases
+  package: norouter/norouter
+  extractVersion: ^v(?<version>.+?)$

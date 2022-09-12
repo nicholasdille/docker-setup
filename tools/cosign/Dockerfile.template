@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/cosign" \
+    "https://github.com/sigstore/cosign/releases/download/v${version}/cosign-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/cosign"
+"${prefix}${target}/bin/cosign" completion bash >"${prefix}${target}/share/bash-completion/completions/cosign"
+"${prefix}${target}/bin/cosign" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/cosign.fish"
+"${prefix}${target}/bin/cosign" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_cosign"
+EOF

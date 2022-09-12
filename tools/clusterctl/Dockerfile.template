@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/clusterctl" \
+    "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/clusterctl"
+"${prefix}${target}/bin/clusterctl" completion bash >"${prefix}${target}/share/bash-completion/completions/clusterctl"
+"${prefix}${target}/bin/clusterctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_clusterctl"
+EOF

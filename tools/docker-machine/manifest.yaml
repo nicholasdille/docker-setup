@@ -1,0 +1,14 @@
+name: docker-machine
+version: 0.16.2
+check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
+tags:
+- standard/docker
+- org/docker
+- type/cli
+- state/archived
+homepage: https://github.com/docker/machine
+description: Machine management for a container-centric world
+renovate:
+  datasource: github-releases
+  package: docker/machine
+  extractVersion: ^v(?<version>.+?)$

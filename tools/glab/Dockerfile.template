@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/profclems/glab/releases/download/v${version}/glab_${version}_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
+    bin/glab
+"${prefix}${target}/bin/glab" completion -s bash >"${prefix}${target}/share/bash-completion/completions/glab"
+"${prefix}${target}/bin/glab" completion -s fish >"${prefix}${target}/share/fish/vendor_completions.d/glab.fish"
+"${prefix}${target}/bin/glab" completion -s zsh >"${prefix}${target}/share/zsh/vendor-completions/_glab"
+EOF

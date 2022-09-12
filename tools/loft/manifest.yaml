@@ -1,0 +1,12 @@
+name: loft
+version: 2.3.0
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- kubernetes
+homepage: https://github.com/loft-sh/loft
+description: Namespace & Virtual Cluster Manager for Kubernetes
+renovate:
+  datasource: github-releases
+  package: loft-sh/loft
+  extractVersion: ^v(?<version>.+)$

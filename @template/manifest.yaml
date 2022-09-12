@@ -1,0 +1,13 @@
+name: tool_name
+version: 0.1.2
+dependencies:
+- docker
+tags:
+- tag1
+- tag2
+homepage: https://www.google.de
+description: Some description
+renovate:
+  datasource: github-releases
+  package: foo/bar
+  extractVersion: ^v(?<version>.+?)$

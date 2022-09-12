@@ -1,0 +1,18 @@
+name: buildx
+version: 0.9.1
+binary: ${target}/libexec/docker/cli-plugins/docker-buildx
+check: ${binary} version | cut -d' ' -f2 | tr -d v
+dependencies:
+- docker
+tags:
+- org/docker
+- standard/docker
+- type/cli
+- type/plugin
+- category/default
+homepage: https://github.com/docker/buildx
+description: Docker CLI plugin for extended build capabilities with BuildKit
+renovate:
+  datasource: github-releases
+  package: docker/buildx
+  extractVersion: ^v(?<version>.+?)$

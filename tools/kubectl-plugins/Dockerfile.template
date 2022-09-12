@@ -1,0 +1,97 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
+FROM ghcr.io/nicholasdille/docker-setup/kubectl:${ref} AS kubectl
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY --from=krew / /
+COPY --from=kubectl / /
+
+RUN <<EOF
+export KREW_ROOT="/opt/krew"
+krew update
+krew install krew
+plugins=(
+    access-matrix
+    advise-policy
+    advise-psp
+    assert
+    blame
+    bulk-action
+    cert-manager
+    cilium
+    cyclonus
+    debug-shell
+    deprecations
+    df-pv
+    doctor
+    edit-status
+    emit-event
+    evict-pod
+    exec-as
+    exec-cronjob
+    fields
+    flame
+    fleet
+    fuzzy
+    gadget
+    get-all
+    graph
+    grep
+    hns
+    ice
+    images
+    janitor
+    konfig
+    kubesec-scan
+    kurt
+    lineage
+    modify-secret
+    mtail
+    neat
+    node-shell
+    outdated
+    pexec
+    pod-dive
+    pod-inspect
+    pod-lens
+    rbac-lookup
+    rbac-tool
+    rbac-view
+    resource-capacity
+    resource-snapshot
+    rolesum
+    score
+    skew
+    slice
+    sniff
+    socks5-proxy
+    spy
+    sshd
+    starboard
+    status
+    strace
+    sudo
+    support-bundle
+    tap
+    trace
+    tree
+    tunnel
+    view-allocations
+    view-utilization
+    viewnode
+    who-can
+    whoami
+)
+for plugin in "${plugins[@]}"; do
+    echo "Processing ${plugin}"
+    krew install "${plugin}"
+done
+mv /opt/krew/bin/kubectl-* ${prefix}${target}/bin/
+EOF

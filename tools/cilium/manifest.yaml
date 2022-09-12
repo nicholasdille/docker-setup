@@ -1,0 +1,13 @@
+name: cilium
+version: 0.12.3
+check: ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
+tags:
+- type/cli
+- component/network
+- kubernetes
+homepage: https://github.com/cilium/cilium-cli
+description: CLI to install, manage & troubleshoot Kubernetes clusters running Cilium
+renovate:
+  datasource: github-releases
+  package: cilium/cilium-cli
+  extractVersion: ^v(?<version>.+?)$

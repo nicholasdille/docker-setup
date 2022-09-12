@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/stern/stern/releases/download/v${version}/stern_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    stern
+"${prefix}${target}/bin/stern" --completion bash >"${prefix}${target}/share/bash-completion/completions/stern"
+"${prefix}${target}/bin/stern" --completion fish >"${prefix}${target}/share/fish/vendor_completions.d/stern.fish"
+"${prefix}${target}/bin/stern" --completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_stern"
+EOF

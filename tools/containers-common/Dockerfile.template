@@ -1,0 +1,30 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY --link --from=go-md2man / /
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/share/man/man5/Containerfile.5.md" \
+    "https://github.com/containers/common/raw/v${version}/docs/Containerfile.5.md"
+curl --silent --location --output "${prefix}${target}/share/man/man5/containerignore.5.md" \
+    "https://github.com/containers/common/raw/v${version}/docs/containerignore.5.md"
+curl --silent --location --output "${prefix}${target}/share/man/man5/containers-mounts.conf.5.md" \
+    "https://github.com/containers/common/raw/v${version}/docs/containers-mounts.conf.5.md"
+curl --silent --location --output "${prefix}${target}/share/man/man5/containers.conf.5.md" \
+    "https://github.com/containers/common/raw/v${version}/docs/containers.conf.5.md"
+go-md2man -in "${prefix}${target}/share/man/man5/Containerfile.5.md"          -out "${prefix}${target}/share/man/man5/Containerfile.5"
+go-md2man -in "${prefix}${target}/share/man/man5/containerignore.5.md"        -out "${prefix}${target}/share/man/man5/containerignore.5"
+go-md2man -in "${prefix}${target}/share/man/man5/containers-mounts.conf.5.md" -out "${prefix}${target}/share/man/man5/containers-mounts.conf.5"
+go-md2man -in "${prefix}${target}/share/man/man5/containers.conf.5.md"        -out "${prefix}${target}/share/man/man5/containers.conf.5"
+rm \
+    "${prefix}${target}/share/man/man5/Containerfile.5.md" \
+    "${prefix}${target}/share/man/man5/containerignore.5.md" \
+    "${prefix}${target}/share/man/man5/containers-mounts.conf.5.md" \
+    "${prefix}${target}/share/man/man5/containers.conf.5.md"
+EOF

@@ -1,0 +1,15 @@
+name: docker-credential-magic
+version: 0.8.1
+dependencies:
+- docker
+tags:
+- standard/docker
+- container/runtime
+- category/security
+- cloud/google
+homepage: https://github.com/docker-credential-magic/docker-credential-magic
+description: Magic shim for Docker credential helpers
+renovate:
+  datasource: github-releases
+  package: docker-credential-magic/docker-credential-magic
+  extractVersion: ^v(?<version>.+?)$

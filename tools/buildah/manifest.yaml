@@ -1,0 +1,17 @@
+name: buildah
+version: 1.27.1
+check: ${binary} --version | cut -d' ' -f3
+dependencies:
+- runc
+- cni
+tags:
+- org/redhat
+- standard/oci
+- container/build
+- type/cli
+homepage: https://github.com/nicholasdille/buildah-static
+description: Tool that facilitates building OCI images
+renovate:
+  datasource: github-releases
+  package: nicholasdille/buildah-static
+  extractVersion: ^v(?<version>.+?)$

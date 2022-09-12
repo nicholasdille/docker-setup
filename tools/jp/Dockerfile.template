@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/jp" \
+    "https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/jp"
+EOF

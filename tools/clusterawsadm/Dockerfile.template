@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/clusterawsadm" \
+    "https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/v${version}/clusterawsadm-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/clusterawsadm"
+"${prefix}${target}/bin/clusterawsadm" completion bash >"${prefix}${target}/share/bash-completion/completions/clusterawsadm"
+"${prefix}${target}/bin/clusterawsadm" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/clusterawsadm.fish"
+"${prefix}${target}/bin/clusterawsadm" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_clusterawsadm"
+EOF

@@ -1,0 +1,15 @@
+name: docker-credential-gcr
+version: 2.1.6
+dependencies:
+- docker
+tags:
+- standard/docker
+- container/runtime
+- category/security
+- cloud/google
+homepage: https://github.com/GoogleCloudPlatform/docker-credential-gcr
+description: Docker credential helper for GCR users
+renovate:
+  datasource: github-releases
+  package: GoogleCloudPlatform/docker-credential-gcr
+  extractVersion: ^v(?<version>.+?)$

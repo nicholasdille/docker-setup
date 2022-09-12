@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/controlplaneio/kubesec/releases/download/v${version}/kubesec_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    kubesec
+"${prefix}${target}/bin/kubesec" completion bash >"${prefix}${target}/share/bash-completion/completions/kubesec"
+"${prefix}${target}/bin/kubesec" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kubesec.fish"
+"${prefix}${target}/bin/kubesec" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubesec"
+EOF

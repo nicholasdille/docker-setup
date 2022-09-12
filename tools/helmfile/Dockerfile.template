@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/helmfile" \
+    "https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/helmfile"
+curl --silent --location --output "${prefix}${target}/share/bash-completion/completions/helmfile" \
+    "https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_bash_autocomplete"
+curl --silent --location --output "${prefix}${target}/share/zsh/vendor-completions/_helmfile" \
+    "https://github.com/roboll/helmfile/raw/v${version}/autocomplete/helmfile_zsh_autocomplete"
+EOF

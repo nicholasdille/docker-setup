@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/faasd" \
+    "https://github.com/openfaas/faasd/releases/download/${version}/faasd"
+chmod +x "${prefix}${target}/bin/faasd"
+curl --silent --location --output "${prefix}/etc/systemd/system/faasd.service" \
+    "https://github.com/openfaas/faasd/raw/${version}/hack/faasd.service"
+curl --silent --location --output "${prefix}/etc/systemd/system/faasd-provider.service" \
+    "https://github.com/openfaas/faasd/raw/${version}/hack/faasd-provider.service"
+EOF

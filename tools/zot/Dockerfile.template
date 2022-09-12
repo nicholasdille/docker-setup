@@ -1,0 +1,34 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/zot" \
+    "https://github.com/project-zot/zot/releases/download/v${version}/zot-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/zot"
+"${prefix}${target}/bin/zot" completion bash >"${prefix}${target}/share/bash-completion/completions/zot"
+"${prefix}${target}/bin/zot" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/zot.fish"
+"${prefix}${target}/bin/zot" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_zot"
+
+curl --silent --location --output "${prefix}${target}/bin/zli" \
+    "https://github.com/project-zot/zot/releases/download/v${version}/zli-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/zli"
+"${prefix}${target}/bin/zli" completion bash >"${prefix}${target}/share/bash-completion/completions/zli"
+"${prefix}${target}/bin/zli" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/zli.fish"
+"${prefix}${target}/bin/zli" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_zli"
+
+curl --silent --location --output "${prefix}${target}/bin/zb" \
+    "https://github.com/project-zot/zot/releases/download/v${version}/zb-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/zb"
+
+curl --silent --location --output "${prefix}${target}/bin/zxp" \
+    "https://github.com/project-zot/zot/releases/download/v${version}/zxp-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/zxp"
+"${prefix}${target}/bin/zxp" completion bash >"${prefix}${target}/share/bash-completion/completions/zxp"
+"${prefix}${target}/bin/zxp" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/zxp.fish"
+"${prefix}${target}/bin/zxp" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_zxp"
+EOF

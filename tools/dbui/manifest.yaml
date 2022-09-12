@@ -1,0 +1,11 @@
+name: dbui
+version: 0.7.0
+tags:
+- component/database
+- type/tui
+homepage: https://github.com/KenanBek/dbui
+description: Universal Database CLI for MySQL, PostgreSQL, and SQLite
+renovate:
+  datasource: github-releases
+  package: KenanBek/dbui
+  extractVersion: ^v(?<version>.+?)$

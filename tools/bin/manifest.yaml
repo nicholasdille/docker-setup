@@ -1,0 +1,12 @@
+name: bin
+version: 0.15.1
+check: ${binary} --version | grep ^bin | cut -d' ' -f3
+tags:
+- type/cli
+- management
+homepage: https://github.com/marcosnils/bin
+description: Effortless binary manager
+renovate:
+  datasource: github-releases
+  package: marcosnils/bin
+  extractVersion: ^v(?<version>.+?)$

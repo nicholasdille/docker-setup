@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --remote-name "https://github.com/datreeio/datree/releases/download/${version}/datree-cli_${version}_Linux_${arch}.zip"
+unzip -q -o -d "/tmp" "datree-cli_${version}_Linux_${arch}.zip"
+rm "datree-cli_${version}_Linux_${arch}.zip"
+mv "/tmp/datree" "${prefix}${target}/bin"
+"${prefix}${target}/bin/datree" completion bash >"${prefix}${target}/share/bash-completion/completions/datree"
+"${prefix}${target}/bin/datree" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/datree.fish"
+"${prefix}${target}/bin/datree" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_datree"
+EOF

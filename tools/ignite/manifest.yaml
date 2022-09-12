@@ -1,0 +1,18 @@
+name: ignite
+version: 0.10.0
+check: ${binary} version --output short | tr -d v
+dependencies:
+- containerd
+- cni
+tags:
+- type/cli
+- kvm
+- management
+- vm
+- emulation
+homepage: https://github.com/weaveworks/ignite
+description: Ignite a Firecracker microVM
+renovate:
+  datasource: github-releases
+  package: weaveworks/ignite
+  extractVersion: ^v(?<version>.+?)$

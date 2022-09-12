@@ -1,0 +1,13 @@
+name: lazygit
+version: 0.32.2
+check: ${binary} --version | cut -d' ' -f6 | cut -d= -f2 | tr -d ,
+tags:
+- type/tui
+- development
+- management
+homepage: https://github.com/jesseduffield/lazygit
+description: Simple terminal UI for git commands
+renovate:
+  datasource: github-releases
+  package: jesseduffield/lazygit
+  extractVersion: ^v(?<version>.+)$

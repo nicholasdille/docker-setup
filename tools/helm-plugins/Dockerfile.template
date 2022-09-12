@@ -1,0 +1,64 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/helm:${ref} AS helm
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY --link --from=helm / /
+
+RUN <<EOF
+echo "export HELM_PLUGINS=${target}/share/helm/plugins" >${prefix}/etc/profile.d/helm-plugins.sh
+
+export HELM_PLUGINS=${prefix}${target}/share/helm/plugins
+
+plugins=(
+    https://github.com/mstrzele/helm-edit
+    https://github.com/databus23/helm-diff
+    https://github.com/aslafy-z/helm-git
+    https://github.com/sstarcher/helm-release
+    https://github.com/maorfr/helm-backup
+    https://github.com/technosophos/helm-keybase
+    https://github.com/technosophos/helm-gpg
+    https://github.com/cloudogu/helm-sudo
+    https://github.com/bloodorangeio/helm-oci-mirror
+    https://github.com/UniKnow/helm-outdated
+    https://github.com/rimusz/helm-chartify
+    https://github.com/random-dwi/helm-doc
+    https://github.com/sapcc/helm-outdated-dependencies
+    https://github.com/jkroepke/helm-secrets
+    https://github.com/sigstore/helm-sigstore
+    https://github.com/quintush/helm-unittest
+)
+for url in "${plugins[@]}"; do
+    name="$(basename "${url}")"
+    echo "Installing ${name}"
+    helm plugin install "${url}"
+    echo "Cleaning ${name}"
+    rm -rf \
+        "${HELM_PLUGINS}/${name}/.git" \
+        "${HELM_PLUGINS}/${name}/.github" \
+        "${HELM_PLUGINS}/${name}/cmd" \
+        "${HELM_PLUGINS}/${name}/pkg" \
+        "${HELM_PLUGINS}/${name}/scripts" \
+        "${HELM_PLUGINS}/${name}/test" \
+        "${HELM_PLUGINS}/${name}/vendor" \
+        "${HELM_PLUGINS}/${name}/.[a-z]*" \
+        "${HELM_PLUGINS}/${name}/*.go" \
+        "${HELM_PLUGINS}/${name}/*.md"
+done
+
+helm diff completion bash >"${prefix}${target}/share/bash-completion/completions/helm-diff"
+helm diff completion fish >"${prefix}${target}/share/fish/vendor_completions.d/helm-diff.fish"
+helm diff completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm-diff"
+
+helm sigstore completion bash >"${prefix}${target}/share/bash-completion/completions/helm-sigstore"
+helm sigstore completion fish >"${prefix}${target}/share/fish/vendor_completions.d/helm-sigstore.fish"
+helm sigstore completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm-sigstore"
+
+helm sudo completion bash >"${prefix}${target}/share/bash-completion/completions/helm-sudo"
+helm sudo completion fish >"${prefix}${target}/share/fish/vendor_completions.d/helm-sudo.fish"
+helm sudo completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm-sudo"
+EOF

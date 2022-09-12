@@ -1,0 +1,20 @@
+name: docker
+version: 20.10.18
+dependencies:
+- fuse-overlayfs
+- docker-manpages
+tags:
+- org/docker
+- standard/docker
+- standard/oci
+- container/runtime
+- container/build
+- category/default
+- type/cli
+- type/daemon
+homepage: https://www.docker.com/
+description: The Docker CLI
+renovate:
+  datasource: github-tags
+  package: moby/moby
+  extractVersion: ^v(?<version>.+?)$

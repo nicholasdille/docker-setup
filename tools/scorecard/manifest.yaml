@@ -1,0 +1,12 @@
+name: scorecard
+version: 4.6.0
+check: ${binary} version | grep "GitVersion" | cut -dv -f2
+tags:
+- category/security
+- type/cli
+homepage: https://github.com/ossf/scorecard
+description: Security health metrics for Open Source
+renovate:
+  datasource: github-releases
+  package: ossf/scorecard
+  extractVersion: ^v(?<version>.+?)$

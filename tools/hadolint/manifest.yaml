@@ -1,0 +1,15 @@
+name: hadolint
+version: 2.10.0
+check: ${binary} --version | cut -d' ' -f4 | cut -d- -f1
+tags:
+- container/build
+- category/development
+- type/cli
+- troubleshooting
+- cicd
+homepage: https://github.com/hadolint/hadolint
+description: Dockerfile linter, validate inline bash
+renovate:
+  datasource: github-releases
+  package: hadolint/hadolint
+  extractVersion: ^v(?<version>.+?)$

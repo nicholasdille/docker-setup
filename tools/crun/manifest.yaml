@@ -1,0 +1,14 @@
+name: crun
+version: 1.6
+check: ${binary} --version | grep "crun version" | cut -d' ' -f3
+tags:
+- org/redhat
+- standard/oci
+- container/runtime
+- type/cli
+homepage: https://github.com/containers/crun
+description: Fast and lightweight fully featured OCI runtime
+renovate:
+  datasource: github-releases
+  package: containers/crun
+  versioning: loose

@@ -1,0 +1,24 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY --from=krew / /
+
+COPY kubectl.sh ${prefix}/etc/profile.d/
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kubectl" \
+    "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl"
+chmod +x "${prefix}${target}/bin/kubectl"
+curl --silent --location --output "${prefix}${target}/bin/kubectl-convert" \
+    "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert"
+chmod +x "${prefix}${target}/bin/kubectl-convert"
+"${prefix}${target}/bin/kubectl" completion bash >"${prefix}${target}/share/bash-completion/completions/kubectl"
+"${prefix}${target}/bin/kubectl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubectl"
+EOF
