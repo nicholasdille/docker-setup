@@ -40,9 +40,10 @@ RUN <<EOF
 mkdir -p \
     "${prefix}/etc/profile.d" \
     "${prefix}/etc/systemd/system" \
-    "${docker_setup_cache}" \
-    "${docker_setup_contrib}" \
-    "${docker_setup_post_install}" \
+    "${prefix}${docker_setup_cache}" \
+    "${prefix}${docker_setup_contrib}" \
+    "${prefix}${docker_setup_manifests}" \
+    "${prefix}${docker_setup_post_install}" \
     "${prefix}${target}/bin" \
     "${prefix}${target}/etc" \
     "${prefix}${target}/include" \

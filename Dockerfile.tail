@@ -1,4 +1,9 @@
-COPY manifest.yaml "${prefix}${docker_setup_manifests}/${name}.json"
+RUN <<EOF
+find ${prefix} -type f \
+| grep -v "${prefix}${docker_setup_manifests}/${name}.txt" \
+>"${prefix}${docker_setup_manifests}/${name}.txt"
+EOF
+COPY manifest.json "${prefix}${docker_setup_manifests}/${name}.json"
 
 FROM scratch
 ARG ref
