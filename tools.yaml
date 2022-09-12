@@ -3058,7 +3058,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kots
-    version: 1.83.0
+    version: 1.84.0
     binary: kubectl-kots
     check: ${binary} version | cut -d' ' -f3
     download:
