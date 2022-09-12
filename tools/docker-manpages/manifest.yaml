@@ -11,7 +11,7 @@ tags:
 - type/configuration
 renovate:
   datasource: github-tags
-  package: moby/moby
+  package: docker/cli
   extractVersion: ^v(?<version>.+?)$
 homepage: https://www.docker.com/
 description: The Docker CLI

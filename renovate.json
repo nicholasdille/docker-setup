@@ -821,7 +821,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "moby/moby",
+      "depNameTemplate": "docker/cli",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
