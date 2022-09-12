@@ -2573,7 +2573,7 @@ tools:
       type: executable
 
   - name: grype
-    version: 0.49.0
+    version: 0.50.0
     check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
     tags:
     - security
