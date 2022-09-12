@@ -1,5 +1,5 @@
 name: kcp
-version: 0.8.0
+version: 0.8.2
 check: ${binary} --version | cut -d' ' -f3 | cut -dv -f3
 tags:
 - type/cli
