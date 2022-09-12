@@ -3466,6 +3466,7 @@ tools:
 
   - name: kubo
     version: 0.15.0
+    binary: ipfs
     check: ${binary} version --number
     needs:
     - containerd
@@ -3501,9 +3502,9 @@ tools:
       echo "Install completion"
       ${binary} commands completion bash >"${target}/share/bash-completion/completions/ipfs"
       echo "Preconfigure ipfs"
-      IPFS_PATH=${target}/var/lib/ipfs ${binary} init
-      IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
-      IPFS_PATH=${target}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
+      IPFS_PATH=${prefix}/var/lib/ipfs ${binary} init
+      IPFS_PATH=${prefix}/var/lib/ipfs ${binary} config Addresses.API "/ip4/127.0.0.1/tcp/5888"
+      IPFS_PATH=${prefix}/var/lib/ipfs ${binary} config Addresses.Gateway "/ip4/127.0.0.1/tcp/5889"
       echo "Patch systemd units"
       sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${relative_target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
       if test -z "${prefix}" && has_systemd; then
