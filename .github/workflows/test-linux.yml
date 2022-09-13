@@ -64,7 +64,7 @@ jobs:
               done
               GIT_BRANCH=test make tools.json bin/regctl
               cp bin/regctl /usr/local/bin/
-              docker_setup_version=test ./docker-setup.sh build bar ${TOOLS}
+              docker_setup_version=test ./docker-setup build bar ${TOOLS}
 
           else
               GIT_BRANCH=test make
