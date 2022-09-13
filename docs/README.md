@@ -11,14 +11,7 @@ The documentation of `docker-setup` is devided into the following sections:
 
 ## Internals
 
-XXX location of tools `tools/`
-
-XXX `manifest.yaml`
-
-XXX `Dockerfile.template`
-
-XXX `docker-setup` works standalone (no libraries as in v1)
-
+1. [Concepts](ceoncepts.md)
 1. [Tool manifest](manifest.md)
 1. [Dependency resolution](dependency_resolution.md)
 1. [Workflows](workflows.md)
