@@ -4352,7 +4352,7 @@ tools:
       - registry
 
   - name: rekor
-    version: 0.11.0
+    version: 0.12.0
     binary: rekor-cli
     check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
     tags:
