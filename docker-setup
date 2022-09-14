@@ -1,12 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-if ! test -f tools.json; then
-    echo "No releaeses published yet."
-    exit 1
-fi
-
-: "${docker_setup_version:=oras}"
+: "${docker_setup_version:=main}"
 
 function show_banner() {
     cat <<"EOF"
@@ -39,33 +34,54 @@ pull="$(echo -e "\U0001F4E5")"
 build="$(echo -e "\U0001F9F1")"
 inspect="$(echo -e "\U0001F50D")"
 
+: "${REGISTRY:=ghcr.io}"
+: "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
+
+: "${docker_setup_cache:=/var/cache/docker-setup-v2}"
+
+export PATH="${docker_setup_cache}/bin:${PATH}"
+REGCLIENT_VERSION=0.4.4
+if test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
+    mkdir -p \
+        "${docker_setup_cache}/bin" \
+        "${docker_setup_cache}/share/bash-completion/completions" \
+        "${docker_setup_cache}/share/fish/vendor_completions.d" \
+        "${docker_setup_cache}/share/zsh/vendor-completions"
+    ./Dockerfile.sh . \
+        --file tools/regclient/Dockerfile \
+        --build-arg target="${docker_setup_cache}" \
+        --build-arg arch=x86_64 \
+        --build-arg alt_arch=amd64 \
+        --build-arg name=regclient \
+        --build-arg version="${REGCLIENT_VERSION}"
+fi
+
+if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
+    echo "${auth} Logging in to ${REGISTRY}"
+    regctl registry login ${REGISTRY}
+fi
+
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if test -f "${PWD}/tools.json"; then
     docker_setup_tools_file="${PWD}/tools.json"
 fi
+>&2 echo "Using ${docker_setup_tools_file}"
 if ! test -f "${docker_setup_tools_file}"; then
-    echo "ERROR: Missing tools.json (${docker_setup_tools_file})"
-    exit 1
+    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+    | while read DIGEST; do
+        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
+        | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
+    done
 fi
-
-: "${REGISTRY:=ghcr.io}"
-: "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
 
 if test -z "${DOCKER_CONFIG}"; then
     export DOCKER_CONFIG="${HOME}/.docker"
 fi
 
-function get_tools() {
-    jq --raw-output '.tools[] | .name' "${docker_setup_tools_file}"
-}
-
-declare -a tools
-mapfile -t tools < <(get_tools)
 declare -A tools_install
 declare -a tools_ordered
-
 all_tools="$(
-    jq --raw-output '.tools[].name' tools.json \
+    jq --raw-output '.tools[].name' "${docker_setup_tools_file}" \
     | xargs echo
 )"
 
@@ -74,7 +90,10 @@ function resolve_dependencies() {
 
     if test -z "${tools_install[${name}]}"; then
         local tool_deps
-        tool_deps="$(jq --raw-output '.tools[] | select(.dependencies != null) | .dependencies[]' tools/${name}/manifest.json | xargs echo)"
+        tool_deps="$(
+            jq --raw-output --arg tool "${name}" '.tools[] | select(.name == $name) | select(.dependencies != null) | .dependencies[]' "${docker_setup_tools_file}" \
+            | xargs echo
+        )"
 
         local dep
         for dep in ${tool_deps}; do
@@ -90,7 +109,7 @@ function resolve_dependencies() {
 
 function generate() {
     CONTENT="$(
-        cat Dockerfile.template \
+        cat tools/Dockerfile.template \
         | sed -E "s|^ARG ref=main|ARG ref=${docker_setup_version}|"
     )"
     while test "$#" -gt 0; do
@@ -106,15 +125,39 @@ function generate() {
     echo "${CONTENT}"
 }
 
+function show_help() {
+    cat <<EOF
+docker-setup
+
+Commands:
+  ls                      List available tools
+  info                    Show tool manifest
+  dependencies            Resolve dependencies
+  generate                Generate Dockerfile
+  build                   Build container image
+  build-flat              Build container image using "docker commit"
+  install                 Install natively
+  install-from-registry   Install 
+  install-from-image      Build container image with local output
+
+Global options:
+  --help                  Display help
+  --version               Display version
+EOF
+}
+
 command=$1
 shift
 case "${command}" in
-    version)
+    --version)
         echo "docker-setup version ${docker_setup_version}"
+        ;;
+    --help)
+        show_help
         ;;
     ls)
         show_banner
-        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' tools.json \
+        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}" \
         | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
         ;;
 
@@ -132,7 +175,7 @@ case "${command}" in
 
     dependencies)
         for name in "$@"; do
-            if ! test -f "tools/${name}/manifest.json"; then
+            if ! jq --exit-status --arg name "${name}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}"; then
                 >&2 echo "ERROR: Tool <${name}> is unknown."
                 exit 1
             fi
@@ -276,14 +319,14 @@ case "${command}" in
         done
         ;;
     
-    install-flat)
+    build-flat)
         show_banner
         if ! type regctl >/dev/null 2>&1; then
             echo "ERROR: Command <install> requires regclient."
             exit 1
         fi
         if ! type docker >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires regclient."
+            echo "ERROR: Command <install> requires docker."
             exit 1
         fi
         base=$1
@@ -325,7 +368,7 @@ case "${command}" in
 
     *)
         echo "ERROR: Unknown or empty command <${command}>"
-        echo "       Supported commands are: version, ls, info, generate, build, install, install-from-registry, install-from-image"
+        show_help
         exit 1
         ;;
 esac
