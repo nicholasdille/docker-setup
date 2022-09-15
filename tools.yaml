@@ -4997,7 +4997,7 @@ tools:
       - yasu
 
   - name: ytt
-    version: 0.42.0
+    version: 0.43.0
     check: ${binary} version | cut -d' ' -f3
     tags:
     - k8s
