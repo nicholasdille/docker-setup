@@ -37,11 +37,12 @@ inspect="$(echo -e "\U0001F50D")"
 : "${REGISTRY:=ghcr.io}"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
 
-: "${docker_setup_cache:=/var/cache/docker-setup-v2}"
+: "${docker_setup_cache:=/var/cache/docker-setup}"
+mkdir -p "${docker_setup_cache}"
 
 export PATH="${docker_setup_cache}/bin:${PATH}"
 REGCLIENT_VERSION=0.4.4
-if test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
+if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
     mkdir -p \
         "${docker_setup_cache}/bin" \
         "${docker_setup_cache}/share/bash-completion/completions" \
@@ -57,8 +58,13 @@ if test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}";
 fi
 
 if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
-    echo "${auth} Logging in to ${REGISTRY}"
-    regctl registry login ${REGISTRY}
+    if test -n "${REGISTRY_USERNAME}" && test -n "${REGISTRY_PASSWORD}"; then
+        regctl registry login ${REGISTRY} --user "${REGISTRY_USERNAME}" --pass "${REGISTRY_PASSWORD}"
+
+    else
+        echo "${auth} Logging in to ${REGISTRY}"
+        regctl registry login ${REGISTRY}
+    fi
 fi
 
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
