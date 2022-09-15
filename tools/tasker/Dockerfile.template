@@ -25,4 +25,6 @@ make install
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /opt/tasker/ ${prefix}${target}/

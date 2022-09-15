@@ -14,4 +14,6 @@ cp oci-image-tool /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/bin/oci-image-tool ${prefix}${target}/bin/

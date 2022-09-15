@@ -1,0 +1,48 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM alpine:3.16 AS build
+WORKDIR /tmp/curl
+ARG name
+ARG version
+ENV CC=clang
+RUN <<EOF
+apk update
+apk add \
+    build-base \
+    clang \
+    openssl-dev \
+    nghttp2-dev \
+    nghttp2-static \
+    libssh2-dev \
+    libssh2-static \
+    openssl-libs-static \
+    zlib-static \
+    curl \
+    ca-certificates \
+    bash
+EOF
+RUN <<EOF
+curl --silent --location "https://github.com/curl/curl/releases/download/curl-${version//./_}/curl-${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1
+LDFLAGS="-static" \
+PKG_CONFIG="pkg-config --static" \
+    ./configure \
+        --disable-shared \
+        --enable-static \
+        --disable-ldap \
+        --enable-ipv6 \
+        --enable-unix-sockets \
+        --with-ssl \
+        --with-libssh2
+make -j4 V=1 LDFLAGS="-static -all-static"
+cp src/curl /usr/local/bin/
+mkdir -p /usr/local/share/man/man1/
+cp docs/curl.1 /usr/local/share/man/man1/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /usr/local/ ${prefix}${target}/

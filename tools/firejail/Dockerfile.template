@@ -23,4 +23,6 @@ rm -f /usr/local/sbin/unminimize
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/ ${prefix}${target}/

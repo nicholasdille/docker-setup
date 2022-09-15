@@ -14,4 +14,6 @@ cp ./bin/linux/podman-tui /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/bin/podman-tui ${prefix}${target}/bin/

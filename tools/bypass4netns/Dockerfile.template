@@ -19,5 +19,7 @@ cp bypass4netnsd /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/bin/bypass4netns ${prefix}${target}/bin/
 COPY --from=build /usr/local/bin/bypass4netnsd ${prefix}${target}/bin/

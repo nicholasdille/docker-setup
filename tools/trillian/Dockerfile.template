@@ -15,4 +15,6 @@ go build -ldflags "-w -s" -o "/opt/trillian/bin/trillian_log_signer" ./cmd/trill
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /opt/trillian/ ${prefix}${target}/

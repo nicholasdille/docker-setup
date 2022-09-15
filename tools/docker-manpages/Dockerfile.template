@@ -17,4 +17,6 @@ RUN cp -r man/man1 /usr/local/share/man/ \
  && cp -r man/man8 /usr/local/share/man/
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/share/man/ ${prefix}${target}/share/man/

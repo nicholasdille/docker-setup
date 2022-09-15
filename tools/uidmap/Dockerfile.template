@@ -31,4 +31,6 @@ chmod u+s /opt/uidmap/bin/newgidmap
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /opt/uidmap/ ${prefix}${target}/

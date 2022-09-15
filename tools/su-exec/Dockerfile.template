@@ -20,4 +20,6 @@ cp su-exec-static /usr/local/bin/su-exec
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/bin/su-exec ${prefix}${target}/bin/

@@ -13,4 +13,6 @@ cp /usr/local/cargo/bin/envsub /usr/local/bin/
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/bin/envsub ${prefix}${target}/bin/

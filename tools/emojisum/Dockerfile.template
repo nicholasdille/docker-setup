@@ -16,4 +16,6 @@ go build -ldflags "-w -s" -o "/usr/local/bin/emojisum" .
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
 COPY --from=build /usr/local/bin/emojisum ${prefix}${target}/bin/
