@@ -1698,7 +1698,7 @@ tools:
       type: executable
 
   - name: datree
-    version: 1.6.28
+    version: 1.6.29
     check: ${binary} version
     tags:
     - kubernetes
