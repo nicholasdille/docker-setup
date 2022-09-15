@@ -4939,7 +4939,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: vendir
-    version: 0.30.0
+    version: 0.31.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
     - development
