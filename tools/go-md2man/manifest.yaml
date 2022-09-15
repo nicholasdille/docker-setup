@@ -7,5 +7,5 @@ homepage: https://github.com/cpuguy83/go-md2man
 description: Converts markdown into roff (man pages)
 renovate:
   datasource: github-releases
-  package: nicholasdille/go-md2man-static
+  package: cpuguy83/go-md2man
   extractVersion: ^v(?<version>.+?)$
