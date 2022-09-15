@@ -3,6 +3,7 @@ version: 1.0.0
 tags:
 - category/security
 - type/cli
+- bar
 homepage: https://github.com/FiloSottile/age
 description: Simple, modern and secure encryption tool
 renovate:

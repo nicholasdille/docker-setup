@@ -9,6 +9,7 @@ tags:
 - type/cli
 - testing
 - cicd
+- foo
 homepage: https://github.com/nektos/act
 description: Run your GitHub Actions locally
 renovate:

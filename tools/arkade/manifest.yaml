@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - package
 - management
+- baz
 homepage: https://github.com/alexellis/arkade
 description: Open Source Marketplace For Kubernetes
 renovate:
