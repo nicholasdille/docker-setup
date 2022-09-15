@@ -200,7 +200,7 @@ case "${command}" in
 
     tags)
         show_banner
-        jq -r '.tools[].tags[]' tools.json | sort | uniq | xargs echo
+        jq -r '.tools[].tags[]' "${docker_setup_tools_file}" | sort | uniq | xargs echo
         ;;
 
     dependencies)
