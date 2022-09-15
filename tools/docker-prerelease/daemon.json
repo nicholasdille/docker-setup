@@ -1,0 +1,10 @@
+{
+    "bridge": "none",
+    "data-root": "/var/lib/docker-prerelease",
+    "exec-root": "/var/run/docker-prerelease",
+    "hosts": [
+            "unix:///var/run/docker-prerelease.sock"
+    ],
+    "ip-masq": false,
+    "iptables": false
+}
