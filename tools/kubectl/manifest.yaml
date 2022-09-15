@@ -1,5 +1,5 @@
 name: kubectl
-version: 1.25.0
+version: 1.25.1
 check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
 dependencies:
 - krew
