@@ -14,8 +14,6 @@ no-recommends
 APT::Install-Suggests "false";
 no-suggests
 
-# INSERT COPY
-
 RUN <<EOF
 apt-get update
 apt-get -y install \
@@ -27,6 +25,8 @@ apt-get -y install \
     less
 update-alternatives --set iptables /usr/sbin/iptables-legacy
 EOF
+
+# INSERT COPY
 
 # TODO: Use dedicated sub-shell for each post_install script
 # TODO: Implement mocked functions
