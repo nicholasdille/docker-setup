@@ -21,18 +21,18 @@ EOF
 }
 
 # https://unicode.org/emoji/charts-14.0/full-emoji-list.html
-tool="$(echo -e "\U0001F6E0")"
-auth="$(echo -e "\U0001F513")"
-whale="$(echo -e "\U0001F433")"
-container=$(echo -e "\U0001F5C3")
-image="$(echo -e "\U0001F4E6")"
-layer="$(echo -e "\U0001F4C2")"
-archive="$(echo -e "\U0001F4E5")"
-sign="$(echo -e "\U00002712")"
-push="$(echo -e "\U0001F4E4")"
-pull="$(echo -e "\U0001F4E5")"
-build="$(echo -e "\U0001F9F1")"
-inspect="$(echo -e "\U0001F50D")"
+emoji_tool="$(echo -e "\U0001F528")"
+emoji_auth="$(echo -e "\U0001F513")"
+emoji_whale="$(echo -e "\U0001F433")"
+emoji_container=$(echo -e "\U0001F5C3")
+emoji_image="$(echo -e "\U0001F4E6")"
+emoji_layer="$(echo -e "\U0001F4C2")"
+emoji_archive="$(echo -e "\U0001F4E5")"
+emoji_sign="$(echo -e "\U00002712")"
+emoji_push="$(echo -e "\U0001F4E4")"
+emoji_pull="$(echo -e "\U0001F4E5")"
+emoji_build="$(echo -e "\U0001F9F1")"
+emoji_inspect="$(echo -e "\U0001F50D")"
 
 : "${REGISTRY:=ghcr.io}"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
@@ -62,7 +62,7 @@ if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_
         regctl registry login ${REGISTRY} --user "${REGISTRY_USERNAME}" --pass "${REGISTRY_PASSWORD}"
 
     else
-        echo "${auth} Logging in to ${REGISTRY}"
+        echo "${emoji_auth} Logging in to ${REGISTRY}"
         regctl registry login ${REGISTRY}
     fi
 fi
@@ -97,7 +97,7 @@ function resolve_dependencies() {
     if test -z "${tools_install[${name}]}"; then
         local tool_deps
         tool_deps="$(
-            jq --raw-output --arg tool "${name}" '.tools[] | select(.name == $name) | select(.dependencies != null) | .dependencies[]' "${docker_setup_tools_file}" \
+            jq --raw-output --arg name "${name}" '.tools[] | select(.name == $name) | select(.dependencies != null) | .dependencies[]' "${docker_setup_tools_file}" \
             | xargs echo
         )"
 
@@ -196,6 +196,23 @@ case "${command}" in
         echo "${tools_ordered[@]}"
         ;;
 
+    inspect)
+        show_banner
+        tool=$1
+        if test -z "${tool}"; then
+            echo "No tool name specified"
+            exit 1
+        fi
+        shift
+        echo "${emoji_tool} Processing ${tool}"
+            regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+            | while read DIGEST; do
+                echo "${emoji_archive} Inspecting ${DIGEST}"
+                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                | tar --list --gzip
+            done
+        ;;
+
     generate)
         if test "$#" -eq 0; then
             set -- ${all_tools}
@@ -246,7 +263,7 @@ case "${command}" in
             exit 1
         fi
         if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
-            echo "${auth} Logging in to ${REGISTRY}"
+            echo "${emoji_auth} Logging in to ${REGISTRY}"
             regctl registry login ${REGISTRY}
         fi
         mkdir -p "${target}"
@@ -254,10 +271,10 @@ case "${command}" in
             resolve_dependencies "${name}"
         done
         for tool in "${tools_ordered[@]}"; do
-            echo "${tool} Processing ${tool}"
+            echo "${emoji_tool} Processing ${tool}"
             regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
             | while read DIGEST; do
-                echo "${archive} Unpacking ${DIGEST}"
+                echo "${emoji_archive} Unpacking ${DIGEST}"
                 regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                 | tar --extract --gzip --directory=${target} --no-same-owner
             done
@@ -307,22 +324,22 @@ case "${command}" in
             exit 1
         fi
         if ! jq --exit-status --arg registry "${REGISTRY}" '.auths | to_entries[] | select(.key == $registry)' "${DOCKER_CONFIG}/config.json" >/dev/null 2>&1; then
-            echo "${auth} Logging in to ${REGISTRY}"
+            echo "${emoji_auth} Logging in to ${REGISTRY}"
             docker login ${REGISTRY}
         fi
         for name in "$@"; do
             resolve_dependencies "${name}"
         done
         for tool in "${tools_ordered[@]}"; do
-            echo "${tool} Processing ${tool}"
-            echo "${image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
+            echo "${emoji_tool} Processing ${tool}"
+            echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
             docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
-            echo "${layer} Reading layers"
+            echo "${emoji_layer} Reading layers"
             docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
             | tar --extract --to-stdout manifest.json \
             | jq --raw-output '.[].Layers[]' \
             | while read FILE; do
-                echo "${archive} Extracting layer $(dirname "${FILE}")"
+                echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
                 docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
                 | tar --extract --to-stdout "${FILE}" \
                 | tar --extract --directory="${target}" --strip-components=2
@@ -364,16 +381,16 @@ case "${command}" in
         done
         docker create --name docker-setup-install-flat ${base}
         for tool in "${tools_ordered[@]}"; do
-            echo "${tool} Processing ${tool}"
+            echo "${emoji_tool} Processing ${tool}"
             regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
             | while read DIGEST; do
-                echo "${archive} Unpacking ${DIGEST}"
+                echo "${emoji_archive} Unpacking ${DIGEST}"
                 regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                 | gunzip \
                 | docker cp - docker-setup-install-flat:/
             done
         done
-        echo "${whale} Creating image ${image}"
+        echo "${emoji_whale} Creating image ${image}"
         docker commit docker-setup-install-flat ${image}
         docker rm docker-setup-install-flat >/dev/null 2>&1
         ;;
