@@ -1,12 +1,27 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM golang:1.18.5 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install \
+    git \
+    make
+EOF
+WORKDIR $GOPATH/src/github.com/cpuguy83/go-md2man
 ARG name
 ARG version
+RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/cpuguy83/go-md2man.git .
+ENV CGO_ENABLED=0
+RUN make bin/go-md2man \
+ && mv bin/go-md2man /usr/local/bin/
+RUN mkdir -p /usr/local/share/man/man1/ \
+ && go-md2man -in ./go-md2man.1.md -out ./go-md2man.1 \
+ && mv go-md2man.1 /usr/local/share/man/man1/
 
-RUN <<EOF
-curl --silent --location "https://github.com/nicholasdille/go-md2man-static/releases/download/v${version}/go-md2man-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory "${prefix}${target}" --no-same-owner
-EOF
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /usr/local/bin/ ${prefix}${target}/bin/
+COPY --from=build /usr/local/share/ ${prefix}${target}/share/

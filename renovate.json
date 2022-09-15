@@ -1158,7 +1158,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "nicholasdille/go-md2man-static",
+      "depNameTemplate": "cpuguy83/go-md2man",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
