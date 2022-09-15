@@ -8,7 +8,6 @@ sed -i -E "s|^DOCKERD=/usr/local/bin/dockerd|DOCKERD=${target}/bin/dockerd|" "${
 sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/redhat/docker"
 sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.initd"
 sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.confd"
-chmod +x "${docker_setup_contrib}/docker/openrc/docker.initd"
 
 if test -f "${prefix}/etc/group"; then
     echo "Create group (@ ${SECONDS} seconds)"
