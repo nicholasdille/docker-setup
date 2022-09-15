@@ -109,6 +109,14 @@ if ! test -f "${docker_setup_tools_file}"; then
     done
 fi
 
+docker_setup_dockerfile_template="${docker_setup_cache}/Dockerfile.template"
+if test -f "${PWD}/Dockerfile.template"; then
+    docker_setup_dockerfile_template="${PWD}/Dockerfile.template"
+fi
+curl --silent --location --output "${docker_setup_dockerfile_template}" \
+    https://raw.githubusercontent.com/nicholasdille/docker-setup/${docker_setup_version}/tools/Dockerfile.template
+>&2 echo "Using ${docker_setup_dockerfile_template}"
+
 declare -A tools_install
 declare -a tools_ordered
 all_tools="$(
@@ -140,7 +148,7 @@ function resolve_dependencies() {
 
 function generate() {
     CONTENT="$(
-        cat tools/Dockerfile.template \
+        cat "${docker_setup_dockerfile_template}" \
         | sed -E "s|^ARG ref=main|ARG ref=${docker_setup_version}|"
     )"
     while test "$#" -gt 0; do
