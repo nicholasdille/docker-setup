@@ -184,9 +184,11 @@ case "${command}" in
     --version)
         echo "docker-setup version ${docker_setup_version}"
         ;;
+
     --help)
         show_help
         ;;
+        
     ls)
         show_banner
         jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}" \
