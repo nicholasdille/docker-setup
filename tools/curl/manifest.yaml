@@ -1,0 +1,11 @@
+name: curl
+version: 7.85.0
+tags:
+- type/cli
+- network
+homepage: https://github.com/curl/curl
+description: Tool and library for transferring data with URL syntax
+renovate:
+  datasource: github-releases
+  package: curl/curl
+  extractVersion: regex:^curl-(?<major>\d+?)_(?<minor>\d+?)_(?<patch>\d+?)$

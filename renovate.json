@@ -645,6 +645,17 @@
     },
     {
       "fileMatch": [
+        "^tools/curl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "curl/curl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "regex:^curl-(?<major>\\d+?)_(?<minor>\\d+?)_(?<patch>\\d+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cyclonedx-cli/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1348,6 +1359,18 @@
       ],
       "depNameTemplate": "jmespath/jp",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "^tools/jq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "stedolan/jq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^jq-(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [

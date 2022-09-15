@@ -1,0 +1,12 @@
+name: jq
+version: 1.6
+tags:
+- type/cli
+- format
+homepage: https://github.com/stedolan/jq
+description: Command-line JSON processor
+renovate:
+  datasource: github-releases
+  package: stedolan/jq
+  extractVersion: ^jq-(?<version>.+?)$
+  versioning: loose
