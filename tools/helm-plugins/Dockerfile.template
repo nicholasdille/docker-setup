@@ -57,8 +57,4 @@ helm diff completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm
 helm sigstore completion bash >"${prefix}${target}/share/bash-completion/completions/helm-sigstore"
 helm sigstore completion fish >"${prefix}${target}/share/fish/vendor_completions.d/helm-sigstore.fish"
 helm sigstore completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm-sigstore"
-
-helm sudo completion bash >"${prefix}${target}/share/bash-completion/completions/helm-sudo"
-helm sudo completion fish >"${prefix}${target}/share/fish/vendor_completions.d/helm-sudo.fish"
-helm sudo completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_helm-sudo"
 EOF
