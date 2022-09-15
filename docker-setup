@@ -237,7 +237,8 @@ case "${command}" in
             | while read DIGEST; do
                 echo "${emoji_archive} Inspecting ${DIGEST}"
                 regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
-                | tar --list --gzip
+                | tar --list --gzip \
+                | grep -v "/$"
             done
         ;;
 
