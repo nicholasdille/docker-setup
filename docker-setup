@@ -165,6 +165,7 @@ Commands:
   info                    Show tool manifest
   tags                    Show tags
   dependencies            Resolve dependencies
+  inspect                 Show contents image
   generate                Generate Dockerfile
   build                   Build container image
   build-flat              Build container image using "docker commit"
