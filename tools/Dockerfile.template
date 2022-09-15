@@ -16,11 +16,16 @@ no-suggests
 
 # INSERT COPY
 
-# TODO: Replace jq with dasel?
 RUN <<EOF
 apt-get update
 apt-get -y install \
-    jq
+    curl \
+    ca-certificates \
+    jq \
+    iptables \
+    bash-completion \
+    less
+update-alternatives --set iptables /usr/sbin/iptables-legacy
 EOF
 
 # TODO: Use dedicated sub-shell for each post_install script
@@ -33,6 +38,15 @@ export relative_target=/usr/local
 export docker_setup_cache=/var/cache/docker-setup
 export docker_setup_contrib=/var/lib/docker-setup/contrib
 export docker_setup_manifests=/var/lib/docker-setup/manifests
+function has_systemd() {
+    local init
+    init="$(readlink -f /sbin/init)"
+    if test "$(basename "${init}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
 function has_tool() {
     local tool=$1
     if test -z "${tool}"; then
@@ -101,7 +115,7 @@ if test -d /var/lib/docker-setup/post_install; then
     FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
     for FILE in ${FILES}; do
         echo "Running post install for $(basename "${FILE}" .sh)"
-        source ${FILE}
+        source ${FILE} >"${FILE}.log" 2>&1
     done
 fi
 rm -rf /var/cache/docker-setup
