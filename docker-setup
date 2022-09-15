@@ -185,7 +185,7 @@ case "${command}" in
 
     dependencies)
         for name in "$@"; do
-            if ! jq --exit-status --arg name "${name}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}"; then
+            if ! jq --exit-status --arg name "${name}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}" >/dev/null; then
                 >&2 echo "ERROR: Tool <${name}> is unknown."
                 exit 1
             fi
