@@ -38,6 +38,10 @@ emoji_inspect="$(echo -e "\U0001F50D")"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
+if ! test -w "${docker_setup_cache}"; then
+    >&2 echo "WARNING: Cache directory <${docker_setup_cache}> is not writable."
+    docker_setup_cache="${HOME}/.cache/docker-setup"
+fi
 mkdir -p "${docker_setup_cache}"
 
 export PATH="${docker_setup_cache}/bin:${PATH}"
