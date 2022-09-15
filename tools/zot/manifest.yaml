@@ -4,7 +4,7 @@ tags:
 - standard/oci
 - container/registry
 - container/image
-- tyep/daemon
+- type/daemon
 homepage: https://github.com/project-zot/zot
 description: Production-ready vendor-neutral OCI image registry server purely based on OCI Distribution Specification
 renovate:
