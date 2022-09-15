@@ -4924,7 +4924,7 @@ tools:
       EOF
 
   - name: vcluster
-    version: 0.11.2
+    version: 0.12.0
     check: ${binary} --version | cut -d' ' -f3
     tags:
     - kubernetes
