@@ -251,10 +251,6 @@ case "${command}" in
 
     build)
         show_banner
-        if ! type regctl >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires regclient."
-            exit 1
-        fi
         image=$1
         if test -z "${image}"; then
             echo "No image name specified"
@@ -273,10 +269,6 @@ case "${command}" in
 
     install)
         show_banner
-        if ! type regctl >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires regclient."
-            exit 1
-        fi
         target=$1
         if test -z "${target}"; then
             echo "No target specified"
@@ -287,10 +279,6 @@ case "${command}" in
         if test "$#" == 0; then
             echo "No tools specified"
             exit 1
-        fi
-        if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
-            echo "${emoji_auth} Logging in to ${REGISTRY}"
-            regctl registry login ${REGISTRY}
         fi
         mkdir -p "${target}"
         for name in "$@"; do
@@ -349,10 +337,6 @@ case "${command}" in
             echo "No tools specified"
             exit 1
         fi
-        if ! jq --exit-status --arg registry "${REGISTRY}" '.auths | to_entries[] | select(.key == $registry)' "${DOCKER_CONFIG}/config.json" >/dev/null 2>&1; then
-            echo "${emoji_auth} Logging in to ${REGISTRY}"
-            docker login ${REGISTRY}
-        fi
         for name in "$@"; do
             resolve_dependencies "${name}"
         done
@@ -376,10 +360,6 @@ case "${command}" in
     
     build-flat)
         show_banner
-        if ! type regctl >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires regclient."
-            exit 1
-        fi
         if ! type docker >/dev/null 2>&1; then
             echo "ERROR: Command <install> requires docker."
             exit 1
@@ -396,9 +376,6 @@ case "${command}" in
             exit 1
         fi
         shift
-        if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
-            regctl registry login ${REGISTRY}
-        fi
         if test "$#" -eq 0; then
             set -- ${all_tools}
         fi
