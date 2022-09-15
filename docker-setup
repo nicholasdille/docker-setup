@@ -138,6 +138,7 @@ docker-setup
 Commands:
   ls                      List available tools
   info                    Show tool manifest
+  tags                    Show tags
   dependencies            Resolve dependencies
   generate                Generate Dockerfile
   build                   Build container image
@@ -177,6 +178,11 @@ case "${command}" in
         shift
         cat "tools/${tool}/manifest.yaml"
         echo
+        ;;
+
+    tags)
+        show_banner
+        jq -r '.tools[].tags[]' tools.json | sort | uniq | xargs echo
         ;;
 
     dependencies)
