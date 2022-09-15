@@ -51,7 +51,7 @@ if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr 
     >&2 echo "Installing regctl"
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --output "${docker_setup_cache}/bin/regctl" \
-        https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64
+        "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
     chmod +x "${docker_setup_cache}/bin/regctl"
 fi
 YQ_VERSION=4.27.5
@@ -59,8 +59,16 @@ if ! type yq >/dev/null 2>&1 || test "$(yq --version | cut -d' ' -f4)" != "${YQ_
     >&2 echo "Installing yq"
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --output "${docker_setup_cache}/bin/yq" \
-        https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
+        "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
     chmod +x "${docker_setup_cache}/bin/yq"
+fi
+JQ_VERSION=1.6
+if ! type jq >/dev/null 2>&1 || test "$(jq --version | cut -d- -f2)" != "${JQ_VERSION}"; then
+    >&2 echo "Installing jq"
+    mkdir -p "${docker_setup_cache}/bin"
+    curl --silent --location --output "${docker_setup_cache}/bin/yq" \
+        "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
+    chmod +x "${docker_setup_cache}/bin/jq"
 fi
 
 if test -z "${DOCKER_CONFIG}"; then

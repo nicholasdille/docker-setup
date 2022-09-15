@@ -274,6 +274,18 @@
     },
     {
       "fileMatch": [
+        "^docker-setup$"
+      ],
+      "matchStrings": [
+        "JQ_VERSION=(?<currentValue>.*?)\n"
+      ],
+      "depNameTemplate": "stedolan/jq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^jq-(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "(^|/|\\.)Dockerfile[^/]*$"
       ],
       "matchStrings": [
