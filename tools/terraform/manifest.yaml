@@ -1,0 +1,14 @@
+name: terraform
+version: 1.2.9
+tags:
+- type/cli
+- org/hashicorp
+- standard/hcl
+- management
+- infrastructure
+homepage: https://github.com/hashicorp/terraform
+description: Safely and predictably create, change, and improve infrastructure
+renovate:
+  datasource: github-releases
+  package: hashicorp/terraform
+  extractVersion: ^v(?<version>.+?)$

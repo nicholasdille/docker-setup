@@ -2299,6 +2299,17 @@
     },
     {
       "fileMatch": [
+        "^tools/terraform/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "hashicorp/terraform",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/tini/manifest.yaml$"
       ],
       "matchStrings": [
