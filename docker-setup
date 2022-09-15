@@ -99,22 +99,24 @@ fi
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if test -f "${PWD}/tools.json"; then
     docker_setup_tools_file="${PWD}/tools.json"
+else
+    if ! test -f "${docker_setup_tools_file}"; then
+        regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+        | while read DIGEST; do
+            regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
+            | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
+        done
+    fi
 fi
 >&2 echo "Using ${docker_setup_tools_file}"
-if ! test -f "${docker_setup_tools_file}"; then
-    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-    | while read DIGEST; do
-        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
-        | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
-    done
-fi
 
 docker_setup_dockerfile_template="${docker_setup_cache}/Dockerfile.template"
-if test -f "${PWD}/Dockerfile.template"; then
-    docker_setup_dockerfile_template="${PWD}/Dockerfile.template"
+if test -f "${PWD}/tools/Dockerfile.template"; then
+    docker_setup_dockerfile_template="${PWD}/tools/Dockerfile.template"
+else
+    curl --silent --location --output "${docker_setup_dockerfile_template}" \
+        https://raw.githubusercontent.com/nicholasdille/docker-setup/${docker_setup_version}/tools/Dockerfile.template
 fi
-curl --silent --location --output "${docker_setup_dockerfile_template}" \
-    https://raw.githubusercontent.com/nicholasdille/docker-setup/${docker_setup_version}/tools/Dockerfile.template
 >&2 echo "Using ${docker_setup_dockerfile_template}"
 
 declare -A tools_install
