@@ -43,18 +43,15 @@ mkdir -p "${docker_setup_cache}"
 export PATH="${docker_setup_cache}/bin:${PATH}"
 REGCLIENT_VERSION=0.4.4
 if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
-    mkdir -p \
-        "${docker_setup_cache}/bin" \
-        "${docker_setup_cache}/share/bash-completion/completions" \
-        "${docker_setup_cache}/share/fish/vendor_completions.d" \
-        "${docker_setup_cache}/share/zsh/vendor-completions"
-    ./Dockerfile.sh . \
-        --file tools/regclient/Dockerfile \
-        --build-arg target="${docker_setup_cache}" \
-        --build-arg arch=x86_64 \
-        --build-arg alt_arch=amd64 \
-        --build-arg name=regclient \
-        --build-arg version="${REGCLIENT_VERSION}"
+    mkdir -p "${docker_setup_cache}/bin"
+    curl --silent --location "${docker_setup_cache}/bin/regctl" \
+        https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64
+fi
+YQ_VERSION=4.27.5
+if ! type yq >/dev/null 2>&1 || test "$(yq --version | cut -d' ' -f4)" != "${YQ_VERSION}"; then
+    mkdir -p "${docker_setup_cache}/bin"
+    curl --silent --location --output "${docker_setup_cache}/bin/yq" \
+        https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
 fi
 
 if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
@@ -176,7 +173,8 @@ case "${command}" in
             exit 1
         fi
         shift
-        cat "tools/${tool}/manifest.yaml"
+        jq --raw-output --arg name "${tool}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}" \
+        | yq --prettyPrint
         echo
         ;;
 

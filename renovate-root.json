@@ -130,9 +130,16 @@
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch":            [ "^.github/workflows/release.yml$" ],
+      "fileMatch":            [ "^.github/workflows/release.yml$", "^docker-setup$" ],
       "matchStrings":         [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
       "depNameTemplate":        "mikefarah/yq",
+      "datasourceTemplate":     "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch":            [ "^docker-setup$" ],
+      "matchStrings":         [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n" ],
+      "depNameTemplate":        "regclient/regclient",
       "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
