@@ -53,7 +53,8 @@ jobs:
                       --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
                   | jq --raw-output '.[].filename' \
                   | grep -E '^tools/[^/]+/' \
-                  | cut -d/ -f2
+                  | cut -d/ -f2 \
+                  | xargs echo
               )"
               echo "TOOLS=${TOOLS}"
           fi
