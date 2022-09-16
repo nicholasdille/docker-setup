@@ -1,7 +1,7 @@
 name: kubesec
 version: 2.11.5
 tags:
-- catgory/security
+- category/security
 - type/cli
 - kubernetes
 homepage: https://github.com/controlplaneio/kubesec
