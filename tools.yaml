@@ -5030,7 +5030,7 @@ tools:
       ${binary} shell-completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: zot
-    version: 1.4.1
+    version: 1.4.2
     tags:
     - registry
     - image
