@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+source /var/lib/docker-setup/functions
+
 if test -f "${prefix}/etc/crictl.yaml"; then
     echo "Fixing configuration for cticrl"
     ENDPOINT=unix:///var/run/cri-dockerd.sock

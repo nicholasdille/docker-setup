@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /var/lib/docker-setup/functions
+
 echo "Make buildx the default builder on login"
 cat >"${prefix}/etc/profile.d/docker-buildx-install" <<EOF
 #!/bin/bash

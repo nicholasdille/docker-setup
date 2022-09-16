@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+source /var/lib/docker-setup/functions
+
 echo "Patch systemd units"
 sed -i "s|ExecStart=/usr/local/bin/faasd|ExecStart=${relative_target}/bin/faasd|" "${prefix}/etc/systemd/system/faasd.service"
 sed -i "s|ExecStart=/usr/local/bin/faasd|ExecStart=${relative_target}/bin/faasd|" "${prefix}/etc/systemd/system/faasd-provider.service"

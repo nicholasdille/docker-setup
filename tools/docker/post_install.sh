@@ -1,4 +1,7 @@
 #!/bin/bash
+set -o errexit
+
+source /var/lib/docker-setup/functions
 
 echo "Patch paths in systemd unit files (@ ${SECONDS} seconds)"
 sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"

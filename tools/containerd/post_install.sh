@@ -1,4 +1,7 @@
 #!/bin/bash
+set -o errexit
+
+source /var/lib/docker-setup/functions
 
 if ! test -f "${prefix}/etc/containerd/config.toml"; then
     echo "Adding default configuration"

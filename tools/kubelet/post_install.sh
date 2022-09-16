@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+source /var/lib/docker-setup/functions
+
 echo "Patch systemd units"
 sed -i "s|ExecStart=/usr/local/bin/kubelet|ExecStart=${target}/bin/kubelet|" "${prefix}/etc/systemd/system/kubelet.service"
 

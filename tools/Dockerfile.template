@@ -28,9 +28,7 @@ EOF
 
 # INSERT COPY
 
-# TODO: Use dedicated sub-shell for each post_install script
-# TODO: Implement mocked functions
-RUN <<EOF
+COPY <<"functions" /var/lib/docker-setup/
 mkdir -p /var/cache/docker-setup
 export prefix=
 export target=${prefix}/usr/local
@@ -111,11 +109,16 @@ function is_alpine() {
             ;;
     esac
 }
+functions
+
+RUN <<EOF
 if test -d /var/lib/docker-setup/post_install; then
     FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
     for FILE in ${FILES}; do
         echo "Running post install for $(basename "${FILE}" .sh)"
-        source ${FILE} >"${FILE}.log" 2>&1
+        if ! bash "${FILE}" >"${FILE}.log" 2>&1; then
+            cat "${FILE}.log"
+        fi
     done
 fi
 rm -rf /var/cache/docker-setup

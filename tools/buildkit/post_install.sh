@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /var/lib/docker-setup/functions
+
 echo "Patch init script"
 sed -i "s|/usr/local/bin/buildkitd|${relative_target}/bin/buildkitd|" "${prefix}/etc/init.d/buildkit"
 

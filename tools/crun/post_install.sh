@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+source /var/lib/docker-setup/functions
+
 if ! test -f "${prefix}/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "${prefix}/etc/docker/daemon.json")" == "true"; then
     echo "Add runtime to Docker"
     # shellcheck disable=SC2094

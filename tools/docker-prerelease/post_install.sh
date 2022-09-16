@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+source /var/lib/docker-setup/functions
+
 if test -f "${prefix}/etc/group"; then
     echo "Create group (@ ${SECONDS} seconds)"
     groupadd --prefix "${prefix}" --system --force docker
@@ -70,20 +72,20 @@ fi
 if is_debian || is_clearlinux; then
     echo "Install init script for debian"
     mkdir -p "${prefix}/etc/default" "${prefix}/etc/init.d"
-    cp "${docker_setup_contrib}/docker/sysvinit/debian/docker.default" "${prefix}/etc/default/docker-prerelease"
-    cp "${docker_setup_contrib}/docker/sysvinit/debian/docker" "${prefix}/etc/init.d/docker-prerelease"
+    cp "${docker_setup_contrib}/docker-prerelease/sysvinit/debian/docker.default" "${prefix}/etc/default/docker-prerelease"
+    cp "${docker_setup_contrib}/docker-prerelease/sysvinit/debian/docker" "${prefix}/etc/init.d/docker-prerelease"
     
 elif is_redhat; then
     echo "Install init script for redhat"
     mkdir -p "${prefix}/etc/sysconfig" "${prefix}/etc/init.d"
-    cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker.sysconfig" "${prefix}/etc/sysconfig/docker-prerelease"
-    cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker" "${prefix}/etc/init.d/docker-prerelease"
+    cp "${docker_setup_contrib}/docker-prerelease/sysvinit/redhat/docker.sysconfig" "${prefix}/etc/sysconfig/docker-prerelease"
+    cp "${docker_setup_contrib}/docker-prerelease/sysvinit/redhat/docker" "${prefix}/etc/init.d/docker-prerelease"
     
 elif is_alpine; then
     echo "Install openrc script for alpine"
     mkdir -p "${prefix}/etc/conf.d" "${prefix}/etc/init.d"
-    cp "${docker_setup_contrib}/docker/openrc/docker.confd" "${prefix}/etc/conf.d/docker-prerelease"
-    cp "${docker_setup_contrib}/docker/openrc/docker.initd" "${prefix}/etc/init.d/docker-prerelease"
+    cp "${docker_setup_contrib}/docker-prerelease/openrc/docker.confd" "${prefix}/etc/conf.d/docker-prerelease"
+    cp "${docker_setup_contrib}/docker-prerelease/openrc/docker.initd" "${prefix}/etc/init.d/docker-prerelease"
     openrc
 else
     echo "Unable to install init script because the distributon is unknown."

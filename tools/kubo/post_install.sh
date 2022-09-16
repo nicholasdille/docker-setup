@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+source /var/lib/docker-setup/functions
+
 echo "Patch systemd units"
 sed -i "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${target}/bin/ipfs|" "${prefix}/etc/systemd/system/ipfs.service"
 
