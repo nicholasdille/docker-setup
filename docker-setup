@@ -290,9 +290,8 @@ case "${command}" in
         fi
         shift
         echo "Using target ${target}"
-        if test "$#" == 0; then
-            echo "No tools specified"
-            exit 1
+        if test "$#" -eq 0; then
+            set -- ${all_tools}
         fi
         mkdir -p "${target}"
         for name in "$@"; do
