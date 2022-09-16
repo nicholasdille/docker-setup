@@ -4062,7 +4062,7 @@ tools:
       - polaris
 
   - name: portainer
-    version: 2.15.0
+    version: 2.15.1
     check: ${binary} --version 2>&1
     needs:
     - docker
