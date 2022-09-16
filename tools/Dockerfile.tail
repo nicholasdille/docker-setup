@@ -3,6 +3,9 @@ find "${prefix}" -type f \
 | grep -v "${prefix}${docker_setup_manifests}/${name}.txt" \
 >"${prefix}${docker_setup_manifests}/${name}.txt"
 EOF
+#RUN <<EOF
+#find "${prefix}" -type f -executable -exec strip --verbose --strip-all --preserve-dates {} \;
+#EOF
 COPY manifest.json "${prefix}${docker_setup_manifests}/${name}.json"
 
 FROM scratch

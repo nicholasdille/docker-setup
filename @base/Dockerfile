@@ -21,7 +21,8 @@ apt-get -y install \
     curl \
     ca-certificates \
     jq \
-    unzip
+    unzip \
+    binutils
 rm /usr/local/sbin/unminimize
 EOF
 
