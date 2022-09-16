@@ -754,6 +754,17 @@
     },
     {
       "fileMatch": [
+        "^tools/docker-base/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "docker/base-cli-plugin",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/docker-compose/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,15 @@
+name: docker-base
+version: 0.1.0
+dependencies:
+- docker
+tags:
+- standard/docker
+- org/docker
+- type/plugin
+- type/cli
+homepage: https://github.com/docker/base-cli-plugin
+description: Docker CLI plugin to detect base images
+renovate:
+  datasource: github-releases
+  package: docker/base-cli-plugin
+  extractVersion: ^v(?<version>.+?)$
