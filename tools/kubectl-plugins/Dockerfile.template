@@ -93,5 +93,5 @@ for plugin in "${plugins[@]}"; do
     echo "Processing ${plugin}"
     krew install "${plugin}"
 done
-mv /opt/krew/bin/kubectl-* ${prefix}${target}/bin/
+find "${KREW_ROOT}/bin" -type l -exec cp {} "${prefix}${target}/bin/" \;
 EOF
