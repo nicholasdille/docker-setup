@@ -110,6 +110,19 @@ else
 fi
 >&2 echo "Using ${docker_setup_tools_file}"
 
+declare -A tool_json
+mapfile tool_json_array < <(jq --raw-output --compact-output '.tools[] | "\(.name)=\(.)"' "${docker_setup_tools_file}")
+i=0
+while test "$i" -lt "${#tool_json_array[@]}"; do
+    name_json=${tool_json_array[$i]}
+
+    name="${name_json%%=*}"
+    json="${name_json#*=}"
+    tool_json[${name}]="${json}"
+
+    i=$((i + 1))
+done
+
 docker_setup_dockerfile_template="${docker_setup_cache}/Dockerfile.template"
 if test -f "${PWD}/tools/Dockerfile.template"; then
     docker_setup_dockerfile_template="${PWD}/tools/Dockerfile.template"
@@ -121,10 +134,7 @@ fi
 
 declare -A tools_install
 declare -a tools_ordered
-all_tools="$(
-    jq --raw-output '.tools[].name' "${docker_setup_tools_file}" \
-    | xargs echo
-)"
+all_tools="${!tool_json[@]}"
 
 function resolve_dependencies() {
     local name=$1
@@ -132,7 +142,7 @@ function resolve_dependencies() {
     if test -z "${tools_install[${name}]}"; then
         local tool_deps
         tool_deps="$(
-            jq --raw-output --arg name "${name}" '.tools[] | select(.name == $name) | select(.dependencies != null) | .dependencies[]' "${docker_setup_tools_file}" \
+            jq --raw-output --arg name "${name}" 'select(.dependencies != null) | .dependencies[]' <<<${tool_json[${name}]} \
             | xargs echo
         )"
 
@@ -189,231 +199,276 @@ Global options:
 EOF
 }
 
-command=$1
-shift
-case "${command}" in
-    --version)
-        echo "docker-setup version ${docker_setup_version}"
-        ;;
+: "${target:=/usr/local}"
+while test "$#" -gt 0; do
+    case "$1" in
+        --version)
+            echo "docker-setup version ${docker_setup_version}"
+            ;;
 
-    --help)
-        show_help
-        ;;
+        --help)
+            show_help
+            ;;
         
-    ls)
-        show_banner
-        jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}" \
-        | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
-        ;;
+        --target=*)
+            target="${1#*=}"
+            ;;
 
-    info)
-        show_banner
-        tool=$1
-        if test -z "${tool}"; then
-            echo "No tool name specified"
-            exit 1
-        fi
-        shift
-        jq --raw-output --arg name "${tool}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}" \
-        | yq --prettyPrint
-        echo
-        ;;
+        --target)
+            shift
+            target="$1"
+            ;;
+            
+        ls)
+            show_banner
+            jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}" \
+            | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
+            ;;
 
-    tags)
-        show_banner
-        jq -r '.tools[].tags[]' "${docker_setup_tools_file}" | sort | uniq | xargs echo
-        ;;
-
-    dependencies)
-        for name in "$@"; do
-            if ! jq --exit-status --arg name "${name}" '.tools[] | select(.name == $name)' "${docker_setup_tools_file}" >/dev/null; then
-                >&2 echo "ERROR: Tool <${name}> is unknown."
+        info)
+            show_banner
+            name=$1
+            if test -z "${name}"; then
+                echo "No tool name specified"
                 exit 1
             fi
-            resolve_dependencies "${name}"
-        done
-        echo "${tools_ordered[@]}"
-        ;;
+            shift
+            yq --prettyPrint <<<"${tool_json[${name}]}"
+            echo
+            ;;
 
-    inspect)
-        show_banner
-        tool=$1
-        if test -z "${tool}"; then
-            echo "No tool name specified"
-            exit 1
-        fi
-        shift
-        echo "${emoji_tool} Processing ${tool}"
-            regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-            | while read DIGEST; do
-                echo "${emoji_archive} Inspecting ${DIGEST}"
-                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
-                | tar --list --gzip \
-                | grep -v "/$"
+        tags)
+            show_banner
+            jq -r '.tools[].tags[]' "${docker_setup_tools_file}" | sort | uniq | xargs echo
+            ;;
+
+        plan)
+            for name in ${all_tools}; do
+                echo -n "${name}:"
+
+                version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
+                echo -n " version=${version}"
+
+                binary="$(jq --raw-output --arg name "${name}" 'select(.binary != null) | .binary' <<<"${tool_json[${name}]}")"
+                if ! ${binary}; then
+                    echo
+                    break
+
+                else
+                    if test -z "${binary}"; then
+                        binary="${name}"
+                    fi
+                    if test "${binary:0:1}" != "/"; then
+                        binary="${target}/bin/${binary}"
+                    fi
+                fi
+                echo -n " binary=${binary}"
+
+                check="$(jq --raw-output --arg name "${name}" 'select(.check != null) | .check' <<<"${tool_json[${name}]}")"
+                echo -n " check=${check//\$\{binary\}/${binary}}."
+
+                if test -f "${binary}"; then
+                    installed_version="$(eval "${check}")"
+                    echo -n " installed_version=${installed_version}"
+                fi
+
+                echo
             done
-        ;;
+            ;;
 
-    generate)
-        if test "$#" -eq 0; then
-            set -- ${all_tools}
-        fi
-        for name in "$@"; do
-            resolve_dependencies "${name}"
-        done
-        generate "${tools_ordered[@]}"
-        ;;
-
-    build)
-        show_banner
-        image=$1
-        if test -z "${image}"; then
-            echo "No image name specified"
-            exit 1
-        fi
-        shift
-        if test "$#" -eq 0; then
-            set -- ${all_tools}
-        fi
-        for name in "$@"; do
-            resolve_dependencies "${name}"
-        done
-        generate "${tools_ordered[@]}" \
-        | docker build --tag "${image}" -
-        ;;
-
-    install)
-        show_banner
-        target=$1
-        if test -z "${target}"; then
-            echo "No target specified"
-            exit 1
-        fi
-        shift
-        echo "Using target ${target}"
-        if test "$#" -eq 0; then
-            set -- ${all_tools}
-        fi
-        mkdir -p "${target}"
-        for name in "$@"; do
-            resolve_dependencies "${name}"
-        done
-        for tool in "${tools_ordered[@]}"; do
-            echo "${emoji_tool} Processing ${tool}"
-            regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-            | while read DIGEST; do
-                echo "${emoji_archive} Unpacking ${DIGEST}"
-                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
-                | tar --extract --gzip --directory=${target} --no-same-owner
+        dependencies)
+            for name in "$@"; do
+                if test -z "${tool_json[${name}]}"; then
+                    >&2 echo "ERROR: Tool <${name}> is unknown."
+                    exit 1
+                fi
+                resolve_dependencies "${name}"
             done
-        done
-        ;;
+            echo "${tools_ordered[@]}"
+            ;;
 
-    install-from-registry)
-        show_banner
-        if ! type docker >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires docker."
-            exit 1
-        fi
-        target=$1
-        if test -z "${target}"; then
-            echo "No target specified"
-            exit 1
-        fi
-        shift
-        echo "Using target ${target}"
-        if test "$#" == 0; then
-            echo "No tools specified"
-            exit 1
-        fi
-        mkdir -p "${target}"
-        for name in "$@"; do
-            resolve_dependencies "${name}"
-        done
-        generate "${tools_ordered[@]}" \
-        | docker build --output "${target}" -
-        ;;
-
-    install-from-image)
-        show_banner
-        if ! type docker >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires docker."
-            exit 1
-        fi
-        target=$1
-        if test -z "${target}"; then
-            echo "No target specified"
-            exit 1
-        fi
-        shift
-        echo "Using target ${target}"
-        if test "$#" == 0; then
-            echo "No tools specified"
-            exit 1
-        fi
-        for name in "$@"; do
-            resolve_dependencies "${name}"
-        done
-        for tool in "${tools_ordered[@]}"; do
+        inspect)
+            show_banner
+            tool=$1
+            if test -z "${tool}"; then
+                echo "No tool name specified"
+                exit 1
+            fi
+            shift
             echo "${emoji_tool} Processing ${tool}"
-            echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
-            docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
-            echo "${emoji_layer} Reading layers"
-            docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
-            | tar --extract --to-stdout manifest.json \
-            | jq --raw-output '.[].Layers[]' \
-            | while read FILE; do
-                echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                | while read DIGEST; do
+                    echo "${emoji_archive} Inspecting ${DIGEST}"
+                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                    | tar --list --gzip \
+                    | grep -v "/$"
+                done
+            ;;
+
+        generate)
+            if test "$#" -eq 0; then
+                set -- ${all_tools}
+            fi
+            for name in "$@"; do
+                resolve_dependencies "${name}"
+            done
+            generate "${tools_ordered[@]}"
+            ;;
+
+        build)
+            show_banner
+            image=$1
+            if test -z "${image}"; then
+                echo "No image name specified"
+                exit 1
+            fi
+            shift
+            if test "$#" -eq 0; then
+                set -- ${all_tools}
+            fi
+            for name in "$@"; do
+                resolve_dependencies "${name}"
+            done
+            generate "${tools_ordered[@]}" \
+            | docker build --tag "${image}" -
+            ;;
+
+        install)
+            show_banner
+            target=$1
+            if test -z "${target}"; then
+                echo "No target specified"
+                exit 1
+            fi
+            shift
+            echo "Using target ${target}"
+            if test "$#" -eq 0; then
+                set -- ${all_tools}
+            fi
+            mkdir -p "${target}"
+            for name in "$@"; do
+                resolve_dependencies "${name}"
+            done
+            for tool in "${tools_ordered[@]}"; do
+                echo "${emoji_tool} Processing ${tool}"
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                | while read DIGEST; do
+                    echo "${emoji_archive} Unpacking ${DIGEST}"
+                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                    | tar --extract --gzip --directory=${target} --no-same-owner
+                done
+            done
+            ;;
+
+        install-from-registry)
+            show_banner
+            if ! type docker >/dev/null 2>&1; then
+                echo "ERROR: Command <install> requires docker."
+                exit 1
+            fi
+            target=$1
+            if test -z "${target}"; then
+                echo "No target specified"
+                exit 1
+            fi
+            shift
+            echo "Using target ${target}"
+            if test "$#" == 0; then
+                echo "No tools specified"
+                exit 1
+            fi
+            mkdir -p "${target}"
+            for name in "$@"; do
+                resolve_dependencies "${name}"
+            done
+            generate "${tools_ordered[@]}" \
+            | docker build --output "${target}" -
+            ;;
+
+        install-from-image)
+            show_banner
+            if ! type docker >/dev/null 2>&1; then
+                echo "ERROR: Command <install> requires docker."
+                exit 1
+            fi
+            target=$1
+            if test -z "${target}"; then
+                echo "No target specified"
+                exit 1
+            fi
+            shift
+            echo "Using target ${target}"
+            if test "$#" == 0; then
+                echo "No tools specified"
+                exit 1
+            fi
+            for name in "$@"; do
+                resolve_dependencies "${name}"
+            done
+            for tool in "${tools_ordered[@]}"; do
+                echo "${emoji_tool} Processing ${tool}"
+                echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
+                docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
+                echo "${emoji_layer} Reading layers"
                 docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
-                | tar --extract --to-stdout "${FILE}" \
-                | tar --extract --directory="${target}" --strip-components=2
+                | tar --extract --to-stdout manifest.json \
+                | jq --raw-output '.[].Layers[]' \
+                | while read FILE; do
+                    echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
+                    docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
+                    | tar --extract --to-stdout "${FILE}" \
+                    | tar --extract --directory="${target}" --strip-components=2
+                done
+                echo "+ Done"
             done
-            echo "+ Done"
-        done
-        ;;
-    
-    build-flat)
-        show_banner
-        if ! type docker >/dev/null 2>&1; then
-            echo "ERROR: Command <install> requires docker."
-            exit 1
-        fi
-        base=$1
-        if test -z "${base}"; then
-            echo "No base image name specified"
-            exit 1
-        fi
-        shift
-        image=$1
-        if test -z "${image}"; then
-            echo "No target image name specified"
-            exit 1
-        fi
-        shift
-        if test "$#" -eq 0; then
-            set -- ${all_tools}
-        fi
-        for name in "$@"; do
-            resolve_dependencies "${name}"
-        done
-        docker create --name docker-setup-install-flat ${base}
-        for tool in "${tools_ordered[@]}"; do
-            echo "${emoji_tool} Processing ${tool}"
-            regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-            | while read DIGEST; do
-                echo "${emoji_archive} Unpacking ${DIGEST}"
-                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
-                | gunzip \
-                | docker cp - docker-setup-install-flat:/
+            ;;
+        
+        build-flat)
+            show_banner
+            if ! type docker >/dev/null 2>&1; then
+                echo "ERROR: Command <install> requires docker."
+                exit 1
+            fi
+            base=$1
+            if test -z "${base}"; then
+                echo "No base image name specified"
+                exit 1
+            fi
+            shift
+            image=$1
+            if test -z "${image}"; then
+                echo "No target image name specified"
+                exit 1
+            fi
+            shift
+            if test "$#" -eq 0; then
+                set -- ${all_tools}
+            fi
+            for name in "$@"; do
+                resolve_dependencies "${name}"
             done
-        done
-        echo "${emoji_whale} Creating image ${image}"
-        docker commit docker-setup-install-flat ${image}
-        docker rm docker-setup-install-flat >/dev/null 2>&1
-        ;;
+            docker create --name docker-setup-install-flat ${base}
+            for tool in "${tools_ordered[@]}"; do
+                echo "${emoji_tool} Processing ${tool}"
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                | while read DIGEST; do
+                    echo "${emoji_archive} Unpacking ${DIGEST}"
+                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                    | gunzip \
+                    | docker cp - docker-setup-install-flat:/
+                done
+            done
+            echo "${emoji_whale} Creating image ${image}"
+            docker commit docker-setup-install-flat ${image}
+            docker rm docker-setup-install-flat >/dev/null 2>&1
+            ;;
 
-    *)
-        echo "ERROR: Unknown or empty command <${command}>"
-        show_help
-        exit 1
-        ;;
-esac
+        *)
+            echo "ERROR: Unknown or empty command <${command}>"
+            show_help
+            exit 1
+            ;;
+    esac
+
+    shift
+done
