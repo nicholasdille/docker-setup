@@ -2980,7 +2980,7 @@ tools:
       ${binary} completion zsh  | grep -v "^Succeeded$" >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: kbld
-    version: 0.34.0
+    version: 0.35.0
     check: ${binary} version | head -n 1 | cut -d' ' -f3
     tags:
     - k8s
