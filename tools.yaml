@@ -4722,7 +4722,7 @@ tools:
       path: ${target}/share/bash-completion/completions/${name}
 
   - name: syft
-    version: 0.56.0
+    version: 0.57.0
     check: ${binary} --version | cut -d' ' -f2
     tags:
     - sbom
