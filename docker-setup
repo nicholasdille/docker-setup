@@ -280,6 +280,7 @@ while test "$#" -gt 0; do
             ;;
 
         dependencies)
+            shift
             for name in "$@"; do
                 if test -z "${tool_json[${name}]}"; then
                     >&2 echo "ERROR: Tool <${name}> is unknown."
