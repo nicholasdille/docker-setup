@@ -46,7 +46,7 @@ fi
 mkdir -p "${docker_setup_cache}"
 
 export PATH="${docker_setup_cache}/bin:${PATH}"
-REGCLIENT_VERSION=0.4.4
+REGCLIENT_VERSION=0.4.5
 if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
     >&2 echo "Installing regctl"
     mkdir -p "${docker_setup_cache}/bin"
