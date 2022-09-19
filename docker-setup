@@ -227,6 +227,7 @@ while test "$#" -gt 0; do
 
         info)
             show_banner
+            shift
             name=$1
             if test -z "${name}"; then
                 echo "No tool name specified"
@@ -261,6 +262,8 @@ while test "$#" -gt 0; do
                     if test "${binary:0:1}" != "/"; then
                         binary="${target}/bin/${binary}"
                     fi
+
+                    # TODO: Replace ${target}
                 fi
                 echo -n " binary=${binary}"
 
@@ -289,6 +292,7 @@ while test "$#" -gt 0; do
 
         inspect)
             show_banner
+            shift
             tool=$1
             if test -z "${tool}"; then
                 echo "No tool name specified"
@@ -313,10 +317,12 @@ while test "$#" -gt 0; do
                 resolve_dependencies "${name}"
             done
             generate "${tools_ordered[@]}"
+            exit
             ;;
 
         build)
             show_banner
+            shift
             image=$1
             if test -z "${image}"; then
                 echo "No image name specified"
@@ -329,12 +335,15 @@ while test "$#" -gt 0; do
             for name in "$@"; do
                 resolve_dependencies "${name}"
             done
+            echo "Building image ${image} with $# tool(s)..."
             generate "${tools_ordered[@]}" \
             | docker build --tag "${image}" -
+            exit
             ;;
 
         install)
             show_banner
+            shift
             target=$1
             if test -z "${target}"; then
                 echo "No target specified"
@@ -358,6 +367,7 @@ while test "$#" -gt 0; do
                     | tar --extract --gzip --directory=${target} --no-same-owner
                 done
             done
+            exit
             ;;
 
         install-from-registry)
@@ -366,6 +376,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
+            shift
             target=$1
             if test -z "${target}"; then
                 echo "No target specified"
@@ -383,6 +394,7 @@ while test "$#" -gt 0; do
             done
             generate "${tools_ordered[@]}" \
             | docker build --output "${target}" -
+            exit
             ;;
 
         install-from-image)
@@ -391,6 +403,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
+            shift
             target=$1
             if test -z "${target}"; then
                 echo "No target specified"
@@ -421,6 +434,7 @@ while test "$#" -gt 0; do
                 done
                 echo "+ Done"
             done
+            exit
             ;;
         
         build-flat)
@@ -429,6 +443,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
+            shift
             base=$1
             if test -z "${base}"; then
                 echo "No base image name specified"
@@ -461,6 +476,7 @@ while test "$#" -gt 0; do
             echo "${emoji_whale} Creating image ${image}"
             docker commit docker-setup-install-flat ${image}
             docker rm docker-setup-install-flat >/dev/null 2>&1
+            exit
             ;;
 
         *)
