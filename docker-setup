@@ -132,30 +132,36 @@ else
 fi
 >&2 echo "Using ${docker_setup_dockerfile_template}"
 
-declare -A tools_install
-declare -a tools_ordered
 all_tools="${!tool_json[@]}"
 
 function resolve_dependencies() {
     local name=$1
+    shift
+    local state="$@"
 
-    if test -z "${tools_install[${name}]}"; then
-        local tool_deps
-        tool_deps="$(
-            jq --raw-output --arg name "${name}" 'select(.dependencies != null) | .dependencies[]' <<<${tool_json[${name}]} \
-            | xargs echo
-        )"
+    #>&2 echo "resolve_dependencies(${name}): state=${state}."
 
-        local dep
-        for dep in ${tool_deps}; do
-            if test -z "${tools_install[${dep}]}"; then
-                resolve_dependencies "${dep}"
-            fi
-        done
-
-        tools_ordered+=( "${name}" )
-        tools_install["${name}"]=true
+    if echo "${state}" | tr ' ' '\n' | grep -q "^${name}$"; then
+        #>&2 echo "resolve_dependencies(${name}): Already present"
+        echo "${state}"
+        return
     fi
+
+    local tool_deps
+    tool_deps="$(
+        jq --raw-output 'select(.dependencies != null) | .dependencies[]' <<<${tool_json[${name}]} \
+        | xargs echo
+    )"
+    #>&2 echo "resolve_dependencies(${name}): deps=${tool_deps}."
+    
+    local dep
+    for dep in ${tool_deps}; do
+        #>&2 echo "resolve_dependencies(${name}): calling self for ${dep} with state=${state}."
+        state="$(resolve_dependencies "${dep}" "${state}")"
+        #>&2 echo "resolve_dependencies(${name}): returned for ${dep} with state=${state}."
+    done
+
+    echo "${state} ${name}" | xargs
 }
 
 function generate() {
@@ -281,14 +287,15 @@ while test "$#" -gt 0; do
 
         dependencies)
             shift
-            for name in "$@"; do
-                if test -z "${tool_json[${name}]}"; then
-                    >&2 echo "ERROR: Tool <${name}> is unknown."
-                    exit 1
-                fi
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
-            echo "${tools_ordered[@]}"
+            echo "${state}"
             ;;
 
         inspect)
