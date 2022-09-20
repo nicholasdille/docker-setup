@@ -318,13 +318,19 @@ while test "$#" -gt 0; do
             ;;
 
         generate)
+            shift
             if test "$#" -eq 0; then
                 set -- ${all_tools}
             fi
-            for name in "$@"; do
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
-            generate "${tools_ordered[@]}"
+            generate ${state}
             exit
             ;;
 
@@ -340,11 +346,16 @@ while test "$#" -gt 0; do
             if test "$#" -eq 0; then
                 set -- ${all_tools}
             fi
-            for name in "$@"; do
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
             echo "Building image ${image} with $# tool(s)..."
-            generate "${tools_ordered[@]}" \
+            generate ${state} \
             | docker build --tag "${image}" -
             exit
             ;;
@@ -363,10 +374,15 @@ while test "$#" -gt 0; do
                 set -- ${all_tools}
             fi
             mkdir -p "${target}"
-            for name in "$@"; do
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
-            for tool in "${tools_ordered[@]}"; do
+            for tool in ${state}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
@@ -397,10 +413,15 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             mkdir -p "${target}"
-            for name in "$@"; do
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
-            generate "${tools_ordered[@]}" \
+            generate ${state} \
             | docker build --output "${target}" -
             exit
             ;;
@@ -423,10 +444,15 @@ while test "$#" -gt 0; do
                 echo "No tools specified"
                 exit 1
             fi
-            for name in "$@"; do
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
-            for tool in "${tools_ordered[@]}"; do
+            for tool in ${state}; do
                 echo "${emoji_tool} Processing ${tool}"
                 echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
                 docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
@@ -467,11 +493,16 @@ while test "$#" -gt 0; do
             if test "$#" -eq 0; then
                 set -- ${all_tools}
             fi
-            for name in "$@"; do
-                resolve_dependencies "${name}"
+            state=""
+            while test "$#" -gt 0; do
+                name=$1
+
+                state="$(resolve_dependencies "${name}" "${state}")"
+
+                shift
             done
             docker create --name docker-setup-install-flat ${base}
-            for tool in "${tools_ordered[@]}"; do
+            for tool in ${state}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
