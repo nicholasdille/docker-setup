@@ -4704,7 +4704,7 @@ tools:
       ${binary} --completion zsh  >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: switcher
-    version: 0.7.1
+    version: 0.7.2
     check: ${binary} --version | cut -d' ' -f3 | tr -d v
     tags:
     - k8s
