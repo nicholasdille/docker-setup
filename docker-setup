@@ -392,6 +392,7 @@ while test "$#" -gt 0; do
                 done
             done
             if test -d /var/lib/docker-setup/post_install; then
+                cp "${docker_setup_functions}" /var/lib/docker-setup/
                 FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
                 for FILE in ${FILES}; do
                     echo "Running post install for $(basename "${FILE}" .sh)"
