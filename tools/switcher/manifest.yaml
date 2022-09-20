@@ -1,5 +1,5 @@
 name: switcher
-version: 0.7.1
+version: 0.7.2
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
