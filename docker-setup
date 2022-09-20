@@ -391,6 +391,15 @@ while test "$#" -gt 0; do
                     | tar --extract --gzip --directory=${target} --no-same-owner
                 done
             done
+            if test -d /var/lib/docker-setup/post_install; then
+                FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
+                for FILE in ${FILES}; do
+                    echo "Running post install for $(basename "${FILE}" .sh)"
+                    if ! bash "${FILE}" >"${FILE}.log" 2>&1; then
+                        cat "${FILE}.log"
+                    fi
+                done
+            fi
             exit
             ;;
 
@@ -423,6 +432,7 @@ while test "$#" -gt 0; do
             done
             generate ${state} \
             | docker build --output "${target}" -
+            # TODO: post_install
             exit
             ;;
 
@@ -468,6 +478,7 @@ while test "$#" -gt 0; do
                 done
                 echo "+ Done"
             done
+            # TODO: post_install
             exit
             ;;
         
@@ -512,6 +523,7 @@ while test "$#" -gt 0; do
                     | docker cp - docker-setup-install-flat:/
                 done
             done
+            # TODO: post_install
             echo "${emoji_whale} Creating image ${image}"
             docker commit docker-setup-install-flat ${image}
             docker rm docker-setup-install-flat >/dev/null 2>&1
