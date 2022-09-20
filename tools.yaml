@@ -2269,7 +2269,7 @@ tools:
       EOF
 
   - name: faas-cli
-    version: 0.14.6
+    version: 0.14.7
     check: ${binary} version | grep "version:" | cut -d' ' -f3
     tags:
     - serverless
