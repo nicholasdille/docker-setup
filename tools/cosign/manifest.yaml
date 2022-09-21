@@ -1,5 +1,5 @@
 name: cosign
-version: 1.12.0
+version: 1.12.1
 check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 dependencies:
 - docker
