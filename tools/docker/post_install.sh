@@ -3,6 +3,67 @@ set -o errexit
 
 source /var/lib/docker-setup/functions
 
+function get_lsb_distro_name() {
+	local lsb_dist=""
+	if test -r "${prefix}/etc/os-release"; then
+        # shellcheck disable=SC1091
+		lsb_dist="$(source "${prefix}/etc/os-release" && echo "$ID")"
+	fi
+	echo "${lsb_dist}"
+}
+
+function is_debian() {
+    local lsb_dist
+    lsb_dist=$(get_lsb_distro_name)
+    case "${lsb_dist}" in
+        ubuntu|debian|raspbian)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_clearlinux() {
+    local lsb_dist
+    lsb_dist=$(get_lsb_distro_name)
+    case "${lsb_dist}" in
+        clear-linux-os)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_redhat() {
+    local lsb_dist
+    lsb_dist=$(get_lsb_distro_name)
+    case "${lsb_dist}" in
+        rhel|sles|fedora|amzn|rocky)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+function is_alpine() {
+    local lsb_dist
+    lsb_dist=$(get_lsb_distro_name)
+    case "${lsb_dist}" in
+        alpine)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 echo "Patch paths in systemd unit files (@ ${SECONDS} seconds)"
 sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
 
