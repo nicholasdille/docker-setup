@@ -1,5 +1,5 @@
 name: k9s
-version: 0.26.3
+version: 0.26.4
 check: ${binary} version --short | grep "^Version" | cut -dv -f2
 tags:
 - type/tui
