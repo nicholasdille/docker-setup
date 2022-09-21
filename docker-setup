@@ -96,16 +96,20 @@ if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_
     fi
 fi
 
+function update() {
+    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+    | while read DIGEST; do
+        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
+        | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
+    done
+}
+
 docker_setup_tools_file="${docker_setup_cache}/tools.json"
 if test -f "${PWD}/tools.json"; then
     docker_setup_tools_file="${PWD}/tools.json"
 else
     if ! test -f "${docker_setup_tools_file}"; then
-        regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-        | while read DIGEST; do
-            regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
-            | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
-        done
+        update
     fi
 fi
 >&2 echo "Using ${docker_setup_tools_file}"
@@ -187,6 +191,8 @@ function show_help() {
 docker-setup
 
 Commands:
+  update                  Update tools manifests
+  upgrade                 Update docker-setup
   ls                      List available tools
   info                    Show tool manifest
   tags                    Show tags
@@ -223,6 +229,17 @@ while test "$#" -gt 0; do
         --target)
             shift
             target="$1"
+            ;;
+
+        update)
+            update
+            exit
+            ;;
+
+        upgrade)
+            echo "Replacing $0"
+            touch /
+            exec curl --silent --location -o "$0" https://github.com/nicholasdille/docker-setup/raw/main/docker-setup
             ;;
             
         ls)
