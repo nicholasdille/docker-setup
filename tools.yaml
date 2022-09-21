@@ -2663,7 +2663,7 @@ tools:
       "${binary}" completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: helm
-    version: 3.9.4
+    version: 3.10.0
     check: ${binary} version --short | cut -d+ -f1 | tr -d v
     tags:
     - k8s
