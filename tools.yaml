@@ -345,7 +345,7 @@ tools:
       type: executable
 
   - name: cilium
-    version: 0.12.3
+    version: 0.12.4
     check: ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
     tag:
     - kubernetes
