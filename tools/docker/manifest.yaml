@@ -1,5 +1,7 @@
 name: docker
 version: 20.10.18
+binary: dockerd
+check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 dependencies:
 - fuse-overlayfs
 - docker-manpages
