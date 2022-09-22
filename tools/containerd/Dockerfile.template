@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.3
 
-ARG ref=main
+ARG ref=main@sha256:6dd8f6cf30f41cf6a34ea6aec1f49e09cb4e23aab6384ee53e5cccd2264546a3
 FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 

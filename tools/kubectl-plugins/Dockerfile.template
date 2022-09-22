@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.3
 
-ARG ref=main
+ARG ref=main@sha256:f41484c24cdec7b91255ed6038997aada910432f01e7341203dd781aeae7ece4@sha256:56b9991a6fd1c3493ced015b617ca8bb105176c0fa10490a615ae31659805a22
 
 FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
 FROM ghcr.io/nicholasdille/docker-setup/kubectl:${ref} AS kubectl
