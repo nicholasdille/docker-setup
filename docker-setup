@@ -20,6 +20,13 @@ from the container ecosystem.
 EOF
 }
 
+reset="\e[39m\e[49m"
+green="\e[92m"
+yellow="\e[93m"
+red="\e[91m"
+grey="\e[90m"
+magenta="\e[95m"
+
 # https://unicode.org/emoji/charts-14.0/full-emoji-list.html
 emoji_tool="$(echo -e "\U0001F528")"
 emoji_auth="$(echo -e "\U0001F513")"
@@ -147,6 +154,9 @@ default_tools="$(
 )"
 selected_tools="${default_tools}"
 install_tools=""
+declare -A tool_version
+declare -A tool_binary
+declare -A tool_check
 
 function resolve_dependencies() {
     local name=$1
@@ -202,6 +212,26 @@ function generate() {
         )"
     done
     echo "${CONTENT}"
+}
+
+function warm_cache() {
+    local temp
+    
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_tools_file}")"
+    for pair in ${temp}; do
+        local name="${pair%%=*}"
+        local value="${pair#*=}"
+        #>&2 echo "VERSION name=${name},value=${value}."
+        tool_version[${name}]=${value}
+    done
+
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_tools_file}")"
+    for pair in ${temp}; do
+        local name="${pair%%=*}"
+        local value="${pair#*=}"
+        #>&2 echo "BINARY name=${name},value=${value}."
+        tool_binary[${name}]=${value}
+    done
 }
 
 function show_help() {
@@ -279,6 +309,7 @@ while test "$#" -gt 0; do
                     ;;
             esac
             install_tools="$(resolve_dependencies_wrapper)"
+            warm_cache
             ;;
 
         --tags|--tags=*)
@@ -297,6 +328,7 @@ while test "$#" -gt 0; do
                 | xargs
             )"
             install_tools="$(resolve_dependencies_wrapper)"
+            warm_cache
             ;;
 
         --all)
@@ -351,17 +383,17 @@ while test "$#" -gt 0; do
 
         plan)
             for name in ${install_tools}; do
-                echo -n "${name}:"
+                echo -n -e "${name}:"
 
-                version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
-                echo -n " version=${version}"
+                version="${tool_version[${name}]}"
+                echo -n -e " version=${version}"
 
-                binary="$(jq --raw-output --arg name "${name}" 'select(.binary != null) | .binary' <<<"${tool_json[${name}]}")"
+                binary="${tool_binary[${name}]}"
                 if test "${binary}" == "false"; then
                     if test -f "${docker_setup_cache}/${name}/${version}"; then
-                        echo -n " MARKER_FILE_PRESENT"
+                        echo -n -e " ${green}MARKER_FILE_PRESENT${reset}"
                     else
-                        echo -n " MARKER_FILE_MISSING"
+                        echo -n -e " ${red}MARKER_FILE_MISSING${reset}"
                     fi
                     echo
                     continue
@@ -378,28 +410,41 @@ while test "$#" -gt 0; do
                         binary="${target}/bin/${binary}"
                     fi
                 fi
-                echo -n " binary=${binary}"
+                echo -n -e " binary=${binary}"
 
                 if test -f "${binary}"; then
-                    echo -n " BINARY_PRESENT"
+                    echo -n -e " ${green}BINARY_PRESENT${reset}"
+
+                    if test -x "${binary}"; then
+                        echo -n -e " ${green}BINARY_EXECUTABLE${reset}"
+                    fi
+
+                else
+                    echo -n -e " ${red}BINARY_MISSING${reset}"
                 fi
 
                 check="$(jq --raw-output --arg name "${name}" 'select(.check != null) | .check' <<<"${tool_json[${name}]}")"
                 if test -n "${check}"; then
-                    echo -n " check=${check//\$\{binary\}/${binary}}."
+                    echo -n -e " check=${check//\$\{binary\}/${binary}}."
                 fi
 
                 if test -n "${check}"; then
-                    installed_version="$(eval "${check}")"
-                    echo -n " installed_version=${installed_version}"
+                    if test -x "${binary}"; then
+                        installed_version="$(eval "${check}")"
+                        echo -n -e " installed_version=${installed_version}"
+                    fi
 
                     if test "${installed_version}" == "${version}"; then
-                        echo -n " VERSION_MATCHES"
+                        echo -n -e " ${green}VERSION_MATCHES${reset}"
+                    else
+                        echo -n -e " ${red}VERSION_MISMATCH${reset}"
                     fi
 
                 else
                     if test -f "${docker_setup_cache}/${name}/${version}"; then
-                        echo -n " MARKER_FILE_PRESENT"
+                        echo -n -e " ${green}MARKER_FILE_PRESENT${reset}"
+                    else
+                        echo -n -e " ${red}MARKER_FILE_MISSING${reset}"
                     fi
                 fi
 
@@ -454,13 +499,16 @@ while test "$#" -gt 0; do
             echo "Using target ${target}"
             mkdir -p "${target}"
             for tool in ${install_tools}; do
-                echo "${emoji_tool} Processing ${tool}"
+                version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
+                echo "${emoji_tool} Processing ${tool} ${version}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
                     echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                     | tar --extract --gzip --directory=${target} --no-same-owner
                 done
+                mkdir -p "/var/cache/docker-setup/${tool}/${version}"
+                touch "/var/cache/docker-setup/${tool}/${version}"
             done
             if test -d /var/lib/docker-setup/post_install; then
                 mkdir -p /var/lib/docker-setup
