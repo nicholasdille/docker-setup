@@ -82,27 +82,6 @@ if test -z "${DOCKER_CONFIG}"; then
     export DOCKER_CONFIG="${HOME}/.docker"
 fi
 
-if ! regctl registry config | jq --exit-status --arg registry "${REGISTRY}" 'to_entries[] | select(.key == $registry)' >/dev/null 2>&1; then
-    >&2 echo "WARNING: regctl does not know how to login to ${REGISTRY}"
-
-    if test -f "${DOCKER_CONFIG}/config.json" && jq --exit-status --arg registry ghcr.io '.auths | to_entries[] | select(.key == $registry)' "${DOCKER_CONFIG}/config.json" >/dev/null; then
-        >&2 echo "${emoji_auth} Logging in to ${REGISTRY} using credentials from Docker config.json"
-        AUTH="$(jq -r '.auths | to_entries[] | select(.key == "ghcr.io") | .value.auth' "${DOCKER_CONFIG}/config.json" | base64 -d)"
-        regctl registry login ${REGISTRY} --user "${AUTH%%:*}" --pass "${AUTH#*:}"
-
-    elif test -n "${REGISTRY_USERNAME}" && test -n "${REGISTRY_PASSWORD}"; then
-        >&2 echo "${emoji_Auth} Logging in to ${REGISTRY} using credentials from environment variables"
-        regctl registry login ${REGISTRY} --user "${REGISTRY_USERNAME}" --pass "${REGISTRY_PASSWORD}"
-
-    elif ! test -t 1; then
-        >&2 echo "${emoji_auth} No console available. Unable to login to ${REGISTRY}."
-
-    else
-        echo "${emoji_auth} Logging in to ${REGISTRY}"
-        regctl registry login ${REGISTRY}
-    fi
-fi
-
 function update() {
     regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
     | while read DIGEST; do
