@@ -2083,7 +2083,7 @@ tools:
       - docker-credential-gcr
 
   - name: docker-credential-helpers
-    version: 0.6.4
+    version: 0.7.0
     binary: docker-credential-pass
     needs:
     - docker
