@@ -328,35 +328,55 @@ while test "$#" -gt 0; do
             ;;
 
         plan)
-            for name in ${all_tools}; do
+            for name in ${install_tools}; do
                 echo -n "${name}:"
 
                 version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
                 echo -n " version=${version}"
 
                 binary="$(jq --raw-output --arg name "${name}" 'select(.binary != null) | .binary' <<<"${tool_json[${name}]}")"
-                if ! ${binary}; then
+                if test "${binary}" == "false"; then
+                    if test -f "${docker_setup_cache}/${name}/${version}"; then
+                        echo -n " MARKER_FILE_PRESENT"
+                    fi
                     echo
-                    break
+                    continue
 
                 else
                     if test -z "${binary}"; then
                         binary="${name}"
                     fi
+                    binary="$(
+                        echo "${binary}" \
+                        | sed "s|\${target}|${target}|g"
+                    )"
                     if test "${binary:0:1}" != "/"; then
                         binary="${target}/bin/${binary}"
                     fi
-
-                    # TODO: Replace ${target}
                 fi
                 echo -n " binary=${binary}"
 
-                check="$(jq --raw-output --arg name "${name}" 'select(.check != null) | .check' <<<"${tool_json[${name}]}")"
-                echo -n " check=${check//\$\{binary\}/${binary}}."
-
                 if test -f "${binary}"; then
+                    echo -n " BINARY_PRESENT"
+                fi
+
+                check="$(jq --raw-output --arg name "${name}" 'select(.check != null) | .check' <<<"${tool_json[${name}]}")"
+                if test -n "${check}"; then
+                    echo -n " check=${check//\$\{binary\}/${binary}}."
+                fi
+
+                if test -n "${check}"; then
                     installed_version="$(eval "${check}")"
                     echo -n " installed_version=${installed_version}"
+
+                    if test "${installed_version}" == "${version}"; then
+                        echo -n " VERSION_MATCHES"
+                    fi
+
+                else
+                    if test -f "${docker_setup_cache}/${name}/${version}"; then
+                        echo -n " MARKER_FILE_PRESENT"
+                    fi
                 fi
 
                 echo
