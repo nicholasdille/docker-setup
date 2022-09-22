@@ -262,12 +262,19 @@ while test "$#" -gt 0; do
             fi
             case "${tools}" in
                 all)
+                    >&2 echo "Selected all tools"
                     selected_tools="${all_tools}"
                     ;;
                 default)
+                    >&2 echo "Selected default tools"
                     selected_tools="${default_tools}"
                     ;;
+                installed)
+                    >&2 echo "NOT IMPLEMENTED YET"
+                    exit 1
+                    ;;
                 *)
+                    >&2 echo "Selected custom list of tools"
                     selected_tools="$(echo "${tools}" | tr ',' ' ')"
                     ;;
             esac
@@ -279,7 +286,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Tools already selected. Cannot process --tags."
                 exit 1
             fi
-            if test "$1" == "--tools"; then
+            if test "$1" == "--tags"; then
                 shift
                 tags=$1
             else
@@ -290,6 +297,21 @@ while test "$#" -gt 0; do
                 | xargs
             )"
             install_tools="$(resolve_dependencies_wrapper)"
+            ;;
+
+        --all)
+            shift
+            set -- --all --tools=all "$@"
+            ;;
+
+        --default)
+            shift
+            set -- --default --tools=default "$@"
+            ;;
+
+        --installed)
+            shift
+            set -- --installed --tools=installed "$@"
             ;;
 
         update)
@@ -338,6 +360,8 @@ while test "$#" -gt 0; do
                 if test "${binary}" == "false"; then
                     if test -f "${docker_setup_cache}/${name}/${version}"; then
                         echo -n " MARKER_FILE_PRESENT"
+                    else
+                        echo -n " MARKER_FILE_MISSING"
                     fi
                     echo
                     continue
