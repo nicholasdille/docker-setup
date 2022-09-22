@@ -136,7 +136,17 @@ else
 fi
 >&2 echo "Using ${docker_setup_dockerfile_template}"
 
-all_tools="${!tool_json[@]}"
+all_tools="$(
+    jq --raw-output '.tools[] | .name' "${docker_setup_tools_file}" \
+    | sort \
+    | xargs
+)"
+default_tools="$(
+    jq --raw-output '.tools[] | select(.tags[] | contains("category/default")) | .name' "${docker_setup_tools_file}" \
+    | xargs
+)"
+selected_tools="${default_tools}"
+install_tools=""
 
 function resolve_dependencies() {
     local name=$1
@@ -166,6 +176,14 @@ function resolve_dependencies() {
     done
 
     echo "${state} ${name}" | xargs
+}
+
+function resolve_dependencies_wrapper() {
+    state=""
+    for name in ${selected_tools}; do
+        state="$(resolve_dependencies "${name}" "${state}")"
+    done
+    echo "${state}"
 }
 
 function generate() {
@@ -229,6 +247,49 @@ while test "$#" -gt 0; do
         --target)
             shift
             target="$1"
+            ;;
+
+        --tools|--tools=*)
+            if test -n "${install_tools}"; then
+                echo "ERROR: Tools already selected. Cannot process --tools."
+                exit 1
+            fi
+            if test "$1" == "--tools"; then
+                shift
+                tools=$1
+            else
+                tools="${1#*=}"
+            fi
+            case "${tools}" in
+                all)
+                    selected_tools="${all_tools}"
+                    ;;
+                default)
+                    selected_tools="${default_tools}"
+                    ;;
+                *)
+                    selected_tools="$(echo "${tools}" | tr ',' ' ')"
+                    ;;
+            esac
+            install_tools="$(resolve_dependencies_wrapper)"
+            ;;
+
+        --tags|--tags=*)
+            if test -n "${install_tools}"; then
+                echo "ERROR: Tools already selected. Cannot process --tags."
+                exit 1
+            fi
+            if test "$1" == "--tools"; then
+                shift
+                tags=$1
+            else
+                tags="${1#*=}"
+            fi
+            selected_tools="$(
+                jq --raw-output --arg category "${tags}" '.tools[] | select(.tags[] | contains($category)) | .name' "${docker_setup_tools_file}" \
+                | xargs
+            )"
+            install_tools="$(resolve_dependencies_wrapper)"
             ;;
 
         update)
@@ -303,27 +364,11 @@ while test "$#" -gt 0; do
             ;;
 
         dependencies)
-            shift
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
-            echo "${state}"
+            echo "${install_tools}"
             ;;
 
         inspect)
             show_banner
-            shift
-            tool=$1
-            if test -z "${tool}"; then
-                echo "No tool name specified"
-                exit 1
-            fi
-            shift
             echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
@@ -335,18 +380,6 @@ while test "$#" -gt 0; do
             ;;
 
         generate)
-            shift
-            if test "$#" -eq 0; then
-                set -- ${all_tools}
-            fi
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
             generate ${state}
             exit
             ;;
@@ -359,20 +392,8 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            shift
-            if test "$#" -eq 0; then
-                set -- ${all_tools}
-            fi
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
             echo "Building image ${image} with $# tool(s)..."
-            generate ${state} \
+            generate ${install_tools} \
             | docker build --tag "${image}" -
             exit
             ;;
@@ -387,19 +408,8 @@ while test "$#" -gt 0; do
             fi
             shift
             echo "Using target ${target}"
-            if test "$#" -eq 0; then
-                set -- ${all_tools}
-            fi
             mkdir -p "${target}"
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
-            for tool in ${state}; do
+            for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
@@ -465,15 +475,7 @@ EOT
                 exit 1
             fi
             mkdir -p "${target}"
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
-            generate ${state} \
+            generate ${install_tools} \
             | docker build --output "${target}" -
             # TODO: post_install
             exit
@@ -497,15 +499,7 @@ EOT
                 echo "No tools specified"
                 exit 1
             fi
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
-            for tool in ${state}; do
+            for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
                 docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
@@ -543,20 +537,8 @@ EOT
                 echo "No target image name specified"
                 exit 1
             fi
-            shift
-            if test "$#" -eq 0; then
-                set -- ${all_tools}
-            fi
-            state=""
-            while test "$#" -gt 0; do
-                name=$1
-
-                state="$(resolve_dependencies "${name}" "${state}")"
-
-                shift
-            done
             docker create --name docker-setup-install-flat ${base}
-            for tool in ${state}; do
+            for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
