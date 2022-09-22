@@ -1,5 +1,6 @@
 name: fuse-overlayfs
 version: 1.9
+check: ${binary} --version | head -n 1 | cut -d' ' -f3
 tags:
 - org/redhat
 - type/plugin

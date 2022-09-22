@@ -1,5 +1,6 @@
 name: cyclonedx-cli
 version: 0.24.0
+check: ${binary} --version
 tags:
 - type/cli
 - category/security

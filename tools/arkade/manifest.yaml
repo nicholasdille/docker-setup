@@ -1,6 +1,6 @@
 name: arkade
 version: 0.8.44
-check: ${binary} version | grep "version" | cut -d' ' -f2
+check: ${binary} version | grep "Version" | cut -d' ' -f2
 tags:
 - type/cli
 - kubernetes

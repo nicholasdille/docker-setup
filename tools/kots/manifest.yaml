@@ -1,7 +1,7 @@
 name: kots
 version: 1.85.0
 binary: kubectl-kots
-check: ${binary} version | cut -d' ' -f3
+check: ${binary} version 2>&1 | cut -d' ' -f3
 tags:
 - type/cli
 - kubernetes

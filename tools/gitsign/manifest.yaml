@@ -1,6 +1,6 @@
 name: gitsign
 version: 0.3.0
-check: ${binary} --version | cut -d' ' -f3 | tr -d v
+check: ${binary} --version | grep ^gitsign | cut -d' ' -f3 | tr -d v
 tags:
 - category/development
 - category/security

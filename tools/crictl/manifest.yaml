@@ -1,5 +1,6 @@
 name: crictl
 version: 1.25.0
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - org/cncf
 - standard/cri

@@ -1,6 +1,6 @@
 name: clusterctl
 version: 1.2.2
-check: ${binary} version --output short | tr -d v
+check: ${binary} version --output short 2>/dev/null | tr -d v
 tags:
 - org/cncf
 - org/kubernetes
