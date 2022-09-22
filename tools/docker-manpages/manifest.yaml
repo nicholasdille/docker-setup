@@ -7,7 +7,6 @@ tags:
 - standard/oci
 - container/runtime
 - container/build
-- category/default
 - type/configuration
 renovate:
   datasource: github-tags

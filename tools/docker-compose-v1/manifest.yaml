@@ -6,7 +6,6 @@ flags:
 tags:
 - org/docker
 - standard/docker
-- category/default
 - container/compose
 - type/cli
 homepage: https://github.com/docker/compose

@@ -8,7 +8,6 @@ tags:
 - standard/oci
 - container/runtime
 - container/build
-- category/default
 - type/cli
 - type/daemon
 - stability/prerelease

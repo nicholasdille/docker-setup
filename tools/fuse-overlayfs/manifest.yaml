@@ -3,7 +3,6 @@ version: 1.9
 tags:
 - org/redhat
 - type/plugin
-- category/default
 - component/storage
 - containerd
 homepage: https://github.com/containers/fuse-overlayfs
