@@ -1,0 +1,11 @@
+name: vault
+version: 1.11.3
+tags:
+- type/cli
+- category/security
+homepage: https://www.google.de
+description: Some description
+renovate:
+  datasource: github-releases
+  package: foo/bar
+  extractVersion: ^v(?<version>.+?)$

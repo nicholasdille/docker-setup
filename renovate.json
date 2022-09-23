@@ -2457,6 +2457,17 @@
     },
     {
       "fileMatch": [
+        "^tools/vault/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "foo/bar",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/vcluster/manifest.yaml$"
       ],
       "matchStrings": [
