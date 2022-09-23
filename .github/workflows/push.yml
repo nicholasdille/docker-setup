@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.BOT_USERNAME }}
           password: ${{ secrets.BOT_PACKAGES_TOKEN }}
 
-      - name: Test
+      - name: Build and push
         env:
           DOCKER_BUILDKIT: 1
         run: |
