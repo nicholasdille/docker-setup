@@ -2091,9 +2091,8 @@ tools:
     - docker
     - security
     download:
-    - url:
-        x86_64: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-pass-v${version}-${alt_arch}.tar.gz
-      type: tarball
+    - url: https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-pass-v${version}.linux-${alt_arch}
+      type: executable
 
   - name: docker-credential-magic
     version: 0.8.1
