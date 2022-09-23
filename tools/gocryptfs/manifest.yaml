@@ -1,0 +1,12 @@
+name: gocryptfs
+version: 2.3
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/rfjakob/gocryptfs
+description: Encrypted overlay filesystem written in Go
+renovate:
+  datasource: github-releases
+  package: rfjakob/gocryptfs
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

@@ -1164,6 +1164,18 @@
     },
     {
       "fileMatch": [
+        "^tools/gocryptfs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "rfjakob/gocryptfs",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/go-md2man/manifest.yaml$"
       ],
       "matchStrings": [

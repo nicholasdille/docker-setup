@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/rfjakob/gocryptfs/releases/download/v${version}/gocryptfs_v${version}_linux-static_amd64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
+mv \
+    "${prefix}${target}/bin/gocryptfs.1" \
+    "${prefix}${target}/bin/gocryptfs-xray.1" \
+    "${prefix}${target}/share/man/man1/"
+EOF
