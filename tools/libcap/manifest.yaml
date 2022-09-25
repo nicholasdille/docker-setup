@@ -1,5 +1,5 @@
 name: libcap
-version: 2.65
+version: 2.66
 binary: ${target}/sbin/setcap
 dependencies:
 - docker
