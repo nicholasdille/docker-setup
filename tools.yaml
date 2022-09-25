@@ -903,7 +903,7 @@ tools:
       ${binary} completion zsh >"${target}/share/zsh/vendor-completions/_${name}"
 
   - name: cri-dockerd
-    version: 0.2.5
+    version: 0.2.6
     check: ${binary} --version 2>&1 | cut -d' ' -f2
     needs:
     - docker
