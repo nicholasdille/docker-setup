@@ -1,0 +1,11 @@
+name: mkcert
+version: 1.4.4
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/FiloSottile/mkcert
+description: Simple zero-config tool to make locally trusted development certificates
+renovate:
+  datasource: github-releases
+  package: FiloSottile/mkcert
+  extractVersion: ^v(?<version>.+?)$
