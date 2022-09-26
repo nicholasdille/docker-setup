@@ -6,6 +6,8 @@ on:
       - "main"
     paths:
       - "tools/**"
+  schedule:
+    - cron: "*/10 * * * *"
 
 jobs:
 
