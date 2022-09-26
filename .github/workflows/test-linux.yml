@@ -43,6 +43,7 @@ jobs:
           IS_PR: ${{ github.event_name == 'pull_request' }}
           PR: ${{ github.event.pull_request.number }}
         run: |
+          set -o errexit
           if ${IS_PR}; then
               echo "This is PR ${PR}"
               TOOLS="$(
@@ -66,7 +67,7 @@ jobs:
               GIT_BRANCH=test make tools.json
               docker_setup_version=test \
               docker_setup_cache="${HOME}/.cache/docker-setup" \
-                  ./docker-setup build bar ${TOOLS}
+                  ./docker-setup --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
 
           else
               GIT_BRANCH=test make
