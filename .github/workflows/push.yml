@@ -55,8 +55,8 @@ jobs:
               git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
               | sort \
               | grep -E "^tools/[^/]+/" \
-              | uniq \
               | cut -d/ -f2 \
+              | uniq \
               | xargs
           )"
 
