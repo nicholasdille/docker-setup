@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.3
 
-ARG ref=main
+ARG ref=main@sha256:d4ed9e3ea02ecd01ac32e41becce86bc81b17a19e6d2dd4a0753e4ef96f4be04
 
 FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare

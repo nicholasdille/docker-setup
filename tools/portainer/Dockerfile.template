@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.3
 
-ARG ref=main
+ARG ref=main@sha256:4e50c6f371e1ef632bd58b252f60018a61b9b3de155ac8d54644886827148f93
 
 FROM ghcr.io/nicholasdille/docker-setup/docker-compose-v1:${ref} AS docker-compose-v1
 
