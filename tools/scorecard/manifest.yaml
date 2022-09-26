@@ -1,5 +1,5 @@
 name: scorecard
-version: 4.6.0
+version: 4.7.0
 check: ${binary} version 2>&1 | grep "GitVersion" | cut -dv -f2
 tags:
 - category/security
