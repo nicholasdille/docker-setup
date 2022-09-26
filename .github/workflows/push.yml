@@ -54,8 +54,8 @@ jobs:
           CHANGED_TOOLS="$(
               git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
               | sort \
-              | uniq \
               | grep -E "^tools/[^/]+/" \
+              | uniq \
               | cut -d/ -f2 \
               | xargs
           )"
