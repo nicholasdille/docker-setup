@@ -1,5 +1,5 @@
 FROM scratch
-COPY tools.json /
+COPY metadata.json /
 
 ARG ref=main
 ARG commit=UNKNOWN

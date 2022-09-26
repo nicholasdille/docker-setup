@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# TODO: Download tools.json
+# TODO: Download metadata.json
 
 declare -a tools
-mapfile -t tools < <(jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' /var/cache/docker-setup/tools.json)
+mapfile -t tools < <(jq --raw-output '.tools[] | select(.hidden == null or .hidden == false) | .name' /var/cache/docker-setup/metadata.json)
 
 declare -a flags
-mapfile -t flags < <(jq --raw-output '.tools[] | select(.flags != null) | .flags[]' /var/cache/docker-setup/tools.json | grep -v ^not-)
+mapfile -t flags < <(jq --raw-output '.tools[] | select(.flags != null) | .flags[]' /var/cache/docker-setup/metadata.json | grep -v ^not-)
 
 parameters=(
     version

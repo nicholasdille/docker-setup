@@ -64,7 +64,7 @@ jobs:
                   echo "Building tool ${TOOL}--deep"
                   GIT_BRANCH=test make ${TOOL}--deep
               done
-              GIT_BRANCH=test make tools.json
+              GIT_BRANCH=test make metadata.json
               docker_setup_version=test \
               docker_setup_cache="${HOME}/.cache/docker-setup" \
                   ./docker-setup --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar

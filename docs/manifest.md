@@ -6,7 +6,7 @@ XXX `manifest.yaml`
 
 XXX `Dockerfile.template`
 
-Available tools are defined in `tools.yaml`, converted to `tools.json` using [make](make.md) and published in a [release](release.md).
+Available tools are defined in `tools.yaml`, converted to `metadata.json` using [make](make.md) and published in a [release](release.md).
 
 `tools.yaml` contains an array called `tools` containing all available tools:
 

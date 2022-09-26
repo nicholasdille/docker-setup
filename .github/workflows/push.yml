@@ -70,7 +70,7 @@ jobs:
           fi
 
           echo "### Making tools: ${CHANGED_TOOLS}."
-          TOOLS_RAW="${CHANGED_TOOLS}" make push tools.json--push
+          TOOLS_RAW="${CHANGED_TOOLS}" make push manifest.json--push
 
       - name: Store logs
         uses: actions/upload-artifact@v3

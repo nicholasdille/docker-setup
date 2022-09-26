@@ -90,18 +90,18 @@ function update() {
     done
 }
 
-docker_setup_tools_file="${docker_setup_cache}/tools.json"
-if test -f "${PWD}/tools.json"; then
-    docker_setup_tools_file="${PWD}/tools.json"
+docker_setup_metadata_file="${docker_setup_cache}/metadata.json"
+if test -f "${PWD}/metadata.json"; then
+    docker_setup_metadata_file="${PWD}/metadata.json"
 else
-    if ! test -f "${docker_setup_tools_file}"; then
+    if ! test -f "${docker_setup_metadata_file}"; then
         update
     fi
 fi
->&2 echo "Using ${docker_setup_tools_file}"
+>&2 echo "Using ${docker_setup_metadata_file}"
 
 declare -A tool_json
-mapfile tool_json_array < <(jq --raw-output --compact-output '.tools[] | "\(.name)=\(.)"' "${docker_setup_tools_file}")
+mapfile tool_json_array < <(jq --raw-output --compact-output '.tools[] | "\(.name)=\(.)"' "${docker_setup_metadata_file}")
 i=0
 while test "$i" -lt "${#tool_json_array[@]}"; do
     name_json=${tool_json_array[$i]}
@@ -123,12 +123,12 @@ fi
 >&2 echo "Using ${docker_setup_dockerfile_template}"
 
 all_tools="$(
-    jq --raw-output '.tools[] | .name' "${docker_setup_tools_file}" \
+    jq --raw-output '.tools[] | .name' "${docker_setup_metadata_file}" \
     | sort \
     | xargs
 )"
 default_tools="$(
-    jq --raw-output '.tools[] | select(.tags[] | contains("category/default")) | .name' "${docker_setup_tools_file}" \
+    jq --raw-output '.tools[] | select(.tags[] | contains("category/default")) | .name' "${docker_setup_metadata_file}" \
     | xargs
 )"
 selected_tools="${default_tools}"
@@ -196,7 +196,7 @@ function generate() {
 function warm_cache() {
     local temp
     
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_tools_file}")"
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
         local value="${pair#*=}"
@@ -204,7 +204,7 @@ function warm_cache() {
         tool_version[${name}]=${value}
     done
 
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_tools_file}")"
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
         local value="${pair#*=}"
@@ -303,7 +303,7 @@ while test "$#" -gt 0; do
                 tags="${1#*=}"
             fi
             selected_tools="$(
-                jq --raw-output --arg category "${tags}" '.tools[] | select(.tags[] | contains($category)) | .name' "${docker_setup_tools_file}" \
+                jq --raw-output --arg category "${tags}" '.tools[] | select(.tags[] | contains($category)) | .name' "${docker_setup_metadata_file}" \
                 | xargs
             )"
             install_tools="$(resolve_dependencies_wrapper)"
@@ -338,7 +338,7 @@ while test "$#" -gt 0; do
             
         ls)
             show_banner
-            jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_tools_file}" \
+            jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
             | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
             ;;
 
@@ -357,7 +357,7 @@ while test "$#" -gt 0; do
 
         tags)
             show_banner
-            jq -r '.tools[].tags[]' "${docker_setup_tools_file}" | sort | uniq | xargs echo
+            jq -r '.tools[].tags[]' "${docker_setup_metadata_file}" | sort | uniq | xargs echo
             ;;
 
         plan)
