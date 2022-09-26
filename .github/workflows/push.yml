@@ -1,4 +1,4 @@
-name: Push on push
+name: Build and push
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
 
   test:
-    name: Push
+    name: Build and push
     runs-on: ubuntu-20.04
     steps:
 
