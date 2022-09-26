@@ -35,14 +35,20 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           make bin/regctl
+          
+          echo "### Fetching manifest for metadata"
           CONFIG_DIGEST="$(
               bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
               | jq --raw-output '.config.digest'
           )
+
+          echo "### Fetching config for metadata"
           OLD_COMMIT_SHA="$(
               bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
               | jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
           )
+
+          echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
           CHANGED_TOOLS="$$( \
               git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
               | sort \
@@ -51,6 +57,8 @@ jobs:
               | cut -d/ -f2 \
               | xargs \
           )"
+
+          echo "### Making tools: ${CHANGED_TOOLS}."
           TOOLS_RAW="${CHANGED_TOOLS}" make push tools.json--push
 
       - name: Store logs
