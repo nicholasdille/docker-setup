@@ -1,5 +1,5 @@
 name: dasel
-version: 1.26.1
+version: 1.27.0
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
