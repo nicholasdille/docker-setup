@@ -62,6 +62,13 @@ jobs:
               | xargs
           )"
 
+          if test -z "${CHANGED_TOOLS}"; then
+              echo "### No tools to make (${CHANGED_TOOLS})"
+              echo "### git log:"
+              git log --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA}
+              exit
+          fi
+
           echo "### Making tools: ${CHANGED_TOOLS}."
           TOOLS_RAW="${CHANGED_TOOLS}" make push tools.json--push
 
