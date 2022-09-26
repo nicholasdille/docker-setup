@@ -34,7 +34,24 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          make push tools.json--push
+          make bin/regctl
+          CONFIG_DIGEST="$(
+              bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
+              | jq --raw-output '.config.digest'
+          )
+          OLD_COMMIT_SHA="$(
+              bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
+              | jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
+          )
+          CHANGED_TOOLS="$$( \
+              git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+              | sort \
+              | uniq \
+              | grep -E "^tools/[^/]+/" \
+              | cut -d/ -f2 \
+              | xargs \
+          )"
+          TOOLS_RAW="${CHANGED_TOOLS}" make push tools.json--push
 
       - name: Store logs
         uses: actions/upload-artifact@v3
