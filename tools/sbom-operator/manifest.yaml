@@ -1,0 +1,11 @@
+name: sbom-operator
+version: 0.18.0
+tags:
+- type/daemon
+- category/security
+- sbom
+homepage: https://github.com/ckotzbauer/sbom-operator
+description: Catalogue all images of a Kubernetes cluster to multiple targets with Syft
+renovate:
+  datasource: github-releases
+  package: ckotzbauer/sbom-operator

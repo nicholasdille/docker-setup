@@ -2254,6 +2254,16 @@
     },
     {
       "fileMatch": [
+        "^tools/sbom-operator/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ckotzbauer/sbom-operator",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/sbom-tool/manifest.yaml$"
       ],
       "matchStrings": [
