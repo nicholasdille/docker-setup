@@ -392,6 +392,17 @@
     },
     {
       "fileMatch": [
+        "^tools/bumblebee/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "solo-io/bumblebee",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/bypass4netns/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,11 @@
+name: bumblebee
+version: 0.0.13
+tags:
+- type/cli
+- ebpf
+homepage: https://github.com/solo-io/bumblebee
+description: Get eBPF programs running from the cloud to the kernel
+renovate:
+  datasource: github-releases
+  package: solo-io/bumblebee
+  extractVersion: ^v(?<version>.+?)$
