@@ -3,9 +3,9 @@ version: 1.11.3
 tags:
 - type/cli
 - category/security
-homepage: https://www.google.de
-description: Some description
+homepage: https://github.com/hashicorp/vault
+description: Secrets management, encryption as a service, and privileged access management
 renovate:
   datasource: github-releases
-  package: foo/bar
+  package: hashicorp/vault
   extractVersion: ^v(?<version>.+?)$
