@@ -486,7 +486,7 @@ while test "$#" -gt 0; do
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                     | tar --extract --gzip --directory=${target} --no-same-owner
                 done
-                mkdir -p "/var/cache/docker-setup/${tool}/${version}"
+                mkdir -p "/var/cache/docker-setup/${tool}"
                 touch "/var/cache/docker-setup/${tool}/${version}"
             done
             if test -d /var/lib/docker-setup/post_install; then
