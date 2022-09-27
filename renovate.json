@@ -2166,6 +2166,17 @@
     },
     {
       "fileMatch": [
+        "^tools/powerline-go/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "justjanne/powerline-go",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/pwru/manifest.yaml$"
       ],
       "matchStrings": [
