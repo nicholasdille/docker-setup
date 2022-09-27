@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/tektoncd/cli/releases/download/v${version}/tkn_${version}_Linux_x86_64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    tkn
+"${prefix}${target}/bin/tkn" completion bash >"${prefix}${target}/share/bash-completion/completions/tkn"
+"${prefix}${target}/bin/tkn" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/tkn.fish"
+"${prefix}${target}/bin/tkn" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_tkn"
+ln -s "${prefix}${target}/bin/tkn" "${prefix}${target}/bin/kubectl-tkn"
+EOF
+
+RUN <<EOF
+curl --silent --location "https://github.com/tektoncd/cli/archive/refs/tags/v${version}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/man/man1/" --strip-components=4 --no-same-owner \
+    cli-0.26.0/docs/man/man1/
+EOF
