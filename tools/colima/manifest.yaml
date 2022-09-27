@@ -1,0 +1,11 @@
+name: colima
+version: 0.4.5
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/abiosoft/colima
+description: Container runtimes on macOS (and Linux) with minimal setup
+renovate:
+  datasource: github-releases
+  package: abiosoft/colima
+  extractVersion: ^v(?<version>.+?)$

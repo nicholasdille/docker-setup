@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/colima" \
+    "https://github.com/abiosoft/colima/releases/download/v${version}/colima-Linux-${arch}"
+chmod +x "${prefix}${target}/bin/colima"
+"${prefix}${target}/bin/colima" completion bash >"${prefix}${target}/share/bash-completion/completions/colima"
+"${prefix}${target}/bin/colima" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/colima.fish"
+"${prefix}${target}/bin/colima" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_colima"
+EOF

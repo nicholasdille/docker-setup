@@ -545,6 +545,17 @@
     },
     {
       "fileMatch": [
+        "^tools/colima/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "abiosoft/colima",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/conftest/manifest.yaml$"
       ],
       "matchStrings": [
