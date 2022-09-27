@@ -1,0 +1,11 @@
+name: shdotenv
+version: 0.13.0
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/ko1nksm/shdotenv
+description: Support for POSIX-compliant and multiple .env file syntax
+renovate:
+  datasource: github-releases
+  package: ko1nksm/shdotenv
+  extractVersion: ^v(?<version>.+?)$

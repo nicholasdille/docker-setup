@@ -2220,6 +2220,17 @@
     },
     {
       "fileMatch": [
+        "^tools/shdotenv/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ko1nksm/shdotenv",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/shortnames/manifest.yaml$"
       ],
       "matchStrings": [
