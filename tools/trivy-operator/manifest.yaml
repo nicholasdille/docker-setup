@@ -1,0 +1,11 @@
+name: trivy-operator
+version: 0.3.0
+tags:
+- type/daemon
+- category/security
+homepage: https://github.com/aquasecurity/trivy-operator
+description: Kubernetes-native security toolkit
+renovate:
+  datasource: github-releases
+  package: aquasecurity/trivy-operator
+  extractVersion: ^v(?<version>.+?)$

@@ -2532,6 +2532,17 @@
     },
     {
       "fileMatch": [
+        "^tools/trivy-operator/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "aquasecurity/trivy-operator",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/ttyd/manifest.yaml$"
       ],
       "matchStrings": [
