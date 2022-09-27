@@ -1913,6 +1913,17 @@
     },
     {
       "fileMatch": [
+        "^tools/mink/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "mattmoor/mink",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/mitmproxy/manifest.yaml$"
       ],
       "matchStrings": [

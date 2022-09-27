@@ -1,0 +1,12 @@
+name: mink
+version: 1.3.1
+tags:
+- type/cli
+- category/development
+- cicd
+homepage: https://github.com/mattmoor/mink
+description: Minimal distribution of Knative and Tekton, and CLI
+renovate:
+  datasource: github-releases
+  package: mattmoor/mink
+  extractVersion: ^v(?<version>.+?)$
