@@ -1,0 +1,10 @@
+name: mcfly
+version: 0.6.1
+tags:
+- type/cli
+homepage: https://github.com/cantino/mcfly
+description: Fly through your shell history
+renovate:
+  datasource: github-releases
+  package: cantino/mcfly
+  extractVersion: ^v(?<version>.+?)$

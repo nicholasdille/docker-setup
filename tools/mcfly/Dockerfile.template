@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/cantino/mcfly/releases/download/v${version}/mcfly-v${version}-${arch}-unknown-linux-musl.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+EOF

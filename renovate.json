@@ -1935,6 +1935,17 @@
     },
     {
       "fileMatch": [
+        "^tools/mcfly/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cantino/mcfly",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/minectl/manifest.yaml$"
       ],
       "matchStrings": [
