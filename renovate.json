@@ -2630,6 +2630,16 @@
     },
     {
       "fileMatch": [
+        "^tools/vulnerability-operator/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ckotzbauer/vulnerability-operator",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/watchtower/manifest.yaml$"
       ],
       "matchStrings": [
