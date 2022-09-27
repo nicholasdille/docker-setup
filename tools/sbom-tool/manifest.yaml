@@ -1,0 +1,12 @@
+name: sbom-tool
+version: 0.2.2
+tags:
+- category/security
+- sbom
+- cicd
+homepage: https://github.com/microsoft/sbom-tool
+description: Highly scalable and enterprise ready tool to create SPDX 2.2 compatible SBOMs
+renovate:
+  datasource: github-releases
+  package: microsoft/sbom-tool
+  extractVersion: ^v(?<version>.+?)$
