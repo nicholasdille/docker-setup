@@ -1098,6 +1098,17 @@
     },
     {
       "fileMatch": [
+        "^tools/flux2/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "fluxcd/flux2",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/footloose/manifest.yaml$"
       ],
       "matchStrings": [
