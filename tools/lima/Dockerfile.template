@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/lima-vm/lima/releases/download/v${version}/lima-${version}-Linux-${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
+EOF

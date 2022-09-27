@@ -1,0 +1,11 @@
+name: lima
+version: 0.12.0
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/lima-vm/lima
+description: Linux virtual machines, typically on macOS, for running containerd
+renovate:
+  datasource: github-releases
+  package: lima-vm/lima
+  extractVersion: ^v(?<version>.+?)$
