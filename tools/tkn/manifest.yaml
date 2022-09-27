@@ -3,6 +3,7 @@ version: 0.26.0
 tags:
 - type/cli
 - type/development
+- org/cdfoundation
 - cicd
 homepage: https://github.com/tektoncd/cli
 description: CLI for interacting with Tekton
