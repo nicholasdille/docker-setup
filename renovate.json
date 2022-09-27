@@ -316,6 +316,17 @@
     },
     {
       "fileMatch": [
+        "^tools/argocd/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "argoproj/argo-cd",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/arkade/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,12 @@
+name: argocd
+version: 2.4.11
+tags:
+- type/cli
+- category/development
+- gitops
+homepage: https://github.com/argoproj/argo-cd
+description: Declarative continuous deployment for Kubernetes
+renovate:
+  datasource: github-releases
+  package: argoproj/argo-cd
+  extractVersion: ^v(?<version>.+?)$
