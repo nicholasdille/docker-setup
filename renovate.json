@@ -1098,6 +1098,16 @@
     },
     {
       "fileMatch": [
+        "^tools/fx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "antonmedv/fx",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/fzf/manifest.yaml$"
       ],
       "matchStrings": [
