@@ -1,0 +1,11 @@
+name: argo
+version: 3.4.0
+tags:
+- tag1
+- tag2
+homepage: https://github.com/argoproj/argo-workflows
+description: Workflow engine for Kubernetes
+renovate:
+  datasource: github-releases
+  package: argoproj/argo-workflows
+  extractVersion: ^v(?<version>.+?)$

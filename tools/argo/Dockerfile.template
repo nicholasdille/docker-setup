@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/argoproj/argo-workflows/releases/download/v${version}/argo-linux-${alt_arch}.gz" \
+| gunzip \
+>"${prefix}${target}/bin/argo"
+chmod +x "${prefix}${target}/bin/argo"
+"${prefix}${target}/bin/argo" completion bash >"${prefix}${target}/share/bash-completion/completions/argo"
+"${prefix}${target}/bin/argo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_argo"
+EOF
