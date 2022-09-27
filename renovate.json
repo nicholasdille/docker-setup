@@ -1537,6 +1537,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kn/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "knative/client",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kompose/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kn" \
+    "https://github.com/knative/client/releases/download/knative-v${version}/kn-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/kn"
+"${prefix}${target}/bin/kn" completion bash >"${prefix}${target}/share/bash-completion/completions/kn"
+"${prefix}${target}/bin/kn" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kn"
+EOF
