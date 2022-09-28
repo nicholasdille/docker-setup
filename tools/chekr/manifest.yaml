@@ -1,0 +1,12 @@
+name: chekr
+version: 0.5.1
+check: ${binary} version | grep ^Version | cut -d' ' -f2
+tags:
+- type/cli
+- kubernetes
+- management
+homepage: https://github.com/ckotzbauer/chekr
+description: Inspection utility for the maintenance of Kubernetes clusters
+renovate:
+  datasource: github-releases
+  package: ckotzbauer/chekr

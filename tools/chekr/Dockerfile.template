@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/ckotzbauer/chekr/releases/download/${version}/chekr_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    chekr
+"${prefix}${target}/bin/chekr" completion bash >"${prefix}${target}/share/bash-completion/completions/chekr"
+"${prefix}${target}/bin/chekr" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/chekr.fish"
+"${prefix}${target}/bin/chekr" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_chekr"
+EOF

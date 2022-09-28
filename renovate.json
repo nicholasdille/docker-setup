@@ -458,6 +458,16 @@
     },
     {
       "fileMatch": [
+        "^tools/chekr/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ckotzbauer/chekr",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/chisel/manifest.yaml$"
       ],
       "matchStrings": [
