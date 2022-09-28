@@ -2374,6 +2374,17 @@
     },
     {
       "fileMatch": [
+        "^tools/sish/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "antoniomika/sish",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/skopeo/manifest.yaml$"
       ],
       "matchStrings": [
