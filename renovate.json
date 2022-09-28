@@ -1602,6 +1602,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kluctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kluctl/kluctl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kn/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,13 @@
+name: kluctl
+version: 2.15.0
+check: ""
+tags:
+- type/cli
+- category/development
+- management
+homepage: https://github.com/kluctl/kluctl
+description: missing glue to put together large Kubernetes deployments, composed of multiple smaller parts in a manageable and unified way
+renovate:
+  datasource: github-releases
+  package: kluctl/kluctl
+  extractVersion: ^v(?<version>.+?)$
