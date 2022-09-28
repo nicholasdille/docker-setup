@@ -1,6 +1,6 @@
 name: nerdctl
 version: 0.23.0
-check: ${binary} --version 2>&1 | cut -d' ' -f3
+check: XDG_RUNTIME_DIR=foo ${binary} --version | cut -d' ' -f3
 dependencies:
 - containerd
 - buildkit

@@ -402,7 +402,7 @@ while test "$#" -gt 0; do
                     echo -n -e " ${red}BINARY_MISSING${reset}"
                 fi
 
-                check="$(jq --raw-output --arg name "${name}" 'select(.check != null) | .check' <<<"${tool_json[${name}]}")"
+                check="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
                 if test -n "${check}"; then
                     echo -n -e " check=${check//\$\{binary\}/${binary}}."
                 fi

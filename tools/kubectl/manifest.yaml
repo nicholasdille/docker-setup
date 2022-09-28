@@ -1,6 +1,6 @@
 name: kubectl
 version: 1.25.2
-check: ${binary} version --client --short | cut -d' ' -f3 | tr -d v
+check: ${binary} version --client --short 2>/dev/null | cut -d' ' -f3 | tr -d v
 dependencies:
 - krew
 tags:

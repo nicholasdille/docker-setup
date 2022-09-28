@@ -1,6 +1,6 @@
 name: kubeletctl
 version: 1.8
-check: ${binary} version | grep "^Version:" | cut -d' ' -f2
+check: ${binary} version 2>/dev/null | grep ^Version | cut -d' ' -f2
 tags:
 - type/cli
 - kubernetes
