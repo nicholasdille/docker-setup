@@ -1,0 +1,31 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential \
+    zlib1g-dev \
+    make \
+    git \
+    ca-certificates
+EOF
+WORKDIR /tmp/pigz
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/madler/pigz .
+make pigz LDFLAGS=-static
+mkdir -p \
+    /opt/pigz/bin \
+    /opt/pigz/share/man/man1
+cp pigz /opt/pigz/bin/
+cp pigz.1 /opt/pigz/share/man/man1/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /opt/pigz/ ${prefix}${target}/

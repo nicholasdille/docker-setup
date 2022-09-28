@@ -2265,6 +2265,18 @@
     },
     {
       "fileMatch": [
+        "^tools/pigz/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "madler/pigz",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/podman/manifest.yaml$"
       ],
       "matchStrings": [
