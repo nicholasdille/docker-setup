@@ -1,12 +1,10 @@
 #!/bin/bash
 set -o errexit
 
-source /var/lib/docker-setup/functions
-
 echo "Patch systemd units"
-sed -i "s|ExecStart=/usr/local/bin/kubelet|ExecStart=${target}/bin/kubelet|" "${prefix}/etc/systemd/system/kubelet.service"
+sed -i "s|ExecStart=/usr/local/bin/kubelet|ExecStart=${target}/bin/kubelet|" "/etc/systemd/system/kubelet.service"
 
-if test -z "${prefix}" && has_systemd; then
+if systemctl >/dev/null 2>&1; then
     echo "Reload systemd"
     systemctl daemon-reload
 fi

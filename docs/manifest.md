@@ -43,7 +43,7 @@ tools:
   post_install: |
     echo "Install systemd units"
     sed -i "s|ExecStart=/usr/local/bin/foo|ExecStart=${target}/bin/foo|" "${prefix}/etc/systemd/system/foo.service"
-    if test -z "${prefix}" && has_systemd; then
+    if test -z "${prefix}" && systemctl >/dev/null 2>&1; then
         echo "Reload systemd"
         systemctl daemon-reload
     fi
@@ -132,9 +132,7 @@ Tool-specific variables:
 `docker-setup` comes with several functions to support installation commands:
 
 - `is_debian`, `is_redhat`, `is_alpine` - checks for distribution flavors
-- `has_tool` - check whether a tool is installed
-- `has_systemd` - check whether the system offers `systemd`
-- `docker_run` - execute commands in a container based on the image built by `dockerfile`, see [image cache](image_cache.md)
+- `systemctl >/dev/null 2>&1` - check whether the system offers `systemd`
 
 ## Special files
 

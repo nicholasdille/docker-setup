@@ -490,33 +490,13 @@ while test "$#" -gt 0; do
                 touch "/var/cache/docker-setup/${tool}/${version}"
             done
             if test -d /var/lib/docker-setup/post_install; then
-                mkdir -p /var/lib/docker-setup
-                cat <<"EOT" >/var/lib/docker-setup/functions
-mkdir -p /var/cache/docker-setup
-export prefix=
-export target=${prefix}/usr/local
-export relative_target=/usr/local
-export docker_setup_cache=/var/cache/docker-setup
-export docker_setup_contrib=/var/lib/docker-setup/contrib
-export docker_setup_manifests=/var/lib/docker-setup/manifests
-function has_systemd() {
-    local init
-    init="$(readlink -f /sbin/init)"
-    if test "$(basename "${init}")" == "systemd" && test -x /usr/bin/systemctl && systemctl status >/dev/null 2>&1; then
-        return 0
-    else
-        return 1
-    fi
-}
-function has_tool() {
-    local tool=$1
-    if test -z "${tool}"; then
-        echo "has_tool(): You must specify a tool"
-        exit 1
-    fi
-    test -f "${docker_setup_manifests}/${tool}.yaml"
-}
-EOT
+                mkdir -p /var/lib/docker-setup /var/cache/docker-setup
+                export prefix=
+                export target=${prefix}/usr/local
+                export relative_target=/usr/local
+                export docker_setup_cache=/var/cache/docker-setup
+                export docker_setup_contrib=/var/lib/docker-setup/contrib
+                export docker_setup_manifests=/var/lib/docker-setup/manifests
                 FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
                 for FILE in ${FILES}; do
                     echo "Running post install for $(basename "${FILE}" .sh)"

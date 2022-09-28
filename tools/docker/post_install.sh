@@ -1,13 +1,11 @@
 #!/bin/bash
 set -o errexit
 
-source /var/lib/docker-setup/functions
-
 function get_lsb_distro_name() {
 	local lsb_dist=""
-	if test -r "${prefix}/etc/os-release"; then
+	if test -r "/etc/os-release"; then
         # shellcheck disable=SC1091
-		lsb_dist="$(source "${prefix}/etc/os-release" && echo "$ID")"
+		lsb_dist="$(source "/etc/os-release" && echo "$ID")"
 	fi
 	echo "${lsb_dist}"
 }
@@ -65,7 +63,7 @@ function is_alpine() {
 }
 
 echo "Patch paths in systemd unit files (@ ${SECONDS} seconds)"
-sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
+sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "/etc/systemd/system/docker.service"
 
 echo "Patch paths in init scripts (@ ${SECONDS} seconds)"
 sed -i -E "s|^DOCKERD=/usr/local/bin/dockerd|DOCKERD=${target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"
@@ -73,20 +71,20 @@ sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_cont
 sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.initd"
 sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/docker/openrc/docker.confd"
 
-if test -f "${prefix}/etc/group"; then
+if test -f "/etc/group"; then
     echo "Create group (@ ${SECONDS} seconds)"
-    groupadd --prefix "${prefix}" --system --force docker
+    groupadd --prefix "" --system --force docker
 fi
 
 echo "Configure daemon (@ ${SECONDS} seconds)"
-mkdir -p "${prefix}/etc/docker"
-if ! test -f "${prefix}/etc/docker/daemon.json"; then
+mkdir -p "/etc/docker"
+if ! test -f "/etc/docker/daemon.json"; then
     echo "Initialize dockerd configuration"
-    echo "{}" >"${prefix}/etc/docker/daemon.json"
+    echo "{}" >"/etc/docker/daemon.json"
 fi
 
-if test -f "${prefix}/etc/fstab"; then
-    root_fs="$(cat "${prefix}/etc/fstab" | tr -s ' ' | grep " / " | cut -d' ' -f3)"
+if test -f "/etc/fstab"; then
+    root_fs="$(cat "/etc/fstab" | tr -s ' ' | grep " / " | cut -d' ' -f3)"
     if test -z "${root_fs}"; then
         root_fs="$(mount | grep " on / " | cut -d' ' -f5)"
     fi
@@ -94,10 +92,10 @@ if test -f "${prefix}/etc/fstab"; then
 
     if test "${root_fs}" == "overlay"; then
 
-        if has_tool "fuse-overlayfs"; then
+        if grep -qE "^[^:]+:[^:]*:/.+$" /proc/1/cgroup; then
             echo "Configuring storage driver for DinD"
             # shellcheck disable=SC2094
-            cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+            cat <<< "$(jq '. * {"storage-driver": "fuse-overlayfs"}' "/etc/docker/daemon.json")" >"/etc/docker/daemon.json"
 
         else
             echo "fuse-overlayfs should be planned for installation."
@@ -105,63 +103,63 @@ if test -f "${prefix}/etc/fstab"; then
     fi
 fi
 
-if ! test "$(jq '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "${prefix}/etc/docker/daemon.json")" == "true"; then
+if ! test "$(jq '."exec-opts" // [] | any(. | startswith("native.cgroupdriver="))' "/etc/docker/daemon.json")" == "true"; then
     echo "Configuring native cgroup driver"
     # shellcheck disable=SC2094
-    cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+    cat <<< "$(jq '."exec-opts" += ["native.cgroupdriver=cgroupfs"]' "/etc/docker/daemon.json")" >"/etc/docker/daemon.json"
 fi
-if ! test "$(jq '. | keys | any(. == "default-runtime")' "${prefix}/etc/docker/daemon.json")" == true; then
+if ! test "$(jq '. | keys | any(. == "default-runtime")' "/etc/docker/daemon.json")" == true; then
     echo "Set default runtime"
     # shellcheck disable=SC2094
-    cat <<< "$(jq '. * {"default-runtime": "runc"}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+    cat <<< "$(jq '. * {"default-runtime": "runc"}' "/etc/docker/daemon.json")" >"/etc/docker/daemon.json"
 fi
 # shellcheck disable=SC2016
-if test -n "${docker_address_base}" && test -n "${docker_address_size}" && ! test "$(jq --arg base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" | any(.base == $base and .size == $size)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+if test -n "${docker_address_base}" && test -n "${docker_address_size}" && ! test "$(jq --arg base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" | any(.base == $base and .size == $size)' "/etc/docker/daemon.json")" == "true"; then
     echo "Add address pool with base ${docker_address_base} and size ${docker_address_size}"
     # shellcheck disable=SC2094
-    cat <<< "$(jq --args base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" += {"base": $base, "size": $size}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+    cat <<< "$(jq --args base "${docker_address_base}" --arg size "${docker_address_size}" '."default-address-pool" += {"base": $base, "size": $size}' "/etc/docker/daemon.json")" >"/etc/docker/daemon.json"
 fi
 # shellcheck disable=SC2016
-if test -n "${docker_hub_mirror}" && ! test "$(jq --arg mirror "${docker_hub_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "${prefix}/etc/docker/daemon.json")" == "true"; then
+if test -n "${docker_hub_mirror}" && ! test "$(jq --arg mirror "${docker_hub_mirror}" '."registry-mirrors" // [] | any(. == $mirror)' "/etc/docker/daemon.json")" == "true"; then
     echo "Add registry mirror ${docker_hub_mirror}"
     # shellcheck disable=SC2094
     # shellcheck disable=SC2016
-    cat <<< "$(jq --args mirror "${docker_hub_mirror}" '."registry-mirrors" += ["\($mirror)"]' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+    cat <<< "$(jq --args mirror "${docker_hub_mirror}" '."registry-mirrors" += ["\($mirror)"]' "/etc/docker/daemon.json")" >"/etc/docker/daemon.json"
 fi
-if ! test "$(jq --raw-output '.features.buildkit // false' "${prefix}/etc/docker/daemon.json")" == true; then
+if ! test "$(jq --raw-output '.features.buildkit // false' "/etc/docker/daemon.json")" == true; then
     echo "Enable BuildKit"
     # shellcheck disable=SC2094
-    cat <<< "$(jq '. * {"features":{"buildkit":true}}' "${prefix}/etc/docker/daemon.json")" >"${prefix}/etc/docker/daemon.json"
+    cat <<< "$(jq '. * {"features":{"buildkit":true}}' "/etc/docker/daemon.json")" >"/etc/docker/daemon.json"
 fi
 echo "Check if daemon.json is valid JSON (@ ${SECONDS} seconds)"
-if ! jq --exit-status '.' "${prefix}/etc/docker/daemon.json" >/dev/null 2>&1; then
-    error "${prefix}/etc/docker/daemon.json is not valid JSON."
+if ! jq --exit-status '.' "/etc/docker/daemon.json" >/dev/null 2>&1; then
+    error "/etc/docker/daemon.json is not valid JSON."
     exit 1
 fi
 
 if is_debian || is_clearlinux; then
     echo "Install init script for debian"
-    mkdir -p "${prefix}/etc/default" "${prefix}/etc/init.d"
-    cp "${docker_setup_contrib}/docker/sysvinit/debian/docker.default" "${prefix}/etc/default/docker"
-    cp "${docker_setup_contrib}/docker/sysvinit/debian/docker" "${prefix}/etc/init.d/docker"
+    mkdir -p "/etc/default" "/etc/init.d"
+    cp "${docker_setup_contrib}/docker/sysvinit/debian/docker.default" "/etc/default/docker"
+    cp "${docker_setup_contrib}/docker/sysvinit/debian/docker" "/etc/init.d/docker"
     
 elif is_redhat; then
     echo "Install init script for redhat"
-    mkdir -p "${prefix}/etc/sysconfig" "${prefix}/etc/init.d"
-    cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker.sysconfig" "${prefix}/etc/sysconfig/docker"
-    cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker" "${prefix}/etc/init.d/docker"
+    mkdir -p "/etc/sysconfig" "/etc/init.d"
+    cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker.sysconfig" "/etc/sysconfig/docker"
+    cp "${docker_setup_contrib}/docker/sysvinit/redhat/docker" "/etc/init.d/docker"
     
 elif is_alpine; then
     echo "Install openrc script for alpine"
-    mkdir -p "${prefix}/etc/conf.d" "${prefix}/etc/init.d"
-    cp "${docker_setup_contrib}/docker/openrc/docker.confd" "${prefix}/etc/conf.d/docker"
-    cp "${docker_setup_contrib}/docker/openrc/docker.initd" "${prefix}/etc/init.d/docker"
+    mkdir -p "/etc/conf.d" "/etc/init.d"
+    cp "${docker_setup_contrib}/docker/openrc/docker.confd" "/etc/conf.d/docker"
+    cp "${docker_setup_contrib}/docker/openrc/docker.initd" "/etc/init.d/docker"
     openrc
 else
     echo "Unable to install init script because the distributon is unknown."
 fi
 
-if test -z "${prefix}" && has_systemd; then
+if systemctl >/dev/null 2>&1; then
     echo "Reload systemd (@ ${SECONDS} seconds)"
     systemctl daemon-reload
 

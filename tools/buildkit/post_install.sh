@@ -1,14 +1,12 @@
 #!/bin/bash
 
-source /var/lib/docker-setup/functions
-
 echo "Patch init script"
-sed -i "s|/usr/local/bin/buildkitd|${relative_target}/bin/buildkitd|" "${prefix}/etc/init.d/buildkit"
+sed -i "s|/usr/local/bin/buildkitd|${relative_target}/bin/buildkitd|" "/etc/init.d/buildkit"
 
 echo "Patch systemd units"
-sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "${prefix}/etc/systemd/system/buildkit.service"
+sed -i "s|ExecStart=/usr/local/bin/buildkitd|ExecStart=${target}/bin/buildkitd|" "/etc/systemd/system/buildkit.service"
 
-if test -z "${prefix}" && has_systemd; then
+if systemctl >/dev/null 2>&1; then
     echo "Reload systemd"
     systemctl daemon-reload
 fi
