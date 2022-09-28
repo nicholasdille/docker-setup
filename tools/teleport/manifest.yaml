@@ -1,0 +1,14 @@
+name: teleport
+version: 10.2.6
+check: ${binary} version | cut -d' ' -f2 | tr -d v
+tags:
+- type/cli
+- type/daemon
+- category/development
+- tunneling
+homepage: https://github.com/gravitational/teleport
+description: Easiest, most secure way to access infrastructure
+renovate:
+  datasource: github-releases
+  package: gravitational/teleport
+  extractVersion: ^v(?<version>.+?)$

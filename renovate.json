@@ -2531,6 +2531,17 @@
     },
     {
       "fileMatch": [
+        "^tools/teleport/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "gravitational/teleport",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/terraform/manifest.yaml$"
       ],
       "matchStrings": [
