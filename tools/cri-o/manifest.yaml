@@ -5,7 +5,6 @@ check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 dependencies:
 - runc
 - cni
-- go-md2man
 - crictl
 tags:
 - org/redhat

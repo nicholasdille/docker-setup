@@ -4,7 +4,6 @@ check: ${binary} --version | cut -d' ' -f3 | tr -d v
 dependencies:
 - runc
 - cni
-- go-md2man
 - crictl
 tags:
 - org/cncf
