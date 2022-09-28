@@ -1120,6 +1120,16 @@
     },
     {
       "fileMatch": [
+        "^tools/figlet/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cmatsuoka/figlet",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": [
         "^tools/firecracker/manifest.yaml$"
       ],
       "matchStrings": [

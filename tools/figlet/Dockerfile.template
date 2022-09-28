@@ -1,0 +1,28 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential \
+    zlib1g-dev \
+    make \
+    curl \
+    ca-certificates
+EOF
+WORKDIR /tmp/figlet
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location "http://ftp.figlet.org/pub/figlet/program/unix/figlet-${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1
+make figlet LDFLAGS=-static DEFAULTFONTDIR=${target}/share/figlet
+make install prefix=/opt/figlet
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /opt/figlet/ ${prefix}${target}/

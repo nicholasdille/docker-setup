@@ -1,0 +1,11 @@
+name: figlet
+version: 2.2.5
+check: ""
+tags:
+- type/cli
+- fun
+homepage: http://www.figlet.org/
+description: Making large letters out of ordinary text
+renovate:
+  datasource: github-tags
+  package: cmatsuoka/figlet
