@@ -1,5 +1,6 @@
 name: tool_name
 version: 0.1.2
+check: ""
 dependencies:
 - docker
 tags:
