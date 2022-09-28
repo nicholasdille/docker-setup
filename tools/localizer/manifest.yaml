@@ -1,0 +1,12 @@
+name: localizer
+version: 1.15.0
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/getoutreach/localizer
+description: No-frills local development tool for service developers working in Kubernetes
+renovate:
+  datasource: github-releases
+  package: getoutreach/localizer
+  extractVersion: ^v(?<version>.+?)$

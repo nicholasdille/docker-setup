@@ -1946,6 +1946,17 @@
     },
     {
       "fileMatch": [
+        "^tools/localizer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "getoutreach/localizer",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/loft/manifest.yaml$"
       ],
       "matchStrings": [
