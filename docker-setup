@@ -365,7 +365,7 @@ while test "$#" -gt 0; do
                 echo -n -e "${name}:"
 
                 version="${tool_version[${name}]}"
-                echo -n -e " version=${version}"
+                #echo -n -e " version=${version}"
 
                 binary="${tool_binary[${name}]}"
                 if test "${binary}" == "false"; then
@@ -389,7 +389,7 @@ while test "$#" -gt 0; do
                         binary="${target}/bin/${binary}"
                     fi
                 fi
-                echo -n -e " binary=${binary}"
+                #echo -n -e " binary=${binary}"
 
                 if test -f "${binary}"; then
                     echo -n -e " ${green}BINARY_PRESENT${reset}"
@@ -403,14 +403,14 @@ while test "$#" -gt 0; do
                 fi
 
                 check="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
-                if test -n "${check}"; then
-                    echo -n -e " check=${check//\$\{binary\}/${binary}}."
-                fi
+                #if test -n "${check}"; then
+                #    echo -n -e " check=${check//\$\{binary\}/${binary}}."
+                #fi
 
                 if test -n "${check}"; then
                     if test -x "${binary}"; then
                         installed_version="$(eval "${check}")"
-                        echo -n -e " installed_version=${installed_version}"
+                        #echo -n -e " installed_version=${installed_version}"
                     fi
 
                     if test "${installed_version}" == "${version}"; then
@@ -482,7 +482,7 @@ while test "$#" -gt 0; do
                 echo "${emoji_tool} Processing ${tool} ${version}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
-                    echo "${emoji_archive} Unpacking ${DIGEST}"
+                    #echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                     | tar --extract --gzip --directory=${target} --no-same-owner
                 done
