@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/jpillora/chisel/releases/download/v${version}/chisel_${version}_linux_${alt_arch}.gz" \
+| gunzip \
+>"${prefix}${target}/bin/chisel"
+chmod +x "${prefix}${target}/bin/chisel"
+EOF

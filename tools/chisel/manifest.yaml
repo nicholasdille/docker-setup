@@ -1,0 +1,12 @@
+name: chisel
+version: 1.7.7
+check: ${binary} | grep Version | tr -s ' ' | cut -d' ' -f3
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/jpillora/chisel
+description: Fast TCP/UDP tunnel over HTTP
+renovate:
+  datasource: github-releases
+  package: jpillora/chisel
+  extractVersion: ^v(?<version>.+?)$
