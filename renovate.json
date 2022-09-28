@@ -1141,6 +1141,17 @@
     },
     {
       "fileMatch": [
+        "^tools/flyctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "superfly/flyctl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/footloose/manifest.yaml$"
       ],
       "matchStrings": [

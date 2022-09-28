@@ -1,0 +1,12 @@
+name: flyctl
+version: 0.0.398
+check: ${binary} version | cut -d' ' -f2 | tr -d v
+tags:
+- type/cli
+- cicd
+homepage: https://github.com/superfly/flyctl
+description: Command line tools for fly.io services
+renovate:
+  datasource: github-releases
+  package: superfly/flyctl
+  extractVersion: ^v(?<version>.+?)$
