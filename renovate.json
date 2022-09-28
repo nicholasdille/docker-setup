@@ -1910,6 +1910,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kyverno/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kyverno/kyverno",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/lab/manifest.yaml$"
       ],
       "matchStrings": [

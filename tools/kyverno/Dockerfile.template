@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/kyverno/kyverno/releases/download/v${version}/kyverno-cli_v${version}_linux_x86_64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    kyverno
+"${prefix}${target}/bin/kyverno" completion bash >"${prefix}${target}/share/bash-completion/completions/kyverno"
+"${prefix}${target}/bin/kyverno" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kyverno.fish"
+"${prefix}${target}/bin/kyverno" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kyverno"
+EOF
