@@ -1,0 +1,11 @@
+name: cloudflared
+version: 2022.9.1
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/cloudflare/cloudflared
+description: Cloudflare Tunnel client (formerly Argo Tunnel)
+renovate:
+  datasource: github-releases
+  package: cloudflare/cloudflared

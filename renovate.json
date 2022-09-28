@@ -491,6 +491,16 @@
     },
     {
       "fileMatch": [
+        "^tools/cloudflared/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cloudflare/cloudflared",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/clusterawsadm/manifest.yaml$"
       ],
       "matchStrings": [
