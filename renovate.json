@@ -1172,6 +1172,17 @@
     },
     {
       "fileMatch": [
+        "^tools/furyctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sighupio/furyctl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/fuse-overlayfs/manifest.yaml$"
       ],
       "matchStrings": [

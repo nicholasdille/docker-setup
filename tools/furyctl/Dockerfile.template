@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/furyctl" \
+    "https://github.com/sighupio/furyctl/releases/download/v${version}/furyctl-linux-amd64"
+chmod +x "${prefix}${target}/bin/furyctl"
+"${prefix}${target}/bin/furyctl" completion bash >"${prefix}${target}/share/bash-completion/completions/furyctl"
+"${prefix}${target}/bin/furyctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/furyctl.fish"
+"${prefix}${target}/bin/furyctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_furyctl"
+EOF
