@@ -1,0 +1,12 @@
+name: shellcheck
+version: 0.8.0
+check: ""
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/koalaman/shellcheck
+description: Static analysis tool for shell scripts
+renovate:
+  datasource: github-releases
+  package: koalaman/shellcheck
+  extractVersion: ^v(?<version>.+?)$

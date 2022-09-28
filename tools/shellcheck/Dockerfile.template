@@ -1,0 +1,25 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+COPY --from=go-md2man / /
+
+RUN <<EOF
+apt-get update
+apt-get -y install \
+    xz-utils
+curl --silent --location "https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.${arch}.tar.xz" \
+| tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    shellcheck-v${version}/shellcheck
+curl --silent --location --output "${prefix}${target}/share/man/man1/shellcheck.1.md" \
+    "https://github.com/koalaman/shellcheck/raw/v${version}/shellcheck.1.md"
+go-md2man \
+    -in "${prefix}${target}/share/man/man1/shellcheck.1.md" \
+    -out "${prefix}${target}/share/man/man1/shellcheck.1"
+rm "${prefix}${target}/share/man/man1/shellcheck.1.md"
+EOF

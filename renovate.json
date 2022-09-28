@@ -2448,6 +2448,17 @@
     },
     {
       "fileMatch": [
+        "^tools/shellcheck/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "koalaman/shellcheck",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/shortnames/manifest.yaml$"
       ],
       "matchStrings": [
