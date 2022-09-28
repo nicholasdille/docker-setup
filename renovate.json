@@ -1646,6 +1646,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kpack-cli/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vmware-tanzu/kpack-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/krew/manifest.yaml$"
       ],
       "matchStrings": [

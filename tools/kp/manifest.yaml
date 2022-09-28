@@ -1,0 +1,12 @@
+name: kpack-cli
+version: 0.7.1
+check: ${binary} version | cut -d- -f1
+tags:
+- type/cli
+- container/build
+homepage: https://github.com/vmware-tanzu/kpack-cli
+description: Command line interface for interacting with kpack
+renovate:
+  datasource: github-releases
+  package: vmware-tanzu/kpack-cli
+  extractVersion: ^v(?<version>.+?)$

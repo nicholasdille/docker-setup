@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/kp" \
+    "https://github.com/vmware-tanzu/kpack-cli/releases/download/v${version}/kp-linux-amd64-${version}"
+chmod +x "${prefix}${target}/bin/kp"
+"${prefix}${target}/bin/kp" completion bash >"${prefix}${target}/share/bash-completion/completions/kp"
+"${prefix}${target}/bin/kp" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kp.fish"
+"${prefix}${target}/bin/kp" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kp"
+EOF
