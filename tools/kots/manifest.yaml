@@ -1,5 +1,5 @@
 name: kots
-version: 1.85.0
+version: 1.86.0
 binary: kubectl-kots
 check: ${binary} version | head -n 1 | cut -d' ' -f3
 tags:
