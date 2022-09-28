@@ -437,7 +437,8 @@ while test "$#" -gt 0; do
 
         inspect)
             show_banner
-            echo "${emoji_tool} Processing ${tool}"
+            for tool in ${install_tools}; do
+                echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read DIGEST; do
                     echo "${emoji_archive} Inspecting ${DIGEST}"
@@ -445,6 +446,7 @@ while test "$#" -gt 0; do
                     | tar --list --gzip \
                     | grep -v "/$"
                 done
+            done
             ;;
 
         generate)
