@@ -1,5 +1,6 @@
 name: sbom-tool
 version: 0.2.2
+check: ""
 tags:
 - category/security
 - sbom

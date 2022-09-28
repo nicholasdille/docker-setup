@@ -1,5 +1,6 @@
 name: argo
-version: 3.4.0
+version: 3.4.0^
+check: ${binary} version | grep ^argo | cut -d' ' -f2 | tr -d v
 tags:
 - tag1
 - tag2

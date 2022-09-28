@@ -1,6 +1,7 @@
 name: fuse-overlayfs-snapshotter
 version: 1.0.4
 binary: containerd-fuse-overlayfs-grpc
+check: ""
 dependencies:
 - fuse-overlayfs
 - containerd

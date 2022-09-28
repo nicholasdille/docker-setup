@@ -1,5 +1,6 @@
 name: watchtower
 version: 1.4.0
+check: ""
 dependencies:
 - docker
 tags:

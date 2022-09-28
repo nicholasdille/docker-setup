@@ -1,5 +1,6 @@
 name: dbui
 version: 0.7.0
+check: ""
 tags:
 - component/database
 - type/tui

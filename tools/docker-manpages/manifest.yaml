@@ -1,6 +1,7 @@
 name: docker-manpages
 version: 20.10.18
 binary: false
+check: ""
 tags:
 - org/docker
 - standard/docker

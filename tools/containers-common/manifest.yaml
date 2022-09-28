@@ -1,6 +1,7 @@
 name: containers-common
 version: 0.49.1
 binary: false
+check: ""
 dependencies:
 - go-md2man
 tags:

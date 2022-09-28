@@ -1,5 +1,6 @@
 name: trivy-operator
 version: 0.3.0
+check: ""
 tags:
 - type/daemon
 - category/security

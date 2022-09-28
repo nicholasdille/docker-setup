@@ -1,5 +1,6 @@
 name: podman-docker-shim
 version: 0.1.0
+check: ""
 dependencies:
 - podman
 tags:

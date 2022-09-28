@@ -1,5 +1,6 @@
 name: shdotenv
 version: 0.13.0
+check: ${binary} --version
 tags:
 - type/cli
 - category/development

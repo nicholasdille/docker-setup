@@ -1,6 +1,7 @@
 name: docker-sbom
 version: 0.6.1
 binary: ${target}/libexec/docker/cli-plugins/docker-sbom
+check: ${binary} sbom --version | cut -d, -f1 | cut -d' ' -f2
 dependencies:
 - docker
 tags:

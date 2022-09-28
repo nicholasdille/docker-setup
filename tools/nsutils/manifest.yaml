@@ -1,6 +1,7 @@
 name: nsutils
 version: 0.2
 binary: nslist
+check: ""
 dependencies:
 - docker
 tags:

@@ -1,5 +1,6 @@
 name: docker-credential-magic
 version: 0.8.1
+check: ${binary} version
 dependencies:
 - docker
 tags:

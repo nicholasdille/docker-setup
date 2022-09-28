@@ -1,5 +1,6 @@
 name: webhookd
 version: 1.15.0
+check: ""
 tags:
 - category/development
 - type/daemon

@@ -1,6 +1,7 @@
 name: shortnames
 version: 2022.02.08
 binary: false
+check: ""
 tags:
 - org/redhat
 - type/configuration

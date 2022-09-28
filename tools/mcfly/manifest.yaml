@@ -1,5 +1,6 @@
 name: mcfly
 version: 0.6.1
+check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
 homepage: https://github.com/cantino/mcfly

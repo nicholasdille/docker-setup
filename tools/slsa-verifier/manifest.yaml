@@ -1,5 +1,6 @@
 name: slsa-verifier
 version: 1.3.0
+check: ""
 tags:
 - category/security
 - type/cli

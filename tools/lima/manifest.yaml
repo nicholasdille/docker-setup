@@ -1,5 +1,6 @@
 name: lima
 version: 0.12.0
+check: limactl --version | cut -d' ' -f3
 tags:
 - type/cli
 - category/development

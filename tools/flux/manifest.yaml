@@ -1,5 +1,6 @@
 name: flux
 version: 0.34.0
+check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - gitops

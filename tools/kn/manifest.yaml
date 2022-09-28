@@ -1,5 +1,6 @@
 name: kn
 version: 1.7.0
+check: ""
 tags:
 - type/cli
 - category/development

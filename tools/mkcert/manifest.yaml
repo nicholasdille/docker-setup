@@ -1,5 +1,6 @@
 name: mkcert
 version: 1.4.4
+check: ${binary} --version | tr -d v
 tags:
 - type/cli
 - category/security

@@ -1,5 +1,6 @@
 name: sbom-operator
 version: 0.18.0
+check: ""
 tags:
 - type/daemon
 - category/security

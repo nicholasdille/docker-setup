@@ -1,6 +1,7 @@
 name: docker-compose-switch
 version: 1.0.5
 binary: docker-compose
+check: ""
 flags:
 - not-docker-compose-v1
 tags:

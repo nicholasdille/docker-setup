@@ -1,5 +1,6 @@
 name: kubectl-resources
 version: 0.2.0
+check: ""
 dependencies:
 - kubectl
 tags:

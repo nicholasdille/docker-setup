@@ -1,5 +1,6 @@
 name: zot
 version: 1.4.2
+check: ""
 tags:
 - standard/oci
 - container/registry

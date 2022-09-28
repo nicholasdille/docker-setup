@@ -1,5 +1,6 @@
 name: bypass4netns
 version: 0.3.0
+check: --version | grep ^bypass4netns | cut -d' ' -f3
 dependencies:
 - docker
 - slirp4netns

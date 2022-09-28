@@ -1,5 +1,6 @@
 name: kubesec
 version: 2.11.5
+check: ""
 tags:
 - category/security
 - type/cli

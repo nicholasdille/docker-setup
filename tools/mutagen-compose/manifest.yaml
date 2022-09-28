@@ -1,5 +1,6 @@
 name: mutagen-compose
 version: 0.15.4
+check: ${binary} version | grep ^Mutagen | cut -d' ' -f3
 dependencies:
 - mutagen
 tags:

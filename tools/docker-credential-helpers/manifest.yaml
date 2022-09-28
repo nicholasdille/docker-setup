@@ -1,6 +1,7 @@
 name: docker-credential-helpers
 version: 0.7.0
 binary: docker-credential-pass
+check: ${binary} version | cut -d' ' -f3 | tr -d v
 dependencies:
 - docker
 tags:

@@ -1,5 +1,7 @@
 name: bumblebee
 version: 0.0.13
+binary: bee
+check: ${binary} version
 tags:
 - type/cli
 - ebpf

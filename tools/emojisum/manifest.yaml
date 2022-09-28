@@ -1,5 +1,6 @@
 name: emojisum
 version: 2
+check: ""
 dependencies:
 - docker
 tags:

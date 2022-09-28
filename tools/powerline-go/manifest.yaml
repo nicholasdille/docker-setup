@@ -1,5 +1,6 @@
 name: powerline-go
 version: 1.22.1
+check: ""
 tags:
 - type/cli
 homepage: https://github.com/justjanne/powerline-go

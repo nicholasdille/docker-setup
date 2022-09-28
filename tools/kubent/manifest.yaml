@@ -1,5 +1,6 @@
 name: kubent
 version: 0.5.1
+check: ""
 tags:
 - type/cli
 - kubernetes
