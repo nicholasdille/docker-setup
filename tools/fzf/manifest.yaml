@@ -1,5 +1,5 @@
 name: fzf
-version: 0.33.0
+version: 0.34.0
 check: ${binary} --version | cut -d' ' -f1
 tags:
 - type/cli
