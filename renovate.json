@@ -1226,6 +1226,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gatekeeper/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "open-policy-agent/gatekeeper",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gh/manifest.yaml$"
       ],
       "matchStrings": [

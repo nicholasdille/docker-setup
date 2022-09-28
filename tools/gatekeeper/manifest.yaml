@@ -1,0 +1,14 @@
+name: gatekeeper
+version: 3.9.0
+binary: gator
+check: ""
+tags:
+- type/daemon
+- category/security
+- kubernetes
+homepage: https://github.com/open-policy-agent/gatekeeper
+description: Policy Controller for Kubernetes
+renovate:
+  datasource: github-releases
+  package: open-policy-agent/gatekeeper
+  extractVersion: ^v(?<version>.+?)$
