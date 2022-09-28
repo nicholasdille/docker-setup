@@ -1,0 +1,11 @@
+name: tunnelto
+version: 0.1.18
+check: ""
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/agrinman/tunnelto
+description: Expose your local web server to the internet with a public URL
+renovate:
+  datasource: github-releases
+  package: agrinman/tunnelto

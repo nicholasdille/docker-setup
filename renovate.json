@@ -2640,6 +2640,16 @@
     },
     {
       "fileMatch": [
+        "^tools/tunnelto/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "agrinman/tunnelto",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/uidmap/manifest.yaml$"
       ],
       "matchStrings": [
