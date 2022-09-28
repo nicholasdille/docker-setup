@@ -14,7 +14,7 @@ ARG version
 
 # executable
 #RUN <<EOF
-#curl --silent --location "${prefix}${target}/bin/foo" \
+#curl --silent --location --output "${prefix}${target}/bin/foo" \
 #    ""
 #chmod +x "${prefix}${target}/bin/foo"
 #EOF
