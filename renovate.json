@@ -2220,6 +2220,17 @@
     },
     {
       "fileMatch": [
+        "^tools/opa/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "open-policy-agent/opa",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/oras/manifest.yaml$"
       ],
       "matchStrings": [

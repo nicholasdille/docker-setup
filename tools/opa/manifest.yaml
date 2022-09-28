@@ -1,0 +1,12 @@
+name: opa
+version: 0.44.0
+check: ${binary} version | grep ^Version | cut -d' ' -f2
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/open-policy-agent/opa
+description: Open source, general-purpose policy engine
+renovate:
+  datasource: github-releases
+  package: open-policy-agent/opa
+  extractVersion: ^v(?<version>.+?)$
