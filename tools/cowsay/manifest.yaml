@@ -1,0 +1,12 @@
+name: cowsay
+version: 2.0.4
+check: ""
+tags:
+- type/cli
+- fun
+homepage: https://github.com/Code-Hex/Neo-cowsay
+description: Cowsay is reborn
+renovate:
+  datasource: github-releases
+  package: Code-Hex/Neo-cowsay
+  extractVersion: ^v(?<version>.+?)$

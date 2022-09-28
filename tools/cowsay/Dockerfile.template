@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/Code-Hex/Neo-cowsay/releases/download/v${version}/cowsay_${version}_Linux_x86_64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    cowsay \
+    cowthink
+curl --silent --location --output "${prefix}${target}/share/man/man1/cowsay.1" \
+    "https://github.com/Code-Hex/Neo-cowsay/raw/v${version}/doc/cowsay.1"
+EOF

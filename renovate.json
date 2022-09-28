@@ -653,6 +653,17 @@
     },
     {
       "fileMatch": [
+        "^tools/cowsay/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "Code-Hex/Neo-cowsay",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/crane/manifest.yaml$"
       ],
       "matchStrings": [
