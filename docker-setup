@@ -3,7 +3,7 @@ set -o errexit
 
 : "${docker_setup_version:=main}"
 
-function show_banner() {
+if test -t 1; then
     cat <<"EOF"
      _            _                           _
   __| | ___   ___| | _____ _ __      ___  ___| |_ _   _ _ __
@@ -18,7 +18,39 @@ This script will install Docker Engine as well as useful tools
 from the container ecosystem.
 
 EOF
+fi
+
+: "${debug:=false}"
+function debug() {
+    if ${debug}; then
+        >&2 echo -e "${magenta}[DEBUG] $*${reset}"
+    fi
 }
+if echo "$@" | grep -q "^--debug$"; then
+    debug=true
+fi
+
+: "${trace:=false}"
+function trace() {
+    if ${trace}; then
+        >&2 echo -e "${grey}[TRACE] $*${reset}"
+    fi
+}
+if echo "$@" | grep -q "^--trace$"; then
+    debug=true
+    trace=true
+fi
+
+: "${profile:=false}"
+SECONDS=0
+function profile() {
+    if ${profile}; then
+        >&2 echo -e "${yellow}[PROFILE] $* @ ${SECONDS} seconds${reset}"
+    fi
+}
+if echo "$@" | grep -q "^--profile$"; then
+    profile=true
+fi
 
 reset="\e[39m\e[49m"
 green="\e[92m"
@@ -40,22 +72,25 @@ emoji_push="$(echo -e "\U0001F4E4")"
 emoji_pull="$(echo -e "\U0001F4E5")"
 emoji_build="$(echo -e "\U0001F9F1")"
 emoji_inspect="$(echo -e "\U0001F50D")"
+emoji_done="$(echo -e "\u2713")"
+emoji_todo="$(echo -e "\u21bb")"
+emoji_missing="$(echo -e "\u2717")"
 
 : "${REGISTRY:=ghcr.io}"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
 if ! test -w "${docker_setup_cache}"; then
-    >&2 echo "WARNING: Cache directory <${docker_setup_cache}> is not writable."
+    debug "WARNING: Cache directory <${docker_setup_cache}> is not writable."
     docker_setup_cache="${HOME}/.cache/docker-setup"
-    >&2 echo "WARNING: Using cache directory <${docker_setup_cache}>"
+    debug "WARNING: Using cache directory <${docker_setup_cache}>"
 fi
 mkdir -p "${docker_setup_cache}"
 
 export PATH="${docker_setup_cache}/bin:${PATH}"
 REGCLIENT_VERSION=0.4.5
 if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
-    >&2 echo "Installing regctl"
+    debug "Installing regctl"
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --output "${docker_setup_cache}/bin/regctl" \
         "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
@@ -63,7 +98,7 @@ if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr 
 fi
 YQ_VERSION=4.27.5
 if ! type yq >/dev/null 2>&1 || test "$(yq --version | cut -d' ' -f4)" != "${YQ_VERSION}"; then
-    >&2 echo "Installing yq"
+    debug "Installing yq"
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --output "${docker_setup_cache}/bin/yq" \
         "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
@@ -71,7 +106,7 @@ if ! type yq >/dev/null 2>&1 || test "$(yq --version | cut -d' ' -f4)" != "${YQ_
 fi
 JQ_VERSION=1.6
 if ! type jq >/dev/null 2>&1 || test "$(jq --version | cut -d- -f2)" != "${JQ_VERSION}"; then
-    >&2 echo "Installing jq"
+    debug "Installing jq"
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --output "${docker_setup_cache}/bin/yq" \
         "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
@@ -84,7 +119,7 @@ fi
 
 function update() {
     regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-    | while read DIGEST; do
+    | while read -r DIGEST; do
         regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
         | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
     done
@@ -98,7 +133,7 @@ else
         update
     fi
 fi
->&2 echo "Using ${docker_setup_metadata_file}"
+debug "Using ${docker_setup_metadata_file}"
 
 declare -A tool_json
 mapfile tool_json_array < <(jq --raw-output --compact-output '.tools[] | "\(.name)=\(.)"' "${docker_setup_metadata_file}")
@@ -120,7 +155,7 @@ else
     curl --silent --location --output "${docker_setup_dockerfile_template}" \
         https://raw.githubusercontent.com/nicholasdille/docker-setup/${docker_setup_version}/tools/Dockerfile.template
 fi
->&2 echo "Using ${docker_setup_dockerfile_template}"
+debug "Using ${docker_setup_dockerfile_template}"
 
 all_tools="$(
     jq --raw-output '.tools[] | .name' "${docker_setup_metadata_file}" \
@@ -136,32 +171,37 @@ install_tools=""
 declare -A tool_version
 declare -A tool_binary
 declare -A tool_check
+declare -A tool_deps
+declare -A tool_marker_file_present
+declare -A tool_installed_version
+declare -A tool_version_matches
+declare -A tool_installed
+declare -A tool_operator
+declare -A tool_color
+declare -A tool_marker
 
 function resolve_dependencies() {
     local name=$1
     shift
-    local state="$@"
+    local state="$*"
 
-    #>&2 echo "resolve_dependencies(${name}): state=${state}."
+    trace "resolve_dependencies(${name}): state=${state}."
 
     if echo "${state}" | tr ' ' '\n' | grep -q "^${name}$"; then
-        #>&2 echo "resolve_dependencies(${name}): Already present"
+        trace "resolve_dependencies(${name}): Already present"
         echo "${state}"
         return
     fi
 
     local tool_deps
-    tool_deps="$(
-        jq --raw-output 'select(.dependencies != null) | .dependencies[]' <<<${tool_json[${name}]} \
-        | xargs echo
-    )"
-    #>&2 echo "resolve_dependencies(${name}): deps=${tool_deps}."
+    tool_deps="${tool_deps[${name}]}"
+    trace "resolve_dependencies(${name}): deps=${tool_deps}."
     
     local dep
     for dep in ${tool_deps}; do
-        #>&2 echo "resolve_dependencies(${name}): calling self for ${dep} with state=${state}."
+        trace "resolve_dependencies(${name}): calling self for ${dep} with state=${state}."
         state="$(resolve_dependencies "${dep}" "${state}")"
-        #>&2 echo "resolve_dependencies(${name}): returned for ${dep} with state=${state}."
+        trace "resolve_dependencies(${name}): returned for ${dep} with state=${state}."
     done
 
     echo "${state} ${name}" | xargs
@@ -176,6 +216,7 @@ function resolve_dependencies_wrapper() {
 }
 
 function generate() {
+    # shellcheck disable=SC2002
     CONTENT="$(
         cat "${docker_setup_dockerfile_template}" \
         | sed -E "s|^ARG ref=main|ARG ref=${docker_setup_version}|"
@@ -195,22 +236,161 @@ function generate() {
 
 function warm_cache() {
     local temp
+
+    profile "Starting cache warming"
     
     temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
         local value="${pair#*=}"
-        #>&2 echo "VERSION name=${name},value=${value}."
+        trace "VERSION name=${name},value=${value}."
         tool_version[${name}]=${value}
     done
+
+    profile "Done reading versions"
 
     temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
         local value="${pair#*=}"
-        #>&2 echo "BINARY name=${name},value=${value}."
+        trace "BINARY name=${name},value=${value}."
         tool_binary[${name}]=${value}
     done
+
+    profile "Done reading binaries"
+
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(" "))"' "${docker_setup_metadata_file}")"
+    for pair in ${temp}; do
+        local name="${pair%%=*}"
+        local value="${pair#*=}"
+        trace "DEP name=${name},value=${value}."
+        tool_deps[${name}]=${value}
+    done
+
+    profile "Done reading dependencies"
+
+    if ! ${deps}; then
+        install_tools="$(resolve_dependencies_wrapper)"
+    else
+        install_tools="${selected_tools}"
+    fi
+
+    profile "Done resolving dependencies"
+
+    for name in ${install_tools}; do
+        debug "${name}:"
+
+        local version="${tool_version[${name}]}"
+        debug "  version=${version}."
+
+        if test -f "${docker_setup_cache}/${name}/${version}"; then
+            debug "  ${green}MARKER_FILE_EXISTS${reset}"
+            tool_marker_file_present[${name}]=true
+        else
+            debug "  ${red}MARKER_FILE_MISSING${reset}"
+            tool_marker_file_present[${name}]=false
+        fi
+
+        local binary="${tool_binary[${name}]}"
+        if test "${binary}" == "false"; then
+            debug "  ${red}NO_BINARY_DEFINED${reset}"
+
+            if ${tool_marker_file_present[${name}]}; then
+                debug "  Setting green"
+                tool_installed[${name}]=true
+                tool_operator[${name}]="="
+                tool_color[${name}]="${green}"
+                tool_marker[${name}]="${emoji_done}"
+            
+            else
+                debug "  Setting red"
+                tool_installed[${name}]=false
+                tool_operator[${name}]="!"
+                tool_color[${name}]="${red}"
+                tool_marker[${name}]="${emoji_missing}"
+            fi
+            continue
+
+        else
+            if test -z "${binary}"; then
+                binary="${name}"
+            fi
+            # shellcheck disable=SC2001
+            binary="$(
+                echo "${binary}" \
+                | sed "s|\${target}|${target}|g"
+            )"
+            if test "${binary:0:1}" != "/"; then
+                binary="${target}/bin/${binary}"
+            fi
+            tool_binary[${name}]="${binary}"
+        fi
+        debug "  binary=${binary}."
+
+        local check
+        check="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
+        if test -n "${check}"; then
+            debug "  check=${check//\$\{binary\}/${binary}}."
+        fi
+        tool_check[${name}]="${check}"
+
+        if test -n "${check}"; then
+            debug "  ${green}CHECK_EXISTS${reset}"
+            tool_installed[${name}]=false
+            tool_version_matches[${name}]=false
+
+            if test -f "${binary}"; then
+                debug "  ${green}BINARY_EXISTS${reset}"
+            fi
+
+            if test -x "${binary}"; then
+                debug "  ${green}BINARY_EXECUTABLE${reset}"
+                installed_version="$(eval "${check}")"
+                tool_installed_version[${name}]="${installed_version}"
+                debug "  installed_version=${installed_version}."
+
+                if test "${installed_version}" == "${version}"; then
+                    tool_installed[${name}]=true
+                    tool_version_matches[${name}]=true
+                    debug "  ${green}VERSION_MATCHES${reset}"
+
+                else
+                    tool_installed[${name}]=true
+                    tool_version_matches[${name}]=false
+                    debug "  ${red}VERSION_MISMATCH${reset}"
+                fi
+            fi
+
+        elif ${tool_marker_file_present[${name}]}; then
+            debug "  ${red}No check defined${reset}"
+            tool_installed[${name}]=true
+        fi
+
+        if ${tool_installed[${name}]}; then
+            if ${tool_version_matches[${name}]}; then
+                debug "  Setting green"
+                tool_operator[${name}]="="
+                tool_color[${name}]="${green}"
+                tool_marker[${name}]="${emoji_done}"
+
+            else
+                debug "  Setting yellow"
+                tool_operator[${name}]="<"
+                tool_color[${name}]="${yellow}"
+                tool_marker[${name}]="${emoji_todo}"
+            fi
+
+        else
+            debug "  Setting red"
+            tool_operator[${name}]="!"
+            tool_color[${name}]="${red}"
+            tool_marker[${name}]="${emoji_missing}"
+        fi
+
+        profile "Done with ${name}"
+    done
+
+    profile "Done warming cache"
 }
 
 function show_help() {
@@ -220,13 +400,13 @@ docker-setup
 Commands:
   update                  Update tools manifests
   upgrade                 Update docker-setup
-  ls                      List available tools
+  ls, list, l             List available tools
   info                    Show tool manifest
-  tags                    Show tags
-  dependencies            Resolve dependencies
+  tags, t                 Show tags
+  dependencies, deps, d   Resolve dependencies
   inspect                 Show contents image
-  generate                Generate Dockerfile
-  build                   Build container image
+  generate, gen, g        Generate Dockerfile
+  build, b                Build container image
   build-flat              Build container image using "docker commit"
   install                 Install natively
   install-from-registry   Install 
@@ -234,15 +414,33 @@ Commands:
 
 Global options:
   --help                  Display help
+  --debug                 Display debug output
+  --trace                 Display trace output
+  --profile               Display timing information
   --version               Display version
 EOF
 }
 
 : "${target:=/usr/local}"
+: "${deps:=false}"
+: "${reinstall:=false}"
 while test "$#" -gt 0; do
     case "$1" in
         --version)
             echo "docker-setup version ${docker_setup_version}"
+            ;;
+
+        --debug)
+            debug=true
+            ;;
+
+        --trace)
+            debug=true
+            trace=true
+            ;;
+
+        --profile)
+            profile=true
             ;;
 
         --help)
@@ -259,10 +457,6 @@ while test "$#" -gt 0; do
             ;;
 
         --tools|--tools=*)
-            if test -n "${install_tools}"; then
-                echo "ERROR: Tools already selected. Cannot process --tools."
-                exit 1
-            fi
             if test "$1" == "--tools"; then
                 shift
                 tools=$1
@@ -271,11 +465,11 @@ while test "$#" -gt 0; do
             fi
             case "${tools}" in
                 all)
-                    >&2 echo "Selected all tools"
+                    debug "Selected all tools"
                     selected_tools="${all_tools}"
                     ;;
                 default)
-                    >&2 echo "Selected default tools"
+                    debug "Selected default tools"
                     selected_tools="${default_tools}"
                     ;;
                 installed)
@@ -283,19 +477,13 @@ while test "$#" -gt 0; do
                     exit 1
                     ;;
                 *)
-                    >&2 echo "Selected custom list of tools"
                     selected_tools="$(echo "${tools}" | tr ',' ' ')"
+                    debug "Selected custom list of tools: ${selected_tools}"
                     ;;
             esac
-            install_tools="$(resolve_dependencies_wrapper)"
-            warm_cache
             ;;
 
         --tags|--tags=*)
-            if test -n "${install_tools}"; then
-                echo "ERROR: Tools already selected. Cannot process --tags."
-                exit 1
-            fi
             if test "$1" == "--tags"; then
                 shift
                 tags=$1
@@ -325,9 +513,20 @@ while test "$#" -gt 0; do
             set -- --installed --tools=installed "$@"
             ;;
 
+        --deps)
+            deps=true
+            ;;
+
+        --no-deps)
+            deps=false
+            ;;
+
+        --reinstall)
+            reinstall=true
+            ;;
+
         update)
             update
-            exit
             ;;
 
         upgrade)
@@ -336,111 +535,48 @@ while test "$#" -gt 0; do
             exec curl --silent --location -o "$0" https://github.com/nicholasdille/docker-setup/raw/main/docker-setup
             ;;
             
-        ls)
-            show_banner
+        ls|list|l)
             jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
             | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
             ;;
 
         info)
-            show_banner
-            shift
-            name=$1
-            if test -z "${name}"; then
-                echo "No tool name specified"
-                exit 1
-            fi
-            shift
-            yq --prettyPrint <<<"${tool_json[${name}]}"
+            warm_cache
+            for name in ${install_tools}; do
+                echo "---"
+                yq --prettyPrint <<<"${tool_json[${name}]}"
+            done
             echo
             ;;
 
-        tags)
-            show_banner
+        tags|t)
             jq -r '.tools[].tags[]' "${docker_setup_metadata_file}" | sort | uniq | xargs echo
             ;;
 
-        plan)
+        plan|p|status|s)
+            warm_cache
+            echo
             for name in ${install_tools}; do
-                echo -n -e "${name}:"
-
-                version="${tool_version[${name}]}"
-                #echo -n -e " version=${version}"
-
-                binary="${tool_binary[${name}]}"
-                if test "${binary}" == "false"; then
-                    if test -f "${docker_setup_cache}/${name}/${version}"; then
-                        echo -n -e " ${green}MARKER_FILE_PRESENT${reset}"
-                    else
-                        echo -n -e " ${red}MARKER_FILE_MISSING${reset}"
-                    fi
-                    echo
-                    continue
-
-                else
-                    if test -z "${binary}"; then
-                        binary="${name}"
-                    fi
-                    binary="$(
-                        echo "${binary}" \
-                        | sed "s|\${target}|${target}|g"
-                    )"
-                    if test "${binary:0:1}" != "/"; then
-                        binary="${target}/bin/${binary}"
-                    fi
+                tool_version_string="${tool_operator[${name}]}${tool_version[${name}]}"
+                if test -n "${tool_installed_version[${name}]}" && test "${tool_installed_version[${name}]}" != "${tool_version[${name}]}"; then
+                    tool_version_string="-${tool_installed_version[${name}]}${tool_version_string}"
                 fi
-                #echo -n -e " binary=${binary}"
-
-                if test -f "${binary}"; then
-                    echo -n -e " ${green}BINARY_PRESENT${reset}"
-
-                    if test -x "${binary}"; then
-                        echo -n -e " ${green}BINARY_EXECUTABLE${reset}"
-                    fi
-
-                else
-                    echo -n -e " ${red}BINARY_MISSING${reset}"
-                fi
-
-                check="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
-                #if test -n "${check}"; then
-                #    echo -n -e " check=${check//\$\{binary\}/${binary}}."
-                #fi
-
-                if test -n "${check}"; then
-                    if test -x "${binary}"; then
-                        installed_version="$(eval "${check}")"
-                        #echo -n -e " installed_version=${installed_version}"
-                    fi
-
-                    if test "${installed_version}" == "${version}"; then
-                        echo -n -e " ${green}VERSION_MATCHES${reset}"
-                    else
-                        echo -n -e " ${red}VERSION_MISMATCH${reset}"
-                    fi
-
-                else
-                    if test -f "${docker_setup_cache}/${name}/${version}"; then
-                        echo -n -e " ${green}MARKER_FILE_PRESENT${reset}"
-                    else
-                        echo -n -e " ${red}MARKER_FILE_MISSING${reset}"
-                    fi
-                fi
-
-                echo
+                echo -n -e "${tool_marker[${name}]}${tool_color[${name}]}${name}${reset}${tool_version_string}${reset}  "
             done
+            echo
             ;;
 
-        dependencies)
+        dependencies|deps|d)
+            warm_cache
             echo "${install_tools}"
             ;;
 
         inspect)
-            show_banner
+            warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-                | while read DIGEST; do
+                | while read -r DIGEST; do
                     echo "${emoji_archive} Inspecting ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                     | tar --list --gzip \
@@ -449,54 +585,50 @@ while test "$#" -gt 0; do
             done
             ;;
 
-        generate)
-            generate ${state}
-            exit
+        generate|gen|g)
+            warm_cache
+            generate ${install_tools}
             ;;
 
-        build)
-            show_banner
+        build|b)
             shift
             image=$1
             if test -z "${image}"; then
                 echo "No image name specified"
                 exit 1
             fi
+            warm_cache
             echo "Building image ${image} with $# tool(s)..."
             generate ${install_tools} \
             | docker build --tag "${image}" -
-            exit
             ;;
 
-        install)
-            show_banner
-            shift
-            target=$1
-            if test -z "${target}"; then
-                echo "No target specified"
-                exit 1
-            fi
-            shift
-            echo "Using target ${target}"
+        install|i)
+            echo
+            debug "Using target ${target}"
             mkdir -p "${target}"
+            warm_cache
             for tool in ${install_tools}; do
+                if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
+                    echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${version}"
+                    continue
+                fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
-                echo "${emoji_tool} Processing ${tool} ${version}"
+                echo "${emoji_tool} Installing ${tool} ${version}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-                | while read DIGEST; do
+                | while read -r DIGEST; do
                     #echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
-                    | tar --extract --gzip --directory=${target} --no-same-owner
+                    | tar --extract --gzip --directory="${target/"usr/local"/}" --no-same-owner
                 done
-                mkdir -p "/var/cache/docker-setup/${tool}"
-                touch "/var/cache/docker-setup/${tool}/${version}"
+                mkdir -p "${docker_setup_cache}/${tool}"
+                touch "${docker_setup_cache}/${tool}/${version}"
             done
             if test -d /var/lib/docker-setup/post_install; then
-                mkdir -p /var/lib/docker-setup /var/cache/docker-setup
-                export prefix=
-                export target=${prefix}/usr/local
+                mkdir -p /var/lib/docker-setup "${docker_setup_cache}"
+                export prefix=""
                 export relative_target=/usr/local
-                export docker_setup_cache=/var/cache/docker-setup
+                export docker_setup_cache
                 export docker_setup_contrib=/var/lib/docker-setup/contrib
                 export docker_setup_manifests=/var/lib/docker-setup/manifests
                 FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
@@ -509,11 +641,9 @@ while test "$#" -gt 0; do
                     fi
                 done
             fi
-            exit
             ;;
 
         install-from-registry)
-            show_banner
             if ! type docker >/dev/null 2>&1; then
                 echo "ERROR: Command <install> requires docker."
                 exit 1
@@ -525,20 +655,15 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
-            echo "Using target ${target}"
-            if test "$#" == 0; then
-                echo "No tools specified"
-                exit 1
-            fi
+            debug "Using target ${target}"
             mkdir -p "${target}"
+            warm_cache
             generate ${install_tools} \
             | docker build --output "${target}" -
             # TODO: post_install
-            exit
             ;;
 
         install-from-image)
-            show_banner
             if ! type docker >/dev/null 2>&1; then
                 echo "ERROR: Command <install> requires docker."
                 exit 1
@@ -550,11 +675,8 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
-            echo "Using target ${target}"
-            if test "$#" == 0; then
-                echo "No tools specified"
-                exit 1
-            fi
+            debug "Using target ${target}"
+            warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
@@ -563,7 +685,7 @@ while test "$#" -gt 0; do
                 docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
                 | tar --extract --to-stdout manifest.json \
                 | jq --raw-output '.[].Layers[]' \
-                | while read FILE; do
+                | while read -r FILE; do
                     echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
                     docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
                     | tar --extract --to-stdout "${FILE}" \
@@ -572,11 +694,9 @@ while test "$#" -gt 0; do
                 echo "+ Done"
             done
             # TODO: post_install
-            exit
             ;;
         
         build-flat)
-            show_banner
             if ! type docker >/dev/null 2>&1; then
                 echo "ERROR: Command <install> requires docker."
                 exit 1
@@ -593,11 +713,12 @@ while test "$#" -gt 0; do
                 echo "No target image name specified"
                 exit 1
             fi
-            docker create --name docker-setup-install-flat ${base}
+            warm_cache
+            docker create --name docker-setup-install-flat "${base}"
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-                | while read DIGEST; do
+                | while read -r DIGEST; do
                     echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
                     | gunzip \
@@ -606,13 +727,12 @@ while test "$#" -gt 0; do
             done
             # TODO: post_install
             echo "${emoji_whale} Creating image ${image}"
-            docker commit docker-setup-install-flat ${image}
+            docker commit docker-setup-install-flat "${image}"
             docker rm docker-setup-install-flat >/dev/null 2>&1
-            exit
             ;;
 
         *)
-            echo "ERROR: Unknown or empty command <${command}>"
+            echo "ERROR: Unknown or empty command <$1>"
             show_help
             exit 1
             ;;
