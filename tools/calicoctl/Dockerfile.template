@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/calicoctl" \
+    "https://github.com/projectcalico/calico/releases/download/v${version}/calicoctl-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/calicoctl"
+EOF

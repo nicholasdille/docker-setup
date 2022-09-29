@@ -436,6 +436,17 @@
     },
     {
       "fileMatch": [
+        "^tools/calicoctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectcalico/calico",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cas/manifest.yaml$"
       ],
       "matchStrings": [
