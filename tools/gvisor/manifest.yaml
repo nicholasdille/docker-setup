@@ -3,6 +3,7 @@ version: 20220926
 binary: ${target}/bin/runsc
 check: ${binary} --version | grep "runsc version" | cut -d' ' -f3
 dependencies:
+- containerd
 - docker
 tags:
 - org/google

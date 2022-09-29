@@ -2,8 +2,6 @@ name: util-linux
 version: 2.38.1
 binary: lsns
 check: ${binary} --version | cut -d' ' -f4
-dependencies:
-- docker
 tags:
 - kernel/namespaces
 - type/cli

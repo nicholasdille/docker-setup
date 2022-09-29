@@ -1,8 +1,6 @@
 name: tasker
 version: 0.9
 check: ${binary} --version
-dependencies:
-- docker
 tags:
 - type/cli
 - management

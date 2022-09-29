@@ -2,8 +2,6 @@ name: uidmap
 version: 4.11.1
 binary: newuidmap
 check: ""
-dependencies:
-- docker
 tags:
 - kernel/pid
 - type/cli

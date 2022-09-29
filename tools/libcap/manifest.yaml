@@ -2,8 +2,6 @@ name: libcap
 version: 2.66
 binary: ${target}/sbin/setcap
 check: ""
-dependencies:
-- docker
 tags:
 - kernel/capabilities
 - type/cli

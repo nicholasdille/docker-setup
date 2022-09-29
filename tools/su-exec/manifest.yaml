@@ -1,8 +1,6 @@
 name: su-exec
 version: 0.2
 check: ""
-dependencies:
-- docker
 tags:
 - container/su
 - type/cli

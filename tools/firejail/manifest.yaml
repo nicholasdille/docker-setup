@@ -1,8 +1,6 @@
 name: firejail
 version: 0.9.70
 check: ${binary} --version | head -n 1 | cut -d' ' -f3
-dependencies:
-- docker
 tags:
 - category/security
 - type/cli

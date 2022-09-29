@@ -2,8 +2,6 @@ name: libcap-ng
 version: 0.8.3
 binary: captest
 check: ""
-dependencies:
-- docker
 tags:
 - kernel/capabilities
 - type/cli

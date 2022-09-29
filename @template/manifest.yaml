@@ -1,8 +1,8 @@
-name: tool_name
+name: foo
 version: 0.1.2
 check: ""
 dependencies:
-- docker
+- bar
 tags:
 - tag1
 - tag2
