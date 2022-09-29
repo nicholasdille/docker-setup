@@ -1,6 +1,6 @@
 name: cilium
 version: 0.12.4
-check: ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
+check: timeout 3 ${binary} version | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
 - component/network

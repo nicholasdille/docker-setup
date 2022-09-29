@@ -1,6 +1,6 @@
 name: tkn
 version: 0.26.0
-check: ${binary} version | cut -d' ' -f3
+check: timeout 3 ${binary} version | cut -d' ' -f3
 tags:
 - type/cli
 - type/development

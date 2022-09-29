@@ -1,6 +1,7 @@
 name: fx
 version: 24.0.0
-check: ${binary} | grep "fx" | head -n 1 | tr -s ' ' | cut -d' ' -f3
+#check: ${binary} | grep "fx" | head -n 1 | tr -s ' ' | cut -d' ' -f3
+check: ""
 tags:
 - type/cli
 - format

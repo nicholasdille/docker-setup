@@ -12,6 +12,7 @@ COPY --link --from=go-md2man / /
 RUN <<EOF
 curl --silent --location --output "${prefix}${target}/bin/runc" \
     "https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}"
+chmod +x "${prefix}${target}/bin/runc"
 EOF
 
 RUN <<EOF
