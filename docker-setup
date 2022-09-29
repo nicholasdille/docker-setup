@@ -610,7 +610,7 @@ while test "$#" -gt 0; do
             warm_cache
             for tool in ${install_tools}; do
                 if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
-                    echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${version}"
+                    echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${tool_version[${name}]}"
                     continue
                 fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
