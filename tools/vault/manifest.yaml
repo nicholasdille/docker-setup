@@ -1,5 +1,5 @@
 name: vault
-version: 1.11.3
+version: 1.11.4
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
