@@ -1,5 +1,5 @@
 name: porter
-version: 0.38.13
+version: 1.0.0
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
