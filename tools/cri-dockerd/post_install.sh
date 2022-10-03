@@ -10,7 +10,7 @@ if test -f "/etc/crictl.yaml"; then
 fi
 
 echo "Patch systemd unit"
-sed -i "s|ExecStart=/usr/bin/cri-dockerd|ExecStart=${relative_target}/bin/cri-dockerd|" "/etc/systemd/system/cri-docker.service"
+sed -i "s|ExecStart=/usr/bin/cri-dockerd|ExecStart=${target}/bin/cri-dockerd|" "/etc/systemd/system/cri-docker.service"
 if systemctl >/dev/null 2>&1; then
     echo "Reload systemd"
     systemctl daemon-reload

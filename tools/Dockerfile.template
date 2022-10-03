@@ -33,7 +33,6 @@ if test -d /var/lib/docker-setup/post_install; then
     mkdir -p /var/cache/docker-setup
     export prefix=
     export target=${prefix}/usr/local
-    export relative_target=/usr/local
     export docker_setup_cache=/var/cache/docker-setup
     export docker_setup_contrib=/var/lib/docker-setup/contrib
     export docker_setup_manifests=/var/lib/docker-setup/manifests
