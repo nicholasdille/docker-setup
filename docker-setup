@@ -627,6 +627,7 @@ while test "$#" -gt 0; do
             if test -d /var/lib/docker-setup/post_install; then
                 mkdir -p /var/lib/docker-setup "${docker_setup_cache}"
                 export prefix=""
+                export target
                 export docker_setup_cache
                 export docker_setup_contrib=/var/lib/docker-setup/contrib
                 export docker_setup_manifests=/var/lib/docker-setup/manifests
