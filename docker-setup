@@ -421,7 +421,8 @@ Global options:
 EOF
 }
 
-: "${target:=/usr/local}"
+#: "${target:=/usr/local}"
+target=/usr/local
 : "${deps:=false}"
 : "${reinstall:=false}"
 while test "$#" -gt 0; do
@@ -447,13 +448,14 @@ while test "$#" -gt 0; do
             show_help
             ;;
         
-        --target=*)
-            target="${1#*=}"
-            ;;
-
-        --target)
-            shift
-            target="$1"
+        --target|--target=*)
+            if test "$1" == "--target"; then
+                shift
+                target="$1"
+            else
+                target="${1#*=}"
+            fi
+            >&2 echo "Target must be /usr/local for now"
             ;;
 
         --tools|--tools=*)
