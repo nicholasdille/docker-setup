@@ -12,7 +12,7 @@ tags:
 - type/daemon
 - kubernetes
 homepage: https://github.com/Mirantis/cri-dockerd
-description: ""
+description: Shim for Docker Engine that lets you control Docker via the Kubernetes Container Runtime Interface
 renovate:
   datasource: github-releases
   package: Mirantis/cri-dockerd
