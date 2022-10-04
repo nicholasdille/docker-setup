@@ -193,12 +193,12 @@ function resolve_dependencies() {
         return
     fi
 
-    local tool_deps
-    tool_deps="${tool_deps[${name}]}"
+    local deps
+    deps="${tool_deps[${name}]}"
     trace "resolve_dependencies(${name}): deps=${tool_deps}."
     
     local dep
-    for dep in ${tool_deps}; do
+    for dep in ${deps}; do
         trace "resolve_dependencies(${name}): calling self for ${dep} with state=${state}."
         state="$(resolve_dependencies "${dep}" "${state}")"
         trace "resolve_dependencies(${name}): returned for ${dep} with state=${state}."
@@ -263,8 +263,10 @@ function warm_cache() {
     for pair in ${temp}; do
         local name="${pair%%=*}"
         local value="${pair#*=}"
-        trace "DEP name=${name},value=${value}."
-        tool_deps[${name}]=${value}
+        if test "${value}" != "${name}"; then
+            trace "DEP name=${name},value=${value}."
+            tool_deps[${name}]="${value}"
+        fi
     done
 
     profile "Done reading dependencies"

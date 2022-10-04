@@ -1,6 +1,8 @@
 name: shellcheck
 version: 0.8.0
 check: ""
+dependencies:
+- go-md2man
 tags:
 - type/cli
 - category/development

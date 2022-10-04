@@ -5,6 +5,7 @@ dependencies:
 - runc
 - cni
 - crictl
+- go-md2man
 tags:
 - org/cncf
 - org/containerd
