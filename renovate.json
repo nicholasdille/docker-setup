@@ -479,6 +479,17 @@
     },
     {
       "fileMatch": [
+        "^tools/chigo/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "UltiRequiem/chigo",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/chisel/manifest.yaml$"
       ],
       "matchStrings": [
