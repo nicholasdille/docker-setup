@@ -407,6 +407,7 @@ Commands:
   tags, t                 Show tags
   dependencies, deps, d   Resolve dependencies
   inspect                 Show contents image
+  search, find            Search for tools
   generate, gen, g        Generate Dockerfile
   build, b                Build container image
   build-flat              Build container image using "docker commit"
@@ -587,6 +588,15 @@ while test "$#" -gt 0; do
                     | grep -v "/$"
                 done
             done
+            ;;
+
+        search|find)
+            shift
+            term=$1
+            jq --raw-output --arg term "${term,,}" '.tools[] | select((.name | ascii_downcase | contains($term)) or (.description | ascii_downcase | contains($term)) or (.tags[] | ascii_downcase | contains($term)) or ((.dependencies != null) and (.dependencies[] | ascii_downcase | contains($term)))) | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
+            | sort \
+            | uniq \
+            | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
             ;;
 
         generate|gen|g)
