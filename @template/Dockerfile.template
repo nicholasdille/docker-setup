@@ -19,6 +19,14 @@ ARG version
 #chmod +x "${prefix}${target}/bin/foo"
 #EOF
 
+# zip
+#RUN <<EOF
+#url=""
+#filename="$(basename "${url}")"
+#curl --silent --location --remote-name "${url}"
+#unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+#EOF
+
 # completion
 #RUN <<EOF
 #"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
