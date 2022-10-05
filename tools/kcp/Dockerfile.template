@@ -16,8 +16,9 @@ RUN <<EOF
 curl --silent --location "https://github.com/kcp-dev/kcp/releases/download/v${version}/kubectl-kcp-plugin_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     bin/kubectl-kcp \
-    bin/kubectl-ws \
-    bin/kubectl-workspaces
+    bin/kubectl-workspace \
+    bin/kubectl-workspaces \
+    bin/kubectl-ws
 EOF
 
 RUN <<EOF
