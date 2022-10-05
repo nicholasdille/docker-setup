@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM golang:1.19.2@sha256:b7f161585b61f10843fa9292fd4661735065a5399cc44a48d76c91b68fdd90cb AS build
+FROM golang:1.19.2@sha256:955e427730af0b6e226aca5404b81f8fcde6c53b3dacee1a574ade51d6a38244 AS build
 WORKDIR /go/src/github.com/docker/cli
 ARG name
 ARG version
