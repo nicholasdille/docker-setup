@@ -1,0 +1,12 @@
+name: yh
+version: 0.4.0
+check: ""
+tags:
+- type/cli
+- format
+homepage: https://github.com/andreazorzetto/yh
+description: YAML syntax highlighter to bring colours to kubectl output
+renovate:
+  datasource: github-releases
+  package: andreazorzetto/yh
+  extractVersion: ^v(?<version>.+?)$
