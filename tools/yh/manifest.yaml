@@ -1,6 +1,6 @@
 name: yh
 version: 0.4.0
-check: ""
+check: ${binary} version
 tags:
 - type/cli
 - format

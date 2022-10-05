@@ -1,6 +1,5 @@
 name: chigo
 version: 1.4.0
-check: ""
 tags:
 - type/cli
 - fun
