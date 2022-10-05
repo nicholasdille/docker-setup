@@ -752,6 +752,17 @@
     },
     {
       "fileMatch": [
+        "^tools/cue/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cue-lang/cue",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/curl/manifest.yaml$"
       ],
       "matchStrings": [

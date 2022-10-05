@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/cue-lang/cue/releases/download/v${version}/cue_v${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    cue
+"${prefix}${target}/bin/cue" completion bash >"${prefix}${target}/share/bash-completion/completions/cue"
+"${prefix}${target}/bin/cue" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/cue.fish"
+"${prefix}${target}/bin/cue" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_cue"
+EOF
