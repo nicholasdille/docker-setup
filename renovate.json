@@ -2207,6 +2207,16 @@
     },
     {
       "fileMatch": [
+        "^tools/neofetch/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "dylanaraps/neofetch",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/nerdctl/manifest.yaml$"
       ],
       "matchStrings": [

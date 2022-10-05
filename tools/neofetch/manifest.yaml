@@ -1,0 +1,11 @@
+name: neofetch
+version: 7.1.0
+check: ""
+tags:
+- type/cli
+- fun
+homepage: https://github.com/dylanaraps/neofetch
+description: Command-line system information tool written in bash 3.2+
+renovate:
+  datasource: github-releases
+  package: dylanaraps/neofetch
