@@ -2030,6 +2030,18 @@
     },
     {
       "fileMatch": [
+        "^tools/lectl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sahsanu/lectl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/libcap/manifest.yaml$"
       ],
       "matchStrings": [

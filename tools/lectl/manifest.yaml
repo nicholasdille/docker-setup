@@ -1,0 +1,15 @@
+name: lectl
+version: 0.21
+check: ${binary} --version | grep ^lectl | cut -d' ' -f2
+tags:
+- type/cli
+- category/security
+- management
+- certificate
+homepage: https://github.com/sahsanu/lectl
+description: Check issued certificates by Let's Encrypt on CTL (Certificate Transparency Log) using https://crt.sh
+renovate:
+  datasource: github-releases
+  package: sahsanu/lectl
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose
