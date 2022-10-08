@@ -1,5 +1,5 @@
 name: vcluster
-version: 0.12.1
+version: 0.12.2
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
