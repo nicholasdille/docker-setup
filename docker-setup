@@ -2,6 +2,7 @@
 set -o errexit
 
 : "${docker_setup_version:=main}"
+: "${tools_version:=main}"
 
 if test -t 1; then
     cat <<"EOF"
@@ -133,9 +134,9 @@ if test -z "${DOCKER_CONFIG}"; then
 fi
 
 function update() {
-    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
     | while read -r DIGEST; do
-        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${docker_setup_version}" "${DIGEST}" \
+        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${tools_version}" "${DIGEST}" \
         | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
     done
 }
@@ -168,7 +169,7 @@ if test -f "${PWD}/tools/Dockerfile.template"; then
     docker_setup_dockerfile_template="${PWD}/tools/Dockerfile.template"
 else
     curl --silent --location --output "${docker_setup_dockerfile_template}" \
-        https://raw.githubusercontent.com/nicholasdille/docker-setup/${docker_setup_version}/tools/Dockerfile.template
+        https://raw.githubusercontent.com/nicholasdille/docker-setup/${tools_version}/tools/Dockerfile.template
 fi
 debug "Using ${docker_setup_dockerfile_template}"
 
@@ -234,7 +235,7 @@ function generate() {
     # shellcheck disable=SC2002
     CONTENT="$(
         cat "${docker_setup_dockerfile_template}" \
-        | sed -E "s|^ARG ref=main|ARG ref=${docker_setup_version}|"
+        | sed -E "s|^ARG ref=main|ARG ref=${tools_version}|"
     )"
     while test "$#" -gt 0; do
         tool=$1
@@ -596,10 +597,10 @@ while test "$#" -gt 0; do
             warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read -r DIGEST; do
                     echo "${emoji_archive} Inspecting ${DIGEST}"
-                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
                     | tar --list --gzip \
                     | grep -v "/$"
                 done
@@ -647,10 +648,10 @@ while test "$#" -gt 0; do
                 fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
                 echo "${emoji_tool} Installing ${tool} ${version}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read -r DIGEST; do
                     #echo "${emoji_archive} Unpacking ${DIGEST}"
-                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
                     | tar --extract --gzip --directory="${target/"usr/local"/}" --no-same-owner
                 done
                 mkdir -p "${docker_setup_cache}/${tool}"
@@ -712,15 +713,15 @@ while test "$#" -gt 0; do
             warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
-                echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
-                docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}"
+                echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
+                docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
                 echo "${emoji_layer} Reading layers"
-                docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
+                docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
                 | tar --extract --to-stdout manifest.json \
                 | jq --raw-output '.[].Layers[]' \
                 | while read -r FILE; do
                     echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
-                    docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" \
+                    docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
                     | tar --extract --to-stdout "${FILE}" \
                     | tar --extract --directory="${target}" --strip-components=2
                 done
@@ -750,10 +751,10 @@ while test "$#" -gt 0; do
             docker create --name docker-setup-install-flat "${base}"
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
                 | while read -r DIGEST; do
                     echo "${emoji_archive} Unpacking ${DIGEST}"
-                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${docker_setup_version}" "${DIGEST}" \
+                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
                     | gunzip \
                     | docker cp - docker-setup-install-flat:/
                 done
