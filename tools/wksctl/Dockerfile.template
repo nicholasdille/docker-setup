@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/weaveworks/wksctl/releases/download/v0.10.2/wksctl-0.10.2-linux-x86_64.tar.gz" \
+curl --silent --location "https://github.com/weaveworks/wksctl/releases/download/v${version}/wksctl-${version}-linux-x86_64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/" --no-same-owner
 mv "${prefix}${target}/share/wksctl" "${prefix}${target}/bin/"
 mv "${prefix}${target}/share/examples" "${prefix}${target}/share/wksctl/"
