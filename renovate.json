@@ -1362,6 +1362,17 @@
     },
     {
       "fileMatch": [
+        "^tools/hubble/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cilium/hubble",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/hub-tool/manifest.yaml$"
       ],
       "matchStrings": [

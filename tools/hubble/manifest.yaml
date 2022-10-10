@@ -1,0 +1,13 @@
+name: hubble
+version: 0.10.0
+check: ""
+tags:
+- type/cli
+- category/security
+- network
+homepage: https://github.com/cilium/hubble
+description: Network, Service & Security Observability for Kubernetes using eBPF
+renovate:
+  datasource: github-releases
+  package: cilium/hubble
+  extractVersion: ^v(?<version>.+?)$

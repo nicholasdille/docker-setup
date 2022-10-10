@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/cilium/hubble/releases/download/v${version}/hubble-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+"${prefix}${target}/bin/hubble" completion bash >"${prefix}${target}/share/bash-completion/completions/hubble"
+"${prefix}${target}/bin/hubble" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/hubble.fish"
+"${prefix}${target}/bin/hubble" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_hubble"
+EOF
