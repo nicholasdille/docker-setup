@@ -24,8 +24,8 @@ cp doc/capsh.1 /usr/local/share/man/man1/
 cp doc/getcap.8 /usr/local/share/man/man8/
 cp doc/getpcaps.8 /usr/local/share/man/man8/
 cp doc/setcap.8 /usr/local/share/man/man8/
+rm /usr/local/man
 rm -f /usr/local/sbin/unminimize
-find /usr/local
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare

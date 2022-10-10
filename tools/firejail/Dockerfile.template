@@ -19,6 +19,7 @@ git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" 
 ./configure --prefix=/usr/local
 make
 make install-strip
+rm -f /usr/local/man
 rm -f /usr/local/sbin/unminimize
 EOF
 
