@@ -229,20 +229,10 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "^.github/workflows/release.yml$"
+        "^Makefile$"
       ],
       "matchStrings": [
-        "SEMVER_VERSION=(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "fsaintjacques/semver-tool",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [
-        "^.github/workflows/release.yml$"
-      ],
-      "matchStrings": [
-        "SHELLCHECK_VERSION=(?<currentValue>.*?)\n"
+        "SHELLCHECK_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "koalaman/shellcheck",
       "datasourceTemplate": "github-releases",
@@ -250,11 +240,11 @@
     },
     {
       "fileMatch": [
-        "^.github/workflows/release.yml$",
+        "^Makefile$",
         "^docker-setup$"
       ],
       "matchStrings": [
-        "YQ_VERSION=(?<currentValue>.*?)\n"
+        "YQ_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "mikefarah/yq",
       "datasourceTemplate": "github-releases",
@@ -262,10 +252,11 @@
     },
     {
       "fileMatch": [
+        "Makefile",
         "^docker-setup$"
       ],
       "matchStrings": [
-        "REGCLIENT_VERSION=(?<currentValue>.*?)\n"
+        "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "regclient/regclient",
       "datasourceTemplate": "github-releases",
@@ -1743,7 +1734,7 @@
     },
     {
       "fileMatch": [
-        "^tools/kpack-cli/manifest.yaml$"
+        "^tools/kp/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
