@@ -60,20 +60,35 @@ grey="\e[90m"
 magenta="\e[95m"
 
 # https://unicode.org/emoji/charts-14.0/full-emoji-list.html
+# shellcheck disable=SC2034
 emoji_tool="$(echo -e "\U0001F528")"
+# shellcheck disable=SC2034
 emoji_auth="$(echo -e "\U0001F513")"
+# shellcheck disable=SC2034
 emoji_whale="$(echo -e "\U0001F433")"
+# shellcheck disable=SC2034
 emoji_container=$(echo -e "\U0001F5C3")
+# shellcheck disable=SC2034
 emoji_image="$(echo -e "\U0001F4E6")"
+# shellcheck disable=SC2034
 emoji_layer="$(echo -e "\U0001F4C2")"
+# shellcheck disable=SC2034
 emoji_archive="$(echo -e "\U0001F4E5")"
+# shellcheck disable=SC2034
 emoji_sign="$(echo -e "\U00002712")"
+# shellcheck disable=SC2034
 emoji_push="$(echo -e "\U0001F4E4")"
+# shellcheck disable=SC2034
 emoji_pull="$(echo -e "\U0001F4E5")"
+# shellcheck disable=SC2034
 emoji_build="$(echo -e "\U0001F9F1")"
+# shellcheck disable=SC2034
 emoji_inspect="$(echo -e "\U0001F50D")"
+# shellcheck disable=SC2034
 emoji_done="$(echo -e "\u2713")"
+# shellcheck disable=SC2034
 emoji_todo="$(echo -e "\u21bb")"
+# shellcheck disable=SC2034
 emoji_missing="$(echo -e "\u2717")"
 
 : "${REGISTRY:=ghcr.io}"
@@ -195,7 +210,7 @@ function resolve_dependencies() {
 
     local deps
     deps="${tool_deps[${name}]}"
-    trace "resolve_dependencies(${name}): deps=${tool_deps}."
+    trace "resolve_dependencies(${name}): deps=${deps}."
     
     local dep
     for dep in ${deps}; do
@@ -329,14 +344,15 @@ function warm_cache() {
         fi
         debug "  binary=${binary}."
 
-        local check
-        check="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
-        if test -n "${check}"; then
+        if test -z "${tool_check[${name}]}"; then
+            tool_check[${name}]="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
+        fi
+        if test -n "${tool_check[${name}]}"; then
+            local check="${tool_check[${name}]}"
             debug "  check=${check//\$\{binary\}/${binary}}."
         fi
-        tool_check[${name}]="${check}"
 
-        if test -n "${check}"; then
+        if test -n "${tool_check[${name}]}"; then
             debug "  ${green}CHECK_EXISTS${reset}"
             tool_installed[${name}]=false
             tool_version_matches[${name}]=false
@@ -347,7 +363,7 @@ function warm_cache() {
 
             if test -x "${binary}"; then
                 debug "  ${green}BINARY_EXECUTABLE${reset}"
-                installed_version="$(eval "${check}")"
+                installed_version="$(eval "${tool_check[${name}]}")"
                 tool_installed_version[${name}]="${installed_version}"
                 debug "  installed_version=${installed_version}."
 
@@ -601,6 +617,7 @@ while test "$#" -gt 0; do
 
         generate|gen|g)
             warm_cache
+            # shellcheck disable=SC2086
             generate ${install_tools}
             ;;
 
@@ -613,6 +630,7 @@ while test "$#" -gt 0; do
             fi
             warm_cache
             echo "Building image ${image} with $# tool(s)..."
+            # shellcheck disable=SC2086
             generate ${install_tools} \
             | docker build --tag "${image}" -
             ;;
@@ -672,6 +690,7 @@ while test "$#" -gt 0; do
             debug "Using target ${target}"
             mkdir -p "${target}"
             warm_cache
+            # shellcheck disable=SC2086
             generate ${install_tools} \
             | docker build --output "${target}" -
             # TODO: post_install
