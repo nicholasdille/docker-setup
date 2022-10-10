@@ -116,28 +116,22 @@
   ],
   "regexManagers": [
     {
-      "fileMatch":        [ "^.github/workflows/release.yml$" ],
-      "matchStrings":     [ "SEMVER_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate":    "fsaintjacques/semver-tool",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch":            [ "^.github/workflows/release.yml$" ],
-      "matchStrings":         [ "SHELLCHECK_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch":            [ "^Makefile$" ],
+      "matchStrings":         [ "SHELLCHECK_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
       "depNameTemplate":        "koalaman/shellcheck",
       "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch":            [ "^.github/workflows/release.yml$", "^docker-setup$" ],
-      "matchStrings":         [ "YQ_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch":            [ "^Makefile$", "^docker-setup$" ],
+      "matchStrings":         [ "YQ_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
       "depNameTemplate":        "mikefarah/yq",
       "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch":            [ "^docker-setup$" ],
-      "matchStrings":         [ "REGCLIENT_VERSION=(?<currentValue>.*?)\n" ],
+      "fileMatch":            [ "Makefile", "^docker-setup$" ],
+      "matchStrings":         [ "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
       "depNameTemplate":        "regclient/regclient",
       "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
