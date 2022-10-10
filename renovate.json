@@ -2924,6 +2924,17 @@
     },
     {
       "fileMatch": [
+        "^tools/vexctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "chainguard-dev/vex",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/vulnerability-operator/manifest.yaml$"
       ],
       "matchStrings": [

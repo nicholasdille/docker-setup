@@ -1,0 +1,13 @@
+name: vexctl
+version: 0.0.1
+check: ""
+tags:
+- type/cli
+- category/securoty
+- sbom
+homepage: https://github.com/chainguard-dev/vex
+description: Attest VEX impact statements 
+renovate:
+  datasource: github-tags
+  package: chainguard-dev/vex
+  extractVersion: ^v(?<version>.+?)$
