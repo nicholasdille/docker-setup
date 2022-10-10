@@ -1417,6 +1417,17 @@
     },
     {
       "fileMatch": [
+        "^tools/in-toto/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "in-toto/in-toto-golang",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/iptables/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.19.2 AS build
+WORKDIR /go/src/github.com/in-toto/in-toto-golang
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/in-toto/in-toto-golang .
+make build
+cp bin/in-toto /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /usr/local/bin/in-toto ${prefix}${target}/bin/
+RUN <<EOF
+"${prefix}${target}/bin/in-toto" completion bash >"${prefix}${target}/share/bash-completion/completions/in-toto"
+"${prefix}${target}/bin/in-toto" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/in-toto.fish"
+"${prefix}${target}/bin/in-toto" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_in-toto"
+EOF

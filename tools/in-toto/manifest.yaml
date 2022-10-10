@@ -1,0 +1,13 @@
+name: in-toto
+version: 0.4.0
+check: ""
+tags:
+- type/cli
+- category/security
+- sbom
+homepage: https://github.com/in-toto/in-toto-golang
+description: Framework to protect software supply chain integrity
+renovate:
+  datasource: github-tags
+  package: in-toto/in-toto-golang
+  extractVersion: ^v(?<version>.+?)$
