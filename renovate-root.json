@@ -38,66 +38,6 @@
   "digest": { "labels": [ "bump/digest", "type/renovate" ] },
   "packageRules": [
     {
-      "matchPaths":        [ "env/alpine-3.15/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "alpine" ],
-      "allowedVersions":     "<=3.15.0"
-    },
-    {
-      "matchPaths":        [ "env/alpine-3.16/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "alpine" ],
-      "allowedVersions":     "<=3.16"
-    },
-    {
-      "matchPaths":        [ "env/amazonlinux-2022/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "amazonlinux" ],
-      "allowedVersions":     "<=2022"
-    },
-    {
-      "matchPaths":        [ "env/debian-11/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "debian" ],
-      "allowedVersions":     "<=11"
-    },
-    {
-      "matchPaths":        [ "env/fedora-35/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "fedora" ],
-      "allowedVersions":     "<=35"
-    },
-    {
-      "matchPaths":        [ "env/opensuse-leap-15/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "opensuse/leap" ],
-      "allowedVersions":     "/^[0-9]+\\.[0-9]+(\\.[0-9]+)?$/"
-    },
-    {
-      "matchPaths":        [ "env/rockylinux-8/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "rockylinux" ],
-      "allowedVersions":     "<=8"
-    },
-    {
-      "matchPaths":        [ "env/rockylinux-9/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "rockylinux" ],
-      "allowedVersions":     "<=9"
-    },
-    {
-      "matchPaths":        [ "env/ubuntu-20.04/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "ubuntu" ],
-      "allowedVersions":     "20.04"
-    },
-    {
-      "matchPaths":        [ "env/ubuntu-22.04/**" ],
-      "matchDatasources":  [ "docker" ],
-      "matchPackageNames": [ "ubuntu" ],
-      "allowedVersions":     "22.04"
-    },
-    {
       "matchDatasources":  [ "docker" ],
       "matchPackageNames": [ "golang", "rust" ],
       "updateTypes":       [ "pin", "digest", "patch", "minor", "major" ],
