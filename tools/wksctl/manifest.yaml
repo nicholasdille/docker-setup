@@ -1,0 +1,12 @@
+name: wksctl
+version: 0.10.2
+check: ""
+tags:
+- tag1
+- tag2
+homepage: https://github.com/weaveworks/wksctl
+description: Open Source Weaveworks Kubernetes System
+renovate:
+  datasource: github-releases
+  package: weaveworks/wksctl
+  extractVersion: ^v(?<version>.+?)$

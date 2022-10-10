@@ -2860,6 +2860,17 @@
     },
     {
       "fileMatch": [
+        "^tools/wksctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "weaveworks/wksctl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/yasu/manifest.yaml$"
       ],
       "matchStrings": [
