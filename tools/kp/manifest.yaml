@@ -1,4 +1,4 @@
-name: kpack-cli
+name: kp
 version: 0.7.1
 check: ${binary} version | cut -d- -f1
 tags:
