@@ -2871,6 +2871,17 @@
     },
     {
       "fileMatch": [
+        "^tools/websocat/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vi/websocat",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/win-gpg-agent/manifest.yaml$"
       ],
       "matchStrings": [

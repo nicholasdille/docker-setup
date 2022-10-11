@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/websocat" \
+    "https://github.com/vi/websocat/releases/download/v${version}/websocat.x86_64-unknown-linux-musl"
+chmod +x "${prefix}${target}/bin/websocat"
+EOF
