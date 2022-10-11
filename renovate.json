@@ -187,6 +187,28 @@
     },
     {
       "fileMatch": [
+        "^tools/apk/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "alpinelinux/apk-tools",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/apko/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "chainguard-dev/apko",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/argo/manifest.yaml$"
       ],
       "matchStrings": [
@@ -2053,6 +2075,17 @@
       ],
       "depNameTemplate": "cantino/mcfly",
       "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/melange/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "chainguard-dev/melange",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {

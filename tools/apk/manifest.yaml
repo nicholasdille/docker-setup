@@ -1,0 +1,13 @@
+name: apk
+version: 2.12.10
+check: ""
+tags:
+- type/cli
+- package
+- management
+homepage: httpshttps://gitlab.alpinelinux.org/alpine/apk-tools
+description: Alpine package manager
+renovate:
+  datasource: github-tags
+  package: alpinelinux/apk-tools
+  extractVersion: ^v(?<version>.+?)$

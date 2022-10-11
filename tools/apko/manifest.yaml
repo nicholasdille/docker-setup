@@ -1,0 +1,14 @@
+name: apko
+version: 0.5.0
+check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+dependencies:
+- apk
+tags:
+- type/cli
+- tag2
+homepage: https://github.com/chainguard-dev/apko
+description: Build OCI images using APK directly without Dockerfile
+renovate:
+  datasource: github-tags
+  package: chainguard-dev/apko
+  extractVersion: ^v(?<version>.+?)$
