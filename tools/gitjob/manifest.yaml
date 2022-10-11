@@ -1,0 +1,11 @@
+name: gitjob
+version: 0.1.31
+check: ""
+tags:
+- type/daemon
+homepage: https://github.com/rancher/gitjob
+description: Job controller to launch kubernetes jobs based on git event
+renovate:
+  datasource: github-releases
+  package: rancher/gitjob
+  extractVersion: ^v(?<version>.+?)$

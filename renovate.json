@@ -1173,6 +1173,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gitjob/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "rancher/gitjob",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gitlab-runner/manifest.yaml$"
       ],
       "matchStrings": [
