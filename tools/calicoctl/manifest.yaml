@@ -3,7 +3,7 @@ version: 3.24.1
 check: ${binary} version | grep ^Client | tr -s ' ' | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
-- network
+- component/network
 - kubernetes
 homepage: https://github.com/projectcalico/calico
 description: Cloud native networking and network security

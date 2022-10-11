@@ -5,7 +5,8 @@ check: ${binary} 2>&1 | cut -d' ' -f4 | tr -d v
 tags:
 - k8s
 - kubernetes
-- network
+- component/network
+- type/plugin
 homepage: https://github.com/containernetworking/plugins
 description: Some reference and example networking plugins
 renovate:

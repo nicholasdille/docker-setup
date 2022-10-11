@@ -513,7 +513,7 @@ while test "$#" -gt 0; do
                 tags="${1#*=}"
             fi
             selected_tools="$(
-                jq --raw-output --arg category "${tags}" '.tools[] | select(.tags[] | contains($category)) | .name' "${docker_setup_metadata_file}" \
+                jq --raw-output --arg category "${tags}" '.tools[] | select(.tags[] | inside($category)) | .name' "${docker_setup_metadata_file}" \
                 | xargs
             )"
             install_tools="$(resolve_dependencies_wrapper)"
@@ -556,9 +556,22 @@ while test "$#" -gt 0; do
             touch /
             exec curl --silent --location -o "$0" https://github.com/nicholasdille/docker-setup/raw/main/docker-setup
             ;;
+
+        debug)
+            warm_cache
+            echo "selected_tools=${selected_tools}"
+            echo "install_tools=${install_tools}."
+            ;;
             
         ls|list|l)
             jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
+            | while read -r LINE; do
+                    for name in ${install_tools}; do
+                        if grep -q "^${name};" <<<"${LINE}"; then
+                            echo "${LINE}"
+                        fi
+                    done
+                done \
             | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
             ;;
 

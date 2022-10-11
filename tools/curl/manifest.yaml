@@ -3,7 +3,7 @@ version: 7.85.0
 check: ${binary} --version | grep ^curl | cut -d' ' -f2
 tags:
 - type/cli
-- network
+- component/network
 homepage: https://github.com/curl/curl
 description: Tool and library for transferring data with URL syntax
 renovate:
