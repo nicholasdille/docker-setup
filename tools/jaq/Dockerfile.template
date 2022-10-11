@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM rust:1.64.0 AS build
+WORKDIR /tmp/github.com/01mf02/jaq
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/01mf02/jaq .
+export RUSTFLAGS='-C target-feature=+crt-static'
+cargo build --release --target x86_64-unknown-linux-gnu
+cp target/x86_64-unknown-linux-gnu/release/jaq /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /usr/local/bin/jaq ${prefix}${target}/bin/

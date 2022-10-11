@@ -1,0 +1,12 @@
+name: jaq
+version: 0.8.2
+check: ${binary} --version | cut -d' ' -f2
+tags:
+- type/cli
+- format
+homepage: https://github.com/01mf02/jaq
+description: jq clone focussed on correctness, speed, and simplicity
+renovate:
+  datasource: github-releases
+  package: 01mf02/jaq
+  extractVersion: ^v(?<version>.+?)$

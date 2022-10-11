@@ -1450,6 +1450,17 @@
     },
     {
       "fileMatch": [
+        "^tools/jaq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "01mf02/jaq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/jp/manifest.yaml$"
       ],
       "matchStrings": [
