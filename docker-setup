@@ -778,6 +778,43 @@ while test "$#" -gt 0; do
             docker rm docker-setup-install-flat >/dev/null 2>&1
             ;;
 
+        install-from-image-build)
+            if ! type docker >/dev/null 2>&1; then
+                echo "ERROR: Command <install> requires docker."
+                exit 1
+            fi
+            shift
+            target=$1
+            if test -z "${target}"; then
+                echo "No target specified"
+                exit 1
+            fi
+            shift
+            debug "Using target ${target}"
+            if ! test -d "${docker_setup_cache}/repo/.git"; then
+                git clone https://github.com/nicholasdille/docker-setup "${docker_setup_cache}/repo"
+            else
+                git -C "${docker_setup_cache}/repo" reset --hard
+                git -C "${docker_setup_cache}/repo" pull
+            fi
+            mkdir -p "${target}"
+            warm_cache
+            for name in ${install_tools}; do
+                echo "${emoji_tool} Processing ${name}"
+                make -C "${docker_setup_cache}/repo" tools/${name}/Dockerfile tools/${name}/manifest.json
+                version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
+                docker build "${docker_setup_cache}/repo/tools/${name}" \
+                    --build-arg branch=${tools_version} \
+                    --build-arg ref=${tools_version} \
+                    --build-arg name=${name} \
+                    --build-arg version=${version} \
+                    --build-arg deps=${deps} \
+                    --build-arg tags=${tags} \
+                    --output type=local,dest=${target/"usr/local"/}
+            done
+            # TODO: post_install
+            ;;
+
         *)
             echo "ERROR: Unknown or empty command <$1>"
             show_help
