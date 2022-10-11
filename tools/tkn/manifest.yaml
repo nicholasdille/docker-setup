@@ -1,5 +1,5 @@
 name: tkn
-version: 0.26.0
+version: 0.27.0
 check: timeout 3 ${binary} version | cut -d' ' -f3
 tags:
 - type/cli
