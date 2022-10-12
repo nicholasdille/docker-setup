@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM golang:1.19.2 AS build
+WORKDIR /go/src/github.com/flatcar/container-linux-config-transpiler
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/flatcar/container-linux-config-transpiler .
+make
+cp bin/ct /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /usr/local/bin/ct ${prefix}${target}/bin/

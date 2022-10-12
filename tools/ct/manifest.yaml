@@ -1,0 +1,12 @@
+name: ct
+version: 0.9.3
+check: ${binary} -version | cut -d' ' -f2 | tr -d v
+tags:
+- type/cli
+- management
+homepage: https://github.com/flatcar/container-linux-config-transpiler
+description: Utility for Flatcar Container Linux
+renovate:
+  datasource: github-releases
+  package: flatcar/container-linux-config-transpiler
+  extractVersion: ^v(?<version>.+?)$

@@ -634,6 +634,17 @@
     },
     {
       "fileMatch": [
+        "^tools/ct/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "flatcar/container-linux-config-transpiler",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/ctop/manifest.yaml$"
       ],
       "matchStrings": [
