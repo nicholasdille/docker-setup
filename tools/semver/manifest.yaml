@@ -1,5 +1,5 @@
 name: semver
-version: 3.3.0
+version: 3.4.0
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - category/development
