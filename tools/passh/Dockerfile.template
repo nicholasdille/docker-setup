@@ -1,0 +1,26 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    git \
+    ca-certificates \
+    build-essential \
+    make
+EOF
+WORKDIR /tmp/passh
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/clarkwang/passh .
+make LDFLAGS=-static
+cp passh /usr/local/bin/
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /usr/local/bin/passh ${prefix}${target}/bin/

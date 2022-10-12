@@ -2354,6 +2354,17 @@
     },
     {
       "fileMatch": [
+        "^tools/passh/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "clarkwang/passh",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/patat/manifest.yaml$"
       ],
       "matchStrings": [
