@@ -19,5 +19,5 @@ EOF
 RUN <<EOF
 curl --silent --location "https://github.com/tektoncd/cli/archive/refs/tags/v${version}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/man/man1/" --strip-components=4 --no-same-owner \
-    cli-0.26.0/docs/man/man1/
+    cli-${version}/docs/man/man1/
 EOF
