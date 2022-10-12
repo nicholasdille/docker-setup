@@ -1,0 +1,14 @@
+name: kube-scheduler
+version: 1.25.2
+check: ${binary} --version | cut -d' ' -f2 | tr -d v
+tags:
+- org/cncf
+- org/kubernetes
+- type/daemon
+- kubernetes
+homepage: https://github.com/kubernetes/kubernetes
+description: Kubernetes scheduler
+renovate:
+  datasource: github-releases
+  package: kubernetes/kubernetes
+  extractVersion: ^v(?<version>.+?)$

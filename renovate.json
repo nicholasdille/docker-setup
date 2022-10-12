@@ -1735,6 +1735,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-apiserver/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubeaudit/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1763,6 +1774,17 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "openclarity/kubeclarity",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-controller-manager/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -1856,12 +1878,34 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-proxy/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubescape/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "armosec/kubescape",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-scheduler/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
