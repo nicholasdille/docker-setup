@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-url="https://github.com/andreazorzetto/yh/releases/download/v0.4.0/yh-linux-amd64.zip"
+url="https://github.com/andreazorzetto/yh/releases/download/v${version}/yh-linux-amd64.zip"
 filename="$(basename "${url}")"
 echo "Downloading ${filename} from ${url}."
 curl --silent --location --remote-name "${url}"
