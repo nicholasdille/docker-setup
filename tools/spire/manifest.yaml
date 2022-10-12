@@ -1,0 +1,13 @@
+name: spire
+version: 1.4.4
+binary: spire-server
+check: ${binary} --version
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/spiffe/spire
+description: SPIFFE Runtime Environment
+renovate:
+  datasource: github-releases
+  package: spiffe/spire
+  extractVersion: ^v(?<version>.+?)$

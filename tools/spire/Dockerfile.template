@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+mkdir "${prefix}${target}/share/spire/"
+curl --silent --location "https://github.com/spiffe/spire/releases/download/v${version}/spire-${version}-linux-x86_64-glibc.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/spire/" --strip-components=1 --no-same-owner
+
+curl --silent --location "https://github.com/spiffe/spire/releases/download/v${version}/spire-extras-${version}-linux-x86_64-glibc.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/spire/" --strip-components=1 --no-same-owner
+
+find "${prefix}${target}/share/spire/bin" -type f -executable -exec mv {} "${prefix}${target}/bin/" \;
+rmdir "${prefix}${target}/share/spire/bin"
+EOF
