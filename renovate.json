@@ -2618,6 +2618,17 @@
     },
     {
       "fileMatch": [
+        "^tools/spiffe-vault/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "philips-labs/spiffe-vault",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/spire/manifest.yaml$"
       ],
       "matchStrings": [
