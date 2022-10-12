@@ -4,6 +4,8 @@ check: ${binary} --version | head -n 1
 tags:
 - type/cli
 - markdown
+- slides
+- presentation
 homepage: https://github.com/jaspervdj/patat
 description: Terminal-based presentations using Pandoc
 renovate:

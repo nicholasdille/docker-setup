@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/hakimel/reveal.js/archive/refs/tags/${version}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/" --no-same-owner
+mv "${prefix}${target}/share/reveal.js-${version}" "${prefix}${target}/share/reveal.js"
+EOF

@@ -351,6 +351,18 @@
     },
     {
       "fileMatch": [
+        "^tools/cascadia-code/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "microsoft/cascadia-code",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/catatonit/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1117,6 +1129,16 @@
       "depNameTemplate": "superfly/flyctl",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/fontawesome-free/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "FortAwesome/Font-Awesome",
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [
@@ -2483,6 +2505,16 @@
       "depNameTemplate": "nelhage/reptyr",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^reptyr-(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/reveal.js/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "hakimel/reveal.js",
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [

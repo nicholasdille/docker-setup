@@ -4,6 +4,8 @@ check: ""
 tags:
 - type/cli
 - markdown
+- slides
+- presentation
 homepage: https://github.com/maaslalani/slides
 description: Terminal based presentation tool
 renovate:

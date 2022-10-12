@@ -1,0 +1,12 @@
+name: reveal.js
+version: 4.3.1
+check: ""
+tags:
+- markdown
+- slides
+- presentation
+homepage: https://github.com/hakimel/reveal.js
+description: HTML Presentation Framework
+renovate:
+  datasource: github-releases
+  package: hakimel/reveal.js

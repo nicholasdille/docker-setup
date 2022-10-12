@@ -1,0 +1,13 @@
+name: cascadia-code
+version: 2111.01
+check: ""
+tags:
+- slides
+- presentation
+homepage: https://github.com/microsoft/cascadia-code
+description: Monospaced font that includes programming ligatures
+renovate:
+  datasource: github-releases
+  package: microsoft/cascadia-code
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose
