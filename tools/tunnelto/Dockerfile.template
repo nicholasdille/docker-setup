@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/agrinman/tunnelto/releases/download/0.1.18/tunnelto-linux.tar.gz" \
+curl --silent --location "https://github.com/agrinman/tunnelto/releases/download/${version}/tunnelto-linux.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 EOF

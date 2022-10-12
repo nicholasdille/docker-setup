@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/containrrr/watchtower/releases/download/v1.4.0/watchtower_linux_amd64.tar.gz" \
+curl --silent --location "https://github.com/containrrr/watchtower/releases/download/v${version}/watchtower_linux_amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     watchtower
 EOF
