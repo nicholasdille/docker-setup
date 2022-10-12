@@ -1,5 +1,5 @@
 name: helm
-version: 3.10.0
+version: 3.10.1
 check: ${binary} version --short | cut -d+ -f1 | tr -d v
 tags:
 - type/cli
