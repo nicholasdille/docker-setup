@@ -1228,6 +1228,17 @@
     },
     {
       "fileMatch": [
+        "^tools/ghostunnel/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ghostunnel/ghostunnel",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gitjob/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,12 @@
+name: ghostunnel
+version: 1.6.1
+check: ""
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/ghostunnel/ghostunnel
+description: Simple SSL/TLS proxy with mutual authentication for securing non-TLS services
+renovate:
+  datasource: github-releases
+  package: ghostunnel/ghostunnel
+  extractVersion: ^v(?<version>.+?)$
