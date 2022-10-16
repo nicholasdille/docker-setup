@@ -1,0 +1,11 @@
+name: kube-linter
+version: 0.5.0
+check: ${binary} version | cut -d- -f1
+tags:
+- type/cli
+- kubernetes
+homepage: https://github.com/stackrox/kube-linter
+description: static analysis tool that checks Kubernetes YAML files and Helm charts
+renovate:
+  datasource: github-releases
+  package: stackrox/kube-linter

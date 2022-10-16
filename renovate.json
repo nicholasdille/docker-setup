@@ -1911,6 +1911,16 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-linter/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "stackrox/kube-linter",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/kubent/manifest.yaml$"
       ],
       "matchStrings": [
