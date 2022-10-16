@@ -3079,6 +3079,17 @@
     },
     {
       "fileMatch": [
+        "^tools/witness/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "testifysec/witness",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/wksctl/manifest.yaml$"
       ],
       "matchStrings": [

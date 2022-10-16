@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+# tarball
+RUN <<EOF
+curl --silent --location "https://github.com/testifysec/witness/releases/download/v${version}/witness_${version}_linux_amd64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    witness
+"${prefix}${target}/bin/witness" completion bash >"${prefix}${target}/share/bash-completion/completions/witness"
+"${prefix}${target}/bin/witness" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/witness.fish"
+"${prefix}${target}/bin/witness" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_witness"
+EOF
