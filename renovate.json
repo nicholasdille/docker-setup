@@ -2365,6 +2365,16 @@
     },
     {
       "fileMatch": [
+        "^tools/pandoc/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jgm/pandoc",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/passh/manifest.yaml$"
       ],
       "matchStrings": [
