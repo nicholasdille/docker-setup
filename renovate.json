@@ -1955,6 +1955,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kubeseal/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "bitnami-labs/sealed-secrets",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubesec/manifest.yaml$"
       ],
       "matchStrings": [

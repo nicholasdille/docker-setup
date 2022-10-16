@@ -1,0 +1,12 @@
+name: kubeseal
+version: 0.19.0
+check: ${binary}--version | cut -d' ' -f3
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/bitnami-labs/sealed-secrets
+description: Kubernetes controller and tool for one-way encrypted Secrets
+renovate:
+  datasource: github-releases
+  package: bitnami-labs/sealed-secrets
+  extractVersion: ^v(?<version>.+?)$
