@@ -1867,6 +1867,16 @@
     },
     {
       "fileMatch": [
+        "^tools/kubectl-ssh-proxy/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "little-angry-clouds/kubectl-ssh-proxy",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/kubefire/manifest.yaml$"
       ],
       "matchStrings": [

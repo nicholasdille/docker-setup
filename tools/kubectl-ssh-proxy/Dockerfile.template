@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+# tarball
+RUN <<EOF
+curl --silent --location "https://github.com/little-angry-clouds/kubectl-ssh-proxy/releases/download/${version}/kubectl-ssh-proxy-linux-amd64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
+mv "${prefix}${target}/bin/kubectl-ssh_proxy-linux-amd64" "${prefix}${target}/bin/kubectl-ssh_proxy"
+mv "${prefix}${target}/bin/kube-ssh-proxy-ssh-bin-linux-amd64" "${prefix}${target}/bin/kube-ssh-proxy-ssh-bin"
+EOF
