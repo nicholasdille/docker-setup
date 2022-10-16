@@ -3068,6 +3068,16 @@
     },
     {
       "fileMatch": [
+        "^tools/whalebrew/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "whalebrew/whalebrew",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/win-gpg-agent/manifest.yaml$"
       ],
       "matchStrings": [
