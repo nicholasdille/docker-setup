@@ -2421,6 +2421,17 @@
     },
     {
       "fileMatch": [
+        "^tools/popeye/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "derailed/popeye",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/portainer/manifest.yaml$"
       ],
       "matchStrings": [

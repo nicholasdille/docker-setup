@@ -1,0 +1,12 @@
+name: popeye
+version: 0.10.1
+check: ${binary} version | grep Version | tr -s ' ' | cut -d' ' -f2
+tags:
+- type/cli
+- kubernetes
+homepage: https://github.com/derailed/popeye
+description: Kubernetes cluster resource sanitizer
+renovate:
+  datasource: github-releases
+  package: derailed/popeye
+  extractVersion: ^v(?<version>.+?)$
