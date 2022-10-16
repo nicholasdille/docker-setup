@@ -2605,6 +2605,16 @@
     },
     {
       "fileMatch": [
+        "^tools/secretize/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "bbl/secretize",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/semver/manifest.yaml$"
       ],
       "matchStrings": [
