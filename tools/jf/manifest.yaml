@@ -1,0 +1,13 @@
+name: jf
+version: 2.27.1
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- package
+- manager
+homepage: https://github.com/jfrog/jfrog-cli
+description: Client that provides a simple interface that automates access to the JFrog products
+renovate:
+  datasource: github-releases
+  package: jfrog/jfrog-cli
+  extractVersion: ^v(?<version>.+?)$

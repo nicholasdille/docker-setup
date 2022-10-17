@@ -1615,6 +1615,17 @@
     },
     {
       "fileMatch": [
+        "^tools/jf/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jfrog/jfrog-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/jp/manifest.yaml$"
       ],
       "matchStrings": [

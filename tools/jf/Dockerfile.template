@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/jf" \
+    "https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/${version}/jfrog-cli-linux-${alt_arch}/jf"
+chmod +x "${prefix}${target}/bin/jf"
+"${prefix}${target}/bin/jf" completion bash >"${prefix}${target}/share/bash-completion/completions/jf"
+"${prefix}${target}/bin/jf" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/jf.fish"
+"${prefix}${target}/bin/jf" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_jf"
+EOF
