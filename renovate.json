@@ -1569,6 +1569,17 @@
     },
     {
       "fileMatch": [
+        "^tools/huber/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "innobead/huber",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/hub-tool/manifest.yaml$"
       ],
       "matchStrings": [

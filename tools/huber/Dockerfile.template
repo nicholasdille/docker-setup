@@ -1,0 +1,41 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential
+EOF
+
+WORKDIR /tmp/libarchive
+ARG LIBARCHIVE_VERSION=3.6.1
+RUN <<EOF
+curl --silent --location "https://github.com/libarchive/libarchive/releases/download/v3.6.1/libarchive-3.6.1.tar.gz" \
+| tar --extract --gzip --strip-components=1
+./configure
+make
+make install
+ldconfig
+EOF
+
+WORKDIR /tmp/libssl
+ARG LIBSSL_VERSION=1.1.1r
+RUN <<EOF
+curl --silent --location "https://github.com/openssl/openssl/archive/refs/tags/OpenSSL_${LIBSSL_VERSION//./_}.tar.gz" \
+| tar --extract --gzip --strip-components=1
+./config
+make
+make install
+ldconfig
+EOF
+
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/huber" \
+    "https://github.com/innobead/huber/releases/download/v${version}/huber-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/huber"
+EOF
