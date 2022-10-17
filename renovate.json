@@ -3000,6 +3000,17 @@
     },
     {
       "fileMatch": [
+        "^tools/tig/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jonas/tig",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^tig-(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/tini/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,12 @@
+name: tig
+version: 2.5.7
+check: ${binary} --version | grep ^tig | cut -d' ' -f3
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/jonas/tig
+description: Text-mode interface for git
+renovate:
+  datasource: github-releases
+  package: jonas/tig
+  extractVersion: ^tig-(?<version>.+?)$
