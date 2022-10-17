@@ -1,0 +1,12 @@
+name: dockle
+version: 0.4.7
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/goodwithtech/dockle
+description: Container Image Linter for Security, Helping build the Best-Practice Docker Image, Easy to start
+renovate:
+  datasource: github-releases
+  package: goodwithtech/dockle
+  extractVersion: ^v(?<version>.+?)$

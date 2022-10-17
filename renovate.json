@@ -941,6 +941,17 @@
     },
     {
       "fileMatch": [
+        "^tools/dockle/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "goodwithtech/dockle",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/docuum/manifest.yaml$"
       ],
       "matchStrings": [
