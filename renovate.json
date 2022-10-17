@@ -2275,6 +2275,16 @@
     },
     {
       "fileMatch": [
+        "^tools/lsd/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "Peltoche/lsd",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/manifest-tool/manifest.yaml$"
       ],
       "matchStrings": [

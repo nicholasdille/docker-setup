@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR /tmp/lsd
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location "https://github.com/Peltoche/lsd/releases/download/${version}/lsd-${version}-${arch}-unknown-linux-gnu.tar.gz" \
+| tar --extract --gzip --strip-components=1 --no-same-owner
+mv lsd "${prefix}${target}/bin/"
+mv lsd.1 "${prefix}${target}/share/man/man1/"
+mv autocomplete/lsd.bash-completion "${prefix}${target}/share/bash-completion/completions/lsd"
+mv autocomplete/lsd.fish "${prefix}${target}/share/fish/vendor_completions.d/"
+mv autocomplete/_lsd "${prefix}${target}/share/zsh/vendor-completions/"
+EOF
