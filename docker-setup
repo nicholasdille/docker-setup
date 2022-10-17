@@ -441,7 +441,6 @@ Global options:
 EOF
 }
 
-#: "${target:=/usr/local}"
 target=/usr/local
 : "${deps:=false}"
 : "${reinstall:=false}"
@@ -468,14 +467,13 @@ while test "$#" -gt 0; do
             show_help
             ;;
         
-        --target|--target=*)
-            if test "$1" == "--target"; then
+        --prefix|--prefix=*)
+            if test "$1" == "--prefix"; then
                 shift
-                target="$1"
+                prefix="$1"
             else
-                target="${1#*=}"
+                prefix="${1#*=}"
             fi
-            >&2 echo "Target must be /usr/local for now"
             ;;
 
         --tools|--tools=*)
@@ -651,8 +649,8 @@ while test "$#" -gt 0; do
 
         install|i)
             echo
-            debug "Using target ${target}"
-            mkdir -p "${target}"
+            debug "Using prefix ${prefix}"
+            mkdir -p "${prefix}"
             warm_cache
             for tool in ${install_tools}; do
                 if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
@@ -665,14 +663,14 @@ while test "$#" -gt 0; do
                 | while read -r DIGEST; do
                     #echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
-                    | tar --extract --gzip --directory="${target/"usr/local"/}" --no-same-owner
+                    | tar --extract --gzip --directory="${prefix}" --no-same-owner
                 done
                 mkdir -p "${docker_setup_cache}/${tool}"
                 touch "${docker_setup_cache}/${tool}/${version}"
             done
             if test -d /var/lib/docker-setup/post_install; then
                 mkdir -p /var/lib/docker-setup "${docker_setup_cache}"
-                export prefix=""
+                export prefix="${prefix}"
                 export target
                 export docker_setup_cache
                 export docker_setup_contrib=/var/lib/docker-setup/contrib
@@ -695,18 +693,12 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
-            target=$1
-            if test -z "${target}"; then
-                echo "No target specified"
-                exit 1
-            fi
-            shift
-            debug "Using target ${target}"
-            mkdir -p "${target}"
+            debug "Using prefix ${prefix} and target ${target}"
+            mkdir -p "${prefix}"
             warm_cache
             # shellcheck disable=SC2086
             generate ${install_tools} \
-            | docker build --output "${target}" -
+            | docker build --output "${prefix}${target}" -
             # TODO: post_install
             ;;
 
@@ -716,13 +708,8 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
-            target=$1
-            if test -z "${target}"; then
-                echo "No target specified"
-                exit 1
-            fi
-            shift
-            debug "Using target ${target}"
+            debug "Using prefix ${prefix} and target ${target}"
+            mkdir -p "${prefix}"
             warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
@@ -736,7 +723,7 @@ while test "$#" -gt 0; do
                     echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
                     docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
                     | tar --extract --to-stdout "${FILE}" \
-                    | tar --extract --directory="${target}" --strip-components=2
+                    | tar --extract --directory="${prefix}${target}" --strip-components=2
                 done
                 echo "+ Done"
             done
@@ -757,7 +744,7 @@ while test "$#" -gt 0; do
             shift
             image=$1
             if test -z "${image}"; then
-                echo "No target image name specified"
+                echo "No image name specified"
                 exit 1
             fi
             warm_cache
@@ -784,20 +771,14 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
-            target=$1
-            if test -z "${target}"; then
-                echo "No target specified"
-                exit 1
-            fi
-            shift
-            debug "Using target ${target}"
+            debug "Using prefix ${prefix} and target ${target}"
+            mkdir -p "${prefix}"
             if ! test -d "${docker_setup_cache}/repo/.git"; then
                 git clone https://github.com/nicholasdille/docker-setup "${docker_setup_cache}/repo"
             else
                 git -C "${docker_setup_cache}/repo" reset --hard
                 git -C "${docker_setup_cache}/repo" pull
             fi
-            mkdir -p "${target}"
             warm_cache
             for name in ${install_tools}; do
                 echo "${emoji_tool} Processing ${name}"
@@ -810,7 +791,7 @@ while test "$#" -gt 0; do
                     --build-arg version=${version} \
                     --build-arg deps=${deps} \
                     --build-arg tags=${tags} \
-                    --output type=local,dest=${target/"usr/local"/}
+                    --output type=local,dest=${prefix}${target}
             done
             # TODO: post_install
             ;;
