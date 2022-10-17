@@ -1,0 +1,12 @@
+name: huber
+version: 0.3.8
+check: ""
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/innobead/huber
+description: Package Manager for GitHub repos
+renovate:
+  datasource: github-releases
+  package: innobead/huber
+  extractVersion: ^v(?<version>.+?)$
