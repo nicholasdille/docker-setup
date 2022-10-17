@@ -2275,6 +2275,17 @@
     },
     {
       "fileMatch": [
+        "^tools/linuxkit/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "linuxkit/linuxkit",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/localizer/manifest.yaml$"
       ],
       "matchStrings": [

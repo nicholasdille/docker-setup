@@ -1,0 +1,12 @@
+name: linuxkit
+version: 1.0.0
+check: ""
+tags:
+- type/cli
+- org/moby
+homepage: https://github.com/linuxkit/linuxkit
+description: Toolkit for building secure, portable and lean operating systems for containers
+renovate:
+  datasource: github-releases
+  package: linuxkit/linuxkit
+  extractVersion: ^v(?<version>.+?)$
