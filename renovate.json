@@ -374,6 +374,17 @@
     },
     {
       "fileMatch": [
+        "^tools/cfssl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cloudflare/cfssl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/chekr/manifest.yaml$"
       ],
       "matchStrings": [

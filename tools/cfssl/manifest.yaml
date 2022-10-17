@@ -1,0 +1,12 @@
+name: cfssl
+version: 1.6.3
+check: ""
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/cloudflare/cfssl
+description: Cloudflare's PKI and TLS toolkit
+renovate:
+  datasource: github-releases
+  package: cloudflare/cfssl
+  extractVersion: ^v(?<version>.+?)$

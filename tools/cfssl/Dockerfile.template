@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+ARG BINARIES="cfssl-bundle cfssl-certinfo cfssl-newkey cfssl-scan cfssljson cfssl mkbundle multirootca"
+RUN <<EOF
+for BINARY in ${BINARIES}; do
+    curl --silent --location --output "${prefix}${target}/bin/${BINARY}" \
+        "https://github.com/cloudflare/cfssl/releases/download/v${version}/${BINARY}_${version}_linux_amd64"
+    chmod +x "${prefix}${target}/bin/${BINARY}"
+done
+EOF
