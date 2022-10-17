@@ -1,0 +1,12 @@
+name: kmon
+version: 1.6.2
+check: ""
+tags:
+- type/tui
+- management
+homepage: https://github.com/orhun/kmon
+description: Linux Kernel Manager and Activity Monitor
+renovate:
+  datasource: github-releases
+  package: orhun/kmon
+  extractVersion: ^v(?<version>.+?)$
