@@ -252,6 +252,17 @@
     },
     {
       "fileMatch": [
+        "^tools/bat/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sharkdp/bat",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/bin/manifest.yaml$"
       ],
       "matchStrings": [

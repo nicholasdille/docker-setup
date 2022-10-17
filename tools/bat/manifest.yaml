@@ -1,0 +1,11 @@
+name: bat
+version: 0.22.1
+check: ${binary} --version | cut -d' ' -f2
+tags:
+- type/cli
+homepage: https://github.com/sharkdp/bat
+description: cat(1) clone with wings
+renovate:
+  datasource: github-releases
+  package: sharkdp/bat
+  extractVersion: ^v(?<version>.+?)$
