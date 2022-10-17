@@ -1757,6 +1757,17 @@
     },
     {
       "fileMatch": [
+        "^tools/ktunnel/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "omrikiei/ktunnel",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubeadm/manifest.yaml$"
       ],
       "matchStrings": [

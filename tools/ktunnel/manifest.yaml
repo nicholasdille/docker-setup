@@ -1,0 +1,13 @@
+name: ktunnel
+version: 1.4.8
+check: ""
+tags:
+- type/cli
+- category/security
+- tunneling
+homepage: https://github.com/omrikiei/ktunnel
+description: CLI that exposes your local resources to kubernetes
+renovate:
+  datasource: github-releases
+  package: omrikiei/ktunnel
+  extractVersion: ^v(?<version>.+?)$
