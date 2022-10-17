@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR /tmp/wslu
+ARG name
+ARG version
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    make
+curl --silent --location "https://github.com/wslutilities/wslu/archive/refs/tags/v${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1
+make all install "DESTDIR=${prefix}" "PREFIX=${target}"
+EOF

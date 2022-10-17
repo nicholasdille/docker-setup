@@ -3250,6 +3250,17 @@
     },
     {
       "fileMatch": [
+        "^tools/wslu/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "wslutilities/wslu",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/yasu/manifest.yaml$"
       ],
       "matchStrings": [

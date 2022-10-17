@@ -1,0 +1,12 @@
+name: wslu
+version: 4.0.0
+check: ""
+tags:
+- type/cli
+- wsl
+homepage: https://github.com/wslutilities/wslu
+description: Collection of utilities for Windows Subsystem for Linux
+renovate:
+  datasource: github-releases
+  package: wslutilities/wslu
+  extractVersion: ^v(?<version>.+?)$
