@@ -5,7 +5,7 @@ on:
     types:
       - opened
       - synchronize
-      - labeled
+      #- labeled
       #- reopened
     paths:
       - docker-setup
