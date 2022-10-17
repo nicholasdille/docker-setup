@@ -635,6 +635,17 @@
     },
     {
       "fileMatch": [
+        "^tools/crossplane/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "crossplane/crossplane",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/crun/manifest.yaml$"
       ],
       "matchStrings": [

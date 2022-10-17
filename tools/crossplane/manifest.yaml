@@ -1,0 +1,15 @@
+name: crossplane
+version: 1.9.1
+check: ${binary} --version | tr -d v
+dependencies:
+- kubectl
+tags:
+- type/cli
+- type/plugin
+- management
+homepage: https://github.com/crossplane/crossplane
+description: Cloud Native Control Planes
+renovate:
+  datasource: github-releases
+  package: crossplane/crossplane
+  extractVersion: ^v(?<version>.+?)$
