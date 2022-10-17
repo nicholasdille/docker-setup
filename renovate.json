@@ -1942,6 +1942,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-psp-advisor/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sysdiglabs/kube-psp-advisor",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubescape/manifest.yaml$"
       ],
       "matchStrings": [
