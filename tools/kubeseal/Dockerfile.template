@@ -8,13 +8,6 @@ ARG version
 
 RUN <<EOF
 curl --silent --location "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${version}/kubeseal-${version}-linux-amd64.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner 
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     kubeseal
 EOF
-
-# completion
-#RUN <<EOF
-#"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
-#"${prefix}${target}/bin/foo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
-#"${prefix}${target}/bin/foo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_foo"
-#EOF
