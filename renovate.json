@@ -1658,6 +1658,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kd/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "UKHomeOffice/kd",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kdo/manifest.yaml$"
       ],
       "matchStrings": [

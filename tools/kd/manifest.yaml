@@ -1,0 +1,14 @@
+name: kd
+version: 1.20.15
+check: ${binary} --version | cut -d' ' -f3 | cut -d- -f1 | tr -d v
+tags:
+- type/cli
+- category/development
+- cicd
+- kubernetes
+homepage: https://github.com/UKHomeOffice/kd
+description: Minimalistic kubernetes resources deployment tool with templating
+renovate:
+  datasource: github-releases
+  package: UKHomeOffice/kd
+  extractVersion: ^v(?<version>.+?)$
