@@ -1121,6 +1121,17 @@
     },
     {
       "fileMatch": [
+        "^tools/flarectl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cloudflare/cloudflare-go",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/flux/manifest.yaml$"
       ],
       "matchStrings": [
