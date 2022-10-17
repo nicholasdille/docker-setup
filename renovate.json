@@ -396,6 +396,16 @@
     },
     {
       "fileMatch": [
+        "^tools/cheat/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cheat/cheat",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/chekr/manifest.yaml$"
       ],
       "matchStrings": [

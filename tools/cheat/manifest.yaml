@@ -1,0 +1,10 @@
+name: cheat
+version: 4.3.3
+check: ${binary} --version
+tags:
+- type/cli
+homepage: https://github.com/cheat/cheat
+description: Interactive cheatsheets on the command-line
+renovate:
+  datasource: github-releases
+  package: cheat/cheat
