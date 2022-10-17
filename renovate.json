@@ -1327,6 +1327,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gitleaks/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "zricethezav/gitleaks",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gitsign/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+# tarball
+RUN <<EOF
+curl --silent --location "https://github.com/zricethezav/gitleaks/releases/download/v${version}/gitleaks_${version}_linux_x64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    gitleaks
+"${prefix}${target}/bin/gitleaks" completion bash >"${prefix}${target}/share/bash-completion/completions/gitleaks"
+"${prefix}${target}/bin/gitleaks" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/gitleaks.fish"
+"${prefix}${target}/bin/gitleaks" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_gitleaks"
+EOF

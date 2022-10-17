@@ -1,0 +1,12 @@
+name: gitleaks
+version: 8.15.0
+check: ${binary} version
+tags:
+- type/cli
+- category/security
+homepage: https://github.com/zricethezav/gitleaks
+description: Protect and discover secrets using Gitleaks
+renovate:
+  datasource: github-releases
+  package: zricethezav/gitleaks
+  extractVersion: ^v(?<version>.+?)$
