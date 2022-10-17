@@ -68,7 +68,7 @@ You can specify either `download` or `install`. If `install` is supplied it must
 ```yaml
 tools:
 - name: foo
-  # ...
+  #...
   install: |
     echo "Installing foo ${version}"
     touch ${binary}
@@ -79,7 +79,7 @@ You will most likely use `download` which contains a list of downloads. Each ent
 ```yaml
 tools:
 - name: foo
-  # ...
+  #...
   download:
   - url: https://github.com/foo/bar/releases/download/v${version}/foo
     type: executable
