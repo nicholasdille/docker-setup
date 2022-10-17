@@ -1746,6 +1746,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kmon/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "orhun/kmon",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kn/manifest.yaml$"
       ],
       "matchStrings": [
