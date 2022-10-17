@@ -1,0 +1,12 @@
+name: kdo
+version: 0.8.0
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- kubernetes
+homepage: https://github.com/stepro/kdo
+description: Deployless Development on Kubernetes
+renovate:
+  datasource: github-releases
+  package: stepro/kdo
+  extractVersion: ^v(?<version>.+?)$
