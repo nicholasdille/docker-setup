@@ -1,0 +1,15 @@
+name: earthly
+version: 0.6.26
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+dependencies:
+- docker
+tags:
+- type/cli
+- category/development
+- cicd
+homepage: https://github.com/earthly/earthly
+description: Effortless CI/CD framework that runs anywhere
+renovate:
+  datasource: github-releases
+  package: earthly/earthly
+  extractVersion: ^v(?<version>.+?)$

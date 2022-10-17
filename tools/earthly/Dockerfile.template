@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    zsh
+EOF
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/earthly" \
+    "https://github.com/earthly/earthly/releases/download/v${version}/earthly-linux-amd64"
+chmod +x "${prefix}${target}/bin/earthly"
+"${prefix}${target}/bin/earthly" bootstrap --with-autocomplete --no-buildkit
+cp /usr/share/bash-completion/completions/earthly "${prefix}${target}/share/bash-completion/completions/earthly"
+cp /usr/local/share/zsh/site-functions/_earthly "${prefix}${target}/share/zsh/vendor-completions/_earthly"
+EOF

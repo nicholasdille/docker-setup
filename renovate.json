@@ -995,6 +995,17 @@
     },
     {
       "fileMatch": [
+        "^tools/earthly/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "earthly/earthly",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/ekz/manifest.yaml$"
       ],
       "matchStrings": [
