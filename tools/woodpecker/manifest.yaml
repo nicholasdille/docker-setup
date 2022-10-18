@@ -1,0 +1,13 @@
+name: woodpecker
+version: 0.15.5
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- type/daemon
+- cicd
+homepage: https://github.com/woodpecker-ci/woodpecker
+description: Community fork of the Drone CI system
+renovate:
+  datasource: github-releases
+  package: woodpecker-ci/woodpecker
+  extractVersion: ^v(?<version>.+?)$

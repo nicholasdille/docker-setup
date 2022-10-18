@@ -3379,6 +3379,17 @@
     },
     {
       "fileMatch": [
+        "^tools/woodpecker/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "woodpecker-ci/woodpecker",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/wslu/manifest.yaml$"
       ],
       "matchStrings": [
