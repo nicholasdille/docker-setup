@@ -1,6 +1,6 @@
 name: jx
 version: 3.7.8
-check: ""
+check: ${binary} version | grep ^version | cut -d' ' -f2
 tags:
 - type/cli
 - cicd
