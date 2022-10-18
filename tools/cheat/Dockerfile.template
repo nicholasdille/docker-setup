@@ -12,6 +12,6 @@ curl --silent --location "https://github.com/cheat/cheat/releases/download/${ver
 >"${prefix}${target}/bin/cheat"
 chmod +x "${prefix}${target}/bin/cheat"
 
-curl --silent --location --output "${prefix}${target}/share/man/man1/" \
+curl --silent --location --output "${prefix}${target}/share/man/man1/cheat.1" \
     "https://github.com/cheat/cheat/raw/${version}/doc/cheat.1"
 EOF
