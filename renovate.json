@@ -187,6 +187,16 @@
     },
     {
       "fileMatch": [
+        "^tools/ansi/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "fidian/ansi",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": [
         "^tools/apk/manifest.yaml$"
       ],
       "matchStrings": [
