@@ -557,6 +557,8 @@ while test "$#" -gt 0; do
 
         debug)
             warm_cache
+            echo "prefix=${prefix}"
+            echo "target=${target}"
             echo "selected_tools=${selected_tools}"
             echo "install_tools=${install_tools}."
             ;;
@@ -649,8 +651,10 @@ while test "$#" -gt 0; do
 
         install|i)
             echo
-            debug "Using prefix ${prefix}"
-            mkdir -p "${prefix}"
+            if test -n "${prefix}"; then
+                debug "Using prefix ${prefix}"
+                mkdir -p "${prefix}"
+            fi
             warm_cache
             for tool in ${install_tools}; do
                 if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
@@ -694,7 +698,9 @@ while test "$#" -gt 0; do
             fi
             shift
             debug "Using prefix ${prefix} and target ${target}"
-            mkdir -p "${prefix}"
+            if test -n "${prefix}"; then
+                mkdir -p "${prefix}"
+            fi
             warm_cache
             # shellcheck disable=SC2086
             generate ${install_tools} \
@@ -709,7 +715,9 @@ while test "$#" -gt 0; do
             fi
             shift
             debug "Using prefix ${prefix} and target ${target}"
-            mkdir -p "${prefix}"
+            if test -n "${prefix}"; then
+                mkdir -p "${prefix}"
+            fi
             warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
