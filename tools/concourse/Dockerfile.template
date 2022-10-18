@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/concourse/concourse/releases/download/v${version}/fly-${version}-linux-amd64.tgz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+
+curl --silent --location "https://github.com/concourse/concourse/releases/download/v${version}/concourse-${version}-linux-amd64.tgz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=2 --no-same-owner \
+    concourse/bin/concourse
+
+"${prefix}${target}/bin/concourse" completion --shell=bash >"${prefix}${target}/share/bash-completion/completions/concourse"
+"${prefix}${target}/bin/concourse" completion --shell=zsh >"${prefix}${target}/share/zsh/vendor-completions/_concourse"
+EOF

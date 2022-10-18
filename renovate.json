@@ -567,6 +567,17 @@
     },
     {
       "fileMatch": [
+        "^tools/concourse/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "concourse/concourse",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/conftest/manifest.yaml$"
       ],
       "matchStrings": [

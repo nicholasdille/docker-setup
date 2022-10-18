@@ -1,0 +1,13 @@
+name: concourse
+version: 6.7.9
+check: ${binary} --version
+tags:
+- type/cli
+- type/daemon
+- cicd
+homepage: https://github.com/concourse/concourse
+description: Container-based continuous thing-doer
+renovate:
+  datasource: github-releases
+  package: concourse/concourse
+  extractVersion: ^v(?<version>.+?)$
