@@ -1,5 +1,5 @@
 name: concourse
-version: 6.7.9
+version: 7.8.3
 check: ${binary} --version
 tags:
 - type/cli
