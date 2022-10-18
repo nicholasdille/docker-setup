@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/ketch" \
+    "https://github.com/theketchio/ketch/releases/download/v${version}/ketch-linux-amd64"
+chmod +x "${prefix}${target}/bin/ketch"
+EOF

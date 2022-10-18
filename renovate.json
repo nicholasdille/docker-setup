@@ -1821,6 +1821,17 @@
     },
     {
       "fileMatch": [
+        "^tools/ketch/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "theketchio/ketch",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kind/manifest.yaml$"
       ],
       "matchStrings": [
