@@ -1700,6 +1700,17 @@
     },
     {
       "fileMatch": [
+        "^tools/jx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jenkins-x/jx",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/k3d/manifest.yaml$"
       ],
       "matchStrings": [

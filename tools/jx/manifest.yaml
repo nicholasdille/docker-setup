@@ -1,0 +1,12 @@
+name: jx
+version: 3.7.8
+check: ""
+tags:
+- type/cli
+- cicd
+homepage: https://github.com/jenkins-x/jx
+description: Automated CI+CD for Kubernetes with Preview Environments on Pull Requests using Cloud Native pipelines from Tekton
+renovate:
+  datasource: github-releases
+  package: jenkins-x/jx
+  extractVersion: ^v(?<version>.+?)$
