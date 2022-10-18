@@ -1,0 +1,11 @@
+name: asciigraph
+version: 0.5.5
+check: ""
+tags:
+- type/cli
+homepage: https://github.com/guptarohit/asciigraph
+description: Make lightweight ASCII line graph in command line apps
+renovate:
+  datasource: github-releases
+  package: foo/bar
+  extractVersion: ^v(?<version>.+?)$
