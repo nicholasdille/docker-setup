@@ -1,5 +1,5 @@
 name: kyverno
-version: 1.8.0
+version: 10.10.10
 check: ${binary} version | grep ^Version | cut -d' ' -f2
 tags:
 - type/cli
