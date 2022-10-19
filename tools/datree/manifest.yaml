@@ -1,5 +1,5 @@
 name: datree
-version: 1.6.37
+version: 1.6.40
 check: ${binary} version
 tags:
 - category/security
