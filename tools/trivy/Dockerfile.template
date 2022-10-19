@@ -6,8 +6,16 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
-RUN arch=$(uname -m) \
- && if test "${arch}" == "x86_64"; then alt_arch=amd64; alt_arch2=64bit; else alt_arch=arm64; alt_arch2=ARM64; fi \
- && curl --location --fail https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz | \
-        tar --extract --gzip --directory="${prefix}${target}/bin" \
-              trivy
+RUN <<EOF
+curl --silent --location https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz \
+| tar --extract --gzip --directory="${prefix}${target}/bin" \
+      trivy \
+      contrib
+mkdir -p "${prefix}${target}/share/trivy"
+mv "${prefix}${target}/bin/contrib" "${prefix}${target}/share/trivy/"
+EOF
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/share/trivy/contrib/sonarqube.tpl" \
+      https://github.com/mendhak/trivy-template-output-to-sonarqube/raw/master/sonarqube.tpl
+EOF
