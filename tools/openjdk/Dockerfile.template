@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/jabba:${ref} AS jabba
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=jabba / /
+ARG name
+ARG version
+RUN <<EOF
+jabba install --output "${prefix}/opt/openjdk/" openjdk@1.${version}
+ln -sf "/opt/openjdk/bin/javac" "${prefix}${target}/bin/javac"
+ln -sf "/opt/openjdk/bin/java" "${prefix}${target}/bin/java"
+EOF

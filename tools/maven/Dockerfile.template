@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/openjdk:${ref} AS openjdk
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=openjdk / /
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}/opt/maven"
+curl --silent --location "https://archive.apache.org/dist/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz" \
+| tar --extract --gzip --directory="${prefix}/opt/maven" --strip-components=1 --no-same-owner
+ln -sf "/opt/maven/bin/mvn" "${prefix}${target}/bin/mvn"
+EOF

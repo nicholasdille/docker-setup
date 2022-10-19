@@ -1,0 +1,11 @@
+name: openjdk
+version: 17
+binary: ${prefix}/opt/openjdk/bin/javac -version
+check: ${binary} -version 2>&1 | grep ^openjdk | cut -d' ' -f3 | tr -d '"'
+dependencies:
+- jabba
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/openjdk
+description: OpenJDK

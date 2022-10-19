@@ -1,0 +1,15 @@
+name: maven
+version: 3.8.6
+binsry: mvn
+check: ${binary} -version | grep ^Apache | cut -d' ' -f3
+dependencies:
+- openjdk
+tags:
+- type/cli
+- cicd
+homepage: https://github.com/apache/maven
+description: Apache Maven
+renovate:
+  datasource: github-releases
+  package: apache/maven
+  extractVersion: ^maven-(?<version>.+?)$

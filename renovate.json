@@ -1458,6 +1458,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gradle/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "gradle/gradle",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/grype/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1643,6 +1654,16 @@
       "depNameTemplate": "nicholasdille/centos-iptables-legacy",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/jabba/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "shyiko/jabba",
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [
@@ -2412,6 +2433,17 @@
       "depNameTemplate": "estesp/manifest-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/maven/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "apache/maven",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^maven-(?<version>.+?)$"
     },
     {
       "fileMatch": [
