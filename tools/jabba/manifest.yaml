@@ -1,0 +1,11 @@
+name: jabba
+version: 0.11.2
+check: ${binary} --version
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/shyiko/jabba
+description: Java Version Manager
+renovate:
+  datasource: github-releases
+  package: shyiko/jabba

@@ -1,0 +1,14 @@
+name: gradle
+version: 6.9.3
+check: ${binary} -version | grep ^Gradle | cut -d' ' -f2
+dependencies:
+- openjdk
+tags:
+- type/cli
+- cicd
+homepage: https://github.com/gradle/gradle
+description: Adaptable, fast automation for all
+renovate:
+  datasource: github-releases
+  package: gradle/gradle
+  extractVersion: ^v(?<version>.+?)$
