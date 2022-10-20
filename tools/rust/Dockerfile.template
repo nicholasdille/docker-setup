@@ -1,0 +1,30 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+export CARGO_HOME="${prefix}/opt/cargo"
+export RUSTUP_HOME="${prefix}/opt/rustup"
+curl https://sh.rustup.rs \
+        --proto '=https' \
+        --tlsv1.2 \
+        --silent \
+        --show-error \
+        --fail | \
+    env CARGO_HOME="${CARGO_HOME}" RUSTUP_HOME="${RUSTUP_HOME}" bash -s -- \
+        --default-toolchain "${version}" \
+        --no-modify-path \
+        -y
+"${prefix}${target}/bin/rustup" completions bash rustup >"${prefix}${target}/share/bash-completion/completions/rustup"
+"${prefix}${target}/bin/rustup" completions fish rustup >"${prefix}${target}/share/fish/vendor_completions.d/rustup.fish"
+"${prefix}${target}/bin/rustup" completions zsh rustup >"${prefix}${target}/share/zsh/vendor-completions/_rustup"
+cp \
+    "${prefix}/opt/rustup/toolchains/${version}-x86_64-unknown-linux-gnu/etc/bash_completion.d/cargo" \
+    "${prefix}${target}/share/bash-completion/completions/"
+cp \
+    "${prefix}/opt/rustup/toolchains/${version}-x86_64-unknown-linux-gnu/share/zsh/site-functions/_cargo" \
+    "${prefix}${target}/share/zsh/vendor-completions/"
+EOF

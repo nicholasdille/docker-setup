@@ -2907,6 +2907,16 @@
     },
     {
       "fileMatch": [
+        "^tools/rust/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "rust-lang/rust",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/sbom-operator/manifest.yaml$"
       ],
       "matchStrings": [
