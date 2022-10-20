@@ -54,7 +54,7 @@ RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/innobead/huber .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --target x86_64-unknown-linux-gnu --release --workspace --exclude=huber-generator
-find . -type f
+find . -type f -executable
 cp target/x86_64-unknown-linux-gnu/huber /usr/local/bin/
 EOF
 
