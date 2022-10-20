@@ -1,0 +1,12 @@
+name: go
+version: 1.19.2
+check: ${binary} version | cut -d' ' -f3 | tr -d go
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/golang/go
+description: Go programming language
+renovate:
+  datasource: github-tags
+  package: golang/go
+  extractVersion: ^go(?<version>.+?)$
