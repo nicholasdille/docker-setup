@@ -22,7 +22,8 @@ apt-get -y install \
     ca-certificates \
     jq \
     unzip \
-    binutils
+    binutils \
+    xz-utils
 rm /usr/local/sbin/unminimize
 EOF
 

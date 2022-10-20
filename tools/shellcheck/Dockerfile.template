@@ -1,18 +1,14 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=go-md2man / /
 ARG name
 ARG version
-
-COPY --from=go-md2man / /
-
 RUN <<EOF
-apt-get update
-apt-get -y install \
-    xz-utils
 curl --silent --location "https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.${arch}.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     shellcheck-v${version}/shellcheck

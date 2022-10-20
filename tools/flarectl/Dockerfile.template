@@ -1,17 +1,10 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
+
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
-RUN <<EOF
-apt-get update
-apt-get -y install --no-install-recommends \
-    xz-utils
-EOF
-
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location "https://github.com/cloudflare/cloudflare-go/releases/download/v${version}/flarectl_${version}_linux_amd64.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --no-same-owner \
