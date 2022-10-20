@@ -1413,6 +1413,17 @@
     },
     {
       "fileMatch": [
+        "^tools/go/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "golang/go",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^go(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gocryptfs/manifest.yaml$"
       ],
       "matchStrings": [
