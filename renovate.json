@@ -2600,6 +2600,17 @@
     },
     {
       "fileMatch": [
+        "^tools/nodejs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "nodejs/node",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/norouter/manifest.yaml$"
       ],
       "matchStrings": [

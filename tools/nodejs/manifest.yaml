@@ -1,0 +1,13 @@
+name: nodejs
+# See https://github.com/nodejs/Release
+version: 19.0.0
+check: ${binary} --version | tr -d v
+tags:
+- type/cli
+- category/development
+homepage: https://github.com/nodejs/node
+description: Node.js JavaScript runtime
+renovate:
+  datasource: github-releases
+  package: nodejs/node
+  extractVersion: ^v(?<version>.+?)$
