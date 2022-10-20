@@ -1,0 +1,12 @@
+name: python
+version: 3.10.8
+check: ""
+tags:
+- tag1
+- tag2
+homepage: https://github.com/python/cpython
+description: Python programming language
+renovate:
+  datasource: github-tags
+  package: python/cpython
+  extractVersion: ^v(?<version>.+?)$
