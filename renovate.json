@@ -267,7 +267,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "foo/bar",
+      "depNameTemplate": "guptarohit/asciigraph",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
