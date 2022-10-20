@@ -53,6 +53,12 @@ jobs:
           )"
 
           echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
+          git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+          | sort \
+          | grep -E "^tools/[^/]+/" \
+          | cut -d/ -f2 \
+          | uniq \
+          | xargs
           CHANGED_TOOLS="$(
               git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
               | sort \
