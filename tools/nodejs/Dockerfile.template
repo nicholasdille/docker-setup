@@ -10,10 +10,15 @@ RUN <<EOF
 mkdir -p "${prefix}/opt/node"
 curl --silent --location "https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz" \
 | tar --extract --xz --directory="${prefix}/opt/node" --strip-components=1 --no-same-owner
+EOF
 
+RUN <<EOF
 for file in node npm npx; do
     ln -sf "/opt/node/bin/${file}" "${prefix}${target}/bin/${file}"
 done
+EOF
 
-"${prefix}${target}/bin/npm completion" >"${prefix}${target}/share/bash-completion/completions/npm"
+RUN <<EOF
+export PATH="${prefix}/opt/node/bin:${PATH}"
+"${prefix}/opt/node/bin/npm" completion >"${prefix}${target}/share/bash-completion/completions/npm"
 EOF
