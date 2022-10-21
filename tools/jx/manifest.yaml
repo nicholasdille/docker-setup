@@ -1,5 +1,5 @@
 name: jx
-version: 3.7.12
+version: 3.7.13
 check: ${binary} version | grep ^version | cut -d' ' -f2
 tags:
 - type/cli
