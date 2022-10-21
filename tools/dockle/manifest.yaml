@@ -1,5 +1,5 @@
 name: dockle
-version: 0.4.7
+version: 0.4.8
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
