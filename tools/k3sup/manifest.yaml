@@ -1,5 +1,5 @@
 name: k3sup
-version: 0.12.8
+version: 0.12.10
 check: ${binary} version | grep Version | cut -d' ' -f2
 tags:
 - type/cli
