@@ -27,9 +27,6 @@ function debug() {
         >&2 echo -e "${magenta}[DEBUG] $*${reset}"
     fi
 }
-if echo "$@" | grep -q "^--debug$"; then
-    debug=true
-fi
 
 : "${trace:=false}"
 function trace() {
@@ -37,10 +34,15 @@ function trace() {
         >&2 echo -e "${grey}[TRACE] $*${reset}"
     fi
 }
-if echo "$@" | grep -q "^--trace$"; then
-    debug=true
-    trace=true
-fi
+for arg in "$@"; do
+    if echo "${arg}" | grep -q "^--debug$"; then
+        debug=true
+    fi
+    if echo "${arg}" | grep -q "^--trace$"; then
+        debug=true
+        trace=true
+    fi
+done
 
 : "${profile:=false}"
 SECONDS=0
@@ -96,7 +98,7 @@ emoji_missing="$(echo -e "\u2717")"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
-if ! test -w "${docker_setup_cache}"; then
+if ! test -w "$(dirname "${docker_setup_cache}")"; then
     debug "WARNING: Cache directory <${docker_setup_cache}> is not writable."
     docker_setup_cache="${HOME}/.cache/docker-setup"
     debug "WARNING: Using cache directory <${docker_setup_cache}>"
