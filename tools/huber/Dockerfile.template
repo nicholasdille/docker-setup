@@ -2,45 +2,10 @@
 
 ARG ref=main
 
+FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
+
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
-#RUN <<EOF
-#apt-get update
-#apt-get -y install --no-install-recommends \
-#    build-essential
-#EOF
-#
-#WORKDIR /tmp/libarchive
-#ARG LIBARCHIVE_VERSION=3.6.1
-#RUN <<EOF
-#curl --silent --location "https://github.com/libarchive/libarchive/releases/download/v${LIBARCHIVE_VERSION}/libarchive-${LIBARCHIVE_VERSION}.tar.gz" \
-#| tar --extract --gzip --strip-components=1
-#./configure
-#make
-#make install
-#ldconfig
-#EOF
-#
-#WORKDIR /tmp/libssl
-#ARG LIBSSL_VERSION=1.1.1r
-#RUN <<EOF
-#curl --silent --location "https://github.com/openssl/openssl/archive/refs/tags/OpenSSL_${LIBSSL_VERSION//./_}.tar.gz" \
-#| tar --extract --gzip --strip-components=1
-#./config
-#make
-#make install
-#ldconfig
-#EOF
-#
-#ARG name
-#ARG version
-#RUN <<EOF
-#curl --silent --location --output "${prefix}${target}/bin/huber" \
-#    "https://github.com/innobead/huber/releases/download/v${version}/huber-linux-${alt_arch}"
-#chmod +x "${prefix}${target}/bin/huber"
-#EOF
-
-FROM rust:1.64.0 AS build
+COPY --from=rust / /
 WORKDIR /tmp/github.com/innobead/huber
 ARG name
 ARG version
@@ -51,14 +16,11 @@ apt-get -y install --no-install-recommends \
     libarchive-dev
 EOF
 RUN <<EOF
+export CARGO_HOME=/opt/cargo
+export RUSTUP_HOME=/opt/rustup
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/innobead/huber .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --target x86_64-unknown-linux-gnu --release --workspace --exclude=huber-generator
 find . -type f -executable
-cp target/x86_64-unknown-linux-gnu/release/huber /usr/local/bin/
+cp target/x86_64-unknown-linux-gnu/release/huber "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/huber ${prefix}${target}/bin/

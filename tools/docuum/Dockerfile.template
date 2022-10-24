@@ -2,18 +2,18 @@
 
 ARG ref=main
 
-FROM rust:1.64.0@sha256:dec677e4000081877722c5e0a14a4c190dae8d17ebbf7025ab21a4dad8d7a50d AS build
+FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=rust / /
 WORKDIR /tmp/github.com/stepchowfun/docuum
 ARG name
 ARG version
 RUN <<EOF
+export CARGO_HOME=/opt/cargo
+export RUSTUP_HOME=/opt/rustup
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stepchowfun/docuum .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
-cp target/x86_64-unknown-linux-gnu/release/docuum /usr/local/bin/
+cp target/x86_64-unknown-linux-gnu/release/docuum "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/docuum ${prefix}${target}/bin/

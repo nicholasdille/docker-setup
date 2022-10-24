@@ -1,6 +1,8 @@
 name: jaq
 version: 0.8.2
 check: ${binary} --version | cut -d' ' -f2
+dependencies:
+- rust
 tags:
 - type/cli
 - format

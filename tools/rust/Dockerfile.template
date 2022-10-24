@@ -5,6 +5,11 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
+COPY <<EOF ${prefix}/etc/profile.d/cargo.sh
+#!/bin/bash
+export CARGO_HOME=/opt/cargo
+export RUSTUP_HOME=/opt/rustup
+EOF
 RUN <<EOF
 apt-get update
 apt-get -y install ca-certificates
@@ -35,5 +40,5 @@ find "${prefix}/opt/cargo/bin" -type f -executable \
     ln -sf "/opt/cargo/bin/$(basename "${FILE}")" "${prefix}${target}/bin/"
 done
 sed -i "s|${prefix}||g" "${prefix}/opt/cargo/env"
-cp "${prefix}/opt/cargo/env" "${prefix}/etc/profile.d/cargo.sh"
+cp "${prefix}/opt/cargo/env" "${prefix}/etc/profile.d/cargo-env.sh"
 EOF

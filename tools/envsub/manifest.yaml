@@ -1,6 +1,8 @@
 name: envsub
 version: 0.1.3
 check: ${binary} --version
+dependencies:
+- rust
 tags:
 - type/cli
 - category/development
