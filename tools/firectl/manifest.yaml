@@ -1,5 +1,5 @@
 name: firectl
-version: 0.1.0
+version: v0.2.0
 check: ${binary} --version
 dependencies:
 - firecracker
