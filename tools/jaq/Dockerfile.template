@@ -10,8 +10,6 @@ WORKDIR /tmp/github.com/01mf02/jaq
 ARG name
 ARG version
 RUN <<EOF
-export CARGO_HOME=/opt/cargo
-export RUSTUP_HOME=/opt/rustup
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/01mf02/jaq .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu

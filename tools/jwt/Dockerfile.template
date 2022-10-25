@@ -16,8 +16,6 @@ WORKDIR /tmp/github.com/mike-engel/jwt-cli
 ARG name
 ARG version
 RUN <<EOF
-export CARGO_HOME=/opt/cargo
-export RUSTUP_HOME=/opt/rustup
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/mike-engel/jwt-cli .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu

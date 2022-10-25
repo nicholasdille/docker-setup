@@ -10,8 +10,6 @@ WORKDIR /tmp/github.com/stephenc/envsub
 ARG name
 ARG version
 RUN <<EOF
-export CARGO_HOME=/opt/cargo
-export RUSTUP_HOME=/opt/rustup
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/stephenc/envsub .
 cargo install --path .
 cp /usr/local/cargo/bin/envsub "${prefix}${target}/bin/"

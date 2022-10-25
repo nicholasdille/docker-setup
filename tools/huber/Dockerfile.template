@@ -16,8 +16,6 @@ apt-get -y install --no-install-recommends \
     libarchive-dev
 EOF
 RUN <<EOF
-export CARGO_HOME=/opt/cargo
-export RUSTUP_HOME=/opt/rustup
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/innobead/huber .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --target x86_64-unknown-linux-gnu --release --workspace --exclude=huber-generator
