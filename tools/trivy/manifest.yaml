@@ -1,5 +1,5 @@
 name: trivy
-version: 0.32.1
+version: 0.33.0
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - category/security
