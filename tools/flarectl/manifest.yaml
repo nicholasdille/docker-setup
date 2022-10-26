@@ -1,5 +1,5 @@
 name: flarectl
-version: 0.52.0
+version: 0.53.0
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
