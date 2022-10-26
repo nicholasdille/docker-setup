@@ -66,7 +66,6 @@ jobs:
                   GIT_BRANCH=test make ${TOOL}--deep
               done
               GIT_BRANCH=test make metadata.json
-              cat ~/.docker/config.json
               docker_setup_version=test \
               docker_setup_cache="${HOME}/.cache/docker-setup" \
                   ./docker-setup --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
