@@ -6,6 +6,12 @@ FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --from=rust / /
+ARG DEBIAN_FRONTEND=noninteractive
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential
+EOF
 WORKDIR /tmp/github.com/stephenc/envsub
 ARG name
 ARG version
