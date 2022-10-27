@@ -2,18 +2,23 @@
 
 ARG ref=main
 
-FROM rust:1.64.0 AS build
+FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=rust / /
+ARG DEBIAN_FRONTEND=noninteractive
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential
+EOF
 WORKDIR /tmp/github.com/01mf02/jaq
 ARG name
 ARG version
+SHELL [ "/bin/bash", "--login", "-ec" ]
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/01mf02/jaq .
 export RUSTFLAGS='-C target-feature=+crt-static'
 cargo build --release --target x86_64-unknown-linux-gnu
-cp target/x86_64-unknown-linux-gnu/release/jaq /usr/local/bin/
+cp target/x86_64-unknown-linux-gnu/release/jaq "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/jaq ${prefix}${target}/bin/

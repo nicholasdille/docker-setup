@@ -1,0 +1,48 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY <<EOF ${prefix}/etc/profile.d/cargo.sh
+#!/bin/bash
+export CARGO_HOME=/opt/cargo
+export RUSTUP_HOME=/opt/rustup
+EOF
+ARG CARGO_HOME="${prefix}/opt/cargo" \
+    RUSTUP_HOME="${prefix}/opt/rustup"
+RUN <<EOF
+curl -svLko /dev/null https://sh.rustup.rs
+curl https://sh.rustup.rs \
+        --proto '=https' \
+        --tlsv1.2 \
+        --silent \
+        --show-error \
+        --fail | \
+    env CARGO_HOME="${CARGO_HOME}" RUSTUP_HOME="${RUSTUP_HOME}" bash -s -- \
+        --default-toolchain "${version}" \
+        --no-modify-path \
+        -y
+EOF
+RUN <<EOF
+"${prefix}/opt/cargo/bin/rustup" completions bash rustup >"${prefix}${target}/share/bash-completion/completions/rustup"
+"${prefix}/opt/cargo/bin/rustup" completions fish rustup >"${prefix}${target}/share/fish/vendor_completions.d/rustup.fish"
+"${prefix}/opt/cargo/bin/rustup" completions zsh rustup >"${prefix}${target}/share/zsh/vendor-completions/_rustup"
+cp \
+    "${prefix}/opt/rustup/toolchains/${version}-x86_64-unknown-linux-gnu/etc/bash_completion.d/cargo" \
+    "${prefix}${target}/share/bash-completion/completions/"
+cp \
+    "${prefix}/opt/rustup/toolchains/${version}-x86_64-unknown-linux-gnu/share/zsh/site-functions/_cargo" \
+    "${prefix}${target}/share/zsh/vendor-completions/"
+EOF
+RUN <<EOF
+find "${prefix}/opt/cargo/bin" -type f -executable \
+| while read -r FILE; do
+    ln -sf "/opt/cargo/bin/$(basename "${FILE}")" "${prefix}${target}/bin/"
+done
+EOF
+RUN <<EOF
+sed -i "s|${prefix}||g" "${prefix}/opt/cargo/env"
+cp "${prefix}/opt/cargo/env" "${prefix}/etc/profile.d/cargo-env.sh"
+EOF

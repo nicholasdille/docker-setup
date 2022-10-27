@@ -27,9 +27,6 @@ function debug() {
         >&2 echo -e "${magenta}[DEBUG] $*${reset}"
     fi
 }
-if echo "$@" | grep -q "^--debug$"; then
-    debug=true
-fi
 
 : "${trace:=false}"
 function trace() {
@@ -37,10 +34,15 @@ function trace() {
         >&2 echo -e "${grey}[TRACE] $*${reset}"
     fi
 }
-if echo "$@" | grep -q "^--trace$"; then
-    debug=true
-    trace=true
-fi
+for arg in "$@"; do
+    if echo "${arg}" | grep -q "^--debug$"; then
+        debug=true
+    fi
+    if echo "${arg}" | grep -q "^--trace$"; then
+        debug=true
+        trace=true
+    fi
+done
 
 : "${profile:=false}"
 SECONDS=0
@@ -96,7 +98,7 @@ emoji_missing="$(echo -e "\u2717")"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
 
 : "${docker_setup_cache:=/var/cache/docker-setup}"
-if ! test -w "${docker_setup_cache}"; then
+if ! test -w "$(dirname "${docker_setup_cache}")"; then
     debug "WARNING: Cache directory <${docker_setup_cache}> is not writable."
     docker_setup_cache="${HOME}/.cache/docker-setup"
     debug "WARNING: Using cache directory <${docker_setup_cache}>"
@@ -212,7 +214,7 @@ function resolve_dependencies() {
     local deps
     deps="${tool_deps[${name}]}"
     trace "resolve_dependencies(${name}): deps=${deps}."
-    
+
     local dep
     for dep in ${deps}; do
         trace "resolve_dependencies(${name}): calling self for ${dep} with state=${state}."
@@ -254,7 +256,7 @@ function warm_cache() {
     local temp
 
     profile "Starting cache warming"
-    
+
     temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
@@ -275,13 +277,13 @@ function warm_cache() {
 
     profile "Done reading binaries"
 
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(" "))"' "${docker_setup_metadata_file}")"
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(","))"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
         local value="${pair#*=}"
         if test "${value}" != "${name}"; then
             trace "DEP name=${name},value=${value}."
-            tool_deps[${name}]="${value}"
+            tool_deps[${name}]="${value//,/ }"
         fi
     done
 
@@ -319,7 +321,7 @@ function warm_cache() {
                 tool_operator[${name}]="="
                 tool_color[${name}]="${green}"
                 tool_marker[${name}]="${emoji_done}"
-            
+
             else
                 debug "  Setting red"
                 tool_installed[${name}]=false
@@ -429,7 +431,7 @@ Commands:
   build, b                Build container image
   build-flat              Build container image using "docker commit"
   install                 Install natively
-  install-from-registry   Install 
+  install-from-registry   Install
   install-from-image      Build container image with local output
 
 Global options:
@@ -466,7 +468,7 @@ while test "$#" -gt 0; do
         --help)
             show_help
             ;;
-        
+
         --prefix|--prefix=*)
             if test "$1" == "--prefix"; then
                 shift
@@ -562,7 +564,7 @@ while test "$#" -gt 0; do
             echo "selected_tools=${selected_tools}"
             echo "install_tools=${install_tools}."
             ;;
-            
+
         ls|list|l)
             jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
             | while read -r LINE; do
@@ -667,7 +669,7 @@ while test "$#" -gt 0; do
                 | while read -r DIGEST; do
                     #echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
-                    | tar --extract --gzip --directory="${prefix}" --no-same-owner
+                    | tar --extract --gzip --directory="${prefix}/" --no-same-owner
                 done
                 mkdir -p "${docker_setup_cache}/${tool}"
                 touch "${docker_setup_cache}/${tool}/${version}"
@@ -737,7 +739,7 @@ while test "$#" -gt 0; do
             done
             # TODO: post_install
             ;;
-        
+
         build-flat)
             if ! type docker >/dev/null 2>&1; then
                 echo "ERROR: Command <install> requires docker."

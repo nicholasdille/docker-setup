@@ -55,6 +55,7 @@ jobs:
                   | jq --raw-output '.[].filename' \
                   | grep -E '^tools/[^/]+/' \
                   | cut -d/ -f2 \
+                  | uniq \
                   | xargs echo
               )"
               echo "TOOLS=${TOOLS}"
