@@ -1,5 +1,5 @@
 name: flyctl
-version: 0.0.423
+version: 0.0.424
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
