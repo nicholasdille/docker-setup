@@ -20,6 +20,7 @@ apt-get update
 apt-get -y install --no-install-recommends \
     libarchive13 \
     libarchive-dev \
+    openssl-dev \
     pkg-config
 EOF
 SHELL [ "/bin/bash", "--login", "-ec" ]
