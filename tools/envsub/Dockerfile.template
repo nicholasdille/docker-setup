@@ -15,6 +15,7 @@ EOF
 WORKDIR /tmp/github.com/stephenc/envsub
 ARG name
 ARG version
+SHELL [ "/bin/bash", "--login", "-o", "errexit", "-c" ]
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/stephenc/envsub .
 cargo install --path .
