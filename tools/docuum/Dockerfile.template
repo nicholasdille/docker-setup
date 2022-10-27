@@ -15,7 +15,7 @@ EOF
 WORKDIR /tmp/github.com/stepchowfun/docuum
 ARG name
 ARG version
-SHELL [ "/bin/bash", "--login", "-o", "errexit", "-c" ]
+SHELL [ "/bin/bash", "--login", "-ec" ]
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/stepchowfun/docuum .
 export RUSTFLAGS='-C target-feature=+crt-static'

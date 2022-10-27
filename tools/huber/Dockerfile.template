@@ -21,7 +21,7 @@ apt-get -y install --no-install-recommends \
     libarchive13 \
     libarchive-dev
 EOF
-SHELL [ "/bin/bash", "--login", "-o", "errexit", "-c" ]
+SHELL [ "/bin/bash", "--login", "-ec" ]
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/innobead/huber .
 export RUSTFLAGS='-C target-feature=+crt-static'
