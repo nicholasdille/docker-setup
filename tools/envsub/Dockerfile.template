@@ -18,6 +18,6 @@ ARG version
 SHELL [ "/bin/bash", "--login", "-ec" ]
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/stephenc/envsub .
-cargo install --path .
-cp /usr/local/cargo/bin/envsub "${prefix}${target}/bin/"
+cargo build --release --target x86_64-unknown-linux-gnu
+cp target/x86_64-unknown-linux-gnu/release/envsub "${prefix}${target}/bin/"
 EOF
