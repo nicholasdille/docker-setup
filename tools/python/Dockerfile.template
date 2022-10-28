@@ -36,8 +36,7 @@ curl --silent --location "https://www.python.org/ftp/python/${version}/Python-${
 #    --enable-optimizations
 make -j4
 make install
-EOF
-
-RUN <<EOF
-touch "${prefix}${target}/bin/foo"
+for FILE in python pip idle pydoc; do
+    ln -sf "${FILE}3" "${prefix}${target}/bin/${FILE}"
+done
 EOF

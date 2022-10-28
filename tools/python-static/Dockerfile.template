@@ -3,41 +3,47 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG DEBIAN_FRONTEND=noninteractive
+#ARG DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
-    xz-utils \
-    build-essential \
-    make \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    llvm \
-    libncurses5-dev \
-    libncursesw5-dev \
-    tk-dev \
-    libffi-dev \
-    liblzma-dev
+    python3-pip \
+    python3-venv \
+    make
+#    xz-utils \
+#    build-essential \
+#    make \
+#    libssl-dev \
+#    zlib1g-dev \
+#    libbz2-dev \
+#    libreadline-dev \
+#    libsqlite3-dev \
+#    llvm \
+#    libncurses5-dev \
+#    libncursesw5-dev \
+#    tk-dev \
+#    libffi-dev \
+#    liblzma-dev
 EOF
 WORKDIR /tmp/python
 ARG name
 ARG version
+#COPY Modules-Setup.local /tmp/python/Modules/
+#RUN <<EOF
+#curl --silent --location https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz \
+#| tar --extract --xz --strip-components=1
+## https://wiki.python.org/moin/BuildStatically
+#./configure LDFLAGS="-static -static-libgcc" CPPFLAGS="-static" \
+#    --prefix=${prefix}${target} \
+#    --disable-shared
+##    --enable-optimizations
+## TODO: Configure Modules/Setup
+#make LDFLAGS="-static" LINKFORSHARED=" " -j4
+#make install
+#EOF
 RUN <<EOF
-curl --silent --location https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz \
-| tar --extract --xz --strip-components=1
-# https://wiki.python.org/moin/BuildStatically
-./configure LDFLAGS="-static -static-libgcc" CPPFLAGS="-static" \
-    --prefix=${prefix}${target} \
-    --disable-shared
-#    --enable-optimizations
-# TODO: Configure Modules/Setup
-make LDFLAGS="-static" LINKFORSHARED=" " -j4
-make install
-EOF
-
-RUN <<EOF
-touch "${prefix}${target}/bin/foo"
+# https://github.com/indygreg/python-build-standalone
+git clone https://github.com/indygreg/python-build-standalone .
+./build-linux.py --target-triple x86_64-unknown-linux-musl --python cpython-3.10 --optimizations noopt
+touch "${prefix}${targe}/foo"
 EOF
