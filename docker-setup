@@ -114,7 +114,7 @@ if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr 
         "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
     chmod +x "${docker_setup_cache}/bin/regctl"
 fi
-YQ_VERSION=4.28.2
+YQ_VERSION=4.29.1
 if ! type yq >/dev/null 2>&1 || test "$(yq --version | cut -d' ' -f4)" != "${YQ_VERSION}"; then
     debug "Installing yq"
     mkdir -p "${docker_setup_cache}/bin"
