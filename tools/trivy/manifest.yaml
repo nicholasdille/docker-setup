@@ -1,6 +1,6 @@
 name: trivy
 version: 0.33.0
-check: ${binary} --version | cut -d' ' -f2
+check: ${binary} --version | grep ^Version | cut -d' ' -f2
 tags:
 - category/security
 - type/cli

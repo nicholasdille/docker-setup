@@ -1,6 +1,6 @@
 name: docker-prerelease
 version: 22.06.0-beta.0
-binary: ${prefix}${target}/libexec/docker-prerelease/bin/docker
+binary: ${target}/libexec/docker-prerelease/bin/docker
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 dependencies:
 - fuse-overlayfs

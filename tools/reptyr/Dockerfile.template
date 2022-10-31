@@ -15,6 +15,7 @@ ARG name
 ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "reptyr-${version}" https://github.com/nelhage/reptyr .
+sed -E -i "s/#define REPTYR_VERSION \".+\"/#define REPTYR_VERSION \"${version}\"/" reptyr.h
 export LDFLAGS=-static
 make reptyr
 mkdir -p /opt/reptyr/bin /opt/reptyr/share/man/man1

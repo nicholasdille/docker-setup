@@ -1,6 +1,6 @@
 name: docker-credential-ecr-login
 version: 0.6.0
-check: ${binary} version
+#check: ${binary} version
 dependencies:
 - docker
 tags:

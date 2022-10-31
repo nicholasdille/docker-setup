@@ -1,5 +1,6 @@
 name: kubo
 version: 0.16.0
+binary: ipfs
 check: ${binary} version --number
 dependencies:
 - containerd

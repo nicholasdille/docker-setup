@@ -1,7 +1,7 @@
 name: openjdk
 version: 17
-binary: ${prefix}/opt/openjdk/bin/javac -version
-check: ${binary} -version 2>&1 | grep ^openjdk | cut -d' ' -f3 | tr -d '"'
+binary: /opt/openjdk/bin/javac
+check: ${binary} -version | cut -d' ' -f2
 dependencies:
 - jabba
 tags:

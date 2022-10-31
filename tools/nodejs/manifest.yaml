@@ -1,6 +1,7 @@
 name: nodejs
 # See https://github.com/nodejs/Release
 version: 19.0.0
+binary: node
 check: ${binary} --version | tr -d v
 tags:
 - type/cli

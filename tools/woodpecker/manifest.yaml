@@ -1,5 +1,6 @@
 name: woodpecker
 version: 0.15.5
+binary: woodpecker-server
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
