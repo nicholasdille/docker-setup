@@ -498,6 +498,15 @@ while test "$#" -gt 0; do
                     >&2 echo "NOT IMPLEMENTED YET"
                     exit 1
                     ;;
+                *%)
+                    selected_tools="$(
+                        for tool in ${all_tools}; do
+                            if echo "${tool}" | grep -q "^${tools:0:-1}"; then
+                                echo "${tool}"
+                            fi
+                        done | xargs
+                    )"
+                    ;;
                 *)
                     selected_tools="$(echo "${tools}" | tr ',' ' ')"
                     debug "Selected custom list of tools: ${selected_tools}"
