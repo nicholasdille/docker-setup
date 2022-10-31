@@ -1,7 +1,7 @@
 name: cri-o
 version: 1.25.1
 binary: crio
-check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+check: ${binary} --version | grep ^crio | cut -d' ' -f3
 dependencies:
 - runc
 - cni
