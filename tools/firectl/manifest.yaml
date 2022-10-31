@@ -1,5 +1,5 @@
 name: firectl
-version: v0.2.0
+version: 0.2.0
 check: ${binary} --version
 dependencies:
 - firecracker
@@ -14,3 +14,4 @@ description: Command-line tool to run Firecracker microVMs
 renovate:
   datasource: github-releases
   package: firecracker-microvm/firectl
+  extractVersion: ^v(?<version>.+?)$
