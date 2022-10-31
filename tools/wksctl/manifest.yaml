@@ -3,7 +3,6 @@ version: 0.10.2
 check: ${binary} version
 tags:
 - type/cli
-- state/stale
 - kubernetes
 - management
 - lang/go
