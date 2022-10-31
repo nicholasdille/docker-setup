@@ -93,6 +93,10 @@ emoji_done="$(echo -e "\u2713")"
 emoji_todo="$(echo -e "\u21bb")"
 # shellcheck disable=SC2034
 emoji_missing="$(echo -e "\u2717")"
+# shellcheck disable=SC2034
+emoji_stale="$(echo -e "\U0001F971")"
+# shellcheck disable=SC2034
+emoji_deprecated="$(echo -e "\U0001F634")"
 
 : "${REGISTRY:=ghcr.io}"
 : "${REPOSITORY_PREFIX:=nicholasdille/docker-setup/}"
