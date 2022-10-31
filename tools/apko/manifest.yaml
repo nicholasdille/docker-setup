@@ -5,7 +5,8 @@ dependencies:
 - apk
 tags:
 - type/cli
-- tag2
+- package
+- management
 homepage: https://github.com/chainguard-dev/apko
 description: Build OCI images using APK directly without Dockerfile
 renovate:

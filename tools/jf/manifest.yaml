@@ -4,7 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - package
-- manager
+- management
 homepage: https://github.com/jfrog/jfrog-cli
 description: Client that provides a simple interface that automates access to the JFrog products
 renovate:

@@ -3,6 +3,9 @@ version: 0.1.31
 check: ""
 tags:
 - type/daemon
+- category/development
+- kubernetes
+- k8s
 homepage: https://github.com/rancher/gitjob
 description: Job controller to launch kubernetes jobs based on git event
 renovate:

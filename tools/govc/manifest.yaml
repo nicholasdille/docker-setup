@@ -5,6 +5,7 @@ tags:
 - org/vmware
 - type/cli
 - vm
+- infrastructure
 homepage: https://github.com/vmware/govmomi/
 description: vSphere CLI built on top of govmomi
 renovate:

@@ -3,6 +3,7 @@ version: 3.0.1
 check: ""
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/fidian/ansi
 description: ANSI escape codes in pure bash
 renovate:

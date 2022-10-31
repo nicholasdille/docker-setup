@@ -5,6 +5,8 @@ dependencies:
 - apk
 tags:
 - type/cli
+- package
+- management
 homepage: https://github.com/chainguard-dev/melange
 description: Build APKs from source code
 renovate:

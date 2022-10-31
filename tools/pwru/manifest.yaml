@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
 - component/network
+- ebpf
 homepage: https://github.com/cilium/pwru
 description: eBPF-based Linux kernel networking debugger
 renovate:

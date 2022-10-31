@@ -3,6 +3,9 @@ version: 0.8.0
 check: ${binary} version 2>&1 | head -n 1 | cut -d= -f4 | tr -d \" | cut -d' ' -f3 | cut -d\\ -f1
 tags:
 - type/cli
+- kubernetes
+- k8s
+- management
 homepage: https://github.com/sighupio/furyctl
 description: Multi-purpose command line tool for the Kubernetes Fury Distribution
 renovate:

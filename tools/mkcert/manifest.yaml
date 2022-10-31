@@ -4,6 +4,7 @@ check: ${binary} --version | tr -d v
 tags:
 - type/cli
 - category/security
+- certificate
 homepage: https://github.com/FiloSottile/mkcert
 description: Simple zero-config tool to make locally trusted development certificates
 renovate:

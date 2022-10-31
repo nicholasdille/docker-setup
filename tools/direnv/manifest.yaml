@@ -3,6 +3,7 @@ version: 2.32.1
 check: ${binary} version
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/direnv/direnv/
 description: Unclutter your .profile
 renovate:

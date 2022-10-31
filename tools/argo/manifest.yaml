@@ -2,8 +2,10 @@ name: argo
 version: 3.4.2
 check: ${binary} version | grep ^argo | cut -d' ' -f2 | tr -d v
 tags:
-- tag1
-- tag2
+- type/cli
+- kubernetes
+- org/cncf
+- cicd
 homepage: https://github.com/argoproj/argo-workflows
 description: Workflow engine for Kubernetes
 renovate:

@@ -3,6 +3,7 @@ version: 1.0.2
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
+- category/security
 homepage: https://github.com/clarkwang/passh
 description: sshpass is broken by design
 renovate:

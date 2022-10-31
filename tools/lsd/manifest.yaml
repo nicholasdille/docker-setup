@@ -3,6 +3,7 @@ version: 0.23.1
 check: ""
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/Peltoche/lsd
 description: Next gen ls command
 renovate:

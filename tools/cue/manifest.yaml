@@ -3,6 +3,7 @@ version: 0.4.3
 check: ${binary} version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
+- category/development
 homepage: https://github.com/cue-lang/cue
 description: Validate and define text-based and dynamic configuration
 renovate:

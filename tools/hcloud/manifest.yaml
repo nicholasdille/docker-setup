@@ -4,6 +4,7 @@ check: ${binary} version | cut -d' ' -f2
 tags:
 - cloud/hetzner
 - type/cli
+- infrastructure
 - management
 homepage: https://github.com/hetznercloud/cli
 description: command-line interface for Hetzner Cloud

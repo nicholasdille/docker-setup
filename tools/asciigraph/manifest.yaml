@@ -3,6 +3,7 @@ version: 0.5.5
 check: ""
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/guptarohit/asciigraph
 description: Make lightweight ASCII line graph in command line apps
 renovate:

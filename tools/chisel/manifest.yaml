@@ -4,6 +4,7 @@ check: ${binary} | grep Version | tr -s ' ' | cut -d' ' -f3
 tags:
 - type/cli
 - category/development
+- tunneling
 homepage: https://github.com/jpillora/chisel
 description: Fast TCP/UDP tunnel over HTTP
 renovate:

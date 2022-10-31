@@ -3,6 +3,7 @@ version: 1.2.5
 check: ${binary} --version 2>&1 | cut -d' ' -f2 | tr -d v
 tags:
 - container/init
+- type/cli
 homepage: https://github.com/Yelp/dumb-init
 description: Minimal init system for Linux containers
 renovate:

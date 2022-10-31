@@ -3,6 +3,7 @@ version: 0.22.1
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/sharkdp/bat
 description: cat(1) clone with wings
 renovate:

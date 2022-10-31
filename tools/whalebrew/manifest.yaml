@@ -4,7 +4,7 @@ check: ${binary} version | cut -d' ' -f2
 tags:
 - type/cli
 - package
-- manager
+- management
 homepage: https://github.com/whalebrew/whalebrew
 description: Homebrew, but with Docker images
 renovate:

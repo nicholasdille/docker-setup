@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - category/security
+- tunneling
 homepage: https://github.com/ghostunnel/ghostunnel
 description: Simple SSL/TLS proxy with mutual authentication for securing non-TLS services
 renovate:

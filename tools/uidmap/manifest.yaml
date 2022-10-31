@@ -4,6 +4,7 @@ binary: newuidmap
 check: ""
 tags:
 - kernel/pid
+- kernel/namespaces
 - type/cli
 homepage: https://github.com/shadow-maint/shadow
 description: Programs to help use subuids

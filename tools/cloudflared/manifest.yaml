@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - category/development
+- tunneling
 homepage: https://github.com/cloudflare/cloudflared
 description: Cloudflare Tunnel client (formerly Argo Tunnel)
 renovate:

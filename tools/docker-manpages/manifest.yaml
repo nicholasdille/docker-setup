@@ -8,7 +8,6 @@ tags:
 - standard/oci
 - container/runtime
 - container/build
-- type/configuration
 renovate:
   datasource: github-tags
   package: docker/cli

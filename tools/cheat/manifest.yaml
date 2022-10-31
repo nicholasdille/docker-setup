@@ -3,6 +3,7 @@ version: 4.3.3
 check: ${binary} --version
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/cheat/cheat
 description: Interactive cheatsheets on the command-line
 renovate:

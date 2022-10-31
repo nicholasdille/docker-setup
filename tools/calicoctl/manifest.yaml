@@ -5,6 +5,7 @@ tags:
 - type/cli
 - component/network
 - kubernetes
+- standard/cni
 homepage: https://github.com/projectcalico/calico
 description: Cloud native networking and network security
 renovate:

@@ -7,7 +7,6 @@ tags:
 - standard/docker
 - category/development
 - type/cli
-- testing
 - cicd
 homepage: https://github.com/nektos/act
 description: Run your GitHub Actions locally

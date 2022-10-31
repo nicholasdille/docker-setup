@@ -3,7 +3,7 @@ version: 0.27.0
 check: timeout 3 ${binary} version | cut -d' ' -f3
 tags:
 - type/cli
-- type/development
+- category/development
 - org/cdfoundation
 - cicd
 homepage: https://github.com/tektoncd/cli

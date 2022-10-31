@@ -3,6 +3,7 @@ version: 1.22.1
 check: ""
 tags:
 - type/cli
+- terminal
 homepage: https://github.com/justjanne/powerline-go
 description: Beautiful and useful low-latency prompt for your shell
 renovate:

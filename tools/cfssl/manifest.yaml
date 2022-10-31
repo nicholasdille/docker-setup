@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - category/security
+- certificate
 homepage: https://github.com/cloudflare/cfssl
 description: Cloudflare's PKI and TLS toolkit
 renovate:
