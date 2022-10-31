@@ -26,6 +26,7 @@ mkdir -p \
     /usr/local/share/zsh/vendor-completions
 cp contrib/tig-completion.bash "/usr/local/share/bash-completion/completions/tig"
 cp contrib/tig-completion.zsh "/usr/local/share/zsh/vendor-completions/_tig"
+rm /usr/local/man
 rm /usr/local/sbin/unminimize
 EOF
 
