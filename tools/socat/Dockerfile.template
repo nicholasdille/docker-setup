@@ -24,6 +24,7 @@ make
 mkdir -p /usr/local/share/man/man1
 cp socat /usr/local/bin/
 cp doc/socat.1 /usr/local/share/man/man1/
+rm -f /usr/local/man
 rm /usr/local/sbin/unminimize
 EOF
 
