@@ -1,5 +1,5 @@
 name: buildah
-version: 1.27.2
+version: 1.28.0
 check: ${binary} --version | cut -d' ' -f3
 dependencies:
 - runc
