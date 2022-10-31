@@ -7,6 +7,7 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/kubernetes/minikube
 description: Run Kubernetes locally
 renovate:

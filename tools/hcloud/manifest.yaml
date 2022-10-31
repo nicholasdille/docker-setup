@@ -6,6 +6,7 @@ tags:
 - type/cli
 - infrastructure
 - management
+- lang/go
 homepage: https://github.com/hetznercloud/cli
 description: command-line interface for Hetzner Cloud
 renovate:

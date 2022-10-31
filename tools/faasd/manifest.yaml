@@ -7,6 +7,7 @@ dependencies:
 tags:
 - category/serverless
 - type/daemon
+- lang/go
 homepage: https://github.com/openfaas/faasd
 description: Lightweight & portable faas engine
 renovate:

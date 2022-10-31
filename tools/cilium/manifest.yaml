@@ -6,6 +6,7 @@ tags:
 - component/network
 - kubernetes
 - standard/cni
+- lang/go
 homepage: https://github.com/cilium/cilium-cli
 description: CLI to install, manage & troubleshoot Kubernetes clusters running Cilium
 renovate:

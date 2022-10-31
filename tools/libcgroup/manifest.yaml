@@ -5,6 +5,7 @@ check: ""
 tags:
 - kernel/cgroups
 - type/cli
+- lang/c
 homepage: https://github.com/libcgroup/libcgroup
 description: Library and tools to manage cgroups
 renovate:

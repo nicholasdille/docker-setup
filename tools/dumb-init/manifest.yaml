@@ -4,6 +4,7 @@ check: ${binary} --version 2>&1 | cut -d' ' -f2 | tr -d v
 tags:
 - container/init
 - type/cli
+- lang/c
 homepage: https://github.com/Yelp/dumb-init
 description: Minimal init system for Linux containers
 renovate:

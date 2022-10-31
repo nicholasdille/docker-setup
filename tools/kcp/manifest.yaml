@@ -6,6 +6,7 @@ tags:
 - type/daemon
 - type/plugin
 - kubernetes
+- lang/go
 homepage: https://github.com/kcp-dev/kcp
 description: Prototype of a multi-tenant Kubernetes control plane
 renovate:

@@ -4,6 +4,7 @@ check: ${binary} version | cut -d' ' -f2 | cut -d- -f1 | tr -d v
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/testifysec/witness
 description: Pluggable framework for software supply chain risk management
 renovate:

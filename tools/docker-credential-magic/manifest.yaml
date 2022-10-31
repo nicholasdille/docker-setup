@@ -7,6 +7,7 @@ tags:
 - standard/docker
 - container/runtime
 - category/security
+- lang/go
 homepage: https://github.com/docker-credential-magic/docker-credential-magic
 description: Magic shim for Docker credential helpers
 renovate:

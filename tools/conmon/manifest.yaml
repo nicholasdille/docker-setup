@@ -8,6 +8,7 @@ tags:
 - standard/oci
 - container/runtime
 - type/cli
+- lang/c
 homepage: https://github.com/containers/conmon
 description: OCI container runtime monitor
 renovate:

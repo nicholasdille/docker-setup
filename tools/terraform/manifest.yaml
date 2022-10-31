@@ -7,6 +7,7 @@ tags:
 - standard/hcl
 - management
 - infrastructure
+- lang/go
 homepage: https://github.com/hashicorp/terraform
 description: Safely and predictably create, change, and improve infrastructure
 renovate:

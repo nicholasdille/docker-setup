@@ -9,6 +9,7 @@ tags:
 - standard/docker
 - container/runtime
 - category/security
+- lang/go
 homepage: https://github.com/docker/docker-credential-helpers
 description: Programs to keep Docker login credentials safe
 renovate:

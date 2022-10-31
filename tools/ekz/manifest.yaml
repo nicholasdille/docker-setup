@@ -5,6 +5,8 @@ tags:
 - cloud/aws
 - type/cli
 - kubernetes
+- lang/go
+- state/stale
 homepage: https://github.com/chanwit/ekz
 description: EKS-D Kubernetes distribution for desktop
 renovate:

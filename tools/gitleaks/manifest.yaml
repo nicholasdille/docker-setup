@@ -4,6 +4,7 @@ check: ${binary} version
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/zricethezav/gitleaks
 description: Protect and discover secrets using Gitleaks
 renovate:

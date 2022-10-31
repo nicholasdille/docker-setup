@@ -5,6 +5,7 @@ check: ""
 tags:
 - kernel/capabilities
 - type/cli
+- lang/c
 homepage: https://git.kernel.org/pub/scm/libs/libcap/libcap.git/about/
 description: Library for getting and setting POSIX.1e (formerly POSIX 6) draft 15 capabilities.
 renovate:

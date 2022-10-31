@@ -6,6 +6,8 @@ tags:
 - state/stale
 - kubernetes
 - management
+- lang/go
+- state/stale
 homepage: https://github.com/weaveworks/wksctl
 description: Open Source Weaveworks Kubernetes System
 renovate:

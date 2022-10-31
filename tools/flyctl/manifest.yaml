@@ -4,6 +4,7 @@ check: ${binary} version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/superfly/flyctl
 description: Command line tools for fly.io services
 renovate:

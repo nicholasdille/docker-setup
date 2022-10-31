@@ -5,6 +5,8 @@ tags:
 - standard/oci
 - container/build
 - type/cli
+- lang/go
+- state/stale
 homepage: https://github.com/genuinetools/img
 description: Standalone, daemon-less, unprivileged Dockerfile and OCI compatible container image builder
 renovate:

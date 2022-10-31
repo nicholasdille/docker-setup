@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
 - compression
+- lang/c
 homepage: https://github.com/madler/pigz
 description: Parallel implementation of gzip for modern multi-processor, multi-core machines
 renovate:

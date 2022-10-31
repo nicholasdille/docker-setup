@@ -5,6 +5,7 @@ tags:
 - type/cli
 - category/security
 - sbom
+- lang/go
 homepage: https://github.com/chainguard-dev/vex
 description: Attest VEX impact statements
 renovate:

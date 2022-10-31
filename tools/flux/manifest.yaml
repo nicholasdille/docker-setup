@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - gitops
+- lang/go
 homepage: https://github.com/fluxcd/flux2
 description: Open and extensible continuous delivery solution for Kubernetes
 renovate:

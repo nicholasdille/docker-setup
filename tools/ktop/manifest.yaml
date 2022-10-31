@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - management
 - troubleshooting
+- lang/go
 homepage: https://github.com/vladimirvivien/ktop
 description: top-like tool for your Kubernetes clusters
 renovate:

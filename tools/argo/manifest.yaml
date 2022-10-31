@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - org/cncf
 - cicd
+- lang/go
 homepage: https://github.com/argoproj/argo-workflows
 description: Workflow engine for Kubernetes
 renovate:

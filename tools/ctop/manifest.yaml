@@ -6,6 +6,7 @@ tags:
 - type/tui
 - troubleshooting
 - management
+- lang/go
 homepage: https://github.com/bcicen/ctop
 description: Top-like interface for container metrics
 renovate:

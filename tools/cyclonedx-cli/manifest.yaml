@@ -6,6 +6,8 @@ tags:
 - category/security
 - sbom
 - cicd
+- lang/c
+- lang/csharp
 homepage: https://github.com/CycloneDX/cyclonedx-cli
 description: CycloneDX CLI tool for SBOM analysis, merging, diffs and format conversions
 renovate:

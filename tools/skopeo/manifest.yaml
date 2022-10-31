@@ -7,6 +7,7 @@ tags:
 - container/registry
 - container/image
 - type/cli
+- lang/go
 homepage: https://github.com/containers/skopeo
 description: Work with remote images registries
 renovate:

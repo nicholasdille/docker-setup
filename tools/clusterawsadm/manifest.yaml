@@ -6,6 +6,7 @@ tags:
 - org/kubernetes
 - cloud/aws
 - type/cli
+- lang/go
 homepage: https://github.com/kubernetes-sigs/cluster-api-provider-aws
 description: Kubernetes Cluster API Provider AWS
 renovate:

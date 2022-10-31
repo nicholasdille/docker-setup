@@ -6,6 +6,7 @@ dependencies:
 tags:
 - category/security
 - type/cli
+- lang/rust
 homepage: https://github.com/mike-engel/jwt-cli
 description: Super fast CLI tool to decode and encode JWTs
 renovate:

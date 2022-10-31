@@ -5,6 +5,7 @@ tags:
 - type/cli
 - management
 - storage
+- lang/go
 homepage: https://github.com/crazy-max/artifactory-cleanup
 description: Cleanup artifacts on Jfrog Artifactory with advanced settings
 renovate:

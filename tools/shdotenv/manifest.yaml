@@ -4,6 +4,7 @@ check: ${binary} --version
 tags:
 - type/cli
 - category/development
+- lang/shell
 homepage: https://github.com/ko1nksm/shdotenv
 description: Support for POSIX-compliant and multiple .env file syntax
 renovate:

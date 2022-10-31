@@ -8,6 +8,7 @@ tags:
 - type/plugin
 - category/security
 - container/sign
+- lang/go
 homepage: https://github.com/notaryproject/notation
 description: Add signatures as standard items in the registry ecosystem
 renovate:

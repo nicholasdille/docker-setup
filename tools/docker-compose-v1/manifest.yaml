@@ -9,6 +9,7 @@ tags:
 - standard/docker
 - container/compose
 - type/cli
+- lang/python
 homepage: https://github.com/docker/compose
 description: Define and run multi-container applications with Docker (v1)
 renovate:

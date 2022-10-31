@@ -4,6 +4,8 @@ check: ""
 tags:
 - category/security
 - type/cli
+- lang/go
+- state/stale
 homepage: https://github.com/benjojo/ssh-key-confirmer
 description: Test SSH login key acceptance without having the private key
 renovate:

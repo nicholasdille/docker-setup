@@ -6,6 +6,7 @@ dependencies:
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/philips-labs/spiffe-vault
 description: Integrates Spiffe and Vault to have secretless authentication
 renovate:

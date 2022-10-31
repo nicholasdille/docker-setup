@@ -5,6 +5,7 @@ check: ${binary} --version 2>&1
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/spiffe/spire
 description: SPIFFE Runtime Environment
 renovate:

@@ -7,6 +7,7 @@ tags:
 - type/cli
 - category/development
 - cicd
+- lang/go
 homepage: https://github.com/earthly/earthly
 description: Effortless CI/CD framework that runs anywhere
 renovate:

@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f1
 tags:
 - type/cli
 - terminal
+- lang/go
 homepage: https://github.com/junegunn/fzf
 description: Command-line fuzzy finder
 renovate:

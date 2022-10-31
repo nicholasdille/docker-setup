@@ -8,6 +8,7 @@ tags:
 - templating
 - package
 - management
+- lang/go
 homepage: https://github.com/vmware-tanzu/carvel-kapp
 description: Simple deployment tool focused on the concept of "Kubernetes application" — a set of resources with the same label
 renovate:

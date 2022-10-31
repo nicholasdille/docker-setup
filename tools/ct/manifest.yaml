@@ -4,6 +4,7 @@ check: ${binary} -version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
 - management
+- lang/go
 homepage: https://github.com/flatcar/container-linux-config-transpiler
 description: Utility for Flatcar Container Linux
 renovate:

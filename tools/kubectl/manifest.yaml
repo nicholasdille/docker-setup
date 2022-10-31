@@ -9,6 +9,7 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/kubernetes/kubernetes
 description: Run commands against Kubernetes clusters
 renovate:

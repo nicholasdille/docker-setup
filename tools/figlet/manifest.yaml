@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - fun
+- lang/c
 homepage: http://www.figlet.org/
 description: Making large letters out of ordinary text
 renovate:

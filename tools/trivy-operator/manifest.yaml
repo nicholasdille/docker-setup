@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/daemon
 - category/security
+- lang/go
 homepage: https://github.com/aquasecurity/trivy-operator
 description: Kubernetes-native security toolkit
 renovate:

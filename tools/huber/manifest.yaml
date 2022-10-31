@@ -6,6 +6,7 @@ dependencies:
 tags:
 - type/cli
 - category/development
+- lang/rust
 homepage: https://github.com/innobead/huber
 description: Package Manager for GitHub repos
 renovate:

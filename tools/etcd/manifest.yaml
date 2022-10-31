@@ -5,6 +5,7 @@ tags:
 - type/cli
 - type/daemon
 - kubernetes
+- lang/go
 homepage: https://github.com/etcd-io/etcd
 description: Distributed reliable key-value store
 renovate:

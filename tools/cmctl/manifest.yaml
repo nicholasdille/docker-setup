@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - management
 - category/security
+- lang/go
 homepage: https://github.com/cert-manager/cert-manager
 description: Automatically provision and manage TLS certificates in Kubernetes
 renovate:

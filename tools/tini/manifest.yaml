@@ -4,6 +4,8 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - container/init
 - type/cli
+- lang/c
+- state/stale
 homepage: https://github.com/krallin/tini
 description: Tiny but valid init for containers
 renovate:

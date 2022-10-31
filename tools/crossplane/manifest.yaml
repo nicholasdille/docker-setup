@@ -8,6 +8,8 @@ tags:
 - type/cli
 - type/plugin
 - management
+- infrastructure
+- lang/go
 homepage: https://github.com/crossplane/crossplane
 description: Cloud Native Control Planes
 renovate:

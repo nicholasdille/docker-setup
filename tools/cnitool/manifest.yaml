@@ -6,6 +6,7 @@ tags:
 - component/network
 - type/cli
 - kubernetes
+- lang/go
 homepage: https://github.com/containernetworking/cni
 description: Container Network Interface - networking for Linux containers
 renovate:

@@ -4,6 +4,7 @@ check: ${binary} --version | grep ^tig | cut -d' ' -f3
 tags:
 - type/cli
 - category/development
+- lang/c
 homepage: https://github.com/jonas/tig
 description: Text-mode interface for git
 renovate:

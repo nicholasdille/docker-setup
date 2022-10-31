@@ -5,6 +5,7 @@ check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1
 tags:
 - type/cli
 - wsl
+- lang/go
 homepage: https://github.com/rupor-github/win-gpg-agent
 description: Windows helpers for GnuPG tools suite
 renovate:

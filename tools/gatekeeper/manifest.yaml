@@ -6,6 +6,7 @@ tags:
 - type/daemon
 - category/security
 - kubernetes
+- lang/go
 homepage: https://github.com/open-policy-agent/gatekeeper
 description: Policy Controller for Kubernetes
 renovate:

@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - markdown
+- lang/go
 homepage: https://github.com/charmbracelet/glow
 description: Render markdown on the CLI
 renovate:

@@ -5,6 +5,7 @@ check: ""
 tags:
 - kernel/namespaces
 - type/cli
+- lang/c
 homepage: https://github.com/rd235/nsutils
 description: Linux namespace utilities
 renovate:

@@ -6,6 +6,7 @@ tags:
 - type/cli
 - minecraft
 - management
+- lang/go
 homepage: https://github.com/dirien/minectl
 description: CLI for creating Minecraft server on different cloud provider
 renovate:

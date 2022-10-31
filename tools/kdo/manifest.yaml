@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - kubernetes
+- lang/go
 homepage: https://github.com/stepro/kdo
 description: Deployless Development on Kubernetes
 renovate:

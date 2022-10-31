@@ -10,6 +10,7 @@ tags:
 - type/plugin
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl
 description: Tool for building container images with your Kubernetes cluster
 renovate:

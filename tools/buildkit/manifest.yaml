@@ -8,6 +8,7 @@ tags:
 - container/build
 - type/cli
 - type/daemon
+- lang/go
 homepage: https://github.com/moby/buildkit
 description: Concurrent, cache-efficient, and Dockerfile-agnostic builder toolkit
 renovate:

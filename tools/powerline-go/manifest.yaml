@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - terminal
+- lang/go
 homepage: https://github.com/justjanne/powerline-go
 description: Beautiful and useful low-latency prompt for your shell
 renovate:

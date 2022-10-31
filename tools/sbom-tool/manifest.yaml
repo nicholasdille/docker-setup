@@ -5,6 +5,8 @@ tags:
 - category/security
 - sbom
 - cicd
+- lang/c
+- lang/csharp
 homepage: https://github.com/microsoft/sbom-tool
 description: Highly scalable and enterprise ready tool to create SPDX 2.2 compatible SBOMs
 renovate:

@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - markdown
+- lang/go
 homepage: https://github.com/cpuguy83/go-md2man
 description: Converts markdown into roff (man pages)
 renovate:

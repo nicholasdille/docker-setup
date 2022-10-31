@@ -14,6 +14,7 @@ tags:
 - category/default
 - type/cli
 - type/daemon
+- lang/go
 homepage: https://www.docker.com/
 description: The Docker CLI
 renovate:

@@ -10,6 +10,7 @@ tags:
 - container/registry
 - type/cli
 - containerd
+- lang/go
 homepage: https://github.com/ipfs/kubo
 description: IPFS implementation in Go
 renovate:

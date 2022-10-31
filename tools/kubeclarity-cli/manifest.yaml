@@ -6,6 +6,7 @@ tags:
 - category/security
 - kubernetes
 - cicd
+- lang/go
 homepage: https://github.com/openclarity/kubeclarity
 description: Tool for detection and management of Software Bill Of Materials and vulnerabilities of container images and filesystems
 renovate:

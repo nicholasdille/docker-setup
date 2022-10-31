@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - component/network
 - type/cli
+- lang/go
 homepage: https://github.com/norouter/norouter
 description: IP-over-Stdio
 renovate:

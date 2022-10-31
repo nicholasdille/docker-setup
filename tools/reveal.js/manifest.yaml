@@ -5,6 +5,7 @@ tags:
 - markdown
 - slides
 - presentation
+- lang/javascript
 homepage: https://github.com/hakimel/reveal.js
 description: HTML Presentation Framework
 renovate:

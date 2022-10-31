@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/theketchio/ketch
 description: Application delivery framework that facilitates the deployment and management of applications on Kubernetes using a simple command line interface
 renovate:

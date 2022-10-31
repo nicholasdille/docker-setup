@@ -4,6 +4,8 @@ check: ${binary} version
 tags:
 - type/cli
 - cnab
+- lang/go
+- state/archived
 homepage: https://github.com/cnabio/duffle
 description: CNAB installer
 renovate:

@@ -6,6 +6,7 @@ tags:
 - markdown
 - slides
 - presentation
+- lang/go
 homepage: https://github.com/maaslalani/slides
 description: Terminal based presentation tool
 renovate:

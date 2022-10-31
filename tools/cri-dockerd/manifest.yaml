@@ -11,6 +11,7 @@ tags:
 - container/runtime
 - type/daemon
 - kubernetes
+- lang/go
 homepage: https://github.com/Mirantis/cri-dockerd
 description: Shim for Docker Engine that lets you control Docker via the Kubernetes Container Runtime Interface
 renovate:

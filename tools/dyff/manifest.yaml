@@ -4,6 +4,7 @@ check: ${binary} version | cut -d' ' -f3
 tags:
 - category/development
 - type/cli
+- lang/go
 homepage: https://github.com/homeport/dyff
 description: Diff tool for YAML files
 renovate:

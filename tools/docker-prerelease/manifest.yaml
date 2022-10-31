@@ -13,6 +13,7 @@ tags:
 - type/cli
 - type/daemon
 - stability/prerelease
+- lang/go
 homepage: https://www.docker.com/
 description: The Docker CLI
 renovate:

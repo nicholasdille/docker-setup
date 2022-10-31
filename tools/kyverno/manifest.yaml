@@ -4,6 +4,7 @@ check: ${binary} version | grep ^Version | cut -d' ' -f2
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/kyverno/kyverno
 description: Kubernetes Native Policy Management
 renovate:

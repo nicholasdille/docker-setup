@@ -6,6 +6,7 @@ dependencies:
 tags:
 - type/cli
 - format
+- lang/rust
 homepage: https://github.com/01mf02/jaq
 description: jq clone focussed on correctness, speed, and simplicity
 renovate:

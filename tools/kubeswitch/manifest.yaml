@@ -5,6 +5,7 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/danielb42/kubeswitch
 description: Visually select kubernetes context/namespace from tree
 renovate:

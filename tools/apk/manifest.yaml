@@ -5,7 +5,8 @@ tags:
 - type/cli
 - package
 - management
-homepage: httpshttps://gitlab.alpinelinux.org/alpine/apk-tools
+- lang/c
+homepage: https://gitlab.alpinelinux.org/alpine/apk-tools
 description: Alpine package manager
 renovate:
   datasource: github-tags

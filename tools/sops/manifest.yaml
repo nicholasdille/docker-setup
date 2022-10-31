@@ -6,6 +6,7 @@ tags:
 - category/security
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/mozilla/sops
 description: Simple and flexible tool for managing secrets
 renovate:

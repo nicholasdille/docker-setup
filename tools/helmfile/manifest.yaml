@@ -5,6 +5,7 @@ tags:
 - type/cli
 - kubernetes
 - templating
+- lang/go
 homepage: https://github.com/roboll/helmfile
 description: Deploy Kubernetes Helm Charts
 renovate:

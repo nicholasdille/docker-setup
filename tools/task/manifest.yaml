@@ -5,6 +5,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/go-task/task
 description: Task runner and simpler Make alternative written in Go
 renovate:

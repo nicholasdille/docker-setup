@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - wsl
+- lang/shell
 homepage: https://github.com/wslutilities/wslu
 description: Collection of utilities for Windows Subsystem for Linux
 renovate:

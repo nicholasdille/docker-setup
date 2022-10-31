@@ -8,6 +8,7 @@ tags:
 - type/plugin
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/kubernetes-sigs/krew
 description: Find and install kubectl plugins
 renovate:

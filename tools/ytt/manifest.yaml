@@ -8,6 +8,7 @@ tags:
 - templating
 - package
 - management
+- lang/go
 homepage: https://github.com/vmware-tanzu/carvel-ytt
 description: YAML templating tool that works on YAML structure instead of text
 renovate:

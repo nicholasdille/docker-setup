@@ -5,6 +5,7 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/ckotzbauer/chekr
 description: Inspection utility for the maintenance of Kubernetes clusters
 renovate:

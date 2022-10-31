@@ -5,6 +5,7 @@ tags:
 - type/daemon
 - category/development
 - terminal
+- lang/c
 homepage: https://github.com/tsl0922/ttyd
 description: Share your terminal over the web
 renovate:

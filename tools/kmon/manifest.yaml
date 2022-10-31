@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/tui
 - management
+- lang/rust
 homepage: https://github.com/orhun/kmon
 description: Linux Kernel Manager and Activity Monitor
 renovate:

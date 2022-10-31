@@ -9,6 +9,8 @@ tags:
 - kubernetes
 - management
 - troubleshooting
+- lang/go
+- state/stale
 homepage: https://github.com/howardjohn/kubectl-resources
 description: Access Kubernetes resource requests, limits, and usage
 renovate:

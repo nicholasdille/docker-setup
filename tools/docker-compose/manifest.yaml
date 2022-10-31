@@ -14,6 +14,7 @@ tags:
 - container/compose
 - type/cli
 - type/plugin
+- lang/go
 homepage: https://github.com/docker/compose
 description: Define and run multi-container applications with Docker (v2)
 renovate:

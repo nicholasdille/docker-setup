@@ -13,6 +13,7 @@ tags:
 - standard/cri
 - container/runtime
 - type/daemon
+- lang/go
 homepage: https://github.com/cri-o/cri-o
 description: Open Container Initiative-based implementation of Kubernetes Container Runtime Interface
 renovate:

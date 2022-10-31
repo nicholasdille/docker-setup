@@ -5,6 +5,7 @@ tags:
 - org/cncf
 - org/kubernetes
 - type/cli
+- lang/go
 homepage: https://github.com/kubernetes-sigs/cluster-api
 description: Home for Cluster API
 renovate:

@@ -9,6 +9,7 @@ tags:
 - container/registry
 - type/daemon
 - management
+- lang/go
 homepage: https://github.com/containrrr/watchtower
 description: Process for automating Docker container base image updates
 renovate:

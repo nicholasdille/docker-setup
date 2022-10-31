@@ -5,6 +5,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/zaquestion/lab
 description: Wraps Git or Hub, making it simple to clone, fork, and interact with repositories on GitLab
 renovate:

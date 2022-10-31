@@ -5,6 +5,7 @@ check: ${binary} version
 tags:
 - type/cli
 - ebpf
+- lang/c
 homepage: https://github.com/solo-io/bumblebee
 description: Get eBPF programs running from the cloud to the kernel
 renovate:

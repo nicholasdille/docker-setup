@@ -8,6 +8,7 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/rancher/k3d
 description: Little helper to run CNCF's k3s in Docker
 renovate:

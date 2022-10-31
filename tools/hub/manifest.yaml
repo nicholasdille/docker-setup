@@ -6,6 +6,7 @@ tags:
 - type/cli
 - category/development
 - cicd
+- lang/go
 homepage: https://github.com/github/hub
 description: Command-line tool that makes git easier to use with GitHub
 renovate:

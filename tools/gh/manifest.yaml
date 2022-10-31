@@ -6,6 +6,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/cli/cli
 description: GitHub's official command line tool
 renovate:

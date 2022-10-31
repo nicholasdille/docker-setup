@@ -6,6 +6,7 @@ tags:
 - type/daemon
 - container/registry
 - management
+- lang/go
 homepage: https://github.com/crazy-max/diun
 description: Receive notifications when an image is updated on a Docker registry
 renovate:

@@ -5,6 +5,7 @@ tags:
 - type/cli
 - category/security
 - certificate
+- lang/go
 homepage: https://github.com/cloudflare/cfssl
 description: Cloudflare's PKI and TLS toolkit
 renovate:

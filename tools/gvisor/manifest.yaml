@@ -9,6 +9,7 @@ tags:
 - org/google
 - container/runtime
 - category/security
+- lang/go
 homepage: https://github.com/google/gvisor
 description: Application Kernel for Containers
 renovate:

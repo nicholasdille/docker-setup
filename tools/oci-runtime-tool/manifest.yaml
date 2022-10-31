@@ -6,6 +6,7 @@ tags:
 - standard/oci
 - container/runtime
 - type/cli
+- lang/go
 homepage: https://github.com/opencontainers/runtime-tools
 description: OCI Runtime Tools
 renovate:

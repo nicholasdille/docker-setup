@@ -8,6 +8,7 @@ tags:
 - org/docker
 - type/plugin
 - type/cli
+- lang/go
 homepage: https://github.com/docker/base-cli-plugin
 description: Docker CLI plugin to detect base images
 renovate:

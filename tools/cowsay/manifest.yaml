@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - fun
+- lang/go
 homepage: https://github.com/Code-Hex/Neo-cowsay
 description: Cowsay is reborn
 renovate:

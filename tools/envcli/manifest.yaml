@@ -6,6 +6,7 @@ tags:
 - category/development
 - type/cli
 - management
+- lang/go
 homepage: https://github.com/EnvCLI/EnvCLI
 description: Don't install locally, use containers you define within your project
 renovate:

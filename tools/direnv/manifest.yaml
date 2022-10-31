@@ -4,6 +4,7 @@ check: ${binary} version
 tags:
 - type/cli
 - terminal
+- lang/go
 homepage: https://github.com/direnv/direnv/
 description: Unclutter your .profile
 renovate:

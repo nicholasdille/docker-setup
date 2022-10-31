@@ -4,6 +4,8 @@ check: ""
 tags:
 - type/cli
 - category/security
+- lang/go
+- state/stale
 homepage: https://github.com/bbl/secretize
 description: Kubernetes secrets generator plugin for kustomize
 renovate:

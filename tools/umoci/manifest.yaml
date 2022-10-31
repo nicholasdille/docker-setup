@@ -6,6 +6,7 @@ tags:
 - standard/oci
 - container/image
 - type/cli
+- lang/go
 homepage: https://github.com/opencontainers/umoci
 description: Modifies Open Container images
 renovate:

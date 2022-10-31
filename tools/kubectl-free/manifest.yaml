@@ -9,6 +9,8 @@ tags:
 - kubernetes
 - management
 - troubleshooting
+- lang/go
+- state/stale
 homepage: https://github.com/makocchi-git/kubectl-free
 description: Show various requested resources on Kubernetes nodes
 renovate:

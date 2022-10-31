@@ -14,6 +14,7 @@ tags:
 - type/cli
 - type/daemon
 - container/runtime
+- lang/go
 homepage: https://github.com/containerd/containerd
 description: Open and reliable container runtime
 renovate:

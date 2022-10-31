@@ -7,6 +7,7 @@ tags:
 - type/cli
 - troubleshooting
 - cicd
+- lang/haskell
 homepage: https://github.com/hadolint/hadolint
 description: Dockerfile linter, validate inline bash
 renovate:

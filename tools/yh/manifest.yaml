@@ -4,6 +4,8 @@ check: ${binary} version
 tags:
 - type/cli
 - format
+- lang/go
+- state/stale
 homepage: https://github.com/andreazorzetto/yh
 description: YAML syntax highlighter to bring colours to kubectl output
 renovate:

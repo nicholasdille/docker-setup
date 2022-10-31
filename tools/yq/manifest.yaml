@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f4
 tags:
 - type/cli
 - format
+- lang/go
 homepage: https://github.com/mikefarah/yq
 description: Portable command-line YAML, JSON, XML, CSV and properties processor
 renovate:

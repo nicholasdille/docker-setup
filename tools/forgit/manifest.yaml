@@ -6,5 +6,6 @@ dependencies:
 tags:
 - type/cli
 - category/development
+- lang/shell
 homepage: https://github.com/wfxr/forgit
 description: Utility tool powered by fzf for using git interactively

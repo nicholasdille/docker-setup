@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f1
 tags:
 - container/su
 - type/cli
+- lang/go
 homepage: https://github.com/tianon/gosu
 description: Simple Go-based setuid+setgid+setgroups+exec
 renovate:

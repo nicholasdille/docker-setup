@@ -6,6 +6,7 @@ tags:
 - type/plugin
 - component/storage
 - containerd
+- lang/c
 homepage: https://github.com/containers/fuse-overlayfs
 description: FUSE implementation for overlayfs
 renovate:

@@ -6,6 +6,7 @@ tags:
 - category/development
 - cicd
 - kubernetes
+- lang/go
 homepage: https://github.com/UKHomeOffice/kd
 description: Minimalistic kubernetes resources deployment tool with templating
 renovate:

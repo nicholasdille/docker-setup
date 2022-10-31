@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - rootless
+- lang/go
 homepage: https://github.com/rootless-containers/rootlesskit
 description: Linux-native "fake root" for implementing rootless containers
 renovate:

@@ -6,6 +6,7 @@ tags:
 - component/network
 - kubernetes
 - standard/cni
+- lang/go
 homepage: https://github.com/projectcalico/calico
 description: Cloud native networking and network security
 renovate:

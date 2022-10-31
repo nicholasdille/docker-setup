@@ -6,6 +6,7 @@ tags:
 - org/docker
 - type/cli
 - state/archived
+- lang/go
 homepage: https://github.com/docker/machine
 description: Machine management for a container-centric world
 renovate:

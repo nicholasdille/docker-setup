@@ -6,6 +6,7 @@ tags:
 - type/cli
 - kubernetes
 - cicd
+- lang/go
 homepage: https://github.com/datreeio/datree
 description: Prevent Kubernetes misconfigurations from reaching production
 renovate:

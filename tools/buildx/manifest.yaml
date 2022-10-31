@@ -10,6 +10,7 @@ tags:
 - type/cli
 - type/plugin
 - category/default
+- lang/go
 homepage: https://github.com/docker/buildx
 description: Docker CLI plugin for extended build capabilities with BuildKit
 renovate:

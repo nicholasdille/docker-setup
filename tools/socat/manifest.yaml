@@ -4,5 +4,6 @@ check: ${binary} -V | grep "^socat version" | cut -d' ' -f3
 tags:
 - type/cli
 - component/network
+- lang/c
 homepage: http://www.dest-unreach.org/socat/
 description: Multipurpose relay

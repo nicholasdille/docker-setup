@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
 - format
+- lang/go
 homepage: https://github.com/TomWright/dasel
 description: Select, put and delete data from JSON, TOML, YAML, XML and CSV files
 renovate:

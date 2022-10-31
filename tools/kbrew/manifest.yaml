@@ -6,6 +6,8 @@ tags:
 - kubernetes
 - package
 - management
+- lang/go
+- state/stale
 homepage: https://github.com/kbrew-dev/kbrew
 description: Homebrew for Kubernetes
 renovate:

@@ -7,6 +7,8 @@ tags:
 - type/cli
 - category/development
 - management
+- lang/rust
+- state/stale
 homepage: https://github.com/stephenc/envsub
 description: alternative envsubst that allows for ${foo:-default} expansion too
 renovate:

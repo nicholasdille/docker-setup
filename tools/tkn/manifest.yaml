@@ -6,6 +6,7 @@ tags:
 - category/development
 - org/cdfoundation
 - cicd
+- lang/go
 homepage: https://github.com/tektoncd/cli
 description: CLI for interacting with Tekton
 renovate:

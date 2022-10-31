@@ -4,6 +4,7 @@ check: ${binary} version | grep ^version | cut -d' ' -f2
 tags:
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/jenkins-x/jx
 description: Automated CI+CD for Kubernetes with Preview Environments on Pull Requests using Cloud Native pipelines from Tekton
 renovate:

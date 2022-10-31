@@ -9,6 +9,7 @@ tags:
 - container/runtime
 - type/daemon
 - management
+- lang/rust
 homepage: https://github.com/stepchowfun/docuum
 description: Performs least recently used eviction of Docker images
 renovate:

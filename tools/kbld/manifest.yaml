@@ -6,6 +6,7 @@ tags:
 - type/cli
 - container/build
 - kubernetes
+- lang/go
 homepage: https://github.com/vmware-tanzu/carvel-kbld
 description: Seamlessly incorporates image building and image pushing into your development and deployment workflows
 renovate:

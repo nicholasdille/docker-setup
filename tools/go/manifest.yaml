@@ -4,6 +4,7 @@ check: ${binary} version | cut -d' ' -f3 | tr -d go
 tags:
 - type/cli
 - category/development
+- lang/go
 homepage: https://github.com/golang/go
 description: Go programming language
 renovate:

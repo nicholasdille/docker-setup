@@ -6,6 +6,7 @@ tags:
 - component/network
 - component/storage
 - type/cli
+- lang/go
 homepage: https://github.com/lima-vm/sshocker
 description: SSH + reverse sshfs + port forwarder in Docker-like CLI
 renovate:

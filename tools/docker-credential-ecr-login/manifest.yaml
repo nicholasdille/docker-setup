@@ -8,6 +8,7 @@ tags:
 - container/runtime
 - category/security
 - cloud/aws
+- lang/go
 homepage: https://github.com/awslabs/amazon-ecr-credential-helper
 description: Automatically gets credentials for Amazon ECR on docker push/pull
 renovate:

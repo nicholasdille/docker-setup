@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - terminal
+- lang/rust
 homepage: https://github.com/Peltoche/lsd
 description: Next gen ls command
 renovate:

@@ -7,5 +7,6 @@ dependencies:
 tags:
 - type/cli
 - category/development
+- lang/java
 homepage: https://github.com/openjdk
 description: OpenJDK

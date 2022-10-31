@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
 - terminal
+- lang/rust
 homepage: https://github.com/sharkdp/bat
 description: cat(1) clone with wings
 renovate:

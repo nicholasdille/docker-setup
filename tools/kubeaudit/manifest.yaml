@@ -4,6 +4,7 @@ check: ${binary} version
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/Shopify/kubeaudit
 description: Audit your Kubernetes clusters against common security controls
 renovate:

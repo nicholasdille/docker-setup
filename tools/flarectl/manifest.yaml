@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - management
+- lang/go
 homepage: https://github.com/cloudflare/cloudflare-go/tree/master/cmd/flarectl
 description: CLI application for interacting with a Cloudflare account
 renovate:

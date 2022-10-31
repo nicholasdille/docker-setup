@@ -6,6 +6,7 @@ tags:
 - component/storage
 - type/cli
 - cnab
+- lang/go
 homepage: https://github.com/oras-project/oras
 description: ORAS CLI
 renovate:

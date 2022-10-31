@@ -5,6 +5,7 @@ tags:
 - category/development
 - category/security
 - type/cli
+- lang/go
 homepage: https://github.com/sigstore/gitsign
 description: Keyless Git signing using Sigstore
 renovate:

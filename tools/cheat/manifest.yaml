@@ -4,6 +4,7 @@ check: ${binary} --version
 tags:
 - type/cli
 - terminal
+- lang/go
 homepage: https://github.com/cheat/cheat
 description: Interactive cheatsheets on the command-line
 renovate:

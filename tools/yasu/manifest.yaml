@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f1
 tags:
 - container/su
 - type/cli
+- lang/go
 homepage: https://github.com/crazy-max/yasu
 description: Yet Another Switch User
 renovate:

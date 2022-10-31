@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - management
 - troubleshooting
+- lang/go
 homepage: https://github.com/salesforce/sloop
 description: Kubernetes History Visualization
 renovate:

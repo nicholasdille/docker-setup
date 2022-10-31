@@ -6,6 +6,8 @@ tags:
 - category/security
 - management
 - certificate
+- lang/shell
+- state/stale
 homepage: https://github.com/sahsanu/lectl
 description: Check issued certificates by Let's Encrypt on CTL (Certificate Transparency Log) using https://crt.sh
 renovate:

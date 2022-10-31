@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
 tags:
 - org/docker
 - type/cli
+- lang/go
 homepage: https://github.com/docker/hub-tool
 description: Docker Hub experimental CLI tool
 renovate:

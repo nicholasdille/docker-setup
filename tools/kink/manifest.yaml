@@ -5,6 +5,8 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
+- state/stale
 homepage: https://github.com/Trendyol/kink
 description: CLI to manage KinD clusters as Kubernetes pods
 renovate:

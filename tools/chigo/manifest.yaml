@@ -3,6 +3,7 @@ version: 1.4.0
 tags:
 - type/cli
 - fun
+- lang/go
 homepage: https://github.com/UltiRequiem/chigo
 description: Lolcat in Go - Rainbows and Unicorns
 renovate:

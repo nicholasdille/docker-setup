@@ -4,6 +4,7 @@ check: ${binary} version | cut -d- -f1
 tags:
 - type/cli
 - kubernetes
+- lang/go
 homepage: https://github.com/stackrox/kube-linter
 description: static analysis tool that checks Kubernetes YAML files and Helm charts
 renovate:

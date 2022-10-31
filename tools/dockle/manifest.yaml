@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/goodwithtech/dockle
 description: Container Image Linter for Security, Helping build the Best-Practice Docker Image, Easy to start
 renovate:

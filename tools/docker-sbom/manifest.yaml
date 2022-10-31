@@ -12,6 +12,7 @@ tags:
 - type/cli
 - sbom
 - cicd
+- lang/go
 homepage: https://github.com/docker/sbom-cli-plugin
 description: Plugin for Docker CLI to support SBOM creation using Syft
 renovate:

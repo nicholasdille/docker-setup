@@ -7,6 +7,7 @@ tags:
 - templating
 - package
 - management
+- lang/go
 homepage: https://github.com/helm/helm
 description: The Kubernetes Package Manager
 renovate:

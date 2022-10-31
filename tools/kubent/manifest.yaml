@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - management
 - cicd
+- lang/go
 homepage: https://github.com/doitintl/kube-no-trouble
 description: Easily check your clusters for use of deprecated APIs
 renovate:

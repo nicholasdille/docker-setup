@@ -5,6 +5,7 @@ tags:
 - type/cli
 - format
 - markdown
+- lang/haskell
 homepage: https://github.com/jgm/pandoc
 description: Universal markup converter
 renovate:

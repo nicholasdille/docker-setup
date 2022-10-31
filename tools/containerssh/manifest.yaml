@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/daemon
 - category/security
+- lang/go
 homepage: https://github.com/ContainerSSH/ContainerSSH
 description: Launch containers on demand
 renovate:

@@ -4,6 +4,7 @@ check: ""
 tags:
 - category/security
 - type/cli
+- lang/go
 homepage: https://github.com/emojisum/emojisum
 description: Easier way to compare hashes/fingerprints when dealing human weak link
 renovate:

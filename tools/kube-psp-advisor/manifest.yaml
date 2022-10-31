@@ -5,6 +5,7 @@ tags:
 - type/cli
 - category/security
 - kubernetes
+- lang/go
 homepage: https://github.com/sysdiglabs/kube-psp-advisor
 description: Help building an adaptive and fine-grained pod security policy
 renovate:

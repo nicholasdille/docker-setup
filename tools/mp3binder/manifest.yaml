@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - category/music
 - type/cli
+- lang/go
 homepage: https://github.com/crra/mp3binder
 description: Concatenating, joining, binding MP3 files without re-encoding
 renovate:

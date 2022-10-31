@@ -9,6 +9,7 @@ tags:
 - standard/oci
 - container/build
 - type/cli
+- lang/go
 homepage: https://github.com/nicholasdille/buildah-static
 description: Tool that facilitates building OCI images
 renovate:

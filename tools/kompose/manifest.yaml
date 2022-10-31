@@ -6,6 +6,7 @@ tags:
 - container/compose
 - type/cli
 - kubernetes
+- lang/go
 homepage: https://github.com/kubernetes/kompose
 description: Go from Docker Compose to Kubernetes
 renovate:

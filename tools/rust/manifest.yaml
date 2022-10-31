@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - category/development
+- lang/rust
 homepage: https://github.com/rust-lang/rust
 description: Empowering everyone to build reliable and efficient software
 renovate:

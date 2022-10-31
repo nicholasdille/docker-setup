@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
 - category/development
+- lang/go
 homepage: https://github.com/getoutreach/localizer
 description: No-frills local development tool for service developers working in Kubernetes
 renovate:

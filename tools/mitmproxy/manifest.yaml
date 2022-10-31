@@ -5,6 +5,7 @@ tags:
 - component/network
 - type/cli
 - troubleshooting
+- lang/python
 homepage: https://github.com/mitmproxy/mitmproxy
 description: Interactive TLS-capable intercepting HTTP proxy for penetration testers and software developers
 renovate:

@@ -5,6 +5,7 @@ tags:
 - type/cli
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/danielfoehrKn/kubeswitch
 description: The kubectx for operators
 renovate:

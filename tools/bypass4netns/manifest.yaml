@@ -8,6 +8,7 @@ tags:
 - type/cli
 - type/daemon
 - rootless
+- lang/go
 homepage: https://github.com/rootless-containers/bypass4netns
 description: Accelerates slirp4netns using SECCOMP_IOCTL_NOTIF_ADDFD
 renovate:

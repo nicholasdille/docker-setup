@@ -8,6 +8,7 @@ tags:
 - type/tui
 - management
 - troubleshooting
+- lang/go
 homepage: https://github.com/jesseduffield/lazydocker
 description: The lazier way to manage everything docker
 renovate:

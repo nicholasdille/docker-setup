@@ -5,6 +5,7 @@ tags:
 - type/cli
 - package
 - management
+- lang/go
 homepage: https://github.com/whalebrew/whalebrew
 description: Homebrew, but with Docker images
 renovate:

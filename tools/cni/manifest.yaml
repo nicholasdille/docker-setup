@@ -3,10 +3,10 @@ version: 1.1.1
 binary: ${target}/libexec/cni/loopback
 check: ${binary} 2>&1 | cut -d' ' -f4 | tr -d v
 tags:
-- k8s
 - kubernetes
 - component/network
 - type/plugin
+- lang/go
 homepage: https://github.com/containernetworking/plugins
 description: Some reference and example networking plugins
 renovate:

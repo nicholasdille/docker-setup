@@ -7,6 +7,7 @@ tags:
 - container/registry
 - type/cli
 - management
+- lang/go
 homepage: https://github.com/regclient/regclient
 description: Docker and OCI Registry Client in Go and tooling using those libraries
 renovate:

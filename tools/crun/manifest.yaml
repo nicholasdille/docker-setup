@@ -6,6 +6,7 @@ tags:
 - standard/oci
 - container/runtime
 - type/cli
+- lang/c
 homepage: https://github.com/containers/crun
 description: Fast and lightweight fully featured OCI runtime
 renovate:

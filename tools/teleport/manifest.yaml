@@ -6,6 +6,7 @@ tags:
 - type/daemon
 - category/development
 - tunneling
+- lang/go
 homepage: https://github.com/gravitational/teleport
 description: Easiest, most secure way to access infrastructure
 renovate:

@@ -4,6 +4,7 @@ check: ""
 tags:
 - type/cli
 - org/moby
+- lang/go
 homepage: https://github.com/linuxkit/linuxkit
 description: Toolkit for building secure, portable and lean operating systems for containers
 renovate:

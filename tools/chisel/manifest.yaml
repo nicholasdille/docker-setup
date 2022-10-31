@@ -5,6 +5,7 @@ tags:
 - type/cli
 - category/development
 - tunneling
+- lang/go
 homepage: https://github.com/jpillora/chisel
 description: Fast TCP/UDP tunnel over HTTP
 renovate:

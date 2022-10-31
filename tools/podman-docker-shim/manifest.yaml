@@ -10,5 +10,6 @@ tags:
 - type/cli
 - type/daemon
 - rootless
+- lang/shell
 homepage: https://github.com/containers/podman
 description: Shim to call Podman instead of Docker

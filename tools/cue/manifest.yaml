@@ -4,6 +4,8 @@ check: ${binary} version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
 - category/development
+- lang/go
+- lang/cue
 homepage: https://github.com/cue-lang/cue
 description: Validate and define text-based and dynamic configuration
 renovate:

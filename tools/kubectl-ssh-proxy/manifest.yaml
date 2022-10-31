@@ -5,6 +5,8 @@ tags:
 - type/cli
 - category/security
 - kubernetes
+- lang/go
+- state/stale
 homepage: https://github.com/little-angry-clouds/kubectl-ssh-proxy
 description: Kubectl plugin to launch a ssh socks proxy and use it
 renovate:

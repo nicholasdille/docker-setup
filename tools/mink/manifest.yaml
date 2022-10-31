@@ -6,6 +6,7 @@ tags:
 - category/development
 - org/cdfoundation
 - cicd
+- lang/go
 homepage: https://github.com/mattmoor/mink
 description: Minimal distribution of Knative and Tekton, and CLI
 renovate:

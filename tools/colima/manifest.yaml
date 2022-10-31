@@ -4,6 +4,7 @@ check: ${binary} version 2>/dev/null | grep ^colima | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
 - category/development
+- lang/go
 homepage: https://github.com/abiosoft/colima
 description: Container runtimes on macOS (and Linux) with minimal setup
 renovate:

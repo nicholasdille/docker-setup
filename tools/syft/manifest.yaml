@@ -5,6 +5,7 @@ tags:
 - category/security
 - sbom
 - cicd
+- lang/go
 homepage: https://github.com/anchore/syft
 description: CLI tool and library for generating a Software Bill of Materials from container images and filesystems
 renovate:

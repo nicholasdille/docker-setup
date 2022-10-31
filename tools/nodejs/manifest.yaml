@@ -6,6 +6,7 @@ check: ${binary} --version | tr -d v
 tags:
 - type/cli
 - category/development
+- lang/javascript
 homepage: https://github.com/nodejs/node
 description: Node.js JavaScript runtime
 renovate:

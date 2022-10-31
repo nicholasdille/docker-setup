@@ -5,6 +5,7 @@ check: ""
 tags:
 - kernel/capabilities
 - type/cli
+- lang/c
 homepage: https://github.com/stevegrubb/libcap-ng
 description: Library for Linux that makes using posix capabilities easy
 renovate:

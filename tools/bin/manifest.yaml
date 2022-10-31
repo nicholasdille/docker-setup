@@ -4,6 +4,7 @@ check: ${binary} --version | grep ^bin | cut -d' ' -f3
 tags:
 - type/cli
 - management
+- lang/go
 homepage: https://github.com/marcosnils/bin
 description: Effortless binary manager
 renovate:

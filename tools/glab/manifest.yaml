@@ -6,6 +6,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/go
 homepage: https://gitlab.com/gitlab-org/cli
 description: CLI tool bringing GitLab to your command line
 renovate:

@@ -5,6 +5,7 @@ tags:
 - type/tui
 - kubernetes
 - management
+- lang/go
 homepage: https://github.com/derailed/k9s
 description: CLI To Manage Your Clusters In Style
 renovate:

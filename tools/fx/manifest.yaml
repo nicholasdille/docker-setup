@@ -5,6 +5,7 @@ check: ""
 tags:
 - type/cli
 - format
+- lang/go
 homepage: https://github.com/antonmedv/fx
 description: Terminal JSON viewer
 renovate:

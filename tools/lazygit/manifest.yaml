@@ -5,6 +5,7 @@ tags:
 - type/tui
 - category/development
 - management
+- lang/go
 homepage: https://github.com/jesseduffield/lazygit
 description: Simple terminal UI for git commands
 renovate:

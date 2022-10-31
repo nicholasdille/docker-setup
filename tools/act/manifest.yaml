@@ -8,6 +8,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/nektos/act
 description: Run your GitHub Actions locally
 renovate:

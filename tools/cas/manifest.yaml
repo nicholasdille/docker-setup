@@ -5,6 +5,7 @@ tags:
 - type/cli
 - category/security
 - cicd
+- lang/go
 homepage: https://github.com/codenotary/cas
 description: Codenotary Community Attestation Service (CAS) for notarization and authentication of digital artifacts
 renovate:

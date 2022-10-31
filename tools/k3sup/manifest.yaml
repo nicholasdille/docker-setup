@@ -6,6 +6,7 @@ tags:
 - kubernetes
 - package
 - management
+- lang/go
 homepage: https://github.com/alexellis/k3sup
 description: Bootstrap Kubernetes with k3s over SSH
 renovate:

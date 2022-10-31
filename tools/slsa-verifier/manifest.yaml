@@ -4,6 +4,7 @@ check: ""
 tags:
 - category/security
 - type/cli
+- lang/go
 homepage: https://github.com/slsa-framework/slsa-verifier
 description: Implementation for verifying SLSA provenance
 renovate:

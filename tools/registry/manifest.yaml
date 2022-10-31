@@ -6,6 +6,7 @@ tags:
 - standard/oci
 - container/registry
 - type/daemon
+- lang/go
 homepage: https://github.com/distribution/distribution
 description: Toolkit to pack, ship, store, and deliver container content
 renovate:

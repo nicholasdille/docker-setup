@@ -6,6 +6,7 @@ if: is_rockylinux
 tags:
 - component/network
 - type/cli
+- lang/c
 homepage: https://www.netfilter.org/projects/iptables/index.html
 description: Userspace command line program used to configure kernel packet filtering ruleset
 renovate:

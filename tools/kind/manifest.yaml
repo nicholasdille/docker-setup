@@ -1,13 +1,14 @@
 name: kind
 version: 0.17.0
 check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
+dependencies:
+- docker
 tags:
 - org/cncf
 - standard/docker
 - type/cli
 - kubernetes
-dependencies:
-- docker
+- lang/go
 homepage: https://github.com/kubernetes-sigs/kind
 description: Kubernetes IN Docker - local clusters for testing Kubernetes
 renovate:

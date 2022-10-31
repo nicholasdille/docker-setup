@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/bitnami-labs/sealed-secrets
 description: Kubernetes controller and tool for one-way encrypted Secrets
 renovate:

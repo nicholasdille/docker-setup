@@ -6,6 +6,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/go
 homepage: https://github.com/vmware-tanzu/carvel-vendir
 description: Easy way to vendor declaratively
 renovate:

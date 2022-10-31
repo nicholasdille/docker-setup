@@ -4,6 +4,7 @@ check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
 - fun
+- lang/shell
 homepage: https://github.com/dylanaraps/neofetch
 description: Command-line system information tool written in bash 3.2+
 renovate:

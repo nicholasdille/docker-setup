@@ -4,6 +4,8 @@ check: ${binary} --version
 tags:
 - type/cli
 - category/development
+- lang/go
+- state/stale
 homepage: https://github.com/shyiko/jabba
 description: Java Version Manager
 renovate:

@@ -5,6 +5,8 @@ tags:
 - kernel/cgroups
 - kernel/capabilities
 - type/cli
+- lang/go
+- state/stale
 homepage: https://github.com/mhausenblas/cinf
 description: Command line tool to view namespaces and cgroups
 renovate:

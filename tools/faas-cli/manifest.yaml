@@ -4,6 +4,7 @@ check: ${binary} version | grep "version:" | cut -d' ' -f3
 tags:
 - category/serverless
 - type/cli
+- lang/go
 homepage: https://github.com/openfaas/faas-cli
 description: Official CLI for OpenFaaS
 renovate:

@@ -4,6 +4,7 @@ check: ${binary} --version | tr -d v
 tags:
 - category/security
 - type/cli
+- lang/go
 homepage: https://github.com/FiloSottile/age
 description: Simple, modern and secure encryption tool
 renovate:

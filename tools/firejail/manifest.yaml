@@ -4,6 +4,7 @@ check: ${binary} --version | head -n 1 | cut -d' ' -f3
 tags:
 - category/security
 - type/cli
+- lang/c
 homepage: https://github.com/netblue30/firejail
 description: Linux namespaces and seccomp-bpf sandbox
 renovate:

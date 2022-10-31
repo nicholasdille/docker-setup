@@ -5,6 +5,7 @@ tags:
 - category/development
 - type/cli
 - cicd
+- lang/shell
 homepage: https://github.com/fsaintjacques/semver-tool
 description: Semver bash implementation
 renovate:

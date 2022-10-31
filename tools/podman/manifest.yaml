@@ -15,6 +15,7 @@ tags:
 - type/cli
 - type/daemon
 - rootless
+- lang/go
 homepage: https://github.com/containers/podman
 description: Tool for managing OCI containers and pods
 renovate:

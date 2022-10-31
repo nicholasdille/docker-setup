@@ -4,6 +4,7 @@ check: ${binary} -version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
 - category/security
+- lang/go
 homepage: https://github.com/rfjakob/gocryptfs
 description: Encrypted overlay filesystem written in Go
 renovate:

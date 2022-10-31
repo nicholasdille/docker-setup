@@ -6,6 +6,7 @@ dependencies:
 tags:
 - type/cli
 - category/development
+- lang/go
 homepage: https://github.com/lima-vm/lima
 description: Linux virtual machines, typically on macOS, for running containerd
 renovate:
