@@ -1,7 +1,7 @@
 name: spire
 version: 1.4.4
 binary: spire-server
-check: ${binary} --version
+check: ${binary} --version 2>&1
 tags:
 - type/cli
 - category/security
