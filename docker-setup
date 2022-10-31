@@ -523,6 +523,7 @@ while test "$#" -gt 0; do
             fi
             selected_tools="$(
                 jq --raw-output --arg category "${tags}" '.tools[] | select(.tags[] | inside($category)) | .name' "${docker_setup_metadata_file}" \
+                | sort \
                 | xargs
             )"
             install_tools="$(resolve_dependencies_wrapper)"
