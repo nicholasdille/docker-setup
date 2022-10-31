@@ -1,6 +1,6 @@
 name: kubeseal
 version: 0.19.1
-check: ${binary}--version | cut -d' ' -f3
+check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
 - category/security
