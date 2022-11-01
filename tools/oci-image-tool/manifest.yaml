@@ -7,6 +7,7 @@ tags:
 - container/image
 - type/cli
 - lang/go
+- state/stale
 - state/deprecated
 homepage: https://github.com/opencontainers/image-tools
 description: OCI Image Tooling

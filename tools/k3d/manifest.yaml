@@ -9,9 +9,9 @@ tags:
 - kubernetes
 - management
 - lang/go
-homepage: https://github.com/rancher/k3d
+homepage: https://github.com/k3d-io/k3d
 description: Little helper to run CNCF's k3s in Docker
 renovate:
   datasource: github-releases
-  package: rancher/k3d
+  package: k3d-io/k3d
   extractVersion: ^v(?<version>.+?)$

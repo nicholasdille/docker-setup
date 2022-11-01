@@ -5,6 +5,7 @@ tags:
 - type/cli
 - cnab
 - lang/go
+- state/stale
 - state/deprecated
 homepage: https://github.com/cnabio/duffle
 description: CNAB installer

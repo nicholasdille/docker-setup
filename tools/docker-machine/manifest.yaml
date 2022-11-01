@@ -5,6 +5,7 @@ tags:
 - standard/docker
 - org/docker
 - type/cli
+- state/stale
 - state/deprecated
 - lang/go
 homepage: https://github.com/docker/machine

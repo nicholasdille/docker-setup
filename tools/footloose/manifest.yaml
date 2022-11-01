@@ -6,6 +6,7 @@ tags:
 - vm
 - emulation
 - lang/go
+- state/stale
 homepage: https://github.com/weaveworks/footloose
 description: Containers that look like Virtual Machines
 renovate:
