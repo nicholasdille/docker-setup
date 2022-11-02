@@ -1,5 +1,5 @@
 name: faas-cli
-version: 0.14.11
+version: 0.15.2
 check: ${binary} version | grep "version:" | cut -d' ' -f3
 tags:
 - category/serverless
