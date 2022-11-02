@@ -1,5 +1,5 @@
 name: polaris
-version: 7.1.5
+version: 7.1.6
 check: "${binary} version | cut -d: -f2"
 tags:
 - type/cli
