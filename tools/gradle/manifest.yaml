@@ -2,7 +2,7 @@ name: gradle
 version: 7.5.1
 check: ${binary} -version | grep ^Gradle | cut -d' ' -f2
 dependencies:
-- openjdk
+- openjdk-jre
 tags:
 - type/cli
 - cicd
