@@ -1,6 +1,6 @@
 name: openjdk-jre
 version: 17
-binary: /opt/openjdk/bin/javac
+binary: /opt/openjdk/bin/java
 check: ${binary} -version | cut -d' ' -f2
 dependencies:
 - openjdk
