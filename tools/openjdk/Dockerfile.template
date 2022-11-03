@@ -10,6 +10,9 @@ ARG name
 ARG version
 RUN <<EOF
 jabba install --output "${prefix}/opt/openjdk/" openjdk@1.${version}
-ln -sf "/opt/openjdk/bin/javac" "${prefix}${target}/bin/javac"
-ln -sf "/opt/openjdk/bin/java" "${prefix}${target}/bin/java"
+cd "${prefix}/opt/openjdk/bin"
+find . -type f -executable \
+| while read -r BINARY; do
+    ln -sf "/opt/openjdk/bin/${BINARY:2}" "${prefix}${target}/bin/${BINARY:2}"
+done
 EOF
