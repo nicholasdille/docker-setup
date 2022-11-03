@@ -1,0 +1,12 @@
+name: openjdk-jre
+version: 17
+binary: /opt/openjdk/bin/javac
+check: ${binary} -version | cut -d' ' -f2
+dependencies:
+- openjdk
+tags:
+- type/cli
+- category/development
+- lang/java
+homepage: https://github.com/openjdk
+description: OpenJDK
