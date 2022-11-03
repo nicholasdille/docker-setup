@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${version}-linux.zip"
+filename="$(basename "${url}")"
+curl --silent --location --remote-name "${url}"
+unzip -q -o -d "${prefix}/opt" "${filename}"
+mv "${prefix}/opt/sonar-scanner-${version}-linux" "${prefix}/opt/sonar-scanner"
+sed -i 's/use_embedded_jre=true/use_embedded_jre=false/' "${prefix}/opt/sonar-scanner/bin/sonar-scanner"
+rm -rf "${prefix}/opt/sonar-scanner/jre"
+EOF
