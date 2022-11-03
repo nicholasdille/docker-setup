@@ -1,11 +1,12 @@
-name: sonar-scanner-cli
+name: sonar-scanner
 version: 4.7.0.2747
 check: ""
 dependencies:
 - openjdk-jre
 tags:
-- tag1
-- tag2
+- type/cli
+- category/development
+- lang/java
 homepage: https://github.com/SonarSource/sonar-scanner-cli
 description: Scanner CLI for SonarQube and SonarCloud
 renovate:
