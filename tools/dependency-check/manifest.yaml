@@ -1,0 +1,16 @@
+name: dependency-check
+version: 7.3.0
+binary: dependency-check.sh
+check: ""
+dependencies:
+- openjdk-jre
+tags:
+- org/owasp
+- category/security
+- lang/java
+homepage: https://github.com/jeremylong/DependencyCheck
+description: software composition analysis utility that detects publicly disclosed vulnerabilities in application dependencies
+renovate:
+  datasource: github-releases
+  package: jeremylong/DependencyCheck
+  extractVersion: ^v(?<version>.+?)$
