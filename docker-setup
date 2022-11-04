@@ -34,15 +34,6 @@ function trace() {
         >&2 echo -e "${grey}[TRACE] $*${reset}"
     fi
 }
-for arg in "$@"; do
-    if echo "${arg}" | grep -q "^--debug$"; then
-        debug=true
-    fi
-    if echo "${arg}" | grep -q "^--trace$"; then
-        debug=true
-        trace=true
-    fi
-done
 
 : "${profile:=false}"
 SECONDS=0
@@ -51,9 +42,19 @@ function profile() {
         >&2 echo -e "${yellow}[PROFILE] $* @ ${SECONDS} seconds${reset}"
     fi
 }
-if echo "$@" | grep -q "^--profile$"; then
-    profile=true
-fi
+
+for arg in "$@"; do
+    if echo "${arg}" | grep -q "^--debug$"; then
+        debug=true
+    fi
+    if echo "${arg}" | grep -q "^--trace$"; then
+        debug=true
+        trace=true
+    fi
+    if echo "${arg}" | grep -q "^--profile$"; then
+        profile=true
+    fi
+done
 
 reset="\e[39m\e[49m"
 green="\e[92m"
@@ -109,6 +110,22 @@ if ! test -w "$(dirname "${docker_setup_cache}")"; then
 fi
 mkdir -p "${docker_setup_cache}"
 
+profile "Done with cache dir selection"
+
+if ! type curl >/dev/null 2>&1; then
+    echo "ERROR: Please make sure curl is available."
+    exit 1
+fi
+if ! type column >/dev/null 2>&1; then
+    function column() {
+        cat
+    }
+fi
+yq_present=false
+if type yq >/dev/null 2>&1; then
+    yq_present=true
+fi
+
 export PATH="${docker_setup_cache}/bin:${PATH}"
 REGCLIENT_VERSION=0.4.5
 if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
@@ -118,29 +135,25 @@ if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr 
         "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
     chmod +x "${docker_setup_cache}/bin/regctl"
 fi
-YQ_VERSION=4.29.2
-if ! type yq >/dev/null 2>&1 || test "$(yq --version | cut -d' ' -f4)" != "${YQ_VERSION}"; then
-    debug "Installing yq"
-    mkdir -p "${docker_setup_cache}/bin"
-    curl --silent --location --output "${docker_setup_cache}/bin/yq" \
-        "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
-    chmod +x "${docker_setup_cache}/bin/yq"
-fi
 JQ_VERSION=1.6
 if ! type jq >/dev/null 2>&1 || test "$(jq --version | cut -d- -f2)" != "${JQ_VERSION}"; then
     debug "Installing jq"
     mkdir -p "${docker_setup_cache}/bin"
-    curl --silent --location --output "${docker_setup_cache}/bin/yq" \
+    curl --silent --location --output "${docker_setup_cache}/bin/jq" \
         "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
     chmod +x "${docker_setup_cache}/bin/jq"
 fi
+
+profile "Done with tools"
 
 if test -z "${DOCKER_CONFIG}"; then
     export DOCKER_CONFIG="${HOME}/.docker"
 fi
 
 function update() {
-    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+    debug "Downloading metadata"
+    regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${tools_version}" --format raw-body \
+    | jq --raw-output '.layers[].digest' \
     | while read -r DIGEST; do
         regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${tools_version}" "${DIGEST}" \
         | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
@@ -157,6 +170,8 @@ else
 fi
 debug "Using ${docker_setup_metadata_file}"
 
+profile "Done with metadata"
+
 declare -A tool_json
 mapfile tool_json_array < <(jq --raw-output --compact-output '.tools[] | "\(.name)=\(.)"' "${docker_setup_metadata_file}")
 i=0
@@ -170,14 +185,19 @@ while test "$i" -lt "${#tool_json_array[@]}"; do
     i=$((i + 1))
 done
 
+profile "Done with tool json"
+
 docker_setup_dockerfile_template="${docker_setup_cache}/Dockerfile.template"
 if test -f "${PWD}/tools/Dockerfile.template"; then
     docker_setup_dockerfile_template="${PWD}/tools/Dockerfile.template"
-else
+
+elif ! test -f "${docker_setup_dockerfile_template}"; then
     curl --silent --location --output "${docker_setup_dockerfile_template}" \
-        https://raw.githubusercontent.com/nicholasdille/docker-setup/${tools_version}/tools/Dockerfile.template
+        "https://raw.githubusercontent.com/nicholasdille/docker-setup/${tools_version}/tools/Dockerfile.template"
 fi
 debug "Using ${docker_setup_dockerfile_template}"
+
+profile "Done with Dockerfile.template"
 
 all_tools="$(
     jq --raw-output '.tools[] | .name' "${docker_setup_metadata_file}" \
@@ -428,6 +448,7 @@ Commands:
   ls, list, l             List available tools
   info                    Show tool manifest
   tags, t                 Show tags
+  plan, p, status, s      Show status of installed tools and how to proceed
   dependencies, deps, d   Resolve dependencies
   inspect                 Show contents image
   search, find            Search for tools
@@ -594,8 +615,13 @@ while test "$#" -gt 0; do
         info)
             warm_cache
             for name in ${install_tools}; do
-                echo "---"
-                yq --prettyPrint <<<"${tool_json[${name}]}"
+                if ${yq_present}; then
+                    echo "---"
+                    yq --prettyPrint <<<"${tool_json[${name}]}"
+
+                else
+                    jq '.' <<<"${tool_json[${name}]}"
+                fi
             done
             echo
             ;;
