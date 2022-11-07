@@ -1,5 +1,5 @@
 name: argocd
-version: 2.5.1
+version: 2.5.2
 check: ${binary} version 2>/dev/null | grep ^argocd | cut -d' ' -f2 | cut -d+ -f1 | tr -d v
 tags:
 - type/cli
