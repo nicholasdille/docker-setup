@@ -1,5 +1,5 @@
 name: crun
-version: 1.6
+version: 1.7
 check: ${binary} --version | grep "crun version" | cut -d' ' -f3
 tags:
 - org/redhat
