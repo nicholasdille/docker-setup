@@ -106,8 +106,8 @@ emoji_deprecated="$(echo -e "\U0001F634")"
 if ! test -w "$(dirname "${docker_setup_cache}")"; then
     debug "WARNING: Cache directory <${docker_setup_cache}> is not writable."
     docker_setup_cache="${HOME}/.cache/docker-setup"
-    debug "WARNING: Using cache directory <${docker_setup_cache}>"
 fi
+debug "Using cache directory <${docker_setup_cache}>"
 mkdir -p "${docker_setup_cache}"
 
 profile "Done with cache dir selection"
@@ -365,7 +365,7 @@ function warm_cache() {
                 | sed "s|\${target}|${target}|g"
             )"
             if test "${binary:0:1}" != "/"; then
-                binary="${target}/bin/${binary}"
+                binary="${prefix}${target}/bin/${binary}"
             fi
             tool_binary[${name}]="${binary}"
         fi
@@ -714,14 +714,14 @@ while test "$#" -gt 0; do
                 mkdir -p "${docker_setup_cache}/${tool}"
                 touch "${docker_setup_cache}/${tool}/${version}"
             done
-            if test -d /var/lib/docker-setup/post_install; then
-                mkdir -p /var/lib/docker-setup "${docker_setup_cache}"
+            if test -d "${docker_setup_cache}/post_install"; then
+                mkdir -p "${prefix}/var/lib/docker-setup" "${docker_setup_cache}"
                 export prefix="${prefix}"
                 export target
                 export docker_setup_cache
                 export docker_setup_contrib=/var/lib/docker-setup/contrib
                 export docker_setup_manifests=/var/lib/docker-setup/manifests
-                FILES="$(find /var/lib/docker-setup/post_install -type f -name \*.sh)"
+                FILES="$(find "${prefix}/var/lib/docker-setup/post_install" -type f -name \*.sh)"
                 for FILE in ${FILES}; do
                     echo "Running post install for $(basename "${FILE}" .sh)"
                     if ! bash "${FILE}" >"${FILE}.log" 2>&1; then
