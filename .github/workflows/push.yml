@@ -7,7 +7,7 @@ on:
     paths:
       - "tools/**"
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "15 * * * *"
 
 jobs:
 
@@ -43,13 +43,13 @@ jobs:
           echo "### Fetching manifest for metadata"
           CONFIG_DIGEST="$(
               helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
-              | jq --raw-output '.config.digest'
+              | helper/usr/local/bin/jq --raw-output '.config.digest'
           )"
 
           echo "### Fetching config for metadata"
           OLD_COMMIT_SHA="$(
               helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
-              | jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
+              | helper/usr/local/bin/jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
           )"
 
           echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
