@@ -1,6 +1,6 @@
 name: calicoctl
 version: 3.24.5
-check: ${binary} version | grep ^Client | tr -s ' ' | cut -d' ' -f3 | tr -d v
+check: ${binary} version 2>&1 | grep ^Client | tr -s ' ' | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
 - component/network

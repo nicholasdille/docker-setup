@@ -1,7 +1,7 @@
 name: openjdk-jre
 version: 17
 binary: /opt/openjdk/bin/java
-check: ${binary} -version | cut -d' ' -f2
+check: ${binary} -version 2>&1 | grep ^openjdk | cut -d' ' -f3 | tr -d '"'
 dependencies:
 - openjdk
 tags:

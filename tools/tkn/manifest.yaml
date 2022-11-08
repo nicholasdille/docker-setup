@@ -1,6 +1,6 @@
 name: tkn
 version: 0.27.0
-check: timeout 3 ${binary} version | cut -d' ' -f3
+check: timeout 3 ${binary} version | grep ^Client | cut -d' ' -f3
 tags:
 - type/cli
 - category/development
