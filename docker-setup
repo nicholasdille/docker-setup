@@ -738,14 +738,14 @@ while test "$#" -gt 0; do
                 mkdir -p "${docker_setup_cache}/${tool}"
                 touch "${docker_setup_cache}/${tool}/${version}"
             done
-            if test -d "${docker_setup_cache}/post_install"; then
-                mkdir -p "${prefix}/var/lib/docker-setup" "${docker_setup_cache}"
+            if test -d "/var/lib/docker-setup/post_install"; then
+                mkdir -p "/var/lib/docker-setup" "${docker_setup_cache}"
                 export prefix="${prefix}"
                 export target
                 export docker_setup_cache
                 export docker_setup_contrib=/var/lib/docker-setup/contrib
                 export docker_setup_manifests=/var/lib/docker-setup/manifests
-                FILES="$(find "${prefix}/var/lib/docker-setup/post_install" -type f -name \*.sh)"
+                FILES="$(find "/var/lib/docker-setup/post_install" -type f -name \*.sh)"
                 for FILE in ${FILES}; do
                     echo "Running post install for $(basename "${FILE}" .sh)"
                     if ! bash "${FILE}" >"${FILE}.log" 2>&1; then
