@@ -390,11 +390,10 @@ function warm_cache() {
 
             if test -x "${binary}"; then
                 debug "  ${green}BINARY_EXECUTABLE${reset}"
-                installed_version="$(eval "${tool_check[${name}]}")"
-                tool_installed_version[${name}]="${installed_version}"
-                debug "  installed_version=${installed_version}."
+                tool_installed_version[${name}]="$(eval "${tool_check[${name}]}")"
+                debug "  installed_version=${tool_installed_version[${name}]}."
 
-                if test "${installed_version}" == "${version}"; then
+                if test "${tool_installed_version[${name}]}" == "${version}"; then
                     tool_installed[${name}]=true
                     tool_version_matches[${name}]=true
                     debug "  ${green}VERSION_MATCHES${reset}"
@@ -705,7 +704,8 @@ while test "$#" -gt 0; do
                 fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
                 echo "${emoji_tool} Installing ${tool} ${version}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body \
+                | jq --raw-output '.layers[].digest' \
                 | while read -r DIGEST; do
                     #echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
