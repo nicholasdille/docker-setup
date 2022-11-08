@@ -470,6 +470,7 @@ EOF
 target=/usr/local
 : "${deps:=false}"
 : "${reinstall:=false}"
+: "${cron:=true}"
 while test "$#" -gt 0; do
     case "$1" in
         --version)
@@ -575,6 +576,14 @@ while test "$#" -gt 0; do
 
         --no-deps)
             deps=false
+            ;;
+
+        --cron)
+            cron=true
+            ;;
+
+        --no-cron)
+            cron=false
             ;;
 
         --reinstall)
@@ -691,7 +700,6 @@ while test "$#" -gt 0; do
             ;;
 
         install|i)
-            echo
             if test -n "${prefix}"; then
                 debug "Using prefix ${prefix}"
                 mkdir -p "${prefix}"
@@ -855,3 +863,34 @@ while test "$#" -gt 0; do
 
     shift
 done
+
+# shellcheck disable=SC1091
+case "$(if test -f "${prefix}/etc/os-release"; then source "${prefix}/etc/os-release" && echo "$ID"; fi)" in
+    alpine)
+        cron_weekly_path="${prefix}/etc/periodic/weekly"
+        ;;
+    *)
+        cron_weekly_path="${prefix}/etc/cron.weekly"
+        ;;
+esac
+if ! test -d "${cron_weekly_path}" && ${cron}; then
+    debug "Disabled creation of cronjob because directory for weekly job is missing (${cron_weekly_path})"
+    cron=false
+fi
+
+if ${cron}; then
+    # Weekly update of docker-setup into current location
+    rm -f "${cron_weekly_path}/docker-setup-update" "${cron_weekly_path}/docker-setup-upgrade"
+    cat >"${cron_weekly_path}/docker-setup" <<EOF
+#!/bin/bash
+set -o errexit
+
+curl https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh \
+    --location \
+    --output /usr/local/bin/docker-setup
+chmod +x /usr/local/bin/docker-setup
+
+/usr/local/bin/docker-setup --no-wait --only-installed
+EOF
+    chmod +x "${cron_weekly_path}/docker-setup"
+fi
