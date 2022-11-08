@@ -321,6 +321,14 @@ function warm_cache() {
 
     profile "Done resolving dependencies"
 
+    tool_check=()
+    tool_marker_file_present=()
+    tool_installed_version=()
+    tool_version_matches=()
+    tool_installed=()
+    tool_operator=()
+    tool_color=()
+    tool_marker=()
     for name in ${install_tools}; do
         debug "${name}:"
 
@@ -520,8 +528,14 @@ while test "$#" -gt 0; do
                     selected_tools="${default_tools}"
                     ;;
                 installed)
-                    >&2 echo "NOT IMPLEMENTED YET"
-                    exit 1
+                    selected_tools="${all_tools}"
+                    warm_cache
+                    selected_tools=""
+                    for name in "${!tool_installed[@]}"; do
+                        if ${tool_installed[${name}]}; then
+                            selected_tools="${selected_tools} ${name}"
+                        fi
+                    done
                     ;;
                 *%)
                     selected_tools="$(
@@ -609,6 +623,8 @@ while test "$#" -gt 0; do
             ;;
 
         ls|list|l)
+            echo LIST
+            warm_cache
             jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
             | while read -r LINE; do
                     for name in ${install_tools}; do
@@ -861,6 +877,8 @@ while test "$#" -gt 0; do
             ;;
     esac
 
+    profile "Done with parameter"
+
     shift
 done
 
@@ -890,7 +908,7 @@ curl https://github.com/nicholasdille/docker-setup/releases/latest/download/dock
     --output /usr/local/bin/docker-setup
 chmod +x /usr/local/bin/docker-setup
 
-/usr/local/bin/docker-setup install
+/usr/local/bin/docker-setup --tools=installed install
 EOF
     chmod +x "${cron_weekly_path}/docker-setup"
 fi
