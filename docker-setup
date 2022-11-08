@@ -832,16 +832,16 @@ while test "$#" -gt 0; do
             warm_cache
             for name in ${install_tools}; do
                 echo "${emoji_tool} Processing ${name}"
-                make -C "${docker_setup_cache}/repo" tools/${name}/Dockerfile tools/${name}/manifest.json
+                make -C "${docker_setup_cache}/repo" "tools/${name}/Dockerfile" "tools/${name}/manifest.json"
                 version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
                 docker build "${docker_setup_cache}/repo/tools/${name}" \
-                    --build-arg branch=${tools_version} \
-                    --build-arg ref=${tools_version} \
-                    --build-arg name=${name} \
-                    --build-arg version=${version} \
-                    --build-arg deps=${deps} \
-                    --build-arg tags=${tags} \
-                    --output type=local,dest=${prefix}${target}
+                    --build-arg "branch=${tools_version}" \
+                    --build-arg "ref=${tools_version}" \
+                    --build-arg "name=${name}" \
+                    --build-arg "version=${version}" \
+                    --build-arg "deps=${deps}" \
+                    --build-arg "tags=${tags}" \
+                    --output "type=local,dest=${prefix}${target}"
             done
             # TODO: post_install
             ;;
