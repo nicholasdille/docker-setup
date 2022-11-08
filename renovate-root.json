@@ -56,21 +56,14 @@
   ],
   "regexManagers": [
     {
-      "fileMatch":            [ "^Makefile$" ],
-      "matchStrings":         [ "SHELLCHECK_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
-      "depNameTemplate":        "koalaman/shellcheck",
-      "datasourceTemplate":     "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch":            [ "^Makefile$", "^docker-setup$" ],
+      "fileMatch":            [ "^docker-setup$" ],
       "matchStrings":         [ "YQ_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
       "depNameTemplate":        "mikefarah/yq",
       "datasourceTemplate":     "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
-      "fileMatch":            [ "Makefile", "^docker-setup$" ],
+      "fileMatch":            [ "^docker-setup$" ],
       "matchStrings":         [ "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
       "depNameTemplate":        "regclient/regclient",
       "datasourceTemplate":     "github-releases",
