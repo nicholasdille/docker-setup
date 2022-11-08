@@ -7,7 +7,7 @@ on:
     paths:
       - "tools/**"
   schedule:
-    - cron: "15 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
 
@@ -38,17 +38,17 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          make bin/regctl
+          make require--regclient
 
           echo "### Fetching manifest for metadata"
           CONFIG_DIGEST="$(
-              bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
+              helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
               | jq --raw-output '.config.digest'
           )"
 
           echo "### Fetching config for metadata"
           OLD_COMMIT_SHA="$(
-              bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
+              helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
               | jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
           )"
 
