@@ -890,7 +890,7 @@ curl https://github.com/nicholasdille/docker-setup/releases/latest/download/dock
     --output /usr/local/bin/docker-setup
 chmod +x /usr/local/bin/docker-setup
 
-/usr/local/bin/docker-setup --no-wait --only-installed
+/usr/local/bin/docker-setup install
 EOF
     chmod +x "${cron_weekly_path}/docker-setup"
 fi
