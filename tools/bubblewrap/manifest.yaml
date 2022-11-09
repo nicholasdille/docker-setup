@@ -1,0 +1,16 @@
+name: bubblewrap
+version: 0.7.0
+binary: bwrap
+check: ""
+dependencies:
+- bar
+tags:
+- org/redhat
+- kernel/namespaces
+- lang/c
+homepage: https://github.com/containers/bubblewrap
+description: Unprivileged sandboxing tool
+renovate:
+  datasource: github-releases
+  package: containers/bubblewrap
+  extractVersion: ^v(?<version>.+?)$
