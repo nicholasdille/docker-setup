@@ -5095,6 +5095,17 @@
     },
     {
       "fileMatch": [
+        "^tools/youki/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "containers/youki",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/yq/manifest.yaml$"
       ],
       "matchStrings": [
