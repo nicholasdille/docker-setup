@@ -1,0 +1,32 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/tini:main AS tini
+
+FROM golang:1.19.3 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    libseccomp-dev
+EOF
+COPY --link --from=tini / /
+WORKDIR /go/src/github.com/gotoz/runq
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" --recurse-submodules https://github.com/gotoz/runq .
+make
+mkdir -p /var/lib/runq/qemu
+mv /usr/local/bin/tini /usr/bin/docker-init
+make version
+make -C cmd/proxy install
+make -C cmd/runq install
+make -C cmd/runq-exec install
+install -m 0444 -D version /var/lib/runq/version
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /var/lib/runq/ ${prefix}/var/lib/runq/
