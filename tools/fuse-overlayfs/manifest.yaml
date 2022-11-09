@@ -10,7 +10,6 @@ tags:
 homepage: https://github.com/containers/fuse-overlayfs
 description: FUSE implementation for overlayfs
 renovate:
-  pattern: "name: fuse-overlayfs\\n\\s+version: \"?(?<currentValue>.*?)\\n"
   datasource: github-releases
   package: containers/fuse-overlayfs
   extractVersion: ^v(?<version>.+?)$

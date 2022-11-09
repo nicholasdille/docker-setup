@@ -19,4 +19,4 @@ description: The Docker CLI
 renovate:
   datasource: github-tags
   package: moby/moby
-  extractVersion: ^v(?<version>.+?)-
+  extractVersion: ^v(?<version>.+?)$

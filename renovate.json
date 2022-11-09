@@ -109,18 +109,6 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "^Makefile$"
-      ],
-      "matchStrings": [
-        "SHELLCHECK_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "koalaman/shellcheck",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^Makefile$",
         "^docker-setup$"
       ],
       "matchStrings": [
@@ -132,7 +120,6 @@
     },
     {
       "fileMatch": [
-        "Makefile",
         "^docker-setup$"
       ],
       "matchStrings": [
@@ -290,6 +277,17 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "marcosnils/bin",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/bom/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/bom",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -819,6 +817,17 @@
     },
     {
       "fileMatch": [
+        "^tools/dependency-check/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jeremylong/DependencyCheck",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/direnv/manifest.yaml$"
       ],
       "matchStrings": [
@@ -990,7 +999,7 @@
       ],
       "depNameTemplate": "moby/moby",
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.+?)-"
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -1760,7 +1769,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "rancher/k3d",
+      "depNameTemplate": "k3d-io/k3d",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -2198,7 +2207,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "armosec/kubescape",
+      "depNameTemplate": "kubescape/kubescape",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -3069,6 +3078,17 @@
       "depNameTemplate": "slsa-framework/slsa-verifier",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/sonar-scanner/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "SonarSource/sonar-scanner-cli",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [

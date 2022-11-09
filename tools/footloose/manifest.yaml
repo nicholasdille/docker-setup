@@ -10,6 +10,5 @@ tags:
 homepage: https://github.com/weaveworks/footloose
 description: Containers that look like Virtual Machines
 renovate:
-  pattern: "name: footloose\\\\n\\\\s+version: \\\"?(?<currentValue>.*?)\\\\n"
   datasource: github-releases
   package: weaveworks/footloose
