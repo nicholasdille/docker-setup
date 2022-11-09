@@ -2831,6 +2831,17 @@
     },
     {
       "fileMatch": [
+        "^tools/promql-cli/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "nalbury/promql-cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/pwru/manifest.yaml$"
       ],
       "matchStrings": [
