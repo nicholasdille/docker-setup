@@ -1,5 +1,5 @@
 name: conmon
-version: 2.1.4
+version: 2.1.5
 check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
 dependencies:
 - shortnames
