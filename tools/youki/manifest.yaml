@@ -1,0 +1,15 @@
+name: youki
+version: 0.0.3
+check: ""
+dependencies:
+- docker
+tags:
+- org/redhat
+- container/runtime
+- lang/rust
+homepage: https://github.com/containers/youki
+description: Container runtime written in rust
+renovate:
+  datasource: github-releases
+  package: containers/youki
+  extractVersion: ^v(?<version>.+?)$

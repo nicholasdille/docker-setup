@@ -1,0 +1,30 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=rust / /
+ARG DEBIAN_FRONTEND=noninteractive
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    pkg-config \
+    libsystemd-dev \
+    libdbus-glib-1-dev \
+    build-essential \
+    libelf-dev \
+    libseccomp-dev
+EOF
+WORKDIR /tmp/github.com/containers/youki
+ARG name
+ARG version
+SHELL [ "/bin/bash", "--login", "-ec" ]
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/youki .
+cd crates
+export RUSTFLAGS='-C target-feature=+crt-static'
+cargo build --release --target x86_64-unknown-linux-gnu
+cp target/x86_64-unknown-linux-gnu/release/youki "${prefix}${target}/bin/"
+EOF
