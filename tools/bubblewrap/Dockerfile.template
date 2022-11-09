@@ -28,6 +28,7 @@ curl --silent --location "https://github.com/containers/bubblewrap/releases/down
 make LDFLAGS=-static
 find . -type f
 make install
+rm -f "${prefix}${target}/man"
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare

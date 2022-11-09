@@ -1,9 +1,7 @@
 name: bubblewrap
 version: 0.7.0
 binary: bwrap
-check: ""
-dependencies:
-- bar
+check: ${binary} --version | cut -d' ' -f2
 tags:
 - org/redhat
 - kernel/namespaces
