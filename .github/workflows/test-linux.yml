@@ -45,7 +45,7 @@ jobs:
         run: |
           set -o errexit
           if ${IS_PR}; then
-              echo "This is PR ${PR}"
+              echo "### This is PR ${PR}"
               TOOLS="$(
                   curl https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR}/files \
                       --silent \
@@ -58,19 +58,23 @@ jobs:
                   | uniq \
                   | xargs echo
               )"
-              echo "TOOLS=${TOOLS}"
+              echo "### Got TOOLS=${TOOLS}"
           fi
           if test -n "${TOOLS}"; then
+              echo "### Building all tools with dependencies"
               for TOOL in ${TOOLS}; do
-                  echo "Building tool ${TOOL}--deep"
+                  echo "### Building ${TOOL} with dependencies"
                   GIT_BRANCH=test make ${TOOL}--deep
               done
+              echo "### Creating metadata"
               GIT_BRANCH=test make metadata.json
+              echo "### Building container image"
               docker_setup_version=test \
               docker_setup_cache="${HOME}/.cache/docker-setup" \
                   ./docker-setup --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
 
           else
+              echo "### Building all container images"
               GIT_BRANCH=test make
           fi
 
