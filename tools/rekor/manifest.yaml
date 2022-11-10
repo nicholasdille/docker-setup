@@ -1,5 +1,5 @@
 name: rekor
-version: 1.0.0
+version: 1.0.1
 binary: rekor-cli
 check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
 dependencies:
