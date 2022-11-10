@@ -1,5 +1,5 @@
 name: kubeadm
-version: 1.25.3
+version: 1.25.4
 check: ${binary} version --output short | tr -d v
 dependencies:
 - kubelet
