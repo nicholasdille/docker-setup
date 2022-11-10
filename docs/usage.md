@@ -2,44 +2,48 @@
 
 `docker-setup` supports several sub-commands:
 
-| Subcommand               | Alias(es)    | Description |
-| ------------------------ | ------------ | ----------- |
-| update                   |              | XXX         |
-| upgrade                  |              | XXX         |
-| debug                    |              | XXX         |
-| list                     | ls, l        | XXX         |
-| info                     |              | XXX         |
-| tags                     | t            | XXX         |
-| plan                     | p, status, s | XXX         |
-| dependencies             | deps, d      | XXX         |
-| inspect                  |              | XXX         |
-| search                   | find         | XXX         |
-| generate                 | gen, g       | XXX         |
-| build                    | b            | XXX         |
-| install                  | i            | XXX         |
-| install-from-registry    |              | XXX         |
-| install-from-image       |              | XXX         |
-| build-flat               |              | XXX         |
-| install-from-image-build |              | XXX         |
+| Subcommand               | Alias(es)    | Description                                                 |
+| ------------------------ | ------------ | ----------------------------------------------------------- |
+| update                   |              | Download the latest metadata                                |
+| upgrade                  |              | Replace `docker-setup` with the latest version              |
+| debug                    |              | Display debugging information                               |
+| list                     | ls, l        | List all tools or those selected by `--tools` and `--tags`  |
+| info                     |              | Display manifest for selected tools                         |
+| tags                     | t            | Display tags                                                |
+| plan                     | p, status, s | Display how and why to proceed with selected tools          |
+| dependencies             | deps, d      | Display dependencies for a tool recursively                 |
+| inspect                  |              | Display contents of container image for selected tools      |
+| search                   | find         | Search for term in name, tags, description and dependencies |
+| generate                 | gen, g       | Generate a Dockerfile for the selected tools    |
+| build                    | b            | Build a container image with the selected tools |
+| install                  | i            | Install the selected tools natively             |
+| install-from-registry    |              | Install the selected tools natively by building a container image with local output |
+| install-from-image       |              | Install the selected tools natively by pullin the image and unpacking it |
+| build-flat               |              | Build a container image using docker create/commit |
+| install-from-image-build |              | Install the selected tools natively by building the individual container images with local output |
 
 You can tweak the behaviour of `docker-setup` by passing parameters:
 
 | Parameter           | Variable                 | Meaning |
 | ------------------- | ------------------------ | ------- |
 | `--version`         | n/a                      | Display version and exit |
-| `--debug`           | n/a                      | XXX |
-| `--trace`           | n/a                      | XXX |
-| `--profile`         | n/a                      | XXX |
+| `--debug`           | n/a                      | Display debug output |
+| `--trace`           | n/a                      | Display trace output (more verbose than debug) |
+| `--profile`         | n/a                      | Display timing information |
 | `--help`            | n/a                      | Display help for parameters and environment variables |
-| `--prefix`          | n/a                      | XXX |
-| `--tools`           | n/a                      | XXX |
-| `--tags`            | n/a                      | XXX |
-| `--all`             | n/a                      | XXX |
-| `--default`         | n/a                      | XXX |
-| `--installed`       | n/a                      | XXX |
-| `--[no-]deps`       | n/a                      | XXX |
-| `--[no-]cron`       | n/a                      | XXX |
+| `--prefix`          | n/a                      | Set installation prefix |
+| `--tools`           | n/a                      | Select tools to install (see below for [tools selection](#tool-selection)) |
+| `--tags`            | n/a                      | Select tools to install using tags (see below for [tools selection](#tool-selection)) |
+| `--all`             | n/a                      | Shortcut for `--tools=all` |
+| `--default`         | n/a                      | Shortcut for `--tags=category/default` |
+| `--installed`       | n/a                      | Shortcut for `--tools=installed` |
+| `--deps`            | n/a                      | Ignore dependencies |
+| `--no-cron`         | n/a                      | Do not create weekly cronjob |
 | `--reinstall`       | `reinstall`              | Install all tools again |
+
+## Tool selection
+
+XXX
 
 ## Scenario 1: You want the default set of tools
 

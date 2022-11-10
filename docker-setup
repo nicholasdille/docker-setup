@@ -611,7 +611,7 @@ while test "$#" -gt 0; do
         upgrade)
             echo "Replacing $0"
             touch /
-            exec curl --silent --location -o "$0" https://github.com/nicholasdille/docker-setup/raw/main/docker-setup
+            exec curl --silent --location --output "$0" https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup
             ;;
 
         debug)

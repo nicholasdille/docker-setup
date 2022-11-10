@@ -1,6 +1,6 @@
 # Repositories
 
-`docker-setup` aims for speed when installing but some tools take a long time to build. `docker-setup` relys on the following repositories to contain statically linked binaries:
+`docker-setup` relys on the following repositories to contain statically linked binaries:
 
 - [skopeo](https://github.com/nicholasdille/skopeo-static)
 - [podman](https://github.com/nicholasdille/podman-static)
