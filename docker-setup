@@ -320,7 +320,9 @@ function warm_cache() {
     fi
 
     profile "Done resolving dependencies"
+}
 
+function check_tools() {
     tool_check=()
     tool_marker_file_present=()
     tool_installed_version=()
@@ -475,6 +477,8 @@ Global options:
 EOF
 }
 
+warm_cache
+
 target=/usr/local
 : "${deps:=false}"
 : "${reinstall:=false}"
@@ -529,7 +533,7 @@ while test "$#" -gt 0; do
                     ;;
                 installed)
                     selected_tools="${all_tools}"
-                    warm_cache
+                    check_tools
                     selected_tools=""
                     for name in "${!tool_installed[@]}"; do
                         if ${tool_installed[${name}]}; then
@@ -551,6 +555,7 @@ while test "$#" -gt 0; do
                     debug "Selected custom list of tools: ${selected_tools}"
                     ;;
             esac
+            warm_cache
             ;;
 
         --tags|--tags=*)
@@ -566,7 +571,7 @@ while test "$#" -gt 0; do
                 | xargs
             )"
             install_tools="$(resolve_dependencies_wrapper)"
-            warm_cache
+            check_tools
             ;;
 
         --all)
@@ -615,7 +620,6 @@ while test "$#" -gt 0; do
             ;;
 
         debug)
-            warm_cache
             echo "prefix=${prefix}"
             echo "target=${target}"
             echo "selected_tools=${selected_tools}"
@@ -623,21 +627,14 @@ while test "$#" -gt 0; do
             ;;
 
         ls|list|l)
-            echo LIST
-            warm_cache
-            jq --raw-output '.tools[] | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
-            | while read -r LINE; do
-                    for name in ${install_tools}; do
-                        if grep -q "^${name};" <<<"${LINE}"; then
-                            echo "${LINE}"
-                        fi
-                    done
-                done \
+            for name in ${install_tools}; do
+                jq --raw-output '"\(.name);\(.version);\(.description)"' <<<"${tool_json[${name}]}"
+            done \
+            | sort \
             | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
             ;;
 
         info)
-            warm_cache
             for name in ${install_tools}; do
                 if ${yq_present}; then
                     echo "---"
@@ -668,12 +665,10 @@ while test "$#" -gt 0; do
             ;;
 
         dependencies|deps|d)
-            warm_cache
             echo "${install_tools}"
             ;;
 
         inspect)
-            warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
@@ -696,7 +691,6 @@ while test "$#" -gt 0; do
             ;;
 
         generate|gen|g)
-            warm_cache
             # shellcheck disable=SC2086
             generate ${install_tools}
             ;;
@@ -708,7 +702,6 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            warm_cache
             echo "Building image ${image} with $# tool(s)..."
             # shellcheck disable=SC2086
             generate ${install_tools} \
@@ -767,7 +760,6 @@ while test "$#" -gt 0; do
             if test -n "${prefix}"; then
                 mkdir -p "${prefix}"
             fi
-            warm_cache
             # shellcheck disable=SC2086
             generate ${install_tools} \
             | docker build --output "${prefix}${target}" -
@@ -784,7 +776,6 @@ while test "$#" -gt 0; do
             if test -n "${prefix}"; then
                 mkdir -p "${prefix}"
             fi
-            warm_cache
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
@@ -821,7 +812,6 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            warm_cache
             docker create --name docker-setup-install-flat "${base}"
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
@@ -853,7 +843,6 @@ while test "$#" -gt 0; do
                 git -C "${docker_setup_cache}/repo" reset --hard
                 git -C "${docker_setup_cache}/repo" pull
             fi
-            warm_cache
             for name in ${install_tools}; do
                 echo "${emoji_tool} Processing ${name}"
                 make -C "${docker_setup_cache}/repo" "tools/${name}/Dockerfile" "tools/${name}/manifest.json"
