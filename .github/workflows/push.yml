@@ -6,6 +6,8 @@ on:
       - "main"
     paths:
       - "tools/**"
+      - "docker-setup"
+      - "Makefile"
   schedule:
     - cron: "*/15 * * * *"
 
