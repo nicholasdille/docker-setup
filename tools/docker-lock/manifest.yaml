@@ -1,0 +1,17 @@
+name: docker-lock
+version: 0.8.10
+binary: ${target}/libexec/docker/cli-plugins/docker-lock
+check: ${binary} lock version
+dependencies:
+- docker
+tags:
+- standard/docker
+- category/development
+- lang/go
+- state/stale
+homepage: https://github.com/safe-waters/docker-lock
+description: Automatically manage image digests in Dockerfiles, docker-compose files, and Kubernetes manifests by tracking them in a separate Lockfile
+renovate:
+  datasource: github-releases
+  package: safe-waters/docker-lock
+  extractVersion: ^v(?<version>.+?)$

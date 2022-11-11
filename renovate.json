@@ -981,6 +981,17 @@
     },
     {
       "fileMatch": [
+        "^tools/docker-lock/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "safe-waters/docker-lock",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/docker-machine/manifest.yaml$"
       ],
       "matchStrings": [
