@@ -38,7 +38,7 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          make require--regclient
+          make $(HELPER)/var/lib/docker-setup/manifests/regclient.json
 
           echo "### Fetching manifest for metadata"
           CONFIG_DIGEST="$(
