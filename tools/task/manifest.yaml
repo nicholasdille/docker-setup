@@ -1,5 +1,5 @@
 name: task
-version: 3.17.0
+version: 3.18.0
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - category/development
