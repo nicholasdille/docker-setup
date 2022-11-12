@@ -1,5 +1,5 @@
 name: lazydocker
-version: 0.19.0
+version: 0.20.0
 check: ${binary} --version | grep Version | cut -d' ' -f2
 dependencies:
 - docker
