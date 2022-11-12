@@ -732,7 +732,7 @@ while test "$#" -gt 0; do
                 touch "${docker_setup_cache}/${tool}/${version}"
             done
             if test -d "/var/lib/docker-setup/post_install"; then
-                mkdir -p "/var/lib/docker-setup" "${docker_setup_cache}"
+                mkdir -p "${docker_setup_cache}"
                 export prefix="${prefix}"
                 export target
                 export docker_setup_cache
@@ -871,7 +871,7 @@ while test "$#" -gt 0; do
     shift
 done
 
-# shellcheck disable=SC1091
+# shellcheck disable=SC1090,SC1091
 case "$(if test -f "${prefix}/etc/os-release"; then source "${prefix}/etc/os-release" && echo "$ID"; fi)" in
     alpine)
         cron_weekly_path="${prefix}/etc/periodic/weekly"
