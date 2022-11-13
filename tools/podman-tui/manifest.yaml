@@ -1,5 +1,5 @@
 name: podman-tui
-version: 0.6.0
+version: 0.7.0
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 dependencies:
 - podman
