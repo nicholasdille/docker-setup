@@ -8,8 +8,8 @@ on:
       - "tools/**"
       - "docker-setup"
       - "Makefile"
-  schedule:
-    - cron: "*/15 * * * *"
+  #schedule:
+  #  - cron: "*/15 * * * *"
 
 jobs:
 
