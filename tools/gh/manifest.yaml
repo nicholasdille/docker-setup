@@ -1,5 +1,5 @@
 name: gh
-version: 2.20.0
+version: 2.20.1
 check: ${binary} --version | head -n 1 | cut -d' ' -f3
 tags:
 - org/github
