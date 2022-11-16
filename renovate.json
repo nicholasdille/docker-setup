@@ -3542,6 +3542,17 @@
     },
     {
       "fileMatch": [
+        "^tools/wsl-open/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "4U6U57/wsl-open",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/wslu/manifest.yaml$"
       ],
       "matchStrings": [
