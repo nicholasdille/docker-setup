@@ -1,6 +1,9 @@
 name: gitsign
 version: 0.3.2
 check: ${binary} --version | grep ^gitsign | cut -d' ' -f3 | tr -d v
+dependencies:
+- wslu
+- xdg-utils
 tags:
 - category/development
 - category/security

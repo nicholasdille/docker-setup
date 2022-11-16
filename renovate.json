@@ -3548,7 +3548,7 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "4U6U57/wsl-open",
-      "datasourceTemplate": "github-releases",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
@@ -3560,6 +3560,17 @@
       ],
       "depNameTemplate": "wslutilities/wslu",
       "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/xdg-utils/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "freedesktop/xdg-utils",
+      "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {

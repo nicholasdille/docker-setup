@@ -3,6 +3,8 @@ version: 1.13.1
 check: ${binary} version 2>&1 | grep GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 dependencies:
 - docker
+- wslu
+- xdg-utils
 tags:
 - container/sign
 - category/security

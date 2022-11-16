@@ -1,12 +1,13 @@
 name: wsl-open
 version: 2.2.1
-check: ""
+check: grep 2.2.1 ${binary} | grep @version | cut -d' ' -f3
 tags:
-- category/?
+- wsl
 - lang/shell
+- state/stale
 homepage: https://github.com/4U6U57/wsl-open
 description: Open files with xdg-open on Bash for Windows in Windows applications
 renovate:
-  datasource: github-releases
+  datasource: github-tags
   package: 4U6U57/wsl-open
   extractVersion: ^v(?<version>.+?)$
