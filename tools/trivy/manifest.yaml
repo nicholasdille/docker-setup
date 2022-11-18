@@ -1,6 +1,8 @@
 name: trivy
 version: 0.34.0
 check: ${binary} --version | grep ^Version | cut -d' ' -f2
+dependencies:
+- cosign
 tags:
 - category/security
 - type/cli

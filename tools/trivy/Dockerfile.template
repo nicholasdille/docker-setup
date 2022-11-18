@@ -1,21 +1,55 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=cosign / /
 ARG name
 ARG version
-
 RUN <<EOF
-curl --silent --location https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz \
-| tar --extract --gzip --directory="${prefix}${target}/bin" \
-      trivy \
-      contrib
+echo "### Downloading trivy ${version}"
+curl --silent --location --fail --remote-name \
+      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz"
+echo "### Installing trivy ${version}"
+
+echo "### Checking keyless signature for trivy ${version}"
+curl --silent --location --fail --remote-name \
+      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz.pem"
+curl --silent --location --fail --remote-name \
+      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz.sig"
+SHA="$(
+    curl "https://api.github.com/repos/aquasecurity/trivy/git/matching-refs/tags/v${version}" \
+            --silent \
+            --location \
+        | jq --raw-output '.[].object.sha'
+)"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob \
+    --cert "trivy_${version}_Linux-64bit.tar.gz.pem" \
+    --signature "trivy_${version}_Linux-64bit.tar.gz.sig" \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+    --certificate-identity "https://github.com/aquasecurity/trivy/.github/workflows/reusable-release.yaml@refs/tags/v${version}" \
+    --certificate-github-workflow-name Release \
+    --certificate-github-workflow-ref "refs/tags/v${version}" \
+    --certificate-github-workflow-repository "aquasecurity/trivy" \
+    --certificate-github-workflow-sha "${SHA}" \
+    --certificate-github-workflow-trigger push \
+    "trivy_${version}_Linux-64bit.tar.gz"
+
+echo "### Installing trivy ${version}"
+tar --extract --gzip --directory="${prefix}${target}/bin" --file "trivy_${version}_Linux-64bit.tar.gz" \
+    trivy \
+    contrib
+rm -f "trivy_${version}_Linux-64bit.tar.gz"
+
+echo "### Moving templates for trivy ${version}"
 mkdir -p "${prefix}${target}/share/trivy"
 mv "${prefix}${target}/bin/contrib" "${prefix}${target}/share/trivy/"
 EOF
 
 RUN <<EOF
+echo "### Installing SonarQube template for trivy ${version}"
 curl --silent --location --output "${prefix}${target}/share/trivy/contrib/sonarqube.tpl" \
       https://github.com/mendhak/trivy-template-output-to-sonarqube/raw/master/sonarqube.tpl
 EOF

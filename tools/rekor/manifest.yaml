@@ -4,6 +4,7 @@ binary: rekor-cli
 check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
 dependencies:
 - trillian
+- cosign
 tags:
 - category/security
 - type/cli
