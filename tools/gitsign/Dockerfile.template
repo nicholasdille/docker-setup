@@ -1,8 +1,11 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=cosign / /
 ARG name
 ARG version
 COPY <<EOF /etc/profile.d/gitsign-credential-cache
@@ -15,11 +18,62 @@ fi
 export GITSIGN_CREDENTIAL_CACHE="${HOME}/.cache/.sigstore/gitsign/cache.sock"
 EOF
 RUN <<EOF
+echo "### Installing gitsign ${version}"
 curl --silent --location --output "${prefix}${target}/bin/gitsign" \
     "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/gitsign"
 
+echo "### Checking keyless signature for gitsign ${version}"
+curl --silent --location --fail --output "gitsign_${version}_linux_${alt_arch}.pem" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}.pem"
+curl --silent --location --fail --output "gitsign_${version}_linux_${alt_arch}.sig" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}.sig"
+SHA="$(
+    curl "https://api.github.com/repos/sigstore/gitsign/git/matching-refs/tags/v${version}" \
+            --silent \
+            --location \
+        | jq --raw-output '.[].object.sha'
+)"
+echo "    Using SHA ${SHA} for gitsign ${version}"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob \
+    --cert "gitsign_${version}_linux_${alt_arch}.pem" \
+    --signature "gitsign_${version}_linux_${alt_arch}.sig" \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+    --certificate-identity "https://github.com/sigstore/gitsign/.github/workflows/release.yml@refs/tags/v${version}" \
+    --certificate-github-workflow-name Release \
+    --certificate-github-workflow-ref "refs/tags/v${version}" \
+    --certificate-github-workflow-repository "sigstore/gitsign" \
+    --certificate-github-workflow-sha "${SHA}" \
+    --certificate-github-workflow-trigger push \
+    "${prefix}${target}/bin/gitsign"
+rm -f "gitsign_${version}_linux_${alt_arch}.pem" "gitsign_${version}_linux_${alt_arch}.sig"
+
+echo "### Installing gitsign-credential-cache ${version}"
 curl --silent --location --output "${prefix}${target}/bin/gitsign-credential-cache" \
     "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign-credential-cache_${version}_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/gitsign-credential-cache"
+
+echo "### Checking keyless signature for gitsign-credential-cache ${version}"
+curl --silent --location --fail --output "gitsign_${version}_linux_${alt_arch}.pem" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}.pem"
+curl --silent --location --fail --output "gitsign_${version}_linux_${alt_arch}.sig" \
+    "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}.sig"
+SHA="$(
+    curl "https://api.github.com/repos/sigstore/gitsign/git/matching-refs/tags/v${version}" \
+            --silent \
+            --location \
+        | jq --raw-output '.[].object.sha'
+)"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob \
+    --cert "gitsign_${version}_linux_${alt_arch}.pem" \
+    --signature "gitsign_${version}_linux_${alt_arch}.sig" \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+    --certificate-identity "https://github.com/sigstore/gitsign/.github/workflows/release.yml@refs/tags/v${version}" \
+    --certificate-github-workflow-name Release \
+    --certificate-github-workflow-ref "refs/tags/v${version}" \
+    --certificate-github-workflow-repository "sigstore/gitsign" \
+    --certificate-github-workflow-sha "${SHA}" \
+    --certificate-github-workflow-trigger push \
+    "${prefix}${target}/bin/gitsign-credential-cache"
+rm -f "gitsign_${version}_linux_${alt_arch}.pem" "gitsign_${version}_linux_${alt_arch}.sig"
 EOF
