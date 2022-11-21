@@ -1,0 +1,20 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/jb" \
+    "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/v${version}/jb-linux-amd64"
+chmod +x "${prefix}${target}/bin/jb"
+EOF
+
+# completion
+#RUN <<EOF
+#"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
+#"${prefix}${target}/bin/foo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
+#"${prefix}${target}/bin/foo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_foo"
+#EOF

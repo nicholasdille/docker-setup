@@ -1732,6 +1732,17 @@
     },
     {
       "fileMatch": [
+        "^tools/jb/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jsonnet-bundler/jsonnet-bundler",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/jf/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1762,6 +1773,17 @@
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^jq-(?<version>.+?)$",
       "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools/jsonnet/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "google/go-jsonnet",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [

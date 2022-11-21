@@ -1,0 +1,12 @@
+name: jb
+version: 0.5.1
+check: ${binary} --version 2>&1 | tr -d v
+tags:
+- category/?
+- lang/go
+homepage: https://github.com/jsonnet-bundler/jsonnet-bundler
+description: Jsonnet package manager
+renovate:
+  datasource: github-releases
+  package: jsonnet-bundler/jsonnet-bundler
+  extractVersion: ^v(?<version>.+?)$
