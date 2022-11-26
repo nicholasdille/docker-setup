@@ -1,5 +1,5 @@
 name: vendir
-version: 0.32.0
+version: 0.32.1
 check: ${binary} version | head -n 1 | cut -d' ' -f3
 tags:
 - org/vmware
