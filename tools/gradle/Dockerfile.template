@@ -2,17 +2,16 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/openjdk:${ref} AS openjdk
-
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --from=openjdk / /
 ARG name
 ARG version
 RUN <<EOF
-url="https://services.gradle.org/distributions/gradle-${version}-bin.zip"
+fixed_version="${version}"
+test "${version:0-2}" == ".0" && fixed_version="${version:0:-2}"
+url="https://services.gradle.org/distributions/gradle-${fixed_version}-bin.zip"
 filename="$(basename "${url}")"
 curl --silent --location --remote-name "${url}"
 unzip -q -o -d "${prefix}/opt" "${filename}"
-mv "${prefix}/opt/gradle-${version}" "${prefix}/opt/gradle"
+mv "${prefix}/opt/gradle-${fixed_version}" "${prefix}/opt/gradle"
 ln -sf "/opt/gradle/bin/gradle" "${prefix}${target}/bin/gradle"
 EOF
