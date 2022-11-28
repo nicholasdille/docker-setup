@@ -24,11 +24,11 @@ ARG version
 RUN <<EOF
 curl --silent --location "https://github.com/containers/bubblewrap/releases/download/v${version}/bubblewrap-${version}.tar.xz" \
 | tar --extract --xz --strip-components=1
-./configure
+./configure --prefix=/usr/local
 make LDFLAGS=-static
 find . -type f
 make install
-rm -f "${prefix}${target}/man"
+rm -f "/usr/local/man"
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
