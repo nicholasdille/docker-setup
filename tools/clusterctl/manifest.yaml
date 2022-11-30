@@ -1,5 +1,5 @@
 name: clusterctl
-version: 1.2.6
+version: 1.2.7
 check: ${binary} version --output short 2>/dev/null | tr -d v
 tags:
 - org/cncf
