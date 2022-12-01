@@ -1,0 +1,14 @@
+name: hugo
+version: 0.107.0
+check: ${binary} version | cut -d' ' -f2 | cut -d- -f1 | tr -d v
+dependencies:
+- bar
+tags:
+- category/development
+- lang/go
+homepage: https://github.com/gohugoio/hugo
+description: World’s fastest framework for building websites
+renovate:
+  datasource: github-releases
+  package: gohugoio/hugo
+  extractVersion: ^v(?<version>.+?)$

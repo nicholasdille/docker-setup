@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location "https://github.com/gohugoio/hugo/releases/download/v${version}/hugo_${version}_Linux-64bit.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    hugo
+"${prefix}${target}/bin/hugo" completion bash >"${prefix}${target}/share/bash-completion/completions/hugo"
+"${prefix}${target}/bin/hugo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/hugo.fish"
+"${prefix}${target}/bin/hugo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_hugo"
+EOF
