@@ -370,6 +370,17 @@
     },
     {
       "fileMatch": [
+        "^tools/cadvisor/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "google/cadvisor",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/calicoctl/manifest.yaml$"
       ],
       "matchStrings": [

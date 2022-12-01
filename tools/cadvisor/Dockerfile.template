@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --output "${prefix}${target}/bin/cadvisor" \
+    "https://github.com/google/cadvisor/releases/download/v${version}/cadvisor-v${version}-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/cadvisor"
+EOF

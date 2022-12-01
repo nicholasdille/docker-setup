@@ -1,0 +1,13 @@
+name: cadvisor
+version: 0.46.0
+check: ""
+tags:
+- org/google
+- category/monitoring
+- lang/go
+homepage: https://github.com/google/cadvisor
+description: Analyzes resource usage and performance characteristics of running containers
+renovate:
+  datasource: github-releases
+  package: google/cadvisor
+  extractVersion: ^v(?<version>.+?)$
