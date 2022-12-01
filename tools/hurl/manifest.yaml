@@ -1,0 +1,11 @@
+name: hurl
+version: 1.8.0
+check: ${binary} --version | grep ^hurl | cut -d' ' -f2
+tags:
+- category/development
+- lang/rust
+homepage: https://github.com/Orange-OpenSource/hurl/
+description: Run and test HTTP requests with plain text
+renovate:
+  datasource: github-releases
+  package: Orange-OpenSource/hurl/

@@ -1656,6 +1656,16 @@
     },
     {
       "fileMatch": [
+        "^tools/hurl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "Orange-OpenSource/hurl/",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/ignite/manifest.yaml$"
       ],
       "matchStrings": [
