@@ -1,5 +1,5 @@
 name: gitsign
-version: 0.3.2
+version: 0.4.1
 check: ${binary} --version | grep ^gitsign | cut -d' ' -f3 | tr -d v
 dependencies:
 - wslu
