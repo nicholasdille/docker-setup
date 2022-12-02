@@ -39,6 +39,7 @@ plugins=(
     fields
     flame
     fleet
+    foreach
     fuzzy
     gadget
     get-all
