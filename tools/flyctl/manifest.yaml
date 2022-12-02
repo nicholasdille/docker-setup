@@ -1,5 +1,5 @@
 name: flyctl
-version: 0.0.436
+version: 0.0.437
 # BROKEN: flyctl dies without access to /tmp/flyctl.cache.lock
 #check: ${binary} version 2>/dev/null | cut -d' ' -f2 | tr -d v
 tags:
