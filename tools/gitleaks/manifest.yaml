@@ -1,5 +1,5 @@
 name: gitleaks
-version: 8.15.1
+version: 8.15.2
 check: ${binary} version
 tags:
 - type/cli
