@@ -1,5 +1,5 @@
 name: kubeclarity-cli
-version: 2.8.0
+version: 2.9.0
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
