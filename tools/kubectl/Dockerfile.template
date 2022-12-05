@@ -3,22 +3,44 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY --from=krew / /
-
+COPY --from=cosign / /
 COPY kubectl.sh ${prefix}/etc/profile.d/
-
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/kubectl" \
-    "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubectl"
+curl --silent --location --fail --output "${prefix}${target}/bin/kubectl" \
+    "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl"
 chmod +x "${prefix}${target}/bin/kubectl"
-curl --silent --location --output "${prefix}${target}/bin/kubectl-convert" \
+
+if test "$(echo -e "1.26.0-beta.0\n${version}\n" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
+    echo "Verifying keyless signature"
+    curl --silent --location --fail --output "/tmp/kubectl.sig" \
+        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl.sig"
+    curl --silent --location --fail --output "/tmp/kubectl.cert" \
+        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl.cert"
+    COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kubectl" \
+        --signature "/tmp/kubectl.sig" \
+        --certificate "/tmp/kubectl.cert" \
+        --certificate-oidc-issuer https://accounts.google.com \
+        --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+fi
+
+curl --silent --location --fail --output "${prefix}${target}/bin/kubectl-convert" \
     "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert"
 chmod +x "${prefix}${target}/bin/kubectl-convert"
+#curl --silent --location --fail --output "/tmp/kubectl-convert.sig" \
+#    "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl-convert.sig"
+#curl --silent --location --fail --output "/tmp/kubectl-convert.cert" \
+#    "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl-convert.cert"
+#COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kubectl-convert" \
+#    --signature "/tmp/kubectl-convert.sig" \
+#    --certificate "/tmp/kubectl-convert.cert" \
+#    --certificate-oidc-issuer https://accounts.google.com \
+#    --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
 "${prefix}${target}/bin/kubectl" completion bash >"${prefix}${target}/share/bash-completion/completions/kubectl"
 "${prefix}${target}/bin/kubectl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubectl"
 EOF
