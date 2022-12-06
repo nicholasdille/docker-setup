@@ -1,15 +1,32 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=cosign / /
 ARG name
 ARG version
-
 COPY kubelet.service ${prefix}/etc/systemd/system/
-
 RUN <<EOF
 curl --silent --location --output "${prefix}${target}/bin/kubelet" \
     "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubelet"
 chmod +x "${prefix}${target}/bin/kubelet"
+
+if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
+    echo "Verifying keyless signature for kubelet"
+    curl --silent --location --fail --output "/tmp/kubelet.sig" \
+        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubelet.sig"
+    curl --silent --location --fail --output "/tmp/kubelet.cert" \
+        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubelet.cert"
+    COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kubelet" \
+        --signature "/tmp/kubelet.sig" \
+        --certificate "/tmp/kubelet.cert" \
+        --certificate-oidc-issuer https://accounts.google.com \
+        --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+    rm -f \
+        "/tmp/kubelet.sig" \
+        "/tmp/kubelet.cert"
+fi
 EOF

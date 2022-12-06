@@ -1,6 +1,8 @@
 name: kube-proxy
 version: "1.25.4"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
+dependencies:
+- cosign
 tags:
 - org/cncf
 - org/kubernetes

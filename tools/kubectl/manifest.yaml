@@ -1,6 +1,8 @@
 name: kubectl
 version: "1.25.4"
 check: ${binary} version --client --short 2>/dev/null | grep ^Client | cut -d' ' -f3 | tr -d v
+dependencies:
+- cosign
 tags:
 - org/cncf
 - org/kubernetes
