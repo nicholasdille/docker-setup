@@ -1,5 +1,5 @@
 name: socat
-version: 1.7.4.3
+version: "1.7.4.3"
 check: ${binary} -V | grep "^socat version" | cut -d' ' -f3
 tags:
 - type/cli

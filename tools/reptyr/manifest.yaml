@@ -1,5 +1,5 @@
 name: reptyr
-version: 0.9.0
+version: "0.9.0"
 check: ${binary} -v | head -n 1 | cut -d' ' -f5 | cut -d. -f1-3
 tags:
 - type/cli

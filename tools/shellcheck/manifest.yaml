@@ -1,5 +1,5 @@
 name: shellcheck
-version: 0.8.0
+version: "0.8.0"
 check: ""
 dependencies:
 - go-md2man

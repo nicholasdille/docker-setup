@@ -1,5 +1,5 @@
 name: firectl
-version: 0.2.0
+version: "0.2.0"
 check: ${binary} --version | grep ^Version | cut -d' ' -f2
 dependencies:
 - firecracker

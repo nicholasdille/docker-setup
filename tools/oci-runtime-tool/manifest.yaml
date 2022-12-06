@@ -1,5 +1,5 @@
 name: oci-runtime-tool
-version: 0.9.0
+version: "0.9.0"
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 tags:
 - org/oci

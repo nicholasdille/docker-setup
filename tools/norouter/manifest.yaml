@@ -1,5 +1,5 @@
 name: norouter
-version: 0.6.4
+version: "0.6.4"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - component/network

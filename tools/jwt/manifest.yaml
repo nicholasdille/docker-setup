@@ -1,5 +1,5 @@
 name: jwt
-version: 5.0.3
+version: "5.0.3"
 check: ${binary} --version | cut -d' ' -f2
 dependencies:
 - rust

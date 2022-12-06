@@ -1,5 +1,5 @@
 name: ghostunnel
-version: 1.7.1
+version: "1.7.1"
 check: ""
 tags:
 - type/cli

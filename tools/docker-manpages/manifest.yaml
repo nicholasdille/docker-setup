@@ -1,5 +1,5 @@
 name: docker-manpages
-version: 20.10.21
+version: "20.10.21"
 binary: false
 check: ""
 tags:

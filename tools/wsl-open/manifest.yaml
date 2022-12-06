@@ -1,5 +1,5 @@
 name: wsl-open
-version: 2.2.1
+version: "2.2.1"
 check: grep 2.2.1 ${binary} | grep @version | cut -d' ' -f3
 tags:
 - wsl

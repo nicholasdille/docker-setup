@@ -1,5 +1,5 @@
 name: umoci
-version: 0.4.7
+version: "0.4.7"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - org/oci

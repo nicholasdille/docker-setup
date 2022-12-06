@@ -1,5 +1,5 @@
 name: vexctl
-version: 0.0.2
+version: "0.0.2"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli

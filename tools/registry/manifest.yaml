@@ -1,5 +1,5 @@
 name: registry
-version: 2.8.1
+version: "2.8.1"
 check: ${binary} --version | cut -d' ' -f3 | cut -d+ -f1 | tr -d v
 tags:
 - org/cncf

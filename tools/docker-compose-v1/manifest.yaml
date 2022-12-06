@@ -1,5 +1,5 @@
 name: docker-compose-v1
-version: 1.29.2
+version: "1.29.2"
 binary: docker-compose
 check: ${binary} version --short
 flags:

@@ -1,5 +1,5 @@
 name: tig
-version: 2.5.7
+version: "2.5.7"
 check: ${binary} --version | grep ^tig | cut -d' ' -f3
 tags:
 - type/cli

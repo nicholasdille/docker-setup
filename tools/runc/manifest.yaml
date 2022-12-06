@@ -1,5 +1,5 @@
 name: runc
-version: 1.1.4
+version: "1.1.4"
 check: ${binary} --version | head -n 1 | cut -d' ' -f3
 dependencies:
 - go-md2man

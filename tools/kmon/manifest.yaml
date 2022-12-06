@@ -1,5 +1,5 @@
 name: kmon
-version: 1.6.2
+version: "1.6.2"
 check: ""
 tags:
 - type/tui

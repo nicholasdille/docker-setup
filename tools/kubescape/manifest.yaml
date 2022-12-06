@@ -1,5 +1,5 @@
 name: kubescape
-version: 2.0.176
+version: "2.0.176"
 check: ${binary} version 2>/dev/null | cut -d' ' -f5 | tr -d v
 tags:
 - type/cli

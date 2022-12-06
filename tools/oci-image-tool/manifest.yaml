@@ -1,5 +1,5 @@
 name: oci-image-tool
-version: 1.0.0-rc3
+version: "1.0.0-rc3"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - org/oci

@@ -1,5 +1,5 @@
 name: libcgroup
-version: 2.0.2
+version: "2.0.2"
 binary: ${target}/bin/lscgroup
 check: ""
 tags:

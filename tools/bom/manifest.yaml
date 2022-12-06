@@ -1,5 +1,5 @@
 name: bom
-version: 0.4.1
+version: "0.4.1"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -d ' ' | cut -d':' -f2 | tr -d v
 tags:
 - category/security

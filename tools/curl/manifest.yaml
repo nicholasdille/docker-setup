@@ -1,5 +1,5 @@
 name: curl
-version: 7.85.0
+version: "7.85.0"
 check: ${binary} --version | grep ^curl | cut -d' ' -f2
 tags:
 - type/cli

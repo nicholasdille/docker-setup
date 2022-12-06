@@ -1,5 +1,5 @@
 name: furyctl
-version: 0.8.0
+version: "0.8.0"
 check: ${binary} version 2>&1 | head -n 1 | cut -d= -f4 | tr -d \" | cut -d' ' -f3 | cut -d\\ -f1
 tags:
 - type/cli

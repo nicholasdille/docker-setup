@@ -1,5 +1,5 @@
 name: huber
-version: 0.3.8
+version: "0.3.8"
 check: ""
 dependencies:
 - rust

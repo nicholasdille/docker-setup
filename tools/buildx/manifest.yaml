@@ -1,5 +1,5 @@
 name: buildx
-version: 0.9.1
+version: "0.9.1"
 binary: ${target}/libexec/docker/cli-plugins/docker-buildx
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 dependencies:

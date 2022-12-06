@@ -1,5 +1,5 @@
 name: bin
-version: 0.15.1
+version: "0.15.1"
 check: ${binary} --version | grep ^bin | cut -d' ' -f3
 tags:
 - type/cli

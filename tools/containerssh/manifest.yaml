@@ -1,5 +1,5 @@
 name: containerssh
-version: 0.4.1
+version: "0.4.1"
 check: ""
 tags:
 - type/daemon

@@ -1,5 +1,5 @@
 name: neofetch
-version: 7.1.0
+version: "7.1.0"
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli

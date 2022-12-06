@@ -1,5 +1,5 @@
 name: uidmap
-version: 4.11.1
+version: "4.11.1"
 binary: newuidmap
 check: ""
 tags:

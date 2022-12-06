@@ -1,5 +1,5 @@
 name: hub-tool
-version: 0.4.5
+version: "0.4.5"
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f4 | tr -d v
 tags:
 - org/docker

@@ -1,5 +1,5 @@
 name: gocryptfs
-version: 2.3
+version: "2.3"
 check: ${binary} -version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli

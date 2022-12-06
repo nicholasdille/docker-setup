@@ -1,5 +1,5 @@
 name: kbrew
-version: 0.1.0
+version: "0.1.0"
 check: ${binary} version | cut -d, -f1 | cut -d'"' -f4 | tr -d v
 tags:
 - type/cli

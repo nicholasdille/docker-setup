@@ -1,5 +1,5 @@
 name: forgit
-version: master
+version: "master"
 check: ""
 dependencies:
 - fzf

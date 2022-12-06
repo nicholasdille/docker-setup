@@ -1,5 +1,5 @@
 name: bubblewrap
-version: 0.7.0
+version: "0.7.0"
 binary: bwrap
 check: ${binary} --version | cut -d' ' -f2
 tags:

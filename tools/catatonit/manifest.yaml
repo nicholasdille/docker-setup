@@ -1,5 +1,5 @@
 name: catatonit
-version: 0.1.7
+version: "0.1.7"
 check: ${binary} --version | cut -d' ' -f3 | cut -d_ -f1
 tags:
 - type/cli

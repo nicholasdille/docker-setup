@@ -1,5 +1,5 @@
 name: gitlab-runner
-version: 15.6.1
+version: "15.6.1"
 check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 tags:
 - org/gitlab

@@ -1,5 +1,5 @@
 name: cfssl
-version: 1.6.3
+version: "1.6.3"
 check: ""
 tags:
 - type/cli

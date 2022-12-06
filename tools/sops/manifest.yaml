@@ -1,5 +1,5 @@
 name: sops
-version: 3.7.3
+version: "3.7.3"
 check: ${binary} --version | head -n 1 | cut -d' ' -f2
 tags:
 - org/mozilla

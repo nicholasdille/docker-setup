@@ -1,5 +1,5 @@
 name: wksctl
-version: 0.10.2
+version: "0.10.2"
 check: ${binary} version
 tags:
 - type/cli

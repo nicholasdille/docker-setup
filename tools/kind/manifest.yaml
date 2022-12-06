@@ -1,5 +1,5 @@
 name: kind
-version: 0.17.0
+version: "0.17.0"
 check: ${binary} version | cut -d' ' -f1-2 | cut -d' ' -f2 | tr -d v
 dependencies:
 - docker

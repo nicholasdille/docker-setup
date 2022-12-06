@@ -1,5 +1,5 @@
 name: regclient
-version: 0.4.5
+version: "0.4.5"
 binary: regctl
 check: ${binary} version | jq -r .VCSTag | tr -d v
 tags:

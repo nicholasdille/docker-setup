@@ -1,5 +1,5 @@
 name: cntr
-version: 1.5.1
+version: "1.5.1"
 check: ""
 tags:
 - container/runtime

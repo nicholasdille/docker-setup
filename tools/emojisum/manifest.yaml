@@ -1,5 +1,5 @@
 name: emojisum
-version: 2
+version: "2"
 check: ""
 tags:
 - category/security

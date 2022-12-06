@@ -1,5 +1,5 @@
 name: kompose
-version: 1.27.0
+version: "1.27.0"
 check: ${binary} version | cut -d' ' -f1
 tags:
 - org/kubernetes

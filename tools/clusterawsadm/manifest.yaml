@@ -1,5 +1,5 @@
 name: clusterawsadm
-version: 2.0.2
+version: "2.0.2"
 check: ${binary} version --output short | tr -d v
 tags:
 - org/cncf

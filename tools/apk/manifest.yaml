@@ -1,5 +1,5 @@
 name: apk
-version: 2.12.10
+version: "2.12.10"
 check: ""
 tags:
 - type/cli

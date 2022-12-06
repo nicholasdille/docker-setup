@@ -1,5 +1,5 @@
 name: mp3binder
-version: 5.1.0
+version: "5.1.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - category/music

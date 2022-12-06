@@ -1,5 +1,5 @@
 name: yq
-version: 4.30.5
+version: "4.30.5"
 check: ${binary} --version | cut -d' ' -f4
 tags:
 - type/cli

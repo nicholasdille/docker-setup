@@ -1,5 +1,5 @@
 name: docker-credential-gcr
-version: 2.1.6
+version: "2.1.6"
 check: ${binary} version | cut -d' ' -f7
 dependencies:
 - docker

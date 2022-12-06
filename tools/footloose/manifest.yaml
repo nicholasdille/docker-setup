@@ -1,5 +1,5 @@
 name: footloose
-version: 0.6.3
+version: "0.6.3"
 check: ${binary} version | cut -d' ' -f2
 tags:
 - type/cli

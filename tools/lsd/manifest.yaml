@@ -1,5 +1,5 @@
 name: lsd
-version: 0.23.1
+version: "0.23.1"
 check: ""
 tags:
 - type/cli

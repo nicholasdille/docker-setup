@@ -1,5 +1,5 @@
 name: jb
-version: 0.5.1
+version: "0.5.1"
 check: ${binary} --version 2>&1 | tr -d v
 tags:
 - category/?

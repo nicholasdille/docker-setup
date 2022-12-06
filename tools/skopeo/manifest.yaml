@@ -1,5 +1,5 @@
 name: skopeo
-version: 1.10.0
+version: "1.10.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - org/redhat

@@ -1,5 +1,5 @@
 name: ssh-key-confirmer
-version: 0.1
+version: "0.1"
 check: ""
 tags:
 - category/security

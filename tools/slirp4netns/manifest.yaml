@@ -1,5 +1,5 @@
 name: slirp4netns
-version: 1.2.0
+version: "1.2.0"
 check: ${binary} --version | head -n 1 | cut -d' ' -f3
 tags:
 - type/cli

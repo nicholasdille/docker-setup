@@ -1,5 +1,5 @@
 name: jq
-version: 1.6
+version: "1.6"
 check: ${binary} --version | cut -d- -f2
 tags:
 - type/cli

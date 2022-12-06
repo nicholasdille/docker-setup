@@ -1,5 +1,5 @@
 name: ignite
-version: 0.10.0
+version: "0.10.0"
 check: ${binary} version --output short | tr -d v
 dependencies:
 - containerd

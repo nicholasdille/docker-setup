@@ -1,5 +1,5 @@
 name: cue
-version: 0.4.3
+version: "0.4.3"
 check: ${binary} version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli

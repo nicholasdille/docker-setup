@@ -1,5 +1,5 @@
 name: docker-compose-switch
-version: 1.0.5
+version: "1.0.5"
 check: ""
 flags:
 - not-docker-compose-v1

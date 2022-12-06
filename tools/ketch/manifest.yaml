@@ -1,5 +1,5 @@
 name: ketch
-version: 0.7.0
+version: "0.7.0"
 check: ""
 tags:
 - type/cli

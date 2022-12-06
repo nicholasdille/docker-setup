@@ -1,5 +1,5 @@
 name: img
-version: 0.5.11
+version: "0.5.11"
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
 tags:
 - standard/oci

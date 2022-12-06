@@ -1,5 +1,5 @@
 name: gradle
-version: 7.6.0
+version: "7.6.0"
 check: ${binary} -version | grep ^Gradle | cut -d' ' -f2
 dependencies:
 - openjdk-jre

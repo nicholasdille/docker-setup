@@ -1,5 +1,5 @@
 name: artifactory-cleanup
-version: 1.6.0
+version: "1.6.0"
 check: ${binary} --version
 tags:
 - type/cli

@@ -1,5 +1,5 @@
 name: helmfile
-version: 0.144.0
+version: "0.144.0"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli

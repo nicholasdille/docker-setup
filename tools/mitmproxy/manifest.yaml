@@ -1,5 +1,5 @@
 name: mitmproxy
-version: 8.1.1
+version: "8.1.1"
 check: ${binary} --version | grep ^Mitmproxy | cut -d' ' -f2
 tags:
 - component/network

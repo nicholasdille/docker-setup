@@ -1,5 +1,5 @@
 name: kubeaudit
-version: 0.21.0
+version: "0.21.0"
 check: ${binary} version
 tags:
 - type/cli

@@ -1,5 +1,5 @@
 name: util-linux
-version: 2.38.1
+version: "2.38.1"
 binary: lsns
 check: ${binary} --version | cut -d' ' -f4
 tags:

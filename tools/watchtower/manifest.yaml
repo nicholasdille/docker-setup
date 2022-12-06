@@ -1,5 +1,5 @@
 name: watchtower
-version: 1.5.1
+version: "1.5.1"
 check: ""
 dependencies:
 - docker

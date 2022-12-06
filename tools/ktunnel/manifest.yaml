@@ -1,5 +1,5 @@
 name: ktunnel
-version: 1.4.8
+version: "1.4.8"
 check: ""
 tags:
 - type/cli

@@ -1,5 +1,5 @@
 name: nsutils
-version: 0.2
+version: "0.2"
 binary: nslist
 check: ""
 tags:

@@ -1,5 +1,5 @@
 name: krew
-version: 0.4.3
+version: "0.4.3"
 check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
 - org/cncf

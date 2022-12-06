@@ -1,5 +1,5 @@
 name: docker-credential-acr-env
-version: 0.7.0
+version: "0.7.0"
 check: ""
 dependencies:
 - docker
