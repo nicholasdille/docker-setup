@@ -7,7 +7,6 @@ FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY --from=krew / /
 COPY --from=cosign / /
 COPY kubectl.sh ${prefix}/etc/profile.d/
 RUN <<EOF
