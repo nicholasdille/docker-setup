@@ -20,10 +20,8 @@ curl --silent --location --fail --remote-name \
 curl --silent --location --fail --remote-name \
       "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz.sig"
 SHA="$(
-    curl "https://api.github.com/repos/aquasecurity/trivy/git/matching-refs/tags/v${version}" \
-            --silent \
-            --location \
-        | jq --raw-output '.[].object.sha'
+    git ls-remote --tags https://github.com/aquasecurity/trivy "v${version}" \
+    | cut -f1
 )"
 COSIGN_EXPERIMENTAL=1 cosign verify-blob \
     --cert "trivy_${version}_Linux-64bit.tar.gz.pem" \
