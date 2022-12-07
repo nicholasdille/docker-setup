@@ -28,7 +28,7 @@ curl --silent --location --fail --output "gitsign_${version}_linux_${alt_arch}.p
 curl --silent --location --fail --output "gitsign_${version}_linux_${alt_arch}.sig" \
     "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}.sig"
 SHA="$(
-    git ls-remote --tags https://github.com/sigstore/gitsign "v${version}" \
+    git ls-remote --tags https://github.com/sigstore/gitsign "v${version}^{}" \
     | cut -f1
 )"
 COSIGN_EXPERIMENTAL=1 cosign verify-blob \
