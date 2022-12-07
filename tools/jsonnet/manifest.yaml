@@ -1,6 +1,6 @@
 name: jsonnet
 version: "0.19.1"
-check: ${binary} --version | cut -d' ' -f6 | tr -d
+check: ${binary} --version | cut -d' ' -f6 | tr -d v
 tags:
 - org/google
 - category/?
