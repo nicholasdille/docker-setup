@@ -1,16 +1,22 @@
 #!/bin/bash
 set -o errexit
 
-function create_tool_page() {
-    local tool=$1
-    local version=$2
-    local tags=$3
-    local description=$4
-    local timestamp=$5
-    local deps=$6
-    local homepage=$7
+tool=$1
+if test -z "${tool}"; then
+    echo "Usage: $0 <tool>"
+    exit 1
+fi
 
-    cat <<EOF
+TOOL_JSON="$(jq --arg name "${tool}" '.tools[] | select(.name == $name)' metadata.json)"
+
+version="$(jq --raw-output '.version' <<<"${TOOL_JSON}")"
+tags="$(jq --raw-output --compact-output '.tags' <<<"${TOOL_JSON}")"
+description="$(jq --raw-output '.description' <<<"${TOOL_JSON}" | sed s/\"/\'/g)"
+homepage="$(jq --raw-output '.homepage' <<<"${TOOL_JSON}" | sed s/\"/\'/g)"
+timestamp="$(git log --follow --format=%ad --date iso-strict "tools/${tool}/manifest.yaml" | tail -1)"
+deps="$(jq --raw-output 'select(.dependencies != null) | .dependencies[]' <<<"${TOOL_JSON}")"
+   
+cat <<EOF
 +++
 title = "${tool} ${version}"
 date = "${timestamp}"
@@ -42,9 +48,15 @@ docker-setup --tools=${tool} install
 ## Dependencies
 
 EOF
-for DEP in ${deps}; do
-    echo "[${DEP}](/tools/${DEP}/) "
-done
+
+if test -n "${DEPS}"; then
+    for DEP in ${deps}; do
+        echo "[${DEP}](/tools/${DEP}/) "
+    done
+else
+    echo "None"
+fi
+
 cat <<EOF
 
 ## Changelog
@@ -52,25 +64,5 @@ cat <<EOF
 | Date | Message | SHA |
 |------|---------|-----|
 EOF
+
 git log --pretty=format:"| %ad | %s | [%h](https://github.com/nicholasdille/docker-setup/commit/%h) |" --date=iso-strict tools/${tool}/
-}
-
-METADATA_JSON="$(cat metadata.json)"
-TOOLS="$(
-    jq --raw-output '.tools[].name' <<<"${METADATA_JSON}"
-)"
-mkdir -p site/content/tools
-for TOOL in ${TOOLS}; do
-    echo "Processing ${TOOL}"
-
-    TOOL_JSON="$(jq --arg name "${TOOL}" '.tools[] | select(.name == $name)' <<<"${METADATA_JSON}")"
-
-    version="$(jq --raw-output '.version' <<<"${TOOL_JSON}")"
-    tags="$(jq --raw-output --compact-output '.tags' <<<"${TOOL_JSON}")"
-    description="$(jq --raw-output '.description' <<<"${TOOL_JSON}" | sed s/\"/\'/g)"
-    homepage="$(jq --raw-output '.homepage' <<<"${TOOL_JSON}" | sed s/\"/\'/g)"
-    timestamp="$(git log --follow --format=%ad --date iso-strict "tools/${TOOL}/manifest.yaml" | tail -1)"
-    deps="$(jq --raw-output 'select(.dependencies != null) | .dependencies[]' <<<"${TOOL_JSON}")"
-   
-    create_tool_page "${TOOL}" "${version}" "${tags}" "${description}" "${timestamp}" "${deps}" "${homepage}" >"site/content/tools/${TOOL}.md"
-done

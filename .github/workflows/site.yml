@@ -1,0 +1,67 @@
+name: Build site
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "tools/**"
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create pages
+        run: |
+          make site
+
+      - name: Generate site
+        run: |
+          cd site/public
+          hugo --minify
+
+      - name: Package site
+        run: |
+          tar -czf ../public.tar.gz
+
+      - name: Store artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: site
+          path: site/public.tar.gz
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+      
+      - name: Fetch artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: site
+
+      - name: Unpack site
+        run: |
+          find . -type f
+          tar -xzf public.tar.gz
+
+      - name: Commit site
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: gh-pages
+          create_branch: false
+          commit_message: "Updates"
