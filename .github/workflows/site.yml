@@ -6,6 +6,9 @@ on:
       - "main"
     paths:
       - "tools/**"
+      - "scripts/gh-pages.sh"
+      - "make/site.mk"
+      - ".github/workflows/site.yml"
 
 jobs:
 
