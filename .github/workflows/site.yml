@@ -28,11 +28,12 @@ jobs:
 
       - name: Generate site
         run: |
-          cd site/public
+          cd site
           hugo --minify
 
       - name: Package site
         run: |
+          cd site/public
           tar -czf ../public.tar.gz
 
       - name: Store artifact
