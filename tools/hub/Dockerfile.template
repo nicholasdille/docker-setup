@@ -12,7 +12,8 @@ curl --silent --location "https://github.com/github/hub/releases/download/v${ver
 rm -f \
     "${prefix}${target}/LICENSE" \
     "${prefix}${target}/install" \
-    "${prefix}${target}/README.md"
+    "${prefix}${target}/README.md" \
+    "${prefix}${target}/share/man/man1/*.txt"
 mv "${prefix}${target}/etc/hub.bash_completion.sh" "${prefix}${target}/share/bash-completion/completions/hub"
 mv "${prefix}${target}/etc/hub.fish_completion"    "${prefix}${target}/share/fish/vendor_completions.d/hub.fish"
 mv "${prefix}${target}/etc/hub.zsh_completion"     "${prefix}${target}/share/zsh/vendor-completions/_hub"
