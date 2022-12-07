@@ -24,7 +24,7 @@ jobs:
 
       - name: Create pages and generate site
         run: |
-          make site
+          make -j4 site
 
       - name: Package site
         run: |
