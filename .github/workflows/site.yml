@@ -22,14 +22,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create pages
+      - name: Create pages and generate site
         run: |
           make site
-
-      - name: Generate site
-        run: |
-          cd site
-          hugo --minify
 
       - name: Package site
         run: |
