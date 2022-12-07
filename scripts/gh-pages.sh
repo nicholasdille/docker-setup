@@ -17,21 +17,12 @@ timestamp="$(git log --follow --format=%ad --date iso-strict "tools/${tool}/mani
 deps="$(jq --raw-output 'select(.dependencies != null) | .dependencies[]' <<<"${TOOL_JSON}")"
    
 cat <<EOF
-+++
-title = "${tool} ${version}"
-date = "${timestamp}"
-author = "Nicholas Dille"
-authorTwitter = "nicholasdille"
-cover = ""
-tags = ${tags}
-keywords = []
-description = ""
-summary = "${description}"
-showFullContent = false
-readingTime = false
-hideComments = false
-color = ""
-+++
+---
+title: "${tool} ${version}"
+date: "${timestamp}"
+tags: ${tags}
+summary: "${description}"
+---
 
 ## Description
 

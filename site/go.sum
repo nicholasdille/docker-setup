@@ -1,2 +1,6 @@
 github.com/panr/hugo-theme-terminal v0.0.0-20221121074827-007d7f3df65d h1:/jm7YhKBSXTmPHPHWUjB8XP5SAmECva/dY6WFvPrEoc=
 github.com/panr/hugo-theme-terminal v0.0.0-20221121074827-007d7f3df65d/go.mod h1:rl66QefAPr/ZSyEFGqukIUV6S1TVjWSxAVpx/GHeJOs=
+github.com/setsevireon/photophobia v0.0.7 h1:0J9HBN3uhKMFW13vchb+S65hw71GSHhUhFEH5y2wUAg=
+github.com/setsevireon/photophobia v0.0.7/go.mod h1:IZCqmSmQZahg6Jm1S2a3sjWN3C67akbFS0uGaCnniMc=
+gitlab.com/gabmus/hugo-ficurinia v0.0.0-20221115070106-8b3973dc2f6b h1:2KiTI2p0GUlYWtwGY0wx33EyJaq4Pe/8is81YZ887s4=
+gitlab.com/gabmus/hugo-ficurinia v0.0.0-20221115070106-8b3973dc2f6b/go.mod h1:nmsV9/x7nn3bvahS0FgLujjD8VV0PDaAHJxrgq+dACM=

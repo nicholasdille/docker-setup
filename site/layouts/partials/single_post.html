@@ -1,0 +1,54 @@
+{{- partial "inject/content-before.html" . -}}
+<article class="card single">
+    {{ if .Params.showTitle | default true }}
+        <h1>{{ .Title }}</h1>
+    {{ end }}
+    {{ if (.Params.showDate | default true) }}
+        <p class="date">
+            <span title='{{ i18n "date" }}'> </span>
+            {{- partial "date.html" .Date -}}
+        </p>
+    {{ end }}
+    {{ if .Params.tags }}
+        <p class="articleTagsContainer">
+            <span> </span>
+            <strong>{{ i18n "tagsColumn" }}</strong>
+            {{ range sort .Params.tags }}
+                <a
+                    {{ if site.Params.buttonTags | default false }}
+                    class="buttonTag"
+                    {{ end }}
+                    href="/tags/{{ . | urlize }}">#{{ . }}</a>
+            {{ end }}
+        </p>
+        {{ if not .Site.Params.paperCards }}<hr />{{ end }}
+    {{ end }}
+    {{ if and (.Params.toc | default false) (.Site.Params.tocBeforeImage | default false) }}
+        {{- partial "toc.html" . -}}
+    {{ end }}
+    {{ if .Params.Image }}
+        <figure style="margin: 0">
+            {{ if or (hasPrefix .Params.Image "/") (hasPrefix .Params.Image "http://") (hasPrefix .Params.Image "https://") }}
+                <img src="{{ .Params.Image }}" alt="{{ .Params.Alt }}" />
+            {{ else }}
+                <img src="{{ .Permalink }}/{{ .Params.Image }}" alt="{{ .Params.Alt }}" />
+            {{ end }}
+            {{ if .Params.ImageCaption }}
+                <figcaption>
+                    <p>{{ .Params.ImageCaption | markdownify }}</p>
+                </figcaption>
+            {{ end }}
+        </figure>
+    {{ end }}
+    {{ if and (.Params.toc | default false) (not (.Site.Params.tocBeforeImage | default false)) }}
+        {{- partial "toc.html" . -}}
+    {{ end }}
+    <div>{{ .Content }}</div>
+</article>
+{{- partial "inject/content-after.html" . -}}
+{{ if .Params.showShare | default true }}
+    {{- partial "share_on_fediverse.html" . -}}
+{{ end }}
+{{- partial "commento.html" . -}}
+{{- partial "cactus_chat.html" . -}}
+{{- partial "related_articles.html" . -}}
