@@ -7,7 +7,7 @@ if test -z "${tool}"; then
     exit 1
 fi
 
-TOOL_JSON="$(jq --arg name "${tool}" '.tools[] | select(.name == $name)' metadata.json)"
+TOOL_JSON="$(tools/${tool}/manifest.json)"
 
 version="$(jq --raw-output '.version' <<<"${TOOL_JSON}")"
 tags="$(jq --raw-output --compact-output '.tags' <<<"${TOOL_JSON}")"

@@ -44,6 +44,8 @@ jobs:
 
   deploy:
     name: Deploy
+    needs:
+    - build
     runs-on: ubuntu-22.04
     steps:
 
