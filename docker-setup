@@ -211,7 +211,6 @@ default_tools="$(
 selected_tools="${default_tools}"
 install_tools=""
 declare -A tool_version
-declare -A tool_binary
 declare -A tool_check
 declare -A tool_deps
 declare -A tool_marker_file_present
@@ -291,16 +290,6 @@ function warm_cache() {
 
     profile "Done reading versions"
 
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_metadata_file}")"
-    for pair in ${temp}; do
-        local name="${pair%%=*}"
-        local value="${pair#*=}"
-        trace "BINARY name=${name},value=${value}."
-        tool_binary[${name}]=${value}
-    done
-
-    profile "Done reading binaries"
-
     temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(","))"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
         local name="${pair%%=*}"
@@ -340,84 +329,78 @@ function check_tools() {
         if test -f "${docker_setup_cache}/${name}/${version}"; then
             debug "  ${green}MARKER_FILE_EXISTS${reset}"
             tool_marker_file_present[${name}]=true
+            tool_installed[${name}]=true
+            tool_operator[${name}]="="
+            tool_color[${name}]="${green}"
+            tool_marker[${name}]="${emoji_done}"
         else
             debug "  ${red}MARKER_FILE_MISSING${reset}"
             tool_marker_file_present[${name}]=false
+            tool_installed[${name}]=false
+            tool_operator[${name}]="!"
+            tool_color[${name}]="${red}"
+            tool_marker[${name}]="${emoji_missing}"
         fi
 
-        local binary="${tool_binary[${name}]}"
-        if test "${binary}" == "false"; then
-            debug "  ${red}NO_BINARY_DEFINED${reset}"
-
-            if ${tool_marker_file_present[${name}]}; then
-                debug "  Setting green"
-                tool_installed[${name}]=true
-                tool_operator[${name}]="="
-                tool_color[${name}]="${green}"
-                tool_marker[${name}]="${emoji_done}"
+        if ! ${tool_marker_file_present[${name}]}; then
+            local binary="${tool_binary[${name}]}"
+            if test "${binary}" == "false"; then
+                debug "  ${red}NO_BINARY_DEFINED${reset}"
 
             else
-                debug "  Setting red"
-                tool_installed[${name}]=false
-                tool_operator[${name}]="!"
-                tool_color[${name}]="${red}"
-                tool_marker[${name}]="${emoji_missing}"
-            fi
-            continue
 
-        else
-            if test -z "${binary}"; then
-                binary="${name}"
-            fi
-            # shellcheck disable=SC2001
-            binary="$(
-                echo "${binary}" \
-                | sed "s|\${target}|${target}|g"
-            )"
-            if test "${binary:0:1}" != "/"; then
-                binary="${prefix}${target}/bin/${binary}"
-            fi
-            tool_binary[${name}]="${binary}"
-        fi
-        debug "  binary=${binary}."
 
-        if test -z "${tool_check[${name}]}"; then
-            tool_check[${name}]="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
-        fi
-        if test -n "${tool_check[${name}]}"; then
-            local check="${tool_check[${name}]}"
-            debug "  check=${check//\$\{binary\}/${binary}}."
-        fi
-
-        if test -n "${tool_check[${name}]}"; then
-            debug "  ${green}CHECK_EXISTS${reset}"
-            tool_installed[${name}]=false
-            tool_version_matches[${name}]=false
-
-            if test -f "${binary}"; then
-                debug "  ${green}BINARY_EXISTS${reset}"
-            fi
-
-            if test -x "${binary}"; then
-                debug "  ${green}BINARY_EXECUTABLE${reset}"
-                tool_installed_version[${name}]="$(eval "${tool_check[${name}]}")"
-                debug "  installed_version=${tool_installed_version[${name}]}."
-
-                if test "${tool_installed_version[${name}]}" == "${version}"; then
-                    tool_installed[${name}]=true
-                    tool_version_matches[${name}]=true
-                    debug "  ${green}VERSION_MATCHES${reset}"
-
-                else
-                    tool_installed[${name}]=true
-                    tool_version_matches[${name}]=false
-                    debug "  ${red}VERSION_MISMATCH${reset}"
+                if test -z "${binary}"; then
+                    binary="${name}"
                 fi
+                # shellcheck disable=SC2001
+                binary="$(
+                    echo "${binary}" \
+                    | sed "s|\${target}|${target}|g"
+                )"
+                if test "${binary:0:1}" != "/"; then
+                    binary="${prefix}${target}/bin/${binary}"
+                fi
+                tool_binary[${name}]="${binary}"
+            fi
+            debug "  binary=${binary}."
+
+            if test -z "${tool_check[${name}]}"; then
+                tool_check[${name}]="$(jq --raw-output --arg name "${name}" 'select(.check != null and .check != "") | .check' <<<"${tool_json[${name}]}")"
+            fi
+            if test -n "${tool_check[${name}]}"; then
+                local check="${tool_check[${name}]}"
+                debug "  check=${check//\$\{binary\}/${binary}}."
             fi
 
-        elif ${tool_marker_file_present[${name}]}; then
-            debug "  ${red}No check defined${reset}"
-            tool_installed[${name}]=true
+            if test -n "${tool_check[${name}]}"; then
+                debug "  ${green}CHECK_EXISTS${reset}"
+                tool_installed[${name}]=false
+                tool_version_matches[${name}]=false
+
+                if test -f "${binary}"; then
+                    debug "  ${green}BINARY_EXISTS${reset}"
+                fi
+
+                if test -x "${binary}"; then
+                    debug "  ${green}BINARY_EXECUTABLE${reset}"
+                    tool_installed_version[${name}]="$(eval "${tool_check[${name}]}")"
+                    debug "  installed_version=${tool_installed_version[${name}]}."
+
+                    if test "${tool_installed_version[${name}]}" == "${version}"; then
+                        tool_installed[${name}]=true
+                        tool_version_matches[${name}]=true
+                        debug "  ${green}VERSION_MATCHES${reset}"
+
+                    else
+                        tool_installed[${name}]=true
+                        tool_version_matches[${name}]=false
+                        debug "  ${red}VERSION_MISMATCH${reset}"
+                    fi
+                fi
+
+            fi
+
         fi
 
         if ${tool_installed[${name}]}; then
@@ -440,8 +423,6 @@ function check_tools() {
             tool_color[${name}]="${red}"
             tool_marker[${name}]="${emoji_missing}"
         fi
-
-        profile "Done with ${name}"
     done
 
     profile "Done warming cache"
