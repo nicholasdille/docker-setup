@@ -13,6 +13,6 @@ COPY registry.json ${prefix}/etc/containers/registries.json
 COPY storage.conf ${prefix}/etc/containers/storage.conf
 
 RUN <<EOF
-curl --silent --location "https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 EOF

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/jb" \
+curl --silent --location --fail --output "${prefix}${target}/bin/jb" \
     "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/v${version}/jb-linux-amd64"
 chmod +x "${prefix}${target}/bin/jb"
 EOF

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     crane
 "${prefix}${target}/bin/crane" completion bash >"${prefix}${target}/share/bash-completion/completions/crane"

@@ -7,10 +7,10 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     notation
-curl --silent --location "https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/notaryproject/notation/releases/download/v${version}/notation_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/libexec/docker/cli-plugins" --no-same-owner \
     docker-generate \
     docker-notation

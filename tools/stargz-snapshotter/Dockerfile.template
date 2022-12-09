@@ -9,6 +9,6 @@ ARG version
 COPY stargz-snapshotter.service ${prefix}/etc/systemd/system/
 
 RUN <<EOF
-curl --silent --location "https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF

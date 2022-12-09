@@ -9,7 +9,7 @@ ARG version
 COPY docker-compose-cli-plugin ${prefix}${target}/libexec/docker/cli-plugins/docker-compose
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/docker-compose" \
+curl --silent --location --fail --output "${prefix}${target}/bin/docker-compose" \
     "https://github.com/docker/compose/releases/download/${version}/docker-compose-Linux-x86_64"
 chmod +x "${prefix}${target}/bin/docker-compose"
 EOF

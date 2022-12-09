@@ -7,7 +7,7 @@ WORKDIR /tmp/bat
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location "https://github.com/sharkdp/bat/releases/download/v${version}/bat-v${version}-x86_64-unknown-linux-gnu.tar.gz" \
+curl --silent --location --fail "https://github.com/sharkdp/bat/releases/download/v${version}/bat-v${version}-x86_64-unknown-linux-gnu.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
 mv bat "${prefix}${target}/bin/"
 mv bat.1 "${prefix}${target}/share/man/man1/"

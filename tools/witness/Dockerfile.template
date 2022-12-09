@@ -8,7 +8,7 @@ ARG version
 
 # tarball
 RUN <<EOF
-curl --silent --location "https://github.com/testifysec/witness/releases/download/v${version}/witness_${version}_linux_amd64.tar.gz" \
+curl --silent --location --fail "https://github.com/testifysec/witness/releases/download/v${version}/witness_${version}_linux_amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     witness
 "${prefix}${target}/bin/witness" completion bash >"${prefix}${target}/share/bash-completion/completions/witness"

@@ -10,7 +10,7 @@ COPY gitlab-runner.service ${prefix}/etc/systemd/system/
 COPY config.toml ${prefix}/etc/gitlab-runner/
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/gitlab-runner" \
+curl --silent --location --fail --output "${prefix}${target}/bin/gitlab-runner" \
     "https://gitlab.com/gitlab-org/gitlab-runner/-/releases/v${version}/downloads/binaries/gitlab-runner-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/gitlab-runner"
 EOF

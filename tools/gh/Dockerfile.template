@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner
 rm "${prefix}${target}/LICENSE"
 "${prefix}${target}/bin/gh" completion -s bash >"${prefix}${target}/share/bash-completion/completions/gh"

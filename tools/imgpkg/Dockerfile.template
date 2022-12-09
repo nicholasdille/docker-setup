@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/imgpkg" \
+curl --silent --location --fail --output "${prefix}${target}/bin/imgpkg" \
     "https://github.com/vmware-tanzu/carvel-imgpkg/releases/download/v${version}/imgpkg-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/imgpkg"
 EOF

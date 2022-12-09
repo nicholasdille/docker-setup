@@ -7,10 +7,10 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     task
-curl --silent --location "https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/go-task/task/releases/download/v${version}/task_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share" --strip-components=2 --no-same-owner \
     completion/bash/task.bash \
     completion/fish/task.fish \

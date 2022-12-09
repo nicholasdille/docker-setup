@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/yq" \
+curl --silent --location --fail --output "${prefix}${target}/bin/yq" \
     "https://github.com/mikefarah/yq/releases/download/v${version}/yq_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/yq"
 "${prefix}${target}/bin/yq" shell-completion bash >"${prefix}${target}/share/bash-completion/completions/yq"

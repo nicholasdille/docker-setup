@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/kubeletctl" \
+curl --silent --location --fail --output "${prefix}${target}/bin/kubeletctl" \
     "https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/kubeletctl"
 EOF

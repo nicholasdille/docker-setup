@@ -7,9 +7,9 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/jq" \
+curl --silent --location --fail --output "${prefix}${target}/bin/jq" \
     "https://github.com/stedolan/jq/releases/download/jq-${version}/jq-linux64"
 chmod +x "${prefix}${target}/bin/jq"
-curl --silent --location --output "${prefix}${target}/share/man/man1/jq.1" \
+curl --silent --location --fail --output "${prefix}${target}/share/man/man1/jq.1" \
     "https://raw.githubusercontent.com/stedolan/jq/jq-${version}/jq.1.prebuilt"
 EOF

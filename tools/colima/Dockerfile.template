@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/colima" \
+curl --silent --location --fail --output "${prefix}${target}/bin/colima" \
     "https://github.com/abiosoft/colima/releases/download/v${version}/colima-Linux-${arch}"
 chmod +x "${prefix}${target}/bin/colima"
 "${prefix}${target}/bin/colima" completion bash >"${prefix}${target}/share/bash-completion/completions/colima"

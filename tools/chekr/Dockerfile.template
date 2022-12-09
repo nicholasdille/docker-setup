@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/ckotzbauer/chekr/releases/download/${version}/chekr_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/ckotzbauer/chekr/releases/download/${version}/chekr_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     chekr
 "${prefix}${target}/bin/chekr" completion bash >"${prefix}${target}/share/bash-completion/completions/chekr"

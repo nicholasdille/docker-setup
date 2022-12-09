@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/jpillora/chisel/releases/download/v${version}/chisel_${version}_linux_${alt_arch}.gz" \
+curl --silent --location --fail "https://github.com/jpillora/chisel/releases/download/v${version}/chisel_${version}_linux_${alt_arch}.gz" \
 | gunzip \
 >"${prefix}${target}/bin/chisel"
 chmod +x "${prefix}${target}/bin/chisel"

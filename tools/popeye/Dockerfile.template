@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/derailed/popeye/releases/download/v${version}/popeye_Linux_x86_64.tar.gz" \
+curl --silent --location --fail "https://github.com/derailed/popeye/releases/download/v${version}/popeye_Linux_x86_64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     popeye
 "${prefix}${target}/bin/popeye" completion bash >"${prefix}${target}/share/bash-completion/completions/popeye"

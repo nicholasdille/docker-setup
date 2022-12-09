@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz" \
+curl --silent --location --fail "https://github.com/estesp/manifest-tool/releases/download/v${version}/binaries-manifest-tool-${version}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     manifest-tool-linux-${alt_arch}
 mv "${prefix}${target}/bin/manifest-tool-linux-${alt_arch}" "${prefix}${target}/bin/manifest-tool"

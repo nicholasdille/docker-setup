@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/bom" \
+curl --silent --location --fail --output "${prefix}${target}/bin/bom" \
     "https://github.com/kubernetes-sigs/bom/releases/download/v${version}/bom-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/bom"
 "${prefix}${target}/bin/bom" completion bash >"${prefix}${target}/share/bash-completion/completions/bom"

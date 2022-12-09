@@ -8,7 +8,7 @@ ARG version
 RUN <<EOF
 url="https://github.com/jeremylong/DependencyCheck/releases/download/v${version}/dependency-check-${version}-release.zip"
 filename="$(basename "${url}")"
-curl --silent --location --remote-name "${url}"
+curl --silent --location --fail --remote-name "${url}"
 unzip -q -o -d "${prefix}/opt" "${filename}"
 ln -sf /opt/dependency-check/bin/dependency-check.sh "${prefix}${target}/bin/dependency-check.sh"
 mv "${prefix}/opt/dependency-check/bin/completion-for-dependency-check.sh" "${prefix}${target}/share/bash-completion/completions/dependency-check.sh"

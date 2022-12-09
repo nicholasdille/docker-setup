@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/kube-score" \
+curl --silent --location --fail --output "${prefix}${target}/bin/kube-score" \
     "https://github.com/zegl/kube-score/releases/download/v${version}/kube-score_${version}_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/kube-score"
 EOF

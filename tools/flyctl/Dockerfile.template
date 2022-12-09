@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/superfly/flyctl/releases/download/v${version}/flyctl_${version}_Linux_x86_64.tar.gz" \
+curl --silent --location --fail "https://github.com/superfly/flyctl/releases/download/v${version}/flyctl_${version}_Linux_x86_64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 "${prefix}${target}/bin/flyctl" completion bash >"${prefix}${target}/share/bash-completion/completions/flyctl"
 "${prefix}${target}/bin/flyctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/flyctl.fish"

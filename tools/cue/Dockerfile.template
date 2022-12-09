@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/cue-lang/cue/releases/download/v${version}/cue_v${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/cue-lang/cue/releases/download/v${version}/cue_v${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     cue
 "${prefix}${target}/bin/cue" completion bash >"${prefix}${target}/share/bash-completion/completions/cue"

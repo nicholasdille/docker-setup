@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/crazy-max/yasu/releases/download/v${version}/yasu_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/crazy-max/yasu/releases/download/v${version}/yasu_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     yasu
 EOF

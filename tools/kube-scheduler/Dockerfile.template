@@ -9,7 +9,7 @@ COPY --from=cosign / /
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/kube-scheduler" \
+curl --silent --location --fail --output "${prefix}${target}/bin/kube-scheduler" \
     "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kube-scheduler"
 chmod +x "${prefix}${target}/bin/kube-scheduler"
 

@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location "https://github.com/cloudflare/cloudflare-go/releases/download/v${version}/flarectl_${version}_linux_amd64.tar.xz" \
+curl --silent --location --fail "https://github.com/cloudflare/cloudflare-go/releases/download/v${version}/flarectl_${version}_linux_amd64.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --no-same-owner \
     flarectl
 EOF

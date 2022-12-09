@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/opa" \
+curl --silent --location --fail --output "${prefix}${target}/bin/opa" \
     "https://github.com/open-policy-agent/opa/releases/download/v${version}/opa_linux_${alt_arch}_static"
 chmod +x "${prefix}${target}/bin/opa"
 "${prefix}${target}/bin/opa" completion bash >"${prefix}${target}/share/bash-completion/completions/opa"

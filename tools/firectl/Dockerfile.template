@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/firectl" \
+curl --silent --location --fail --output "${prefix}${target}/bin/firectl" \
     "https://github.com/firecracker-microvm/firectl/releases/download/v${version}/firectl-v${version}"
 chmod +x "${prefix}${target}/bin/firectl"
 EOF

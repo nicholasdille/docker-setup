@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/orhun/kmon/releases/download/v${version}/kmon-${version}-x86_64-unknown-linux-gnu.tar.gz" \
+curl --silent --location --fail "https://github.com/orhun/kmon/releases/download/v${version}/kmon-${version}-x86_64-unknown-linux-gnu.tar.gz" \
 | tar --extract --gzip --directory="/tmp" --no-same-owner
 find /tmp
 mv "/tmp/kmon-${version}/kmon" "${prefix}${target}/bin/"

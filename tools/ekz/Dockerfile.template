@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/chanwit/ekz/releases/download/v${version}/ekz_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/chanwit/ekz/releases/download/v${version}/ekz_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     ekz
 EOF

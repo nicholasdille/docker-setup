@@ -8,13 +8,13 @@ ARG version
 
 # tarball
 #RUN <<EOF
-#curl --silent --location "" \
+#curl --silent --location --fail "" \
 #| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 #EOF
 
 # executable
 #RUN <<EOF
-#curl --silent --location --output "${prefix}${target}/bin/foo" \
+#curl --silent --location --fail --output "${prefix}${target}/bin/foo" \
 #    ""
 #chmod +x "${prefix}${target}/bin/foo"
 #EOF
@@ -23,7 +23,7 @@ ARG version
 #RUN <<EOF
 #url=""
 #filename="$(basename "${url}")"
-#curl --silent --location --remote-name "${url}"
+#curl --silent --location --fail --remote-name "${url}"
 #unzip -q -o -d "${prefix}${target}/bin" "${filename}"
 #EOF
 

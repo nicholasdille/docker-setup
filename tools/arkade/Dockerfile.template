@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${version}/arkade"
+curl --silent --location --fail --output "${prefix}${target}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${version}/arkade"
 chmod +x "${prefix}${target}/bin/arkade"
 "${prefix}${target}/bin/arkade" completion bash >"${prefix}${target}/share/bash-completion/completions/arkade"
 "${prefix}${target}/bin/arkade" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/arkade.fish"

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/anchore/grype/releases/download/v${version}/grype_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/anchore/grype/releases/download/v${version}/grype_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     grype
 "${prefix}${target}/bin/grype" completion bash >"${prefix}${target}/share/bash-completion/completions/grype"

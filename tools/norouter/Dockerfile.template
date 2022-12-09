@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz" \
+curl --silent --location --fail "https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     norouter
 EOF

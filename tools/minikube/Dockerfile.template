@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/minikube" \
+curl --silent --location --fail --output "${prefix}${target}/bin/minikube" \
     "https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/minikube"
 "${prefix}${target}/bin/minikube" completion bash >"${prefix}${target}/share/bash-completion/completions/minikube"

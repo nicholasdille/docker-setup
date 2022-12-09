@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/KenanBek/dbui/releases/download/v${version}/dbui_Linux_${arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/KenanBek/dbui/releases/download/v${version}/dbui_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     dbui
 EOF

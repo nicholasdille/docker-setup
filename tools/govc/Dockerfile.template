@@ -7,9 +7,9 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/vmware/govmomi/releases/download/v${version}/govc_Linux_${arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/vmware/govmomi/releases/download/v${version}/govc_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     govc
-curl --silent --location --output "${prefix}${target}/share/bash-completion/completions/govc" \
+curl --silent --location --fail --output "${prefix}${target}/share/bash-completion/completions/govc" \
     "https://github.com/vmware/govmomi/raw/v${version}/scripts/govc_bash_completion"
 EOF

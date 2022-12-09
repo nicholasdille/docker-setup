@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/bee" \
+curl --silent --location --fail --output "${prefix}${target}/bin/bee" \
     "https://github.com/solo-io/bumblebee/releases/download/v${version}/bee-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/bee"
 "${prefix}${target}/bin/bee" completion bash >"${prefix}${target}/share/bash-completion/completions/bee"

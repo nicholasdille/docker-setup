@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --remote-name "https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip"
+curl --silent --location --fail --remote-name "https://github.com/makocchi-git/kubectl-free/releases/download/v${version}/kubectl-free_${version}_Linux_${arch}.zip"
 unzip -q -o -d "/tmp" "kubectl-free_${version}_Linux_${arch}.zip"
 rm "kubectl-free_${version}_Linux_${arch}.zip"
 mv "/tmp/kubectl-free_${version}_Linux_${arch}/kubectl-free" "${prefix}${target}/bin"

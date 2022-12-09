@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/github/hub/releases/download/v${version}/hub-linux-${alt_arch}-${version}.tgz" \
+curl --silent --location --fail "https://github.com/github/hub/releases/download/v${version}/hub-linux-${alt_arch}-${version}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner
 rm -f \
     "${prefix}${target}/LICENSE" \

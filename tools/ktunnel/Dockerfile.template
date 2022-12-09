@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/omrikiei/ktunnel/releases/download/v${version}/ktunnel_${version}_Linux_x86_64.tar.gz" \
+curl --silent --location --fail "https://github.com/omrikiei/ktunnel/releases/download/v${version}/ktunnel_${version}_Linux_x86_64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     ktunnel
 EOF

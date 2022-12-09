@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/k3d" \
+curl --silent --location --fail --output "${prefix}${target}/bin/k3d" \
     "https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/k3d"
 "${prefix}${target}/bin/k3d" completion bash >"${prefix}${target}/share/bash-completion/completions/k3d"

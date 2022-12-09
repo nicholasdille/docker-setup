@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/kubescape" \
+curl --silent --location --fail --output "${prefix}${target}/bin/kubescape" \
     "https://github.com/armosec/kubescape/releases/download/v${version}/kubescape-ubuntu-latest"
 chmod +x "${prefix}${target}/bin/kubescape"
 "${prefix}${target}/bin/kubescape" completion bash >"${prefix}${target}/share/bash-completion/completions/kubescape"

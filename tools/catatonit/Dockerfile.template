@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/catatonit" \
+curl --silent --location --fail --output "${prefix}${target}/bin/catatonit" \
     "https://github.com/openSUSE/catatonit/releases/download/v${version}/catatonit.${arch}"
 chmod +x "${prefix}${target}/bin/catatonit"
 EOF

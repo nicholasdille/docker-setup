@@ -8,7 +8,7 @@ ARG version
 
 RUN <<EOF
 mkdir -p "${prefix}/opt/go"
-curl --silent --location "https://go.dev/dl/go${version}.linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://go.dev/dl/go${version}.linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}/opt/go" --strip-components=1 --no-same-owner
 ln -sf "/opt/go/bin/go" "${prefix}${target}/bin/go"
 ln -sf "/opt/go/bin/gofmt" "${prefix}${target}/bin/gofmt"

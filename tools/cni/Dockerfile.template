@@ -8,6 +8,6 @@ ARG version
 
 RUN <<EOF
 mkdir -p "${prefix}${target}/libexec/cni"
-curl --silent --location "https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz" \
+curl --silent --location --fail "https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-${alt_arch}-v${version}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/libexec/cni" --no-same-owner
 EOF

@@ -7,9 +7,9 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/neofetch" \
+curl --silent --location --fail --output "${prefix}${target}/bin/neofetch" \
     "https://github.com/dylanaraps/neofetch/raw/${version}/neofetch"
 chmod +x "${prefix}${target}/bin/neofetch"
-curl --silent --location --output "${prefix}${target}/share/man/man1/neofetch.1" \
+curl --silent --location --fail --output "${prefix}${target}/share/man/man1/neofetch.1" \
     "https://github.com/dylanaraps/neofetch/raw/${version}/neofetch.1"
 EOF

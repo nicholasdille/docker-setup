@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/powerline-go" \
+curl --silent --location --fail --output "${prefix}${target}/bin/powerline-go" \
     "https://github.com/justjanne/powerline-go/releases/download/v${version}/powerline-go-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/powerline-go"
 EOF

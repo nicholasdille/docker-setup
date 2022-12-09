@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 EOF

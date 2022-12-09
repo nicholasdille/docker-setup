@@ -9,7 +9,7 @@ ARG version
 RUN <<EOF
 url="https://github.com/microsoft/cascadia-code/releases/download/v${version}/CascadiaCode-${version}.zip"
 filename="$(basename "${url}")"
-curl --silent --location --remote-name "${url}"
+curl --silent --location --fail --remote-name "${url}"
 mkdir -p \
     "${prefix}${target}/share/cascadia-code" \
     "${prefix}${target}/share/fonts/cascadia-code"

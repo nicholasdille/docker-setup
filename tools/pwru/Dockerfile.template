@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/cilium/pwru/releases/download/v${version}/pwru-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/cilium/pwru/releases/download/v${version}/pwru-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF

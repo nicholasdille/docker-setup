@@ -16,7 +16,7 @@ apt-get -y install --no-install-recommends \
     make
 EOF
 RUN <<EOF
-curl --silent --location "https://github.com/jonas/tig/releases/download/tig-${version}/tig-${version}.tar.gz" \
+curl --silent --location --fail "https://github.com/jonas/tig/releases/download/tig-${version}/tig-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1
 ./configure
 make prefix=/usr/local

@@ -7,11 +7,11 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/jenkins-x/jx/releases/download/v${version}/jx-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/jenkins-x/jx/releases/download/v${version}/jx-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     jx
 
-curl --silent --location "https://github.com/jenkins-x/jx/archive/refs/tags/v${version}.tar.gz" \
+curl --silent --location --fail "https://github.com/jenkins-x/jx/archive/refs/tags/v${version}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/man/man1/" --strip-components=4 --no-same-owner \
     jx-${version}/docs/man/man1
 EOF

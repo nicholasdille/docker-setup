@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-linux-amd64.tar.gz" \
+curl --silent --location --fail "https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-linux-amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner
 EOF

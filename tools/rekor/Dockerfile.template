@@ -12,7 +12,7 @@ COPY rekor.service ${prefix}/etc/systemd/system/
 RUN <<EOF
 set -x
 echo "### Installing rekor-cli ${version}"
-curl --silent --location --output "${prefix}${target}/bin/rekor-cli" \
+curl --silent --location --fail --output "${prefix}${target}/bin/rekor-cli" \
     "https://github.com/sigstore/rekor/releases/download/v${version}/rekor-cli-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/rekor-cli"
 
@@ -46,7 +46,7 @@ rm -f "rekor-cli-linux-${alt_arch}-keyless.pem" "rekor-cli-linux-${alt_arch}-key
 "${prefix}${target}/bin/rekor-cli" version
 
 echo "### Installing rekor-server ${version}"
-curl --silent --location --output "${prefix}${target}/bin/rekor-server" \
+curl --silent --location --fail --output "${prefix}${target}/bin/rekor-server" \
     "https://github.com/sigstore/rekor/releases/download/v${version}/rekor-server-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/rekor-server"
 

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz" \
+curl --silent --location --fail "https://snapshots.mitmproxy.org/${version}/mitmproxy-${version}-linux.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     mitmproxy \
     mitmdump \

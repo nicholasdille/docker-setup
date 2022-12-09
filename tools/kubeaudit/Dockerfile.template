@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/Shopify/kubeaudit/releases/download/v${version}/kubeaudit_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/Shopify/kubeaudit/releases/download/v${version}/kubeaudit_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     kubeaudit
 "${prefix}${target}/bin/kubeaudit" completion bash >"${prefix}${target}/share/bash-completion/completions/kubeaudit"

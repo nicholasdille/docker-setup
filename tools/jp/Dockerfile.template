@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/jp" \
+curl --silent --location --fail --output "${prefix}${target}/bin/jp" \
     "https://github.com/jmespath/jp/releases/download/${version}/jp-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/jp"
 EOF

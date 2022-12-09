@@ -7,13 +7,13 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://get.gravitational.com/teleport-v${version}-linux-${alt_arch}-bin.tar.gz" \
+curl --silent --location --fail "https://get.gravitational.com/teleport-v${version}-linux-${alt_arch}-bin.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     teleport/tctl \
     teleport/teleport \
     teleport/tbot \
     teleport/tsh
-curl --silent --location --output "${prefix}/etc/systemd/system/teleport.service" \
+curl --silent --location --fail --output "${prefix}/etc/systemd/system/teleport.service" \
     "https://github.com/gravitational/teleport/blob/v${version}/examples/systemd/teleport.service"
 sed -i "s|ExecStart=/usr/local/bin/teleport|ExecStart=${target}/bin/teleport|" "${prefix}/etc/systemd/system/teleport.service"
 EOF

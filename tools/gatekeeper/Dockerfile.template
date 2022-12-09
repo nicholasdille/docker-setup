@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/open-policy-agent/gatekeeper/releases/download/v${version}/gator-v${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/open-policy-agent/gatekeeper/releases/download/v${version}/gator-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 "${prefix}${target}/bin/gator" completion bash >"${prefix}${target}/share/bash-completion/completions/gatekeeper"
 "${prefix}${target}/bin/gator" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/gatekeeper.fish"

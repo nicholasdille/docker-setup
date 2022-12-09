@@ -9,7 +9,7 @@ ARG version
 COPY nerdctl.toml ${prefix}/etc/nerdctl/
 
 RUN <<EOF
-curl --silent --location "https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 "${prefix}${target}/bin/nerdctl" completion bash >"${prefix}${target}/share/bash-completion/completions/nerdctl"
 "${prefix}${target}/bin/nerdctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/nerdctl.fish"

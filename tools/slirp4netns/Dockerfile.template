@@ -7,9 +7,9 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/slirp4netns" \
+curl --silent --location --fail --output "${prefix}${target}/bin/slirp4netns" \
     "https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}"
 chmod +x "${prefix}${target}/bin/slirp4netns"
-curl --silent --location --output "${prefix}${target}/share/man/man1/slirp4netns.1" \
+curl --silent --location --fail --output "${prefix}${target}/share/man/man1/slirp4netns.1" \
     "https://github.com/rootless-containers/slirp4netns/raw/v${version}/slirp4netns.1"
 EOF

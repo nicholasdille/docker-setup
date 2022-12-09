@@ -9,7 +9,7 @@ ARG version
 RUN <<EOF
 url="https://github.com/FortAwesome/Font-Awesome/releases/download/${version}/fontawesome-free-${version}-web.zip"
 filename="$(basename "${url}")"
-curl --silent --location --remote-name "${url}"
+curl --silent --location --fail --remote-name "${url}"
 unzip -q -o -d "${prefix}${target}/share/" "${filename}"
 mv "${prefix}${target}/share/fontawesome-free-${version}-web" "${prefix}${target}/share/fontawesome-free"
 EOF

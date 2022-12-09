@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/gosu" \
+curl --silent --location --fail --output "${prefix}${target}/bin/gosu" \
     "https://github.com/tianon/gosu/releases/download/${version}/gosu-${alt_arch}"
 chmod +x "${prefix}${target}/bin/gosu"
 EOF

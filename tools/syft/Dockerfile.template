@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     syft
 "${prefix}${target}/bin/syft" completion bash | sed -E 's/^(\s*complete.*)/\1 syft/'            >"${prefix}${target}/share/bash-completion/completions/syft"

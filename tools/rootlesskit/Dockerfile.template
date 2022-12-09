@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/rootless-containers/rootlesskit/releases/download/v${version}/rootlesskit-${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF

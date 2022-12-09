@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/ossf/scorecard/releases/download/v${version}/scorecard_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     scorecard-linux-${alt_arch}
 mv "${prefix}${target}/bin/scorecard-linux-${alt_arch}" "${prefix}${target}/bin/scorecard"

@@ -9,7 +9,7 @@ ARG version
 COPY ipfs.service ${prefix}/etc/systemd/system
 
 RUN <<EOF
-curl --silent --location "https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/ipfs/kubo/releases/download/v${version}/kubo_v${version}_linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     kubo/ipfs
 "${prefix}${target}/bin/ipfs" commands completion bash >"${prefix}${target}/share/bash-completion/completions/ipfs"

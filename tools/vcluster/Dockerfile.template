@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/vcluster" \
+curl --silent --location --fail --output "${prefix}${target}/bin/vcluster" \
     "https://github.com/loft-sh/vcluster/releases/download/v${version}/vcluster-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/vcluster"
 "${prefix}${target}/bin/vcluster" completion bash >"${prefix}${target}/share/bash-completion/completions/vcluster"

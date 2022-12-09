@@ -8,7 +8,7 @@ ARG version
 
 # tarball
 RUN <<EOF
-curl --silent --location "https://github.com/zricethezav/gitleaks/releases/download/v${version}/gitleaks_${version}_linux_x64.tar.gz" \
+curl --silent --location --fail "https://github.com/zricethezav/gitleaks/releases/download/v${version}/gitleaks_${version}_linux_x64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     gitleaks
 "${prefix}${target}/bin/gitleaks" completion bash >"${prefix}${target}/share/bash-completion/completions/gitleaks"

@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-rockylinux8-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/nicholasdille/centos-iptables-legacy/releases/download/v${version}/iptables-rockylinux8-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 EOF

@@ -15,7 +15,7 @@ WORKDIR /tmp/xdg-utils
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location "https://github.com/freedesktop/xdg-utils/archive/refs/tags/v${version}.tar.gz" \
+curl --silent --location --fail "https://github.com/freedesktop/xdg-utils/archive/refs/tags/v${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1
 ./configure --prefix="${prefix}${target}"
 make

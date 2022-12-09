@@ -11,7 +11,7 @@ complete -C /docker_setup_install/usr/local/bin/vault vault
 vault.sh
 
 RUN <<EOF
-curl --silent --location --remote-name "https://releases.hashicorp.com/vault/${version}/vault_${version}_linux_${alt_arch}.zip"
+curl --silent --location --fail --remote-name "https://releases.hashicorp.com/vault/${version}/vault_${version}_linux_${alt_arch}.zip"
 unzip -q -o -d "${prefix}${target}/bin" "vault_${version}_linux_${alt_arch}.zip"
 rm "vault_${version}_linux_${alt_arch}.zip"
 EOF

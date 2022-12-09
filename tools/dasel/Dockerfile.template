@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/dasel" \
+curl --silent --location --fail --output "${prefix}${target}/bin/dasel" \
     "https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/dasel"
 EOF

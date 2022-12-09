@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/faas-cli" \
+curl --silent --location --fail --output "${prefix}${target}/bin/faas-cli" \
     "https://github.com/openfaas/faas-cli/releases/download/${version}/faas-cli"
 chmod +x "${prefix}${target}/bin/faas-cli"
 EOF

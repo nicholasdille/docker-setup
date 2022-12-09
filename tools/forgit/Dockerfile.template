@@ -7,6 +7,6 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}/etc/profile.d/forgit.sh" \
+curl --silent --location --fail --output "${prefix}/etc/profile.d/forgit.sh" \
     "https://github.com/wfxr/forgit/raw/${version}/forgit.plugin.zsh"
 EOF

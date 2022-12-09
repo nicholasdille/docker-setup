@@ -7,11 +7,11 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/cheat/cheat/releases/download/${version}/cheat-linux-${alt_arch}.gz" \
+curl --silent --location --fail "https://github.com/cheat/cheat/releases/download/${version}/cheat-linux-${alt_arch}.gz" \
 | gunzip \
 >"${prefix}${target}/bin/cheat"
 chmod +x "${prefix}${target}/bin/cheat"
 
-curl --silent --location --output "${prefix}${target}/share/man/man1/cheat.1" \
+curl --silent --location --fail --output "${prefix}${target}/share/man/man1/cheat.1" \
     "https://github.com/cheat/cheat/raw/${version}/doc/cheat.1"
 EOF

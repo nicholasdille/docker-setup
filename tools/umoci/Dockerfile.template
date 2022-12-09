@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/umoci" \
+curl --silent --location --fail --output "${prefix}${target}/bin/umoci" \
     "https://github.com/opencontainers/umoci/releases/download/v${version}/umoci.${alt_arch}"
 chmod +x "${prefix}${target}/bin/umoci"
 EOF

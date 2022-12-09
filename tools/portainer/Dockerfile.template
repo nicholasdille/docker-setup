@@ -13,12 +13,12 @@ COPY portainer.service ${prefix}/etc/systemd/system/
 COPY init-portainer ${prefix}/etc/init.d/portainer
 
 RUN <<EOF
-curl --silent --location "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     portainer/portainer
 
 mkdir -p "${prefix}${target}/share/portainer"
-curl --silent --location "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/portainer" --strip-components=1 --no-same-owner \
     portainer/public
 EOF

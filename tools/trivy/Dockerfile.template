@@ -48,6 +48,6 @@ EOF
 
 RUN <<EOF
 echo "### Installing SonarQube template for trivy ${version}"
-curl --silent --location --output "${prefix}${target}/share/trivy/contrib/sonarqube.tpl" \
+curl --silent --location --fail --output "${prefix}${target}/share/trivy/contrib/sonarqube.tpl" \
       https://github.com/mendhak/trivy-template-output-to-sonarqube/raw/master/sonarqube.tpl
 EOF

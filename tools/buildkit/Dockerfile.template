@@ -9,11 +9,11 @@ ARG version
 COPY init-buildkit "${prefix}/etc/init.d/buildkit"
 
 RUN <<EOF
-curl --silent --location "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner
-curl --silent --location --output "${prefix}/etc/systemd/system/buildkit.service" \
+curl --silent --location --fail --output "${prefix}/etc/systemd/system/buildkit.service" \
     "https://github.com/moby/buildkit/raw/v${version}/examples/systemd/system/buildkit.service"
-curl --silent --location --output "${prefix}/etc/systemd/system/buildkit.socket" \
+curl --silent --location --fail --output "${prefix}/etc/systemd/system/buildkit.socket" \
     "https://github.com/moby/buildkit/raw/v${version}/examples/systemd/system/buildkit.socket"
 chmod +x "${prefix}/etc/init.d/buildkit"
 EOF

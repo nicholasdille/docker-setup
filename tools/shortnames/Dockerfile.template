@@ -8,6 +8,6 @@ ARG version
 
 RUN <<EOF
 mkdir -p "${prefix}/etc/containers/registries.conf.d"
-curl --silent --location --output "${prefix}/etc/containers/registries.conf.d/00-shortnames.conf" \
+curl --silent --location --fail --output "${prefix}/etc/containers/registries.conf.d/00-shortnames.conf" \
     "https://github.com/containers/shortnames/raw/v${version}/shortnames.conf"
 EOF

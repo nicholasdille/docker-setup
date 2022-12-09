@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --remote-name "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_${alt_arch}.zip"
+curl --silent --location --fail --remote-name "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_${alt_arch}.zip"
 unzip -q -o -d "/tmp" "terraform_${version}_linux_${alt_arch}.zip"
 rm "terraform_${version}_linux_${alt_arch}.zip"
 mv "/tmp/terraform" "${prefix}${target}/bin"

@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/jabba" \
+curl --silent --location --fail --output "${prefix}${target}/bin/jabba" \
     "https://github.com/shyiko/jabba/releases/download/${version}/jabba-${version}-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/jabba"
 EOF

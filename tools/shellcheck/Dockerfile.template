@@ -9,10 +9,10 @@ COPY --from=go-md2man / /
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location "https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.${arch}.tar.xz" \
+curl --silent --location --fail "https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.${arch}.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     shellcheck-v${version}/shellcheck
-curl --silent --location --output "${prefix}${target}/share/man/man1/shellcheck.1.md" \
+curl --silent --location --fail --output "${prefix}${target}/share/man/man1/shellcheck.1.md" \
     "https://github.com/koalaman/shellcheck/raw/v${version}/shellcheck.1.md"
 go-md2man \
     -in "${prefix}${target}/share/man/man1/shellcheck.1.md" \

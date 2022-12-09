@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/openclarity/kubeclarity/releases/download/v${version}/kubeclarity-cli-${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/openclarity/kubeclarity/releases/download/v${version}/kubeclarity-cli-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     kubeclarity-cli
 "${prefix}${target}/bin/kubeclarity-cli" completion bash >"${prefix}${target}/share/bash-completion/completions/kubeclarity-cli"

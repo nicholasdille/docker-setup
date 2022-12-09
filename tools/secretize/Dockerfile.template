@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location "https://github.com/bbl/secretize/releases/download/${version}/secretize-${version}-linux-amd64.tar.gz" \
+curl --silent --location --fail "https://github.com/bbl/secretize/releases/download/${version}/secretize-${version}-linux-amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 EOF
 

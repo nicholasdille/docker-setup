@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/ttyd" \
+curl --silent --location --fail --output "${prefix}${target}/bin/ttyd" \
     "https://github.com/tsl0922/ttyd/releases/download/${version}/ttyd.${arch}"
 chmod +x "${prefix}${target}/bin/ttyd"
 EOF

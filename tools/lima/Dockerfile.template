@@ -9,7 +9,7 @@ ARG name
 ARG version
 COPY --from=yasu / /
 RUN <<EOF
-curl --silent --location "https://github.com/lima-vm/lima/releases/download/v${version}/lima-${version}-Linux-${arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/lima-vm/lima/releases/download/v${version}/lima-${version}-Linux-${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 yasu nobody "${prefix}${target}/bin/limactl" completion bash >"${prefix}${target}/share/bash-completion/completions/limactl"
 yasu nobody "${prefix}${target}/bin/limactl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/limactl.fish"

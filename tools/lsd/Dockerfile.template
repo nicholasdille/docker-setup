@@ -7,7 +7,7 @@ WORKDIR /tmp/lsd
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location "https://github.com/Peltoche/lsd/releases/download/${version}/lsd-${version}-${arch}-unknown-linux-gnu.tar.gz" \
+curl --silent --location --fail "https://github.com/Peltoche/lsd/releases/download/${version}/lsd-${version}-${arch}-unknown-linux-gnu.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
 mv lsd "${prefix}${target}/bin/"
 mv lsd.1 "${prefix}${target}/share/man/man1/"

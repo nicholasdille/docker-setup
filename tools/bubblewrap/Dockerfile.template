@@ -22,7 +22,7 @@ WORKDIR /tmp/bwrap
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location "https://github.com/containers/bubblewrap/releases/download/v${version}/bubblewrap-${version}.tar.xz" \
+curl --silent --location --fail "https://github.com/containers/bubblewrap/releases/download/v${version}/bubblewrap-${version}.tar.xz" \
 | tar --extract --xz --strip-components=1
 ./configure --prefix=/usr/local
 make LDFLAGS=-static

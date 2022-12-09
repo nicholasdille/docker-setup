@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --output "${prefix}${target}/bin/slsa-verifier" \
+curl --silent --location --fail --output "${prefix}${target}/bin/slsa-verifier" \
     "https://github.com/slsa-framework/slsa-verifier/releases/download/v${version}/slsa-verifier-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/slsa-verifier"
 EOF
