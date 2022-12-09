@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
     paths:
-      - "tools/**"
+      - "tools/*/manifest.yaml"
       - "scripts/gh-pages.sh"
       - "make/site.mk"
       - ".github/workflows/site.yml"
