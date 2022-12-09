@@ -50,6 +50,10 @@ fi
 
 cat <<EOF
 
+## Code
+
+[See code on GitHub](https://github.com/nicholasdille/docker-setup/tree/main/tools/${tooll})
+
 ## Changelog
 
 | Date | Message | SHA |
