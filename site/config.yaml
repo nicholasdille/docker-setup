@@ -11,7 +11,7 @@ params:
   description: The container tools updater and installer
   logo: "/logo.svg"
   showSinglePageAsHome: true
-  homeSinglePage: /browse
+  homeSinglePage: /home
   showPostsLink: false
   extraContentDirs:
   - tools
@@ -27,7 +27,7 @@ menu:
   - identifier: tags
     name: Tags
     url: /tags
-    weight: 90
+    weight: 70
   - identifier: impressum
     name: Impressum
     url: /impressum

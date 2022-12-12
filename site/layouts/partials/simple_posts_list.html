@@ -1,0 +1,26 @@
+<h1>
+    {{ $title := .Title }}
+    {{ $section := .Section | humanize }}
+    {{ if and (ne $section $title) (ne $section "Tags") (ne $title (printf "%ss" $section)) }}
+        {{ $section }}:
+    {{ end }}
+    {{ if and (eq $section "Tags") (eq $section $title) }}
+        Tags
+    {{ else }}
+        {{ if and (eq $section "Tags") (ne $section $title) }}{{ i18n "tagColumn" }} #{{ end }}{{ $title }}
+    {{ end }}
+</h1>
+{{ if and (eq $section "Tags") (eq $section $title) }}
+    {{/* if we're in the Tags section, sort alphabetically and don't show the date */}}
+    <span style="line-height: 2em;">
+    {{ range (sort .Pages "Title") }}
+        <span style="margin-right: 1em;"><a href="{{ .Permalink }}">#{{ .Title }}</a> <span style="color: var(--default_accent);">{{ len .Pages }}</span></span>
+    {{ end }}
+    </span>
+{{ else }}
+    <span style="line-height: 2em;">
+    {{ range .Pages }}
+    <span style="margin-right: 1em;"><a href="{{ .Permalink }}">{{ .Title }}</a></span>
+    {{ end }}
+    </span>
+{{ end }}

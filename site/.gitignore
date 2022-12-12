@@ -1,4 +1,4 @@
 public
 .hugo_build.lock
 resources/_gen
-content/tools
+content/tools/*.md
