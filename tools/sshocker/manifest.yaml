@@ -1,5 +1,5 @@
 name: sshocker
-version: "0.3.0"
+version: "0.3.1"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - category/security
