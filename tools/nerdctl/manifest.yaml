@@ -1,5 +1,5 @@
 name: nerdctl
-version: "1.0.0"
+version: "1.1.0"
 check: XDG_RUNTIME_DIR=foo ${binary} --version | cut -d' ' -f3
 dependencies:
 - containerd
