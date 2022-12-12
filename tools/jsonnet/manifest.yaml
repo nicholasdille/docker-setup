@@ -3,7 +3,7 @@ version: "0.19.1"
 check: ${binary} --version | cut -d' ' -f6 | tr -d v
 tags:
 - org/google
-- category/?
+- templating
 - langgo
 homepage: https://github.com/google/go-jsonnet
 description: Data templating language. Implementation of Jsonnet in pure Go
