@@ -1,12 +1,22 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM golang:1.19.4 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install \
+    ca-certificates \
+    make
+EOF
+WORKDIR /go/src/github.com/salesforce/sloop
 ARG name
 ARG version
-
+ENV GO111MODULE=auto
 RUN <<EOF
-curl --silent --location --fail "https://github.com/salesforce/sloop/releases/download/v${version}/sloop_${version}_linux_${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/salesforce/sloop .
+make
 EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /go/bin/sloop "${prefix}${target}/bin/"
