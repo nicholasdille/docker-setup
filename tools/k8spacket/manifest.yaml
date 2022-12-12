@@ -1,0 +1,14 @@
+name: k8spacket
+version: "1.0.0"
+check: ""
+tags:
+- troubleshooting
+- component/network
+- lang/go
+- type/daemon
+homepage: https://github.com/k8spacket/k8spacket
+description: Traffic visualization for kubernetes
+renovate:
+  datasource: github-releases
+  package: k8spacket/k8spacket
+  extractVersion: ^v(?<version>.+?)$
