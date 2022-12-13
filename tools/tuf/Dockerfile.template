@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+# tarball
+RUN <<EOF
+curl --silent --location --fail "https://github.com/theupdateframework/go-tuf/releases/download/v${version}/tuf-client_${version}_linux_amd64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    tuf-client
+curl --silent --location --fail "https://github.com/theupdateframework/go-tuf/releases/download/v${version}/tuf_${version}_linux_amd64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    tuf
+EOF

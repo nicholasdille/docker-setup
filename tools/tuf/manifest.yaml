@@ -1,0 +1,12 @@
+name: tuf
+version: "0.5.1"
+check: ""
+tags:
+- category/security
+- lang/go
+homepage: https://github.com/theupdateframework/go-tuf
+description: The Update Framework (TUF)
+renovate:
+  datasource: github-releases
+  package: theupdateframework/go-tuf
+  extractVersion: ^v(?<version>.+?)$
