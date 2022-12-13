@@ -1,5 +1,5 @@
 name: bumblebee
-version: "0.0.13"
+version: "0.0.14"
 binary: bee
 check: ${binary} version
 tags:
