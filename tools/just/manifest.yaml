@@ -1,0 +1,11 @@
+name: just
+version: "1.9.0"
+check: ${binary} --version | cut -d' ' -f2
+tags:
+- category/development
+- lang/rust
+homepage: https://github.com/casey/just
+description: Just a command runner
+renovate:
+  datasource: github-releases
+  package: casey/just

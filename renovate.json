@@ -1819,6 +1819,16 @@
     },
     {
       "fileMatch": [
+        "^tools/just/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "casey/just",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/jwt/manifest.yaml$"
       ],
       "matchStrings": [
