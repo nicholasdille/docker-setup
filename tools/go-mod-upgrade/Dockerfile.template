@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/oligot/go-mod-upgrade/releases/download/v${version}/go-mod-upgrade_${version}_Linux_x86_64.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    go-mod-upgrade
+EOF

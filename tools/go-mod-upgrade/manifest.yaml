@@ -1,0 +1,12 @@
+name: go-mod-upgrade
+version: "0.9.1"
+check: ${binary} --version | head -1 | cut -d' ' -f3
+tags:
+- category/development
+- lang/go
+homepage: https://github.com/oligot/go-mod-upgrade
+description: Update outdated Go dependencies interactively
+renovate:
+  datasource: github-releases
+  package: oligot/go-mod-upgrade
+  extractVersion: ^v(?<version>.+?)$
