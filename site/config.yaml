@@ -35,7 +35,6 @@ menu:
   
 taxonomies:
   tag: tags
-  category: categories
 
 outputs:
   home:
