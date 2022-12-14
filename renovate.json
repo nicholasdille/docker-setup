@@ -1490,6 +1490,17 @@
     },
     {
       "fileMatch": [
+        "^tools/goreleaser/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "goreleaser/goreleaser",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gosu/manifest.yaml$"
       ],
       "matchStrings": [

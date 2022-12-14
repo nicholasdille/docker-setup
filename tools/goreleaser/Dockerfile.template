@@ -1,0 +1,44 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=cosign / /
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/checksums.txt"
+curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/checksums.txt.sig"
+curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/checksums.txt.pem"
+
+SHA="$(
+    git ls-remote --tags https://github.com/goreleaser/goreleaser "v${version}^{}" \
+    | cut -f1
+)"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob checksums.txt \
+    --signature checksums.txt.sig \
+    --certificate checksums.txt.pem \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+    --certificate-identity "https://github.com/goreleaser/goreleaser/.github/workflows/release.yml@refs/tags/v${version}" \
+    --certificate-github-workflow-name release \
+    --certificate-github-workflow-repository goreleaser/goreleaser \
+    --certificate-github-workflow-ref "refs/tags/v${version}" \
+    --certificate-github-workflow-sha "${SHA}"
+
+curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/goreleaser_Linux_x86_64.tar.gz"
+sha256sum --check --ignore-missing checksums.txt
+
+tar --extract --gzip --file "goreleaser_Linux_x86_64.tar.gz" --directory="${prefix}${target}/bin/" --no-same-owner \
+    goreleaser \
+    manpages \
+    completions
+mv "${prefix}${target}/bin/manpages/goreleaser.1.gz" "${prefix}${target}/share/man/man1/"
+mv "${prefix}${target}/bin/completions/goreleaser.bash" "${prefix}${target}/share/bash-completion/completions/goreleaser"
+mv "${prefix}${target}/bin/completions/goreleaser.fish" "${prefix}${target}/share/fish/vendor_completions.d/goreleaser.fish"
+mv "${prefix}${target}/bin/completions/goreleaser.zsh" "${prefix}${target}/share/zsh/vendor-completions/_goreleaser"
+rmdir \
+    "${prefix}${target}/bin/manpages" \
+    "${prefix}${target}/bin/completions"
+EOF

@@ -1,0 +1,16 @@
+name: goreleaser
+version: "1.13.1"
+check: ""
+dependencies:
+- go
+- cosign
+tags:
+- category/development
+- cicd
+- lang/go
+homepage: https://github.com/goreleaser/goreleaser
+description: Deliver Go binaries as fast and easily as possible
+renovate:
+  datasource: github-releases
+  package: goreleaser/goreleaser
+  extractVersion: ^v(?<version>.+?)$
