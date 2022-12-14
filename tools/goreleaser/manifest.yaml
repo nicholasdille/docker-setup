@@ -1,6 +1,6 @@
 name: goreleaser
 version: "1.13.1"
-check: ""
+check: ${binary} --version | head -1 | cut -d' ' -f3
 dependencies:
 - go
 - cosign
