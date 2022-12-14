@@ -1,5 +1,5 @@
 name: trillian
-version: "1.5.0"
+version: "1.5.1"
 binary: trillian_log_server
 check: ""
 tags:
