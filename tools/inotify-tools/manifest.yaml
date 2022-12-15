@@ -1,0 +1,12 @@
+name: inotify-tools
+version: "3.22.6.0"
+check: ""
+tags:
+- component/kernel
+- lang/c
+homepage: https://github.com/inotify-tools/inotify-tools
+description: Library and a set of command-line programs providing a simple interface to inotify
+renovate:
+  datasource: github-releases
+  package: inotify-tools/inotify-tools
+  versioning: loose

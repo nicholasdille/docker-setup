@@ -1,0 +1,33 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ubuntu:22.04 AS build
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    git \
+    ca-certificates \
+    autoconf \
+    automake \
+    gettext \
+    bison \
+    libtool \
+    pkg-config \
+    make
+EOF
+WORKDIR /tmp/inotify-tools
+ARG name
+ARG version
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/inotify-tools/inotify-tools .
+./autogen.sh
+./configure --prefix=/opt/inotify-tools --enable-static-binary --enable-fanotify
+make LDFLAGS=--static
+make install
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --from=build /opt/inotify-tools/ ${prefix}${target}/

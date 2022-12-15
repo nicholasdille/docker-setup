@@ -1743,6 +1743,17 @@
     },
     {
       "fileMatch": [
+        "^tools/inotify-tools/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "inotify-tools/inotify-tools",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/in-toto/manifest.yaml$"
       ],
       "matchStrings": [
