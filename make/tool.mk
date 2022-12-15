@@ -98,8 +98,7 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/m
 		--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 		--target prepare \
 		--load \
-		--progress plain \
-		--no-cache && \
+		--progress plain && \
 	docker container run \
 		--interactive \
 		--tty \
