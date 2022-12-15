@@ -1,0 +1,28 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+
+# agent
+RUN <<EOF
+url="https://github.com/grafana/agent/releases/download/v${version}/agent-linux-${alt_arch}.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+mv "${prefix}${target}/bin/agent-linux-${alt_arch}" "${prefix}${target}/bin/agent"
+EOF
+
+# agentctl
+RUN <<EOF
+url="https://github.com/grafana/agent/releases/download/v${version}/agentctl-linux-${alt_arch}.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+mv "${prefix}${target}/bin/agentctl-linux-${alt_arch}" "${prefix}${target}/bin/agentctl"
+"${prefix}${target}/bin/agentctl" completion bash >"${prefix}${target}/share/bash-completion/completions/agentctl"
+"${prefix}${target}/bin/agentctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/agentctl.fish"
+"${prefix}${target}/bin/agentctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_agentctl"
+EOF
