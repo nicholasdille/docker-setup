@@ -1,0 +1,13 @@
+name: gojq
+version: "0.12.10"
+check: ${binary} --version | cut -d' ' -f2
+tags:
+- lang/go
+- type/cli
+- format
+homepage: https://github.com/itchyny/gojq
+description: Pure Go implementation of jq
+renovate:
+  datasource: github-releases
+  package: itchyny/gojq
+  extractVersion: ^v(?<version>.+?)$

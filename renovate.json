@@ -1479,6 +1479,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gojq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "itchyny/gojq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/go-md2man/manifest.yaml$"
       ],
       "matchStrings": [
