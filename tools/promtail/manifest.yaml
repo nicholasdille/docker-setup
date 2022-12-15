@@ -1,0 +1,17 @@
+name: promtail
+version: "2.7.1"
+check: ""
+tags:
+- org/grafana
+- observability/logs
+- o11y
+- category/monitoring
+- lang/go
+- type/daemon
+- type/cli
+homepage: https://github.com/grafana/loki
+description: Agent which ships the contents of local logs to Grafana Loki
+renovate:
+  datasource: github-releases
+  package: grafana/loki
+  extractVersion: ^v(?<version>.+?)$

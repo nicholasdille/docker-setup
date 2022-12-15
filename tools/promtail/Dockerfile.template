@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="https://github.com/grafana/loki/releases/download/v${version}/promtail-linux-${alt_arch}.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+mv "${prefix}${target}/bin/promtail-linux-${alt_arch}" "${prefix}${target}/bin/promtail"
+EOF

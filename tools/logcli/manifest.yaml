@@ -1,0 +1,16 @@
+name: logcli
+version: "2.7.1"
+check: ""
+tags:
+- org/grafana
+- observability/logs
+- o11y
+- category/monitoring
+- lang/go
+- type/cli
+homepage: https://github.com/grafana/loki
+description: CLI to Grafana Loki, facilitates running LogQL queries
+renovate:
+  datasource: github-releases
+  package: grafana/loki
+  extractVersion: ^v(?<version>.+?)$
