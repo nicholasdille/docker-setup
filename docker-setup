@@ -211,6 +211,7 @@ default_tools="$(
 selected_tools="${default_tools}"
 install_tools=""
 declare -A tool_version
+declare -A tool_binary
 declare -A tool_check
 declare -A tool_deps
 declare -A tool_marker_file_present
@@ -289,6 +290,16 @@ function warm_cache() {
     done
 
     profile "Done reading versions"
+
+    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_metadata_file}")"
+    for pair in ${temp}; do
+        local name="${pair%%=*}"
+        local value="${pair#*=}"
+        trace "BINARY name=${name},value=${value}."
+        tool_binary[${name}]=${value}
+    done
+
+    profile "Done reading binaries"
 
     temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(","))"' "${docker_setup_metadata_file}")"
     for pair in ${temp}; do
