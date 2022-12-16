@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/influxdata/flux/releases/download/v0.191.0/flux_0.191.0_linux_amd64.tar.gz" \
+curl --silent --location --fail "https://github.com/influxdata/flux/releases/download/v${version}/flux_${version}_linux_amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-component=1 --no-same-owner \
-    flux
+    "flux_${version}_linux_amd64/flux"
 EOF
