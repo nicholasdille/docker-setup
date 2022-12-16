@@ -1,5 +1,5 @@
 name: kube-score
-version: "1.16.0"
+version: "1.16.1"
 check: ${binary} version | cut -d' ' -f3 | tr -d ,
 tags:
 - type/cli
