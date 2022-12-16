@@ -1,0 +1,15 @@
+name: gitea
+version: "1.17.3"
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- org/?
+- category/development
+- lang/go
+- type/daemon
+- type/cli
+homepage: https://github.com/go-gitea/gitea
+description: Git with a cup of tea, painless self-hosted git service
+renovate:
+  datasource: github-releases
+  package: go-gitea/gitea
+  extractVersion: ^v(?<version>.+?)$

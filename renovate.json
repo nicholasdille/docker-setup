@@ -1401,6 +1401,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gitea/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "go-gitea/gitea",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gitjob/manifest.yaml$"
       ],
       "matchStrings": [
