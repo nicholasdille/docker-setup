@@ -1,0 +1,17 @@
+name: influxdb
+version: "2.6.0"
+binary: influxd
+check: ${binary} version | cut -d' ' -f2 | tr -d v
+tags:
+- org/influxdata
+- observability/metrics
+- o11y
+- category/monitoring
+- lang/go
+- type/daemon
+homepage: https://github.com/influxdata/influxdb
+description: Scalable datastore for metrics, events, and real-time analytics
+renovate:
+  datasource: github-releases
+  package: influxdata/influxdb
+  extractVersion: ^v(?<version>.+?)$

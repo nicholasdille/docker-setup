@@ -1,0 +1,14 @@
+name: flux2
+version: "0.37.0"
+binary: flux
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- type/cli
+- gitops
+- lang/go
+homepage: https://github.com/fluxcd/flux2
+description: Open and extensible continuous delivery solution for Kubernetes
+renovate:
+  datasource: github-releases
+  package: fluxcd/flux2
+  extractVersion: ^v(?<version>.+?)$

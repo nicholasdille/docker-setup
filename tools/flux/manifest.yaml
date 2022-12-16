@@ -1,13 +1,16 @@
 name: flux
-version: "0.37.0"
-check: ${binary} --version | cut -d' ' -f3
+version: "0.191.0"
+check: ""
 tags:
-- type/cli
-- gitops
+- org/influxdata
+- observability/metrics
+- o11y
+- category/monitoring
 - lang/go
-homepage: https://github.com/fluxcd/flux2
-description: Open and extensible continuous delivery solution for Kubernetes
+- type/cli
+homepage: https://github.com/influxdata/flux
+description: Lightweight scripting language for querying databases (like InfluxDB)
 renovate:
   datasource: github-releases
-  package: fluxcd/flux2
+  package: influxdata/flux
   extractVersion: ^v(?<version>.+?)$

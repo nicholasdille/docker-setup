@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}${target}/share/telegraf"
+curl --silent --location --fail "https://dl.influxdata.com/telegraf/releases/telegraf-${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/telegraf" --strip-components=2 --no-same-owner
+mv "${prefix}${target}/share/telegraf/usr/bin/telegraf" "${prefix}${target}/bin/telegraf"
+mv "${prefix}${target}/share/telegraf/usr/lib/telegraf/scripts" "${prefix}${target}/share/telegraf/"
+rm -rf \
+    "${prefix}${target}/share/telegraf/usr" \
+    "${prefix}${target}/share/telegraf/var"
+EOF

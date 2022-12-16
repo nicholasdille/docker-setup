@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+curl --silent --location --fail "https://github.com/fluxcd/flux2/releases/download/v${version}/flux_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+"${prefix}${target}/bin/flux" completion bash >"${prefix}${target}/share/bash-completion/completions/flux"
+"${prefix}${target}/bin/flux" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/flux.fish"
+"${prefix}${target}/bin/flux" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_flux"
+EOF

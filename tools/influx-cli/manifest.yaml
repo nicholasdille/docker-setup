@@ -1,0 +1,17 @@
+name: influx-cli
+version: "2.6.0"
+binary: influx
+check: ${binary} version | cut -d' ' -f3
+tags:
+- org/influxdata
+- observability/metrics
+- o11y
+- category/monitoring
+- lang/go
+- type/cli
+homepage: https://github.com/influxdata/influx-cli
+description: CLI for managing resources in InfluxDB v2
+renovate:
+  datasource: github-releases
+  package: influxdata/influx-cli
+  extractVersion: ^v(?<version>.+?)$

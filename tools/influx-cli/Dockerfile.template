@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://dl.influxdata.com/influxdb/releases/influxdb2-client-${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-component=1 --no-same-owner \
+    "influxdb2-client-${version}-linux-${alt_arch}/influx"
+"${prefix}${target}/bin/influx" completion bash >"${prefix}${target}/share/bash-completion/completions/influx"
+"${prefix}${target}/bin/influx" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_influx"
+EOF
