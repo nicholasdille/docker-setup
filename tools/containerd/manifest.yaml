@@ -1,5 +1,5 @@
 name: containerd
-version: "1.6.13"
+version: "1.6.14"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 dependencies:
 - runc
