@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/osv-scanner" \
+    "https://github.com/google/osv-scanner/releases/download/v${version}/osv-scanner_${version}_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/osv-scanner"
+EOF

@@ -2918,6 +2918,17 @@
     },
     {
       "fileMatch": [
+        "^tools/osv-scanner/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "google/osv-scanner",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/pandoc/manifest.yaml$"
       ],
       "matchStrings": [

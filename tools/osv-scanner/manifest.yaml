@@ -1,0 +1,14 @@
+name: osv-scanner
+version: "1.0.1"
+check: ${binary} --version | head -1 | cut -d' ' -f3
+tags:
+- org/google
+- category/security
+- lang/go
+- type/cli
+homepage: https://github.com/google/osv-scanner
+description: Vulnerability scanner which uses the data provided by https://osv.dev
+renovate:
+  datasource: github-releases
+  package: google/osv-scanner
+  extractVersion: ^v(?<version>.+?)$
