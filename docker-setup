@@ -277,34 +277,35 @@ function generate() {
 }
 
 function warm_cache() {
-    local temp
-
     profile "Starting cache warming"
 
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_metadata_file}")"
-    for pair in ${temp}; do
-        local name="${pair%%=*}"
-        local value="${pair#*=}"
+    local temp_version
+    temp_version="$(jq --raw-output '.tools[] | "\(.name)=\(select(.version != null) | .version)"' "${docker_setup_metadata_file}")"
+    for version_pair in ${temp_version}; do
+        local name="${version_pair%%=*}"
+        local value="${version_pair#*=}"
         trace "VERSION name=${name},value=${value}."
         tool_version[${name}]=${value}
     done
 
     profile "Done reading versions"
 
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_metadata_file}")"
-    for pair in ${temp}; do
-        local name="${pair%%=*}"
-        local value="${pair#*=}"
+    local binary_temp
+    binary_temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.binary != null) | .binary)"' "${docker_setup_metadata_file}")"
+    for binary_pair in ${binary_temp}; do
+        local name="${binary_pair%%=*}"
+        local value="${binary_pair#*=}"
         trace "BINARY name=${name},value=${value}."
         tool_binary[${name}]=${value}
     done
 
     profile "Done reading binaries"
 
-    temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(","))"' "${docker_setup_metadata_file}")"
-    for pair in ${temp}; do
-        local name="${pair%%=*}"
-        local value="${pair#*=}"
+    local deps_temp
+    deps_temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(","))"' "${docker_setup_metadata_file}")"
+    for deps_pair in ${deps_temp}; do
+        local name="${deps_pair%%=*}"
+        local value="${deps_pair#*=}"
         if test "${value}" != "${name}"; then
             trace "DEP name=${name},value=${value}."
             tool_deps[${name}]="${value//,/ }"
