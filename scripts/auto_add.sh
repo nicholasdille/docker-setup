@@ -116,7 +116,7 @@ function add_from_issue() {
     cat >"${ISSUE_PATH}/manifest.yaml" <<EOF
 # Generated from ${BROWSER_URL}/issues/${id} (${TITLE})
 name: ${ISSUE_REPO_NAME}
-version: ${RELEASE_VERSION}
+version: "${RELEASE_VERSION}"
 #binary: ""
 #check: ""
 #dependencies:
