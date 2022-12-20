@@ -1,5 +1,5 @@
 name: sish
-version: "2.9.1"
+version: "2.9.2"
 check: ${binary} --version | grep ^Version | cut -d' ' -f2
 tags:
 - type/cli
