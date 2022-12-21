@@ -1,5 +1,5 @@
 name: colima
-version: "0.5.0"
+version: "0.5.1"
 check: ${binary} version 2>/dev/null | grep ^colima | cut -d' ' -f3 | tr -d v
 tags:
 - type/cli
