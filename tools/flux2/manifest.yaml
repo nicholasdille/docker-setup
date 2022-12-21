@@ -1,5 +1,5 @@
 name: flux2
-version: "0.37.0"
+version: "0.38.1"
 binary: flux
 check: ${binary} --version | cut -d' ' -f3
 tags:
