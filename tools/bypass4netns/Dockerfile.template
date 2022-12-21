@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM golang:1.19.4@sha256:f0c32d9dc9a2b9e60d2bd28b51e875be84c6736533720afb67a3e0fecbf31fb7 AS build
+FROM golang:1.19.4@sha256:cfaad8202aed5121121dfe3a252e98d5c89cc67fc456cc69fe70eb7dcc1b8cff AS build
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
