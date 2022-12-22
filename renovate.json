@@ -2741,6 +2741,17 @@
     },
     {
       "fileMatch": [
+        "^tools/mapcidr/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectdiscovery/mapcidr",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/maven/manifest.yaml$"
       ],
       "matchStrings": [

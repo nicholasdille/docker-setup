@@ -1,0 +1,13 @@
+name: mapcidr
+version: "1.0.3"
+check: ${binary} --version 2>&1 | grep "Current Version:" | cut -d' ' -f4 | tr -d v
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/projectdiscovery/mapcidr
+description: Small utility program to perform multiple operations for a given subnet/CIDR ranges.
+renovate:
+  datasource: github-releases
+  package: projectdiscovery/mapcidr
+  extractVersion: ^v(?<version>.+?)$
