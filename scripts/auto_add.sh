@@ -113,6 +113,9 @@ function add_from_issue() {
     echo "    + Found asset <${ASSET_NAME}>"
     echo "    + Asset URL <${ASSET_URL}>"
 
+    ASSET_URL_TEMPLATE="$( sed "s/${RELEASE_VERSION}/\${version}/g; s/amd64/\${alt_arch}/g; s/x86_64/\${arch}/g;" <<<"${ASSET_URL}" )"
+    echo "    + Templates asset URL <${ASSET_URL_TEMPLATE}>"
+
     cat >"${ISSUE_PATH}/manifest.yaml" <<EOF
 # Generated from ${BROWSER_URL}/issues/${id} (${TITLE})
 name: ${ISSUE_REPO_NAME}
@@ -167,7 +170,7 @@ EOT
         tar+*)
             cat >>"${ISSUE_PATH}/Dockerfile.template" <<EOT
 RUN <<EOF
-curl --silent --location --fail "${ASSET_URL}" \\
+curl --silent --location --fail "${ASSET_URL_TEMPLATE}" \\
 | tar --extract --gzip --directory="\${prefix}\${target}/bin/" --no-same-owner
 EOF
 EOT
@@ -175,8 +178,8 @@ EOT
         zip)
             cat >>"${ISSUE_PATH}/Dockerfile.template" <<EOT
 RUN <<EOF
-url="${ASSET_URL}"
-filename="$(basename "\${url}")"
+url="${ASSET_URL_TEMPLATE}"
+filename="\$(basename "\${url}")"
 curl --silent --location --fail --remote-name "\${url}"
 unzip -q -o -d "\${prefix}\${target}/bin" "\${filename}"
 EOF
@@ -185,8 +188,8 @@ EOT
         binary)
             cat >>"${ISSUE_PATH}/Dockerfile.template" <<EOT
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}${target}/bin/foo" \\
-    "${ASSET_URL}"
+curl --silent --location --fail --output "\${prefix}\${target}/bin/${ISSUE_REPO_NAME}" \\
+    "${ASSET_URL_TEMPLATE}"
 chmod +x "\${prefix}\${target}/bin/${ISSUE_REPO_NAME}"
 EOF
 EOT
