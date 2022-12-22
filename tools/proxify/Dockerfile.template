@@ -12,5 +12,5 @@ curl --silent --location --fail --remote-name "${url}"
 unzip -q -o -d "${prefix}${target}/bin" "${filename}" \
     proxify \
     replay \
-    mitmreplay
+    mitmrelay
 EOF
