@@ -271,6 +271,17 @@
     },
     {
       "fileMatch": [
+        "^tools/autocert/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "smallstep/autocert",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/bat/manifest.yaml$"
       ],
       "matchStrings": [

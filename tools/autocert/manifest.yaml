@@ -1,0 +1,14 @@
+name: autocert
+version: "0.16.0"
+check: ""
+tags:
+- category/security
+- certificate
+- type/cli
+- lang/go
+homepage: https://github.com/smallstep/autocert
+description: ⚓ A kubernetes add-on that automatically injects TLS/HTTPS certificates into your containers
+renovate:
+  datasource: github-releases
+  package: smallstep/autocert
+  extractVersion: ^v(?<version>.+?)$
