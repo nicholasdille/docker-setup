@@ -1,0 +1,12 @@
+name: git-igitt
+version: "0.1.17"
+check: ${binary} --version | cut -d' ' -f2
+tags:
+- category/development
+- type/cli
+- lang/rust
+homepage: https://github.com/mlange-42/git-igitt
+description: Interactive, cross-platform Git terminal application with clear git graphs arranged for your branching model
+renovate:
+  datasource: github-releases
+  package: mlange-42/git-igitt

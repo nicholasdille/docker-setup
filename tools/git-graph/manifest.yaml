@@ -1,0 +1,12 @@
+name: git-graph
+version: "0.5.3"
+check: ${binary} --version | cut -d' ' -f2
+tags:
+- category/development
+- type/cli
+- lang/rust
+homepage: https://github.com/mlange-42/git-graph
+description: Command line tool to show clear git graphs arranged for your branching model
+renovate:
+  datasource: github-releases
+  package: mlange-42/git-graph
