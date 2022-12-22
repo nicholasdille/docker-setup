@@ -3,7 +3,7 @@ version: "13.0.0"
 binary: rg
 check: ${binary} --version | head -1 | cut -d' ' -f2
 tags:
-- category/?
+- category/terminal
 - type/cli
 - lang/rust
 homepage: https://github.com/BurntSushi/ripgrep
