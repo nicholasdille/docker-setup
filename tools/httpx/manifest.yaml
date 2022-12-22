@@ -1,0 +1,14 @@
+name: httpx
+version: "1.2.5"
+check: ${binary} --version 2>&1 | grep "Current Version:" | cut -d' ' -f4 | tr -d v
+tags:
+- category/security
+- type/cli
+- component/network
+- lang/go
+homepage: https://github.com/projectdiscovery/httpx
+description: httpx is a fast and multi-purpose HTTP toolkit that allows running multiple probes using the retryablehttp library.
+renovate:
+  datasource: github-releases
+  package: projectdiscovery/httpx
+  extractVersion: ^v(?<version>.+?)$

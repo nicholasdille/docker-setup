@@ -1700,6 +1700,17 @@
     },
     {
       "fileMatch": [
+        "^tools/httpx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectdiscovery/httpx",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/hub/manifest.yaml$"
       ],
       "matchStrings": [
