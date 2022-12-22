@@ -1,0 +1,13 @@
+name: xq
+version: "1.1.1"
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- category/development
+- type/cli
+- lang/go
+homepage: https://github.com/sibprogrammer/xq
+description: Command-line XML and HTML beautifier and content extractor
+renovate:
+  datasource: github-releases
+  package: sibprogrammer/xq
+  extractVersion: ^v(?<version>.+?)$

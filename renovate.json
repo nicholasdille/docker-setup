@@ -3935,6 +3935,17 @@
     },
     {
       "fileMatch": [
+        "^tools/xq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sibprogrammer/xq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/yasu/manifest.yaml$"
       ],
       "matchStrings": [
