@@ -1,0 +1,14 @@
+name: katana
+version: "0.0.2"
+check: ${binary} --version 2>&1 | grep "Current version:" | cut -d' ' -f4 | tr -d v
+tags:
+- category/security
+- type/cli
+- component/network
+- lang/go
+homepage: https://github.com/projectdiscovery/katana
+description: A next-generation crawling and spidering framework.
+renovate:
+  datasource: github-releases
+  package: projectdiscovery/katana
+  extractVersion: ^v(?<version>.+?)$

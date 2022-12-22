@@ -2037,6 +2037,17 @@
     },
     {
       "fileMatch": [
+        "^tools/katana/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectdiscovery/katana",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kbld/manifest.yaml$"
       ],
       "matchStrings": [
