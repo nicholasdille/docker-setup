@@ -3641,6 +3641,17 @@
     },
     {
       "fileMatch": [
+        "^tools/tlsx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectdiscovery/tlsx",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/trillian/manifest.yaml$"
       ],
       "matchStrings": [
