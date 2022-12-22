@@ -1,0 +1,14 @@
+name: aqua
+version: "1.25.0"
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- package
+- manager
+- type/cli
+- lang/go
+homepage: https://github.com/aquaproj/aqua
+description: Declarative CLI Version manager written in Go. Support Lazy Install, Registry, and continuous update with Renovate. CLI version is switched seamlessly
+renovate:
+  datasource: github-releases
+  package: aquaproj/aqua
+  extractVersion: ^v(?<version>.+?)$

@@ -206,6 +206,17 @@
     },
     {
       "fileMatch": [
+        "^tools/aqua/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "aquaproj/aqua",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/argo/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/aquaproj/aqua/releases/download/v${version}/aqua_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    aqua
+"${prefix}${target}/bin/aqua" completion bash >"${prefix}${target}/share/bash-completion/completions/aqua"
+"${prefix}${target}/bin/aqua" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_aqua"
+EOF
