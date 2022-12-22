@@ -1,0 +1,14 @@
+name: curlie
+version: "1.6.9"
+check: ${binary} version | cut -d' ' -f2
+tags:
+- category/development
+- component/network
+- type/cli
+- lang/go
+homepage: https://github.com/rs/curlie
+description: The power of curl, the ease of use of httpie.
+renovate:
+  datasource: github-releases
+  package: rs/curlie
+  extractVersion: ^v(?<version>.+?)$

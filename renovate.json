@@ -785,6 +785,17 @@
     },
     {
       "fileMatch": [
+        "^tools/curlie/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "rs/curlie",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cyclonedx-cli/manifest.yaml$"
       ],
       "matchStrings": [
