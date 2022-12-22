@@ -1,0 +1,13 @@
+name: teller
+version: "1.5.6"
+check: ${binary} version | head -1 | cut -d' ' -f2
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/tellerops/teller
+description: Cloud native secrets management for developers - never leave your command line for secrets.
+renovate:
+  datasource: github-releases
+  package: tellerops/teller
+  extractVersion: ^v(?<version>.+?)$

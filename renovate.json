@@ -3586,6 +3586,17 @@
     },
     {
       "fileMatch": [
+        "^tools/teller/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "tellerops/teller",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/terraform/manifest.yaml$"
       ],
       "matchStrings": [
