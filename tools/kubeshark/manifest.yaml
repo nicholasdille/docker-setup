@@ -1,0 +1,13 @@
+name: kubeshark
+version: "37.0"
+check: ${binary} version 2>&1 | cut -d' ' -f2
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/kubeshark/kubeshark
+description: The API traffic viewer for Kubernetes providing deep visibility into all API traffic and payloads going in, out and across containers and pods inside a Kubernetes cluster. Think TCPDump and Wireshark re-invented for Kubernetes
+renovate:
+  datasource: github-releases
+  package: kubeshark/kubeshark
+  versioning: loose

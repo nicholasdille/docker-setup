@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/kubeshark" \
+    "https://github.com/kubeshark/kubeshark/releases/download/${version}/kubeshark_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/kubeshark"
+"${prefix}${target}/bin/kubeshark" completion bash >"${prefix}${target}/share/bash-completion/completions/kubeshark"
+"${prefix}${target}/bin/kubeshark" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kubeshark.fish"
+"${prefix}${target}/bin/kubeshark" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubeshark"
+EOF

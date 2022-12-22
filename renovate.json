@@ -2486,6 +2486,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kubeshark/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubeshark/kubeshark",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/kubeswitch/manifest.yaml$"
       ],
       "matchStrings": [
