@@ -1,0 +1,13 @@
+name: proxify
+version: "0.0.8"
+check: ${binary} --version 2>&1 | cut -d' ' -f4
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/projectdiscovery/proxify
+description: Swiss Army knife Proxy tool for HTTP/HTTPS traffic capture, manipulation, and replay on the go.
+renovate:
+  datasource: github-releases
+  package: projectdiscovery/proxify
+  extractVersion: ^v(?<version>.+?)$

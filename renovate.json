@@ -3137,6 +3137,17 @@
     },
     {
       "fileMatch": [
+        "^tools/proxify/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectdiscovery/proxify",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/pwru/manifest.yaml$"
       ],
       "matchStrings": [
