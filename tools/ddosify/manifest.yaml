@@ -1,0 +1,13 @@
+name: ddosify
+version: "0.10.0"
+check: ${binary} --version | head -1 | tr -s ' ' | cut -d' ' -f2
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/ddosify/ddosify
+description: High-performance load testing tool, written in Golang. For distributed and Geo-targeted load testing Ddosify Cloud - https//ddosify.com 🚀
+renovate:
+  datasource: github-releases
+  package: ddosify/ddosify
+  extractVersion: ^v(?<version>.+?)$

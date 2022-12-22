@@ -872,6 +872,17 @@
     },
     {
       "fileMatch": [
+        "^tools/ddosify/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ddosify/ddosify",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/dependency-check/manifest.yaml$"
       ],
       "matchStrings": [
