@@ -3224,6 +3224,16 @@
     },
     {
       "fileMatch": [
+        "^tools/ripgrep/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "BurntSushi/ripgrep",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/rootlesskit/manifest.yaml$"
       ],
       "matchStrings": [

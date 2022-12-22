@@ -1,0 +1,26 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/BurntSushi/ripgrep/releases/download/${version}/ripgrep-${version}-${arch}-unknown-linux-musl.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "ripgrep-${version}-x86_64-unknown-linux-musl/rg" \
+    "ripgrep-${version}-x86_64-unknown-linux-musl/doc/rg.1" \
+    "ripgrep-${version}-x86_64-unknown-linux-musl/complete"
+mv "${prefix}${target}/bin/doc/rg.1" "${prefix}${target}/share/man/man1/"
+mv "${prefix}${target}/bin/complete/rg.bash" "${prefix}${target}/share/bash-completion/completions/ripgrep"
+mv "${prefix}${target}/bin/complete/rg.fish" "${prefix}${target}/share/fish/vendor_completions.d/ripgrep.fish"
+mv "${prefix}${target}/bin/complete/_rg" "${prefix}${target}/share/zsh/vendor-completions/_ripgrep"
+rm -rf \
+    "${prefix}${target}/bin/doc" \
+    "${prefix}${target}/bin/complete"
+EOF
+#RUN <<EOF
+#"${prefix}${target}/bin/ripgrep" completion bash >"${prefix}${target}/share/bash-completion/completions/ripgrep"
+#"${prefix}${target}/bin/ripgrep" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/ripgrep.fish"
+#"${prefix}${target}/bin/ripgrep" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_ripgrep"
+#EOF
