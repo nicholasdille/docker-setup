@@ -78,7 +78,7 @@ function add_from_issue() {
     fi
     echo "    + Version <${RELEASE_VERSION}>"
 
-    if jq --exit-status '.assets | length == 0' <<<"${LATEST_RELEASE_JSON}"; then
+    if jq --exit-status '.assets | length == 0' <<<"${LATEST_RELEASE_JSON}" >/dev/null 2>&1; then
         >&2 echo "    + ERROR: Release has no assets."
         return
     fi
