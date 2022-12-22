@@ -894,6 +894,17 @@
     },
     {
       "fileMatch": [
+        "^tools/dnsx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "projectdiscovery/dnsx",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/docker/manifest.yaml$"
       ],
       "matchStrings": [

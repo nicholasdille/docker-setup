@@ -1,0 +1,13 @@
+name: dnsx
+version: "1.1.1"
+check: ${binary} --version 2>&1 | grep "Current Version:" | cut -d' ' -f4
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/projectdiscovery/dnsx
+description: dnsx is a fast and multi-purpose DNS toolkit allow to run multiple DNS queries of your choice with a list of user-supplied resolvers.
+renovate:
+  datasource: github-releases
+  package: projectdiscovery/dnsx
+  extractVersion: ^v(?<version>.+?)$
