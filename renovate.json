@@ -3794,6 +3794,17 @@
     },
     {
       "fileMatch": [
+        "^tools/vhs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "charmbracelet/vhs",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/vulnerability-operator/manifest.yaml$"
       ],
       "matchStrings": [

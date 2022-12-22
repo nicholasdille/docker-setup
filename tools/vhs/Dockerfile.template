@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/charmbracelet/vhs/releases/download/v${version}/vhs_${version}_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    vhs \
+    manpages \
+    completions
+mv "${prefix}${target}/bin/manpages/vhs.1.gz" "${prefix}${target}/share/man/man1/"
+mv "${prefix}${target}/bin/completions/vhs.bash" "${prefix}${target}/share/bash-completion/completions/vhs"
+mv "${prefix}${target}/bin/completions/vhs.fish" "${prefix}${target}/share/fish/vendor_completions.d/vhs.fish"
+mv "${prefix}${target}/bin/completions/vhs.zsh" "${prefix}${target}/share/zsh/vendor-completions/_vhs"
+rmdir \
+    "${prefix}${target}/bin/manpages" \
+    "${prefix}${target}/bin/completions"
+EOF

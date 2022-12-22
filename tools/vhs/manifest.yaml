@@ -1,0 +1,13 @@
+name: vhs
+version: "0.2.0"
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+tags:
+- category/development
+- type/cli
+- lang/go
+homepage: https://github.com/charmbracelet/vhs
+description: Your CLI home video recorder 📼
+renovate:
+  datasource: github-releases
+  package: charmbracelet/vhs
+  extractVersion: ^v(?<version>.+?)$
