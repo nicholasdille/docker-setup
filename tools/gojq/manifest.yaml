@@ -1,5 +1,5 @@
 name: gojq
-version: "0.12.10"
+version: "0.12.11"
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - lang/go
