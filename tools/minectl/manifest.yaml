@@ -1,5 +1,5 @@
 name: minectl
-version: "0.26.0"
+version: "0.27.0"
 check: ${binary} version | grep ^Version | cut -d' ' -f2
 tags:
 - category/games
