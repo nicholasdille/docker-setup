@@ -1,5 +1,5 @@
 name: dependency-check
-version: "7.4.1"
+version: "7.4.2"
 binary: dependency-check.sh
 check: ""
 dependencies:
