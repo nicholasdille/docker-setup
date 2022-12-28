@@ -9,5 +9,5 @@ ARG version
 RUN <<EOF
 curl --silent --location --fail "https://github.com/crazy-max/diun/releases/download/v${version}/diun_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
-    diun
+    ./diun
 EOF
