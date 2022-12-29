@@ -1,5 +1,5 @@
 name: influxdb
-version: "2.6.0"
+version: "2.6.1"
 binary: influxd
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 tags:
