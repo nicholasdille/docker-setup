@@ -1,5 +1,5 @@
 name: influx-cli
-version: "2.6.0"
+version: "2.6.1"
 binary: influx
 check: ${binary} version | cut -d' ' -f3
 tags:
