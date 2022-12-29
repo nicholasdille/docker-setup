@@ -1,5 +1,5 @@
 name: gitea
-version: "1.17.4"
+version: "1.18.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - category/development
