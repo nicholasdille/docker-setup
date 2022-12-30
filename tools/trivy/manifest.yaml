@@ -1,5 +1,5 @@
 name: trivy
-version: "0.35.0"
+version: "0.36.0"
 check: ${binary} --version | grep ^Version | cut -d' ' -f2
 dependencies:
 - cosign
