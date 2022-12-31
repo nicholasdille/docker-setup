@@ -1,5 +1,5 @@
 name: promql-cli
-version: "0.2.1"
+version: "0.3.0"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
 - standard/prometheus
