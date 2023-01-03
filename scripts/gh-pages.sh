@@ -54,6 +54,10 @@ cat <<EOF
 
 [See code on GitHub](https://github.com/nicholasdille/docker-setup/tree/main/tools/${tool})
 
+## Package
+
+[See package on GitHub](https://github.com/nicholasdille/docker-setup/pkgs/container/docker-setup%2F${tool})
+
 ## Changelog
 
 | Date | Message | SHA |
