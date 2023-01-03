@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=nodejs / /
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://registry.npmjs.org/npm/${version}" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+EOF
+COPY <<EOF ${prefix}${target}/etc/npmrc
+globalconfig=/etc/npmrc
+globalignorefile=/etc/npmignore
+prefix=/usr/local
+EOF

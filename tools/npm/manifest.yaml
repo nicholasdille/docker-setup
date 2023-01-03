@@ -1,0 +1,15 @@
+name: npm
+version: "9.2.0"
+check: ""
+dependencies:
+- nodejs
+tags:
+- category/development
+- lang/javascript
+- type/cli
+homepage: https://github.com/npm/cli
+description: Node Package Manager
+renovate:
+  datasource: github-releases
+  package: npm/cli
+  extractVersion: ^v(?<version>.+?)$
