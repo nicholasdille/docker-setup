@@ -3,6 +3,7 @@ set -o errexit
 
 cp renovate-root.json renovate.json
 jq --raw-output '.tools[] | select(.renovate != null) | .name' metadata.json \
+| sort \
 | while read TOOL; do
     jq --arg tool "${TOOL}" '.tools[] | select(.name == $tool) | .renovate | {"regexManagers": [{"fileMatch": ["^tools/" + $tool + "/manifest.yaml$"], "matchStrings": ["version: \"?(?<currentValue>.*?)\"?\\n"], "depNameTemplate": .package, "datasourceTemplate": .datasource, "extractVersionTemplate": .extractVersion, "versioningTemplate": .versioning}]}' metadata.json \
     | jq 'if (.regexManagers[0].extractVersionTemplate == null) then del(.regexManagers[0].extractVersionTemplate) else . end' \
