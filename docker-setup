@@ -21,6 +21,10 @@ from the container ecosystem.
 EOF
 fi
 
+function warning() {
+    >&2 echo -e "${yellow}[WARNING] $*${reset}"
+}
+
 : "${debug:=false}"
 function debug() {
     if ${debug}; then
@@ -313,14 +317,6 @@ function warm_cache() {
     done
 
     profile "Done reading dependencies"
-
-    if ! ${deps}; then
-        install_tools="$(resolve_dependencies_wrapper)"
-    else
-        install_tools="${selected_tools}"
-    fi
-
-    profile "Done resolving dependencies"
 }
 
 function check_tools() {
@@ -473,7 +469,7 @@ EOF
 warm_cache
 
 target=/usr/local
-: "${deps:=false}"
+: "${include_deps:=true}"
 : "${reinstall:=false}"
 : "${cron:=true}"
 while test "$#" -gt 0; do
@@ -548,7 +544,13 @@ while test "$#" -gt 0; do
                     debug "Selected custom list of tools: ${selected_tools}"
                     ;;
             esac
-            warm_cache
+
+            if ${include_deps}; then
+                install_tools="$(resolve_dependencies_wrapper)"
+            else
+                install_tools="${selected_tools}"
+            fi
+            profile "Done resolving dependencies"
             ;;
 
         --tags|--tags=*)
@@ -583,11 +585,17 @@ while test "$#" -gt 0; do
             ;;
 
         --deps)
-            deps=true
+            if ! ${include_deps} && test "${#install_tools}" -gt 0; then
+                warning "Place --[no-]deps before tools/tags selectors."
+            fi
+            include_deps=true
             ;;
 
         --no-deps)
-            deps=false
+            if ${include_deps} && test "${#install_tools}" -gt 0; then
+                warning "Place --[no-]deps before tools/tags selectors."
+            fi
+            include_deps=false
             ;;
 
         --cron)
