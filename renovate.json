@@ -2178,6 +2178,16 @@
     },
     {
       "fileMatch": [
+        "^tools/keyoxide/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "keyoxide-cli",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "fileMatch": [
         "^tools/kind/manifest.yaml$"
       ],
       "matchStrings": [

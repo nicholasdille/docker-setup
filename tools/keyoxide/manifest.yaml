@@ -1,0 +1,15 @@
+name: keyoxide
+version: "0.4.4"
+check: ""
+dependencies:
+- nodejs
+- npm
+tags:
+- category/security
+- lang/javascript
+- type/cli
+homepage: https://codeberg.org/keyoxide/keyoxide-cli
+description: CLI to locally verify online distributed identities, powered by the same method used by keyoxide.org
+renovate:
+  datasource: npm
+  package: keyoxide-cli

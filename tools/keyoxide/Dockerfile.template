@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
+FROM ghcr.io/nicholasdille/docker-setup/npm:${ref} AS npm
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=nodejs / /
+COPY --link --from=npm / /
+ARG name
+ARG version
+RUN <<EOF
+npm install --global --prefix="${prefix}${target}" keyoxide-cli
+EOF
