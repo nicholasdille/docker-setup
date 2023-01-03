@@ -1,0 +1,13 @@
+name: keybase
+version: "6.0.2"
+check: ""
+tags:
+- category/security
+- lang/go
+- type/cli
+homepage: https://github.com/keybase/client
+description: Keybase client
+renovate:
+  datasource: github-releases
+  package: keybase/client
+  extractVersion: ^v(?<version>.+?)$
