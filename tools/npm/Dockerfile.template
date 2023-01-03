@@ -10,7 +10,9 @@ ARG name
 ARG version
 RUN <<EOF
 curl --silent --location --fail "https://registry.npmjs.org/npm/${version}" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+| jq --raw-output '.dist.tarball' \
+| xargs curl --silent --location --fail \
+| tar --extract --gzip --directory="${prefix}${target}/share" --strip-components=1 --no-same-owner
 EOF
 COPY <<EOF ${prefix}${target}/etc/npmrc
 globalconfig=/etc/npmrc
