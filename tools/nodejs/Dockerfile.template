@@ -1,24 +1,23 @@
 #syntax=docker/dockerfile:1.4.3
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR /go/src/github.com/nodejs/node
 ARG name
 ARG version
-
 RUN <<EOF
-mkdir -p "${prefix}/opt/node"
-curl --silent --location --fail "https://nodejs.org/dist/v${version}/node-v${version}-linux-x64.tar.xz" \
-| tar --extract --xz --directory="${prefix}/opt/node" --strip-components=1 --no-same-owner
-EOF
-
-RUN <<EOF
-for file in node npm npx; do
-    ln -sf "/opt/node/bin/${file}" "${prefix}${target}/bin/${file}"
-done
-EOF
-
-RUN <<EOF
-export PATH="${prefix}/opt/node/bin:${PATH}"
-"${prefix}/opt/node/bin/npm" completion >"${prefix}${target}/share/bash-completion/completions/npm"
+apt-get update
+apt-get -y install --no-install-recommends \
+    curl \
+    python3 \
+    gcc \
+    g++ \
+    linux-headers-generic \
+    make
+curl -sL https://github.com/nodejs/node/archive/refs/tags/v${version}.tar.gz \
+| tar --extract --gzip --strip-components=1
+./configure --prefix="${prefix}${target}" --fully-static --enable-static
+make -j2
+make install
 EOF
