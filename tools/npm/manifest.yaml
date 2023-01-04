@@ -1,6 +1,6 @@
 name: npm
 version: "9.2.0"
-check: ""
+check: ${binary} --version
 dependencies:
 - nodejs
 tags:
