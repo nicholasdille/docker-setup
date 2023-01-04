@@ -39,7 +39,8 @@ make install
 for FILE in python pip idle pydoc; do
     ln -sf "${FILE}3" "${prefix}${target}/bin/${FILE}"
 done
-pip install \
+"${prefix}${target}/bin/pip" install \
     venv \
     pipx
+find "${prefix}${target}/bin/" -type f -executable -exec sed -i "s|#!${prefix}/|#!/|" {} \;
 EOF
