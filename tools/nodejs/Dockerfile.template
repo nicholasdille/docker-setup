@@ -7,6 +7,19 @@ WORKDIR /go/src/github.com/nodejs/node
 ARG name
 ARG version
 RUN <<EOF
+MAJOR_VERSION="$(
+    curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
+    | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key' \
+    | tr -d v
+)"
+if test "${version%%.*}" == "${MAJOR_VERSION}"; then
+    echo "### Version ${version} matches latest LTS ${MAJOR_VERSION}"
+else
+    echo "### Version ${version} does not match latest LTS ${MAJOR_VERSION}"
+    exit 1
+fi
+EOF
+RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
     curl \
@@ -17,7 +30,15 @@ apt-get -y install --no-install-recommends \
     make
 curl -sL https://github.com/nodejs/node/archive/refs/tags/v${version}.tar.gz \
 | tar --extract --gzip --strip-components=1
-./configure --prefix="${prefix}${target}" --fully-static --enable-static
+./configure \
+    --prefix="${prefix}${target}" \
+    --fully-static \
+    --without-inspector \
+    --enable-lto \
+    --without-node-options \
+    --without-dtrace \
+    --without-npm \
+    --with-intl=small-icu
 make -j2
 make install
 EOF

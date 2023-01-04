@@ -1,6 +1,16 @@
 name: nodejs
 # See https://github.com/nodejs/Release
-version: "19.3.0"
+# Find latest LTS major version:
+#    MAJOR_VERSION="$(
+#        curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
+#        | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key'
+#    )"
+# Find latest version for major version:
+#    git ls-remote https://github.com/nodejs/node "refs/tags/${MAJOR_VERSION}.*" \
+#    | grep -v '\^{}' \
+#    | cut -f2 | cut -d/ -f3 | tr -d v \
+#    | sort -Vr | head -1
+version: "18.12.1"
 binary: node
 check: ${binary} --version | tr -d v
 tags:
