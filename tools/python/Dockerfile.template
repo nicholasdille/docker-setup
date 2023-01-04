@@ -39,4 +39,7 @@ make install
 for FILE in python pip idle pydoc; do
     ln -sf "${FILE}3" "${prefix}${target}/bin/${FILE}"
 done
+pip install \
+    venv \
+    pipx
 EOF
