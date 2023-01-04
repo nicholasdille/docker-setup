@@ -8,12 +8,12 @@ FROM ghcr.io/nicholasdille/docker-setup/npm:${ref} AS npm
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=nodejs / /
 COPY --link --from=npm / /
+WORKDIR ${prefix}${target}/libexec/keyoxide
 ARG name
 ARG version
 RUN <<EOF
 npm install \
-    --global \
     --omit=dev \
-    --prefix="${prefix}${target}" \
     "keyoxide@${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/keyoxide/node_modules/.bin/keyoxide" "${prefix}${target}/bin/"
 EOF
