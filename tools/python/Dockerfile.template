@@ -36,6 +36,7 @@ curl --silent --location "https://www.python.org/ftp/python/${version}/Python-${
 #    --enable-optimizations
 make -j4
 make install
+echo "${prefix}${target}/lib" >/etc/ld.so.conf.d/python.conf
 ldconfig
 for FILE in python pip idle pydoc; do
     ln -sf "${FILE}3" "${prefix}${target}/bin/${FILE}"
