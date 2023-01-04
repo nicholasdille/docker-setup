@@ -11,5 +11,9 @@ COPY --link --from=npm / /
 ARG name
 ARG version
 RUN <<EOF
-npm install --global --prefix="${prefix}${target}" keyoxide-cli
+npm install \
+    --global \
+    --omit=dev \
+    --prefix="${prefix}${target}" \
+    "keyoxide@${version}"
 EOF
