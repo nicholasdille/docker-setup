@@ -20,7 +20,9 @@ apt-get -y install --no-install-recommends \
     libncursesw5-dev \
     tk-dev \
     libffi-dev \
-    liblzma-dev
+    liblzma-dev \
+    libcrypt-dev \
+    libgdbm-dev
 EOF
 WORKDIR /tmp/python
 ARG name
@@ -28,21 +30,29 @@ ARG version
 RUN <<EOF
 curl --silent --location "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz" \
 | tar --extract --xz --strip-components=1
+EOF
+COPY Setup Modules/
+RUN <<EOF
 ./configure \
     --prefix=${prefix}${target} \
-    --with-system-ffi \
-    --with-system-expat \
-    --enable-shared
-#    --enable-optimizations
-make -j4
-make install
-echo "${prefix}${target}/lib" >/etc/ld.so.conf.d/python.conf
-ldconfig
-for FILE in python pip idle pydoc; do
-    ln -sf "${FILE}3" "${prefix}${target}/bin/${FILE}"
-done
+    LDFLAGS="-static" \
+    --disable-shared
+##    --enable-optimizations
+make LDFLAGS="-static" -j4
+make install LDFLAGS="-static" -j4
+ln --symbolic --relative --force "${prefix}${target}/bin/python3" "${prefix}${target}/bin/python"
+ln --symbolic --relative --force "${prefix}${target}/bin/pip3" "${prefix}${target}/bin/pip"
+EOF
+RUN <<EOF
+"${prefix}${target}/bin/pip" completion --bash >"${prefix}${target}/share/bash-completion/completions/pip"
+"${prefix}${target}/bin/pip" completion --fish >"${prefix}${target}/share/fish/vendor_completions.d/pip.fish"
+"${prefix}${target}/bin/pip" completion --zsh >"${prefix}${target}/share/zsh/vendor-completions/_pip"
+EOF
+RUN <<EOF
 "${prefix}${target}/bin/pip" install \
-    venv \
     pipx
-find "${prefix}${target}/bin/" -type f -executable -exec sed -i "s|#!${prefix}/|#!/|" {} \;
+"${prefix}${target}/bin/register-python-argcomplete" pipx >"${prefix}${target}/share/bash-completion/completions/pipx"
+"${prefix}${target}/bin/register-python-argcomplete" pipx >"${prefix}${target}/share/fish/vendor_completions.d/pipx.fish"
+"${prefix}${target}/bin/register-python-argcomplete" --shell fish pipx >"${prefix}${target}/share/zsh/vendor-completions/_pipx"
+find "${prefix}${target}/bin/" -type f -executable -exec sed -i "s|#\!${prefix}/|#\!/|" {} \;
 EOF
