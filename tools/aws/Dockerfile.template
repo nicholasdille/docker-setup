@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --remote-name \
+    "https://s3.amazonaws.com/aws-cli/awscli-bundle-${version}.zip"
+unzip "awscli-bundle-${version}.zip"
+./awscli-bundle/install --install-dir "${prefix}${target}/aws" --bin-location "${prefix}${target}/bin/aws"
+EOF

@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+ARG name
+ARG version
+RUN <<EOF
+set -x
+curl --silent --location --fail --remote-name \
+    "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${version}.zip"
+unzip "awscli-exe-linux-x86_64-${version}.zip"
+mkdir -p "${prefix}${target}/aws-cli/v2/${version}/bin"
+mv aws/dist "${prefix}${target}/aws-cli/v2/${version}"
+ln --symbolic --relative --force "${prefix}${target}/aws-cli/v2/${version}" "${prefix}${target}/aws-cli/v2/current"
+ln --symbolic --relative --force "${prefix}${target}/aws-cli/v2/current/dist/aws" "${prefix}${target}/aws-cli/v2/current/bin/aws"
+ln --symbolic --relative --force "${prefix}${target}/aws-cli/v2/current/dist/aws_completer" "${prefix}${target}/aws-cli/v2/current/bin/aws_completer"
+ln --symbolic --relative --force "${prefix}${target}/aws-cli/v2/current/bin/aws" "${prefix}${target}/bin/aws"
+ln --symbolic --relative --force "${prefix}${target}/aws-cli/v2/current/bin/aws_completer" "${prefix}${target}/bin/aws_completer"
+EOF

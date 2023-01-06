@@ -1,0 +1,14 @@
+name: aws
+version: "1.27.45"
+check: ""
+dependencies:
+- python
+tags:
+- org/amazon
+- category/development
+- lang/python
+homepage: https://github.com/aws/aws-cli
+description: Universal CLI for Amazon Web Services
+renovate:
+  datasource: pypi
+  package: awscli

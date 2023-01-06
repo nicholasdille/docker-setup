@@ -1,0 +1,15 @@
+name: aws2
+version: "2.9.13"
+binary: aws
+check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
+dependencies:
+- python
+tags:
+- org/amazon
+- category/development
+- lang/python
+homepage: https://github.com/aws/aws-cli
+description: Universal CLI for Amazon Web Services
+renovate:
+  datasource: github-tags
+  package: aws/aws-cli

@@ -282,6 +282,26 @@
     },
     {
       "fileMatch": [
+        "^tools/aws/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "awscli",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
+        "^tools/aws2/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "aws/aws-cli",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": [
         "^tools/bat/manifest.yaml$"
       ],
       "matchStrings": [
