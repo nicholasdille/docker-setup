@@ -23,7 +23,9 @@ apt-get -y install \
     jq \
     unzip \
     binutils \
-    xz-utils
+    xz-utils \
+    less \
+    vim-tiny
 rm /usr/local/sbin/unminimize
 EOF
 
