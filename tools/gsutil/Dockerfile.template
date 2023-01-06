@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+ENV PIPX_HOME=${prefix}${target}/libexec/pipx \
+    PIPX_BIN_DIR=${prefix}${target}/bin
+ARG name
+ARG version
+RUN <<EOF
+pipx install "gsutil==${version}"
+EOF

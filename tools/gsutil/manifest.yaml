@@ -1,0 +1,14 @@
+name: gsutil
+version: "5.17"
+check: ""
+dependencies:
+- python
+tags:
+- org/google
+- category/development
+- lang/python
+homepage: https://github.com/GoogleCloudPlatform/gsutil
+description: CLI for interacting with cloud storage services
+renovate:
+  datasource: pypi
+  package: gsutil

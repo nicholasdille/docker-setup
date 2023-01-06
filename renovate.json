@@ -1675,6 +1675,16 @@
     },
     {
       "fileMatch": [
+        "^tools/gsutil/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "gsutil",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/gvisor/manifest.yaml$"
       ],
       "matchStrings": [
