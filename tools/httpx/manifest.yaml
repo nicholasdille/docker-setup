@@ -1,5 +1,5 @@
 name: httpx
-version: "1.2.5"
+version: "1.2.6"
 check: ${binary} --version 2>&1 | grep "Current Version:" | cut -d' ' -f4 | tr -d v
 tags:
 - category/security
