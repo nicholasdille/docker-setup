@@ -1,0 +1,15 @@
+name: az
+version: "2.43.0"
+check: ""
+dependencies:
+- python
+tags:
+- org/microsoft
+- category/development
+- lang/python
+- cloud/azure
+homepage: https://github.com/Azure/azure-cli
+description: Azure CLI
+renovate:
+  datasource: pypi
+  package: azure-cli

@@ -302,6 +302,16 @@
     },
     {
       "fileMatch": [
+        "^tools/az/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "azure-cli",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/bat/manifest.yaml$"
       ],
       "matchStrings": [
