@@ -12,4 +12,5 @@ ARG name
 ARG version
 RUN <<EOF
 pipx install "azure-cli==${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/pipx/venvs/gsutil/bin/az" "${prefix}${target}/bin/az"
 EOF
