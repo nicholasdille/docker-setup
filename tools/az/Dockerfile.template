@@ -13,4 +13,8 @@ ARG version
 RUN <<EOF
 pipx install "azure-cli==${version}"
 ln --symbolic --relative --force "${prefix}${target}/libexec/pipx/venvs/gsutil/bin/az" "${prefix}${target}/bin/az"
+rm -f \
+    "${prefix}${target}/bin/az.bat" \
+    "${prefix}${target}/bin/az.completion.sh" \
+    "${prefix}${target}/bin/azps.ps1"
 EOF
