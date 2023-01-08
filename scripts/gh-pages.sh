@@ -34,7 +34,7 @@ ${homepage}
 
 ## Install
 
-docker-setup --tools=${tool} install
+\`docker-setup --tools=${tool} install\`
 
 ## Dependencies
 
@@ -58,10 +58,28 @@ cat <<EOF
 
 [See package on GitHub](https://github.com/nicholasdille/docker-setup/pkgs/container/docker-setup%2F${tool})
 
+## Size
+
+EOF
+
+SIZE="$(
+    regctl manifest get ghcr.io/nicholasdille/docker-setup/${tool}:main --format raw-body \
+    | jq -r '.layers[].size' \
+    | paste -sd+ \
+    | bc
+)"
+SIZE_HUMAN="$(
+    echo "${SIZE}" \
+    | numfmt --to=iec --format=%.2f
+)"
+echo "${SIZE_HUMAN}"
+
+cat <<EOF
+
 ## Changelog
 
 | Date | Message | SHA |
 |------|---------|-----|
 EOF
 
-git log --pretty=format:"| %ad | %s | [%h](https://github.com/nicholasdille/docker-setup/commit/%h) |" --date=iso-strict tools/${tool}/
+git log --pretty=format:"| %ad | %s | [%h](https://github.com/nicholasdille/docker-setup/commit/%h) |" --date=iso-strict tools/${tool}/ | cat
