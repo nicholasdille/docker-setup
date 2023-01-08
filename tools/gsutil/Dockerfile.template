@@ -13,4 +13,5 @@ ARG version
 RUN <<EOF
 pipx install "gsutil==${version}"
 ln --symbolic --relative --force "${prefix}${target}/libexec/pipx/venvs/gsutil/bin/gsutil" "${prefix}${target}/bin/gsutil"
+sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/libexec/pipx/venvs/gsutil/bin/gsutil"
 EOF

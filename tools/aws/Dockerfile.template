@@ -13,4 +13,5 @@ curl --silent --location --fail --remote-name \
     "https://s3.amazonaws.com/aws-cli/awscli-bundle-${version}.zip"
 unzip "awscli-bundle-${version}.zip"
 ./awscli-bundle/install --install-dir "${prefix}${target}/aws" --bin-location "${prefix}${target}/bin/aws"
+sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/aws/bin/aws"
 EOF
