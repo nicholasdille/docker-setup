@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="$(
+    curl --silent --location --fail "https://codeberg.org/api/v1/repos/forgejo/forgejo/releases" \
+    | jq --raw-output --arg version "${version}" '
+        .[] 
+        | select(.tag_name == "v\($version)")
+        | .assets[]
+        | select(.name == "forgejo-\($version)-linux-amd64.xz")
+        | .browser_download_url
+    '
+)"
+test -n "${url}"
+curl --silent --location --fail "${url}" \
+| xz --decompress >"${prefix}${target}/bin/forgejo"
+chmod +x "${prefix}${target}/bin/forgejo"
+EOF

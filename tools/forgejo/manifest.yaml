@@ -1,0 +1,14 @@
+name: forgejo
+version: "1.18.0-1"
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- category/development
+- lang/go
+- type/daemon
+- type/cli
+homepage: https://codeberg.org/forgejo/forgejo
+description: Beyond coding. We forge.
+renovate:
+  datasource: docker
+  package: codeberg.org/forgejo/forgejo
+  versioning: loose

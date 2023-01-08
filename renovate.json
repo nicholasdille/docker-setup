@@ -1399,6 +1399,17 @@
     },
     {
       "fileMatch": [
+        "^tools/forgejo/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "codeberg.org/forgejo/forgejo",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/furyctl/manifest.yaml$"
       ],
       "matchStrings": [
