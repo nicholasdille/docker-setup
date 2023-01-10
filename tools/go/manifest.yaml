@@ -1,5 +1,5 @@
 name: go
-version: "1.19.4"
+version: "1.19.5"
 check: ${binary} version | cut -d' ' -f3 | tr -d go
 tags:
 - type/cli
