@@ -1,5 +1,5 @@
 name: flux
-version: "0.191.0"
+version: "0.192.0"
 check: ""
 tags:
 - org/influxdata
