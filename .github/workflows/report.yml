@@ -1,0 +1,28 @@
+name: Report
+
+on:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+
+  prepare:
+    name: Report
+    runs-on: ubuntu-22.04
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Create report
+      env:
+        GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+      run: |
+        make metadata.json
+        bash scripts/report.sh >report.txt
+
+    - name: Store report
+      uses: actions/upload-artifact@v3
+      with:
+        name: daily_report
+        path: "report.txt"
