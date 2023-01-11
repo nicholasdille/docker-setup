@@ -3238,6 +3238,16 @@
     },
     {
       "fileMatch": [
+        "^tools/parca/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "parca-dev/parca",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/passh/manifest.yaml$"
       ],
       "matchStrings": [
