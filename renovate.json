@@ -772,6 +772,17 @@
     },
     {
       "fileMatch": [
+        "^tools/crictl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/cri-tools",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cri-dockerd/manifest.yaml$"
       ],
       "matchStrings": [
@@ -789,17 +800,6 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "cri-o/cri-o",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/crictl/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "kubernetes-sigs/cri-tools",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -1541,6 +1541,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gitea/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "go-gitea/gitea",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/git-graph/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1558,17 +1569,6 @@
       ],
       "depNameTemplate": "mlange-42/git-igitt",
       "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [
-        "^tools/gitea/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "go-gitea/gitea",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -1649,28 +1649,6 @@
     },
     {
       "fileMatch": [
-        "^tools/go-md2man/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "cpuguy83/go-md2man",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/go-mod-upgrade/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "oligot/go-mod-upgrade",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
         "^tools/gocryptfs/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1689,6 +1667,28 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "itchyny/gojq",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/go-md2man/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cpuguy83/go-md2man",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/go-mod-upgrade/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "oligot/go-mod-upgrade",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -1870,17 +1870,6 @@
     },
     {
       "fileMatch": [
-        "^tools/hub-tool/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "docker/hub-tool",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
         "^tools/hubble/manifest.yaml$"
       ],
       "matchStrings": [
@@ -1898,6 +1887,17 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "innobead/huber",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/hub-tool/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "docker/hub-tool",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -1968,17 +1968,6 @@
     },
     {
       "fileMatch": [
-        "^tools/in-toto/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "in-toto/in-toto-golang",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
         "^tools/influx-cli/manifest.yaml$"
       ],
       "matchStrings": [
@@ -2009,6 +1998,17 @@
       "depNameTemplate": "inotify-tools/inotify-tools",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
+        "^tools/in-toto/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "in-toto/in-toto-golang",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -2404,94 +2404,18 @@
     },
     {
       "fileMatch": [
-        "^tools/kube-apiserver/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-bench/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "aquasecurity/kube-bench",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-controller-manager/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-linter/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "stackrox/kube-linter",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-proxy/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-psp-advisor/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "sysdiglabs/kube-psp-advisor",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-scheduler/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/kube-score/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "zegl/kube-score",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
         "^tools/kubeadm/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-apiserver/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -2513,12 +2437,45 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-bench/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "aquasecurity/kube-bench",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubeclarity-cli/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "openclarity/kubeclarity",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kubeconform/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "yannh/kubeconform",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-controller-manager/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -2612,6 +2569,16 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-linter/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "stackrox/kube-linter",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/kubent/manifest.yaml$"
       ],
       "matchStrings": [
@@ -2622,12 +2589,56 @@
     },
     {
       "fileMatch": [
+        "^tools/kube-proxy/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-psp-advisor/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sysdiglabs/kube-psp-advisor",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kubescape/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubescape/kubescape",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-scheduler/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/kube-score/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "zegl/kube-score",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
