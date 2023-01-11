@@ -1,5 +1,5 @@
 name: aws
-version: "1.27.47"
+version: "1.27.48"
 check: ""
 dependencies:
 - python
