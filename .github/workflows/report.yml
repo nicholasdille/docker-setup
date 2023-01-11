@@ -20,9 +20,18 @@ jobs:
       run: |
         make metadata.json
         bash scripts/report.sh >report.txt
+        echo "::set-env name=REPORT::$(cat report.txt)"
 
     - name: Store report
       uses: actions/upload-artifact@v3
       with:
         name: daily_report
         path: "report.txt"
+
+    - name: send message
+      uses: s3krit/matrix-message-action@v0.0.3
+      with:
+        room_id: ${{ secrets.MATRIX_ROOM_ID }}
+        access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+        message: "$REPORT"
+        server: "matrix.freiburg.social"
