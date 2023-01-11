@@ -4067,6 +4067,16 @@
     },
     {
       "fileMatch": [
+        "^tools/venom/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ovh/venom",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/vexctl/manifest.yaml$"
       ],
       "matchStrings": [

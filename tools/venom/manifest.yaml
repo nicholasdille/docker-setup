@@ -1,0 +1,14 @@
+name: venom
+version: "1.1.0"
+check: ${binary} version | cut -d' ' -f3 | tr -d v
+tags:
+- category/development
+- type/cli
+- type/daemon
+- lang/go
+homepage: https://github.com/ovh/venom
+description: Manage and run your integration tests with efficiency - Venom run executors (script, HTTP Request, web, imap, etc... ) and assertions
+renovate:
+  datasource: github-releases
+  package: ovh/venom
+  extractVersion: ^v(?<version>.+?)$

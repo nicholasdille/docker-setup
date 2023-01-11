@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/venom" \
+    "https://github.com/ovh/venom/releases/download/v${version}/venom.linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/venom"
+
+"${prefix}${target}/bin/venom" completion bash >"${prefix}${target}/share/bash-completion/completions/venom"
+"${prefix}${target}/bin/venom" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/venom.fish"
+"${prefix}${target}/bin/venom" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_venom"
+EOF
