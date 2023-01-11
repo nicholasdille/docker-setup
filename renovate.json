@@ -346,6 +346,17 @@
     },
     {
       "fileMatch": [
+        "^tools/bomber/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "devops-kung-fu/bomber",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/bubblewrap/manifest.yaml$"
       ],
       "matchStrings": [

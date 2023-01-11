@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/devops-kung-fu/bomber/releases/download/v${version}/bomber_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    bomber
+
+"${prefix}${target}/bin/bomber" completion bash >"${prefix}${target}/share/bash-completion/completions/bomber"
+"${prefix}${target}/bin/bomber" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/bomber.fish"
+"${prefix}${target}/bin/bomber" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_bomber"
+EOF
