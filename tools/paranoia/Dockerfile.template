@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/paranoia" \
+    "https://github.com/jetstack/paranoia/releases/download/v${version}/paranoia-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/paranoia"
+
+"${prefix}${target}/bin/paranoia" completion bash >"${prefix}${target}/share/bash-completion/completions/paranoia"
+"${prefix}${target}/bin/paranoia" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/paranoia.fish"
+"${prefix}${target}/bin/paranoia" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_paranoia"
+EOF

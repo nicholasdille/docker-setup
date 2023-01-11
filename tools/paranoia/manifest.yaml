@@ -1,0 +1,14 @@
+# Generated from https://github.com/nicholasdille/docker-setup/issues/4185 (Add paranoia)
+name: paranoia
+version: "0.2.1"
+check: ""
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/jetstack/paranoia
+description: Inspect certificate authorities in container images
+renovate:
+  datasource: github-releases
+  package: jetstack/paranoia
+  extractVersion: ^v(?<version>.+?)$

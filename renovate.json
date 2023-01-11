@@ -3228,6 +3228,16 @@
     },
     {
       "fileMatch": [
+        "^tools/paranoia/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "jetstack/paranoia",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/passh/manifest.yaml$"
       ],
       "matchStrings": [
