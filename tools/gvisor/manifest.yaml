@@ -1,5 +1,5 @@
 name: gvisor
-version: "20230102"
+version: "20230109"
 binary: ${target}/bin/runsc
 check: ${binary} --version | grep ^runsc | cut -d' ' -f3 | cut -d- -f2 | cut -d. -f1
 dependencies:
