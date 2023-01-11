@@ -5,7 +5,7 @@ if test -z "${GITHUB_TOKEN}"; then
     exit 1
 fi
 
-today="$(date +%Y-%m-%dT00:00:00Z)"
+today="$(date -d "yesterday" +%Y-%m-%dT00:00:00Z)"
 
 cat <<EOF
 
