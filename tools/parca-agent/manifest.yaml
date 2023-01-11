@@ -1,0 +1,14 @@
+# Generated from https://github.com/nicholasdille/docker-setup/issues/4148 (Add parca-agent)
+name: parca-agent
+version: "0.11.0"
+check: ""
+tags:
+- category/monitoring
+- type/daemon
+- lang/go
+homepage: https://github.com/parca-dev/parca-agent
+description: eBPF based always-on profiler auto-discovering targets in Kubernetes and systemd, zero code changes or restarts needed!
+renovate:
+  datasource: github-releases
+  package: parca-dev/parca-agent
+  extractVersion: ^v(?<version>.+?)$
