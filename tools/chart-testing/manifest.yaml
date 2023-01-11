@@ -1,0 +1,16 @@
+name: chart-testing
+version: "3.7.1"
+binary: ct
+check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2 | tr -d v
+tags:
+- category/development
+- type/cli
+- lang/go
+- package
+- manager
+homepage: https://github.com/helm/chart-testing
+description: CLI tool for linting and testing Helm charts
+renovate:
+  datasource: github-releases
+  package: helm/chart-testing
+  extractVersion: ^v(?<version>.+?)$
