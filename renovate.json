@@ -501,6 +501,17 @@
     },
     {
       "fileMatch": [
+        "^tools/chart-releaser/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "helm/chart-releaser",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cheat/manifest.yaml$"
       ],
       "matchStrings": [

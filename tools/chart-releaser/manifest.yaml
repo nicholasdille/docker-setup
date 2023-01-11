@@ -1,0 +1,16 @@
+name: chart-releaser
+version: "1.5.0"
+binary: cr
+check: ${binary} version | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+tags:
+- category/development
+- type/cli
+- lang/go
+- package
+- manager
+homepage: https://github.com/helm/chart-releaser
+description: Hosting Helm Charts via GitHub Pages and Releases
+renovate:
+  datasource: github-releases
+  package: helm/chart-releaser
+  extractVersion: ^v(?<version>.+?)$
