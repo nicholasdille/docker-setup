@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/zeitgeist" \
+    "https://github.com/kubernetes-sigs/zeitgeist/releases/download/v${version}/zeitgeist_${version}_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/zeitgeist"
+
+"${prefix}${target}/bin/zeitgeist" completion bash >"${prefix}${target}/share/bash-completion/completions/zeitgeist"
+"${prefix}${target}/bin/zeitgeist" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/zeitgeist.fish"
+"${prefix}${target}/bin/zeitgeist" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_zeitgeist"
+EOF

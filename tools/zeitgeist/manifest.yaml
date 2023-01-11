@@ -1,0 +1,14 @@
+# Generated from https://github.com/nicholasdille/docker-setup/issues/4191 (Add zeitgeist)
+name: zeitgeist
+version: "0.3.5"
+check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+tags:
+- category/development
+- type/cli
+- lang/go
+homepage: https://github.com/kubernetes-sigs/zeitgeist
+description: Zeitgeist the language-agnostic dependency checker
+renovate:
+  datasource: github-releases
+  package: kubernetes-sigs/zeitgeist
+  extractVersion: ^v(?<version>.+?)$

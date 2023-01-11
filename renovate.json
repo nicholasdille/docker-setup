@@ -4284,6 +4284,16 @@
     },
     {
       "fileMatch": [
+        "^tools/zeitgeist/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/zeitgeist",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/zot/manifest.yaml$"
       ],
       "matchStrings": [
