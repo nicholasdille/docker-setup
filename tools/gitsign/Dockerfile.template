@@ -17,15 +17,6 @@ if test -z "\$(pidof gitsign-credential-cache)"; then
 fi
 export GITSIGN_CREDENTIAL_CACHE="\${HOME}/.cache/.sigstore/gitsign/cache.sock"
 EOF
-COPY <<EOF /etc/profile.d/gitsign-credential-cache
-#!/bin/bash
-set -o errexit
-
-if test -z "$(pidof gitsign-credential-cache)"; then
-    gitsign-credential-cache >/dev/null 2>&1 &
-fi
-export GITSIGN_CREDENTIAL_CACHE="${HOME}/.cache/.sigstore/gitsign/cache.sock"
-EOF
 RUN <<EOF
 echo "### Installing gitsign ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/gitsign" \
