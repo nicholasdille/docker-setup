@@ -2546,6 +2546,16 @@
     },
     {
       "fileMatch": [
+        "^tools/kubecolor/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "hidetatz/kubecolor",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/kubeconform/manifest.yaml$"
       ],
       "matchStrings": [
