@@ -211,7 +211,7 @@ EOT
 }
 
 ISSUES="$(
-    curl --silent --fail --header "Authorization: token ${GITHUB_TOKEN}" "${API_URL}/issues" \
+    curl --silent --fail --header "Authorization: token ${GITHUB_TOKEN}" "${API_URL}/issues?per_page=100" \
     | jq --raw-output '.[].number'
 )"
 for ISSUE in ${ISSUES}; do
