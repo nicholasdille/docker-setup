@@ -1327,6 +1327,16 @@
     },
     {
       "fileMatch": [
+        "^tools/falcosidekick/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "falcosecurity/falcosidekick",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/figlet/manifest.yaml$"
       ],
       "matchStrings": [
