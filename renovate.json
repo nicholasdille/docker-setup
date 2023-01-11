@@ -3294,16 +3294,6 @@
     },
     {
       "fileMatch": [
-        "^tools/pivy/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "arekinath/pivy",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": [
         "^tools/podman/manifest.yaml$"
       ],
       "matchStrings": [
@@ -3442,16 +3432,6 @@
       "depNameTemplate": "nicholasdille/qemu-static",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^tools/rage/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "depNameTemplate": "str4d/rage",
-      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": [
