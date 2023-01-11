@@ -1,0 +1,13 @@
+name: cdebug
+version: "0.0.6"
+check: ${binary} --version | cut -d' ' -f3
+tags:
+- category/development
+- type/cli
+- lang/go
+homepage: https://github.com/iximiuz/cdebug
+description: cdebug - a swiss army knife of container debugging
+renovate:
+  datasource: github-releases
+  package: iximiuz/cdebug
+  extractVersion: ^v(?<version>.+?)$

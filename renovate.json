@@ -490,6 +490,17 @@
     },
     {
       "fileMatch": [
+        "^tools/cdebug/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "iximiuz/cdebug",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cfssl/manifest.yaml$"
       ],
       "matchStrings": [
