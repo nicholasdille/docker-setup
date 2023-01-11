@@ -1,5 +1,5 @@
 name: rust
-version: "1.66.0"
+version: "1.66.1"
 check: ""
 tags:
 - type/cli
