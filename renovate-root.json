@@ -49,7 +49,7 @@
       "automerge":          true
     },
     {
-      "matchDatasources": [ "github-releases", "github-tags", "git-tags", "gitlab-releases" ],
+      "matchDatasources": [ "github-releases", "github-tags", "git-tags", "gitlab-releases", "pypi" ],
       "updateTypes":      [ "pin", "digest", "patch", "minor", "major" ],
       "automerge":          true
     }

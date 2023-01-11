@@ -94,7 +94,8 @@
         "github-releases",
         "github-tags",
         "git-tags",
-        "gitlab-releases"
+        "gitlab-releases",
+        "pypi"
       ],
       "updateTypes": [
         "pin",
