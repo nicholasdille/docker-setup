@@ -57,9 +57,6 @@ cat <<EOF
 ## Package
 
 [See package on GitHub](https://github.com/nicholasdille/docker-setup/pkgs/container/docker-setup%2F${tool})
-
-## Size
-
 EOF
 
 SIZE="$(
@@ -68,11 +65,19 @@ SIZE="$(
     | paste -sd+ \
     | bc
 )"
-SIZE_HUMAN="$(
-    echo "${SIZE}" \
-    | numfmt --to=iec --format=%.2f
-)"
-echo "${SIZE_HUMAN}"
+if test -n "${SIZE}"; then
+    SIZE_HUMAN="$(
+        echo "${SIZE}" \
+        | numfmt --to=iec --format=%.2f
+    )"
+
+    cat <<EOF
+
+## Size
+
+${SIZE_HUMAN}
+EOF
+fi
 
 cat <<EOF
 
