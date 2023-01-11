@@ -1694,6 +1694,17 @@
     },
     {
       "fileMatch": [
+        "^tools/godotenv/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "joho/godotenv",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/gojq/manifest.yaml$"
       ],
       "matchStrings": [
