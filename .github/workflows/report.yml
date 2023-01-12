@@ -32,6 +32,4 @@ jobs:
 
     - name: Send report
       run: |
-        cat report.txt | while read -r LINE; do
-            curl --silent --verbose --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"${LINE}\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
-        done
+        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"$(cat report.txt)\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
