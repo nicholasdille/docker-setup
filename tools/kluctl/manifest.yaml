@@ -1,5 +1,5 @@
 name: kluctl
-version: "2.18.3"
+version: "2.18.4"
 check: ""
 tags:
 - type/cli
