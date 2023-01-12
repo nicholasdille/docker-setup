@@ -25,6 +25,12 @@ jobs:
         make metadata.json
         bash scripts/report.sh >report.txt
 
+    - name: Store report
+      uses: actions/upload-artifact@v3
+      with:
+        name: daily_report
+        path: "report.txt"
+
     - name: Send report
       run: |
         cat report.txt \
