@@ -24,18 +24,10 @@ jobs:
       run: |
         make metadata.json
         bash scripts/report.sh >report.txt
-        echo "report=$(cat report.txt)" >> ${GITHUB_ENV}
 
-    - name: Store report
-      uses: actions/upload-artifact@v3
-      with:
-        name: daily_report
-        path: "report.txt"
-
-    - name: send message
-      uses: s3krit/matrix-message-action@v0.0.3
-      with:
-        room_id: ${{ secrets.MATRIX_ROOM_ID }}
-        access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-        message: "${{ env.report }}"
-        server: "matrix.freiburg.social"
+    - name: Send report
+      run: |
+        cat report.txt \
+        | while read -r LINE; do
+            curl --silent --fail --request POST --data "${LINE}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
+        done
