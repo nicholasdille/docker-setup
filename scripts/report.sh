@@ -13,7 +13,7 @@ cat <<EOF
 ### Commits
 ############################################################
 EOF
-git log --since="${today}" --patch | cat
+git --no-pager log --since="${today}" --stat
 
 cat <<EOF
 
