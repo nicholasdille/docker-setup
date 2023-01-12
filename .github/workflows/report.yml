@@ -3,7 +3,10 @@ name: Report
 on:
   schedule:
   - cron: "0 0 * * *"
-  - cron: "*/5 * * * *"
+  push:
+    paths:
+    - scripts/report.sh
+    - .github/workflows/report.yml
 
 jobs:
 
