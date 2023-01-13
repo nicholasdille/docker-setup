@@ -1,5 +1,5 @@
 name: spire
-version: "1.5.3"
+version: "1.5.4"
 binary: spire-server
 check: ${binary} --version 2>&1
 tags:
