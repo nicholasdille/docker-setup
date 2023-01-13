@@ -1,5 +1,5 @@
 name: syft
-version: "0.65.0"
+version: "0.66.1"
 check: ${binary} --version | cut -d' ' -f2
 tags:
 - category/security
