@@ -1,5 +1,5 @@
 name: k3s
-version: "1.26.0+k3s1"
+version: "1.26.0+k3s2"
 check: ${binary} --version | head -n 1 | cut -d' ' -f3 | tr -d v
 tags:
 - org/cncf
