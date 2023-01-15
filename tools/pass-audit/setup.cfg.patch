@@ -1,0 +1,10 @@
+--- setup.cfg.bak	2023-01-15 22:43:46.827034687 +0000
++++ setup.cfg	2023-01-15 22:44:24.487016455 +0000
+@@ -49,3 +49,7 @@
+ install_requires =
+     requests
+     zxcvbn
++
++[options.entry_points]
++console_scripts =
++    paudit = pass_audit.__main__:main
