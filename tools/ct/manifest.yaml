@@ -1,5 +1,6 @@
 name: ct
 version: "0.9.4"
+binary: flatcar-ct
 check: ${binary} -version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
