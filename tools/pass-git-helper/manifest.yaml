@@ -1,0 +1,17 @@
+name: pass-git-helper
+version: "1.2.0"
+check: ""
+dependencies:
+- pass
+- python
+#- git
+tags:
+- category/security
+- lang/python
+- type/cli
+homepage: https://github.com/languitar/pass-git-helper
+description: Git credential helper interfacing with pass, the standard unix password manager
+renovate:
+  datasource: github-releases
+  package: languitar/pass-git-helper
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,13 @@
+name: pass
+version: "1.7.4"
+check: ${binary} version | tr -s ' ' | grep '= v' | cut -d' ' -f2 | tr -d v
+#dependencies:
+#- gpg
+#- git
+#- bash
+tags:
+- category/security
+- lang/shell
+- type/cli
+homepage: https://www.passwordstore.org/
+description: The standard unix password manager

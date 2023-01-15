@@ -1,0 +1,17 @@
+name: pass-import
+version: "2.1"
+check: ""
+dependencies:
+- pass
+- python
+tags:
+- category/security
+- lang/python
+- type/cli
+homepage: https://github.com/roddhjav/pass-import
+description: Pass extension for importing data from most existing password managers
+renovate:
+  datasource: github-releases
+  package: roddhjav/pass-import
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

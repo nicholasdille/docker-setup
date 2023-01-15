@@ -1,0 +1,16 @@
+name: pass-update
+version: "2.1"
+check: ""
+dependencies:
+- pass
+tags:
+- category/security
+- lang/shell
+- type/cli
+homepage: https://github.com/roddhjav/pass-update
+description: Pass extension that provides an easy flow for updating passwords
+renovate:
+  datasource: github-releases
+  package: roddhjav/pass-update
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

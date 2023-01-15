@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    make
+EOF
+WORKDIR /tmp/pass-otp
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/tadfisher/pass-otp/releases/download/v${version}/pass-otp-${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1 --no-same-owner
+make install \
+    DESTDIR="${prefix}" \
+    PREFIX="${target}" \
+    BASHCOMPDIR="${target}/share/bash-completion/completions"
+EOF

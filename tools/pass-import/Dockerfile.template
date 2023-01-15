@@ -1,0 +1,20 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    make
+EOF
+WORKDIR /tmp/pass-import
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/roddhjav/pass-import/releases/download/v${version}/pass-import-${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1 --no-same-owner
+make install \
+    DESTDIR="${prefix}" \
+    PREFIX="${target}"
+EOF
