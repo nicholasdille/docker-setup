@@ -3235,7 +3235,8 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "jetstack/paranoia",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -3245,7 +3246,8 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "parca-dev/parca",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -3255,6 +3257,8 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "parca-dev/parca-agent",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -4122,7 +4126,8 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "ovh/venom",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
@@ -4339,7 +4344,8 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "kubernetes-sigs/zeitgeist",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
