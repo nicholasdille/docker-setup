@@ -46,4 +46,4 @@ jobs:
 
     - name: Send report
       run: |
-        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"New report available: ${{ env.report_url }}\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
+        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"New report available for $(date +%Y-%m-%d): ${{ env.report_url }}\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
