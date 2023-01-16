@@ -1,0 +1,11 @@
+name: passage
+version: "master"
+#check: ""
+dependencies:
+- age
+tags:
+- category/security
+- lang/shell
+- type/cli
+homepage: https://github.com/FiloSottile/passage
+description: Fork of password-store that uses age as backend
