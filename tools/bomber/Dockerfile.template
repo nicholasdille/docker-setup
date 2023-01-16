@@ -10,7 +10,7 @@ curl --silent --location --fail "https://github.com/devops-kung-fu/bomber/releas
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     bomber
 
-"${prefix}${target}/bin/bomber" completion bash >"${prefix}${target}/share/bash-completion/completions/bomber"
-"${prefix}${target}/bin/bomber" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/bomber.fish"
-"${prefix}${target}/bin/bomber" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_bomber"
+"${prefix}${target}/bin/bomber" completion bash | tail -n +9 >"${prefix}${target}/share/bash-completion/completions/bomber"
+"${prefix}${target}/bin/bomber" completion fish | tail -n +9 >"${prefix}${target}/share/fish/vendor_completions.d/bomber.fish"
+"${prefix}${target}/bin/bomber" completion zsh  | tail -n +9 >"${prefix}${target}/share/zsh/vendor-completions/_bomber"
 EOF
