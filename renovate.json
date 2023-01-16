@@ -3268,6 +3268,7 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "packageNameTemplate": "https://git.zx2c4.com/password-store",
+      "depNameTemplate": "pass",
       "datasourceTemplate": "git-tags",
       "versioningTemplate": "loose"
     },
