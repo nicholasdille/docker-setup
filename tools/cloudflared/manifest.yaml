@@ -1,5 +1,5 @@
 name: cloudflared
-version: "2022.12.1"
+version: "2023.1.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
