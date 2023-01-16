@@ -1,5 +1,5 @@
 name: kubeseal
-version: "0.19.3"
+version: "0.19.4"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
