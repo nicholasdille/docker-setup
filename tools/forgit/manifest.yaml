@@ -1,5 +1,5 @@
 name: forgit
-version: "master"
+version: "22.12.0"
 check: ""
 dependencies:
 - fzf
@@ -9,3 +9,7 @@ tags:
 - lang/shell
 homepage: https://github.com/wfxr/forgit
 description: Utility tool powered by fzf for using git interactively
+renovate:
+  datasource: github-releases
+  package: wfxr/forgit
+  versioning: loose

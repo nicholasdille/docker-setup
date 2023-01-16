@@ -11,3 +11,8 @@ tags:
 - type/cli
 homepage: https://www.passwordstore.org/
 description: The standard unix password manager
+renovate:
+  datasource: git-tags
+  package: pass
+  url: https://git.zx2c4.com/password-store
+  versioning: loose

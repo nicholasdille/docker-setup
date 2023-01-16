@@ -1465,6 +1465,17 @@
     },
     {
       "fileMatch": [
+        "^tools/forgit/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "wfxr/forgit",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/furyctl/manifest.yaml$"
       ],
       "matchStrings": [
@@ -3765,6 +3776,19 @@
       "depNameTemplate": "slsa-framework/slsa-verifier",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/socat/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "packageNameTemplate": "git://repo.or.cz/socat.git",
+      "depNameTemplate": "socat",
+      "datasourceTemplate": "git-tags",
+      "extractVersionTemplate": "^tag-(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [

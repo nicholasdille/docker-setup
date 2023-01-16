@@ -7,3 +7,9 @@ tags:
 - lang/c
 homepage: http://www.dest-unreach.org/socat/
 description: Multipurpose relay
+renovate:
+  datasource: git-tags
+  package: socat
+  url: git://repo.or.cz/socat.git
+  extractVersion: ^tag-(?<version>.+?)$
+  versioning: loose
