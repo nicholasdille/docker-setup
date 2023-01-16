@@ -33,6 +33,7 @@ jobs:
     - name: Display report
       run: |
         cat report.txt
+        printenv | sort
 
     - name: Send report
       run: |
