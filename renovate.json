@@ -3262,6 +3262,17 @@
     },
     {
       "fileMatch": [
+        "^tools/pass/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "packageNameTemplate": "https://git.zx2c4.com/password-store",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/pass-git-helper/manifest.yaml$"
       ],
       "matchStrings": [
