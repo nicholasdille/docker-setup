@@ -14,7 +14,7 @@ $(addsuffix /Dockerfile,$(ALL_TOOLS)):$(TOOLS_DIR)/%/Dockerfile: $(TOOLS_DIR)/%/
 	cat $@.template >$@; \
 	echo >>$@; \
 	echo >>$@; \
-	if test -f $*/post_install.sh; then echo 'COPY post_install.sh $${prefix}$${docker_setup_post_install}/$${name}.sh' >>$@; fi; \
+	if test -f $(TOOLS_DIR)/$*/post_install.sh; then echo 'COPY post_install.sh $${prefix}$${docker_setup_post_install}/$${name}.sh' >>$@; fi; \
 	cat $(TOOLS_DIR)/Dockerfile.tail >>$@
 
 .PHONY:

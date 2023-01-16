@@ -19,7 +19,7 @@ echo "### Creating container ${container}"
 docker run --detach --rm --name "${container}" --privileged "${image}" sh -c 'while true; do sleep 10; done'
 
 echo "### Executing tests in ${container}"
-docker exec --interactive "${container}" bash <<EOF
+docker exec --interactive --privileged "${container}" bash <<EOF
 set -o errexit
 /etc/init.d/docker start
 timeout 10 bash -c 'while ! docker version >/dev/null 2>&1; do sleep 1; done'
