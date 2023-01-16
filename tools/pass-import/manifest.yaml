@@ -1,5 +1,5 @@
 name: pass-import
-version: "2.1"
+version: "3.4"
 check: ""
 dependencies:
 - pass
