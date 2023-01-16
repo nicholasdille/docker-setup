@@ -33,8 +33,17 @@ jobs:
     - name: Display report
       run: |
         cat report.txt
-        printenv | sort
+        echo -n "report_url=" >>${GITHUB_ENV}
+        curl "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" \
+            --silent \
+            --location \
+            --fail \
+        | jq --raw-output '
+            .jobs[] | 
+            select(.workflow_name == "Report") | 
+            .html_url
+        ' >>${GITHUB_ENV}
 
     - name: Send report
       run: |
-        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"New report available\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
+        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"New report available: ${{ env.report_url }}\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
