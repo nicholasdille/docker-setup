@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR /tmp/nerd-fonts
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}${target}/share/fonts/NerdFonts"
+
+for font in CascadiaCode; do
+    curl --silent --location --fail --remote-name "https://github.com/ryanoasis/nerd-fonts/releases/download/v${version}/${font}.zip"
+    unzip -q -o "${font}.zip"
+    mv *.otf "${prefix}${target}/share/fonts/NerdFonts"
+done
+EOF
