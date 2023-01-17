@@ -2,18 +2,28 @@
 
 ARG ref=main
 
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+ENV PIPX_HOME=${prefix}${target}/libexec/pipx \
+    PIPX_BIN_DIR=${prefix}${target}/bin
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
-    make
+    make \
+    patch
 EOF
 WORKDIR /tmp/pass-import
 ARG name
 ARG version
+COPY version.patch /tmp/
 RUN <<EOF
 curl --silent --location --fail "https://github.com/roddhjav/pass-import/releases/download/v${version}/pass-import-${version}.tar.gz" \
-| tar --extract --gzip --strip-components=1 --no-same-owner
+| tar --extract --gzip --strip-components=1
+patch -p0 </tmp/version.patch
+pipx install .
+sed -i "s|'site-functions'|'vendor-completions'|" setup.py
 make install \
     DESTDIR="${prefix}" \
     PREFIX="${target}"

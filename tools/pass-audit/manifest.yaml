@@ -1,4 +1,4 @@
-name: pass-import
+name: pass-audit
 version: "1.2"
 check: ""
 dependencies:

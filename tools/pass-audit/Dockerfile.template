@@ -17,13 +17,13 @@ EOF
 WORKDIR /tmp/pass-audit
 ARG name
 ARG version
-COPY setup.cfg.patch .
+COPY setup.cfg.patch /tmp/
 RUN <<EOF
 curl --silent --location --fail "https://github.com/roddhjav/pass-audit/releases/download/v${version}/pass-audit-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
-patch <setup.cfg.patch
+patch </tmp/setup.cfg.patch
+pipx install .
 sed -i "s|'site-functions'|'vendor-completions'|" setup.py
-cat setup.py
 make install \
     DESTDIR="${prefix}" \
     PREFIX="${target}"
