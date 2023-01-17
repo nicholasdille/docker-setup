@@ -29,7 +29,7 @@ EOF
 RUN <<EOF
 mkdir -p "${prefix}${target}/lib/password-store/extensions/"
 mv audit.bash "${prefix}${target}/lib/password-store/extensions/"
-sed -i 's/python3 -m pass_audit/paudit/g' "${prefix}${target}/lib/password-store/extensions/import.bash"
+sed -i 's/python3 -m pass_audit/paudit/g' "${prefix}${target}/lib/password-store/extensions/audit.bash"
 mv \
     share/man/man1/pass-audit.1 \
     "${prefix}${target}/share/man/man1/"
