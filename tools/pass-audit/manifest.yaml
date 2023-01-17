@@ -11,7 +11,5 @@ tags:
 homepage: https://github.com/roddhjav/pass-audit
 description: Pass extension for importing data from most existing password managers
 renovate:
-  datasource: github-releases
-  package: roddhjav/pass-audit
-  extractVersion: ^v(?<version>.+?)$
-  versioning: loose
+  datasource: pypi
+  package: pass-audit

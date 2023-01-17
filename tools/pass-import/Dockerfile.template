@@ -8,23 +8,34 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=python / /
 ENV PIPX_HOME=${prefix}${target}/libexec/pipx \
     PIPX_BIN_DIR=${prefix}${target}/bin
-RUN <<EOF
-apt-get update
-apt-get -y install --no-install-recommends \
-    make \
-    patch
-EOF
-WORKDIR /tmp/pass-import
 ARG name
 ARG version
-COPY version.patch /tmp/
+RUN <<EOF
+pipx install pass-import
+ln --symbolic --relative --force "${prefix}${target}/libexec/pipx/venvs/pass-import/bin/pimport" "${prefix}${target}/bin/pimport"
+sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/libexec/pipx/venvs/pass-import/bin/pimport"
+EOF
+WORKDIR /tmp
 RUN <<EOF
 curl --silent --location --fail "https://github.com/roddhjav/pass-import/releases/download/v${version}/pass-import-${version}.tar.gz" \
-| tar --extract --gzip --strip-components=1
-patch -p0 </tmp/version.patch
-sed -i "s|base = '/usr'|base = '${prefix}${target}'|" setup.py
-sed -i "s|'site-functions'|'vendor-completions'|" setup.py
-cat setup.py
-make
-make install DESTDIR="${prefix}"
+| tar --extract --gzip --strip-components=1 \
+    pass-import-${version}/import.bash \
+    pass-import-${version}/share/man/man1 \
+    pass-import-${version}/share/bash-completion \
+    pass-import-${version}/share/zsh/site-functions
+mkdir -p "${prefix}${target}/lib/password-store/extensions/"
+mv import.bash "${prefix}${target}/lib/password-store/extensions/"
+sed -i 's/python3 -m pass_import/pimport/g' "${prefix}${target}/lib/password-store/extensions/import.bash"
+mv \
+    share/man/man1/pimport.1 \
+    share/man/man1/pass-import.1 \
+    "${prefix}${target}/share/man/man1/"
+mv \
+    share/bash-completion/completions/pass-import \
+    share/bash-completion/completions/pimport \
+    "${prefix}${target}/share/bash-completion/completions/"
+mv \
+    share/zsh/site-functions/_pass-import \
+    share/zsh/site-functions/_pimport \
+    "${prefix}${target}/share/zsh/vendor-completions/"
 EOF

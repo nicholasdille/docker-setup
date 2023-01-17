@@ -22,8 +22,21 @@ RUN <<EOF
 curl --silent --location --fail "https://github.com/roddhjav/pass-audit/releases/download/v${version}/pass-audit-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
 patch </tmp/setup.cfg.patch
-sed -i "s|base = '/usr'|base = '${prefix}${target}'|" setup.py
-sed -i "s|'site-functions'|'vendor-completions'|" setup.py
-make
-make install DESTDIR="${prefix}"
+pipx install .
+ln --symbolic --relative --force "${prefix}${target}/libexec/pipx/venvs/pass-audit/bin/paudit" "${prefix}${target}/bin/paudit"
+sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/libexec/pipx/venvs/pass-audit/bin/paudit"
+EOF
+RUN <<EOF
+mkdir -p "${prefix}${target}/lib/password-store/extensions/"
+mv audit.bash "${prefix}${target}/lib/password-store/extensions/"
+sed -i 's/python3 -m pass_audit/paudit/g' "${prefix}${target}/lib/password-store/extensions/import.bash"
+mv \
+    share/man/man1/pass-audit.1 \
+    "${prefix}${target}/share/man/man1/"
+mv \
+    share/bash-completion/completions/pass-audit \
+    "${prefix}${target}/share/bash-completion/completions/"
+mv \
+    share/zsh/site-functions/_pass-audit \
+    "${prefix}${target}/share/zsh/vendor-completions/"
 EOF
