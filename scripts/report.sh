@@ -10,14 +10,6 @@ today="$(date -d "yesterday" +%Y-%m-%dT00:00:00Z)"
 cat <<EOF
 
 ############################################################
-### Commits
-############################################################
-EOF
-git --no-pager log --since="${today}" --stat
-
-cat <<EOF
-
-############################################################
 ### Closed pull requests
 ############################################################
 EOF
@@ -30,6 +22,21 @@ curl 'https://api.github.com/repos/nicholasdille/docker-setup/pulls?state=closed
     | select(.closed_at > $today)
     | "\(.title) (#\(.number))"
 '
+
+cat <<EOF
+
+############################################################
+### Commits
+############################################################
+EOF
+git --no-pager log \
+    --since="${today}" \
+    --stat \
+    --ignore-cr-at-eol \
+    --ignore-space-at-eol \
+    --ignore-space-change \
+    --ignore-all-space \
+    --ignore-blank-lines
 
 cat <<EOF
 
