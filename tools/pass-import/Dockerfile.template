@@ -22,9 +22,9 @@ RUN <<EOF
 curl --silent --location --fail "https://github.com/roddhjav/pass-import/releases/download/v${version}/pass-import-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1
 patch -p0 </tmp/version.patch
-pipx install .
+sed -i "s|base = '/usr'|base = '${prefix}${target}'|" setup.py
 sed -i "s|'site-functions'|'vendor-completions'|" setup.py
-make install \
-    DESTDIR="${prefix}" \
-    PREFIX="${target}"
+cat setup.py
+make
+make install DESTDIR="${prefix}"
 EOF

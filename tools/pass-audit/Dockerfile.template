@@ -22,9 +22,8 @@ RUN <<EOF
 curl --silent --location --fail "https://github.com/roddhjav/pass-audit/releases/download/v${version}/pass-audit-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
 patch </tmp/setup.cfg.patch
-pipx install .
+sed -i "s|base = '/usr'|base = '${prefix}${target}'|" setup.py
 sed -i "s|'site-functions'|'vendor-completions'|" setup.py
-make install \
-    DESTDIR="${prefix}" \
-    PREFIX="${target}"
+make
+make install DESTDIR="${prefix}"
 EOF
