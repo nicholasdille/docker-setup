@@ -3296,7 +3296,7 @@
     },
     {
       "fileMatch": [
-        "^tools/pass-import/manifest.yaml$"
+        "^tools/pass-audit/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
