@@ -20,23 +20,8 @@ curl 'https://api.github.com/repos/nicholasdille/docker-setup/pulls?state=closed
 | jq --raw-output --arg today "${today}" '
     .[]
     | select(.closed_at > $today)
-    | "#\(.number) \(.title) https://github.com/nicholasdille/docker-setup/pull/\(.number)"
+    | "#\(.number) - \(.title) - https://github.com/nicholasdille/docker-setup/pull/\(.number)"
 '
-
-cat <<EOF
-
-############################################################
-### Commits
-############################################################
-EOF
-git --no-pager log \
-    --since="${today}" \
-    --stat \
-    --ignore-cr-at-eol \
-    --ignore-space-at-eol \
-    --ignore-space-change \
-    --ignore-all-space \
-    --ignore-blank-lines
 
 cat <<EOF
 
@@ -51,5 +36,15 @@ curl 'https://api.github.com/repos/nicholasdille/docker-setup/actions/runs?statu
 | jq --raw-output --arg today "${today}" '
     .workflow_runs[]
     | select(.run_started_at > $today)
-    | "\(.display_title) (\(.name) #\(.run_number))"
+    | "\(.display_title) (\(.name) #\(.run_number)) \(.html_url)"
 '
+
+cat <<EOF
+
+############################################################
+### Commits
+############################################################
+EOF
+git --no-pager log \
+    --since="${today}" \
+    --stat
