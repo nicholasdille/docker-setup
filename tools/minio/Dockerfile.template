@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/minio" \
+    "https://dl.min.io/server/minio/release/linux-amd64/minio.RELEASE.${version}"
+chmod +x "${prefix}${target}/bin/minio"
+EOF

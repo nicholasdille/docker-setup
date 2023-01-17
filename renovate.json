@@ -2987,6 +2987,18 @@
     },
     {
       "fileMatch": [
+        "^tools/mc/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "minio/mc",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^RELEASE.(?<version>.+?)$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/mcfly/manifest.yaml$"
       ],
       "matchStrings": [
@@ -3028,6 +3040,18 @@
       "depNameTemplate": "kubernetes/minikube",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
+        "^tools/minio/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "minio/minio",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^RELEASE.(?<version>.+?)$",
+      "versioningTemplate": "loose"
     },
     {
       "fileMatch": [

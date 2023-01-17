@@ -1,0 +1,14 @@
+
+name: minio
+version: "2023-01-06T18-11-18Z"
+#check: ""
+tags:
+- category/?
+- lang/?
+homepage: https://github.com/minio/minio
+description: Multi-Cloud ☁️ Object Storage
+renovate:
+  datasource: github-releases
+  package: minio/minio
+  extractVersion: ^RELEASE.(?<version>.+?)$
+  versioning: loose
