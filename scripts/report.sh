@@ -20,7 +20,7 @@ curl 'https://api.github.com/repos/nicholasdille/docker-setup/pulls?state=closed
 | jq --raw-output --arg today "${today}" '
     .[]
     | select(.closed_at > $today)
-    | "\(.title) (#\(.number))"
+    | "#\(.number) \(.title) https://github.com/nicholasdille/docker-setup/pulls/\(.number)"
 '
 
 cat <<EOF
