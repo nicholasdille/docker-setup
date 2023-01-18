@@ -1,0 +1,17 @@
+name: docker-index
+version: "0.0.28"
+check: ""
+dependencies:
+- docker
+tags:
+- org/docker
+- category/security
+- lang/go
+- type/cli
+- type/plugin
+homepage: https://github.com/docker/index-cli-plugin
+description: Create image SBOMs as well as analyze packages for known vulnerabilities using the Atomist data plane
+renovate:
+  datasource: github-releases
+  package: docker/index-cli-plugin
+  extractVersion: ^v(?<version>.+?)$

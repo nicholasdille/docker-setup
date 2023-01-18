@@ -1124,6 +1124,17 @@
     },
     {
       "fileMatch": [
+        "^tools/docker-index/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "docker/index-cli-plugin",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/docker-lock/manifest.yaml$"
       ],
       "matchStrings": [
