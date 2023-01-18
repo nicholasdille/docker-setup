@@ -149,7 +149,9 @@
       "matchStrings": [
         "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n"
       ],
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "moby/buildkit",
+      "extractVersionTemplate": "^dockerfile/(?<version>.+?)$"
     },
     {
       "fileMatch": [
