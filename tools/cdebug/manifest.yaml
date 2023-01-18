@@ -1,5 +1,5 @@
 name: cdebug
-version: "0.0.7"
+version: "0.0.8"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - category/development
