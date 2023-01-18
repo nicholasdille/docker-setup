@@ -46,13 +46,12 @@ EOF
 RUN <<EOF
 "${prefix}${target}/bin/pip" completion --bash >"${prefix}${target}/share/bash-completion/completions/pip"
 "${prefix}${target}/bin/pip" completion --fish >"${prefix}${target}/share/fish/vendor_completions.d/pip.fish"
-"${prefix}${target}/bin/pip" completion --zsh >"${prefix}${target}/share/zsh/vendor-completions/_pip"
+"${prefix}${target}/bin/pip" completion --zsh  >"${prefix}${target}/share/zsh/vendor-completions/_pip"
 EOF
 RUN <<EOF
 "${prefix}${target}/bin/pip" install \
     pipx
 "${prefix}${target}/bin/register-python-argcomplete" pipx >"${prefix}${target}/share/bash-completion/completions/pipx"
-"${prefix}${target}/bin/register-python-argcomplete" pipx >"${prefix}${target}/share/fish/vendor_completions.d/pipx.fish"
-"${prefix}${target}/bin/register-python-argcomplete" --shell fish pipx >"${prefix}${target}/share/zsh/vendor-completions/_pipx"
+"${prefix}${target}/bin/register-python-argcomplete" --shell fish pipx >"${prefix}${target}/share/fish/vendor_completions.d/pipx.fish"
 find "${prefix}${target}/bin/" -type f -executable -exec sed -i "s|#\!${prefix}/|#\!/|" {} \;
 EOF
