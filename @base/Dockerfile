@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.3
+#syntax=docker/dockerfile:1.5.1
 
 FROM ubuntu:22.04@sha256:27cb6e6ccef575a4698b66f5de06c7ecd61589132d5a91d098f7f3f9285415a9 AS base
 

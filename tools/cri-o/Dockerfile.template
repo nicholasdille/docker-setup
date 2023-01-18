@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4.3
+#syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
