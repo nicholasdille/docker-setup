@@ -4247,6 +4247,17 @@
     },
     {
       "fileMatch": [
+        "^tools/wait-for/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "dnnrly/wait-for",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/watchtower/manifest.yaml$"
       ],
       "matchStrings": [

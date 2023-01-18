@@ -1,0 +1,13 @@
+name: wait-for
+version: "0.0.5"
+check: ""
+tags:
+- category/?
+- lang/go
+- type/cli
+homepage: https://github.com/dnnrly/wait-for
+description: Super simple tool to help with orchestration of commands on the CLI by waiting on networking resources
+renovate:
+  datasource: github-releases
+  package: dnnrly/wait-for
+  extractVersion: ^v(?<version>.+?)$
