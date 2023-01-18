@@ -1,6 +1,6 @@
 name: aws
 version: "1.27.51"
-check: "" # TODO
+check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
 dependencies:
 - python
 tags:
