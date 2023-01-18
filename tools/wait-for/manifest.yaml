@@ -1,6 +1,6 @@
 name: wait-for
 version: "0.0.5"
-check: ""
+check: "" # TODO
 tags:
 - category/?
 - lang/go

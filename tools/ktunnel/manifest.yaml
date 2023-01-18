@@ -1,6 +1,6 @@
 name: ktunnel
 version: "1.4.8"
-check: ""
+check: ${binary} version
 tags:
 - type/cli
 - category/security

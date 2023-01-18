@@ -1,6 +1,6 @@
 name: trivy-operator
 version: "0.10.1"
-check: ""
+check: OPERATOR_NAMESPACE="" ${binary} --version 2>&1 | head -1 | jq --raw-output '.buildInfo.Version'
 tags:
 - type/daemon
 - category/security

@@ -1,6 +1,6 @@
 name: figlet
 version: "2.2.5"
-check: ""
+check: ${binary} -v | grep Version | cut -d' ' -f4 | tr -d ,
 tags:
 - type/cli
 - fun

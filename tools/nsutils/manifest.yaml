@@ -1,7 +1,7 @@
 name: nsutils
 version: "0.2"
 binary: nslist
-check: ""
+check: "" # No version parameter
 tags:
 - kernel/namespaces
 - type/cli

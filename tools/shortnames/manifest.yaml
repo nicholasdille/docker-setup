@@ -1,7 +1,7 @@
 name: shortnames
 version: "2022.02.08"
 binary: false
-check: ""
+check: "" # No binary
 tags:
 - org/redhat
 - type/configuration

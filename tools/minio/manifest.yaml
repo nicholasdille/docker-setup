@@ -1,7 +1,6 @@
-
 name: minio
 version: "2023-01-18T04-36-38Z"
-#check: ""
+check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
 tags:
 - category/?
 - lang/?

@@ -1,6 +1,6 @@
 name: ktop
 version: "0.3.0"
-check: ""
+check: "" # No version parameter
 tags:
 - type/tui
 - kubernetes

@@ -1,6 +1,7 @@
 name: inotify-tools
 version: "3.22.6.0"
-check: ""
+binary: inotifywait
+check: ${binary} --help | head -1 | cut -d' ' -f2
 tags:
 - component/kernel
 - lang/c

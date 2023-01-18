@@ -1,7 +1,6 @@
-
 name: mc
 version: "2023-01-11T03-14-16Z"
-#check: ""
+check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
 tags:
 - category/?
 - lang/?

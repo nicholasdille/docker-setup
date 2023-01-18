@@ -1,6 +1,6 @@
 name: pass-audit
 version: "1.2"
-check: ""
+check: "" # TODO
 dependencies:
 - pass
 - python

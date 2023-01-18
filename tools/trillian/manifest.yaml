@@ -1,7 +1,7 @@
 name: trillian
 version: "1.5.1"
 binary: trillian_log_server
-check: ""
+check: "" # No version parameter
 tags:
 - org/google
 - category/security

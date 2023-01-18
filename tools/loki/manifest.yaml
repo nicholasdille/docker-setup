@@ -1,6 +1,6 @@
 name: loki
 version: "2.7.1"
-check: ""
+check: "" # Wrong version
 tags:
 - org/grafana
 - observability/logs

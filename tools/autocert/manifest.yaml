@@ -1,6 +1,6 @@
 name: autocert
 version: "0.16.0"
-check: ""
+check: "" # No version parameter
 tags:
 - category/security
 - certificate

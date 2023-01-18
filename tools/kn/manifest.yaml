@@ -1,6 +1,6 @@
 name: kn
 version: "1.7.0"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - category/development

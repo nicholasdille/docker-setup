@@ -1,6 +1,6 @@
 name: sloop
 version: "1.2"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - kubernetes

@@ -1,6 +1,6 @@
 name: slides
 version: "0.9.0"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - markdown

@@ -1,6 +1,6 @@
 name: su-exec
 version: "0.2"
-check: ""
+check: "" # No version parameter
 tags:
 - container/su
 - type/cli

@@ -1,6 +1,6 @@
 name: ansi
 version: "3.0.1"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - terminal

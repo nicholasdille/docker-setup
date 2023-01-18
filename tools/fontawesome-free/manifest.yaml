@@ -1,6 +1,7 @@
 name: fontawesome-free
 version: "6.2.1"
-check: ""
+binary: false
+check: "" # No binary
 tags:
 - slides
 - presentation

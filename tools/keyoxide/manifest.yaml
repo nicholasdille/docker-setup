@@ -1,6 +1,6 @@
 name: keyoxide
 version: "0.4.4"
-check: ""
+check: ${binary} --version
 dependencies:
 - nodejs
 - npm

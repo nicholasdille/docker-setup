@@ -1,6 +1,6 @@
 name: pass-update
 version: "2.1"
-check: ""
+check: "" # TODO
 dependencies:
 - pass
 tags:

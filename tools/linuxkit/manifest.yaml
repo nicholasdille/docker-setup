@@ -1,6 +1,6 @@
 name: linuxkit
 version: "1.0.1"
-check: ""
+check: "" # Wrong version
 tags:
 - type/cli
 - org/moby

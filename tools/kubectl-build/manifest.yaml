@@ -1,6 +1,6 @@
 name: kubectl-build
 version: "0.1.6"
-check: ""
+check: "" # No version parameter
 dependencies:
 - kubectl
 tags:

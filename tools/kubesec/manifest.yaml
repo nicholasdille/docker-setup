@@ -1,6 +1,6 @@
 name: kubesec
 version: "2.12.0"
-check: ""
+check: "" # Empty version
 tags:
 - category/security
 - type/cli

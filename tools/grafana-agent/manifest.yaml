@@ -1,6 +1,6 @@
 name: grafana-agent
 version: "0.30.2"
-check: ""
+check: "" # TODO
 tags:
 - org/grafana
 - observability/metrics

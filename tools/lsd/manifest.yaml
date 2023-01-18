@@ -1,6 +1,6 @@
 name: lsd
 version: "0.23.1"
-check: ""
+check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
 - terminal

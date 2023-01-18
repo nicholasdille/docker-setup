@@ -1,7 +1,7 @@
 name: libcap-ng
 version: "0.8.3"
 binary: captest
-check: ""
+check: "" # No version parameter
 tags:
 - kernel/capabilities
 - type/cli

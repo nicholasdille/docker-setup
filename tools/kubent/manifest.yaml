@@ -1,6 +1,6 @@
 name: kubent
 version: "0.7.0"
-check: ""
+check: ${binary} --version 2>&1 | cut -d' ' -f4
 tags:
 - type/cli
 - kubernetes

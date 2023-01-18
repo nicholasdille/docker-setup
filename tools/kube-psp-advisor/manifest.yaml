@@ -1,6 +1,6 @@
 name: kube-psp-advisor
 version: "3.0.1"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - category/security

@@ -1,6 +1,6 @@
 name: promtail
 version: "2.7.1"
-check: ""
+check: "" # Empty version
 tags:
 - org/grafana
 - observability/logs

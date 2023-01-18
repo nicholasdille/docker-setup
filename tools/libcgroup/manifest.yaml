@@ -1,7 +1,7 @@
 name: libcgroup
 version: "2.0.2"
 binary: ${target}/bin/lscgroup
-check: ""
+check: "" # No version parameter
 tags:
 - kernel/cgroups
 - type/cli

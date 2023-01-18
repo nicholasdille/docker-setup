@@ -1,6 +1,6 @@
 name: zot
 version: "1.4.3"
-check: ""
+check: ${binary} --version 2>&1 | jq --raw-output '.commit' | cut -d- -f1 | tr -d v
 tags:
 - standard/oci
 - container/registry

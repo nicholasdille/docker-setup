@@ -1,6 +1,6 @@
 name: asciigraph
 version: "0.5.5"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - terminal

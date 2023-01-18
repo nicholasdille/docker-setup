@@ -1,6 +1,6 @@
 name: sbom-operator
 version: "0.23.0"
-check: ""
+check: "" # No version parameter
 dependencies:
 - cosign
 tags:

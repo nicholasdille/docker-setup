@@ -1,6 +1,6 @@
 name: forgit
 version: "23.01.0"
-check: ""
+check: "" # TODO
 dependencies:
 - fzf
 tags:

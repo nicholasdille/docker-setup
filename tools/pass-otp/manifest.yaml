@@ -1,6 +1,6 @@
 name: pass-otp
 version: "1.2.0"
-check: ""
+check: "" # TODO
 dependencies:
 - pass
 tags:

@@ -1,6 +1,6 @@
 name: keybase
 version: "6.0.2"
-check: ""
+check: ${binary} version | tr -s ' ' | cut -d' ' -f2
 tags:
 - category/security
 - lang/go

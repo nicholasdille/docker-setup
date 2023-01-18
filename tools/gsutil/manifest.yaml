@@ -1,6 +1,6 @@
 name: gsutil
 version: "5.18"
-check: ""
+check: ${binary} version | cut -d' ' -f3
 dependencies:
 - python
 tags:

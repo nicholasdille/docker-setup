@@ -1,6 +1,6 @@
 name: in-toto
 version: "0.5.0"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - category/security

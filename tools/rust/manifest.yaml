@@ -1,6 +1,7 @@
 name: rust
 version: "1.66.1"
-check: ""
+binary: rustc
+check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/cli
 - category/development

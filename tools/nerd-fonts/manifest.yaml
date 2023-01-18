@@ -1,6 +1,7 @@
 name: nerd-fonts
 version: "2.2.2"
-check: ""
+binary: false
+check: "" # No binary
 tags:
 - slides
 - presentation

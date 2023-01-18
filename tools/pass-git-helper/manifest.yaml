@@ -1,6 +1,6 @@
 name: pass-git-helper
 version: "1.2.0"
-check: ""
+check: "" # TODO
 dependencies:
 - pass
 - python

@@ -1,6 +1,6 @@
 name: shellcheck
 version: "0.9.0"
-check: ""
+check: ${binary} --version | grep ^version | cut -d' ' -f2
 dependencies:
 - go-md2man
 tags:

@@ -1,6 +1,6 @@
 name: wslu
 version: "4.1.1"
-check: ""
+check: "" # Wrong version
 tags:
 - type/cli
 - wsl

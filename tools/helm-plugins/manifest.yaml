@@ -1,6 +1,6 @@
 name: helm-plugins
 version: "0.1.0"
-check: ""
+check: "" # No version
 dependencies:
 - helm
 tags:

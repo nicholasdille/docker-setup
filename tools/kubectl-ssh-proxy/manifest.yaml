@@ -1,6 +1,7 @@
 name: kubectl-ssh-proxy
 version: "0.0.2"
-check: ""
+binary: kubectl-ssh_proxy
+check: "" # No version parameter
 tags:
 - type/cli
 - category/security

@@ -1,7 +1,7 @@
 name: dependency-check
 version: "8.0.0"
 binary: dependency-check.sh
-check: ""
+check: ${binary} --version | grep "^Dependency-Check Core version" | cut -d' ' -f4
 dependencies:
 - openjdk-jre
 tags:

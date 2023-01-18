@@ -1,6 +1,6 @@
 name: kubecolor
 version: "0.0.25"
-check: ""
+check: "" # No dedicated version
 tags:
 - category/development
 - type/cli

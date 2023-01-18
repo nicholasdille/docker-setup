@@ -1,6 +1,6 @@
 name: dbui
 version: "0.7.0"
-check: ""
+check: ${binary} -f foo | head -1 | cut -d' ' -f3 | tr -d v
 tags:
 - component/database
 - type/tui

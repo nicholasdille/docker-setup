@@ -1,6 +1,6 @@
 name: apk
 version: "2.12.10"
-check: ""
+check: ${binary} --help | head -1 | cut -d' ' -f2 | tr -d v,
 tags:
 - type/cli
 - package

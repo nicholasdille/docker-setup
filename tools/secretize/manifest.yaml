@@ -1,6 +1,6 @@
 name: secretize
 version: "0.0.2"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - category/security

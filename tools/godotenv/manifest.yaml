@@ -1,6 +1,6 @@
 name: godotenv
 version: "1.4.0"
-check: ""
+check: "" # No version parameter
 tags:
 - category/development
 - type/cli

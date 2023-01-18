@@ -1,7 +1,7 @@
 name: docker-scan
 version: "0.23.0"
 binary: ${target}/libexec/docker/cli-plugins/docker-scan
-check: ""
+check: ${binary} scan --version | grep ^Version | tr -s ' ' | cut -d' ' -f2 | tr -d v
 dependencies:
 - docker
 tags:

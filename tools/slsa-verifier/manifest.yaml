@@ -1,6 +1,6 @@
 name: slsa-verifier
 version: "2.0.1"
-check: ""
+check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2
 tags:
 - category/security
 - type/cli

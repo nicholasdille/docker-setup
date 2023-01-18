@@ -1,6 +1,6 @@
 name: kmon
 version: "1.6.2"
-check: ""
+check: ${binary} --version | cut -d' ' -f2
 tags:
 - type/tui
 - management

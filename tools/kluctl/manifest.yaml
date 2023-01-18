@@ -1,6 +1,6 @@
 name: kluctl
 version: "2.18.4"
-check: ""
+check: ${binary} version 2>/dev/null
 tags:
 - type/cli
 - category/development

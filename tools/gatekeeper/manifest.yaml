@@ -1,7 +1,7 @@
 name: gatekeeper
 version: "3.11.0"
 binary: gator
-check: ""
+check: ${binary} --version | grep "^Gator version" | cut -d' ' -f3 | tr -d v
 tags:
 - type/daemon
 - category/security

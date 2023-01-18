@@ -1,6 +1,6 @@
 name: cntr
 version: "1.5.1"
-check: ""
+check: "" # No version parameter
 tags:
 - container/runtime
 - type/cli

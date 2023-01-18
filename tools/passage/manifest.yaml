@@ -1,6 +1,6 @@
 name: passage
 version: "master"
-#check: ""
+check: ${binary} version 2>/dev/null | tr -s ' ' | grep "^= v" | cut -d' ' -f2 | tr -d v
 dependencies:
 - age
 tags:

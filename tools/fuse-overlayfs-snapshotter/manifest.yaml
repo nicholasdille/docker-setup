@@ -1,7 +1,7 @@
 name: fuse-overlayfs-snapshotter
 version: "1.0.5"
 binary: containerd-fuse-overlayfs-grpc
-check: ""
+check: ${binary} --help 2>&1 | grep Version | cut -d' ' -f4 | cut -d= -f2 | tr -d '\\"v'
 dependencies:
 - fuse-overlayfs
 - containerd

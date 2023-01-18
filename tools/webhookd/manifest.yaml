@@ -1,6 +1,6 @@
 name: webhookd
 version: "1.15.1"
-check: ""
+check: "" # Enpty version
 tags:
 - category/development
 - type/daemon

@@ -1,6 +1,6 @@
 name: powerline-go
 version: "1.22.1"
-check: ""
+check: "" # No version parameter
 tags:
 - type/cli
 - terminal

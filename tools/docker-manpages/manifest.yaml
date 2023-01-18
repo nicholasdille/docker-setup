@@ -1,7 +1,7 @@
 name: docker-manpages
 version: "20.10.22"
 binary: false
-check: ""
+check: "" # No binary
 tags:
 - org/docker
 - standard/docker

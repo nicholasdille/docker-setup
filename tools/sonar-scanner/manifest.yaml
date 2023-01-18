@@ -1,6 +1,6 @@
 name: sonar-scanner
 version: "4.8.0.2856"
-check: ""
+check: "" # TODO
 dependencies:
 - openjdk-jre
 tags:

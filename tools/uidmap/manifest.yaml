@@ -1,7 +1,7 @@
 name: uidmap
 version: "4.11.1"
 binary: newuidmap
-check: ""
+check: "" # No version parameter
 tags:
 - kernel/pid
 - kernel/namespaces

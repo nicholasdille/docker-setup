@@ -1,6 +1,6 @@
 name: tuf
 version: "0.5.1"
-check: ""
+check: "" # No version parameter
 tags:
 - category/security
 - lang/go
