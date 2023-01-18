@@ -9,6 +9,8 @@ tags:
 homepage: https://codeberg.org/forgejo/forgejo
 description: Beyond coding. We forge.
 renovate:
-  datasource: docker
-  package: codeberg.org/forgejo/forgejo
+  datasource: git-tags
+  package: forgejo/forgejo
+  url: https://codeberg.org/forgejo/forgejo
+  extractVersion: ^v(?<version>.+?)$
   versioning: loose
