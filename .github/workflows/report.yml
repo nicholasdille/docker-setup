@@ -4,6 +4,8 @@ on:
   schedule:
   - cron: "0 0 * * *"
   push:
+    branches:
+    - main
     paths:
     - scripts/report.sh
     - .github/workflows/report.yml

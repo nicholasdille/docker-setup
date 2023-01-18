@@ -8,7 +8,7 @@ on:
       - "tools/**"
       - "scripts/gh-pages.sh"
       - "make/site.mk"
-      - ".github/workflows/site.yml"
+      - ".github/workflows/pages.yml"
 
 jobs:
 
