@@ -8,7 +8,8 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=cosign / /
 ARG name
 ARG version
-COPY <<EOF ${prefix}/etc/profile.d/gitsign-credential-cache
+
+COPY <<EOF ${prefix}/etc/profile.d/gitsign-credential-cache.sh
 #!/bin/bash
 set -o errexit
 
@@ -17,6 +18,7 @@ if test -z "\$(pidof gitsign-credential-cache)"; then
 fi
 export GITSIGN_CREDENTIAL_CACHE="\${HOME}/.cache/.sigstore/gitsign/cache.sock"
 EOF
+
 RUN <<EOF
 echo "### Installing gitsign ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/gitsign" \
@@ -44,7 +46,9 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob \
     --certificate-github-workflow-trigger push \
     "${prefix}${target}/bin/gitsign"
 rm -f "gitsign_${version}_linux_${alt_arch}.pem" "gitsign_${version}_linux_${alt_arch}.sig"
+EOF
 
+RUN <<EOF
 echo "### Installing gitsign-credential-cache ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/gitsign-credential-cache" \
     "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign-credential-cache_${version}_linux_${alt_arch}"
