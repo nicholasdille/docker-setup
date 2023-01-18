@@ -1,6 +1,6 @@
 name: flux
 version: "0.192.0"
-check: "" # TODO
+check: "" # No version parameter
 tags:
 - org/influxdata
 - observability/metrics

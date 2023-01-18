@@ -1,6 +1,7 @@
 name: forgit
 version: "23.01.0"
-check: "" # TODO
+binary: false
+check: "" # No binary
 dependencies:
 - fzf
 tags:

@@ -1,6 +1,7 @@
 name: grafana-agent
 version: "0.30.2"
-check: "" # TODO
+binary: agent
+check: ${binary} --version | head -1 | cut -d' ' -f3 | tr -d v
 tags:
 - org/grafana
 - observability/metrics

@@ -1,6 +1,6 @@
 name: ketch
 version: "0.7.0"
-check: "" # TODO
+check: "" # No version parameter
 tags:
 - type/cli
 - cicd

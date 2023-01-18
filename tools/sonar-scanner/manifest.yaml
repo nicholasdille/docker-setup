@@ -1,6 +1,6 @@
 name: sonar-scanner
 version: "4.8.0.2856"
-check: "" # TODO
+check: ${binary} --version | grep SonarScanner | cut -d' ' -f3
 dependencies:
 - openjdk-jre
 tags:
