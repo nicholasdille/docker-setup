@@ -1,0 +1,9 @@
+name: guac
+version: "main"
+check: "" # No version parameter
+tags:
+- category/security
+- type/cli
+- lang/go
+homepage: https://github.com/guacsec/guac
+description: Aggregate software security metadata into a high fidelity graph database
