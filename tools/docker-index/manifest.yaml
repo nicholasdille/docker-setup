@@ -1,5 +1,5 @@
 name: docker-index
-version: "0.0.28"
+version: "0.0.30"
 binary: ${target}/libexec/docker/cli-plugins/docker-index
 check: ${binary} version | grep ^version | cut -d' ' -f2 | tr -d v
 dependencies:
