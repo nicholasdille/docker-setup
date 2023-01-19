@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.5.1
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+ENV PIPX_HOME=${prefix}${target}/libexec/pipx \
+    PIPX_BIN_DIR=${prefix}${target}/bin
+ARG name
+ARG version
+RUN <<EOF
+pipx install "it-depends==${version}"
+EOF
+RUN <<EOF
+for BINARY in it-depends; do
+    ln --symbolic --relative --force \
+        "${prefix}${target}/libexec/pipx/venvs/it-depends/bin/${BINARY}" \
+        "${prefix}${target}/bin/${BINARY}"
+    sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/libexec/pipx/venvs/it-depends/bin/${BINARY}"
+done
+EOF

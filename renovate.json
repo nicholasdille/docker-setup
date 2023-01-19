@@ -2069,6 +2069,16 @@
     },
     {
       "fileMatch": [
+        "^tools/it-depends/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "it-depends",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/jabba/manifest.yaml$"
       ],
       "matchStrings": [
