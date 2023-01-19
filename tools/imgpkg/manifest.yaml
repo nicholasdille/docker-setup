@@ -1,5 +1,5 @@
 name: imgpkg
-version: "0.34.1"
+version: "0.35.0"
 check: ${binary} version | head -n 1 | cut -d' ' -f3
 tags:
 - standard/oci
