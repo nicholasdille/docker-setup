@@ -3695,6 +3695,16 @@
     },
     {
       "fileMatch": [
+        "^tools/sbomtools/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sbomtools",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/scorecard/manifest.yaml$"
       ],
       "matchStrings": [
