@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.5.1
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}/opt/neo4j"
+curl --silent --location --fail "https://dist.neo4j.org/neo4j-community-${version}-unix.tar.gz" \
+| tar --extract --gzip --directory="${prefix}/opt/neo4j" --strip-components=1 --no-same-owner
+EOF
