@@ -1,5 +1,5 @@
 name: etcd
-version: "3.5.6"
+version: "3.5.7"
 check: ${binary} --version | grep ^etcd | cut -d' ' -f3
 tags:
 - type/cli
