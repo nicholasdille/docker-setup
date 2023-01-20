@@ -12,7 +12,6 @@ RUN <<EOF
 echo "### Downloading trivy ${version}"
 curl --silent --location --fail --remote-name \
       "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz"
-echo "### Installing trivy ${version}"
 
 echo "### Checking keyless signature for trivy ${version}"
 curl --silent --location --fail --remote-name \
