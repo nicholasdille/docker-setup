@@ -1482,8 +1482,10 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "codeberg.org/forgejo/forgejo",
-      "datasourceTemplate": "docker",
+      "depNameTemplate": "forgejo/forgejo",
+      "datasourceTemplate": "git-tags",
+      "packageNameTemplate": "https://codeberg.org/forgejo/forgejo",
+      "extractVersionTemplate": "^v(?<version>\\\\d+\\.\\\\d+\\.\\\\d+-\\\\d+?)$",
       "versioningTemplate": "loose"
     },
     {
@@ -2344,7 +2346,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "keyoxide-cli",
+      "depNameTemplate": "keyoxide",
       "datasourceTemplate": "npm"
     },
     {
@@ -3368,10 +3370,8 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "roddhjav/pass-audit",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "versioningTemplate": "loose"
+      "depNameTemplate": "pass-audit",
+      "datasourceTemplate": "pypi"
     },
     {
       "fileMatch": [
@@ -3402,10 +3402,8 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "roddhjav/pass-import",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "versioningTemplate": "loose"
+      "depNameTemplate": "pass-import",
+      "datasourceTemplate": "pypi"
     },
     {
       "fileMatch": [
