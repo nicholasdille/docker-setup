@@ -60,9 +60,15 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOL
 
 $(addsuffix --deep,$(ALL_TOOLS_RAW)):%--deep: info metadata.json
 	@set -o errexit; \
-	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
-	echo "Making deps: $${DEPS}."; \
-	make $${DEPS}
+	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd' ')"; \
+	if test -z "$${DEPS}"; then \
+		echo "No deps for $*"; \
+		exit; \
+	fi; \
+	for DEP in $${DEPS}; do \
+		echo "Making deps: $${DEPS}."; \
+		make $${DEP}; \
+	done
 
 .PHONY:
 push: $(addsuffix --push,$(TOOLS_RAW)) metadata.json--push
