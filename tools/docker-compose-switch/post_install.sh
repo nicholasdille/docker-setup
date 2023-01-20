@@ -1,4 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-ln -sf "docker-compose-switch" "${target}/bin/docker-compose"
+if ! test -f "${prefix}${target}/bin/docker-compose"; then
+    echo "Installing link from docker-compose to docker-compose-switch"
+    ln --symbolic --relative --force "${prefix}${target}/bin/docker-compose-switch" "${prefix}${target}/bin/docker-compose"
+fi

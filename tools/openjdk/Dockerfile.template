@@ -13,6 +13,6 @@ jabba install --output "${prefix}/opt/openjdk/" openjdk@1.${version}
 cd "${prefix}/opt/openjdk/bin"
 find . -type f -executable \
 | while read -r BINARY; do
-    ln -sf "/opt/openjdk/bin/${BINARY:2}" "${prefix}${target}/bin/${BINARY:2}"
+    ln --symbolic --relative --force "${prefix}/opt/openjdk/bin/${BINARY:2}" "${prefix}${target}/bin/${BINARY:2}"
 done
 EOF

@@ -39,7 +39,7 @@ EOF
 RUN <<EOF
 find "${prefix}/opt/cargo/bin" -type f -executable \
 | while read -r FILE; do
-    ln -sf "/opt/cargo/bin/$(basename "${FILE}")" "${prefix}${target}/bin/"
+    ln --symbolic --relative --force "${prefix}/opt/cargo/bin/$(basename "${FILE}")" "${prefix}${target}/bin/"
 done
 EOF
 RUN <<EOF
