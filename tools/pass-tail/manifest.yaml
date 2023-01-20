@@ -1,7 +1,7 @@
 name: pass-tail
 version: "1.2.0"
 check: "" # TODO
-dependencies:
+runtime_dependencies:
 - pass
 tags:
 - category/security

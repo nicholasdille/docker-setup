@@ -1,9 +1,10 @@
 name: docuum
 version: "0.21.1"
 check: ${binary} --version | cut -d' ' -f2
-dependencies:
-- docker
+build_dependencies:
 - rust
+runtime_dependencies:
+- docker
 tags:
 - standard/docker
 - container/runtime

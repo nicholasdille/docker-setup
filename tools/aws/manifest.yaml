@@ -1,7 +1,9 @@
 name: aws
 version: "1.27.53"
 check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - python
 tags:
 - org/amazon

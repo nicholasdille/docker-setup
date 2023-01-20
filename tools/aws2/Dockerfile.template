@@ -2,10 +2,7 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
-
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --link --from=python / /
 ARG name
 ARG version
 RUN <<EOF

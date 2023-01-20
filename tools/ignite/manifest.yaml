@@ -1,7 +1,7 @@
 name: ignite
 version: "0.10.0"
 check: ${binary} version --output short | tr -d v
-dependencies:
+runtime_dependencies:
 - containerd
 - cni
 tags:

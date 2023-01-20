@@ -306,7 +306,7 @@ function warm_cache() {
     profile "Done reading binaries"
 
     local deps_temp
-    deps_temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.dependencies != null) | .dependencies | join(","))"' "${docker_setup_metadata_file}")"
+    deps_temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.runtime_dependencies != null) | .runtime_dependencies | join(","))"' "${docker_setup_metadata_file}")"
     for deps_pair in ${deps_temp}; do
         local name="${deps_pair%%=*}"
         local value="${deps_pair#*=}"
@@ -685,7 +685,20 @@ while test "$#" -gt 0; do
         search|find)
             shift
             term=$1
-            jq --raw-output --arg term "${term,,}" '.tools[] | select((.name | ascii_downcase | contains($term)) or (.description | ascii_downcase | contains($term)) or (.tags[] | ascii_downcase | contains($term)) or ((.dependencies != null) and (.dependencies[] | ascii_downcase | contains($term)))) | "\(.name);\(.version);\(.description)"' "${docker_setup_metadata_file}" \
+            jq --raw-output --arg term "${term,,}" '
+                    .tools[] | 
+                    select(
+                        (.name | ascii_downcase | contains($term)) or 
+                        (.description | ascii_downcase | contains($term)) or 
+                        (.tags[] | ascii_downcase | contains($term)) or 
+                        (
+                            (.runtime_dependencies != null) and 
+                            (.runtime_dependencies) and 
+                            (.runtime_dependencies[] | ascii_downcase | contains($term))
+                        )
+                    ) | 
+                    "\(.name);\(.version);\(.description)"
+                ' "${docker_setup_metadata_file}" \
             | sort \
             | uniq \
             | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3

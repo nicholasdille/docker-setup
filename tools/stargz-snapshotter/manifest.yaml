@@ -2,7 +2,7 @@ name: stargz-snapshotter
 version: "0.13.0"
 binary: containerd-stargz-grpc
 check: ${binary} -version | cut -d' ' -f2 | tr -d v
-dependencies:
+runtime_dependencies:
 - containerd
 tags:
 - org/cncf

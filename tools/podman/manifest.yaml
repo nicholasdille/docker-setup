@@ -1,7 +1,7 @@
 name: podman
 version: "4.3.1"
 check: ${binary} --version | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - conmon
 - runc
 - cni

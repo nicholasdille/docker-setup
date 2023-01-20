@@ -1,7 +1,7 @@
 name: lima
 version: "0.14.2"
 check: limactl --version | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - yasu
 tags:
 - type/cli

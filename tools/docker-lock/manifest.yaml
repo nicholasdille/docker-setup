@@ -2,7 +2,7 @@ name: docker-lock
 version: "0.8.10"
 binary: ${target}/libexec/docker/cli-plugins/docker-lock
 check: ${binary} lock version
-dependencies:
+runtime_dependencies:
 - docker
 tags:
 - standard/docker

@@ -2,7 +2,7 @@ name: kubo
 version: "0.17.0"
 binary: ipfs
 check: ${binary} version --number
-dependencies:
+runtime_dependencies:
 - containerd
 tags:
 - component/storage

@@ -2,7 +2,7 @@ name: imgcrypt
 version: "1.1.7"
 binary: ctr-enc
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
-dependencies:
+runtime_dependencies:
 - containerd
 - docker
 tags:

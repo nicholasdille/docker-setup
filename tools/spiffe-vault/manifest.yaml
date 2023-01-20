@@ -1,7 +1,7 @@
 name: spiffe-vault
 version: "0.4.1"
 check: ${binary} version | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
-dependencies:
+runtime_dependencies:
 - vault
 tags:
 - type/cli

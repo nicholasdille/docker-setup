@@ -2,7 +2,7 @@ name: containers-common
 version: "0.50.1"
 binary: false
 check: "" # No binary
-dependencies:
+build_dependencies:
 - go-md2man
 tags:
 - org/redhat

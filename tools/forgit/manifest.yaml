@@ -2,7 +2,7 @@ name: forgit
 version: "23.01.0"
 binary: false
 check: "" # No binary
-dependencies:
+runtime_dependencies:
 - fzf
 tags:
 - type/cli

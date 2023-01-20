@@ -1,7 +1,7 @@
 name: cri-dockerd
 version: "0.3.0"
 check: ${binary} --version 2>&1 | cut -d' ' -f2
-dependencies:
+runtime_dependencies:
 - docker
 - crictl
 tags:

@@ -1,7 +1,7 @@
 name: faasd
 version: "0.16.7"
 check: ${binary} version | grep faasd | tr '\t' ' ' | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - containerd
 - faas-cli
 tags:

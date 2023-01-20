@@ -13,7 +13,9 @@ name: foo
 version: 1.2.3
 binary: fooctl
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
-dependencies:
+build_dependencies:
+- bar
+runtime_dependencies:
 - baz
 tags:
 - docker

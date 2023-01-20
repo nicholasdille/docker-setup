@@ -31,15 +31,30 @@ check-tools-description: $(HELPER)/var/lib/docker-setup/manifests/jq.json metada
 	fi
 
 .PHONY:
-check-tools-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
+check-tools-build-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
 	@\
-	TOOLS="$$(jq --raw-output '.tools[] | select(.dependencies != null) | .name' metadata.json)"; \
+	TOOLS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
 		for TOOL in $${TOOLS}; do \
-			DEPS="$$(jq --raw-output --arg tool $${TOOL} '.tools[] | select(.name == $$tool) | .dependencies[]' metadata.json)"; \
+			DEPS="$$(jq --raw-output --arg tool $${TOOL} '.tools[] | select(.name == $$tool) | .build_dependencies[]' metadata.json)"; \
 			for DEP in $${DEPS}; do \
 				if ! test -f "$(TOOLS_DIR)/$${DEP}/manifest.yaml"; then \
-					echo "$(RED)Dependency <$${DEP}> for tool <$${TOOL}> does not exist.$(RESET)"; \
+					echo "$(RED)Build dependency <$${DEP}> for tool <$${TOOL}> does not exist.$(RESET)"; \
+				fi; \
+			done; \
+		done; \
+	fi
+
+.PHONY:
+check-tools-runtime-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
+	@\
+	TOOLS="$$(jq --raw-output '.tools[] | select(.runtime_dependencies != null) | .name' metadata.json)"; \
+	if test -n "$${TOOLS}"; then \
+		for TOOL in $${TOOLS}; do \
+			DEPS="$$(jq --raw-output --arg tool $${TOOL} '.tools[] | select(.name == $$tool) | .runtime_dependencies[]' metadata.json)"; \
+			for DEP in $${DEPS}; do \
+				if ! test -f "$(TOOLS_DIR)/$${DEP}/manifest.yaml"; then \
+					echo "$(RED)Runtime dependency <$${DEP}> for tool <$${TOOL}> does not exist.$(RESET)"; \
 				fi; \
 			done; \
 		done; \

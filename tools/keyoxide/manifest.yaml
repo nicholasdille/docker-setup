@@ -1,9 +1,11 @@
 name: keyoxide
 version: "0.4.4"
 check: ${binary} --version
-dependencies:
+build_dependencies:
 - nodejs
 - npm
+runtime_dependencies:
+- nodejs
 tags:
 - category/security
 - lang/javascript

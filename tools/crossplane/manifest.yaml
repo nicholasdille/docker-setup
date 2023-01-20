@@ -2,7 +2,7 @@ name: crossplane
 version: "1.10.2"
 binary: kubectl-crossplane
 check: ${binary} --version | tr -d v
-dependencies:
+runtime_dependencies:
 - kubectl
 tags:
 - type/cli

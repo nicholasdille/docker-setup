@@ -1,7 +1,7 @@
 name: dive
 version: "0.10.0"
 check: ${binary} --version | cut -d' ' -f2
-dependencies:
+runtime_dependencies:
 - docker
 tags:
 - standard/oci

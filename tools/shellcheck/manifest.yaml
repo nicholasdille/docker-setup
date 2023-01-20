@@ -1,7 +1,7 @@
 name: shellcheck
 version: "0.9.0"
 check: ${binary} --version | grep ^version | cut -d' ' -f2
-dependencies:
+build_dependencies:
 - go-md2man
 tags:
 - type/cli

@@ -2,7 +2,7 @@ name: docker-compose
 version: "2.15.1"
 binary: ${target}/libexec/docker/cli-plugins/docker-compose
 check: ${binary} compose version --short
-dependencies:
+runtime_dependencies:
 - docker
 - docker-compose-switch
 flags:

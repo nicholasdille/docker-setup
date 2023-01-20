@@ -1,7 +1,7 @@
 name: kubectl-free
 version: "0.2.0"
 check: ${binary} --version | cut -d' ' -f2 | tr -d ','
-dependencies:
+runtime_dependencies:
 - kubectl
 tags:
 - type/cli

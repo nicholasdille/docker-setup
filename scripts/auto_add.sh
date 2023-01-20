@@ -122,8 +122,10 @@ name: ${ISSUE_REPO_NAME}
 version: "${RELEASE_VERSION}"
 #binary: ""
 #check: ""
-#dependencies:
+#build_dependencies:
 #- foo
+#runtime_dependencies:
+#- bar
 #tags:
 #- org/?
 #- category/?

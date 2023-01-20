@@ -1,7 +1,7 @@
 name: mutagen-compose
 version: "0.16.3"
 check: ${binary} version | grep ^Mutagen | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - mutagen
 tags:
 - component/network

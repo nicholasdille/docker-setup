@@ -1,10 +1,11 @@
 name: gitsign
 version: "0.4.1"
 check: ${binary} --version | grep ^gitsign | cut -d' ' -f3 | tr -d v
-dependencies:
+build_dependencies:
+- cosign
+runtime_dependencies:
 - wslu
 - xdg-utils
-- cosign
 tags:
 - category/development
 - category/security

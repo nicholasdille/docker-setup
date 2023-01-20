@@ -1,7 +1,9 @@
 name: it-depends
 version: "0.1.1"
 check: ""
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - python
 tags:
 - category/security

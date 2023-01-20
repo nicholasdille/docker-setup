@@ -1,7 +1,9 @@
 name: npm
 version: "9.3.1"
 check: ${binary} --version
-dependencies:
+build_dependencies:
+- nodejs
+runtime_dependencies:
 - nodejs
 tags:
 - category/development

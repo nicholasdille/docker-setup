@@ -2,7 +2,7 @@ name: dependency-check
 version: "8.0.1"
 binary: dependency-check.sh
 check: ${binary} --version | grep "^Dependency-Check Core version" | cut -d' ' -f4
-dependencies:
+runtime_dependencies:
 - openjdk-jre
 tags:
 - org/owasp

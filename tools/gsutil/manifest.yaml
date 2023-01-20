@@ -1,7 +1,9 @@
 name: gsutil
 version: "5.18"
 check: ${binary} version | cut -d' ' -f3
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - python
 tags:
 - org/google

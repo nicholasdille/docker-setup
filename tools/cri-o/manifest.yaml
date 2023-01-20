@@ -2,11 +2,12 @@ name: cri-o
 version: "1.26.1"
 binary: crio
 check: ${binary} --version | grep ^crio | cut -d' ' -f3
-dependencies:
+build_dependencies:
+- go-md2man
+runtime_dependencies:
 - runc
 - cni
 - crictl
-- go-md2man
 tags:
 - org/redhat
 - standard/oci

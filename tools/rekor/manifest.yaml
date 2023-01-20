@@ -2,9 +2,10 @@ name: rekor
 version: "1.0.1"
 binary: rekor-cli
 check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
-dependencies:
-- trillian
+build_dependencies:
 - cosign
+runtime_dependencies:
+- trillian
 tags:
 - category/security
 - type/cli

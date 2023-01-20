@@ -1,7 +1,7 @@
 name: containerd
 version: "1.6.15"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
-dependencies:
+runtime_dependencies:
 - runc
 - cni
 - crictl

@@ -14,7 +14,8 @@ tags="$(jq --raw-output --compact-output '.tags' <<<"${TOOL_JSON}")"
 description="$(jq --raw-output '.description' <<<"${TOOL_JSON}" | sed s/\"/\'/g)"
 homepage="$(jq --raw-output '.homepage' <<<"${TOOL_JSON}" | sed s/\"/\'/g)"
 timestamp="$(git log --follow --format=%ad --date iso-strict "tools/${tool}/manifest.yaml" | tail -1)"
-deps="$(jq --raw-output 'select(.dependencies != null) | .dependencies[]' <<<"${TOOL_JSON}")"
+build_deps="$(jq --raw-output 'select(.build_dependencies != null) | .build_dependencies[]' <<<"${TOOL_JSON}")"
+runtime_deps="$(jq --raw-output 'select(.runtime_dependencies != null) | .runtime_dependencies[]' <<<"${TOOL_JSON}")"
    
 cat <<EOF
 ---
@@ -40,9 +41,12 @@ ${homepage}
 
 EOF
 
-if test -n "${DEPS}"; then
-    for DEP in ${deps}; do
-        echo "[${DEP}](/tools/${DEP}/) "
+if test -n "${build_deps}" || test -n "${runtime_deps}"; then
+    for DEP in ${build_deps}; do
+        echo "Build: [${DEP}](/tools/${DEP}/) "
+    done
+    for DEP in ${runtime_deps}; do
+        echo "Runtime: [${DEP}](/tools/${DEP}/) "
     done
 else
     echo "None"

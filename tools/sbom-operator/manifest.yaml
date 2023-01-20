@@ -1,7 +1,7 @@
 name: sbom-operator
 version: "0.23.0"
 check: "" # No version parameter
-dependencies:
+build_dependencies:
 - cosign
 tags:
 - type/daemon

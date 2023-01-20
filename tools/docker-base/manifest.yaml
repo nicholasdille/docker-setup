@@ -1,7 +1,7 @@
 name: docker-base
 version: "0.3.0"
 check: "" # No version parameter
-dependencies:
+runtime_dependencies:
 - docker
 tags:
 - standard/docker

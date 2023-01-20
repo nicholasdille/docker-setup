@@ -1,7 +1,7 @@
 name: buildg
 version: "0.4.1"
 check: ${binary} version | cut -d' ' -f2 | tr -d v
-dependencies:
+runtime_dependencies:
 - runc
 - cni
 tags:

@@ -1,7 +1,7 @@
 name: pass-update
 version: "2.1"
 check: "" # TODO
-dependencies:
+runtime_dependencies:
 - pass
 tags:
 - category/security

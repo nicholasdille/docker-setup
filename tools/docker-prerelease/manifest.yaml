@@ -2,7 +2,7 @@ name: docker-prerelease
 version: "23.0.0-rc.2"
 binary: ${target}/libexec/docker-prerelease/bin/docker
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - fuse-overlayfs
 tags:
 - org/docker

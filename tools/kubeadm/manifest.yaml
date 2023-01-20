@@ -1,9 +1,10 @@
 name: kubeadm
 version: "1.26.1"
 check: ${binary} version --output short | tr -d v
-dependencies:
-- kubelet
+build_dependencies:
 - cosign
+runtime_dependencies:
+- kubelet
 tags:
 - org/cncf
 - org/kubernetes

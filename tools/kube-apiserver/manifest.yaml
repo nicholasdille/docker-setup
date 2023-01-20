@@ -1,7 +1,7 @@
 name: kube-apiserver
 version: "1.26.1"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
-dependencies:
+build_dependencies:
 - cosign
 tags:
 - org/cncf

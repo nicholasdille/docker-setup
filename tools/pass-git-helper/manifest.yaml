@@ -1,7 +1,9 @@
 name: pass-git-helper
 version: "1.2.0"
 check: "" # TODO
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - pass
 - python
 #- git

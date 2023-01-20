@@ -1,7 +1,7 @@
 name: bypass4netns
 version: "0.3.0"
 check: XDG_RUNTIME_DIR=foo ${binary} --version | grep ^bypass4netns | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - slirp4netns
 tags:
 - component/network

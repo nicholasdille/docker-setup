@@ -1,7 +1,7 @@
 name: kubectl-resources
 version: "0.2.0"
 check: "" # No version parameter
-dependencies:
+runtime_dependencies:
 - kubectl
 tags:
 - type/cli

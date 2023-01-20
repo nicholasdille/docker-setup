@@ -1,7 +1,7 @@
 name: act
 version: "0.2.40"
 check: ${binary} --version | cut -d' ' -f3
-dependencies:
+runtime_dependencies:
 - docker
 tags:
 - standard/docker

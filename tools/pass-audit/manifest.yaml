@@ -1,7 +1,9 @@
 name: pass-audit
 version: "1.2"
 check: "" # TODO
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - pass
 - python
 tags:

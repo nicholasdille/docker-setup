@@ -1,7 +1,9 @@
 name: kubectl-plugins
 version: "0.1.0"
 check: "" # No version
-dependencies:
+build_dependencies:
+- krew
+runtime_dependencies:
 - kubectl
 - krew
 tags:

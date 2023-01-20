@@ -1,7 +1,9 @@
 name: pass-import
 version: "3.4"
 check: "" # TODO
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - pass
 - python
 tags:

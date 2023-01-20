@@ -1,9 +1,10 @@
 name: goreleaser
 version: "1.14.1"
 check: ${binary} --version | head -1 | cut -d' ' -f3
-dependencies:
-- go
+build_dependencies:
 - cosign
+runtime_dependencies:
+- go
 tags:
 - category/development
 - cicd

@@ -1,7 +1,9 @@
 name: sbomtools
 version: "0.3.2"
 check: ""
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - python
 tags:
 - category/security

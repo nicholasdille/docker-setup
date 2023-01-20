@@ -3,16 +3,11 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
-FROM ghcr.io/nicholasdille/docker-setup/kubectl:${ref} AS kubectl
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-
+COPY --from=krew / /
 ARG name
 ARG version
-
-COPY --from=krew / /
-COPY --from=kubectl / /
-
 RUN <<EOF
 export KREW_ROOT="/opt/krew"
 krew update
