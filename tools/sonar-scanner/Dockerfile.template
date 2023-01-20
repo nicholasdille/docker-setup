@@ -13,5 +13,5 @@ unzip -q -o -d "${prefix}/opt" "${filename}"
 mv "${prefix}/opt/sonar-scanner-${version}-linux" "${prefix}/opt/sonar-scanner"
 sed -i 's/use_embedded_jre=true/use_embedded_jre=false/' "${prefix}/opt/sonar-scanner/bin/sonar-scanner"
 rm -rf "${prefix}/opt/sonar-scanner/jre"
-ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "${prefix}${target}/bin/sonar-scanner"
+ln --symbolic --relative --force "${prefix}/opt/sonar-scanner/bin/sonar-scanner" "${prefix}${target}/bin/sonar-scanner"
 EOF

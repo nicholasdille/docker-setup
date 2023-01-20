@@ -906,6 +906,16 @@
     },
     {
       "fileMatch": [
+        "^tools/cypher-shell/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "neo4j/neo4j",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/dagger/manifest.yaml$"
       ],
       "matchStrings": [
