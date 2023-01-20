@@ -1,5 +1,5 @@
 name: forgejo
-version: "1.18.0-1"
+version: "1.18.2-0-rootless"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - category/development
