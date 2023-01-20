@@ -1,5 +1,5 @@
 name: aws2
-version: "2.9.16"
+version: "2.9.17"
 binary: aws
 check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
 tags:
