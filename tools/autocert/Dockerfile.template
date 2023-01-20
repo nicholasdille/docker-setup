@@ -2,11 +2,39 @@
 
 ARG ref=main
 
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
+
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=cosign / /
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/smallstep/autocert/releases/download/v${version}/autocert_${version}_linux_${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=2 --no-same-owner \
-    "autocert_${version}/bin/autocert"
+echo "### Downloading autocert ${version}"
+curl --silent --location --fail --remote-name \
+    "https://github.com/smallstep/autocert/releases/download/v${version}/autocert_linux_${version}_amd64.tar.gz"
+
+echo "### Checking keyless signature for autocert ${version}"
+curl --silent --location --fail --remote-name \
+    "https://github.com/smallstep/autocert/releases/download/v${version}/autocert_linux_${version}_amd64.tar.gz.pem"
+curl --silent --location --fail --remote-name \
+    "https://github.com/smallstep/autocert/releases/download/v${version}/autocert_linux_${version}_amd64.tar.gz.sig"
+SHA="$(
+    git ls-remote --tags https://github.com/smallstep/autocert "v${version}" \
+    | cut -f1
+)"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob \
+    --cert "autocert_linux_${version}_amd64.tar.gz.pem" \
+    --signature "autocert_linux_${version}_amd64.tar.gz.sig" \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+    --certificate-identity "https://github.com/smallstep/autocert/.github/workflows/release.yml@refs/tags/v${version}" \
+    --certificate-github-workflow-name "Create Release & Upload Assets" \
+    --certificate-github-workflow-ref "refs/tags/v${version}" \
+    --certificate-github-workflow-repository "smallstep/autocert" \
+    --certificate-github-workflow-sha "${SHA}" \
+    --certificate-github-workflow-trigger push \
+    "autocert_linux_${version}_amd64.tar.gz"
+
+tar --extract --gzip --directory="${prefix}${target}/bin/" --file "autocert_linux_${version}_amd64.tar.gz" --strip-components=1 --no-same-owner \
+    "autocert_${version}/autocert"
+#rm "autocert_linux_${version}_amd64.tar.gz"
 EOF
