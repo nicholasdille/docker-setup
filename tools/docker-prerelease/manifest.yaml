@@ -1,5 +1,5 @@
 name: docker-prerelease
-version: "23.0.0-rc.2"
+version: "23.0.0-rc.3"
 binary: ${target}/libexec/docker-prerelease/bin/docker
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 runtime_dependencies:
