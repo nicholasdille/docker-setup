@@ -26,7 +26,8 @@ builders: ; $(info $(M) Starting builders...)
 	docker buildx ls | grep -q "^docker-setup " \
 	|| docker buildx create --name docker-setup \
 		--platform linux/amd64,linux/arm64 \
-		--bootstrap
+		--bootstrap; \
+	docker container run --privileged --rm tonistiigi/binfmt --install all
 
 .PHONY:
 base: info metadata.json builders ; $(info $(M) Building base image $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG)...)
