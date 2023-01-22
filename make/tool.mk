@@ -21,11 +21,23 @@ $(addsuffix /Dockerfile,$(ALL_TOOLS)):$(TOOLS_DIR)/%/Dockerfile: $(TOOLS_DIR)/%/
 install: push sign attest
 
 .PHONY:
-base: info ; $(info $(M) Building base image $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG)...)
+builders: ; $(info $(M) Starting builders...)
+	@\
+	docker buildx ls | grep -q "^docker-setup " \
+	|| docker buildx create --name docker-setup \
+		--platform linux/amd64,linux/arm64 \
+		--bootstrap
+
+.PHONY:
+base: info metadata.json builders ; $(info $(M) Building base image $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG)...)
 	@set -o errexit; \
+	ARCHS="$$(jq --raw-output '[ .tools[] | select(.platforms != null) | .platforms[] ] | unique[]' metadata.json | paste -sd,)"; \
+	echo "Platforms: $${ARCHS}"; \
 	if ! docker buildx build @base \
+			--builder docker-setup \
 			--build-arg prefix_override=$(PREFIX) \
 			--build-arg target_override=$(TARGET) \
+			--platform $${ARCHS} \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
 			--push \
@@ -40,21 +52,27 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOL
 	@set -o errexit; \
 	PUSH=$(or $(PUSH), false); \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' tools/$*/manifest.json)"; \
-	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
-	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) |.tags[]' tools/$*/manifest.json | paste -sd,)"; \
+	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
+	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) | .tags[]' tools/$*/manifest.json | paste -sd,)"; \
+	ARCHS="$$(jq --raw-output '.tools[] | select(.platforms != null) | .platforms[]' tools/$*/manifest.json | paste -sd,)"; \
 	echo "Name:         $*"; \
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
+	echo "Platforms:    $${ARCHS}"; \
 	echo "Push:         $${PUSH}"; \
 	if ! docker buildx build $(TOOLS_DIR)/$@ \
+			--builder docker-setup \
 			--build-arg branch=$(DOCKER_TAG) \
 			--build-arg ref=$(DOCKER_TAG) \
 			--build-arg name=$* \
 			--build-arg version=$${TOOL_VERSION} \
 			--build-arg deps=$${DEPS} \
 			--build-arg tags=$${TAGS} \
+			--platform $${ARCHS} \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
+			--provenance \
+			--attest=type=sbom \
 			--push="$${PUSH}" \
 			--progress plain \
 			>$(TOOLS_DIR)/$@/build.log 2>&1; then \
@@ -89,7 +107,7 @@ $(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: $(HELPER)/var/lib/docker-set
 $(addsuffix --install,$(ALL_TOOLS_RAW)):%--install: %--push %--sign %--attest
 
 .PHONY:
-$(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Debugging image for $*...)
+$(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Debugging image for $*...)
 	@set -o errexit; \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' $(TOOLS_DIR)/$*/manifest.json)"; \
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
@@ -98,6 +116,7 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/m
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
 	docker buildx build $(TOOLS_DIR)/$* \
+		--builder docker-setup \
 		--build-arg branch=$(DOCKER_TAG) \
 		--build-arg ref=$(DOCKER_TAG) \
 		--build-arg name=$* \
@@ -130,11 +149,15 @@ $(addsuffix --test,$(ALL_TOOLS_RAW)):%--test: % ; $(info $(M) Testing $*...)
 	bash $(TOOLS_DIR)/$*/test.sh test-$*
 
 .PHONY:
-debug: base
+debug: debug-amd64
+
+.PHONY:
+debug-%: base ; $(info $(M) Debugging on platform $*...)
 	@docker container run \
 		--interactive \
 		--tty \
 		--privileged \
 		--rm \
+		--platform linux/$* \
 		$(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
 			bash

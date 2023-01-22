@@ -9,10 +9,27 @@ ENV docker_setup_cache=/var/cache/docker-setup \
     docker_setup_manifests=/var/lib/docker-setup/manifests \
     docker_setup_post_install=/var/lib/docker-setup/post_install \
     prefix=${prefix_override} \
-    target=${target_override} \
-    arch=x86_64 \
-    alt_arch=amd64
-
+    target=${target_override}
+ARG TARGETPLATFORM
+RUN <<EOF
+case "${TARGETPLATFORM}" in
+    linux/amd64)
+        arch=x86_64
+        alt_arch=amd64
+        ;;
+    linux/arm64)
+        arch=aarch64
+        alt_arch=arm64
+        ;;
+    *)
+        echo "ERROR: Unknown TARGETPLATFORM ${TARGETPLATFORM}."
+        exit 1
+        ;;
+esac
+echo "export arch=${arch}" >/etc/profile.d/arch.sh
+echo "export alt_arch=${alt_arch}" >/etc/profile.d/alt_arch.sh
+EOF
+SHELL [ "bash", "-clo", "errexit"]
 RUN <<EOF
 mkdir -p \
     "${prefix}/etc/profile.d" \
@@ -42,9 +59,7 @@ mkdir -p \
     "${prefix}${target}/share/zsh/vendor-completions"
 EOF
 
-ARG ref=main
 LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
-      org.opencontainers.image.ref.name="${ref}" \
-      org.opencontainers.image.title="Base image" \
+      org.opencontainers.image.ref.name="main" \
       org.opencontainers.image.description="Base image for building tools images" \
-      org.opencontainers.image.version="${ref}"
+      org.opencontainers.image.version="main"

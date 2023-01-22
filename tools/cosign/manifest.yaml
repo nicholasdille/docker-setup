@@ -5,6 +5,9 @@ runtime_dependencies:
 - docker
 - wslu
 - xdg-utils
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - container/sign
 - category/security
