@@ -2,17 +2,37 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS cosign-bootstrap
+FROM --platform=linux/amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS cosign-bootstrap
+ARG TARGETPLATFORM
 # renovate: datasource=github-releases depName=sigstore/cosign
 ARG COSIGN_VERSION=1.13.1
 ARG COSIGN_SHA256=a50651a67b42714d6f1a66eb6773bf214dacae321f04323c0885f6a433051f95
 RUN <<EOF
-echo "### Installing cosign ${COSIGN_VERSION} for bootstrapping"
+echo "### Installing cosign ${COSIGN_VERSION} for bootstrapping on ${TARGETPLATFORM} (${alt_arch})"
 curl --silent --location --fail --output "/usr/local/bin/cosign" \
-    "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
+    "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-${alt_arch}"
 chmod +x "/usr/local/bin/cosign"
 
 echo "### Checking cosign ${COSIGN_VERSION} for bootstrapping"
+echo "${COSIGN_SHA256} /usr/local/bin/cosign" \
+| sha256sum --check -
+
+cosign version
+EOF
+
+FROM --platform=linux/arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS cosign-bootstrap
+ARG TARGETPLATFORM
+# renovate: datasource=github-releases depName=sigstore/cosign
+ARG COSIGN_VERSION=1.13.1
+ARG COSIGN_SHA256=a7a79a52c7747e2c21554cad4600e6c7130c0429017dd258f9c558d957fa9090
+RUN <<EOF
+echo "### Installing cosign ${COSIGN_VERSION} for bootstrapping on ${TARGETPLATFORM} (${alt_arch})"
+curl --silent --location --fail --output "/usr/local/bin/cosign" \
+    "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-${alt_arch}"
+chmod +x "/usr/local/bin/cosign"
+
+echo "### Checking cosign ${COSIGN_VERSION} for bootstrapping"
+sha256sum /usr/local/bin/cosign
 echo "${COSIGN_SHA256} /usr/local/bin/cosign" \
 | sha256sum --check -
 

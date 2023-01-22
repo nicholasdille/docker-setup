@@ -6,6 +6,9 @@ build_dependencies:
 runtime_dependencies:
 - wslu
 - xdg-utils
+platforms:
+- linux/amd64
+#- linux/arm64
 tags:
 - category/development
 - category/security
