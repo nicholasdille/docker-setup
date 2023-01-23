@@ -97,7 +97,8 @@ $(addsuffix --deep,$(ALL_TOOLS_RAW)):%--deep: info metadata.json
 	done
 
 .PHONY:
-push: $(addsuffix --push,$(TOOLS_RAW)) metadata.json--push
+push: PUSH=true
+push: $(TOOLS_RAW) metadata.json--push
 
 .PHONY:
 $(addsuffix --push,$(ALL_TOOLS_RAW)): PUSH=true
