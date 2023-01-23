@@ -9,15 +9,23 @@ COPY --link --from=cosign / /
 ARG name
 ARG version
 RUN <<EOF
+echo "### Downloading sbom-operator ${version}"
 curl --silent --location --fail --remote-name "https://github.com/ckotzbauer/sbom-operator/releases/download/${version}/sbom-operator_${version}_linux_${alt_arch}.tar.gz"
+
+echo "### Downloading signature and certificate"
 curl --silent --location --fail --remote-name "https://github.com/ckotzbauer/sbom-operator/releases/download/${version}/sbom-operator_${version}_linux_${alt_arch}.tar.gz.sig"
 curl --silent --location --fail --remote-name "https://github.com/ckotzbauer/sbom-operator/releases/download/${version}/sbom-operator_${version}_linux_${alt_arch}.tar.gz.pem"
 
+SHA="$(
+    git ls-remote --tags https://github.com/ckotzbauer/sbom-operator "${version}" \
+    | cut -f1
+)"
+echo "### Verifying signature for SHA ${SHA}"
 COSIGN_EXPERIMENTAL=1 cosign verify-blob "sbom-operator_${version}_linux_${alt_arch}.tar.gz" \
     --certificate "sbom-operator_${version}_linux_${alt_arch}.tar.gz.pem" \
     --signature "sbom-operator_${version}_linux_${alt_arch}.tar.gz.sig" \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-    --certificate-identity https://github.com/ckotzbauer/actions-toolkit/.github/workflows/toolkit-release-goreleaser.yml@refs/tags/0.25.0 \
+    --certificate-identity https://github.com/ckotzbauer/actions-toolkit/.github/workflows/toolkit-release-goreleaser.yml@refs/tags/0.31.0 \
     --certificate-github-workflow-repository ckotzbauer/sbom-operator \
     --certificate-github-workflow-name create-release \
     --certificate-github-workflow-ref refs/heads/main \
