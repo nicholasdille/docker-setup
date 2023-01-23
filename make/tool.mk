@@ -41,6 +41,8 @@ base: info metadata.json builders ; $(info $(M) Building base image $(REGISTRY)/
 			--platform $${ARCHS} \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
+			--attest=type=provenance \
+			--attest=type=sbom \
 			--push \
 			--progress plain \
 			>@base/build.log 2>&1; then \
@@ -72,7 +74,7 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOL
 			--platform $${ARCHS} \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
-			--provenance \
+			--attest=type=provenance \
 			--attest=type=sbom \
 			--push="$${PUSH}" \
 			--progress plain \

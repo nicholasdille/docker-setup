@@ -60,6 +60,20 @@ for arg in "$@"; do
     fi
 done
 
+export arch="$(uname -m)"
+case "${arch}" in
+    x86_64)
+        export alt_arch=amd64
+        ;;
+    aarch64)
+        export alt_arch=arm64
+        ;;
+    *)
+        >&2 echo "ERROR: Unsupported architecture (${arch})."
+        exit 1
+        ;;
+esac
+
 reset="\e[39m\e[49m"
 green="\e[92m"
 yellow="\e[93m"
@@ -672,13 +686,35 @@ while test "$#" -gt 0; do
         inspect)
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
-                | while read -r DIGEST; do
-                    echo "${emoji_archive} Inspecting ${DIGEST}"
-                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
-                    | tar --list --gzip \
-                    | grep -v "/$"
-                done
+
+                MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
+                if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}" \
+                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+
+                elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}"
+
+                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}" \
+                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+
+                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}"
+
+                else
+                    >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
+                    exit 1
+                fi \
+                | jq --raw-output '.layers[].digest' \
+                    | while read -r DIGEST; do
+                        echo "${emoji_archive} Inspecting ${DIGEST}"
+                        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
+                        | tar --list --gzip \
+                        | grep -v "/$"
+                    done
             done
             ;;
 
@@ -735,7 +771,27 @@ while test "$#" -gt 0; do
                 fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
                 echo "${emoji_tool} Installing ${tool} ${version}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body \
+                MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
+                if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}" \
+                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+
+                elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}"
+
+                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}" \
+                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+
+                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}"
+
+                else
+                    >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
+                    exit 1
+                fi \
                 | jq --raw-output '.layers[].digest' \
                 | while read -r DIGEST; do
                     #echo "${emoji_archive} Unpacking ${DIGEST}"
@@ -829,7 +885,28 @@ while test "$#" -gt 0; do
             docker create --name docker-setup-install-flat "${base}"
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
-                regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body | jq --raw-output '.layers[].digest' \
+                MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
+                if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}" \
+                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+
+                elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}"
+
+                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}" \
+                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+
+                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+                    echo "${MANIFEST}"
+
+                else
+                    >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
+                    exit 1
+                fi \
+                | jq --raw-output '.layers[].digest' \
                 | while read -r DIGEST; do
                     echo "${emoji_archive} Unpacking ${DIGEST}"
                     regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \

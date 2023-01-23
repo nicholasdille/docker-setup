@@ -13,6 +13,7 @@ metadata.json--build: metadata.json @metadata/Dockerfile ; $(info $(M) Building 
 			--build-arg commit=$(GIT_COMMIT_SHA) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG) \
 			--push=$(or $(PUSH), false) \
+			--provenance=false \
 			--progress plain \
 			>@metadata/build.log 2>&1; then \
 		cat @metadata/build.log; \
