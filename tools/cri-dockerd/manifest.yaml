@@ -1,5 +1,5 @@
 name: cri-dockerd
-version: "0.3.0"
+version: "0.3.1"
 check: ${binary} --version 2>&1 | cut -d' ' -f2
 runtime_dependencies:
 - docker
