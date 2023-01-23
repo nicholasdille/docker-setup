@@ -60,7 +60,8 @@ for arg in "$@"; do
     fi
 done
 
-export arch="$(uname -m)"
+arch="$(uname -m)"
+export arch
 case "${arch}" in
     x86_64)
         export alt_arch=amd64
@@ -691,7 +692,7 @@ while test "$#" -gt 0; do
                 if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
                     | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
 
                 elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}"
@@ -699,7 +700,7 @@ while test "$#" -gt 0; do
                 elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
                     | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
 
                 elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}"
@@ -775,7 +776,7 @@ while test "$#" -gt 0; do
                 if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
                     | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
 
                 elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}"
@@ -783,7 +784,7 @@ while test "$#" -gt 0; do
                 elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
                     | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
 
                 elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}"
@@ -889,7 +890,7 @@ while test "$#" -gt 0; do
                 if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
                     | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
 
                 elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}"
@@ -897,7 +898,7 @@ while test "$#" -gt 0; do
                 elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
                     | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{} --format raw-body \
+                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
 
                 elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}"
