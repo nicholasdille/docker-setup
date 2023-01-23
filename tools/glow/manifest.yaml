@@ -1,5 +1,5 @@
 name: glow
-version: "1.4.1"
+version: "1.5.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
