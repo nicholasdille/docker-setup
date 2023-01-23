@@ -58,6 +58,7 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOL
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
 	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) | .tags[]' tools/$*/manifest.json | paste -sd,)"; \
 	ARCHS="$$(jq --raw-output '.tools[] | select(.platforms != null) | .platforms[]' tools/$*/manifest.json | paste -sd,)"; \
+	test -n "$${ARCHS}" || ARCHS="linux/amd64"; \
 	echo "Name:         $*"; \
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
