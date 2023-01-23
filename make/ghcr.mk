@@ -9,12 +9,33 @@ clean-registry-untagged: $(HELPER)/var/lib/docker-setup/manifests/yq.json $(HELP
 		echo "### Package $${NAME}"; \
 		gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
 		| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
-		| xargs -I{} \
-			curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/{}" \
+		| while read -r ID; do \
+			echo "    Removing ID $${ID}"; \
+			curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/$${ID}" \
 				--silent \
 				--header "Authorization: Bearer $${TOKEN}" \
 				--request DELETE \
 				--header "Accept: application/vnd.github+json"; \
+		done; \
+	done
+
+.PHONY:
+clean-registry-untagged--%: $(HELPER)/var/lib/docker-setup/manifests/yq.json $(HELPER)/var/lib/docker-setup/manifests/gh.json $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/curl.json
+	@set -o errexit; \
+	TOKEN="$$(yq '."github.com".oauth_token' "$${HOME}/.config/gh/hosts.yml")"; \
+	test -n "$${TOKEN}"; \
+	test "$${TOKEN}" != "null"; \
+	NAME="docker-setup/$*"; \
+	echo "### Package $${NAME}"; \
+	gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
+	| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
+	| while read -r ID; do \
+		echo "    Removing ID $${ID}"; \
+		curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/$${ID}" \
+			--silent \
+			--header "Authorization: Bearer $${TOKEN}" \
+			--request DELETE \
+			--header "Accept: application/vnd.github+json"; \
 	done
 
 .PHONY:
@@ -29,12 +50,14 @@ clean-ghcr-unused--%: $(HELPER)/var/lib/docker-setup/manifests/yq.json $(HELPER)
 		echo "### Package $${NAME}"; \
 		gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
 		| jq --raw-output --arg tag "$*" '.[] | select(.metadata.container.tags[] | contains($$tag)) | .id' \
-		| xargs -I{} \
+		| while read -r ID; do \
+			echo "    Removing tag $${ID}"; \
 			curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/{}" \
 				--silent \
 				--header "Authorization: Bearer $${TOKEN}" \
 				--request DELETE \
 				--header "Accept: application/vnd.github+json"; \
+		done; \
 	done
 
 .PHONY:
