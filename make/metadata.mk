@@ -8,10 +8,11 @@ metadata.json--show:%--show:
 .PHONY:
 metadata.json--build: metadata.json @metadata/Dockerfile ; $(info $(M) Building metadata image for $(GIT_COMMIT_SHA)...)
 	@set -o errexit; \
-	if ! docker build . \
+	if ! docker buildx build . \
 			--file @metadata/Dockerfile \
 			--build-arg commit=$(GIT_COMMIT_SHA) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG) \
+			--push=$(or $(PUSH), false) \
 			--progress plain \
 			>@metadata/build.log 2>&1; then \
 		cat @metadata/build.log; \
@@ -19,8 +20,8 @@ metadata.json--build: metadata.json @metadata/Dockerfile ; $(info $(M) Building 
 	fi
 
 .PHONY:
+metadata.json--push: PUSH=true
 metadata.json--push: metadata.json--build ; $(info $(M) Pushing metadata image...)
-	@docker push $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG)
 
 .PHONY:
 metadata.json--sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json cosign.key ; $(info $(M) Signing metadata image...)

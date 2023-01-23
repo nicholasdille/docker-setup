@@ -23,11 +23,12 @@ install: push sign attest
 .PHONY:
 base: info ; $(info $(M) Building base image $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG)...)
 	@set -o errexit; \
-	if ! docker build @base \
+	if ! docker buildx build @base \
 			--build-arg prefix_override=$(PREFIX) \
 			--build-arg target_override=$(TARGET) \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)base:$(DOCKER_TAG) \
+			--push \
 			--progress plain \
 			>@base/build.log 2>&1; then \
 		cat @base/build.log; \
@@ -37,13 +38,15 @@ base: info ; $(info $(M) Building base image $(REGISTRY)/$(REPOSITORY_PREFIX)bas
 .PHONY:
 $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Building image $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)...)
 	@set -o errexit; \
+	PUSH=$(or $(PUSH), false); \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' tools/$*/manifest.json)"; \
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
 	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) |.tags[]' tools/$*/manifest.json | paste -sd,)"; \
 	echo "Name:         $*"; \
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
-	if ! docker build $(TOOLS_DIR)/$@ \
+	echo "Push:         $${PUSH}"; \
+	if ! docker buildx build $(TOOLS_DIR)/$@ \
 			--build-arg branch=$(DOCKER_TAG) \
 			--build-arg ref=$(DOCKER_TAG) \
 			--build-arg name=$* \
@@ -52,6 +55,7 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json base $(TOOL
 			--build-arg tags=$${TAGS} \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
+			--push="$${PUSH}" \
 			--progress plain \
 			>$(TOOLS_DIR)/$@/build.log 2>&1; then \
 		cat $(TOOLS_DIR)/$@/build.log; \
@@ -74,8 +78,8 @@ $(addsuffix --deep,$(ALL_TOOLS_RAW)):%--deep: info metadata.json
 push: $(addsuffix --push,$(TOOLS_RAW)) metadata.json--push
 
 .PHONY:
+$(addsuffix --push,$(ALL_TOOLS_RAW)): PUSH=true
 $(addsuffix --push,$(ALL_TOOLS_RAW)):%--push: % ; $(info $(M) Pushing image for $*...)
-	@docker push $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
 $(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Inspecting image for $*...)
