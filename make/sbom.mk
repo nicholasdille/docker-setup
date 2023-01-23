@@ -13,6 +13,11 @@ $(addsuffix --sign,$(ALL_TOOLS_RAW)):%--sign: $(HELPER)/var/lib/docker-setup/man
 	cosign sign --key cosign.key $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
+$(addsuffix --keyless-sign,$(ALL_TOOLS_RAW)):%--keyless-sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json ; $(info $(M) Keyless signing image for $*...)
+	@set -o errexit; \
+	COSIGN_EXPERIMENTAL=1 cosign sign $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
+
+.PHONY:
 sbom: $(addsuffix /sbom.json,$(TOOLS))
 
 .PHONY:
