@@ -6,9 +6,10 @@ metadata.json--show:%--show:
 	@less $*
 
 .PHONY:
-metadata.json--build: metadata.json @metadata/Dockerfile ; $(info $(M) Building metadata image for $(GIT_COMMIT_SHA)...)
+metadata.json--build: metadata.json @metadata/Dockerfile builders ; $(info $(M) Building metadata image for $(GIT_COMMIT_SHA)...)
 	@set -o errexit; \
 	if ! docker buildx build . \
+			--builder docker-setup \
 			--file @metadata/Dockerfile \
 			--build-arg commit=$(GIT_COMMIT_SHA) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG) \
