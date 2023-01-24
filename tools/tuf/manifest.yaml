@@ -1,5 +1,5 @@
 name: tuf
-version: "0.5.1"
+version: "0.5.2"
 check: "" # No version parameter
 tags:
 - category/security
