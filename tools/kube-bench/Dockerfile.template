@@ -9,9 +9,9 @@ ARG version
 RUN <<EOF
 curl --silent --location --fail "https://github.com/aquasecurity/kube-bench/releases/download/v${version}/kube-bench_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
-"${prefix}${target}/bin/kube-bench" completion bash >"${prefix}${target}/share/bash-completion/completions/kube-bench"
-"${prefix}${target}/bin/kube-bench" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kube-bench.fish"
-"${prefix}${target}/bin/kube-bench" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kube-bench"
+"${prefix}${target}/bin/kube-bench" completion bash | sed "s|${prefix}||g" >"${prefix}${target}/share/bash-completion/completions/kube-bench"
+"${prefix}${target}/bin/kube-bench" completion fish | sed "s|${prefix}||g" >"${prefix}${target}/share/fish/vendor_completions.d/kube-bench.fish"
+"${prefix}${target}/bin/kube-bench" completion zsh  | sed "s|${prefix}||g" >"${prefix}${target}/share/zsh/vendor-completions/_kube-bench"
 mkdir -p "${prefix}/etc/kube-bench"
 mv "${prefix}${target}/bin/cfg" "${prefix}/etc/kube-bench"
 EOF

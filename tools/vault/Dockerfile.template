@@ -7,7 +7,7 @@ ARG name
 ARG version
 
 COPY <<vault.sh ${prefix}${target}/share/bash-completion/completions/
-complete -C /docker_setup_install/usr/local/bin/vault vault
+complete -C ${target}/bin/vault vault
 vault.sh
 
 RUN <<EOF

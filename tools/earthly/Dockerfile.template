@@ -19,5 +19,7 @@ curl --silent --location --fail --output "${prefix}${target}/bin/earthly" \
 chmod +x "${prefix}${target}/bin/earthly"
 "${prefix}${target}/bin/earthly" bootstrap --with-autocomplete --no-buildkit
 cp /usr/share/bash-completion/completions/earthly "${prefix}${target}/share/bash-completion/completions/earthly"
+sed -i "s|${prefix}||" "${prefix}${target}/share/bash-completion/completions/earthly"
 cp /usr/local/share/zsh/site-functions/_earthly "${prefix}${target}/share/zsh/vendor-completions/_earthly"
+sed -i "s|${prefix}||" "${prefix}${target}/share/zsh/vendor-completions/_earthly"
 EOF

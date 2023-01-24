@@ -10,7 +10,7 @@ RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" \
     "https://github.com/docker/buildx/releases/download/v${version}/buildx-v${version}.linux-${alt_arch}"
 chmod +x "${prefix}${target}/libexec/docker/cli-plugins/docker-buildx"
-"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-buildx"
-"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/docker-buildx.fish"
-"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_docker-buildx"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion bash | sed "s|${prefix}||g" >"${prefix}${target}/share/bash-completion/completions/docker-buildx"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion fish | sed "s|${prefix}||g" >"${prefix}${target}/share/fish/vendor_completions.d/docker-buildx.fish"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-buildx" completion zsh  | sed "s|${prefix}||g" >"${prefix}${target}/share/zsh/vendor-completions/_docker-buildx"
 EOF

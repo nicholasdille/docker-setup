@@ -10,7 +10,7 @@ RUN <<EOF
 curl --silent --location --fail "https://github.com/docker/index-cli-plugin/releases/download/v0.0.28/docker-index_0.0.28_linux_amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/libexec/docker/cli-plugins" --no-same-owner \
     docker-index
-"${prefix}${target}/libexec/docker/cli-plugins/docker-index" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-index"
-"${prefix}${target}/libexec/docker/cli-plugins/docker-index" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/docker-index.fish"
-"${prefix}${target}/libexec/docker/cli-plugins/docker-index" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_docker-index"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-index" completion bash | sed "s|${prefix}||g" >"${prefix}${target}/share/bash-completion/completions/docker-index"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-index" completion fish | sed "s|${prefix}||g" >"${prefix}${target}/share/fish/vendor_completions.d/docker-index.fish"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-index" completion zsh  | sed "s|${prefix}||g" >"${prefix}${target}/share/zsh/vendor-completions/_docker-index"
 EOF
