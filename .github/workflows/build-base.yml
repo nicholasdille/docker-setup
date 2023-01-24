@@ -35,8 +35,15 @@ jobs:
           username: nicholasdille
           password: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Build and push
+      - name: Build base image
         env:
           DOCKER_BUILDKIT: 1
         run: |
           make base
+
+      - name: Store logs
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: logs.zip
+          path: "@base/build.log"
