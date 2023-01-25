@@ -5,6 +5,9 @@ check: ${binary} compose version --short
 runtime_dependencies:
 - docker
 - docker-compose-switch
+platforms:
+- linux/amd64
+- linux/arm64
 flags:
 - not-docker-compose-v1
 tags:
