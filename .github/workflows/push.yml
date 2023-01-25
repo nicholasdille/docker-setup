@@ -42,7 +42,7 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           make helper/var/lib/docker-setup/manifests/regclient.json
-          find helper
+          find helper -name f
 
           echo "### Fetching manifest for metadata"
           CONFIG_DIGEST="$(
