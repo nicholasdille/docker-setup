@@ -113,17 +113,6 @@
         "^docker-setup$"
       ],
       "matchStrings": [
-        "YQ_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
-      ],
-      "depNameTemplate": "mikefarah/yq",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch": [
-        "^docker-setup$"
-      ],
-      "matchStrings": [
         "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "regclient/regclient",
@@ -135,12 +124,11 @@
         "^docker-setup$"
       ],
       "matchStrings": [
-        "JQ_VERSION=(?<currentValue>.*?)\n"
+        "GOJQ_VERSION=(?<currentValue>.*?)\n"
       ],
-      "depNameTemplate": "stedolan/jq",
+      "depNameTemplate": "itchyny/gojq",
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^jq-(?<version>.+?)$",
-      "versioningTemplate": "loose"
+      "extractVersionTemplate": "^v(?<version>.+?)$"
     },
     {
       "fileMatch": [
