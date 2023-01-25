@@ -8,6 +8,7 @@ on:
       - "tools/**"
       - "docker-setup"
       - "Makefile"
+      - ".github/workflows/push.yml"
   #schedule:
   #  - cron: "*/15 * * * *"
 
