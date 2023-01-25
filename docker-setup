@@ -774,6 +774,10 @@ while test "$#" -gt 0; do
                 fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
                 echo "${emoji_tool} Installing ${tool} ${version}"
+                if ! regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" >/dev/null; then
+                    >&2 echo "ERROR: Tool ${tool} not found"
+                    continue
+                fi
                 MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
                 if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
                     echo "${MANIFEST}" \
