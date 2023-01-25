@@ -12,7 +12,6 @@ ENV docker_setup_cache=/var/cache/docker-setup \
     target=${target_override}
 ARG TARGETPLATFORM
 RUN <<EOF
-uname -a
 case "${TARGETPLATFORM}" in
     linux/amd64)
         arch=x86_64
