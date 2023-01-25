@@ -1,6 +1,6 @@
 # Generated from https://github.com/nicholasdille/docker-setup/issues/4148 (Add parca-agent)
 name: parca-agent
-version: "0.11.1"
+version: "0.12.0"
 check: "" # No version parameter
 tags:
 - category/monitoring
