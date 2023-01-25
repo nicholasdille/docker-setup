@@ -1,6 +1,9 @@
 name: yq
 version: "4.30.8"
 check: ${binary} --version | cut -d' ' -f4
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - format

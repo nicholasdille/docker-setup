@@ -2,6 +2,9 @@ name: regclient
 version: "0.4.5"
 binary: regctl
 check: ${binary} version | jq -r .VCSTag | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - standard/oci
 - container/registry
