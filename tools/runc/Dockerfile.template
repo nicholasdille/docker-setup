@@ -1,20 +1,18 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY --link --from=go-md2man / /
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/runc" \
     "https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}"
 chmod +x "${prefix}${target}/bin/runc"
 EOF
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/share/man/man8/runc-checkpoint.8.md" \
     "https://github.com/opencontainers/runc/raw/v${version}/man/runc-checkpoint.8.md"

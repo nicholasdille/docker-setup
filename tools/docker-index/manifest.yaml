@@ -4,6 +4,9 @@ binary: ${target}/libexec/docker/cli-plugins/docker-index
 check: ${binary} version | grep ^version | cut -d' ' -f2 | tr -d v
 runtime_dependencies:
 - docker
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/docker
 - category/security

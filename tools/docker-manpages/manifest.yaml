@@ -2,6 +2,9 @@ name: docker-manpages
 version: "20.10.23"
 binary: false
 check: "" # No binary
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/docker
 - standard/docker

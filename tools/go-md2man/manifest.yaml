@@ -1,6 +1,9 @@
 name: go-md2man
 version: "2.0.2"
 check: "" # No version parameter
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - markdown

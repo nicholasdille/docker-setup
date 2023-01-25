@@ -1,11 +1,10 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location --fail "https://github.com/docker/base-cli-plugin/releases/download/v${version}/base-cli-plugin_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/libexec/docker/cli-plugins" --no-same-owner \

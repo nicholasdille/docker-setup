@@ -9,22 +9,36 @@ COPY --link --from=cosign / /
 ARG name
 ARG version
 RUN <<EOF
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export alt_arch2=64bit
+        ;;
+    aarch64)
+        export alta_arch2=ARM64
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+
 echo "### Downloading trivy ${version}"
 curl --silent --location --fail --remote-name \
-      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz"
+      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz"
 
 echo "### Checking keyless signature for trivy ${version}"
 curl --silent --location --fail --remote-name \
-      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz.pem"
+      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz.pem"
 curl --silent --location --fail --remote-name \
-      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-64bit.tar.gz.sig"
+      "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz.sig"
 SHA="$(
     git ls-remote --tags https://github.com/aquasecurity/trivy "v${version}" \
     | cut -f1
 )"
 COSIGN_EXPERIMENTAL=1 cosign verify-blob \
-    --cert "trivy_${version}_Linux-64bit.tar.gz.pem" \
-    --signature "trivy_${version}_Linux-64bit.tar.gz.sig" \
+    --cert "trivy_${version}_Linux-${alt_arch2}.tar.gz.pem" \
+    --signature "trivy_${version}_Linux-${alt_arch2}.tar.gz.sig" \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
     --certificate-identity "https://github.com/aquasecurity/trivy/.github/workflows/reusable-release.yaml@refs/tags/v${version}" \
     --certificate-github-workflow-name Release \
@@ -32,13 +46,13 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob \
     --certificate-github-workflow-repository "aquasecurity/trivy" \
     --certificate-github-workflow-sha "${SHA}" \
     --certificate-github-workflow-trigger push \
-    "trivy_${version}_Linux-64bit.tar.gz"
+    "trivy_${version}_Linux-${alt_arch2}.tar.gz"
 
 echo "### Installing trivy ${version}"
-tar --extract --gzip --directory="${prefix}${target}/bin" --file "trivy_${version}_Linux-64bit.tar.gz" \
+tar --extract --gzip --directory="${prefix}${target}/bin" --file "trivy_${version}_Linux-${alt_arch2}.tar.gz" \
     trivy \
     contrib
-rm -f "trivy_${version}_Linux-64bit.tar.gz"
+rm -f "trivy_${version}_Linux-${alt_arch2}.tar.gz"
 
 echo "### Moving templates for trivy ${version}"
 mkdir -p "${prefix}${target}/share/trivy"

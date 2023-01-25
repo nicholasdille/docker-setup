@@ -4,6 +4,9 @@ check: XDG_RUNTIME_DIR=foo ${binary} --version | cut -d' ' -f3
 runtime_dependencies:
 - containerd
 - buildkit
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - org/containerd

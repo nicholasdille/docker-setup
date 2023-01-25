@@ -1,13 +1,11 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY init-buildkit "${prefix}/etc/init.d/buildkit"
-
 RUN <<EOF
 curl --silent --location --fail "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner

@@ -2,6 +2,9 @@ name: cni
 version: "1.2.0"
 binary: ${target}/libexec/cni/loopback
 check: ${binary} 2>&1 | cut -d' ' -f4 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - kubernetes
 - component/network

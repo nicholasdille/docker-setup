@@ -1,11 +1,10 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/libexec/docker/cli-plugins/docker-compose" \
     "https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}"

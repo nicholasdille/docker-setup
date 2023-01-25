@@ -3,6 +3,9 @@ version: "0.3.0"
 check: "" # No version parameter
 runtime_dependencies:
 - docker
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - standard/docker
 - org/docker

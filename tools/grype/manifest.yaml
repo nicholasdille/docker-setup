@@ -1,6 +1,9 @@
 name: grype
 version: "0.55.0"
 check: ${binary} version | grep "^Version:" | tr -s ' ' | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/security
 - type/cli

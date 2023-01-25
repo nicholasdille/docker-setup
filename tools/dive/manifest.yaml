@@ -3,6 +3,8 @@ version: "0.10.0"
 check: ${binary} --version | cut -d' ' -f2
 runtime_dependencies:
 - docker
+platforms:
+- linux/amd64
 tags:
 - standard/oci
 - standard/docker

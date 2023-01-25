@@ -3,6 +3,9 @@ version: "0.36.1"
 check: ${binary} --version | grep ^Version | cut -d' ' -f2
 build_dependencies:
 - cosign
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/security
 - type/cli

@@ -4,6 +4,9 @@ binary: ${target}/libexec/docker/cli-plugins/docker-sbom
 check: ${binary} sbom --version | cut -d, -f1 | cut -d' ' -f2
 runtime_dependencies:
 - docker
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - standard/docker
 - org/docker
