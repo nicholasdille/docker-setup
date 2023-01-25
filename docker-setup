@@ -150,17 +150,19 @@ REGCLIENT_VERSION=0.4.5
 if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
     debug "Installing regctl"
     mkdir -p "${docker_setup_cache}/bin"
-    curl --silent --location --output "${docker_setup_cache}/bin/regctl" \
-        "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-amd64"
+    curl --silent --location --fail --output "${docker_setup_cache}/bin/regctl" \
+        "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-${alt_arch}"
     chmod +x "${docker_setup_cache}/bin/regctl"
 fi
-JQ_VERSION=1.6
-if ! type jq >/dev/null 2>&1 || test "$(jq --version | cut -d- -f2)" != "${JQ_VERSION}"; then
-    debug "Installing jq"
+GOJQ_VERSION=0.12.11
+if ! type jq >/dev/null 2>&1 || test "$("${docker_setup_cache}/bin/jq" --version | cut -d' ' -f2)" != "${GOJQ_VERSION}"; then
+    debug "Installing (go)jq"
     mkdir -p "${docker_setup_cache}/bin"
-    curl --silent --location --output "${docker_setup_cache}/bin/jq" \
-        "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64"
-    chmod +x "${docker_setup_cache}/bin/jq"
+    curl --silent --location --fail "https://github.com/itchyny/gojq/releases/download/v${GOJQ_VERSION}/gojq_v${GOJQ_VERSION}_linux_${alt_arch}.tar.gz" \
+    | tar --extract --gzip --directory="${docker_setup_cache}/bin" --strip-components=1 \
+        gojq_v${GOJQ_VERSION}_linux_amd64/gojq
+    chmod +x "${docker_setup_cache}/bin/gojq"
+    mv "${docker_setup_cache}/bin/gojq" "${docker_setup_cache}/bin/jq"
 fi
 
 profile "Done with tools"
