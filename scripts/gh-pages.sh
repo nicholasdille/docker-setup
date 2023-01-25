@@ -63,7 +63,6 @@ cat <<EOF
 [See package on GitHub](https://github.com/nicholasdille/docker-setup/pkgs/container/docker-setup%2F${tool})
 EOF
 
-echo XXX
 SIZE="$(
     regctl manifest get ghcr.io/nicholasdille/docker-setup/${tool}:main --format raw-body \
     | jq -r '.manifests[] | select(.platform.architecture == "amd64") | .digest' \
@@ -86,13 +85,12 @@ ${SIZE_HUMAN}
 EOF
 fi
 
-echo YYY
 cat <<EOF
 
 ## Platforms
 
 EOF
-if jq --exit-status '.platforms == null' <<<"${TOOL_JSON}" >/dev/null 2>&1; then
+if jq --exit-status '.platforms != null' <<<"${TOOL_JSON}" >/dev/null 2>&1; then
     jq --raw-output '.platforms[]' <<<"${TOOL_JSON}" | paste -sd,
 else
     echo 'None'
