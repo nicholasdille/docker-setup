@@ -2,11 +2,22 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/parca-dev/parca-agent/releases/download/v${version}/parca-agent_${version}_Linux_${arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/parca-dev/parca-agent/releases/download/v${version}/parca-agent_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    parca-agent
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+printenv
+set -x
+curl --silent --location --fail "https://github.com/parca-dev/parca-agent/releases/download/v${version}/parca-agent_Linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     parca-agent
 EOF
