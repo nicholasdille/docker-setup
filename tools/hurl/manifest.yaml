@@ -1,5 +1,5 @@
 name: hurl
-version: "1.8.0"
+version: "2.0.0"
 check: ${binary} --version | grep ^hurl | cut -d' ' -f2
 tags:
 - category/development
