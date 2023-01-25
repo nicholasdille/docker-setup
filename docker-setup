@@ -154,7 +154,7 @@ if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr 
         "https://github.com/regclient/regclient/releases/download/v${REGCLIENT_VERSION}/regctl-linux-${alt_arch}"
     chmod +x "${docker_setup_cache}/bin/regctl"
 fi
-GOJQ_VERSION=0.12.11
+GOJQ_VERSION=1.6
 if ! type jq >/dev/null 2>&1 || test "$("${docker_setup_cache}/bin/jq" --version | cut -d' ' -f2)" != "${GOJQ_VERSION}"; then
     debug "Installing (go)jq"
     mkdir -p "${docker_setup_cache}/bin"
