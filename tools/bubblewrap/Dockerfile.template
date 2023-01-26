@@ -28,7 +28,8 @@ curl --silent --location --fail "https://github.com/containers/bubblewrap/releas
 make LDFLAGS=-static
 find . -type f
 make install
-rm -f "/usr/local/man"
+mv /usr/local/share/zsh/site-functions /usr/local/share/zsh/vendor-completions
+rm -f /usr/local/man
 EOF
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare

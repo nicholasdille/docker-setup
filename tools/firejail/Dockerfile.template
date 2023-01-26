@@ -19,6 +19,7 @@ git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" 
 ./configure --prefix=/usr/local
 make
 make install-strip
+mv /usr/local/share/zsh/site-functions /usr/local/share/zsh/vendor-completions
 rm -f /usr/local/man
 rm -f /usr/local/sbin/unminimize
 EOF

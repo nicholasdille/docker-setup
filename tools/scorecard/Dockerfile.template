@@ -11,7 +11,7 @@ curl --silent --location --fail "https://github.com/ossf/scorecard/releases/down
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     scorecard-linux-${alt_arch}
 mv "${prefix}${target}/bin/scorecard-linux-${alt_arch}" "${prefix}${target}/bin/scorecard"
-"${prefix}${target}/bin/scorecard" completion bash >"${prefix}${target}/share/bash-completion/completions/scorecard"
-"${prefix}${target}/bin/scorecard" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/scorecard.fish"
-"${prefix}${target}/bin/scorecard" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_scorecard"
+"${prefix}${target}/bin/scorecard" completion bash | sed 's|./scorecard|scorecard|g' >"${prefix}${target}/share/bash-completion/completions/scorecard"
+"${prefix}${target}/bin/scorecard" completion fish | sed 's|./scorecard|scorecard|g' >"${prefix}${target}/share/fish/vendor_completions.d/scorecard.fish"
+"${prefix}${target}/bin/scorecard" completion zsh  | sed 's|./scorecard|scorecard|g' >"${prefix}${target}/share/zsh/vendor-completions/_scorecard"
 EOF
