@@ -1,5 +1,5 @@
 name: stargz-snapshotter
-version: "0.14.0"
+version: "0.14.1"
 binary: containerd-stargz-grpc
 check: ${binary} -version | cut -d' ' -f2 | tr -d v
 runtime_dependencies:
