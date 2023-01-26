@@ -1,5 +1,5 @@
 name: rust
-version: "1.66.1"
+version: "1.67.0"
 binary: rustc
 check: ${binary} --version | cut -d' ' -f2
 tags:
