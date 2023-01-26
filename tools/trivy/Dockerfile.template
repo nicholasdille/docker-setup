@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=cosign / /
+ARG TARGETPLATFORM
 ARG name
 ARG version
 RUN <<EOF
