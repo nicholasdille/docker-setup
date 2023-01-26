@@ -15,13 +15,14 @@ case "${arch}" in
         export alt_arch2=64bit
         ;;
     aarch64)
-        export alta_arch2=ARM64
+        export alt_arch2=ARM64
         ;;
     *)
         echo "ERROR: Unsupported architecture ${arch}."
         exit 1
         ;;
 esac
+echo "    Using ${alt_arch2}"
 
 echo "### Downloading trivy ${version}"
 curl --silent --location --fail --remote-name \
