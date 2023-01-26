@@ -1,5 +1,5 @@
 name: loki
-version: "2.7.1"
+version: "2.7.2"
 check: "" # Wrong version
 tags:
 - org/grafana

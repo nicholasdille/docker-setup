@@ -1,5 +1,5 @@
 name: promtail
-version: "2.7.1"
+version: "2.7.2"
 check: "" # Empty version
 tags:
 - org/grafana
