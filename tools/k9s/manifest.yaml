@@ -1,6 +1,9 @@
 name: k9s
 version: "0.27.0"
 check: ${binary} version --short | grep "^Version" | cut -dv -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/tui
 - kubernetes

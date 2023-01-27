@@ -7,7 +7,8 @@ ARG name
 ARG version
 
 RUN <<EOF
-curl --silent --location --fail "https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${arch}.tar.gz" \
+set -x
+curl --silent --location --fail "https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     k9s
 EOF
