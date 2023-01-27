@@ -82,12 +82,13 @@ $(addsuffix --deep,$(ALL_TOOLS_RAW)):%--deep: info metadata.json
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd' ')"; \
 	if test -z "$${DEPS}"; then \
 		echo "No deps for $*"; \
-		exit; \
+	else \
+		for DEP in $${DEPS}; do \
+			echo "Making deps: $${DEPS}."; \
+			make $${DEP}; \
+		done; \
 	fi; \
-	for DEP in $${DEPS}; do \
-		echo "Making deps: $${DEPS}."; \
-		make $${DEP}; \
-	done
+	make $*
 
 .PHONY:
 push: PUSH=true
