@@ -2,17 +2,23 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
 ARG name
 ARG version
-RUN --platform=amd64 <<EOF
+RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${version}/arkade"
 chmod +x "${prefix}${target}/bin/arkade"
 EOF
-RUN --platform=arm64 <<EOF
-curl --silent --location --fail --output "${prefix}${target}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${version}/arkade.${alt_arch}"
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/arkade" "https://github.com/alexellis/arkade/releases/download/${version}/arkade-${alt_arch}"
 chmod +x "${prefix}${target}/bin/arkade"
 EOF
+
+FROM download AS prepare
 RUN <<EOF
 "${prefix}${target}/bin/arkade" completion bash >"${prefix}${target}/share/bash-completion/completions/arkade"
 "${prefix}${target}/bin/arkade" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/arkade.fish"
