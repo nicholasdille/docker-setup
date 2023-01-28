@@ -1,6 +1,9 @@
 name: cadvisor
 version: "0.47.0"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/google
 - category/monitoring

@@ -1,6 +1,9 @@
 name: cmctl
 version: "1.11.0"
 check: ${binary} version --client --short | cut -dv -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - kubernetes

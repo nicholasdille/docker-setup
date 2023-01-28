@@ -1,6 +1,9 @@
 name: cnitool
 version: "1.1.2"
 check: "" # No version parameter
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - standard/cni
 - component/network

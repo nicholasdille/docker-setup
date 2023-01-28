@@ -1,15 +1,13 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY docker-compose-cli-plugin ${prefix}${target}/libexec/docker/cli-plugins/docker-compose
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/docker-compose" \
-    "https://github.com/docker/compose/releases/download/${version}/docker-compose-Linux-x86_64"
+    "https://github.com/docker/compose/releases/download/${version}/docker-compose-Linux-${arch}"
 chmod +x "${prefix}${target}/bin/docker-compose"
 EOF

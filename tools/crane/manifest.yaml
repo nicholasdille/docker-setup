@@ -1,6 +1,9 @@
 name: crane
 version: "0.13.0"
 check: ${binary} version
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/google
 - standard/oci

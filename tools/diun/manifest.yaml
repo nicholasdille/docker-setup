@@ -1,6 +1,9 @@
 name: diun
 version: "4.24.0"
 check: ${binary} --version
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - standard/oci
 - type/daemon

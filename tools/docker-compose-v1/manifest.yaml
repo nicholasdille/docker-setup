@@ -2,6 +2,8 @@ name: docker-compose-v1
 version: "1.29.2"
 binary: docker-compose
 check: ${binary} version --short
+platforms:
+- linux/amd64
 flags:
 - docker-compose-v1
 tags:

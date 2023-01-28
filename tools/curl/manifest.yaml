@@ -1,6 +1,9 @@
 name: curl
 version: "7.87.0"
 check: ${binary} --version | grep ^curl | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - component/network

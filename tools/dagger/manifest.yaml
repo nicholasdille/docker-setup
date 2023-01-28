@@ -1,6 +1,9 @@
 name: dagger
 version: "0.3.10"
 check: ${binary} version | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - management
