@@ -3,7 +3,7 @@ check: $(HELPER)/var/lib/docker-setup/manifests/shellcheck.json
 	@shellcheck docker-setup
 
 .PHONY:
-check-tools: check-tools-homepage check-tools-description check-tools-deps check-tools-tags check-tools-renovate
+check-tools: check-tools-homepage check-tools-description check-tools-runtime-deps check-tools-build-deps check-tools-tags check-tools-renovate check-tools-platforms
 
 .PHONY:
 check-tools-homepage: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
@@ -110,3 +110,15 @@ assert-no-hardcoded-version:
 	| grep -v "^FROM " \
 	| grep -v "^ARG " \
 	| grep -v "127.0.0.1"
+
+.PHONY:
+check-tools-platforms: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
+	@\
+	TOOLS="$$(jq --raw-output '.tools[] | select(.platforms == null) | .name' metadata.json)"; \
+	if test -n "$${TOOLS}"; then \
+		echo "$(YELLOW)Tools missing renovate:$(RESET)"; \
+		echo "$${TOOLS}" \
+		| while read TOOL; do \
+			echo "- $${TOOL}"; \
+		done; \
+	fi
