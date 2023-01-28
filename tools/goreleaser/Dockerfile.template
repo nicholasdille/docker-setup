@@ -4,13 +4,31 @@ ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+ARG name
+ARG version
+RUN <<EOF
+echo "### Downloading goreleaser ${version}"
+curl --silent --location --fail --output "goreleaser_Linux_${alt_arch}.tar.gz" "https://github.com/goreleaser/goreleaser/releases/download/v${version}/goreleaser_Linux_${arch}.tar.gz"
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+ARG name
+ARG version
+RUN <<EOF
+set -x
+echo "### Downloading goreleaser ${version}"
+curl --silent --location --fail --output "goreleaser_Linux_${alt_arch}.tar.gz" "https://github.com/goreleaser/goreleaser/releases/download/v${version}/goreleaser_Linux_${alt_arch}.tar.gz"
+EOF
+
+FROM download AS prepare
 COPY --link --from=cosign / /
 ARG name
 ARG version
 RUN <<EOF
 echo "### Downloading checksums"
 curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/checksums.txt"
+sha256sum --check --ignore-missing checksums.txt
 
 echo "### Downloading signature and certificate"
 curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/checksums.txt.sig"
@@ -31,12 +49,8 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob checksums.txt \
     --certificate-github-workflow-ref "refs/tags/v${version}" \
     --certificate-github-workflow-sha "${SHA}"
 
-echo "### Downloading goreleaser ${version}"
-curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/goreleaser_Linux_${arch}.tar.gz"
-sha256sum --check --ignore-missing checksums.txt
-
 echo "### Unpacking"
-tar --extract --gzip --file "goreleaser_Linux_${arch}.tar.gz" --directory="${prefix}${target}/bin/" --no-same-owner \
+tar --extract --gzip --file "goreleaser_Linux_${alt_arch}.tar.gz" --directory="${prefix}${target}/bin/" --no-same-owner \
     goreleaser \
     manpages \
     completions
