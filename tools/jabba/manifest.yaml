@@ -1,13 +1,13 @@
 name: jabba
-version: "0.11.2"
+version: "0.12.0"
 check: ${binary} --version
 tags:
 - type/cli
 - category/development
 - lang/go
 - state/stale
-homepage: https://github.com/shyiko/jabba
+homepage: https://github.com/Jabba-Team/jabba
 description: Java Version Manager
 renovate:
   datasource: github-releases
-  package: shyiko/jabba
+  package: Jabba-Team/jabba

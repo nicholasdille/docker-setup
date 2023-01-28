@@ -2084,7 +2084,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "shyiko/jabba",
+      "depNameTemplate": "Jabba-Team/jabba",
       "datasourceTemplate": "github-releases"
     },
     {

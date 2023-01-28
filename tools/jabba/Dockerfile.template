@@ -1,13 +1,12 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/jabba" \
-    "https://github.com/shyiko/jabba/releases/download/${version}/jabba-${version}-linux-${alt_arch}"
+    "https://github.com/Jabba-Team/jabba/releases/download/${version}/jabba-${version}-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/jabba"
 EOF
