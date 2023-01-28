@@ -2,6 +2,9 @@ name: iptables
 version: "1.8.8"
 binary: ${target}/sbin/iptables
 check: ${binary} -V | cut -d' ' -f2 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 if: is_rockylinux
 tags:
 - component/network

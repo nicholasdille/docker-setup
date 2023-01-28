@@ -11,15 +11,15 @@ COPY --from=cosign / /
 COPY kubectl.sh ${prefix}/etc/profile.d/
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/kubectl" \
-    "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl"
+    "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl"
 chmod +x "${prefix}${target}/bin/kubectl"
 
 if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
     echo "Verifying keyless signature for kubectl"
     curl --silent --location --fail --output "/tmp/kubectl.sig" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl.sig"
+        "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl.sig"
     curl --silent --location --fail --output "/tmp/kubectl.cert" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl.cert"
+        "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl.cert"
     COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kubectl" \
         --signature "/tmp/kubectl.sig" \
         --certificate "/tmp/kubectl.cert" \
@@ -37,9 +37,9 @@ chmod +x "${prefix}${target}/bin/kubectl-convert"
 if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
     echo "Verifying keyless signature for kubectl-convert"
     curl --silent --location --fail --output "/tmp/kubectl-convert.sig" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl-convert.sig"
+        "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert.sig"
     curl --silent --location --fail --output "/tmp/kubectl-convert.cert" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubectl-convert.cert"
+        "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl-convert.cert"
     COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kubectl-convert" \
         --signature "/tmp/kubectl-convert.sig" \
         --certificate "/tmp/kubectl-convert.cert" \

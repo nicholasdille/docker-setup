@@ -1,6 +1,9 @@
 name: minikube
 version: "1.29.0"
 check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - org/kubernetes

@@ -1,6 +1,9 @@
 name: krew
 version: "0.4.3"
 check: ${binary} version 2>/dev/null | grep GitTag | tr -s ' ' | cut -d' ' -f2 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - org/kubernetes

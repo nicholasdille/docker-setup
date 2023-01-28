@@ -1,6 +1,9 @@
 name: go
 version: "1.19.5"
 check: ${binary} version | cut -d' ' -f3 | tr -d go
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - category/development

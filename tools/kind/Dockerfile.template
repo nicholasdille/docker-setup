@@ -1,11 +1,10 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/kind" \
     "https://github.com/kubernetes-sigs/kind/releases/download/v${version}/kind-linux-${alt_arch}"

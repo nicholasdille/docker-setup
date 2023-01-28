@@ -1,6 +1,9 @@
 name: kustomize
 version: "4.5.7"
 check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - org/kubernetes

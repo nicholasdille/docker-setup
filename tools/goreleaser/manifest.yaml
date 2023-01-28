@@ -5,6 +5,9 @@ build_dependencies:
 - cosign
 runtime_dependencies:
 - go
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/development
 - cicd

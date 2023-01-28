@@ -1,6 +1,9 @@
 name: oras
 version: "0.16.0"
 check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - container/registry
 - component/storage

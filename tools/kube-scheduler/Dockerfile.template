@@ -13,19 +13,17 @@ curl --silent --location --fail --output "${prefix}${target}/bin/kube-scheduler"
     "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kube-scheduler"
 chmod +x "${prefix}${target}/bin/kube-scheduler"
 
-if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
-    echo "Verifying keyless signature for kube-scheduler"
-    curl --silent --location --fail --output "/tmp/kube-scheduler.sig" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kube-scheduler.sig"
-    curl --silent --location --fail --output "/tmp/kube-scheduler.cert" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kube-scheduler.cert"
-    COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-scheduler" \
-        --signature "/tmp/kube-scheduler.sig" \
-        --certificate "/tmp/kube-scheduler.cert" \
-        --certificate-oidc-issuer https://accounts.google.com \
-        --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
-    rm -f \
-        "/tmp/kube-scheduler.sig" \
-        "/tmp/kube-scheduler.cert"
-fi
+echo "Verifying keyless signature for kube-scheduler"
+curl --silent --location --fail --output "/tmp/kube-scheduler.sig" \
+    "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kube-scheduler.sig"
+curl --silent --location --fail --output "/tmp/kube-scheduler.cert" \
+    "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kube-scheduler.cert"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-scheduler" \
+    --signature "/tmp/kube-scheduler.sig" \
+    --certificate "/tmp/kube-scheduler.cert" \
+    --certificate-oidc-issuer https://accounts.google.com \
+    --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+rm -f \
+    "/tmp/kube-scheduler.sig" \
+    "/tmp/kube-scheduler.cert"
 EOF

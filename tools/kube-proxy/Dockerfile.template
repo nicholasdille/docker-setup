@@ -13,19 +13,17 @@ curl --silent --location --fail --output "${prefix}${target}/bin/kube-proxy" \
     "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kube-proxy"
 chmod +x "${prefix}${target}/bin/kube-proxy"
 
-if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
-    echo "Verifying keyless signature for kube-proxy"
-    curl --silent --location --fail --output "/tmp/kube-proxy.sig" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kube-proxy.sig"
-    curl --silent --location --fail --output "/tmp/kube-proxy.cert" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kube-proxy.cert"
-    COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-proxy" \
-        --signature "/tmp/kube-proxy.sig" \
-        --certificate "/tmp/kube-proxy.cert" \
-        --certificate-oidc-issuer https://accounts.google.com \
-        --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
-    rm -f \
-        "/tmp/kube-proxy.sig" \
-        "/tmp/kube-proxy.cert"
-fi
+echo "Verifying keyless signature for kube-proxy"
+curl --silent --location --fail --output "/tmp/kube-proxy.sig" \
+    "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kube-proxy.sig"
+curl --silent --location --fail --output "/tmp/kube-proxy.cert" \
+    "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kube-proxy.cert"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-proxy" \
+    --signature "/tmp/kube-proxy.sig" \
+    --certificate "/tmp/kube-proxy.cert" \
+    --certificate-oidc-issuer https://accounts.google.com \
+    --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+rm -f \
+    "/tmp/kube-proxy.sig" \
+    "/tmp/kube-proxy.cert"
 EOF

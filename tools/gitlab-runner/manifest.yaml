@@ -1,6 +1,9 @@
 name: gitlab-runner
 version: "15.8.0"
 check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/gitlab
 - category/development

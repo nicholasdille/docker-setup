@@ -2,13 +2,26 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
 ARG name
 ARG version
 RUN <<EOF
 curl --silent --location --fail "https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     crane
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    crane
+EOF
+
+FROM download AS prepare
+RUN <<EOF
 "${prefix}${target}/bin/crane" completion bash >"${prefix}${target}/share/bash-completion/completions/crane"
 "${prefix}${target}/bin/crane" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/crane.fish"
 "${prefix}${target}/bin/crane" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_crane"

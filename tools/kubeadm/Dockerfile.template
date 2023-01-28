@@ -17,9 +17,9 @@ chmod +x "${prefix}${target}/bin/kubeadm"
 if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.0-beta.0"; then
     echo "Verifying keyless signature for kubeadm"
     curl --silent --location --fail --output "/tmp/kubeadm.sig" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubeadm.sig"
+        "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubeadm.sig"
     curl --silent --location --fail --output "/tmp/kubeadm.cert" \
-        "https://dl.k8s.io/release/v${version}/bin/linux/amd64/kubeadm.cert"
+        "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubeadm.cert"
     COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kubeadm" \
         --signature "/tmp/kubeadm.sig" \
         --certificate "/tmp/kubeadm.cert" \

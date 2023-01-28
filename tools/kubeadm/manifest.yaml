@@ -5,6 +5,9 @@ build_dependencies:
 - cosign
 runtime_dependencies:
 - kubelet
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - org/kubernetes

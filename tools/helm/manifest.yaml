@@ -1,6 +1,9 @@
 name: helm
 version: "3.11.0"
 check: ${binary} version --short 2>/dev/null | cut -d+ -f1 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - kubernetes

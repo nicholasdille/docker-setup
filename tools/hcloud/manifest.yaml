@@ -1,6 +1,9 @@
 name: hcloud
 version: "1.31.1"
 check: ${binary} version | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - cloud/hetzner
 - type/cli

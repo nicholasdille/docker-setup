@@ -1,6 +1,9 @@
 name: rootlesskit
 version: "1.1.0"
 check: ${binary} --version | cut -d' ' -f3
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - rootless

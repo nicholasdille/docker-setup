@@ -1,6 +1,9 @@
 name: hugo
 version: "0.110.0"
 check: ${binary} version | cut -d' ' -f2 | cut -d- -f1 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/development
 - lang/go

@@ -3,6 +3,9 @@ version: "1.26.1"
 check: ${binary} version --client --short 2>/dev/null | grep ^Client | cut -d' ' -f3 | tr -d v
 build_dependencies:
 - cosign
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - org/kubernetes
