@@ -6,6 +6,11 @@ FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=go / /
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    make
+EOF
 WORKDIR /go/src/github.com/containerd/imgcrypt
 ARG name
 ARG version

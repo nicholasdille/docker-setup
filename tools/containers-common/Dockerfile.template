@@ -1,14 +1,13 @@
 #syntax=docker/dockerfile:1.5.1
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go-md2man / /
 ARG name
 ARG version
-
-COPY --link --from=go-md2man / /
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/share/man/man5/Containerfile.5.md" \
     "https://github.com/containers/common/raw/v${version}/docs/Containerfile.5.md"
