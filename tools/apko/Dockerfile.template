@@ -2,20 +2,23 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    make
+EOF
 WORKDIR /go/src/github.com/chainguard-dev/apko
 ARG name
 ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/chainguard-dev/apko .
 make apko
-cp apko /usr/local/bin/
+cp apko "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --link --from=build /usr/local/bin/apko ${prefix}${target}/bin/
 RUN <<EOF
 "${prefix}${target}/bin/apko" completion bash >"${prefix}${target}/share/bash-completion/completions/apko"
 "${prefix}${target}/bin/apko" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/apko.fish"

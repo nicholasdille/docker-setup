@@ -2,21 +2,17 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/in-toto/in-toto-golang
 ARG name
 ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/in-toto/in-toto-golang .
 make build
-cp bin/in-toto /usr/local/bin/
-EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/in-toto ${prefix}${target}/bin/
-RUN <<EOF
+cp bin/in-toto "${prefix}${target}/bin/"
 "${prefix}${target}/bin/in-toto" completion bash >"${prefix}${target}/share/bash-completion/completions/in-toto"
 "${prefix}${target}/bin/in-toto" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/in-toto.fish"
 "${prefix}${target}/bin/in-toto" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_in-toto"

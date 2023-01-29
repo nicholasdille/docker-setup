@@ -3,6 +3,9 @@ version: "0.3.0"
 check: XDG_RUNTIME_DIR=foo ${binary} --version | grep ^bypass4netns | cut -d' ' -f3
 runtime_dependencies:
 - slirp4netns
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - component/network
 - type/cli

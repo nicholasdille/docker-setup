@@ -2,20 +2,18 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/guacsec/guac
 ARG name
 ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/guacsec/guac .
 make build
-cp bin/guacone /usr/local/bin/
+cp bin/guacone "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/guacone ${prefix}${target}/bin/
 RUN <<EOF
 "${prefix}${target}/bin/guacone" completion bash >"${prefix}${target}/share/bash-completion/completions/guacone"
 "${prefix}${target}/bin/guacone" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/guacone.fish"

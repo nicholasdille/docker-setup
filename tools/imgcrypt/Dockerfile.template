@@ -2,7 +2,10 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/containerd/imgcrypt
 ARG name
 ARG version
@@ -13,8 +16,4 @@ sed -i -E "s/ --dirty='.m' / /" Makefile
 make
 make install DESTDIR=/opt/imgcrypt
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
 COPY --from=build /opt/imgcrypt/ ${prefix}${target}/

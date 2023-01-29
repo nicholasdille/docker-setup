@@ -1,6 +1,11 @@
 name: emojisum
 version: "2"
 check: "" # No version parameter
+build_dependencies:
+- go
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/security
 - type/cli

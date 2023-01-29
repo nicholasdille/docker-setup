@@ -2,7 +2,9 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 RUN <<EOF
 apt-get update
 apt-get -y install \
@@ -17,6 +19,4 @@ RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/salesforce/sloop .
 make
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --from=build /go/bin/sloop "${prefix}${target}/bin/"
