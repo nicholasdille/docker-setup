@@ -1,8 +1,13 @@
 name: apko
 version: "0.6.0"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+build_dependencies:
+- go
 runtime_dependencies:
 - apk
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - package

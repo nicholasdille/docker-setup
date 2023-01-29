@@ -2,7 +2,10 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/keybase/client
 ARG name
 ARG version
@@ -10,15 +13,5 @@ RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/keybase/client .
 cd go
 go build -tags production -o keybase github.com/keybase/client/go/keybase
-cp keybase/keybase /usr/local/bin/
+cp keybase/keybase "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/keybase ${prefix}${target}/bin/
-#RUN <<EOF
-#"${prefix}${target}/bin/apko" completion bash >"${prefix}${target}/share/bash-completion/completions/apko"
-#"${prefix}${target}/bin/apko" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/apko.fish"
-#"${prefix}${target}/bin/apko" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_apko"
-#EOF

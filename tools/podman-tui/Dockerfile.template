@@ -2,7 +2,10 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/containers/podman-tui
 ARG name
 ARG version
@@ -10,10 +13,5 @@ RUN <<EOF
 export CGO_ENABLED=0
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/podman-tui .
 go build -mod=vendor -o ./bin/linux/podman-tui -tags "containers_image_openpgp remote"
-cp ./bin/linux/podman-tui /usr/local/bin/
+cp ./bin/linux/podman-tui "${prefix}${target}/bin/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/podman-tui ${prefix}${target}/bin/

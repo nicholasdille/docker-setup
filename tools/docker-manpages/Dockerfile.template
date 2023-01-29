@@ -2,7 +2,10 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/docker/cli
 ARG name
 ARG version
@@ -12,11 +15,6 @@ ENV GO111MODULE=auto \
 RUN sed -i -E 's|^(\s+)(log.Printf\("WARN:)|\1//\2|' man/generate.go \
  && sed -i -E 's|^(\s+)"log"||' man/generate.go \
  && make manpages
-RUN cp -r man/man1 /usr/local/share/man/ \
- && cp -r man/man5 /usr/local/share/man/ \
- && cp -r man/man8 /usr/local/share/man/
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/share/man/ ${prefix}${target}/share/man/
+RUN cp -r man/man1 "${prefix}${target}/share/man/" \
+ && cp -r man/man5 "${prefix}${target}/share/man/" \
+ && cp -r man/man8 "${prefix}${target}/share/man/"

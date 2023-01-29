@@ -2,11 +2,12 @@
 
 ARG ref=main
 
-FROM golang:1.20.0@sha256:f69d47fedd3b2ebd23bcf473c0b78522ebbc1823f06b7d47f45f04a30bdc901d AS build
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 RUN <<EOF
 apt-get update
 apt-get -y install \
-    git \
     make
 EOF
 WORKDIR $GOPATH/src/github.com/cpuguy83/go-md2man
@@ -15,13 +16,6 @@ ARG version
 RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/cpuguy83/go-md2man.git .
 ENV CGO_ENABLED=0
 RUN make bin/go-md2man \
- && mv bin/go-md2man /usr/local/bin/
-RUN mkdir -p /usr/local/share/man/man1/ \
- && go-md2man -in ./go-md2man.1.md -out ./go-md2man.1 \
- && mv go-md2man.1 /usr/local/share/man/man1/
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /usr/local/bin/ ${prefix}${target}/bin/
-COPY --from=build /usr/local/share/ ${prefix}${target}/share/
+ && mv bin/go-md2man "${prefix}${target}/bin/"
+RUN go-md2man -in ./go-md2man.1.md -out ./go-md2man.1 \
+ && mv go-md2man.1 "${prefix}${target}/share/man/man1/"
