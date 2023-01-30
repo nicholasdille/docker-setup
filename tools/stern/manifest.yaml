@@ -1,5 +1,5 @@
 name: stern
-version: "1.22.0"
+version: "1.23.0"
 check: ${binary} --version | grep ^version | cut -d' ' -f2
 tags:
 - type/cli
