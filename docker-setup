@@ -755,10 +755,15 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            echo "Building image ${image} with $# tool(s)..."
+            shift
+            platform=$1
+            if test -z "${platform}"; then
+                platform=amd64
+            fi
+            echo "Building image ${image} for ${platform} with $# tool(s)..."
             # shellcheck disable=SC2086
             generate ${install_tools} \
-            | docker build --tag "${image}" -
+            | docker buildx build --platform "linux/${platform}" --tag "${image}" --load -
             ;;
 
         install|i)
@@ -832,14 +837,18 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
-            shift
             debug "Using prefix ${prefix} and target ${target}"
             if test -n "${prefix}"; then
                 mkdir -p "${prefix}"
             fi
+            shift
+            platform=$1
+            if test -z "${platform}"; then
+                platform=amd64
+            fi
             # shellcheck disable=SC2086
             generate ${install_tools} \
-            | docker build --output "${prefix}${target}" -
+            | docker buildx build --platform "linux/${platform}" --output "${prefix}${target}" -
             # TODO: post_install
             ;;
 
@@ -849,6 +858,10 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
+            platform=$1
+            if test -z "${platform}"; then
+                platform=amd64
+            fi
             debug "Using prefix ${prefix} and target ${target}"
             if test -n "${prefix}"; then
                 mkdir -p "${prefix}"
@@ -856,14 +869,14 @@ while test "$#" -gt 0; do
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
-                docker image pull --quiet "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
+                docker image pull --quiet --platform "linux/${platform}" "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
                 echo "${emoji_layer} Reading layers"
                 docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
                 | tar --extract --to-stdout manifest.json \
                 | jq --raw-output '.[].Layers[]' \
                 | while read -r FILE; do
                     echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
-                    docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
+                    docker image save --platform "linux/${platform}" "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
                     | tar --extract --to-stdout "${FILE}" \
                     | tar --extract --directory="${prefix}${target}" --strip-components=2
                 done
@@ -889,7 +902,12 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            docker create --name docker-setup-install-flat "${base}"
+            shift
+            platform=$1
+            if test -z "${platform}"; then
+                platform=amd64
+            fi
+            docker create --name docker-setup-install-flat --platform "linux/${platform}" "${base}"
             for tool in ${install_tools}; do
                 echo "${emoji_tool} Processing ${tool}"
                 MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
@@ -933,6 +951,10 @@ while test "$#" -gt 0; do
                 exit 1
             fi
             shift
+            platform=$1
+            if test -z "${platform}"; then
+                platform=amd64
+            fi
             debug "Using prefix ${prefix} and target ${target}"
             mkdir -p "${prefix}"
             if ! test -d "${docker_setup_cache}/repo/.git"; then
@@ -945,13 +967,14 @@ while test "$#" -gt 0; do
                 echo "${emoji_tool} Processing ${name}"
                 make -C "${docker_setup_cache}/repo" "tools/${name}/Dockerfile" "tools/${name}/manifest.json"
                 version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
-                docker build "${docker_setup_cache}/repo/tools/${name}" \
+                docker buildx build "${docker_setup_cache}/repo/tools/${name}" \
                     --build-arg "branch=${tools_version}" \
                     --build-arg "ref=${tools_version}" \
                     --build-arg "name=${name}" \
                     --build-arg "version=${version}" \
                     --build-arg "deps=${deps}" \
                     --build-arg "tags=${tags}" \
+                    --platform "linux/${platform}" \
                     --output "type=local,dest=${prefix}${target}"
             done
             # TODO: post_install
