@@ -3,6 +3,8 @@ version: "0.17.1"
 check: "" # No version parameter
 dependencies:
 - cosign
+platforms:
+- linux/amd64
 tags:
 - category/security
 - certificate

@@ -1,6 +1,8 @@
 name: cdebug
 version: "0.0.11"
 check: ${binary} --version | cut -d' ' -f3
+platforms:
+- linux/amd64
 tags:
 - category/development
 - type/cli

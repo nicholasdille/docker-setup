@@ -1,6 +1,8 @@
 name: containerssh
 version: "0.4.1"
 check: "" # No version parameter
+platforms:
+- linux/amd64
 tags:
 - type/daemon
 - category/security

@@ -1,6 +1,8 @@
 name: cfssl
 version: "1.6.3"
 check: "" # No version parameter
+platforms:
+- linux/amd64
 tags:
 - type/cli
 - category/security

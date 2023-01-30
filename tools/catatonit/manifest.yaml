@@ -1,6 +1,8 @@
 name: catatonit
 version: "0.1.7"
 check: ${binary} --version | cut -d' ' -f3 | cut -d_ -f1
+platforms:
+- linux/amd64
 tags:
 - type/cli
 - container/init

@@ -4,6 +4,9 @@ binary: false
 check: "" # No binary
 build_dependencies:
 - go-md2man
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/redhat
 - type/configuration
