@@ -4,7 +4,7 @@ ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=nodejs / /
 WORKDIR /tmp/node
 ARG name
@@ -21,3 +21,6 @@ globalconfig=/etc/npmrc
 globalignorefile=/etc/npmignore
 prefix=/usr/local
 EOF
+
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY <<EOF ${prefix}${target}/var/cache/docker-setup/npm-is-included-in-prebuilt-binaries-of-nodejs
