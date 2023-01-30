@@ -10,6 +10,7 @@ RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
     build-essential \
+    pkg-config \
     libseccomp-dev
 EOF
 WORKDIR /go/src/github.com/rootless-containers/bypass4netns
