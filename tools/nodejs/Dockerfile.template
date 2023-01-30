@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 WORKDIR /go/src/github.com/nodejs/node
 ARG name
 ARG version
@@ -41,4 +41,30 @@ curl -sL https://github.com/nodejs/node/archive/refs/tags/v${version}.tar.gz \
     --with-intl=small-icu
 make -j2
 make install
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR /go/src/github.com/nodejs/node
+ARG name
+ARG version
+RUN <<EOF
+MAJOR_VERSION="$(
+    curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
+    | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key' \
+    | tr -d v
+)"
+if test "${version%%.*}" == "${MAJOR_VERSION}"; then
+    echo "### Version ${version} matches latest LTS ${MAJOR_VERSION}"
+else
+    echo "### Version ${version} does not match latest LTS ${MAJOR_VERSION}"
+    exit 1
+fi
+EOF
+RUN <<EOF
+curl --silent --location --fail "https://nodejs.org/dist/v${version}/node-v${version}-linux-${alt_arch}.tar.xz" \
+| tar --extract --xz --directory="${prefix}${target}" --strip-components=1 --no-same-owner \
+    "node-v${version}-linux-${alt_arch}/bin" \
+    "node-v${version}-linux-${alt_arch}/include" \
+    "node-v${version}-linux-${alt_arch}/lib" \
+    "node-v${version}-linux-${alt_arch}/share"
 EOF
