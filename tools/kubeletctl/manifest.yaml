@@ -3,7 +3,6 @@ version: "1.10"
 check: ${binary} version 2>/dev/null | grep ^Version | cut -d' ' -f2
 platforms:
 - linux/amd64
-- linux/arm64
 tags:
 - type/cli
 - kubernetes
