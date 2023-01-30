@@ -4,9 +4,9 @@ check: ""
 runtime_dependencies:
 - openjdk-jre
 tags:
-- org/?
-- category/?
-- lang/?
+- category/development
+- lang/java
+- type/daemon
 homepage: https://github.com/neo4j/neo4j
 description: Graphs for Everyone
 renovate:

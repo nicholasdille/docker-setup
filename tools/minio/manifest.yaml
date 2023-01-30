@@ -2,8 +2,9 @@ name: minio
 version: "2023-01-25T00-19-54Z"
 check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
 tags:
-- category/?
-- lang/?
+- component/storage
+- lang/go
+- type/daemon
 homepage: https://github.com/minio/minio
 description: Multi-Cloud ☁️ Object Storage
 renovate:

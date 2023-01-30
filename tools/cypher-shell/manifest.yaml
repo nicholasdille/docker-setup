@@ -4,8 +4,9 @@ check: ""
 runtime_dependencies:
 - openjdk-jre
 tags:
-- category/?
-- lang/?
+- category/development
+- lang/java
+- type/cli
 homepage: https://github.com/neo4j/neo4j
 description: Run queries and perform administrative tasks against a Neo4j instance
 renovate:

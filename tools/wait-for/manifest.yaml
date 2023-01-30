@@ -2,7 +2,7 @@ name: wait-for
 version: "0.0.5"
 check: "" # No version parameter
 tags:
-- category/?
+- category/development
 - lang/go
 - type/cli
 homepage: https://github.com/dnnrly/wait-for
