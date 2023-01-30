@@ -4,17 +4,21 @@ import (
 	"context"
 	"fmt"
 	"encoding/json"
+	"os"
 	"time"
 
 	"github.com/regclient/regclient"
 	"github.com/regclient/regclient/types/ref"
+	"github.com/regclient/regclient/types/manifest"
 )
 
 func main() {
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(3 * time.Second))
+	fmt.Printf("Processing %s\n", os.Args[1])
+
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(10 * time.Second))
 	defer cancel()
 
-	r, err := ref.New("ghcr.io/nicholasdille/docker-setup/docker:main")
+	r, err := ref.New(os.Args[1])
 	if err != nil {
 		return
 	}
@@ -37,4 +41,38 @@ func main() {
         return
     }
     fmt.Println(string(b))
+
+	if m.IsList() {
+		fmt.Println("list")
+
+		if mi, ok := m.(manifest.Indexer); ok {
+			manifests, err := mi.GetManifestList()
+			if err != nil {
+				fmt.Println("Error getting manifests")
+				os.Exit(1)
+			}
+			fmt.Printf("Manifest count: %d\n", len(manifests))
+
+			for i, manifest := range manifests {
+				fmt.Printf("Manifest %d Platform %s\n", i, manifest.Platform.Architecture)
+				if manifest.Platform.Architecture == os.Args[2] {
+					// TODO fetch digest
+					break
+				}
+			}
+		}
+
+	} else {
+		fmt.Println("no list")
+
+		if mi, ok := m.(manifest.Imager); ok {
+			fmt.Printf("Type of mi: %T", mi)
+			layers, err := mi.GetLayers()
+			if err != nil {
+				fmt.Println("Error getting layers")
+				os.Exit(1)
+			}
+			fmt.Printf("Layer count: %d\n", len(layers))
+		}
+	}
 }
