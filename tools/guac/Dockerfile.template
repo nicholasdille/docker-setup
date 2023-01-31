@@ -14,6 +14,7 @@ EOF
 WORKDIR /go/src/github.com/guacsec/guac
 ARG name
 ARG version
+ENV CGO_ENABLED=0
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/guacsec/guac .
 make build
