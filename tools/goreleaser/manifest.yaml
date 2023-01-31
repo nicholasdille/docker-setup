@@ -1,5 +1,5 @@
 name: goreleaser
-version: "1.14.1"
+version: "1.15.0"
 check: ${binary} --version | head -1 | cut -d' ' -f3
 build_dependencies:
 - cosign
