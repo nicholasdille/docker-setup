@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM ubuntu:22.04@sha256:9dc05cf19a5745c33b9327dba850480dae80310972dea9b05052162e7c7f2763 AS build
+FROM ubuntu:22.04@sha256:f05532b6a1dec5f7a77a8d684af87bc9cd1f2b32eab301c109f8ad151b5565d1 AS build
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
