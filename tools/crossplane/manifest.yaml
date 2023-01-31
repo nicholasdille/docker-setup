@@ -1,5 +1,5 @@
 name: crossplane
-version: "1.10.2"
+version: "1.11.0"
 binary: kubectl-crossplane
 check: ${binary} --version | tr -d v
 runtime_dependencies:
