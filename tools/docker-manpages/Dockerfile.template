@@ -3,9 +3,11 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=go / /
+COPY --link --from=go-md2man / /
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
@@ -16,7 +18,8 @@ ARG name
 ARG version
 RUN git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/docker/cli .
 ENV GO111MODULE=auto \
-    DISABLE_WARN_OUTSIDE_CONTAINER=1
+    DISABLE_WARN_OUTSIDE_CONTAINER=1 \
+    GOPATH=/go
 RUN sed -i -E 's|^(\s+)(log.Printf\("WARN:)|\1//\2|' man/generate.go \
  && sed -i -E 's|^(\s+)"log"||' man/generate.go \
  && make manpages
