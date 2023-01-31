@@ -11,4 +11,7 @@ set -x
 curl --silent --location --fail "https://github.com/derailed/k9s/releases/download/v${version}/k9s_Linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     k9s
+"${prefix}${target}/bin/k9s" completion bash >"${prefix}${target}/share/bash-completion/completions/k9s"
+"${prefix}${target}/bin/k9s" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/k9s.fish"
+"${prefix}${target}/bin/k9s" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_k9s"
 EOF
