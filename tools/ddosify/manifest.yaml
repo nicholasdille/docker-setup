@@ -1,5 +1,5 @@
 name: ddosify
-version: "0.13.1"
+version: "0.13.2"
 check: ${binary} --version | head -1 | tr -s ' ' | cut -d' ' -f2
 tags:
 - category/security
