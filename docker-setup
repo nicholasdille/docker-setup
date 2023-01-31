@@ -755,10 +755,10 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            shift
-            platform=$1
-            if test -z "${platform}"; then
-                platform=amd64
+            platform=amd64
+            if test "$#" -gt 1; then
+                shift
+                platform=$1
             fi
             echo "Building image ${image} for ${platform} with $# tool(s)..."
             # shellcheck disable=SC2086
@@ -841,10 +841,10 @@ while test "$#" -gt 0; do
             if test -n "${prefix}"; then
                 mkdir -p "${prefix}"
             fi
-            shift
-            platform=$1
-            if test -z "${platform}"; then
-                platform=amd64
+            platform=amd64
+            if test "$#" -gt 1; then
+                shift
+                platform=$1
             fi
             # shellcheck disable=SC2086
             generate ${install_tools} \
@@ -857,10 +857,10 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
-            shift
-            platform=$1
-            if test -z "${platform}"; then
-                platform=amd64
+            platform=amd64
+            if test "$#" -gt 1; then
+                shift
+                platform=$1
             fi
             debug "Using prefix ${prefix} and target ${target}"
             if test -n "${prefix}"; then
@@ -902,10 +902,10 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            shift
-            platform=$1
-            if test -z "${platform}"; then
-                platform=amd64
+            platform=amd64
+            if test "$#" -gt 1; then
+                shift
+                platform=$1
             fi
             docker create --name docker-setup-install-flat --platform "linux/${platform}" "${base}"
             for tool in ${install_tools}; do
@@ -950,10 +950,10 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
-            shift
-            platform=$1
-            if test -z "${platform}"; then
-                platform=amd64
+            platform=amd64
+            if test "$#" -gt 1; then
+                shift
+                platform=$1
             fi
             debug "Using prefix ${prefix} and target ${target}"
             mkdir -p "${prefix}"
