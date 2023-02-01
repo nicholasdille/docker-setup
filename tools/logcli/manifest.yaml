@@ -1,5 +1,5 @@
 name: logcli
-version: "2.7.2"
+version: "2.7.3"
 check: "" # Wrong version
 tags:
 - org/grafana
