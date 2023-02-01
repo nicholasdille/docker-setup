@@ -3287,6 +3287,18 @@
     },
     {
       "fileMatch": [
+        "^tools/openjdk/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "openjdk/jdk",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^jdk-(?<version>.+?)-ga$",
+      "versioningTemplate": "loose"
+    },
+    {
+      "fileMatch": [
         "^tools/oras/manifest.yaml$"
       ],
       "matchStrings": [
