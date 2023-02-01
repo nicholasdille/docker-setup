@@ -5,24 +5,23 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 # agent
 RUN <<EOF
-url="https://github.com/grafana/agent/releases/download/v${version}/agent-linux-${alt_arch}.zip"
+url="https://github.com/grafana/agent/releases/download/v${version}/grafana-agent-linux-${alt_arch}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"
 unzip -q -o -d "${prefix}${target}/bin" "${filename}"
-mv "${prefix}${target}/bin/agent-linux-${alt_arch}" "${prefix}${target}/bin/agent"
+ls -l "${prefix}${target}/bin"
+mv "${prefix}${target}/bin/grafana-agent-linux-${alt_arch}" "${prefix}${target}/bin/grafana-agent"
 EOF
-
 # agentctl
 RUN <<EOF
-url="https://github.com/grafana/agent/releases/download/v${version}/agentctl-linux-${alt_arch}.zip"
+url="https://github.com/grafana/agent/releases/download/v${version}/grafana-agentctl-linux-${alt_arch}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"
 unzip -q -o -d "${prefix}${target}/bin" "${filename}"
-mv "${prefix}${target}/bin/agentctl-linux-${alt_arch}" "${prefix}${target}/bin/agentctl"
-"${prefix}${target}/bin/agentctl" completion bash >"${prefix}${target}/share/bash-completion/completions/agentctl"
-"${prefix}${target}/bin/agentctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/agentctl.fish"
-"${prefix}${target}/bin/agentctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_agentctl"
+mv "${prefix}${target}/bin/grafana-agentctl-linux-${alt_arch}" "${prefix}${target}/bin/grafana-agentctl"
+"${prefix}${target}/bin/grafana-agentctl" completion bash >"${prefix}${target}/share/bash-completion/completions/grafana-agentctl"
+"${prefix}${target}/bin/grafana-agentctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/grafana-agentctl.fish"
+"${prefix}${target}/bin/grafana-agentctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_grafana-agentctl"
 EOF
