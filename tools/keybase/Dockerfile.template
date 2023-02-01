@@ -5,6 +5,11 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential
+EOF
 COPY --link --from=go / /
 WORKDIR /go/src/github.com/keybase/client
 ARG name
@@ -12,6 +17,5 @@ ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/keybase/client .
 cd go
-go build -tags production -o keybase github.com/keybase/client/go/keybase
-cp keybase/keybase "${prefix}${target}/bin/"
+go build -tags production -o "${prefix}${target}/bin/keybase" github.com/keybase/client/go/keybase
 EOF
