@@ -3145,6 +3145,17 @@
     },
     {
       "fileMatch": [
+        "^tools/navi/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "denisidoro/navi",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/neo4j/manifest.yaml$"
       ],
       "matchStrings": [

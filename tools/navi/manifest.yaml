@@ -1,0 +1,15 @@
+name: navi
+version: "2.20.1"
+check: ""
+runtime_dependencies:
+- fzf
+tags:
+- category/development
+- lang/rust
+- type/cli
+homepage: https://github.com/denisidoro/navi
+description: Interactive cheatsheet tool for the command-line
+renovate:
+  datasource: github-releases
+  package: denisidoro/navi
+  extractVersion: ^v(?<version>.+?)$
