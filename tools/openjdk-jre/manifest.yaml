@@ -10,3 +10,8 @@ tags:
 - lang/java
 homepage: https://github.com/openjdk
 description: OpenJDK
+renovate:
+  datasource: github-tags
+  package: openjdk/jdk
+  extractVersion: ^jdk-(?<version>.+?)-ga$
+  versioning: loose
