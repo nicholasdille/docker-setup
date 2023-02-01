@@ -14,7 +14,8 @@ COPY --link --from=go / /
 WORKDIR /go/src/github.com/opencontainers/image-tools
 ARG name
 ARG version
-ENV GO111MODULE=auto \
+ENV CGO_ENABLED=0 \
+    GO111MODULE=auto \
     GOPATH=/go
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/image-tools .

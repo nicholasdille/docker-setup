@@ -5,17 +5,19 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --link --from=go / /
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
     make
 EOF
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/opencontainers/runtime-tools
 ARG name
 ARG version
+ENV CGO_ENABLED=0 \
+    GO111MODULE=auto \
+    GOPATH=/go
 RUN <<EOF
-export GO111MODULE=auto
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/opencontainers/runtime-tools .
 make tool
 cp oci-runtime-tool "${prefix}${target}/bin/"
