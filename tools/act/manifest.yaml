@@ -1,5 +1,5 @@
 name: act
-version: "0.2.40"
+version: "0.2.41"
 check: ${binary} --version | cut -d' ' -f3
 runtime_dependencies:
 - docker
