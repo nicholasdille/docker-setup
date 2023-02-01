@@ -1,5 +1,5 @@
 name: arkade
-version: "0.8.60"
+version: "0.8.61"
 check: ${binary} version | grep "Version" | cut -d' ' -f2
 platforms:
 - linux/amd64
