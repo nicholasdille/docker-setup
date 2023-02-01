@@ -11,12 +11,14 @@ apt-get -y install \
     ca-certificates \
     make
 EOF
+COPY --link --from=go / /
 WORKDIR /go/src/github.com/salesforce/sloop
 ARG name
 ARG version
-ENV GO111MODULE=auto
+ENV CGO_ENABLED=0 \
+    GO111MODULE=auto \
+    GOBIN=${prefix}${target}/bin
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/salesforce/sloop .
 make
 EOF
-COPY --from=build /go/bin/sloop "${prefix}${target}/bin/"
