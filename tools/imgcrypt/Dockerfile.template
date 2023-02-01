@@ -14,11 +14,11 @@ EOF
 WORKDIR /go/src/github.com/containerd/imgcrypt
 ARG name
 ARG version
+ENV CGO_ENABLED=0
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containerd/imgcrypt .
 sed -i -E 's/ -v / /' Makefile
 sed -i -E "s/ --dirty='.m' / /" Makefile
 make
-make install DESTDIR=/opt/imgcrypt
+make install DESTDIR="${prefix}${target}/"
 EOF
-COPY --from=build /opt/imgcrypt/ ${prefix}${target}/
