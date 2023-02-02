@@ -5,6 +5,8 @@ build_dependencies:
 - python
 runtime_dependencies:
 - python
+conflicts_with:
+- aws2
 tags:
 - org/amazon
 - category/development

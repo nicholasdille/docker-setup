@@ -4,6 +4,9 @@ binary: ${target}/libexec/docker-preview/bin/docker
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 runtime_dependencies:
 - fuse-overlayfs
+conflicts_with:
+- docker
+- docker-stable
 tags:
 - org/docker
 - standard/docker

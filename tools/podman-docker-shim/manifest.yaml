@@ -3,6 +3,8 @@ version: "0.1.0"
 check: "" # No version parameter
 runtime_dependencies:
 - podman
+conflicts_with:
+- docker
 tags:
 - org/redhat
 - standard/oci

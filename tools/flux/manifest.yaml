@@ -1,6 +1,8 @@
 name: flux
 version: "0.192.0"
 check: "" # No version parameter
+conflicts_with:
+- flux2
 tags:
 - org/influxdata
 - observability/metrics

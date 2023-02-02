@@ -4,8 +4,8 @@ binary: docker-compose
 check: ${binary} version --short
 platforms:
 - linux/amd64
-flags:
-- docker-compose-v1
+conflicts_with:
+- docker-compose
 tags:
 - org/docker
 - standard/docker

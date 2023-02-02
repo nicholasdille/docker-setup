@@ -2,6 +2,8 @@ name: flux2
 version: "0.38.3"
 binary: flux
 check: ${binary} --version | cut -d' ' -f3
+conflicts_with:
+- flux
 tags:
 - type/cli
 - gitops
