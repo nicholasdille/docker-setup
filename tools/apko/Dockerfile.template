@@ -15,7 +15,7 @@ EOF
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY --from=build /usr/local/bin/apko ${prefix}${target}/bin/
+COPY --link --from=build /usr/local/bin/apko ${prefix}${target}/bin/
 RUN <<EOF
 "${prefix}${target}/bin/apko" completion bash >"${prefix}${target}/share/bash-completion/completions/apko"
 "${prefix}${target}/bin/apko" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/apko.fish"
