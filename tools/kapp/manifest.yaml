@@ -9,9 +9,9 @@ tags:
 - package
 - management
 - lang/go
-homepage: https://github.com/vmware-tanzu/carvel-kapp
+homepage: https://github.com/carvel-dev/kapp
 description: Simple deployment tool focused on the concept of "Kubernetes application" — a set of resources with the same label
 renovate:
   datasource: github-releases
-  package: vmware-tanzu/carvel-kapp
+  package: carvel-dev/kapp
   extractVersion: ^v(?<version>.+?)$

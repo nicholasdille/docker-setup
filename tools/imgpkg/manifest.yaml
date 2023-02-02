@@ -7,9 +7,9 @@ tags:
 - type/cli
 - management
 - lang/go
-homepage: https://github.com/vmware-tanzu/carvel-imgpkg
+homepage: https://github.com/carvel-dev/imgpkg
 description: Store application configuration files in Docker/OCI registries
 renovate:
   datasource: github-releases
-  package: vmware-tanzu/carvel-imgpkg
+  package: carvel-dev/imgpkg
   extractVersion: ^v(?<version>.+?)$

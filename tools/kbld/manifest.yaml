@@ -7,9 +7,9 @@ tags:
 - container/build
 - kubernetes
 - lang/go
-homepage: https://github.com/vmware-tanzu/carvel-kbld
+homepage: https://github.com/carvel-dev/kbld
 description: Seamlessly incorporates image building and image pushing into your development and deployment workflows
 renovate:
   datasource: github-releases
-  package: vmware-tanzu/carvel-kbld
+  package: carvel-dev/kbld
   extractVersion: ^v(?<version>.+?)$

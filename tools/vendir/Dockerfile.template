@@ -8,6 +8,6 @@ ARG version
 
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/vendir" \
-    "https://github.com/vmware-tanzu/carvel-vendir/releases/download/v${version}/vendir-linux-${alt_arch}"
+    "https://github.com/carvel-dev/vendir/releases/download/v${version}/vendir-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/vendir"
 EOF

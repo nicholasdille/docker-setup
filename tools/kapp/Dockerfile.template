@@ -8,7 +8,7 @@ ARG version
 
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/kapp" \
-    "https://github.com/vmware-tanzu/carvel-kapp/releases/download/v${version}/kapp-linux-${alt_arch}"
+    "https://github.com/carvel-dev/kapp/releases/download/v${version}/kapp-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/kapp"
 "${prefix}${target}/bin/kapp" completion bash >"${prefix}${target}/share/bash-completion/completions/kapp"
 "${prefix}${target}/bin/kapp" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kapp.fish"

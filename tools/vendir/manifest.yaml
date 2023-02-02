@@ -7,9 +7,9 @@ tags:
 - type/cli
 - cicd
 - lang/go
-homepage: https://github.com/vmware-tanzu/carvel-vendir
+homepage: https://github.com/carvel-dev/vendir
 description: Easy way to vendor declaratively
 renovate:
   datasource: github-releases
-  package: vmware-tanzu/carvel-vendir
+  package: carvel-dev/vendir
   extractVersion: ^v(?<version>.+?)$
