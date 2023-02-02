@@ -12,8 +12,6 @@ ARG version
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/trillian .
 export CGO_ENABLED=0
-mkdir -p /opt/trillian/bin
-go build -ldflags "-w -s" -o "/opt/trillian/bin/trillian_log_server" ./cmd/trillian_log_server
-go build -ldflags "-w -s" -o "/opt/trillian/bin/trillian_log_signer" ./cmd/trillian_log_signer
+go build -ldflags "-w -s" -o "${prefix}${target}/bin/trillian_log_server" ./cmd/trillian_log_server
+go build -ldflags "-w -s" -o "${prefix}${target}/bin/trillian_log_signer" ./cmd/trillian_log_signer
 EOF
-COPY --from=build /opt/trillian/ ${prefix}${target}/
