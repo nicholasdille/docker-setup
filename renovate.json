@@ -2019,7 +2019,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "vmware-tanzu/carvel-imgpkg",
+      "depNameTemplate": "carvel-dev/imgpkg",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -2246,7 +2246,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "vmware-tanzu/carvel-kapp",
+      "depNameTemplate": "carvel-dev/kapp",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -2268,7 +2268,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "vmware-tanzu/carvel-kbld",
+      "depNameTemplate": "carvel-dev/kbld",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -4270,7 +4270,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "vmware-tanzu/carvel-vendir",
+      "depNameTemplate": "carvel-dev/vendir",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
@@ -4499,7 +4499,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "depNameTemplate": "vmware-tanzu/carvel-ytt",
+      "depNameTemplate": "carvel-dev/ytt",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+?)$"
     },
