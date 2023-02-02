@@ -14,6 +14,7 @@ EOF
 WORKDIR /go/src/github.com/chainguard-dev/vex
 ARG name
 ARG version
+ENV CGO_ENABLED=0
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/chainguard-dev/vex .
 make
