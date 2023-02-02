@@ -15,7 +15,7 @@ mkdir -p \
     "${prefix}${docker_setup_contrib}/${name}/openrc"
 EOF
 
-COPY daemon.json ${prefix}/etc/docker-previous/
+COPY daemon.json ${prefix}/etc/docker-preview/
 
 RUN <<EOF
 curl --silent --location --fail "https://download.docker.com/linux/static/test/${arch}/docker-${version}.tgz" \

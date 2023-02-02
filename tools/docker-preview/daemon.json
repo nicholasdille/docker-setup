@@ -1,0 +1,10 @@
+{
+    "bridge": "none",
+    "data-root": "/var/lib/docker-preview",
+    "exec-root": "/var/run/docker-preview",
+    "hosts": [
+            "unix:///var/run/docker-preview.sock"
+    ],
+    "ip-masq": false,
+    "iptables": false
+}

@@ -1,22 +1,26 @@
-name: docker-prerelease
-version: "23.0.0"
-binary: ${target}/libexec/docker-prerelease/bin/docker
+name: docker-previous
+version: "20.10.23"
+binary: dockerd
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 runtime_dependencies:
 - fuse-overlayfs
+- docker-manpages
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/docker
 - standard/docker
 - standard/oci
 - container/runtime
 - container/build
+- category/default
 - type/cli
 - type/daemon
-- stability/prerelease
 - lang/go
 homepage: https://www.docker.com/
 description: The Docker CLI
 renovate:
   datasource: github-tags
   package: moby/moby
-  extractVersion: ^v(?<version>.+?)$
+  extractVersion: ^v(?<version>20\..+?)$
