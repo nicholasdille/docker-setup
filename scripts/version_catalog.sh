@@ -1,22 +1,25 @@
 #!/bin/bash
 set -o errexit
 
-METADATA_JSON="$(cat metadata.json)"
-CATALOG_JSON='{"tools":[]}'
-
 commit_sha="$(git rev-parse HEAD)"
-all_tools="$(jq --raw-output '.tools[].name' <<<"${METADATA_JSON}")"
-for name in ${all_tools}; do
-    version="$(jq --raw-output --arg name "${name}" '.tools[] | select(.name == $name) | .version' <<<"${METADATA_JSON}")"
-    echo "${name} ${version}"
-    CATALOG_JSON="$(
-        jq --arg name "${name}" --arg version "${version}" --arg commit_sha "${commit_sha}" '
-            .tools[] += {"name": "\($name)", "versions": [{"\($version)": "\($commit_sha)"}]}
-        ' <<<"${CATALOG_JSON}"
-    )"
-done
-jq '.' <<<"${CATALOG_JSON}"
-exit
+CATALOG_JSON="$(
+    jq --arg commit_sha "${commit_sha}" '
+        {
+            "tools": [ 
+                .tools[] |
+                {
+                    "name": .name,
+                    "versions": [
+                        {
+                            "version": .version,
+                            "commit_sha": "\($commit_sha)"
+                        }
+                    ]
+                } 
+            ]
+        }
+    ' metadata.json
+)"
 
 git log --oneline \
 | head -n 10 \
@@ -34,5 +37,10 @@ git log --oneline \
         version="$(git show "${commit_sha}:tools/${name}/manifest.yaml" | yq eval .version)"
 
         echo "${name} ${version}: ${commit_sha}"
+        #CATALOG_JSON="$(
+            jq --arg name "${name}" --arg version "${version}" --arg commit_sha "${commit_sha}" '
+                .tools[] | select(.name == $name) | .versions[] += {"version": "\($version)", "commit_sha": "\($commit_sha)"}
+            ' <<<"${CATALOG_JSON}"
+        #)"
     done
 done
