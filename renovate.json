@@ -1177,6 +1177,17 @@
     },
     {
       "fileMatch": [
+        "^tools/docker-previous/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "moby/moby",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>20\\..+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/docker-sbom/manifest.yaml$"
       ],
       "matchStrings": [

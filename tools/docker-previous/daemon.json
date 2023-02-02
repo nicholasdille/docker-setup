@@ -1,0 +1,10 @@
+{
+    "bridge": "none",
+    "data-root": "/var/lib/docker-previous",
+    "exec-root": "/var/run/docker-previous",
+    "hosts": [
+            "unix:///var/run/docker-previous.sock"
+    ],
+    "ip-masq": false,
+    "iptables": false
+}
