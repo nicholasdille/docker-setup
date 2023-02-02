@@ -1,5 +1,5 @@
 name: aqua
-version: "1.32.2"
+version: "1.32.3"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - package
