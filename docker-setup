@@ -160,7 +160,7 @@ if ! type jq >/dev/null 2>&1; then
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --fail "https://github.com/itchyny/gojq/releases/download/v${GOJQ_VERSION}/gojq_v${GOJQ_VERSION}_linux_${alt_arch}.tar.gz" \
     | tar --extract --gzip --directory="${docker_setup_cache}/bin" --strip-components=1 \
-        gojq_v${GOJQ_VERSION}_linux_amd64/gojq
+        gojq_v${GOJQ_VERSION}_linux_${alt_arch}/gojq
     chmod +x "${docker_setup_cache}/bin/gojq"
     mv "${docker_setup_cache}/bin/gojq" "${docker_setup_cache}/bin/jq"
 fi
@@ -837,7 +837,7 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            platform=amd64
+            platform=${alt_arch}
             if test "$#" -gt 1; then
                 shift
                 platform=$1
@@ -924,7 +924,7 @@ while test "$#" -gt 0; do
             if test -n "${prefix}"; then
                 mkdir -p "${prefix}"
             fi
-            platform=amd64
+            platform=${alt_arch}
             if test "$#" -gt 1; then
                 shift
                 platform=$1
@@ -940,7 +940,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
-            platform=amd64
+            platform=${alt_arch}
             if test "$#" -gt 1; then
                 shift
                 platform=$1
@@ -985,7 +985,7 @@ while test "$#" -gt 0; do
                 echo "No image name specified"
                 exit 1
             fi
-            platform=amd64
+            platform=${alt_arch}
             if test "$#" -gt 1; then
                 shift
                 platform=$1
@@ -1033,7 +1033,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Command <install> requires docker."
                 exit 1
             fi
-            platform=amd64
+            platform=${alt_arch}
             if test "$#" -gt 1; then
                 shift
                 platform=$1
