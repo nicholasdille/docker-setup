@@ -9,7 +9,6 @@ platforms:
 - linux/arm64
 conflicts_with:
 - docker
-- docker-preview
 tags:
 - org/docker
 - standard/docker
