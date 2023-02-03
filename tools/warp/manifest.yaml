@@ -1,0 +1,16 @@
+name: warp
+version: "0.6.5"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/minio/warp
+description: S3 benchmarking tool
+renovate:
+  datasource: github-releases
+  package: minio/warp
+  extractVersion: ^v(?<version>.+?)$

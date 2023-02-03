@@ -1,0 +1,26 @@
+#syntax=docker/dockerfile:1.5.1
+
+ARG ref=main
+
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/minio/warp/releases/download/v${version}/warp_${version}_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    warp
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/minio/warp/releases/download/v${version}/warp_${version}_Linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    warp
+EOF
+
+FROM download AS prepare
+COPY <<EOF ${prefix}${target}/share/bash-completion/completions/warp
+complete -C warp warp
+EOF
