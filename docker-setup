@@ -737,6 +737,7 @@ function uninstall() {
     for name in ${install_tools}; do
         if test -f "${docker_setup_manifests}/${name}.txt"; then
             echo "Removing ${name}"
+            # shellcheck disable=SC2002
             cat "${docker_setup_manifests}/${name}.txt" \
             | cut -d/ -f3- \
             | while read -r FILE; do
@@ -744,7 +745,7 @@ function uninstall() {
             done
             rm "${docker_setup_manifests}/${name}.txt"
             rm "${docker_setup_manifests}/${name}.json"
-            rm -rf "${docker_setup_cache}/${name}"
+            rm -rf "${docker_setup_cache:?}/${name}"
         fi
     done
 }
