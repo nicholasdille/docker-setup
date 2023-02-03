@@ -460,7 +460,7 @@ function has_conflicts() {
         conflicts="$(
             jq --raw-output 'select(.conflicts_with != null) | .conflicts_with[]' <<<"${tool_json[${name}]}"
         )"
-        #echo "Conflicts for ${name}: ${conflicts}"
+        debug "Conflicts for ${name}: ${conflicts}"
 
         for conflict in ${conflicts}; do
             debug "Checking conflict between planned ${name} and installed ${conflict}"
@@ -477,7 +477,8 @@ function has_conflicts() {
         done
     done
 
-    if ! ${conflict_found}; then
+    debug "conflict_found: ${conflict_found}"
+    if ${conflict_found}; then
         return 0
     else
         return 1
