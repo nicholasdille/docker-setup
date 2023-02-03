@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.5.1
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/grafana/k6/releases/download/v${version}/k6-v${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner
+"${prefix}${target}/bin/k6" completion bash >"${prefix}${target}/share/bash-completion/completions/k6"
+"${prefix}${target}/bin/k6" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/k6.fish"
+"${prefix}${target}/bin/k6" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_k6"
+EOF

@@ -2230,6 +2230,17 @@
     },
     {
       "fileMatch": [
+        "^tools/k6/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "grafana/k6",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/k9s/manifest.yaml$"
       ],
       "matchStrings": [
