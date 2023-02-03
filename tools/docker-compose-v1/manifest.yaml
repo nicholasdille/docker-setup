@@ -5,7 +5,7 @@ check: ${binary} version --short
 platforms:
 - linux/amd64
 conflicts_with:
-- docker-compose
+- docker-compose-switch
 tags:
 - org/docker
 - standard/docker

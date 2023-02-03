@@ -1,7 +1,7 @@
 name: docker-stable
 version: "20.10.23"
 binary: dockerd
-check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
+check: "" # Empty because of parallel install with "docker"
 runtime_dependencies:
 - fuse-overlayfs
 platforms:

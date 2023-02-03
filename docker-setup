@@ -463,16 +463,40 @@ function has_conflicts() {
         debug "Conflicts for ${name}: ${conflicts}"
 
         for conflict in ${conflicts}; do
-            debug "Checking conflict between planned ${name} and installed ${conflict}"
+            debug "Processing planned ${name} and conflict ${conflict}"
+            
             if ${tool_installed[${conflict}]}; then
-                echo "Warning: Conflict between requested ${name} and installed ${conflict}"
-                conflict_found=true
+                debug "Checking conflict between planned ${name} and installed ${conflict}"
+                if ${skip_conflicted}; then
+                    >&2 echo "Warning: Skipping ${name} due to conflict with installed ${conflict}"
+                    install_tools="$(
+                        echo "${install_tools}" \
+                        | sed -E "s/(^|\s)${name}(\s|$)/\1/"#
+                    )"
+                    continue
+
+                else
+                    echo "Warning: Conflict between requested ${name} and installed ${conflict}"
+                    conflict_found=true
+                fi
             fi
 
-            debug "Checking conflict between planned ${name} and planned ${conflict}"
-            if echo "${install_tools}" | grep -qE "(^|\s)${conflict}(\s|$)"; then
-                echo "Warning: Conflict between planned ${name} and planned ${conflict}"
-                conflict_found=true
+            if ${tool_installed[${name}]}; then
+                continue
+
+            elif echo "${install_tools}" | grep -qE "(^|\s)${conflict}(\s|$)"; then
+                debug "Checking conflict between planned ${name} and planned ${conflict}"
+                if ${skip_conflicted}; then
+                    >&2 echo "Warning: Skipping conflicting ${name} and ${conflict}"
+                    install_tools="$(
+                        echo "${install_tools}" \
+                        | sed -E "s/(^|\s)${name}(\s|$)/\1/" \
+                        | sed -E "s/(^|\s)${conflict}(\s|$)/\1/"
+                    )"
+                else
+                    echo "Warning: Conflict between planned ${name} and planned ${conflict}"
+                    conflict_found=true
+                fi
             fi
         done
     done
@@ -520,6 +544,8 @@ warm_cache
 target=/usr/local
 : "${include_deps:=true}"
 : "${check_conflicts:=true}"
+: "${skip_conflicted:=false}"
+: "${show_all:=false}"
 : "${reinstall:=false}"
 : "${cron:=true}"
 while test "$#" -gt 0; do
@@ -609,6 +635,7 @@ while test "$#" -gt 0; do
                 echo "ERROR: Conflicts detected."
                 exit 1
             fi
+            debug "Final tool for installation: ${install_tools}."
             profile "Done checking conflicts"
             ;;
 
@@ -643,6 +670,10 @@ while test "$#" -gt 0; do
             set -- --installed --tools=installed "$@"
             ;;
 
+        --show-all)
+            show_all=true
+            ;;
+
         --deps)
             if ! ${include_deps} && test "${#install_tools}" -gt 0; then
                 warning "Place --[no-]deps before tools/tags selectors."
@@ -659,6 +690,10 @@ while test "$#" -gt 0; do
 
         --ignore-conflicts)
             check_conflicts=false
+            ;;
+
+        --skip-conflicted)
+            skip_conflicted=true
             ;;
 
         --cron)
@@ -721,6 +756,8 @@ while test "$#" -gt 0; do
                 tool_version_string="${tool_operator[${name}]}${tool_version[${name}]}"
                 if test -n "${tool_installed_version[${name}]}" && test "${tool_installed_version[${name}]}" != "${tool_version[${name}]}"; then
                     tool_version_string="-${tool_installed_version[${name}]}${tool_version_string}"
+                elif ${tool_marker_file_present[${name}]} && ! ${show_all}; then
+                    continue
                 fi
                 echo -n -e "${tool_marker[${name}]}${tool_color[${name}]}${name}${reset}${tool_version_string}${reset}  "
             done
@@ -818,7 +855,9 @@ while test "$#" -gt 0; do
             fi
             for tool in ${install_tools}; do
                 if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
-                    echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${tool_version[${tool}]}"
+                    if ${show_all}; then
+                        echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${tool_version[${tool}]}"
+                    fi
                     continue
                 fi
                 version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
