@@ -284,10 +284,7 @@ function generate() {
         cat "${docker_setup_dockerfile_template}" \
         | sed -E "s|^ARG ref=main|ARG ref=${tools_version}|"
     )"
-    while test "$#" -gt 0; do
-        tool=$1
-        shift
-
+    for tool in ${install_tools}; do
         CONTENT="$(
             echo "${CONTENT}" \
             | sed -E "s|^(# INSERT FROM)|FROM ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:\${ref} AS ${tool}\n\1|" \
@@ -503,6 +500,7 @@ function has_conflicts() {
 
     debug "conflict_found: ${conflict_found}"
     if ${conflict_found}; then
+        echo
         return 0
     else
         return 1
@@ -539,6 +537,402 @@ Global options:
 EOF
 }
 
+function upgrade() {
+    if test "$0" == "./docker-setup"; then
+        >&2 echo "ERROR: Refusing to overwrite $0."
+        exit 1
+    fi
+    echo "Replacing $0"
+    touch /
+    exec curl --silent --location --output "$0" https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup
+}
+
+function list() {
+    for name in ${install_tools}; do
+        jq --raw-output '"\(.name);\(.version);\(.description)"' <<<"${tool_json[${name}]}"
+    done \
+    | sort \
+    | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
+}
+
+function info() {
+    for name in ${install_tools}; do
+        if ${yq_present}; then
+            echo "---"
+            yq --prettyPrint <<<"${tool_json[${name}]}"
+
+        else
+            jq '.' <<<"${tool_json[${name}]}"
+        fi
+    done
+    echo
+}
+
+function tags() {
+    jq -r '.tools[].tags[]' "${docker_setup_metadata_file}" | sort | uniq | xargs echo
+}
+
+function plan() {
+    echo
+    for name in ${install_tools}; do
+        tool_version_string="${tool_operator[${name}]}${tool_version[${name}]}"
+        if test -n "${tool_installed_version[${name}]}" && test "${tool_installed_version[${name}]}" != "${tool_version[${name}]}"; then
+            tool_version_string="-${tool_installed_version[${name}]}${tool_version_string}"
+        elif ${tool_marker_file_present[${name}]} && ! ${show_all}; then
+            continue
+        fi
+        echo -n -e "${tool_marker[${name}]}${tool_color[${name}]}${name}${reset}${tool_version_string}${reset}  "
+    done
+    echo
+}
+
+function dependencies() {
+    echo "${install_tools}"
+}
+
+function inspect() {
+    for tool in ${install_tools}; do
+        echo "${emoji_tool} Processing ${tool}"
+
+        MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
+        if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}" \
+            | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+
+        elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}"
+
+        elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}" \
+            | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+
+        elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}"
+
+        else
+            >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
+            exit 1
+        fi \
+        | jq --raw-output '.layers[].digest' \
+            | while read -r DIGEST; do
+                echo "${emoji_archive} Inspecting ${DIGEST}"
+                regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
+                | tar --list --gzip \
+                | grep -v "/$"
+            done
+    done
+}
+
+function search() {
+    shift
+    term=$1
+    # TODO: Check for term
+    jq --raw-output --arg term "${term,,}" '
+            .tools[] | 
+            select(
+                (.name | ascii_downcase | contains($term)) or 
+                (.description | ascii_downcase | contains($term)) or 
+                (.tags[] | ascii_downcase | contains($term)) or 
+                (
+                    (.runtime_dependencies != null) and 
+                    (.runtime_dependencies) and 
+                    (.runtime_dependencies[] | ascii_downcase | contains($term))
+                )
+            ) | 
+            "\(.name);\(.version);\(.description)"
+        ' "${docker_setup_metadata_file}" \
+    | sort \
+    | uniq \
+    | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
+}
+
+function build() {
+    shift
+    image=$1
+    if test -z "${image}"; then
+        echo "No image name specified"
+        exit 1
+    fi
+    platform=${alt_arch}
+    if test "$#" -gt 1; then
+        shift
+        platform=$1
+    fi
+    echo "Building image ${image} for ${platform} with $# tool(s)..."
+    generate \
+    | docker buildx build --platform "linux/${platform}" --tag "${image}" --load -
+}
+
+function install-from-tarball() {
+    if test -n "${prefix}"; then
+        debug "Using prefix ${prefix}"
+        mkdir -p "${prefix}"
+    fi
+    for tool in ${install_tools}; do
+        if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
+            if ${show_all}; then
+                echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${tool_version[${tool}]}"
+            fi
+            continue
+        fi
+        version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
+        echo "${emoji_tool} Installing ${tool} ${version}"
+        if ! regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" >/dev/null; then
+            >&2 echo "ERROR: Tool ${tool} not found"
+            continue
+        fi
+        MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
+        if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}" \
+            | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+
+        elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}"
+
+        elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}" \
+            | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+
+        elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}"
+
+        else
+            >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
+            exit 1
+        fi \
+        | jq --raw-output '.layers[].digest' \
+        | while read -r DIGEST; do
+            #echo "${emoji_archive} Unpacking ${DIGEST}"
+            regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
+            | tar --extract --gzip --directory="${prefix}/" --no-same-owner
+        done
+        mkdir -p "${docker_setup_cache}/${tool}"
+        touch "${docker_setup_cache}/${tool}/${version}"
+    done
+    if test -d "/var/lib/docker-setup/post_install"; then
+        mkdir -p "${docker_setup_cache}"
+        export prefix="${prefix}"
+        export target
+        export docker_setup_cache
+        export docker_setup_contrib=/var/lib/docker-setup/contrib
+        export docker_setup_manifests=/var/lib/docker-setup/manifests
+        FILES="$(find "/var/lib/docker-setup/post_install" -type f -name \*.sh)"
+        for FILE in ${FILES}; do
+            echo "Running post install for $(basename "${FILE}" .sh)"
+            if ! bash "${FILE}" >"${FILE}.log" 2>&1; then
+                cat "${FILE}.log"
+            else
+                rm "${FILE}"
+            fi
+        done
+    fi
+}
+
+function uninstall() {
+    local docker_setup_manifests=/var/lib/docker-setup/manifests
+    for name in ${install_tools}; do
+        if test -f "${docker_setup_manifests}/${name}.txt"; then
+            echo "Removing ${name}"
+            cat "${docker_setup_manifests}/${name}.txt" \
+            | cut -d/ -f3- \
+            | while read -r FILE; do
+                rm "/${FILE}"
+            done
+            rm "${docker_setup_manifests}/${name}.txt"
+            rm "${docker_setup_manifests}/${name}.json"
+            rm -rf "${docker_setup_cache}/${name}"
+        fi
+    done
+}
+
+function install-from-registry() {
+    if ! type docker >/dev/null 2>&1; then
+        echo "ERROR: Command <install> requires docker."
+        exit 1
+    fi
+    debug "Using prefix ${prefix} and target ${target}"
+    if test -n "${prefix}"; then
+        mkdir -p "${prefix}"
+    fi
+    platform=${alt_arch}
+    if test "$#" -gt 1; then
+        shift
+        platform=$1
+    fi
+    generate \
+    | docker buildx build --platform "linux/${platform}" --output "${prefix}${target}" -
+    # TODO: post_install
+}
+
+function install-from-image() {
+    if ! type docker >/dev/null 2>&1; then
+        echo "ERROR: Command <install> requires docker."
+        exit 1
+    fi
+    platform=${alt_arch}
+    if test "$#" -gt 1; then
+        shift
+        platform=$1
+    fi
+    debug "Using prefix ${prefix} and target ${target}"
+    if test -n "${prefix}"; then
+        mkdir -p "${prefix}"
+    fi
+    for tool in ${install_tools}; do
+        echo "${emoji_tool} Processing ${tool}"
+        echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
+        docker image pull --quiet --platform "linux/${platform}" "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
+        echo "${emoji_layer} Reading layers"
+        docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
+        | tar --extract --to-stdout manifest.json \
+        | jq --raw-output '.[].Layers[]' \
+        | while read -r FILE; do
+            echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
+            docker image save --platform "linux/${platform}" "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
+            | tar --extract --to-stdout "${FILE}" \
+            | tar --extract --directory="${prefix}${target}" --strip-components=2
+        done
+        echo "+ Done"
+    done
+    # TODO: post_install
+}
+
+function build-flat() {
+    if ! type docker >/dev/null 2>&1; then
+        echo "ERROR: Command <install> requires docker."
+        exit 1
+    fi
+    shift
+    base=$1
+    if test -z "${base}"; then
+        echo "No base image name specified"
+        exit 1
+    fi
+    shift
+    image=$1
+    if test -z "${image}"; then
+        echo "No image name specified"
+        exit 1
+    fi
+    platform=${alt_arch}
+    if test "$#" -gt 1; then
+        shift
+        platform=$1
+    fi
+    docker create --name docker-setup-install-flat --platform "linux/${platform}" "${base}"
+    for tool in ${install_tools}; do
+        echo "${emoji_tool} Processing ${tool}"
+        MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
+        if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}" \
+            | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+
+        elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}"
+
+        elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}" \
+            | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+
+        elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            echo "${MANIFEST}"
+
+        else
+            >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
+            exit 1
+        fi \
+        | jq --raw-output '.layers[].digest' \
+        | while read -r DIGEST; do
+            echo "${emoji_archive} Unpacking ${DIGEST}"
+            regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
+            | gunzip \
+            | docker cp - docker-setup-install-flat:/
+        done
+    done
+    # TODO: post_install
+    echo "${emoji_whale} Creating image ${image}"
+    docker commit docker-setup-install-flat "${image}"
+    docker rm docker-setup-install-flat >/dev/null 2>&1
+}
+
+function install-from-image-build() {
+    if ! type docker >/dev/null 2>&1; then
+        echo "ERROR: Command <install> requires docker."
+        exit 1
+    fi
+    platform=${alt_arch}
+    if test "$#" -gt 1; then
+        shift
+        platform=$1
+    fi
+    debug "Using prefix ${prefix} and target ${target}"
+    mkdir -p "${prefix}"
+    if ! test -d "${docker_setup_cache}/repo/.git"; then
+        git clone https://github.com/nicholasdille/docker-setup "${docker_setup_cache}/repo"
+    else
+        git -C "${docker_setup_cache}/repo" reset --hard
+        git -C "${docker_setup_cache}/repo" pull
+    fi
+    for name in ${install_tools}; do
+        echo "${emoji_tool} Processing ${name}"
+        make -C "${docker_setup_cache}/repo" "tools/${name}/Dockerfile" "tools/${name}/manifest.json"
+        version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
+        docker buildx build "${docker_setup_cache}/repo/tools/${name}" \
+            --build-arg "branch=${tools_version}" \
+            --build-arg "ref=${tools_version}" \
+            --build-arg "name=${name}" \
+            --build-arg "version=${version}" \
+            --build-arg "deps=${deps}" \
+            --build-arg "tags=${tags}" \
+            --platform "linux/${platform}" \
+            --output "type=local,dest=${prefix}${target}"
+    done
+    # TODO: post_install
+}
+
+function cron() {
+    # shellcheck disable=SC1090,SC1091
+    case "$(if test -f "${prefix}/etc/os-release"; then source "${prefix}/etc/os-release" && echo "$ID"; fi)" in
+        alpine)
+            cron_weekly_path="${prefix}/etc/periodic/weekly"
+            ;;
+        *)
+            cron_weekly_path="${prefix}/etc/cron.weekly"
+            ;;
+    esac
+    if ! test -d "${cron_weekly_path}" && ${cron}; then
+        debug "Disabled creation of cronjob because directory for weekly job is missing (${cron_weekly_path})"
+        cron=false
+    fi
+    if ! test -w "${cron_weekly_path}"; then
+        debug "Disabled creation of cronjob because directory for weekly job is not writable"
+        cron=false
+    fi
+
+    if ${cron}; then
+        # Weekly update of docker-setup into current location
+        rm -f "${cron_weekly_path}/docker-setup-update" "${cron_weekly_path}/docker-setup-upgrade"
+        cat >"${cron_weekly_path}/docker-setup" <<EOF
+    #!/bin/bash
+    set -o errexit
+
+    curl https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh \
+        --location \
+        --output /usr/local/bin/docker-setup
+    chmod +x /usr/local/bin/docker-setup
+
+    /usr/local/bin/docker-setup --tools=installed install
+EOF
+        chmod +x "${cron_weekly_path}/docker-setup"
+    fi
+}
+
 warm_cache
 
 target=/usr/local
@@ -548,6 +942,7 @@ target=/usr/local
 : "${show_all:=false}"
 : "${reinstall:=false}"
 : "${cron:=true}"
+command=""
 while test "$#" -gt 0; do
     case "$1" in
         --version)
@@ -620,23 +1015,6 @@ while test "$#" -gt 0; do
                     debug "Selected custom list of tools: ${selected_tools}"
                     ;;
             esac
-
-            if ${include_deps}; then
-                install_tools="$(resolve_dependencies_wrapper)"
-            else
-                install_tools="${selected_tools}"
-            fi
-            profile "Done resolving dependencies"
-
-            check_tools
-            profile "Done checking tools"
-
-            if ${check_conflicts} && has_conflicts; then
-                echo "ERROR: Conflicts detected."
-                exit 1
-            fi
-            debug "Final tool for installation: ${install_tools}."
-            profile "Done checking conflicts"
             ;;
 
         --tags|--tags=*)
@@ -709,358 +1087,75 @@ while test "$#" -gt 0; do
             ;;
 
         update)
-            update
+            command=update
             ;;
 
         upgrade)
-            echo "Replacing $0"
-            touch /
-            exec curl --silent --location --output "$0" https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup
+            command=upgrade
             ;;
 
         debug)
-            echo "prefix=${prefix}"
-            echo "target=${target}"
-            echo "selected_tools=${selected_tools}"
-            echo "install_tools=${install_tools}."
+            command=debug
             ;;
 
         ls|list|l)
-            for name in ${install_tools}; do
-                jq --raw-output '"\(.name);\(.version);\(.description)"' <<<"${tool_json[${name}]}"
-            done \
-            | sort \
-            | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
+            command=list
             ;;
 
         info)
-            for name in ${install_tools}; do
-                if ${yq_present}; then
-                    echo "---"
-                    yq --prettyPrint <<<"${tool_json[${name}]}"
-
-                else
-                    jq '.' <<<"${tool_json[${name}]}"
-                fi
-            done
-            echo
+            command=info
             ;;
 
         tags|t)
-            jq -r '.tools[].tags[]' "${docker_setup_metadata_file}" | sort | uniq | xargs echo
+            command=tags
             ;;
 
         plan|p|status|s)
-            echo
-            for name in ${install_tools}; do
-                tool_version_string="${tool_operator[${name}]}${tool_version[${name}]}"
-                if test -n "${tool_installed_version[${name}]}" && test "${tool_installed_version[${name}]}" != "${tool_version[${name}]}"; then
-                    tool_version_string="-${tool_installed_version[${name}]}${tool_version_string}"
-                elif ${tool_marker_file_present[${name}]} && ! ${show_all}; then
-                    continue
-                fi
-                echo -n -e "${tool_marker[${name}]}${tool_color[${name}]}${name}${reset}${tool_version_string}${reset}  "
-            done
-            echo
+            command=plan
             ;;
 
         dependencies|deps|d)
-            echo "${install_tools}"
+            command=dependencies
             ;;
 
         inspect)
-            for tool in ${install_tools}; do
-                echo "${emoji_tool} Processing ${tool}"
-
-                MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
-                if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}" \
-                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
-
-                elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}"
-
-                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}" \
-                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
-
-                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}"
-
-                else
-                    >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
-                    exit 1
-                fi \
-                | jq --raw-output '.layers[].digest' \
-                    | while read -r DIGEST; do
-                        echo "${emoji_archive} Inspecting ${DIGEST}"
-                        regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
-                        | tar --list --gzip \
-                        | grep -v "/$"
-                    done
-            done
+            command=inspect
             ;;
 
         search|find)
-            shift
-            term=$1
-            jq --raw-output --arg term "${term,,}" '
-                    .tools[] | 
-                    select(
-                        (.name | ascii_downcase | contains($term)) or 
-                        (.description | ascii_downcase | contains($term)) or 
-                        (.tags[] | ascii_downcase | contains($term)) or 
-                        (
-                            (.runtime_dependencies != null) and 
-                            (.runtime_dependencies) and 
-                            (.runtime_dependencies[] | ascii_downcase | contains($term))
-                        )
-                    ) | 
-                    "\(.name);\(.version);\(.description)"
-                ' "${docker_setup_metadata_file}" \
-            | sort \
-            | uniq \
-            | column --separator ';' --table --table-columns Name,Version,Description --table-truncate 3
+            command=search
             ;;
 
         generate|gen|g)
-            # shellcheck disable=SC2086
-            generate ${install_tools}
+            command=generate
             ;;
 
         build|b)
-            shift
-            image=$1
-            if test -z "${image}"; then
-                echo "No image name specified"
-                exit 1
-            fi
-            platform=${alt_arch}
-            if test "$#" -gt 1; then
-                shift
-                platform=$1
-            fi
-            echo "Building image ${image} for ${platform} with $# tool(s)..."
-            # shellcheck disable=SC2086
-            generate ${install_tools} \
-            | docker buildx build --platform "linux/${platform}" --tag "${image}" --load -
+            command=build
             ;;
 
         install|i)
-            if test -n "${prefix}"; then
-                debug "Using prefix ${prefix}"
-                mkdir -p "${prefix}"
-            fi
-            for tool in ${install_tools}; do
-                if ! ${reinstall} && ${tool_installed[${tool}]} && ${tool_version_matches[${tool}]}; then
-                    if ${show_all}; then
-                        echo -e "${green}${emoji_done}${reset} Nothing to do for ${tool} ${tool_version[${tool}]}"
-                    fi
-                    continue
-                fi
-                version="$(jq --raw-output --arg name "${tool}" 'select(.version != null) | .version' <<<"${tool_json[${tool}]}")"
-                echo "${emoji_tool} Installing ${tool} ${version}"
-                if ! regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" >/dev/null; then
-                    >&2 echo "ERROR: Tool ${tool} not found"
-                    continue
-                fi
-                MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
-                if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}" \
-                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+            command=install-from-tarball
+            ;;
 
-                elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}"
-
-                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}" \
-                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
-
-                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}"
-
-                else
-                    >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
-                    exit 1
-                fi \
-                | jq --raw-output '.layers[].digest' \
-                | while read -r DIGEST; do
-                    #echo "${emoji_archive} Unpacking ${DIGEST}"
-                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
-                    | tar --extract --gzip --directory="${prefix}/" --no-same-owner
-                done
-                mkdir -p "${docker_setup_cache}/${tool}"
-                touch "${docker_setup_cache}/${tool}/${version}"
-            done
-            if test -d "/var/lib/docker-setup/post_install"; then
-                mkdir -p "${docker_setup_cache}"
-                export prefix="${prefix}"
-                export target
-                export docker_setup_cache
-                export docker_setup_contrib=/var/lib/docker-setup/contrib
-                export docker_setup_manifests=/var/lib/docker-setup/manifests
-                FILES="$(find "/var/lib/docker-setup/post_install" -type f -name \*.sh)"
-                for FILE in ${FILES}; do
-                    echo "Running post install for $(basename "${FILE}" .sh)"
-                    if ! bash "${FILE}" >"${FILE}.log" 2>&1; then
-                        cat "${FILE}.log"
-                    else
-                        rm "${FILE}"
-                    fi
-                done
-            fi
+        uninstall)
+            command=uninstall
             ;;
 
         install-from-registry)
-            if ! type docker >/dev/null 2>&1; then
-                echo "ERROR: Command <install> requires docker."
-                exit 1
-            fi
-            debug "Using prefix ${prefix} and target ${target}"
-            if test -n "${prefix}"; then
-                mkdir -p "${prefix}"
-            fi
-            platform=${alt_arch}
-            if test "$#" -gt 1; then
-                shift
-                platform=$1
-            fi
-            # shellcheck disable=SC2086
-            generate ${install_tools} \
-            | docker buildx build --platform "linux/${platform}" --output "${prefix}${target}" -
-            # TODO: post_install
+            command=install-from-registry
             ;;
 
         install-from-image)
-            if ! type docker >/dev/null 2>&1; then
-                echo "ERROR: Command <install> requires docker."
-                exit 1
-            fi
-            platform=${alt_arch}
-            if test "$#" -gt 1; then
-                shift
-                platform=$1
-            fi
-            debug "Using prefix ${prefix} and target ${target}"
-            if test -n "${prefix}"; then
-                mkdir -p "${prefix}"
-            fi
-            for tool in ${install_tools}; do
-                echo "${emoji_tool} Processing ${tool}"
-                echo "${emoji_image} Pulling image ${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
-                docker image pull --quiet --platform "linux/${platform}" "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}"
-                echo "${emoji_layer} Reading layers"
-                docker image save "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
-                | tar --extract --to-stdout manifest.json \
-                | jq --raw-output '.[].Layers[]' \
-                | while read -r FILE; do
-                    echo "${emoji_archive} Extracting layer $(dirname "${FILE}")"
-                    docker image save --platform "linux/${platform}" "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" \
-                    | tar --extract --to-stdout "${FILE}" \
-                    | tar --extract --directory="${prefix}${target}" --strip-components=2
-                done
-                echo "+ Done"
-            done
-            # TODO: post_install
+            command=install-from-image
             ;;
 
         build-flat)
-            if ! type docker >/dev/null 2>&1; then
-                echo "ERROR: Command <install> requires docker."
-                exit 1
-            fi
-            shift
-            base=$1
-            if test -z "${base}"; then
-                echo "No base image name specified"
-                exit 1
-            fi
-            shift
-            image=$1
-            if test -z "${image}"; then
-                echo "No image name specified"
-                exit 1
-            fi
-            platform=${alt_arch}
-            if test "$#" -gt 1; then
-                shift
-                platform=$1
-            fi
-            docker create --name docker-setup-install-flat --platform "linux/${platform}" "${base}"
-            for tool in ${install_tools}; do
-                echo "${emoji_tool} Processing ${tool}"
-                MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
-                if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}" \
-                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
-
-                elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}"
-
-                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}" \
-                    | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-                    | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
-
-                elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
-                    echo "${MANIFEST}"
-
-                else
-                    >&2 echo "ERROR: Unknown media type ($(jq --raw-output '.mediaType' <<<"${MANIFEST}"))."
-                    exit 1
-                fi \
-                | jq --raw-output '.layers[].digest' \
-                | while read -r DIGEST; do
-                    echo "${emoji_archive} Unpacking ${DIGEST}"
-                    regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
-                    | gunzip \
-                    | docker cp - docker-setup-install-flat:/
-                done
-            done
-            # TODO: post_install
-            echo "${emoji_whale} Creating image ${image}"
-            docker commit docker-setup-install-flat "${image}"
-            docker rm docker-setup-install-flat >/dev/null 2>&1
+            command=build-flat
             ;;
 
         install-from-image-build)
-            if ! type docker >/dev/null 2>&1; then
-                echo "ERROR: Command <install> requires docker."
-                exit 1
-            fi
-            platform=${alt_arch}
-            if test "$#" -gt 1; then
-                shift
-                platform=$1
-            fi
-            debug "Using prefix ${prefix} and target ${target}"
-            mkdir -p "${prefix}"
-            if ! test -d "${docker_setup_cache}/repo/.git"; then
-                git clone https://github.com/nicholasdille/docker-setup "${docker_setup_cache}/repo"
-            else
-                git -C "${docker_setup_cache}/repo" reset --hard
-                git -C "${docker_setup_cache}/repo" pull
-            fi
-            for name in ${install_tools}; do
-                echo "${emoji_tool} Processing ${name}"
-                make -C "${docker_setup_cache}/repo" "tools/${name}/Dockerfile" "tools/${name}/manifest.json"
-                version="$(jq --raw-output --arg name "${name}" 'select(.version != null) | .version' <<<"${tool_json[${name}]}")"
-                docker buildx build "${docker_setup_cache}/repo/tools/${name}" \
-                    --build-arg "branch=${tools_version}" \
-                    --build-arg "ref=${tools_version}" \
-                    --build-arg "name=${name}" \
-                    --build-arg "version=${version}" \
-                    --build-arg "deps=${deps}" \
-                    --build-arg "tags=${tags}" \
-                    --platform "linux/${platform}" \
-                    --output "type=local,dest=${prefix}${target}"
-            done
-            # TODO: post_install
+            command=install-from-image-build
             ;;
 
         *)
@@ -1075,37 +1170,104 @@ while test "$#" -gt 0; do
     shift
 done
 
-# shellcheck disable=SC1090,SC1091
-case "$(if test -f "${prefix}/etc/os-release"; then source "${prefix}/etc/os-release" && echo "$ID"; fi)" in
-    alpine)
-        cron_weekly_path="${prefix}/etc/periodic/weekly"
-        ;;
-    *)
-        cron_weekly_path="${prefix}/etc/cron.weekly"
-        ;;
+if ${include_deps}; then
+    install_tools="$(resolve_dependencies_wrapper)"
+else
+    install_tools="${selected_tools}"
+fi
+profile "Done resolving dependencies"
+
+check_tools
+profile "Done checking tools"
+
+if ${check_conflicts} && has_conflicts; then
+    echo "ERROR: Conflicts detected."
+    exit 1
+fi
+debug "Final tool for installation: ${install_tools}."
+profile "Done checking conflicts"
+
+case "${command}" in
+        update)
+            update "$@"
+            ;;
+
+        upgrade)
+            upgrade "$@"
+            ;;
+
+        debug)
+            echo "prefix=${prefix}"
+            echo "target=${target}"
+            echo "selected_tools=${selected_tools}"
+            echo "install_tools=${install_tools}."
+            ;;
+
+        list)
+            list "$@"
+            ;;
+
+        info)
+            info "$@"
+            ;;
+
+        tags)
+            tags "$@"
+            ;;
+
+        plan)
+            plan "$@"
+            ;;
+
+        dependencies)
+            dependencies "$@"
+            ;;
+
+        inspect)
+            inspect "$@"
+            ;;
+
+        search)
+            search "$@"
+            ;;
+
+        generate)
+            generate "$@"
+            ;;
+
+        build)
+            build "$@"
+            ;;
+
+        install-from-tarball)
+            install-from-tarball "$@"
+            ;;
+
+        uninstall)
+            uninstall "$@"
+            ;;
+
+        install-from-registry)
+            install-from-registry "$@"
+            ;;
+
+        install-from-image)
+            install-from-image "$@"
+            ;;
+
+        build-flat)
+            build-flat "$@"
+            ;;
+
+        install-from-image-build)
+            install-from-image-build "$@"
+            ;;
+
+        *)
+            echo "ERROR: Unknown or empty command <$1>"
+            show_help
+            exit 1
+            ;;
 esac
-if ! test -d "${cron_weekly_path}" && ${cron}; then
-    debug "Disabled creation of cronjob because directory for weekly job is missing (${cron_weekly_path})"
-    cron=false
-fi
-if ! test -w "${cron_weekly_path}"; then
-    debug "Disabled creation of cronjob because directory for weekly job is not writable"
-    cron=false
-fi
 
-if ${cron}; then
-    # Weekly update of docker-setup into current location
-    rm -f "${cron_weekly_path}/docker-setup-update" "${cron_weekly_path}/docker-setup-upgrade"
-    cat >"${cron_weekly_path}/docker-setup" <<EOF
-#!/bin/bash
-set -o errexit
-
-curl https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup.sh \
-    --location \
-    --output /usr/local/bin/docker-setup
-chmod +x /usr/local/bin/docker-setup
-
-/usr/local/bin/docker-setup --tools=installed install
-EOF
-    chmod +x "${cron_weekly_path}/docker-setup"
-fi
+cron "$@"
