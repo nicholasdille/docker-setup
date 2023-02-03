@@ -1,6 +1,6 @@
 name: navi
 version: "2.20.1"
-check: ""
+check: ${binary} --version | cut -d' ' -f2
 runtime_dependencies:
 - fzf
 tags:

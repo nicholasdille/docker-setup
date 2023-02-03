@@ -1,6 +1,6 @@
 name: warp
 version: "0.6.5"
-check: ""
+check: ${binary} --version | cut -d' ' -f3
 platforms:
 - linux/amd64
 - linux/arm64

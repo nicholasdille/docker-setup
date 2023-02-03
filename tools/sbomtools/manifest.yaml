@@ -1,6 +1,6 @@
 name: sbomtools
 version: "0.3.2"
-check: ""
+check: "" # No version parameter
 build_dependencies:
 - python
 runtime_dependencies:

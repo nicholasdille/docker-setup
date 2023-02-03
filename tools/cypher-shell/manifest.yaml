@@ -1,6 +1,6 @@
 name: cypher-shell
 version: "5.3.0"
-check: ""
+check: ${binary} --version | cut -d' ' -f2
 runtime_dependencies:
 - openjdk-jre
 conflicts_with:
