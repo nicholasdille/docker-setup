@@ -512,28 +512,43 @@ function show_help() {
 docker-setup
 
 Commands:
-  update                  Update tools manifests
-  upgrade                 Update docker-setup
-  ls, list, l             List available tools
-  info                    Show tool manifest
-  tags, t                 Show tags
-  plan, p, status, s      Show status of installed tools and how to proceed
-  dependencies, deps, d   Resolve dependencies
-  inspect                 Show contents image
-  search, find            Search for tools
-  generate, gen, g        Generate Dockerfile
-  build, b                Build container image
-  build-flat              Build container image using "docker commit"
-  install                 Install natively
-  install-from-registry   Install
-  install-from-image      Build container image with local output
+  update                    Update tools manifests
+  upgrade                   Update docker-setup
+  debug                     Show useful information
+  ls, list, l               List available tools
+  info                      Show tool manifest
+  tags, t                   Show tags
+  plan, p, status, s        Show status of installed tools and how to proceed
+  dependencies, deps, d     Resolve dependencies
+  inspect                   Show contents image
+  search, find              Search for tools
+  generate, gen, g          Generate Dockerfile
+  build, b                  Build container image
+  build-flat                Build single-layer container image using "docker commit"
+  install, i                Install natively (from tarball)
+  uninstall                 Uninstall natively
+  install-from-registry     Build container image with local output
+  install-from-image        Pull images and install using docker save
+  install-from-image-build  Build from source with local output
 
 Global options:
   --help                  Display help
+  --version               Display version
   --debug                 Display debug output
   --trace                 Display trace output
   --profile               Display timing information
-  --version               Display version
+  --prefix                Install into specified directory (default: /)
+  --reinstall             Install even if already present
+  --tools                 Specify comma separated tools to install (special tools: all, default, installed)
+  --tag                   Specify tools to install by tag
+  --all                   Short for --tools=all
+  --default               Short for --tools=default
+  --installed             Short for --tools=installed
+  --show-all              Show all tools even when nothing to do
+  --[no-]deps             Whether to install dependencies (defaults to yes)
+  --ignore-conflicts      Ignore conflicts and continue anyway
+  --skip-conflicted       Skip packages causing a conflict
+  --[no-]cron             Whether to install cron job for update and upgrade
 EOF
 }
 
@@ -948,6 +963,7 @@ while test "$#" -gt 0; do
     case "$1" in
         --version)
             echo "docker-setup version ${docker_setup_version}"
+            exit
             ;;
 
         --debug)
@@ -965,6 +981,7 @@ while test "$#" -gt 0; do
 
         --help)
             show_help
+            exit
             ;;
 
         --prefix|--prefix=*)
@@ -1018,7 +1035,7 @@ while test "$#" -gt 0; do
             esac
             ;;
 
-        --tags|--tags=*)
+        --tag|--tag=*)
             if test "$1" == "--tags"; then
                 shift
                 tags=$1
