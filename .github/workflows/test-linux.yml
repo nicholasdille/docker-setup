@@ -71,7 +71,7 @@ jobs:
               echo "### Building container image"
               docker_setup_version=test \
               docker_setup_cache="${HOME}/.cache/docker-setup" \
-                  ./docker-setup --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
+                  ./docker-setup --ignore-conflicts --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
 
           else
               echo "### Building all container images"
