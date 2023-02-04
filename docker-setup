@@ -641,9 +641,11 @@ function inspect() {
 }
 
 function search() {
-    shift
     term=$1
-    # TODO: Check for term
+    if test -z "${term}"; then
+        >&2 echo "ERROR: Search term required."
+        exit 1
+    fi
     jq --raw-output --arg term "${term,,}" '
             .tools[] | 
             select(
@@ -664,7 +666,6 @@ function search() {
 }
 
 function build() {
-    shift
     image=$1
     if test -z "${image}"; then
         echo "No image name specified"
@@ -776,7 +777,6 @@ function install-from-registry() {
     fi
     platform=${alt_arch}
     if test "$#" -gt 1; then
-        shift
         platform=$1
     fi
     generate \
@@ -791,7 +791,6 @@ function install-from-image() {
     fi
     platform=${alt_arch}
     if test "$#" -gt 1; then
-        shift
         platform=$1
     fi
     debug "Using prefix ${prefix} and target ${target}"
@@ -822,7 +821,6 @@ function build-flat() {
         echo "ERROR: Command <install> requires docker."
         exit 1
     fi
-    shift
     base=$1
     if test -z "${base}"; then
         echo "No base image name specified"
@@ -1177,6 +1175,10 @@ while test "$#" -gt 0; do
             ;;
 
         *)
+            if test -n "${command}"; then
+                debug "Found command (${command}). Following arguments will be passed on."
+                break
+            fi
             echo "ERROR: Unknown or empty command <$1>"
             show_help
             exit 1
@@ -1205,6 +1207,7 @@ fi
 debug "Final tool for installation: ${install_tools}."
 profile "Done checking conflicts"
 
+debug "Calling command <${command}> with arguments <$@>"
 case "${command}" in
         update)
             update "$@"
