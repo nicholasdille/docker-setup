@@ -141,6 +141,25 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/m
 			bash
 
 .PHONY:
+$(addsuffix --buildg,$(ALL_TOOLS_RAW)):%--buildg: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/buildg.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Interactively debugging image for $*...)
+	@set -o errexit; \
+	TOOL_VERSION="$$(jq --raw-output '.tools[].version' $(TOOLS_DIR)/$*/manifest.json)"; \
+	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
+	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) |.tags[]' tools/$*/manifest.json | paste -sd,)"; \
+	test -n "$${ARCHS}" || ARCHS="linux/amd64"; \
+	echo "Name:         $*"; \
+	echo "Version:      $${TOOL_VERSION}"; \
+	echo "Build deps:   $${DEPS}"; \
+	buildg debug $(TOOLS_DIR)/$* \
+		--build-arg branch=$(DOCKER_TAG) \
+		--build-arg ref=$(DOCKER_TAG) \
+		--build-arg name=$* \
+		--build-arg version=$${TOOL_VERSION} \
+		--build-arg deps=$${DEPS} \
+		--build-arg tags=$${TAGS} \
+		--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
+
+.PHONY:
 $(addsuffix --test,$(ALL_TOOLS_RAW)):%--test: % ; $(info $(M) Testing $*...)
 	@set -o errexit; \
 	if ! test -f "$(TOOLS_DIR)/$*/test.sh"; then \
