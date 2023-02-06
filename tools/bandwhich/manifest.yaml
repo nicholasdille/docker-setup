@@ -1,0 +1,14 @@
+name: bandwhich
+version: "0.20.0"
+check: ${binary} --version | cut -d' ' -f2
+platforms:
+- linux/amd64
+tags:
+- category/operations
+- type/cli
+- lang/rust
+homepage: https://github.com/imsnif/bandwhich
+description: Terminal bandwidth utilization tool
+renovate:
+  datasource: github-releases
+  package: imsnif/bandwhich
