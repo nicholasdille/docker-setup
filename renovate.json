@@ -4012,6 +4012,17 @@
     },
     {
       "fileMatch": [
+        "^tools/structurizr-cli/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "structurizr/cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/su-exec/manifest.yaml$"
       ],
       "matchStrings": [

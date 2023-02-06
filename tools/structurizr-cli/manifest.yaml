@@ -1,0 +1,15 @@
+name: structurizr-cli
+version: "1.25.0"
+check: ""
+runtime_dependencies:
+- openjdk-jre
+tags:
+- category/development
+- langjava
+- type/cli
+homepage: https://github.com/structurizr/cli
+description: CLI for Structurizr
+renovate:
+  datasource: github-releases
+  package: structurizr/cli
+  extractVersion: ^v(?<version>.+?)$
