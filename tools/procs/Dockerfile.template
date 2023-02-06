@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="https://github.com/dalance/procs/releases/download/v${version}/procs-v${version}-${arch}-linux.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+"${prefix}${target}/bin/procs" --completion-out bash >"${prefix}${target}/share/bash-completion/completions/procs"
+"${prefix}${target}/bin/procs" --completion-out fish >"${prefix}${target}/share/fish/vendor_completions.d/procs.fish"
+"${prefix}${target}/bin/procs" --completion-out zsh >"${prefix}${target}/share/zsh/vendor-completions/_procs"
+EOF

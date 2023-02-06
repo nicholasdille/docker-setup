@@ -3637,6 +3637,17 @@
       "depNameTemplate": "nalbury/promql-cli",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
+        "^tools/procs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "dalance/procs",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/promql-cli/manifest.yaml$"
       ],
       "matchStrings": [
