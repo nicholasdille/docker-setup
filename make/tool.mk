@@ -18,7 +18,7 @@ builders: ; $(info $(M) Starting builders...)
 	@\
 	docker buildx ls | grep -q "^docker-setup " \
 	|| docker buildx create --name docker-setup \
-		--platform linux/amd64,linux/arm64 \
+		--platform $(subst $(eval ) ,:,$(addprefix linux/,$(SUPPORTED_ALT_ARCH))) \
 		--bootstrap; \
 	docker container run --privileged --rm tonistiigi/binfmt --install all >/dev/null
 
@@ -51,7 +51,7 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
 	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) | .tags[]' tools/$*/manifest.json | paste -sd,)"; \
 	ARCHS="$$(jq --raw-output '.tools[] | select(.platforms != null) | .platforms[]' tools/$*/manifest.json | paste -sd,)"; \
-	test -n "$${ARCHS}" || ARCHS="linux/amd64"; \
+	test -n "$${ARCHS}" || ARCHS="linux/$(ALT_ARCH)"; \
 	echo "Name:         $*"; \
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
@@ -111,12 +111,10 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/m
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' $(TOOLS_DIR)/$*/manifest.json)"; \
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
 	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) |.tags[]' tools/$*/manifest.json | paste -sd,)"; \
-	ARCHS="$$(jq --raw-output '.tools[] | select(.platforms != null) | .platforms[]' tools/$*/manifest.json | paste -sd,)"; \
-	test -n "$${ARCHS}" || ARCHS="linux/amd64"; \
+	test -n "$${ARCHS}" || ARCHS="linux/$(ALT_ARCH)"; \
 	echo "Name:         $*"; \
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
-	echo "Platforms:    $${ARCHS}"; \
 	docker buildx build $(TOOLS_DIR)/$* \
 		--builder docker-setup \
 		--build-arg branch=$(DOCKER_TAG) \
@@ -126,6 +124,7 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/m
 		--build-arg deps=$${DEPS} \
 		--build-arg tags=$${TAGS} \
 		--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
+		--platform linux/amd64 \
 		--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 		--target prepare \
 		--load \
@@ -146,7 +145,7 @@ $(addsuffix --buildg,$(ALL_TOOLS_RAW)):%--buildg: $(HELPER)/var/lib/docker-setup
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' $(TOOLS_DIR)/$*/manifest.json)"; \
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
 	TAGS="$$(jq --raw-output '.tools[] | select(.tags != null) |.tags[]' tools/$*/manifest.json | paste -sd,)"; \
-	test -n "$${ARCHS}" || ARCHS="linux/amd64"; \
+	test -n "$${ARCHS}" || ARCHS="linux/$(ALT_ARCH)"; \
 	echo "Name:         $*"; \
 	echo "Version:      $${TOOL_VERSION}"; \
 	echo "Build deps:   $${DEPS}"; \
@@ -170,7 +169,7 @@ $(addsuffix --test,$(ALL_TOOLS_RAW)):%--test: % ; $(info $(M) Testing $*...)
 	bash $(TOOLS_DIR)/$*/test.sh test-$*
 
 .PHONY:
-debug: debug-amd64
+debug: debug-$(ALT_ARCH)
 
 .PHONY:
 debug-%: ; $(info $(M) Debugging on platform $*...)
