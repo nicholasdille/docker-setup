@@ -69,7 +69,7 @@ jobs:
               echo "### Creating metadata"
               GIT_BRANCH=test make metadata.json
               echo "### Building container image"
-              docker_setup_version=test \
+              tools_version=test \
               docker_setup_cache="${HOME}/.cache/docker-setup" \
                   ./docker-setup --ignore-conflicts --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
 
