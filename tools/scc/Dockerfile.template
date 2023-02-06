@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.4.3
+
+ARG ref=main
+
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/boyter/scc/releases/download/v${version}/scc_${version}_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    scc
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/boyter/scc/releases/download/v${version}/scc_${version}_Linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    scc
+EOF

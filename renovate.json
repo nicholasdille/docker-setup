@@ -3841,6 +3841,17 @@
       "depNameTemplate": "ossf/scorecard",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
+        "^tools/scc/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "boyter/scc",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/scorecard/manifest.yaml$"
       ],
       "matchStrings": [
