@@ -1272,6 +1272,17 @@
     },
     {
       "fileMatch": [
+        "^tools/duf/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "muesli/duf",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/duffle/manifest.yaml$"
       ],
       "matchStrings": [
