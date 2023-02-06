@@ -18,7 +18,7 @@ builders: ; $(info $(M) Starting builders...)
 	@\
 	docker buildx ls | grep -q "^docker-setup " \
 	|| docker buildx create --name docker-setup \
-		--platform $(subst $(eval ) ,:,$(addprefix linux/,$(SUPPORTED_ALT_ARCH))) \
+		--platform $(subst $(eval ) ,$(shell echo ","),$(addprefix linux/,$(SUPPORTED_ALT_ARCH))) \
 		--bootstrap; \
 	docker container run --privileged --rm tonistiigi/binfmt --install all >/dev/null
 
