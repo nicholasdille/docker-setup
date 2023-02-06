@@ -154,6 +154,17 @@
     },
     {
       "fileMatch": [
+        "^tools/actions-runner/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "actions/runner",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/age/manifest.yaml$"
       ],
       "matchStrings": [

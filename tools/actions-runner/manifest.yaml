@@ -1,0 +1,14 @@
+name: actions-runner
+version: "2.301.1"
+check: ""
+tags:
+- org/github
+- category/development
+- lang/csharp
+- type/daemon
+homepage: https://github.com/actions/runner
+description: Runner for GitHub Actions
+renovate:
+  datasource: github-releases
+  package: actions/runner
+  extractVersion: ^v(?<version>.+?)$

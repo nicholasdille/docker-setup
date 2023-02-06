@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.1
+
+ARG ref=main
+
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR ${prefix}/opt/actions-runner
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/actions/runner/releases/download/v${version}/actions-runner-linux-x64-${version}.tar.gz" \
+| tar --extract --gzip --no-same-owner
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR ${prefix}/opt/actions-runner
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/actions/runner/releases/download/v${version}/actions-runner-linux-${alt_arch}-${version}.tar.gz" \
+| tar --extract --gzip --no-same-owner
+EOF
