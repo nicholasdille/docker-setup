@@ -61,3 +61,8 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob \
     "${prefix}${target}/bin/gitsign-credential-cache"
 rm -f "gitsign-credential-cache_${version}_linux_${alt_arch}.pem" "gitsign-credential-cache_${version}_linux_${alt_arch}.sig"
 EOF
+RUN <<EOF
+"${prefix}${target}/bin/gitsign" completion bash >"${prefix}${target}/share/bash-completion/completions/gitsign"
+"${prefix}${target}/bin/gitsign" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/gitsign.fish"
+"${prefix}${target}/bin/gitsign" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_gitsign"
+EOF

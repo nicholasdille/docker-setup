@@ -1,5 +1,4 @@
 #!/bin/bash
-set -o errexit
 
 if test -z "\$(pidof gitsign-credential-cache)"; then
     "gitsign-credential-cache" >/dev/null 2>&1 &
