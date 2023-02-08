@@ -66,3 +66,11 @@ RUN <<EOF
 "${prefix}${target}/bin/gitsign" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/gitsign.fish"
 "${prefix}${target}/bin/gitsign" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_gitsign"
 EOF
+RUN <<EOF
+mkdir -p "${prefix}/etc/systemd/user"
+curl --silent --verbose --location --fail --output "${prefix}/etc/systemd/user/gitsign-credential-cache.service" \
+    "https://github.com/sigstore/gitsign/raw/v${version}/contrib/systemd/gitsign-credential-cache.service"
+curl --silent --location --fail --output "${prefix}/etc/systemd/user/gitsign-credential-cache.socket" \
+    "https://github.com/sigstore/gitsign/raw/v${version}/contrib/systemd/gitsign-credential-cache.socket"
+sed -i "s|ExecStart=%h/.local/bin/gitsign-credential-cache|ExecStart=${target}/bin/gitsign-credential-cache|" "${prefix}/etc/systemd/user/gitsign-credential-cache.service"
+EOF
