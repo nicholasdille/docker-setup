@@ -66,12 +66,12 @@ jobs:
                   echo "### Building ${TOOL} with dependencies"
                   GIT_BRANCH=test make ${TOOL}--deep
               done
-              echo "### Creating metadata"
-              GIT_BRANCH=test make metadata.json
-              echo "### Building container image"
-              tools_version=test \
-              docker_setup_cache="${HOME}/.cache/docker-setup" \
-                  ./docker-setup --ignore-conflicts --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
+              #echo "### Creating metadata"
+              #GIT_BRANCH=test make metadata.json
+              #echo "### Building container image"
+              #tools_version=test \
+              #docker_setup_cache="${HOME}/.cache/docker-setup" \
+              #    ./docker-setup --ignore-conflicts --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
 
           else
               echo "### Building all container images"
