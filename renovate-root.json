@@ -22,9 +22,6 @@
     "github-actions",
     "regex"
   ],
-  "baseBranches": [
-    "main"
-  ],
   "useBaseBranchConfig": "merge",
   "platformAutomerge": true,
   "rebaseWhen": "conflicted",
