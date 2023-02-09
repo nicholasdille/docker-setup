@@ -2433,6 +2433,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "SimonTheLeg/konf-go",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/konf/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "replicatedhq/kots",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
