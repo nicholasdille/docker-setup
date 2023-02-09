@@ -2,11 +2,22 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${arch}.tar.gz" \
+set -x
+curl --silent --verbose --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    duf
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+set -x
+curl --silent --verbose --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     duf
 EOF
