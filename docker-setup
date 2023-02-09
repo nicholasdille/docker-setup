@@ -1049,6 +1049,24 @@ while test "$#" -gt 0; do
             check_tools
             ;;
 
+        --file|--file=*)
+            if test "$1" == "--file"; then
+                shift
+                file=$1
+            else
+                file="${1#*=}"
+            fi
+            if ! test -f "${file}"; then
+                >&2 echo "ERROR: File <${file}> does not exist."
+                exit 1
+            fi
+            selected_tools="$(
+                cat "${file}" | grep -P "^[^#\s]" | xargs echo
+            )"
+            install_tools="$(resolve_dependencies_wrapper)"
+            check_tools
+            ;;
+
         --all)
             shift
             set -- --all --tools=all "$@"
