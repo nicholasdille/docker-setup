@@ -7,6 +7,7 @@ tags:
 - type/daemon
 - category/security
 - lang/go
+- state/stale
 homepage: https://github.com/ContainerSSH/ContainerSSH
 description: Launch containers on demand
 renovate:

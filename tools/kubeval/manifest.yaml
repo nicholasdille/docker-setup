@@ -6,6 +6,7 @@ tags:
 - category/security
 - kubernetes
 - lang/go
+- state/stale
 homepage: https://github.com/instrumenta/kubeval
 description: Validate your Kubernetes configuration files
 renovate:

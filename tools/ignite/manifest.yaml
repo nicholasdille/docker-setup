@@ -11,6 +11,7 @@ tags:
 - vm
 - emulation
 - lang/go
+- state/stale
 homepage: https://github.com/weaveworks/ignite
 description: Ignite a Firecracker microVM
 renovate:

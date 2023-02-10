@@ -5,7 +5,6 @@ tags:
 - type/cli
 - category/development
 - lang/go
-- state/stale
 homepage: https://github.com/Jabba-Team/jabba
 description: Java Version Manager
 renovate:

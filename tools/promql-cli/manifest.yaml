@@ -5,7 +5,6 @@ tags:
 - standard/prometheus
 - category/monitoring
 - lang/go
-- state/stale
 homepage: https://github.com/nalbury/promql-cli
 description: Prometheus Query CLI
 renovate:

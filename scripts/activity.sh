@@ -69,6 +69,10 @@ for NAME in ${all_tools}; do
                 --header "Authorization: Bearer ${GITHUB_TOKEN}" \
             | jq --raw-output '.published_at'
         )"
+        if test -z "${RELEASE_TIMESTAMP_ISO}" || test "${RELEASE_TIMESTAMP_ISO}" == "null"; then
+            echo "ERROR: Unable to determine publishing date of release"
+            continue
+        fi
         #echo "+ release timestamp iso: ${RELEASE_TIMESTAMP_ISO}"
         RELEASE_TIMESTAMP_EPOCH="$(date -d "${RELEASE_TIMESTAMP_ISO}" +%s)"
         RELEASE_AGE_SECONDS=$(( NOW_TIMESTAMP_EPOCH - RELEASE_TIMESTAMP_EPOCH ))
@@ -86,6 +90,10 @@ for NAME in ${all_tools}; do
                 --header "Authorization: Bearer ${GITHUB_TOKEN}" \
             | jq --raw-output '.[0].commit.committer.date'
         )"
+        if test -z "${COMMIT_TIMESTAMP_ISO}" || test "${COMMIT_TIMESTAMP_ISO}" == "null"; then
+            echo "ERROR: Unable to determine date of last commit"
+            continue
+        fi
         #echo "+ commit timestamp iso: ${COMMIT_TIMESTAMP_ISO}"
         COMMIT_TIMESTAMP_EPOCH="$(date -d "${COMMIT_TIMESTAMP_ISO}" +%s)"
         COMMIT_AGE_SECONDS=$(( NOW_TIMESTAMP_EPOCH - COMMIT_TIMESTAMP_EPOCH ))

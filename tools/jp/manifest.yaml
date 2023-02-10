@@ -6,6 +6,7 @@ tags:
 - type/cli
 - format
 - lang/go
+- state/stale
 homepage: https://github.com/jmespath/jp
 description: Command line interface to JMESPath
 renovate:
