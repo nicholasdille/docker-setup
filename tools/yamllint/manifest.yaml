@@ -1,0 +1,14 @@
+name: yamllint
+version: "1.29.0"
+check: ""
+dependencies:
+- python
+tags:
+- category/development
+- lang/python
+- type/cli
+homepage: https://github.com/adrienverge/yamllint
+description: Linter for YAML files
+renovate:
+  datasource: pypi
+  package: yamllint
