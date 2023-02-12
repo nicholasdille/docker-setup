@@ -4577,6 +4577,16 @@
     },
     {
       "fileMatch": [
+        "^tools/yamllint/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "yamllint",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/yasu/manifest.yaml$"
       ],
       "matchStrings": [
