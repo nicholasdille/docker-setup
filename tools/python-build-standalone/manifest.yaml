@@ -1,6 +1,7 @@
 name: python-build-standalone
 version: "20230116"
-check: ""
+binary: python3
+check: ${binary} --version | cut -d' ' -f2
 tags:
 - category/development
 - lang/python
