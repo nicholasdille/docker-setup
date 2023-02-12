@@ -1,0 +1,15 @@
+name: tern
+version: "2.11.0"
+check: ${binary} --version | grep ^Tern | cut -d' ' -f3
+dependencies:
+- python
+#- git
+tags:
+- category/security
+- lang/python
+- type/cli
+homepage: https://github.com/tern-tools/tern
+description: SCA tool that generates a Software Bill of Materials for container images and Dockerfiles
+renovate:
+  datasource: pypi
+  package: tern
