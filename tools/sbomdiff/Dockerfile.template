@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.5.1
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+ENV PIPX_HOME=${prefix}${target}/libexec/pipx \
+    PIPX_BIN_DIR=${prefix}${target}/bin
+ARG name
+ARG version
+RUN <<EOF
+pipx install "sbomdiff==${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/pipx/venvs/sbomdiff/bin/sbomdiff" "${prefix}${target}/bin/sbomdiff"
+sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/libexec/pipx/venvs/sbomdiff/bin/sbomdiff"
+EOF
