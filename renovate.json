@@ -4195,6 +4195,16 @@
     },
     {
       "fileMatch": [
+        "^tools/tern/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "tern",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/terraform/manifest.yaml$"
       ],
       "matchStrings": [
