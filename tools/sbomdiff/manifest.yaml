@@ -1,0 +1,14 @@
+name: sbomdiff
+version: "0.4.0"
+check: ""
+dependencies:
+- python
+tags:
+- category/security
+- lang/python
+- type/cli
+homepage: https://github.com/anthonyharrison/sbomdiff
+description: Compares two Software Bill of Materials (SBOMs) and reports the differences
+renovate:
+  datasource: pypi
+  package: sbomdiff
