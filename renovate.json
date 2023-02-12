@@ -3702,6 +3702,16 @@
     },
     {
       "fileMatch": [
+        "^tools/python-build-standalone/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "indygreg/python-build-standalone",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/qemu/manifest.yaml$"
       ],
       "matchStrings": [
