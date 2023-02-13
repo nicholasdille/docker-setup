@@ -3934,6 +3934,16 @@
     },
     {
       "fileMatch": [
+        "^tools/shiv/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "linkedin/shiv",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/shortnames/manifest.yaml$"
       ],
       "matchStrings": [

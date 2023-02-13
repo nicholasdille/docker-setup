@@ -1,0 +1,14 @@
+name: shiv
+version: "1.0.3"
+check: ""
+runtime_dependencies:
+- python
+tags:
+- category/operations
+- lang/python
+- type/cli
+homepage: https://github.com/linkedin/shiv
+description: Command line utility for building fully self contained Python zipapps as outlined in PEP 441
+renovate:
+  datasource: github-releases
+  package: linkedin/shiv
