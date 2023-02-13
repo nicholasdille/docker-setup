@@ -2,7 +2,7 @@ name: kubecolor
 version: "0.0.25"
 check: "" # No dedicated version
 tags:
-- category/development
+- category/operations
 - type/cli
 - lang/go
 homepage: https://github.com/hidetatz/kubecolor

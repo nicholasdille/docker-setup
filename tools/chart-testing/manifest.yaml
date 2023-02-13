@@ -3,7 +3,7 @@ version: "3.7.1"
 binary: ct
 check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
-- category/development
+- category/operations
 - type/cli
 - lang/go
 - package

@@ -3,7 +3,7 @@ version: "1.21.14"
 check: ${binary} --version | cut -d' ' -f3 | cut -d- -f1 | tr -d v
 tags:
 - type/cli
-- category/development
+- category/operations
 - cicd
 - kubernetes
 - lang/go

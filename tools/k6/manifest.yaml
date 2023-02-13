@@ -6,7 +6,7 @@ platforms:
 - linux/arm64
 tags:
 - org/grafana
-- category/development
+- category/operations
 - lang/go
 - type/cli
 homepage: https://github.com/grafana/k6

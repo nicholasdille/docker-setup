@@ -5,7 +5,7 @@ platforms:
 - linux/amd64
 - linux/arm64
 tags:
-- category/development
+- category/operations
 - lang/go
 - type/cli
 homepage: https://github.com/minio/warp

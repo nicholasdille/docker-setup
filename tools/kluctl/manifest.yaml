@@ -7,7 +7,7 @@ tags:
 - management
 - lang/go
 homepage: https://github.com/kluctl/kluctl
-description: missing glue to put together large Kubernetes deployments, composed of multiple smaller parts in a manageable and unified way
+description: Missing glue to put together large Kubernetes deployments, composed of multiple smaller parts in a manageable and unified way
 renovate:
   datasource: github-releases
   package: kluctl/kluctl

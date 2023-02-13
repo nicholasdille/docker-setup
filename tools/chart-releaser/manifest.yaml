@@ -3,7 +3,7 @@ version: "1.5.0"
 binary: cr
 check: ${binary} version | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
-- category/development
+- category/operations
 - type/cli
 - lang/go
 - package

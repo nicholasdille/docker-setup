@@ -2,7 +2,7 @@ name: kubeconform
 version: "0.5.0"
 check: ${binary} -v | tr -d v
 tags:
-- category/development
+- category/operations
 - type/cli
 - lang/go
 homepage: https://github.com/yannh/kubeconform

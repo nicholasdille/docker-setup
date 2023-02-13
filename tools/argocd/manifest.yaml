@@ -3,7 +3,7 @@ version: "2.6.1"
 check: ${binary} version 2>/dev/null | grep ^argocd | cut -d' ' -f2 | cut -d+ -f1 | tr -d v
 tags:
 - type/cli
-- category/development
+- category/operations
 - gitops
 - lang/go
 homepage: https://github.com/argoproj/argo-cd
