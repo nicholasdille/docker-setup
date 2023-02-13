@@ -6,7 +6,11 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/projectdiscovery/mapcidr/releases/download/v${version}/mapcidr_${version}_linux_${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
-    mapcidr
+url="https://github.com/projectdiscovery/mapcidr/releases/download/v${version}/mapcidr_${version}_linux_${alt_arch}.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+rm \
+    "${prefix}${target}/bin/LICENSE.MD" \
+    "${prefix}${target}/bin/README.md"
 EOF
