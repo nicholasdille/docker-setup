@@ -342,7 +342,15 @@ function check_tools() {
     tool_operator=()
     tool_color=()
     tool_marker=()
+    local conflicts=()
     for name in ${install_tools}; do
+        debug "Fetching conflicts for ${name}"
+        tool_conflicts="$(jq --raw-output --arg name "${name}" '.tools[] | select(.name == $name) | select(.conflicts_with != null) | .conflicts_with[]' "${docker_setup_metadata_file}")"
+        for conflict in ${tool_conflicts}; do
+            conflicts+=("${conflict}")
+        done
+    done
+    for name in ${install_tools} ${conflicts}; do
         debug "${name}:"
 
         local version="${tool_version[${name}]}"
@@ -460,7 +468,7 @@ function has_conflicts() {
         debug "Conflicts for ${name}: ${conflicts}"
 
         for conflict in ${conflicts}; do
-            debug "Processing planned ${name} and conflict ${conflict}"
+            debug "Processing planned ${name} and conflict ${conflict} (installed? ${tool_installed[${conflict}]})"
             
             if ${tool_installed[${conflict}]}; then
                 debug "Checking conflict between planned ${name} and installed ${conflict}"
