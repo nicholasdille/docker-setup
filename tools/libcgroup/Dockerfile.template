@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM ubuntu:22.04@sha256:9a0bdde4188b896a372804be2384015e90e3f84906b750c1a53539b585fbbe7f AS build
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
@@ -10,28 +10,21 @@ apt-get -y install --no-install-recommends \
     autoconf \
     automake \
     libtool \
-    git \
-    ca-certificates \
     m4 \
     bison \
-    flex \
-    curl
+    flex
+EOF
+COPY <<EOF >${prefix}/etc/ld.so.conf.d/libcgroup.conf
+${target}/lib
 EOF
 WORKDIR /tmp/libcgroup
 ARG name
 ARG version
+# Unable to build statically linked tools
 RUN <<EOF
 curl -sL https://github.com/libcgroup/libcgroup/releases/download/v${version}/libcgroup-${version}.tar.gz \
 | tar -xz --strip-components 1
-./configure --prefix=/opt/libcgroup --disable-pam --disable-daemon
+./configure --prefix="${prefix}${target}" --disable-pam --disable-daemon
 make
 make install
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY <<EOF >${prefix}/etc/ld.so.conf.d/libcgroup.conf
-${target}/lib
-EOF
-COPY --from=build /opt/libcgroup/ ${prefix}${target}/
