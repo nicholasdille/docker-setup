@@ -11,5 +11,5 @@ COPY --link --from=shiv / /
 ARG name
 ARG version
 RUN <<EOF
-shiv --output-file "${prefix}${target}/bin/azure-cli" --console-script azure-cli "azure-cli==${version}"
+shiv --output-file "${prefix}${target}/bin/az" --console-script az "azure-cli==${version}"
 EOF
