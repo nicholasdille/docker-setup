@@ -976,6 +976,16 @@
     },
     {
       "fileMatch": [
+        "^tools/delta/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "dandavison/delta",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/dependency-check/manifest.yaml$"
       ],
       "matchStrings": [
