@@ -1,5 +1,5 @@
 name: mutagen
-version: "0.16.4"
+version: "0.16.5"
 check: ${binary} version
 tags:
 - component/network
