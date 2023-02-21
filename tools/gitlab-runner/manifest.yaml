@@ -1,5 +1,5 @@
 name: gitlab-runner
-version: "15.8.2"
+version: "15.8.3"
 check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 platforms:
 - linux/amd64
