@@ -1,5 +1,5 @@
 name: shortnames
-version: "2022.02.08"
+version: "2023.02.20"
 binary: false
 check: "" # No binary
 tags:
