@@ -1,5 +1,5 @@
 name: kubeswitch
-version: "1.5.2"
+version: "1.5.3"
 check: "" # No version parameter
 tags:
 - type/cli
