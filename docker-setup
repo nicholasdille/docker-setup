@@ -1018,14 +1018,11 @@ while test "$#" -gt 0; do
                     selected_tools="${default_tools}"
                     ;;
                 installed)
-                    selected_tools="${all_tools}"
-                    check_tools
-                    selected_tools=""
-                    for name in "${!tool_installed[@]}"; do
-                        if ${tool_installed[${name}]}; then
-                            selected_tools="${selected_tools} ${name}"
-                        fi
-                    done
+                    debug "Selected installed tools"
+                    selected_tools="$(
+                        find "${docker_setup_cache}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; \
+                        | xargs echo
+                    )"
                     ;;
                 *%)
                     selected_tools="$(
