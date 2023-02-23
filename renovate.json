@@ -80,8 +80,8 @@
       "matchDatasources": [
         "docker"
       ],
-      "matchPackageNames": [
-        "ghcr.io/nicholasdille/docker-setup/**"
+      "matchPackagePrefixes": [
+        "ghcr.io/nicholasdille/docker-setup/"
       ],
       "updateTypes": [
         "pin",
