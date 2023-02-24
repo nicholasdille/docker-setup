@@ -48,7 +48,6 @@ make install
 EOF
 
 FROM --platform=arm64 check AS prepare
-WORKDIR /go/src/github.com/nodejs/node
 ARG name
 ARG version
 RUN <<EOF
