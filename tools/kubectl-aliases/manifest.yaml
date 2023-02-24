@@ -1,0 +1,9 @@
+name: kubectl-aliases
+version: "1.0.0"
+check: ""
+tags:
+- category/operations
+- lang/shell
+- type/cli
+homepage: https://github.com/ahmetb/kubectl-aliases
+description: Programmatically generated handy kubectl aliases
