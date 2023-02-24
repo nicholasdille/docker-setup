@@ -2676,6 +2676,16 @@
     },
     {
       "fileMatch": [
+        "^tools/kubebox/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubebox",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "fileMatch": [
         "^tools/kubeclarity-cli/manifest.yaml$"
       ],
       "matchStrings": [

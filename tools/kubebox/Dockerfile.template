@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
+FROM ghcr.io/nicholasdille/docker-setup/npm:${ref} AS npm
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=nodejs / /
+COPY --link --from=npm / /
+WORKDIR ${prefix}${target}/libexec/kubebox
+ARG name
+ARG version
+RUN <<EOF
+npm install \
+    --omit=dev \
+    "kubebox@${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/kubebox/node_modules/.bin/kubebox" "${prefix}${target}/bin/"
+EOF
