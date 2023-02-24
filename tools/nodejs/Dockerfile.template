@@ -2,7 +2,24 @@
 
 ARG ref=main
 
-FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS check
+ARG name
+ARG version
+RUN <<EOF
+MAJOR_VERSION="$(
+    curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
+    | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key' \
+    | tr -d v
+)"
+if test "${version%%.*}" == "${MAJOR_VERSION}"; then
+    echo "### Version ${version} matches latest LTS ${MAJOR_VERSION}"
+else
+    echo "### Version ${version} does not match latest LTS ${MAJOR_VERSION}"
+    exit 1
+fi
+EOF
+
+FROM --platform=amd64 check AS prepare
 WORKDIR /go/src/github.com/nodejs/node
 ARG name
 ARG version
@@ -43,7 +60,7 @@ make -j2
 make install
 EOF
 
-FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=arm64 check AS prepare
 WORKDIR /go/src/github.com/nodejs/node
 ARG name
 ARG version
