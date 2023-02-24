@@ -44,7 +44,7 @@
       "matchDatasources":     [ "docker" ],
       "matchPackagePrefixes": [ "ghcr.io/nicholasdille/docker-setup/" ],
       "updateTypes":          [ "pin", "digest" ],
-      "automerge":              false
+      "enabled":                false
     },
     {
       "matchDatasources": [ "docker" ],

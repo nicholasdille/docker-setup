@@ -87,7 +87,7 @@
         "pin",
         "digest"
       ],
-      "automerge": false
+      "enabled": false
     },
     {
       "matchDatasources": [
