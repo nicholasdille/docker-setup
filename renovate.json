@@ -619,6 +619,17 @@
     },
     {
       "fileMatch": [
+        "^tools/click/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "databricks/click",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cloudflared/manifest.yaml$"
       ],
       "matchStrings": [
