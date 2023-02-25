@@ -2,8 +2,7 @@
 
 ARG ref=main
 
-FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-WORKDIR /go/src/github.com/nodejs/node
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
@@ -20,50 +19,24 @@ else
 fi
 EOF
 RUN <<EOF
-apt-get update
-apt-get -y install --no-install-recommends \
-    curl \
-    python3 \
-    gcc \
-    g++ \
-    linux-headers-generic \
-    make
-curl --silent --location --fail https://github.com/nodejs/node/archive/refs/tags/v${version}.tar.gz \
-| tar --extract --gzip --strip-components=1
-./configure \
-    --prefix="${prefix}${target}" \
-    --fully-static \
-    --without-inspector \
-    --enable-lto \
-    --without-node-options \
-    --without-dtrace \
-    --without-npm \
-    --with-intl=small-icu
-make -j2
-make install
-EOF
-
-FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-RUN <<EOF
-MAJOR_VERSION="$(
-    curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
-    | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key' \
-    | tr -d v
-)"
-if test "${version%%.*}" == "${MAJOR_VERSION}"; then
-    echo "### Version ${version} matches latest LTS ${MAJOR_VERSION}"
-else
-    echo "### Version ${version} does not match latest LTS ${MAJOR_VERSION}"
-    exit 1
-fi
-EOF
-RUN <<EOF
-curl --silent --verbose --location --fail "https://nodejs.org/dist/v${version}/node-v${version}-linux-${alt_arch}.tar.xz" \
+# https://nodejs.org/dist/v18.14.2/node-v18.14.2-linux-x64.tar.xz
+# https://nodejs.org/dist/v18.14.2/node-v18.14.2-linux-arm64.tar.xz
+case "${alt_arch}" in
+    amd64)
+        export arch_suffix=x64
+        ;;
+    arm64)
+        export arch_suffix=arm64
+        ;;
+    *)
+        echo "ERROR: Unknown architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://nodejs.org/dist/v${version}/node-v${version}-linux-${arch_suffix}.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}" --strip-components=1 --no-same-owner \
-    "node-v${version}-linux-${alt_arch}/bin" \
-    "node-v${version}-linux-${alt_arch}/include" \
-    "node-v${version}-linux-${alt_arch}/lib" \
-    "node-v${version}-linux-${alt_arch}/share"
+    "node-v${version}-linux-${arch_suffix}/bin" \
+    "node-v${version}-linux-${arch_suffix}/include" \
+    "node-v${version}-linux-${arch_suffix}/lib" \
+    "node-v${version}-linux-${arch_suffix}/share"
 EOF

@@ -2,25 +2,5 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
-
-FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --link --from=nodejs / /
-WORKDIR /tmp/node
-ARG name
-ARG version
-RUN <<EOF
-curl --silent --location --fail "https://registry.npmjs.org/npm/${version}" \
-| jq --raw-output '.dist.tarball' \
-| xargs curl --silent --location --fail \
-| tar --extract --gzip --strip-components=1 --no-same-owner
-node bin/npm-cli.js install --global --prefix "${prefix}${target}" --force /tmp/node
-EOF
-COPY <<EOF ${prefix}${target}/etc/npmrc
-globalconfig=/etc/npmrc
-globalignorefile=/etc/npmignore
-prefix=/usr/local
-EOF
-
-FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY <<EOF ${prefix}${target}/var/cache/docker-setup/npm-is-included-in-prebuilt-binaries-of-nodejs
