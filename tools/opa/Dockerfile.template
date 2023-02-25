@@ -1,11 +1,10 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/opa" \
     "https://github.com/open-policy-agent/opa/releases/download/v${version}/opa_linux_${alt_arch}_static"

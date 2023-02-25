@@ -4,6 +4,9 @@ binary: kubectl-crossplane
 check: ${binary} --version | tr -d v
 runtime_dependencies:
 - kubectl
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - type/plugin
