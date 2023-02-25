@@ -711,19 +711,33 @@ function install-from-tarball() {
         fi
         MANIFEST="$(regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" --format raw-body)"
         if jq --exit-status '.mediaType == "application/vnd.oci.image.index.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            debug "Found OCI manifest list"
+            IMAGE_DIGEST="$(
+                echo "${MANIFEST}" \
+                | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest'
+            )"
+            debug "Selected image digest for ${alt_arch}: ${IMAGE_DIGEST}"
             echo "${MANIFEST}" \
             | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body
 
         elif jq --exit-status '.mediaType == "application/vnd.oci.image.manifest.v1+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            debug "Found OCI image manifest"
             echo "${MANIFEST}"
 
         elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.list.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            debug "Found Docker manifest list"
+            IMAGE_DIGEST="$(
+                echo "${MANIFEST}" \
+                | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest'
+            )"
+            debug "Selected image digest for ${alt_arch}: ${IMAGE_DIGEST}"
             echo "${MANIFEST}" \
             | jq --raw-output --arg arch "${alt_arch}" '.manifests[] | select(.platform.architecture == $arch) | .digest' \
-            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body \
+            | xargs -I{} regctl manifest get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}@{}" --format raw-body
 
         elif jq --exit-status '.mediaType == "application/vnd.docker.distribution.manifest.v2+json"' <<<"${MANIFEST}" >/dev/null 2>&1; then
+            debug "Found Docker image manifest"
             echo "${MANIFEST}"
 
         else
@@ -732,7 +746,7 @@ function install-from-tarball() {
         fi \
         | jq --raw-output '.layers[].digest' \
         | while read -r DIGEST; do
-            #echo "${emoji_archive} Unpacking ${DIGEST}"
+            echo "${emoji_archive} Unpacking ${DIGEST}"
             regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}${tool}:${tools_version}" "${DIGEST}" \
             | tar --extract --gzip --directory="${prefix}/" --no-same-owner
         done
