@@ -6,6 +6,9 @@ build_dependencies:
 - npm
 runtime_dependencies:
 - nodejs
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/operations
 - lang/javascript
