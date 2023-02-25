@@ -1,5 +1,5 @@
 name: cdebug
-version: "0.0.11"
+version: "0.0.12"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
 - linux/amd64
