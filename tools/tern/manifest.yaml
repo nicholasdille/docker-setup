@@ -1,9 +1,14 @@
 name: tern
 version: "2.11.0"
 check: ${binary} --version | grep ^Tern | cut -d' ' -f3
-dependencies:
+build_dependencies:
+- python
+runtime_dependencies:
 - python
 #- git
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/security
 - lang/python

@@ -5,6 +5,9 @@ build_dependencies:
 - python
 runtime_dependencies:
 - python
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/microsoft
 - category/development

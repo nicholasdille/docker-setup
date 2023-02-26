@@ -1,12 +1,18 @@
 name: foo
 version: "0.1.2"
 check: ""
-dependencies:
+build_dependencies:
 - bar
+runtime_dependencies:
+- baz
+platforms:
+- linux/amd64
+#- linux/arm64
 tags:
 - org/?
 - category/?
 - lang/?
+- type/?
 homepage: https://www.google.de
 description: Some description
 renovate:
