@@ -1,6 +1,9 @@
 name: kubectl-aliases
 version: "1.0.0"
-check: ""
+check: "" # No executables
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/operations
 - lang/shell
