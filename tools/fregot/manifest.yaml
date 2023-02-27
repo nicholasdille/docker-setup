@@ -1,6 +1,6 @@
 name: fregot
 version: "0.14.2"
-check: ""
+check: ${binary} 2>&1 | grep ^fregot | cut -d' ' -f2 | tr -d v
 platforms:
 - linux/amd64
 tags:
