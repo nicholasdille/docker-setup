@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://download.falco.org/packages/bin/${arch}/falco-${version}-${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}" --strip-components=1 --no-same-owner
+
+mv "${prefix}/usr/bin/" "${prefix}${target}/"
+mv "${prefix}/usr/src/" "${prefix}${target}/"
+mv "${prefix}/usr/share/falco/" "${prefix}${target}/share/"
+
+"${prefix}${target}/bin/falcoctl" completion bash >"${prefix}${target}/share/bash-completion/completions/falcoctl"
+"${prefix}${target}/bin/falcoctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/falcoctl.fish"
+"${prefix}${target}/bin/falcoctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_falcoctl"
+EOF

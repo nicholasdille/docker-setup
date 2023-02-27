@@ -1434,6 +1434,16 @@
     },
     {
       "fileMatch": [
+        "^tools/falso/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "falcosecurity/falco",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/falcosidekick/manifest.yaml$"
       ],
       "matchStrings": [

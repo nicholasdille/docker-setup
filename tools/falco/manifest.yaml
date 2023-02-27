@@ -1,0 +1,15 @@
+name: falso
+version: "0.34.1"
+check: ${binary} --version | grep ^Falco | cut -d' ' -f3
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/security
+- lang/c
+- type/cli
+homepage: https://github.com/falcosecurity/falco
+description: Cloud Native Runtime Security
+renovate:
+  datasource: github-releases
+  package: falcosecurity/falco
