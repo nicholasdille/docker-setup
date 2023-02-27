@@ -2218,6 +2218,17 @@
     },
     {
       "fileMatch": [
+        "^tools/jless/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "PaulJuliusMartinez/jless",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/jp/manifest.yaml$"
       ],
       "matchStrings": [
