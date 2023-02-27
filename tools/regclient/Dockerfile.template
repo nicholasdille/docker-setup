@@ -27,4 +27,7 @@ chmod +x "${prefix}${target}/bin/regsync"
 "${prefix}${target}/bin/regsync" completion bash >"${prefix}${target}/share/bash-completion/completions/regsync"
 "${prefix}${target}/bin/regsync" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/regsync.fish"
 "${prefix}${target}/bin/regsync" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_regsync"
+
+curl --silent --location --fail --output "${prefix}${target}/libexec/docker/cli-plugins/docker-regclient" \
+    "https://github.com/regclient/regclient/blob/v${version}/docker-plugin/docker-regclient"
 EOF
