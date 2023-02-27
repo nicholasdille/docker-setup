@@ -1790,6 +1790,17 @@
     },
     {
       "fileMatch": [
+        "^tools/gitui/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "extrawurst/gitui",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/glab/manifest.yaml$"
       ],
       "matchStrings": [
