@@ -1,0 +1,17 @@
+name: wasmedge
+version: "0.11.2"
+check: ${binary} --version | cut -d' ' -f3
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/c
+- type/cli
+- webassembly
+- wasm
+homepage: https://github.com/WasmEdge/WasmEdge
+description: Lightweight, high-performance, and extensible WebAssembly runtime
+renovate:
+  datasource: github-releases
+  package: WasmEdge/WasmEdge

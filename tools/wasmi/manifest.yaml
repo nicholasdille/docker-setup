@@ -1,0 +1,18 @@
+name: wasmi
+version: "0.27.0"
+check: ${binary} --version | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/rust
+- type/cli
+- webassembly
+- wasm
+homepage: https://github.com/paritytech/wasmi
+description: WebAssembly (Wasm) interpreter
+renovate:
+  datasource: github-releases
+  package: paritytech/wasmi
+  extractVersion: ^v(?<version>.+?)$
