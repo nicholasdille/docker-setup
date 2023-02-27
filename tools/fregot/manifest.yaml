@@ -1,0 +1,15 @@
+name: fregot
+version: "0.14.2"
+check: ""
+platforms:
+- linux/amd64
+tags:
+- category/operations
+- lang/haskell
+- type/cli
+homepage: https://github.com/fugue/fregot
+description: Fugue Rego Toolkit
+renovate:
+  datasource: github-releases
+  package: fugue/fregot
+  extractVersion: ^v(?<version>.+?)$

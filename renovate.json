@@ -1574,6 +1574,17 @@
     },
     {
       "fileMatch": [
+        "^tools/fregot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "fugue/fregot",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/furyctl/manifest.yaml$"
       ],
       "matchStrings": [
