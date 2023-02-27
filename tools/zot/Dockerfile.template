@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.5.2
 
-ARG ref=main
+ARG ref=main@sha256:c079fcca3aa8eae2ff3efc2f621437e1cfd6ee364a7bb1b3810662714107c5b9
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
 ARG name
