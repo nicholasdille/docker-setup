@@ -1,0 +1,16 @@
+name: kpt
+version: "1.0.0-beta.27"
+check: ${binary} version
+platforms:
+- linux/amd64
+tags:
+- org/google
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/GoogleContainerTools/kpt
+description: Automate Kubernetes Configuration Editing
+renovate:
+  datasource: github-releases
+  package: GoogleContainerTools/kpt
+  extractVersion: ^v(?<version>.+?)$
