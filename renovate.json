@@ -2620,6 +2620,17 @@
     },
     {
       "fileMatch": [
+        "^tools/ksort/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "superbrothers/ksort",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/ktop/manifest.yaml$"
       ],
       "matchStrings": [
