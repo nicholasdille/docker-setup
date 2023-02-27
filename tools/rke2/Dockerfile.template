@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/rancher/rke2/releases/download/v${version}/rke2.linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner \
+    bin/rke2 \
+    lib
+mv \
+    "${prefix}${target}/lib/systemd/system/rke2-server.service" \
+    "${prefix}${target}/lib/systemd/system/rke2-server.env" \
+    "${prefix}${target}/lib/systemd/system/rke2-agent.service" \
+    "${prefix}${target}/lib/systemd/system/rke2-agent.env" \
+    "${prefix}/etc/systemd/system/"
+EOF

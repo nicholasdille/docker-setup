@@ -1,0 +1,17 @@
+name: rke2
+version: "1.26.0+rke2r2"
+check: ${binary} --version | grep ^rke2 | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+tags:
+- org/rancher
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/rancher/rke2
+description: Rancher's next-generation Kubernetes distribution
+renovate:
+  datasource: github-releases
+  package: rancher/rke2
+  extractVersion: ^v(?<version>.+?)$
+  versioning: loose

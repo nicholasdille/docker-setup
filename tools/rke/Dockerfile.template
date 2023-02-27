@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/rke" \
+    "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/rke"
+EOF
