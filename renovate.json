@@ -3970,6 +3970,17 @@
     },
     {
       "fileMatch": [
+        "^tools/sealer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sealerio/sealer",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/secretize/manifest.yaml$"
       ],
       "matchStrings": [

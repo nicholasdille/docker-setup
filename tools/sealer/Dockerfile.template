@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/sealerio/sealer/releases/download/v${version}/sealer-v${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+
+curl --silent --location --fail "https://github.com/sealerio/sealer/releases/download/v${version}/seautil-v${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+
+"${prefix}${target}/bin/sealer" completion bash >"${prefix}${target}/share/bash-completion/completions/sealer"
+EOF

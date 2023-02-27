@@ -1,0 +1,16 @@
+name: sealer
+version: "0.9.1"
+check: ${binary} version | jq --raw-output '.gitVersion' | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/sealerio/sealer
+description: Build, Share and Run Both Your Kubernetes Cluster and Distributed Applications
+renovate:
+  datasource: github-releases
+  package: sealerio/sealer
+  extractVersion: ^v(?<version>.+?)$
