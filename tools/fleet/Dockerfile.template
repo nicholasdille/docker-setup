@@ -1,0 +1,33 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/fleet" \
+    "https://github.com/rancher/fleet/releases/download/v${version}/fleet-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/fleet"
+
+curl --silent --location --fail --output "${prefix}${target}/bin/fleetagent" \
+    "https://github.com/rancher/fleet/releases/download/v${version}/fleetagent-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/fleetagent"
+
+curl --silent --location --fail --output "${prefix}${target}/bin/fleetcontroller" \
+    "https://github.com/rancher/fleet/releases/download/v${version}/fleetcontroller-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/fleetcontroller"
+
+curl --silent --location --fail "https://github.com/rancher/fleet/releases/download/v${version}/fleet-crd-${version}.tgz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/" --no-same-owner
+
+curl --silent --location --fail "https://github.com/rancher/fleet/releases/download/v${version}/fleet-agent-${version}.tgz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/" --no-same-owner
+
+curl --silent --location --fail "https://github.com/rancher/fleet/releases/download/v${version}/fleet-${version}.tgz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/" --no-same-owner
+
+"${prefix}${target}/bin/fleet" completion bash >"${prefix}${target}/share/bash-completion/completions/fleet"
+"${prefix}${target}/bin/fleet" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/fleet.fish"
+"${prefix}${target}/bin/fleet" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_fleet"
+EOF

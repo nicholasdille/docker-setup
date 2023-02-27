@@ -1,0 +1,21 @@
+name: fleet
+version: "0.5.2"
+check: ""
+build_dependencies:
+- bar
+runtime_dependencies:
+- baz
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/rancher
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/rancher/fleet
+description: Manage large fleets of Kubernetes clusters
+renovate:
+  datasource: github-releases
+  package: rancher/fleet
+  extractVersion: ^v(?<version>.+?)$

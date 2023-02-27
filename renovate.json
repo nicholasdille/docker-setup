@@ -1507,6 +1507,17 @@
     },
     {
       "fileMatch": [
+        "^tools/fleet/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "rancher/fleet",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/flux/manifest.yaml$"
       ],
       "matchStrings": [
