@@ -1,0 +1,16 @@
+name: traefik
+version: "2.9.8"
+check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/traefik/traefik
+description: Cloud Native Application Proxy
+renovate:
+  datasource: github-releases
+  package: traefik/traefik
+  extractVersion: ^v(?<version>.+?)$

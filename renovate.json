@@ -4379,6 +4379,17 @@
     },
     {
       "fileMatch": [
+        "^tools/traefik/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "traefik/traefik",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/trillian/manifest.yaml$"
       ],
       "matchStrings": [
