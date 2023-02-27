@@ -2478,6 +2478,16 @@
     },
     {
       "fileMatch": [
+        "^tools/kgctl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "squat/kilo",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/kind/manifest.yaml$"
       ],
       "matchStrings": [
