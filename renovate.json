@@ -1425,6 +1425,17 @@
     },
     {
       "fileMatch": [
+        "^tools/etcdadm/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/etcdadm",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/faas-cli/manifest.yaml$"
       ],
       "matchStrings": [

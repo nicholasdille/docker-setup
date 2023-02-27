@@ -1,0 +1,17 @@
+name: etcdadm
+version: "0.1.5"
+check: "" # Version too hard to parse
+platforms:
+- linux/amd64
+tags:
+- org/kubernetes
+- org/cncf
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/kubernetes-sigs/etcdadm
+description: Command-line tool for operating an etcd cluster
+renovate:
+  datasource: github-releases
+  package: kubernetes-sigs/etcdadm
+  extractVersion: ^v(?<version>.+?)$
