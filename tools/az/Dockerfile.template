@@ -5,11 +5,25 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
 FROM ghcr.io/nicholasdille/docker-setup/shiv:${ref} AS shiv
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=python / /
 COPY --link --from=shiv / /
 ARG name
 ARG version
+RUN <<EOF
+shiv --output-file "${prefix}${target}/bin/az" --console-script az "azure-cli==${version}"
+EOF
+
+FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=python / /
+COPY --link --from=shiv / /
+ARG name
+ARG version
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential
+EOF
 RUN <<EOF
 shiv --output-file "${prefix}${target}/bin/az" --console-script az "azure-cli==${version}"
 EOF
