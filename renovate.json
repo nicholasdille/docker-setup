@@ -2392,6 +2392,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kcount/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "pan-net-security/kcount",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kcp/manifest.yaml$"
       ],
       "matchStrings": [
