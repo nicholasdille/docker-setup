@@ -1,0 +1,16 @@
+name: clusterlint
+version: "0.5.0"
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+tags:
+- org/digitalocean
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/digitalocean/clusterlint
+description: Best practices checker for Kubernetes clusters
+renovate:
+  datasource: github-releases
+  package: digitalocean/clusterlint
+  extractVersion: ^v(?<version>.+?)$

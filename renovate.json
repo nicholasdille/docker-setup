@@ -662,6 +662,17 @@
     },
     {
       "fileMatch": [
+        "^tools/clusterlint/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "digitalocean/clusterlint",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cmctl/manifest.yaml$"
       ],
       "matchStrings": [
