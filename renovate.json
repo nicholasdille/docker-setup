@@ -2938,6 +2938,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kudo/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kudobuilder/kudo",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kustomize/manifest.yaml$"
       ],
       "matchStrings": [
