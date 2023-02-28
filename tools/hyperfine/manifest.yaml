@@ -1,0 +1,16 @@
+name: hyperfine
+version: "1.15.0"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/rust
+- type/cli
+homepage: https://github.com/sharkdp/hyperfine
+description: Command-line benchmarking tool
+renovate:
+  datasource: github-releases
+  package: sharkdp/hyperfine
+  extractVersion: ^v(?<version>.+?)$
