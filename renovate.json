@@ -565,6 +565,16 @@
     },
     {
       "fileMatch": [
+        "^tools/checkov/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "checkov",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/chekr/manifest.yaml$"
       ],
       "matchStrings": [

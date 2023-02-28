@@ -1,0 +1,19 @@
+name: checkov
+version: "2.3.48"
+check: ""
+build_dependencies:
+- python
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/security
+- lang/python
+- type/cli
+homepage: https://github.com/bridgecrewio/checkov
+description: Prevent cloud misconfigurations and find vulnerabilities during build-time in infrastructure as code, container images and open source packages
+renovate:
+  datasource: pypi
+  package: checkov
