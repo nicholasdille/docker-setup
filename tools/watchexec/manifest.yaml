@@ -1,0 +1,16 @@
+name: watchexec
+version: "1.21.1"
+check: ${binary} --version | cut -d' ' -f2
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/development
+- lang/rust
+- type/daemon
+homepage: https://github.com/watchexec/watchexec
+description: Executes commands in response to file modifications
+renovate:
+  datasource: github-releases
+  package: watchexec/watchexec
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,22 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/watchexec/watchexec/releases/download/v${version}/watchexec-${version}-${arch}-unknown-linux-musl.tar.xz" \
+| tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "watchexec-${version}-${arch}-unknown-linux-musl/watchexec" \
+    "watchexec-${version}-${arch}-unknown-linux-musl/watchexec.1"
+
+mv "${prefix}${target}/bin/watchexec.1" "${prefix}${target}/share/man/man1/"
+EOF
+
+# completion
+#RUN <<EOF
+#"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
+#"${prefix}${target}/bin/foo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
+#"${prefix}${target}/bin/foo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_foo"
+#EOF
