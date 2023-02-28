@@ -3245,6 +3245,17 @@
     },
     {
       "fileMatch": [
+        "^tools/mage/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "magefile/mage",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/manifest-tool/manifest.yaml$"
       ],
       "matchStrings": [

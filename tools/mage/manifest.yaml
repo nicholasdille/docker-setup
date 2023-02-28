@@ -1,0 +1,16 @@
+name: mage
+version: "1.14.0"
+check: ${binary} --version | grep ^Mage | cut -d' ' -f4
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/magefile/mage
+description: Make/rake-like dev tool using Go
+renovate:
+  datasource: github-releases
+  package: magefile/mage
+  extractVersion: ^v(?<version>.+?)$
