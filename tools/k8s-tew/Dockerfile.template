@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/k8s-tew" \
+    "https://github.com/darxkies/k8s-tew/releases/download/${version}/k8s-tew"
+chmod +x "${prefix}${target}/bin/k8s-tew"
+
+"${prefix}${target}/bin/k8s-tew" completion bash >"${prefix}${target}/share/bash-completion/completions/k8s-tew"
+"${prefix}${target}/bin/k8s-tew" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_k8s-tew"
+EOF

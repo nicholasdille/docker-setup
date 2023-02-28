@@ -1,0 +1,14 @@
+name: k8s-tew
+version: "2.4.10"
+check: "" # No version parameter
+platforms:
+- linux/amd64
+tags:
+- category/opertions
+- lang/go
+- type/cli
+homepage: https://github.com/darxkies/k8s-tew
+description: Kubernetes - The Easier Way
+renovate:
+  datasource: github-releases
+  package: darxkies/k8s-tew

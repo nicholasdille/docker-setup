@@ -2402,6 +2402,16 @@
     },
     {
       "fileMatch": [
+        "^tools/k8s-tew/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "darxkies/k8s-tew",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/k9s/manifest.yaml$"
       ],
       "matchStrings": [
