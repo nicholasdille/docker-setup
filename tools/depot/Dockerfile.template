@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/depot/cli/releases/download/v${version}/depot_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    bin/depot
+
+"${prefix}${target}/bin/depot" completion bash >"${prefix}${target}/share/bash-completion/completions/depot"
+"${prefix}${target}/bin/depot" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/depot.fish"
+"${prefix}${target}/bin/depot" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_depot"
+EOF

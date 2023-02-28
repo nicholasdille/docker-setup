@@ -1042,6 +1042,17 @@
     },
     {
       "fileMatch": [
+        "^tools/depot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "depot/cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/direnv/manifest.yaml$"
       ],
       "matchStrings": [
