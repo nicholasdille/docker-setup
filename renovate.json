@@ -3444,6 +3444,16 @@
     },
     {
       "fileMatch": [
+        "^tools/n8n/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "n8n",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "fileMatch": [
         "^tools/navi/manifest.yaml$"
       ],
       "matchStrings": [
