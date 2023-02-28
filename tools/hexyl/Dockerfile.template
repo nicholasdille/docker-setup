@@ -1,0 +1,27 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+case "${alt_arch}" in
+    amd64)
+        export suffix="musl"
+        ;;
+    arm64)
+        export suffix="gnu"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://github.com/sharkdp/hexyl/releases/download/v${version}/hexyl-v${version}-${arch}-unknown-linux-${suffix}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "hexyl-v${version}-${arch}-unknown-linux-${suffix}/hexyl" \
+    "hexyl-v${version}-${arch}-unknown-linux-${suffix}/hexyl.1"
+
+mv "${prefix}${target}/bin/hexyl.1" "${prefix}${target}/share/man/man1/"
+EOF

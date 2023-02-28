@@ -2107,6 +2107,17 @@
     },
     {
       "fileMatch": [
+        "^tools/hexyl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sharkdp/hexyl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/htmx/manifest.yaml$"
       ],
       "matchStrings": [
