@@ -4746,6 +4746,17 @@
     },
     {
       "fileMatch": [
+        "^tools/vgrep/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vrothberg/vgrep",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/vhs/manifest.yaml$"
       ],
       "matchStrings": [
