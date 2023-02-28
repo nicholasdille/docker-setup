@@ -3486,6 +3486,18 @@
     },
     {
       "fileMatch": [
+        "^tools/ncdu/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ncdu",
+      "datasourceTemplate": "git-tags",
+      "packageNameTemplate": "git://g.blicky.net/ncdu.git",
+      "extractVersionTemplate": "^v(?<version>\\\\d+\\.\\\\d+\\.\\\\d+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/neo4j/manifest.yaml$"
       ],
       "matchStrings": [

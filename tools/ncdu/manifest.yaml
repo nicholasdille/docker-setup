@@ -1,0 +1,17 @@
+name: ncdu
+version: "2.2.1"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/zig
+- type/cli
+homepage: https://dev.yorhel.nl/ncdu
+description: Disk usage analyzer with an ncurses interface
+renovate:
+  datasource: git-tags
+  package: ncdu
+  url: git://g.blicky.net/ncdu.git
+  extractVersion: ^v(?<version>\\d+\.\\d+\.\\d+?)$
