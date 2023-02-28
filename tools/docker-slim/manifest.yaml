@@ -1,0 +1,15 @@
+name: docker-slim
+version: "1.40.0"
+check: ${binary} --version | cut -d' ' -f3 | cut -d\| -f3
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/slimtoolkit/slim
+description: Don't change anything in your container image and minify it by up to 30x
+renovate:
+  datasource: github-releases
+  package: slimtoolkit/slim

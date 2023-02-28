@@ -1282,6 +1282,16 @@
     },
     {
       "fileMatch": [
+        "^tools/docker-slim/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "slimtoolkit/slim",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/docker-stable/manifest.yaml$"
       ],
       "matchStrings": [

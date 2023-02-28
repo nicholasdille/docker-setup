@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+case "${alt_arch}" in
+    amd64)
+        export arch_suffix=""
+        ;;
+    arm64)
+        export arch_suffix="_${alt_arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://downloads.dockerslim.com/releases/1.40.0/dist_linux${arch_suffix}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner
+EOF
