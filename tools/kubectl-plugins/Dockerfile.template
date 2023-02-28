@@ -58,6 +58,7 @@ plugins=(
     pod-dive
     pod-inspect
     pod-lens
+    preflight
     rbac-lookup
     rbac-tool
     rbac-view
