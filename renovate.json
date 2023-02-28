@@ -1517,6 +1517,17 @@
     },
     {
       "fileMatch": [
+        "^tools/fd/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sharkdp/fd",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/figlet/manifest.yaml$"
       ],
       "matchStrings": [

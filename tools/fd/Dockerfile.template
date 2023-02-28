@@ -1,0 +1,33 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+case "${alt_arch}" in
+    amd64)
+        export suffix="musl"
+        ;;
+    arm64)
+        export suffix="gnu"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://github.com/sharkdp/fd/releases/download/v${version}/fd-v${version}-${arch}-unknown-linux-${suffix}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "fd-v${version}-${arch}-unknown-linux-${suffix}/fd" \
+    "fd-v${version}-${arch}-unknown-linux-${suffix}/fd.1" \
+    "fd-v${version}-${arch}-unknown-linux-${suffix}/autocomplete"
+
+mv "${prefix}${target}/bin/fd.1" "${prefix}${target}/share/man/man1/"
+
+mv "${prefix}${target}/bin/autocomplete/fd.bash" "${prefix}${target}/share/bash-completion/completions/fd"
+mv "${prefix}${target}/bin/autocomplete/fd.fish" "${prefix}${target}/share/fish/vendor_completions.d/fd.fish"
+mv "${prefix}${target}/bin/autocomplete/_fd"     "${prefix}${target}/share/zsh/vendor-completions/_fd"
+rm -rf "${prefix}${target}/bin/autocomplete"
+EOF
