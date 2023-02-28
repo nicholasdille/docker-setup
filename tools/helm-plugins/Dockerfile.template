@@ -1,14 +1,13 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/helm:${ref} AS helm
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/helm:${ref} AS helm
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY --link --from=helm / /
-
 RUN <<EOF
 echo "export HELM_PLUGINS=${target}/share/helm/plugins" >${prefix}/etc/profile.d/helm-plugins.sh
 
@@ -31,6 +30,7 @@ plugins=(
     https://github.com/jkroepke/helm-secrets
     https://github.com/sigstore/helm-sigstore
     https://github.com/quintush/helm-unittest
+    https://github.com/komodorio/helm-dashboard
 )
 for url in "${plugins[@]}"; do
     name="$(basename "${url}")"
