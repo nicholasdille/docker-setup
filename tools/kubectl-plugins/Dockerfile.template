@@ -42,6 +42,7 @@ plugins=(
     grep
     hns
     ice
+    ingress-nginx
     images
     janitor
     konfig
