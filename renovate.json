@@ -1185,6 +1185,16 @@
     },
     {
       "fileMatch": [
+        "^tools/docker-gen/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "nginx-proxy/docker-gen",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
         "^tools/docker-index/manifest.yaml$"
       ],
       "matchStrings": [
