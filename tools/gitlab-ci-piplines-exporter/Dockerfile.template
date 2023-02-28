@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/mvisonneau/gitlab-ci-pipelines-exporter/releases/download/v${version}/gitlab-ci-pipelines-exporter_edge_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    gitlab-ci-pipelines-exporter \
+    helpers
+
+mv "${prefix}${target}/bin/helpers/autocomplete/bash" "${prefix}${target}/share/bash-completion/completions/gitlab-ci-pipelines-exporter"
+mv "${prefix}${target}/bin/helpers/autocomplete/zsh" "${prefix}${target}/share/zsh/vendor-completions/_gitlab-ci-pipelines-exporter"
+mv "${prefix}${target}/bin/helpers/manpages/gitlab-ci-pipelines-exporter.1.gz" "${prefix}${target}/share/man/man1/"
+rm -rf "${prefix}${target}/bin/helpers"
+EOF
