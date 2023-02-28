@@ -1,0 +1,30 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+case "${alt_arch}" in
+    amd64)
+        export suffix="musl"
+        ;;
+    arm64)
+        export suffix="gnu"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://github.com/sharkdp/hyperfine/releases/download/v${version}/hyperfine-v${version}-${arch}-unknown-linux-${suffix}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "hyperfine-v${version}-${arch}-unknown-linux-${suffix}/hyperfine" \
+    "hyperfine-v${version}-${arch}-unknown-linux-${suffix}/autocomplete"
+
+cp "${prefix}${target}/bin/autocomplete/hyperfine.bash" "${prefix}${target}/share/bash-completion/completions/hyperfine"
+cp "${prefix}${target}/bin/autocomplete/hyperfine.fish" "${prefix}${target}/share/fish/vendor_completions.d/hyperfine.fish"
+cp "${prefix}${target}/bin/autocomplete/_hyperfine" "${prefix}${target}/share/zsh/vendor-completions/_hyperfine"
+rm -rf "${prefix}${target}/bin/autocomplete/"
+EOF

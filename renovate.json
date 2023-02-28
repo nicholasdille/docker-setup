@@ -2120,6 +2120,17 @@
     },
     {
       "fileMatch": [
+        "^tools/hyperfine/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "sharkdp/hyperfine",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/ignite/manifest.yaml$"
       ],
       "matchStrings": [
