@@ -4277,6 +4277,17 @@
     },
     {
       "fileMatch": [
+        "^tools/sonobuoy/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "vmware-tanzu/sonobuoy",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/sops/manifest.yaml$"
       ],
       "matchStrings": [
