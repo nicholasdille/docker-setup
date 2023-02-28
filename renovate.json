@@ -2096,6 +2096,17 @@
     },
     {
       "fileMatch": [
+        "^tools/htmx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "bigskysoftware/htmx",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/httpx/manifest.yaml$"
       ],
       "matchStrings": [

@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+
+ARG name
+ARG version
+
+RUN <<EOF
+mkdir -p "${prefix}${target}/share/htmx"
+curl --silent --location --fail --output "${prefix}${target}/share/htmx/htmx.min.js" \
+    "https://github.com/bigskysoftware/htmx/releases/download/v${version}/htmx.min.js"
+EOF
