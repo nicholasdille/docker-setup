@@ -22,7 +22,7 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-controller
     --signature "/tmp/kube-controller-manager.sig" \
     --certificate "/tmp/kube-controller-manager.cert" \
     --certificate-oidc-issuer https://accounts.google.com \
-    --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+    --certificate-identity krel-staging@k8s-releng-prod.iam.gserviceaccount.com
 rm -f \
     "/tmp/kube-controller-manager.sig" \
     "/tmp/kube-controller-manager.cert"

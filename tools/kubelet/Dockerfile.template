@@ -24,7 +24,7 @@ if test "$(echo -e "1.26.0-beta.0\n${version}" | sort -V | head -n 1)" == "1.26.
         --signature "/tmp/kubelet.sig" \
         --certificate "/tmp/kubelet.cert" \
         --certificate-oidc-issuer https://accounts.google.com \
-        --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+        --certificate-identity krel-staging@k8s-releng-prod.iam.gserviceaccount.com
     rm -f \
         "/tmp/kubelet.sig" \
         "/tmp/kubelet.cert"

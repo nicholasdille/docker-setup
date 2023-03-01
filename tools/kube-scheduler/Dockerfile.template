@@ -22,7 +22,7 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-scheduler"
     --signature "/tmp/kube-scheduler.sig" \
     --certificate "/tmp/kube-scheduler.cert" \
     --certificate-oidc-issuer https://accounts.google.com \
-    --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+    --certificate-identity krel-staging@k8s-releng-prod.iam.gserviceaccount.com
 rm -f \
     "/tmp/kube-scheduler.sig" \
     "/tmp/kube-scheduler.cert"
