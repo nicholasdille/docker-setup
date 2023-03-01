@@ -6,7 +6,20 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/deislabs/wagi/releases/download/v${version}/wagi-v${version}-linux-${alt_arch}.tar.gz" \
+case "${alt_arch}" in
+    amd64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    arm64)
+        export arch_suffix="${arch}"
+        ;;
+    *)
+        echo "ERROR: Unknown architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+set -x
+curl --silent --location --fail "https://github.com/deislabs/wagi/releases/download/v${version}/wagi-v${version}-linux-${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     wagi
 EOF
