@@ -11,17 +11,12 @@ apt-get -y install \
     net-tools \
     iproute2
 EOF
-SHELL [ "/bin/bash", "-c" ]
 WORKDIR /go/src/github.com/k8spacket/k8spacket
 ARG name
 ARG version
 ENV GOPROXY=direct
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/k8spacket/k8spacket .
-if test "${version}" == "1.0.0"; then
-    echo "Applying fix for v1.0.0"
-    go get github.com/likexian/whois
-fi
 go build -o /usr/local/bin/k8spacket .
 EOF
 
