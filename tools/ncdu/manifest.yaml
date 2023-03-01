@@ -1,6 +1,6 @@
 name: ncdu
 version: "2.2.1"
-check: ""
+check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64
 - linux/arm64
