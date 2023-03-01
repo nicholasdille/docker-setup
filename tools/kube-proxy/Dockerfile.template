@@ -22,7 +22,7 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob "${prefix}${target}/bin/kube-proxy" \
     --signature "/tmp/kube-proxy.sig" \
     --certificate "/tmp/kube-proxy.cert" \
     --certificate-oidc-issuer https://accounts.google.com \
-    --certificate-email krel-staging@k8s-releng-prod.iam.gserviceaccount.com
+    --certificate-identity krel-staging@k8s-releng-prod.iam.gserviceaccount.com
 rm -f \
     "/tmp/kube-proxy.sig" \
     "/tmp/kube-proxy.cert"
