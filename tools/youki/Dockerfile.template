@@ -6,6 +6,8 @@ FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --from=rust / /
+ARG CARGO_HOME="/opt/cargo" \
+    RUSTUP_HOME="/opt/rustup"
 ARG DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get update
@@ -23,8 +25,6 @@ ARG version
 SHELL [ "/bin/bash", "--login", "-ec" ]
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/youki .
-cd crates
-export RUSTFLAGS='-C target-feature=+crt-static'
-cargo build --release --target x86_64-unknown-linux-gnu
-cp target/x86_64-unknown-linux-gnu/release/youki "${prefix}${target}/bin/"
+make youki-release
+cp youki "${prefix}${target}/bin/"
 EOF
