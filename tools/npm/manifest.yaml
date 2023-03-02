@@ -1,5 +1,5 @@
 name: npm
-version: "9.5.1"
+version: "9.6.0"
 check: ${binary} --version
 build_dependencies:
 - nodejs
