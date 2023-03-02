@@ -6,7 +6,19 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/parca-dev/parca/releases/download/v${version}/parca_${version}_Linux_${arch}.tar.gz" \
+case "${alt_arch}" in
+    amd64)
+        export arch_suffix="${arch}"
+        ;;
+    arm64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://github.com/parca-dev/parca/releases/download/v${version}/parca_${version}_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     parca
 EOF
