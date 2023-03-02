@@ -2,15 +2,20 @@
 
 ARG ref=main
 
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
 FROM ghcr.io/nicholasdille/docker-setup/tini:main AS tini
 
-FROM golang:1.19.3 AS build
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
+COPY --link --from=tini / /
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
+    build-essential \
+    make \
+    pkg-config \
     libseccomp-dev
 EOF
-COPY --link --from=tini / /
 WORKDIR /go/src/github.com/gotoz/runq
 ARG name
 ARG version
@@ -24,9 +29,5 @@ make -C cmd/proxy install
 make -C cmd/runq install
 make -C cmd/runq-exec install
 install -m 0444 -D version /var/lib/runq/version
+mv /var/lib/runq/ "${prefix}/var/lib/"
 EOF
-
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-COPY --from=build /var/lib/runq/ ${prefix}/var/lib/runq/
