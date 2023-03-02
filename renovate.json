@@ -957,6 +957,17 @@
     },
     {
       "fileMatch": [
+        "^tools/cyclonedx-gomod/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "CycloneDX/cyclonedx-gomod",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/cypher-shell/manifest.yaml$"
       ],
       "matchStrings": [
