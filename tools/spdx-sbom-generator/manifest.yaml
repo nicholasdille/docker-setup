@@ -1,0 +1,16 @@
+name: spdx-sbom-generator
+version: "0.0.15"
+check: "" # No version parameter
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/security
+- lang/go
+- type/cli
+homepage: https://github.com/opensbom-generator/spdx-sbom-generator
+description: Support CI generation of SBOMs via golang tooling
+renovate:
+  datasource: github-releases
+  package: opensbom-generator/spdx-sbom-generator
+  extractVersion: ^v(?<version>.+?)$

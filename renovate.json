@@ -4417,6 +4417,17 @@
     },
     {
       "fileMatch": [
+        "^tools/spdx-sbom-generator/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "opensbom-generator/spdx-sbom-generator",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/spiffe-vault/manifest.yaml$"
       ],
       "matchStrings": [
