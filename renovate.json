@@ -1498,6 +1498,17 @@
     },
     {
       "fileMatch": [
+        "^tools/foo/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "ogham/exa",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/faas-cli/manifest.yaml$"
       ],
       "matchStrings": [

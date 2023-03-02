@@ -1,0 +1,20 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="https://github.com/ogham/exa/releases/download/v0.10.1/exa-linux-x86_64-v0.10.1.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "/tmp" "${filename}"
+
+mv /tmp/bin/exa "${prefix}${target}/bin/"
+mv /tmp/man/exa.1 "${prefix}${target}/share/man/man1/"
+mv /tmp/man/exa_colors.5 "${prefix}${target}/share/man/man5/"
+mv /tmp/completions/exa.bash "${prefix}${target}/share/bash-completion/completions/exa"
+mv /tmp/completions/exa.fish "${prefix}${target}/share/fish/vendor_completions.d/exa.fish"
+mv /tmp/completions/exa.zsh  "${prefix}${target}/share/zsh/vendor-completions/_exa"
+EOF
