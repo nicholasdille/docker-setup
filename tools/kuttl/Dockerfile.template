@@ -1,0 +1,28 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+case "${alt_arch}" in
+    amd64)
+        export arch_suffix="${arch}"
+        ;;
+    arm64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://github.com/kudobuilder/kuttl/releases/download/v${version}/kuttl_${version}_linux_${arch_suffix}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    kubectl-kuttl
+    
+"${prefix}${target}/bin/kubectl-kuttl" completion bash >"${prefix}${target}/share/bash-completion/completions/kubectl-kuttl"
+"${prefix}${target}/bin/kubectl-kuttl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kubectl-kuttl.fish"
+"${prefix}${target}/bin/kubectl-kuttl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kubectl-kuttl"
+EOF

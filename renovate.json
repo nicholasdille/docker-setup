@@ -3184,6 +3184,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kuttl/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kudobuilder/kuttl",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kwok/manifest.yaml$"
       ],
       "matchStrings": [
