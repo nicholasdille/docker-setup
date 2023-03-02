@@ -1,5 +1,5 @@
 name: sonobuoy
-version: "0.56.15"
+version: "0.56.16"
 check: ${binary} version | grep ^Sonobuoy | cut -d' ' -f3 | tr -d v
 platforms:
 - linux/amd64
