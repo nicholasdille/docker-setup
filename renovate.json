@@ -946,6 +946,16 @@
     },
     {
       "fileMatch": [
+        "^tools/cve-bin-tool/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "cve-bin-tool",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": [
         "^tools/cyclonedx-cli/manifest.yaml$"
       ],
       "matchStrings": [
