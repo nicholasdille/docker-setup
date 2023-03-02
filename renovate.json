@@ -3184,6 +3184,17 @@
     },
     {
       "fileMatch": [
+        "^tools/kwok/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/kwok",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    },
+    {
+      "fileMatch": [
         "^tools/kyverno/manifest.yaml$"
       ],
       "matchStrings": [

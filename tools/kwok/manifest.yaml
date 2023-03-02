@@ -1,0 +1,18 @@
+name: kwok
+version: "0.1.0"
+check: ${binary} --version | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/kubernetes
+- org/cncf
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/kubernetes-sigs/kwok
+description: Kubernetes WithOut Kubelet simulates thousands of nodes and clusters
+renovate:
+  datasource: github-releases
+  package: kubernetes-sigs/kwok
+  extractVersion: ^v(?<version>.+?)$

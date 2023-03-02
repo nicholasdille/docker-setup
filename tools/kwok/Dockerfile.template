@@ -1,0 +1,20 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/kwok" \
+    "https://github.com/kubernetes-sigs/kwok/releases/download/v${version}/kwok-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/kwok"
+
+curl --silent --location --fail --output "${prefix}${target}/bin/kwokctl" \
+    "https://github.com/kubernetes-sigs/kwok/releases/download/v${version}/kwokctl-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/kwokctl"
+
+"${prefix}${target}/bin/kwokctl" completion bash >"${prefix}${target}/share/bash-completion/completions/kwokctl"
+"${prefix}${target}/bin/kwokctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kwokctl.fish"
+"${prefix}${target}/bin/kwokctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kwokctl"
+EOF
