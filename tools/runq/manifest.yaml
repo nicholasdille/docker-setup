@@ -1,6 +1,9 @@
 name: runq
 version: master
-check: ""
+check: "" # No tag/release
+platforms:
+- linux/amd64
+#- linux/arm64
 tags:
 - container/runtime
 - standard/oci
