@@ -1,5 +1,5 @@
 name: neo4j
-version: "5.3.0"
+version: "5.5.0"
 check: ${binary} --version
 runtime_dependencies:
 - openjdk-jre
