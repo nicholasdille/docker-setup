@@ -12,5 +12,5 @@ tags:
 homepage: https://github.com/neo4j/neo4j
 description: Graphs for Everyone
 renovate:
-  datasource: github-releases
+  datasource: github-tags
   package: neo4j/neo4j

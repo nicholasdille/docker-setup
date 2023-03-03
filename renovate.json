@@ -3613,7 +3613,7 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "depNameTemplate": "neo4j/neo4j",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-tags"
     },
     {
       "fileMatch": [
