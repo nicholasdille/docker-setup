@@ -1,5 +1,5 @@
 name: gradle
-version: "8.0.1"
+version: "8.0.2"
 check: ${binary} -version | grep ^Gradle | cut -d' ' -f2
 runtime_dependencies:
 - openjdk-jre
