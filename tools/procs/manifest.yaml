@@ -1,5 +1,5 @@
 name: procs
-version: "0.13.4"
+version: "0.14.0"
 check: ${binary} --version | cut -d' ' -f2 | tr -d '"'
 platforms:
 - linux/amd64
