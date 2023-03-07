@@ -351,8 +351,9 @@ function check_tools() {
             conflicts+=( "${conflict}" )
         done
     done
-    debug "Possible conflicts: ${conflicts[@]}"
-    for name in ${install_tools} ${conflicts[@]}; do
+    debug "Possible conflicts: ${conflicts[*]}"
+    # shellcheck disable=SC2048
+    for name in ${install_tools} ${conflicts[*]}; do
         debug "${name}:"
 
         local version="${tool_version[${name}]}"
@@ -464,12 +465,12 @@ function has_conflicts() {
     conflict_found=false
 
     for name in ${install_tools}; do
-        conflicts="$(
+        possible_conflicts="$(
             jq --raw-output 'select(.conflicts_with != null) | .conflicts_with[]' <<<"${tool_json[${name}]}"
         )"
-        debug "Conflicts for ${name}: ${conflicts}"
+        debug "Conflicts for ${name}: ${possible_conflicts}"
 
-        for conflict in ${conflicts}; do
+        for conflict in ${possible_conflicts}; do
             debug "Processing planned ${name} and conflict ${conflict} (installed? ${tool_installed[${conflict}]})"
             
             if ${tool_installed[${conflict}]}; then
@@ -1033,6 +1034,7 @@ while test "$#" -gt 0; do
                     ;;
                 installed)
                     debug "Selected installed tools"
+                    # shellcheck disable=SC2038
                     selected_tools="$(
                         find "${docker_setup_cache}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; \
                         | xargs echo
@@ -1081,6 +1083,7 @@ while test "$#" -gt 0; do
                 >&2 echo "ERROR: File <${file}> does not exist."
                 exit 1
             fi
+            # shellcheck disable=SC2002
             selected_tools="$(
                 cat "${file}" | grep -P "^[^#\s]" | xargs echo
             )"
@@ -1246,7 +1249,7 @@ fi
 debug "Final tool for installation: ${install_tools}."
 profile "Done checking conflicts"
 
-debug "Calling command <${command}> with arguments <$@>"
+debug "Calling command <${command}> with arguments <$*>"
 case "${command}" in
         update)
             update "$@"
