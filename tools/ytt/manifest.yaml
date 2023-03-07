@@ -1,5 +1,5 @@
 name: ytt
-version: "0.44.3"
+version: "0.45.0"
 check: ${binary} version | cut -d' ' -f3
 platforms:
 - linux/amd64
