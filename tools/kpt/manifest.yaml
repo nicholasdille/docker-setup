@@ -1,5 +1,5 @@
 name: kpt
-version: "1.0.0-beta.27"
+version: "1.0.0-beta.29"
 check: ${binary} version
 platforms:
 - linux/amd64
