@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
+WORKDIR /go/src/github.com/sgreben/jp
+ARG name
+ARG version
+ENV GOPATH=/go \
+    GO111MODULE=auto
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/sgreben/jp .
+rm -rf vendor
+go mod init github.com/sgreben/jp
+go get -u ./...
+go mod tidy
+go build -ldflags "-X main.version=${version}" -o "${prefix}${target}/bin/jp" ./cmd/jp
+EOF

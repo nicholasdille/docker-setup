@@ -1,0 +1,18 @@
+name: jsonplot
+version: "1.1.12"
+binary: jp
+check: ""
+conflicts_with:
+- jp
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/sgreben/jp
+description: Dead simple terminal plots from JSON data
+renovate:
+  datasource: github-releases
+  package: sgreben/jp
