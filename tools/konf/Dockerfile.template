@@ -6,7 +6,14 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 COPY <<EOF ${prefix}/etc/profile.d/konf.sh
-source <(konf-go shellwrapper zsh)
+case "\$(basename "\${SHELL}")" in
+    bash)
+        source <(konf-go shellwrapper bash)
+        ;;
+    zsh)
+        source <(konf-go shellwrapper zsh)
+        ;;
+esac
 EOF
 RUN <<EOF
 curl --silent --location --fail "https://github.com/SimonTheLeg/konf-go/releases/download/v${version}/konf-go_${version}_linux_${alt_arch}.tar.gz" \
