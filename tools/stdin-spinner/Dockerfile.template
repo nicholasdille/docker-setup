@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
+WORKDIR /go/src/github.com/sgreben/stdin-spinner
+ARG name
+ARG version
+ENV GOPATH=/go \
+    GO111MODULE=auto
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/sgreben/stdin-spinner .
+go build -ldflags "-X main.version=${version}" -o "${prefix}${target}/bin/stdin-spinner" .
+EOF

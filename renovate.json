@@ -4546,6 +4546,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "sgreben/stdin-spinner",
+      "fileMatch": [
+        "^tools/stdin-spinner/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "stern/stern",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
