@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.5.2
 
-FROM nicholasdille/ubuntu:22.04 AS base
+FROM nicholasdille/ubuntu:22.04@sha256:65c5985265b69260cdfb96cd0ed06a0c0f18bf7e6a5fb9ba6be91e09bf4a2b46 AS base
 
 ARG prefix_override=/docker_setup_install
 ARG target_override=/usr/local

@@ -1,9 +1,9 @@
 #syntax=docker/dockerfile:1.4.3
 
-ARG ref=main
+ARG ref=main@sha256:603df81cedf0e7d932932147512697e3d846a73733f9329e77910d38c8c846be
 
 FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
-FROM ghcr.io/nicholasdille/docker-setup/tini:main AS tini
+FROM ghcr.io/nicholasdille/docker-setup/tini:main@sha256:d19484a162c78ded92a7055feb3a508de351bff986c4addb3d82381500a7754e AS tini
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=go / /

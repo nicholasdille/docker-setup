@@ -1,8 +1,8 @@
 #syntax=docker/dockerfile:1.5.2
 
-ARG ref=main
+ARG ref=main@sha256:603df81cedf0e7d932932147512697e3d846a73733f9329e77910d38c8c846be
 
-FROM ubuntu:22.04 AS build
+FROM ubuntu:22.04@sha256:2adf22367284330af9f832ffefb717c78239f6251d9d0f58de50b86229ed1427 AS build
 WORKDIR /tmp/tig
 ARG name
 ARG version
