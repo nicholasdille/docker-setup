@@ -2,7 +2,7 @@
 
 ARG base=ubuntu-22.04
 
-FROM ubuntu:22.04 AS ubuntu-22.04
+FROM ubuntu:22.04@sha256:2adf22367284330af9f832ffefb717c78239f6251d9d0f58de50b86229ed1427 AS ubuntu-22.04
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
@@ -53,10 +53,10 @@ curl --silent --location --fail --output "/var/cache/docker-setup/Dockerfile.tem
     "https://github.com/nicholasdille/docker-setup/raw/main/tools/Dockerfile.template"
 EOF
 
-FROM ghcr.io/nicholasdille/docker-setup/regclient:main AS regclient
-FROM ghcr.io/nicholasdille/docker-setup/jq:main AS jq
-FROM ghcr.io/nicholasdille/docker-setup/yq:main AS yq
-FROM ghcr.io/nicholasdille/docker-setup/metadata:main AS metadata
+FROM ghcr.io/nicholasdille/docker-setup/regclient:main@sha256:a7bf50e29b6caa15c01cd118b0200308cdb9c8f614f0b64aa51b45858de93249 AS regclient
+FROM ghcr.io/nicholasdille/docker-setup/jq:main@sha256:f5d83714b1a69d00237f996c8631901802cbfefff83a74decd1130e2715c7762 AS jq
+FROM ghcr.io/nicholasdille/docker-setup/yq:main@sha256:92a34bb84e33cca7408fd6b60e92296440a0678b83c486f971c0d585dd16a737 AS yq
+FROM ghcr.io/nicholasdille/docker-setup/metadata:main@sha256:bd9be18187e3a11782948eb13a1e8d14a9e3554941694fda2679124009b88129 AS metadata
 
 FROM local AS local-dogfood
 COPY --link --from=regclient / /
