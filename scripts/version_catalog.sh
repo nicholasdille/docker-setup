@@ -21,11 +21,17 @@ CATALOG_JSON="$(
     ' metadata.json
 )"
 
-git log --oneline --no-abbrev-commit \
-| cut -d' ' -f1 \
-| while read -r commit_sha; do
-    #echo "${commit_sha}"
+function cleanup() {
+    echo "${commit_sha}"
+}
+trap cleanup EXIT
 
+COMMITS="$(
+    git log --oneline --no-abbrev-commit f17e1cc5.. \
+    | cut -d' ' -f1
+)"
+
+for commit_sha in ${COMMITS}; do
     tools="$(
         git log --name-only "${commit_sha}~..${commit_sha}" tools/*/manifest.yaml \
         | grep ^tools/ \
@@ -33,22 +39,24 @@ git log --oneline --no-abbrev-commit \
     )"
 
     for name in ${tools}; do
-        version="$(git show "${commit_sha}:tools/${name}/manifest.yaml" | yq eval .version)"
+        >&2 echo -n "${name}"
 
-        echo "${name} ${version}: ${commit_sha}"
+        if ! version="$(git show "${commit_sha}:tools/${name}/manifest.yaml" | yq eval .version)"; then
+            >&2 echo "ERROR: Failed to parse ${commit_sha}:tools/${name}/manifest.yaml"
+        fi
+        >&2 echo " ${version}: ${commit_sha}"
+
         if ! jq --exit-status --arg name "${name}" --arg version "${version}" '.tools[] | select(.name == $name) | .versions[] | select(.version == $version)' <<<"${CATALOG_JSON}" >/dev/null 2>&1; then
-            #CATALOG_JSON="$(
+            CATALOG_JSON="$(
                 jq --arg name "${name}" --arg version "${version}" --arg commit_sha "${commit_sha}" '
-                    .tools[] |
-                    select(.name == $name) |
-                    .versions += [ {
+                    (.tools[] | select(.name == $name) | .versions) += [ {
                         "version": $version,
                         "commit_sha": $commit_sha
                     } ]
                 ' <<<"${CATALOG_JSON}"
-            #)"
-
-            exit
+            )"
         fi
     done
 done
+
+echo "${CATALOG_JSON}"
