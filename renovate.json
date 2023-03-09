@@ -867,6 +867,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "schollz/croc",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/croc/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "crossplane/crossplane",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
