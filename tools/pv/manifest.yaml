@@ -1,10 +1,6 @@
 name: pv
 version: "1.6.20"
-check: ""
-build_dependencies:
-- bar
-runtime_dependencies:
-- baz
+check: ${binary} --version | grep ^pv | cut -d' ' -f2
 platforms:
 - linux/amd64
 - linux/arm64
