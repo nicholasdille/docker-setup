@@ -1,5 +1,5 @@
 name: jx
-version: "3.10.50"
+version: "3.10.51"
 check: ${binary} version | grep ^version | cut -d' ' -f2
 platforms:
 - linux/amd64
