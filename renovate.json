@@ -4077,6 +4077,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "a-j-wood/pv",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/pv/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "cilium/pwru",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

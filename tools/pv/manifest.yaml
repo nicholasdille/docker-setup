@@ -1,0 +1,20 @@
+name: pv
+version: "1.6.20"
+check: ""
+build_dependencies:
+- bar
+runtime_dependencies:
+- baz
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/c
+- type/cli
+homepage: https://github.com/a-j-wood/pv
+description: Monitor the progress of data through a pipe
+renovate:
+  datasource: github-releases
+  package: a-j-wood/pv
+  extractVersion: ^v(?<version>.+?)$
