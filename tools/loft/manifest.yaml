@@ -1,5 +1,5 @@
 name: loft
-version: "2.3.3"
+version: "3.0.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
 - type/cli
