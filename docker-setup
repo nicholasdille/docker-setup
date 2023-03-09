@@ -147,7 +147,7 @@ fi
 
 export PATH="${docker_setup_cache}/bin:${PATH}"
 REGCLIENT_VERSION=0.4.7
-if ! type regctl >/dev/null 2>&1 || test "$(regctl version | jq -r .VCSTag | tr -d v)" != "${REGCLIENT_VERSION}"; then
+if ! type regctl >/dev/null 2>&1; then
     debug "Installing regctl"
     mkdir -p "${docker_setup_cache}/bin"
     curl --silent --location --fail --output "${docker_setup_cache}/bin/regctl" \
