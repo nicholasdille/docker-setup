@@ -1,0 +1,19 @@
+name: nx
+version: "15.8.5"
+check: ""
+build_dependencies:
+- npm
+runtime_dependencies:
+- nodejs
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/javascript
+- type/cli
+homepage: https://github.com/nrwl/nx
+description: Smart, Fast and Extensible Build System
+renovate:
+  datasource: github-releases
+  package: nrwl/nx

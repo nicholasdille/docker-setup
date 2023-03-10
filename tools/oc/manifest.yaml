@@ -1,0 +1,16 @@
+name: oc
+version: "3.11.0"
+check: ""
+platforms:
+- linux/amd64
+tags:
+- category/operations
+- lang/go
+- type/cli
+- state/stale
+homepage: https://github.com/openshift/origin
+description: Conformance test suite for OpenShift
+renovate:
+  datasource: github-releases
+  package: openshift/origin
+  extractVersion: ^v(?<version>.+?)$

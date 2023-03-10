@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
+FROM ghcr.io/nicholasdille/docker-setup/npm:${ref} AS npm
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=nodejs / /
+COPY --link --from=npm / /
+WORKDIR ${prefix}${target}/libexec/serverless
+ARG name
+ARG version
+RUN <<EOF
+npm install \
+    --omit=dev \
+    "serverless@${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/serverless/node_modules/.bin/serverless" "${prefix}${target}/bin/"
+EOF

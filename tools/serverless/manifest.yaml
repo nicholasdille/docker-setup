@@ -1,0 +1,20 @@
+name: serverless
+version: "3.28.1"
+check: ${binary} --version | grep ^Framework | cut -d' ' -f3
+build_dependencies:
+- npm
+runtime_dependencies:
+- nodejs
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/javascript
+- type/cli
+homepage: https://github.com/serverless/serverless
+description: Build web, mobile and IoT applications with serverless architectures using AWS Lambda, Azure Functions, Google CloudFunctions & more
+renovate:
+  datasource: github-releases
+  package: serverless/serverless
+  extractVersion: ^v(?<version>.+?)$

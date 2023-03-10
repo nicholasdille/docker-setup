@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}/opt/jenkins"
+curl --silent --location --fail --output "${prefix}/opt/jenkins/remoting.jar" \
+    "https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${version}/remoting-${version}.jar"
+EOF

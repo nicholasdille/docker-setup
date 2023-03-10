@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-ri/${version}/jaxb-ri-${version}.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}/opt/" "${filename}"
+rm -rf \
+    "${prefix}/opt/jaxb-ri/docs" \
+    "${prefix}/opt/jaxb-ri/samples"
+ln --symbolic --relative --force "${prefix}/opt/jaxb-ri/bin/xjc.sh" "${prefix}${target}/bin/xjc"
+EOF

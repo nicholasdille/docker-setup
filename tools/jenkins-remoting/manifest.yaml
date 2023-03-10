@@ -1,0 +1,18 @@
+name: jenkins-remoting
+version: "3107.v665000b_51092"
+check: ""
+runtime_dependencies:
+- openjdk-jre
+platforms:
+- linux/amd64
+tags:
+- org/jenkins
+- category/operations
+- lang/java
+- type/daemon
+homepage: https://github.com/jenkinsci/remoting
+description: Jenkins Remoting module
+renovate:
+  datasource: github-releases
+  package: jenkinsci/remoting
+  versioning: loose

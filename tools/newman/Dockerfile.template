@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
+FROM ghcr.io/nicholasdille/docker-setup/npm:${ref} AS npm
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=nodejs / /
+COPY --link --from=npm / /
+WORKDIR ${prefix}${target}/libexec/newman
+ARG name
+ARG version
+RUN <<EOF
+npm install \
+    --omit=dev \
+    "newman@${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/newman/node_modules/.bin/newman" "${prefix}${target}/bin/"
+EOF

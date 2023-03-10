@@ -2409,6 +2409,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "eclipse-ee4j/jaxb-ri",
+      "extractVersionTemplate": "^(?<version>.+?)-RI$",
+      "fileMatch": [
+        "^tools/jaxb/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "jsonnet-bundler/jsonnet-bundler",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -2417,6 +2428,17 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "jenkinsci/remoting",
+      "fileMatch": [
+        "^tools/jenkins-remoting/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "versioningTemplate": "loose"
     },
     {
       "datasourceTemplate": "github-releases",
@@ -3689,6 +3711,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "postmanlabs/newman",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/newman/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "nodejs/node",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -3750,6 +3783,27 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/nvm/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "nrwl/nx",
+      "fileMatch": [
+        "^tools/nx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "openshift/origin",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/oc/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -4413,6 +4467,17 @@
       "depNameTemplate": "fsaintjacques/semver-tool",
       "fileMatch": [
         "^tools/semver/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "serverless/serverless",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/serverless/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -5258,6 +5323,17 @@
       "depNameTemplate": "yamllint",
       "fileMatch": [
         "^tools/yamllint/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "yarnpkg/yarn",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/yarn/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
