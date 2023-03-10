@@ -1,6 +1,12 @@
 #!/bin/bash
 set -o errexit
 
+if ! type pv >/dev/null 2>&1; then
+    function pv() {
+        cat
+    }
+fi
+
 commit_sha="$(git rev-parse HEAD)"
 CATALOG_JSON="$(
     jq --arg commit_sha "${commit_sha}" '
@@ -21,11 +27,6 @@ CATALOG_JSON="$(
     ' metadata.json
 )"
 
-function cleanup() {
-    echo "${commit_sha}"
-}
-trap cleanup EXIT
-
 COMMITS="$(
     git log --oneline --no-abbrev-commit f17e1cc5.. \
     | cut -d' ' -f1
@@ -39,12 +40,12 @@ for commit_sha in ${COMMITS}; do
     )"
 
     for name in ${tools}; do
-        >&2 echo -n "${name}"
+        echo -n "${name}"
 
         if ! version="$(git show "${commit_sha}:tools/${name}/manifest.yaml" | yq eval .version)"; then
-            >&2 echo "ERROR: Failed to parse ${commit_sha}:tools/${name}/manifest.yaml"
+            echo "ERROR: Failed to parse ${commit_sha}:tools/${name}/manifest.yaml"
         fi
-        >&2 echo " ${version}: ${commit_sha}"
+        echo " ${version}: ${commit_sha}"
 
         if ! jq --exit-status --arg name "${name}" --arg version "${version}" '.tools[] | select(.name == $name) | .versions[] | select(.version == $version)' <<<"${CATALOG_JSON}" >/dev/null 2>&1; then
             CATALOG_JSON="$(
@@ -57,6 +58,7 @@ for commit_sha in ${COMMITS}; do
             )"
         fi
     done
-done
+done \
+| pv --progress --timer --eta --line-mode --size "$(echo "${COMMITS}" | wc -l)" >/dev/null
 
-echo "${CATALOG_JSON}"
+echo "${CATALOG_JSON}" >versions.json
