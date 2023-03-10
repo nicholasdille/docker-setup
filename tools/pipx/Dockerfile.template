@@ -1,0 +1,19 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+FROM ghcr.io/nicholasdille/docker-setup/shiv:${ref} AS shiv
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=python / /
+COPY --link --from=shiv / /
+RUN <<EOF
+shiv --output-file "${prefix}${target}/bin/pipx" --console-script pipx "pipx==${version}"
+
+register-python-argcomplete              pipx >"${prefix}${target}/share/bash-completion/completions/pipx"
+register-python-argcomplete --shell fish pipx >"${prefix}${target}/share/fish/vendor_completions.d/pipx.fish"
+register-python-argcomplete              pipx >"${prefix}${target}/share/zsh/vendor-completions/_pipx"
+EOF

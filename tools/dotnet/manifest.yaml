@@ -1,0 +1,17 @@
+name: dotnet
+version: "7.0.201"
+check: ${binary} --version
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/microsoft
+- category/development
+- lang/c
+- type/cli
+homepage: https://github.com/dotnet/sdk
+description: Core functionality needed to create .NET Core projects
+renovate:
+  datasource: github-releases
+  package: dotnet/sdk
+  extractVersion: ^v(?<version>.+?)$

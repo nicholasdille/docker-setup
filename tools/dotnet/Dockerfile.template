@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --remote-name https://dot.net/v1/dotnet-install.sh
+bash dotnet-install.sh --channel STS --version ${version} --install-dir "${prefix}/opt/dotnet"
+ln --symbolic --relative --force "${prefix}/opt/dotnet/dotnet" "${prefix}${target}/bin/dotnet"
+EOF

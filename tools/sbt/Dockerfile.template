@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+set -x
+mkdir -p "${prefix}/opt/sbt"
+curl --silent --location --fail "https://github.com/sbt/sbt/releases/download/v${version}/sbt-${version}.tgz" \
+| tar --extract --gzip --directory="${prefix}/opt/sbt" --strip-components=1 --no-same-owner \
+    sbt/bin/sbt \
+    sbt/bin/sbt-launch.jar \
+    sbt/bin/sbtn-x86_64-pc-linux
+ln --symbolic --relative --force "${prefix}/opt/sbt/bin/sbt" "${prefix}${target}/bin/sbt"
+EOF

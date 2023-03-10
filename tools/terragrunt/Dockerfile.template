@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/terragrunt" \
+    "https://github.com/gruntwork-io/terragrunt/releases/download/v${version}/terragrunt_linux_${alt_arch}"
+chmod +x "${prefix}${target}/bin/terragrunt"
+EOF

@@ -1,0 +1,19 @@
+name: pipx
+version: "1.1.0"
+check: ${binary} --version
+build_dependencies:
+- shiv
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/development
+- lang/python
+- type/cli
+homepage: https://github.com/pypa/pipx/
+description: Install and Run Python Applications in Isolated Environments
+renovate:
+  datasource: pypi
+  package: pipx

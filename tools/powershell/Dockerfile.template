@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    lsb-release
+UBUNTU_RELEASE="$(lsb_release -rs)"
+curl --silent --remote-name "https://packages.microsoft.com/config/ubuntu/${UBUNTU_RELEASE}/packages-microsoft-prod.deb"
+dpkg -i packages-microsoft-prod.deb
+apt-get update
+apt-get -y install --no-install-recommends \
+    powershell=${version}-*
+mkdir -p "${prefix}/opt/microsoft"
+mv /opt/microsoft/ "${prefix}/opt/microsoft/"
+ln --symbolic --relative --force "${prefix}/opt/microsoft/powershell/7/pwsh" "${prefix}${target}/bin/pwsh"
+EOF

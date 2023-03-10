@@ -1,0 +1,16 @@
+name: sbt
+version: "1.8.2"
+check: cat ${binary} | grep "declare init_sbt_version" | cut -d= -f2
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/scala
+- type/cli
+homepage: https://github.com/sbt/sbt
+description: The interactive build tool 
+renovate:
+  datasource: github-releases
+  package: sbt/sbt
+  extractVersion: ^v(?<version>.+?)$

@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}/opt/scala"
+curl --silent --location --fail "https://downloads.lightbend.com/scala/${version}/scala-${version}.tgz" \
+| tar --extract --gzip --directory="${prefix}/opt/scala" --strip-components=1 --no-same-owner
+ln --symbolic --relative --force "${prefix}/opt/scala/bin/scala" "${prefix}${target}/bin/scala"
+EOF

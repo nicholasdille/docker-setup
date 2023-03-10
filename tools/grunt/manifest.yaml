@@ -1,0 +1,20 @@
+name: grunt
+version: "1.6.1"
+check: ""
+build_dependencies:
+- npm
+runtime_dependencies:
+- nodejs
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/javascript
+- type/cli
+homepage: https://github.com/gruntjs/grunt
+description: The JavaScript Task Runner
+renovate:
+  datasource: github-releases
+  package: gruntjs/grunt
+  extractVersion: ^v(?<version>.+?)$
