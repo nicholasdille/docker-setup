@@ -4,7 +4,6 @@ binary: pwsh
 check: ${binary} -Version | cut -d' ' -f2
 platforms:
 - linux/amd64
-- linux/arm64
 tags:
 - org/microsoft
 - category/operations
