@@ -233,6 +233,7 @@ selected_tools="${default_tools}"
 install_tools=""
 declare -A tool_version
 declare -A tool_deps
+declare -A tool_conflicts
 declare -A tool_marker_file_present
 declare -A tool_installed_version
 declare -A tool_version_matches
@@ -318,6 +319,19 @@ function warm_cache() {
     done
 
     profile "Done reading dependencies"
+
+    local conflicts_temp
+    conflicts_temp="$(jq --raw-output '.tools[] | "\(.name)=\(select(.conflicts_with != null) | .conflicts_with | join(","))"' "${docker_setup_metadata_file}")"
+    for conflicts_pair in ${conflicts_temp}; do
+        local name="${conflicts_pair%%=*}"
+        local value="${conflicts_pair#*=}"
+        if test "${value}" != "${name}"; then
+            trace "CONFLICT name=${name},value=${value}."
+            tool_conflicts[${name}]="${value//,/ }"
+        fi
+    done
+
+    profile "Done reading conflicts"
 }
 
 function check_tools() {
@@ -331,7 +345,7 @@ function check_tools() {
     conflicts=()
     for name in ${install_tools}; do
         debug "Fetching conflicts for ${name}"
-        tool_conflicts="$(jq --raw-output --arg name "${name}" '.tools[] | select(.name == $name) | select(.conflicts_with != null) | .conflicts_with[]' "${docker_setup_metadata_file}")"
+        tool_conflicts="${tool_conflicts[${name}]}"
         for conflict in ${tool_conflicts}; do
             debug "+ Adding ${conflict}"
             conflicts+=( "${conflict}" )
