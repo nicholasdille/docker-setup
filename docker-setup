@@ -1096,7 +1096,6 @@ while test "$#" -gt 0; do
             ;;
 
         ls|list|l)
-            check_conflicts=false
             command=list
             ;;
 
@@ -1171,6 +1170,12 @@ while test "$#" -gt 0; do
 
     shift
 done
+
+case "${command}" in
+    update|upgrade|debug|list|info|tags|inspect)
+        check_conflicts=false
+        ;;
+esac
 
 if ${include_deps}; then
     install_tools="$(resolve_dependencies_wrapper)"
