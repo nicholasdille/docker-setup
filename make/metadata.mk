@@ -30,3 +30,8 @@ metadata.json--sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json cosign
 	@set -o errexit; \
 	source .env; \
 	cosign sign --key cosign.key $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG)
+
+.PHONY:
+metadata.json--keyless-sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json ; $(info $(M) Keyless signing metadata image...)
+	@set -o errexit; \
+	COSIGN_EXPERIMENTAL=1 cosign sign $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG)
