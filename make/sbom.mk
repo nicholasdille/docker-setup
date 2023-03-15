@@ -7,6 +7,9 @@ cosign.key: $(HELPER)/var/lib/docker-setup/manifests/cosign.json ; $(info $(M) C
 sign: $(addsuffix --sign,$(TOOLS_RAW))
 
 .PHONY:
+keyless-sign: $(addsuffix --keyless-sign,$(TOOLS_RAW))
+
+.PHONY:
 $(addsuffix --sign,$(ALL_TOOLS_RAW)):%--sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json cosign.key ; $(info $(M) Signing image for $*...)
 	@set -o errexit; \
 	source .env; \
