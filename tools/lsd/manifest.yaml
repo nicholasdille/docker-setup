@@ -5,8 +5,8 @@ tags:
 - type/cli
 - terminal
 - lang/rust
-homepage: https://github.com/Peltoche/lsd
+homepage: https://github.com/lsd-rs/lsd
 description: Next gen ls command
 renovate:
   datasource: github-releases
-  package: Peltoche/lsd
+  package: lsd-rs/lsd

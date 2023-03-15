@@ -5,9 +5,9 @@ tags:
 - type/cli
 - category/security
 - lang/go
-homepage: https://github.com/zricethezav/gitleaks
+homepage: https://github.com/gitleaks/gitleaks
 description: Protect and discover secrets using Gitleaks
 renovate:
   datasource: github-releases
-  package: zricethezav/gitleaks
+  package: gitleaks/gitleaks
   extractVersion: ^v(?<version>.+?)$
