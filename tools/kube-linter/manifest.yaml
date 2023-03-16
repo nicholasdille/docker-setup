@@ -1,5 +1,5 @@
 name: kube-linter
-version: "0.6.0"
+version: "v0.6.1"
 check: ${binary} version | cut -d- -f1
 tags:
 - type/cli
