@@ -1894,7 +1894,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "zricethezav/gitleaks",
+      "depNameTemplate": "gitleaks/gitleaks",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/gitleaks/manifest.yaml$"
@@ -3459,7 +3459,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "Peltoche/lsd",
+      "depNameTemplate": "lsd-rs/lsd",
       "fileMatch": [
         "^tools/lsd/manifest.yaml$"
       ],
@@ -5070,7 +5070,7 @@
     },
     {
       "datasourceTemplate": "github-tags",
-      "depNameTemplate": "chainguard-dev/vex",
+      "depNameTemplate": "openvex/vexctl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/vexctl/manifest.yaml$"
