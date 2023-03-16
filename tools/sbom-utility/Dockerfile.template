@@ -1,0 +1,20 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+set -x
+curl --silent --location --fail "https://github.com/IBM/sbom-utility/releases/download/v${version}/sbom-utility-v${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    sbom-utility \
+    config.json \
+    custom.json \
+    license.json
+
+"${prefix}${target}/bin/sbom-utility" completion bash >"${prefix}${target}/share/bash-completion/completions/sbom-utility"
+"${prefix}${target}/bin/sbom-utility" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/sbom-utility.fish"
+"${prefix}${target}/bin/sbom-utility" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_sbom-utility"
+EOF

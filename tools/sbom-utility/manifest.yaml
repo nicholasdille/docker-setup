@@ -1,0 +1,17 @@
+name: sbom-utility
+version: "0.9.2"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/ibm
+- category/security
+- lang/go
+- type/cli
+homepage: https://github.com/IBM/sbom-utility
+description: Provides an API platform for validating, querying, updating and managing standardized SBOMs
+renovate:
+  datasource: github-releases
+  package: IBM/sbom-utility
+  extractVersion: ^v(?<version>.+?)$
