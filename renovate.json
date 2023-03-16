@@ -520,6 +520,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "CycloneDX/cdxgen",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/cdxgen/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "cloudflare/cfssl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

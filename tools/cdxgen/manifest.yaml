@@ -1,0 +1,21 @@
+name: cdxgen
+version: "8.1.7"
+check: ${binary} --version
+build_dependencies:
+- npm
+runtime_dependencies:
+- nodejs
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/owasp
+- category/security
+- lang/javascript
+- type/cli
+homepage: https://github.com/CycloneDX/cdxgen
+description: Creates CycloneDX Software Bill-of-Materials (SBOM) for your projects from source and container images
+renovate:
+  datasource: github-releases
+  package: CycloneDX/cdxgen
+  extractVersion: ^v(?<version>.+?)$
