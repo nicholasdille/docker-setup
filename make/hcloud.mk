@@ -9,6 +9,9 @@ DOCKER_CONFIG      ?= $(HOME)/.docker
 deploy-hcloud: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-ds vm-install-docker vm-install-creds
 
 .PHONY:
+deploy-hcloud-only: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-ds
+
+.PHONY:
 remove-hcloud: $(HELPER)/var/lib/docker-setup/manifests/hcloud.json $(HELPER)/var/lib/docker-setup/manifests/jq.json ; $(info $(M) Removing VM...)
 	@\
 	hcloud server list --selector purpose=docker-setup --output json \
