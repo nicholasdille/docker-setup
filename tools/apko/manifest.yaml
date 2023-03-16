@@ -1,5 +1,5 @@
 name: apko
-version: "0.6.0"
+version: "0.7.2"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 build_dependencies:
 - go
