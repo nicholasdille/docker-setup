@@ -23,4 +23,4 @@ cp vexctl "${prefix}${target}/bin/"
 "${prefix}${target}/bin/vexctl" completion bash >"${prefix}${target}/share/bash-completion/completions/vexctl"
 "${prefix}${target}/bin/vexctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/vexctl.fish"
 "${prefix}${target}/bin/vexctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_vexctl"
-#EOF
+EOF
