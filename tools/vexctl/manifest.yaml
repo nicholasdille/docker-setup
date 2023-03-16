@@ -1,14 +1,14 @@
 name: vexctl
-version: "0.1.0"
+version: "0.2.0"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
 - category/security
 - sbom
 - lang/go
-homepage: https://github.com/chainguard-dev/vex
-description: Attest VEX impact statements
+homepage: https://github.com/openvex/vexctl
+description: Create, transform and attest VEX metadata
 renovate:
   datasource: github-tags
-  package: chainguard-dev/vex
+  package: openvex/vexctl
   extractVersion: ^v(?<version>.+?)$
