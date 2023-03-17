@@ -8,6 +8,7 @@ tags:
 - category/security
 - lang/go
 - type/cli
+- sbom
 homepage: https://github.com/opensbom-generator/spdx-sbom-generator
 description: Support CI generation of SBOMs via golang tooling
 renovate:

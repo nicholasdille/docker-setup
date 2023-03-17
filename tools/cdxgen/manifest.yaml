@@ -13,6 +13,7 @@ tags:
 - category/security
 - lang/javascript
 - type/cli
+- sbom
 homepage: https://github.com/CycloneDX/cdxgen
 description: Creates CycloneDX Software Bill-of-Materials (SBOM) for your projects from source and container images
 renovate:

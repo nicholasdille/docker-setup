@@ -6,6 +6,8 @@ tags:
 - category/security
 - lang/go
 - type/cli
+- cve
+- scan
 homepage: https://github.com/google/osv-scanner
 description: Vulnerability scanner which uses the data provided by https://osv.dev
 renovate:

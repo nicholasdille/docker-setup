@@ -12,6 +12,7 @@ tags:
 - category/security
 - lang/python
 - type/cli
+- sbom
 homepage: https://github.com/sbomtools/sbomtools
 description: Add, delete, and search for entries in either SPDX or CycloneDX
 renovate:

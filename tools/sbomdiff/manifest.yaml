@@ -12,6 +12,7 @@ tags:
 - category/security
 - lang/python
 - type/cli
+- sbom
 homepage: https://github.com/anthonyharrison/sbomdiff
 description: Compares two Software Bill of Materials (SBOMs) and reports the differences
 renovate:

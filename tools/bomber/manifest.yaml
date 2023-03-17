@@ -8,6 +8,7 @@ tags:
 - category/security
 - type/cli
 - lang/go
+- sbom
 homepage: https://github.com/devops-kung-fu/bomber
 description: Scans Software Bill of Materials (SBOMs) for security vulnerabilities
 renovate:

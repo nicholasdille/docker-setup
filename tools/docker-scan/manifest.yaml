@@ -15,6 +15,7 @@ tags:
 - type/cli
 - cicd
 - lang/go
+- scan
 homepage: https://github.com/docker/scan-cli-plugin
 description: CLI to run vulnerability detection on your Dockerfiles and Docker images
 renovate:

@@ -10,6 +10,7 @@ tags:
 - sbom
 - cicd
 - lang/go
+- scan
 homepage: https://github.com/anchore/grype
 description: Vulnerability scanner for container images and filesystems
 renovate:

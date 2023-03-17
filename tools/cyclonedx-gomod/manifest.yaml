@@ -8,6 +8,7 @@ tags:
 - category/security
 - lang/go
 - type/cli
+- sbom
 homepage: https://github.com/CycloneDX/cyclonedx-gomod
 description: Creates CycloneDX Software Bill of Materials (SBOM) from Go modules
 renovate:

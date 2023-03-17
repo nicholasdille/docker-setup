@@ -12,6 +12,7 @@ tags:
 - category/security
 - lang/python
 - type/cli
+- sbom
 homepage: https://github.com/trailofbits/it-depends
 description: Automatically build a dependency graph and Software Bill of Materials (SBOM) for packages and arbitrary source code repositories
 renovate:

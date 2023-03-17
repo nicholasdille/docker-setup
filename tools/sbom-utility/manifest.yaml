@@ -9,6 +9,7 @@ tags:
 - category/security
 - lang/go
 - type/cli
+- sbom
 homepage: https://github.com/IBM/sbom-utility
 description: Provides an API platform for validating, querying, updating and managing standardized SBOMs
 renovate:
