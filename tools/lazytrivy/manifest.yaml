@@ -1,0 +1,16 @@
+name: lazytrivy
+version: "1.1.0"
+check: "" # No version parameter
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/security
+- lang/go
+- type/tui
+homepage: https://github.com/owenrumney/lazytrivy
+description: Vulnerability scanning just got lazier
+renovate:
+  datasource: github-releases
+  package: owenrumney/lazytrivy
+  extractVersion: ^v(?<version>.+?)$

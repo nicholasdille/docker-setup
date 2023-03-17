@@ -3336,6 +3336,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "owenrumney/lazytrivy",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/lazytrivy/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "sahsanu/lectl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
