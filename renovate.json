@@ -4906,6 +4906,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tinygo-org/tinygo",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/tinygo/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "tektoncd/cli",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
