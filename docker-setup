@@ -179,6 +179,11 @@ function update() {
         regctl blob get "${REGISTRY}/${REPOSITORY_PREFIX}metadata:${tools_version}" "${DIGEST}" \
         | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
     done
+    METADATA_REVISION="$(jq --raw-output '.revision' "${docker_setup_metadata_file}")"
+    METADATA_TIMESTAMP="$(git show --no-patch --format=%ci "${METADATA_REVISION}" | date +"%Y%m%d" -f -)"
+    NOW="$(date +"%Y%m%d")"
+    METADATA_AGE=$(( NOW - METADATA_TIMESTAMP ))
+    echo "Updated metadata: commit SHA ${METADATA_REVISION}, ${METADATA_AGE} day(s) old"
 }
 
 docker_setup_metadata_file="${docker_setup_cache}/metadata.json"
