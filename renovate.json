@@ -4928,6 +4928,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "liamg/tml",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/tml/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "traefik/traefik",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
