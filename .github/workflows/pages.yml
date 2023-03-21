@@ -35,7 +35,7 @@ jobs:
 
       - name: Install hugo
         run: |
-          make $(HELPER)/var/lib/docker-setup/manifests/hugo.json
+          make site-prerequisites
 
       - name: Create pages
         run: |
