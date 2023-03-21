@@ -573,8 +573,8 @@
       ]
     },
     {
-      "datasourceTemplate": "pypi",
-      "depNameTemplate": "checkov",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "bridgecrewio/checkov",
       "fileMatch": [
         "^tools/checkov/manifest.yaml$"
       ],
@@ -965,14 +965,16 @@
       ]
     },
     {
-      "datasourceTemplate": "pypi",
-      "depNameTemplate": "cve-bin-tool",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "intel/cve-bin-tool",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/cve-bin-tool/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
+      ],
+      "versioningTemplate": "loose"
     },
     {
       "datasourceTemplate": "github-releases",
