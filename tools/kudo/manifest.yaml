@@ -10,6 +10,7 @@ tags:
 - lang/go
 - type/cli
 - type/plugin
+- state/stale
 homepage: https://github.com/kudobuilder/kudo
 description: Kubernetes Universal Declarative Operator
 renovate:

@@ -10,7 +10,6 @@ tags:
 - management
 - troubleshooting
 - lang/go
-- state/stale
 homepage: https://github.com/moncho/dry
 description: Docker manager for the terminal
 renovate:

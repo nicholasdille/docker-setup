@@ -5,6 +5,7 @@ tags:
 - container/init
 - type/cli
 - lang/c
+- state/stale
 homepage: https://github.com/Yelp/dumb-init
 description: Minimal init system for Linux containers
 renovate:

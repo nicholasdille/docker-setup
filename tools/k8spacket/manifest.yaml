@@ -9,6 +9,7 @@ tags:
 - component/network
 - lang/go
 - type/daemon
+- state/onemanshow
 homepage: https://github.com/k8spacket/k8spacket
 description: Traffic visualization for kubernetes
 renovate:

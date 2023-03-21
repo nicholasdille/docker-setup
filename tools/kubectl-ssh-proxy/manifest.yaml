@@ -8,6 +8,7 @@ tags:
 - kubernetes
 - lang/go
 - state/stale
+- state/onemanshow
 homepage: https://github.com/little-angry-clouds/kubectl-ssh-proxy
 description: Kubectl plugin to launch a ssh socks proxy and use it
 renovate:

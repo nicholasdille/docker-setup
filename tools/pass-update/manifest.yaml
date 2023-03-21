@@ -7,6 +7,7 @@ tags:
 - category/security
 - lang/shell
 - type/cli
+- state/stale
 homepage: https://github.com/roddhjav/pass-update
 description: Pass extension that provides an easy flow for updating passwords
 renovate:

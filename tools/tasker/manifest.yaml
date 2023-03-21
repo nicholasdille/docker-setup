@@ -7,6 +7,7 @@ tags:
 - cicd
 - lang/c
 - state/stale
+- state/onemanshow
 homepage: https://github.com/stevegrubb/tasker
 description: Parallelizes tasks from a list on stdin
 renovate:

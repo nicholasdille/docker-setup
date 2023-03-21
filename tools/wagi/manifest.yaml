@@ -13,6 +13,7 @@ tags:
 - type/cli
 - webassembly
 - wasm
+- state/stale
 homepage: https://github.com/deislabs/wagi
 description: Write HTTP handlers in WebAssembly with a minimal amount of work
 renovate:

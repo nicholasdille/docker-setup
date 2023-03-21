@@ -8,6 +8,7 @@ tags:
 - category/operations
 - lang/go
 - type/cli
+- state/onemanshow
 homepage: https://github.com/superbrothers/ksort
 description: Sort manfest files in a proper order by Kind
 renovate:

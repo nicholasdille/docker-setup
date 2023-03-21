@@ -3,6 +3,7 @@ set -o errexit
 
 RELEASE_MAX_AGE_DAYS=365
 COMMIT_MAX_AGE_DAYS=95
+CONTRIBUTORS_MIN_COUNT=2
 
 if test -z "${GITHUB_TOKEN}"; then
     echo "ERROR: GitHub token is required to prevent rate limiting."
@@ -44,6 +45,13 @@ for NAME in ${all_tools}; do
             echo false
         fi
     )"
+    onemanshow="$(
+        if jq --exit-status 'select(.tags[] | contains("state/onemanshow"))' <<<"${tool_json[${NAME}]}" >/dev/null; then
+            echo true
+        else
+            echo false
+        fi
+    )"
     deprecated="$(
         if jq --exit-status 'select(.tags[] | contains("state/deprecated"))' <<<"${tool_json[${NAME}]}" >/dev/null; then
             echo true
@@ -62,10 +70,12 @@ for NAME in ${all_tools}; do
 
         RELEASE_TOO_OLD=false
         COMMIT_TOO_OLD=false
+        CONTRIBUTORS_TOO_FEW=false
 
         RELEASE_TIMESTAMP_ISO="$(
             curl "https://api.github.com/repos/${repo}/releases/latest" \
                 --silent \
+                --fail \
                 --header "Authorization: Bearer ${GITHUB_TOKEN}" \
             | jq --raw-output '.published_at'
         )"
@@ -87,6 +97,7 @@ for NAME in ${all_tools}; do
         COMMIT_TIMESTAMP_ISO="$(
             curl "https://api.github.com/repos/${repo}/commits" \
                 --silent \
+                --fail \
                 --header "Authorization: Bearer ${GITHUB_TOKEN}" \
             | jq --raw-output '.[0].commit.committer.date'
         )"
@@ -105,6 +116,18 @@ for NAME in ${all_tools}; do
             #echo "  + COMMIT TOO OLD"
         fi
 
+        CONTRIBUTOR_COUNT="$(
+            curl "https://api.github.com/repos/${repo}/contributors" \
+                --silent \
+                --fail \
+                --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+            | jq --raw-output 'length'
+        )"
+        #echo "+ collaborator count: ${CONTRIBUTOR_COUNT}"
+        if test "${CONTRIBUTOR_COUNT}" -lt "${CONTRIBUTORS_MIN_COUNT}"; then
+            CONTRIBUTORS_TOO_FEW=true
+        fi
+
         if ${RELEASE_TOO_OLD} && ${COMMIT_TOO_OLD}; then
             if ! ${stale}; then
                 echo "+ Add state/stale"
@@ -116,9 +139,21 @@ for NAME in ${all_tools}; do
             fi
         fi
 
+        if ${CONTRIBUTORS_TOO_FEW}; then
+            if ! ${onemanshow}; then
+                echo "+ Add state/onemanshow"
+            fi
+        
+        else
+            if ${onemanshow}; then
+                echo "+ Remove state/onemanshow"
+            fi
+        fi
+
         REPO_ARCHIVED="$(
             curl "https://api.github.com/repos/${repo}" \
                 --silent \
+                --fail \
                 --header "Authorization: Bearer ${GITHUB_TOKEN}" \
             | jq --raw-output '.archived'
         )"

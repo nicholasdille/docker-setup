@@ -5,6 +5,7 @@ tags:
 - component/database
 - type/tui
 - lang/go
+- state/stale
 homepage: https://github.com/KenanBek/dbui
 description: Universal Database CLI for MySQL, PostgreSQL, and SQLite
 renovate:
