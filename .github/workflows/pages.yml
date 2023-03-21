@@ -30,11 +30,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v3
-
-      - name: Cretae metadata
+      - name: Create metadata
         run: |
           make metadata.json
 
