@@ -64,9 +64,7 @@ cat <<EOF
 EOF
 
 SIZE="$(
-    regctl manifest get ghcr.io/nicholasdille/docker-setup/${tool}:main --format raw-body \
-    | jq -r '.manifests[] | select(.platform.architecture == "amd64") | .digest' \
-    | xargs -I{} regctl manifest get ghcr.io/nicholasdille/docker-setup/${tool}:main@{} --format raw-body \
+    regctl manifest get ghcr.io/nicholasdille/docker-setup/${tool}:main --platform linux/amd64 --format raw-body \
     | jq -r '.layers[].size' \
     | paste -sd+ \
     | bc
@@ -90,10 +88,14 @@ cat <<EOF
 ## Platforms
 
 EOF
-if jq --exit-status '.platforms != null' <<<"${TOOL_JSON}" >/dev/null 2>&1; then
-    jq --raw-output '.platforms[]' <<<"${TOOL_JSON}" | paste -sd,
+PLATFORMS="$(
+    jq --raw-output 'select(.platforms != null) | .platforms[]' <<<"${TOOL_JSON}" \
+    | paste -sd,
+)"
+if test -z "${PLATFORMS}"; then
+    echo 'linux/amd64'
 else
-    echo 'None'
+    echo "${PLATFORMS}"
 fi
 
 cat <<EOF
