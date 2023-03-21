@@ -8,11 +8,8 @@ on:
       #- labeled
       #- reopened
     paths:
-      - docker-setup
-      - env/**
       - tools/**
-      - .github/workflows/test-linux.yml
-      - .github/workflows/release.yml
+      - .github/workflows/*
 
 jobs:
 
