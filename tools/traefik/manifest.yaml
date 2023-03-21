@@ -1,5 +1,5 @@
 name: traefik
-version: "2.9.8"
+version: "2.9.9"
 check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 platforms:
 - linux/amd64
