@@ -25,6 +25,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+
       - name: Login to GitHub Container Registry as ${{ secrets.BOT_USERNAME }}
         uses: docker/login-action@v2
         with:
@@ -32,51 +36,40 @@ jobs:
           username: nicholasdille
           password: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Create pages and generate site
+      - name: Cretae metadata
+        run: |
+          make metadata.json
+
+      - name: Install hugo
+        run: |
+          make $(HELPER)/var/lib/docker-setup/manifests/hugo.json
+
+      - name: Create pages
+        run: |
+          make pages
+
+      - name: Create site
         run: |
           make site
 
-      - name: Package site
-        run: |
-          cd site/public
-          tar -czf ../public.tar.gz .
-
-      - name: Store artifact
-        uses: actions/upload-artifact@v3
-        if: always()
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          name: site
-          path: site/public.tar.gz
+          path: ./public
 
   deploy:
     name: Deploy
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     needs:
     - build
     runs-on: ubuntu-22.04
     concurrency:
-      group: ${{ github.ref }}
+      group: pages
       cancel-in-progress: true
     steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-          token: ${{ secrets.BOT_GITHUB_TOKEN }}
-      
-      - name: Fetch artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: site
-
-      - name: Unpack site
-        run: |
-          find . -type f
-          tar -xzf public.tar.gz
-
-      - name: Commit site
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: gh-pages
-          create_branch: false
-          commit_message: "Updated GitHub Pages automatically"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
