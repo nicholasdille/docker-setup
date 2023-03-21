@@ -29,13 +29,6 @@ jobs:
         id: pages
         uses: actions/configure-pages@v3
 
-      - name: Login to GitHub Container Registry as ${{ secrets.BOT_USERNAME }}
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: nicholasdille
-          password: ${{ secrets.PACKAGES_TOKEN }}
-
       - name: Cretae metadata
         run: |
           make metadata.json
