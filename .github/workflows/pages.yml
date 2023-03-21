@@ -39,7 +39,7 @@ jobs:
 
       - name: Create pages
         run: |
-          make pages
+          make -j4 pages
 
       - name: Create site
         run: |
