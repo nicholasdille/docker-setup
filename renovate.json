@@ -2271,7 +2271,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "Orange-OpenSource/hurl/",
+      "depNameTemplate": "Orange-OpenSource/hurl",
       "fileMatch": [
         "^tools/hurl/manifest.yaml$"
       ],
