@@ -1,0 +1,16 @@
+name: aiac
+version: "2.1.0"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/gofireflyio/aiac
+description: Artificial Intelligence Infrastructure-as-Code Generator
+renovate:
+  datasource: github-releases
+  package: gofireflyio/aiac
+  extractVersion: ^v(?<version>.+?)$

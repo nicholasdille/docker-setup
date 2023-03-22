@@ -183,6 +183,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gofireflyio/aiac",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/aiac/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "fidian/ansi",
       "fileMatch": [
