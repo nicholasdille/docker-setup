@@ -1,6 +1,6 @@
 baseURL: https://docker-setup.dille.io
 title: docker-setup
-copyright: "Some copyright notice - [my license](https://example.com/license)"
+copyright: "Nicholas Dille - licensed under [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)"
 theme:
 - gitlab.com/gabmus/hugo-ficurinia
 languageCode: en-us

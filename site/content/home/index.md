@@ -12,10 +12,19 @@ nosearch: true
  \__,_|\___/ \___|_|\_\___|_|       |___/\___|\__|\__,_| .__/
                                                        |_|
                      The container tools installer and updater
-                 https://github.com/nicholasdille/docker-setup
---------------------------------------------------------------
-This script will install Docker Engine as well as useful tools
-from the container ecosystem.
 ```
 
-XXX
+## Purpose
+
+`docker-setup` is inspired by the [convenience script](https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script) to install the Docker daemon. But the scope is much larger.
+
+`docker-setup` is meant to bootstrap a new box with Docker as well as install useful tools from the container ecosystem and beyond. It can also be used to update these tools. It aims to be distribution-agnostic and provide reasonable default configurations. Personally, I am using it to prepare virtual machines for my own experiments as well as training environments.
+
+Tools are downloaded, installed and updated automatically.
+
+## Installation instructions
+
+```
+curl --silent --location https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup | sudo tee /usr/local/bin/docker-setup >/dev/null
+sudo chmod +x /usr/local/bin/docker-setup
+```
