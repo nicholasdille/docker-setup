@@ -29,7 +29,8 @@ $(addsuffix --sbom,$(ALL_TOOLS_RAW)):%--sbom: $(TOOLS_DIR)/%/sbom.json
 $(addsuffix /sbom.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/sbom.json: $(HELPER)/var/lib/docker-setup/manifests/syft.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Creating sbom for $*...)
 	@set -o errexit; \
 	docker buildx imagetools inspect $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) --format "{{ json .SBOM }}" \
-	| jq --arg arch "$(ALT_ARCH)" '."linux/\($$arch)".SPDX' \
+	| jq --arg arch $(ALT_ARCH) 'if .SPDX == null then ."linux/\($$arch)".SPDX else .SPDX end' \
+	| syft convert - --output cyclonedx \
 	>$(TOOLS_DIR)/$*/sbom.json; \
 	test -s $(TOOLS_DIR)/$*/sbom.json || rm $(TOOLS_DIR)/$*/sbom.json
 
