@@ -2139,6 +2139,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kdabir/has",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/has/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "homeport/havener",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
