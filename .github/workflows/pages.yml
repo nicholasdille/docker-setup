@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
     paths:
+      - site/**
       - "tools/**"
       - "scripts/gh-pages.sh"
       - "make/site.mk"
