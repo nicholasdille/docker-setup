@@ -1,5 +1,5 @@
 name: podman
-version: "4.4.2"
+version: "4.4.3"
 check: ${binary} --version | cut -d' ' -f3
 runtime_dependencies:
 - conmon
