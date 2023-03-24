@@ -1,5 +1,5 @@
 name: depot
-version: "2.4.0"
+version: "2.5.0"
 check: ${binary} --version | grep ^depot | cut -d' ' -f3
 platforms:
 - linux/amd64
