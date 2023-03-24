@@ -1,5 +1,5 @@
 name: fuse-overlayfs
-version: "1.10"
+version: "1.11"
 check: ${binary} --version | grep ^fuse-overlayfs | cut -d' ' -f3
 platforms:
 - linux/amd64
