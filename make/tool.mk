@@ -1,3 +1,6 @@
+$(addsuffix --edit,$(ALL_TOOLS_RAW)):%--edit:
+	@code --add $(TOOLS_DIR)/$*
+
 $(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/yq.json $(TOOLS_DIR)/%/manifest.yaml ; $(info $(M) Creating manifest for $*...)
 	@set -o errexit; \
 	yq --output-format json eval '{"tools":[.]}' $(TOOLS_DIR)/$*/manifest.yaml >$(TOOLS_DIR)/$*/manifest.json
