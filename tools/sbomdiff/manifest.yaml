@@ -1,5 +1,5 @@
 name: sbomdiff
-version: "0.4.0"
+version: "0.4.1"
 check: ${binary} --version
 build_dependencies:
 - python
