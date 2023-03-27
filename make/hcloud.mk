@@ -6,10 +6,10 @@ HCLOUD_SERVER_TYPE ?= cx41
 DOCKER_CONFIG      ?= $(HOME)/.docker
 
 .PHONY:
-deploy-hcloud: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-ds vm-install-docker vm-install-creds
+deploy-hcloud: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-idle-alerter vm-install-ds vm-install-docker vm-install-creds
 
 .PHONY:
-deploy-hcloud-only: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-ds
+deploy-hcloud-only: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-idle-alerter vm-install-ds
 
 .PHONY:
 remove-hcloud: $(HELPER)/var/lib/docker-setup/manifests/hcloud.json $(HELPER)/var/lib/docker-setup/manifests/jq.json ; $(info $(M) Removing VM...)
@@ -52,6 +52,29 @@ vm-wait-ready: ~/.ssh/config.d/docker-setup ; $(info $(M) Waiting for VM to be r
 	echo "    StrictHostKeyChecking no" >>$@; \
 	echo "    UserKnownHostsFile /dev/null" >>$@; \
     chmod 0600 $@
+
+.PHONY:
+vm-install-idle-alerter: ; $(info $(M) Installing idle alerter...)
+	@ssh docker-setup \
+		curl \
+			--url https://github.com/nicholasdille/hcloud-uptime-alerter/raw/main/hcloud-uptime-alerter.sh \
+			--silent \
+			--location \
+			--fail \
+			--output /usr/local/bin/hcloud-uptime-alerter.sh
+	@ssh docker-setup \
+		curl \
+			--url https://github.com/nicholasdille/hcloud-uptime-alerter/raw/main/hcloud-uptime-alerter-cron.sh \
+			--silent \
+			--location \
+			--fail \
+			--output /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+	@ssh docker-setup \
+		chmod 0750 /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+	@ssh docker-setup \
+		sed -E \
+			"s/(MATRIX_SERVER)=/\1=foo/; s/(MATRIX_ACCESS_TOKEN)=/\1=bar/; s/(MATRIX_ROOM_ID)=/\1=blarg/" \
+			/etc/cron.hourly/hcloud-uptime-alerter-cron.sh
 
 .PHONY:
 vm-install-ds: ; $(info $(M) Installing docker-setup...)
