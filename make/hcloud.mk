@@ -53,8 +53,18 @@ vm-wait-ready: ~/.ssh/config.d/docker-setup ; $(info $(M) Waiting for VM to be r
 	echo "    UserKnownHostsFile /dev/null" >>$@; \
     chmod 0600 $@
 
+.env.mk:
+	@echo Please add variables to .env.mk:
+	@echo MATRIX_SERVER := foo
+	@echo MATRIX_ACCESS_TOKEN := bar
+	@echo MATRIX_ROOM_ID := blarg
+	@exit 1
+
 .PHONY:
-vm-install-idle-alerter: ; $(info $(M) Installing idle alerter...)
+vm-install-idle-alerter: .env.mk ; $(info $(M) Installing idle alerter...)
+	$(call check_defined, MATRIX_SERVER, Variable must be defined)
+	$(call check_defined, MATRIX_ACCESS_TOKEN, Variable must be defined)
+	$(call check_defined, MATRIX_ROOM_ID, Variable must be defined)
 	@ssh docker-setup \
 		curl \
 			--url https://github.com/nicholasdille/hcloud-uptime-alerter/raw/main/hcloud-uptime-alerter.sh \
@@ -70,11 +80,15 @@ vm-install-idle-alerter: ; $(info $(M) Installing idle alerter...)
 			--fail \
 			--output /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
 	@ssh docker-setup \
+		chmod 0755 /usr/local/bin/hcloud-uptime-alerter.sh
+	@ssh docker-setup \
 		chmod 0750 /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
 	@ssh docker-setup \
-		sed -E \
-			"s/(MATRIX_SERVER)=/\1=foo/; s/(MATRIX_ACCESS_TOKEN)=/\1=bar/; s/(MATRIX_ROOM_ID)=/\1=blarg/" \
-			/etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+		sed -i -E 's/MATRIX_SERVER=/MATRIX_SERVER=$(MATRIX_SERVER)/' /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+	@ssh docker-setup \
+		sed -i -E 's/MATRIX_ACCESS_TOKEN=/MATRIX_ACCESS_TOKEN=$(MATRIX_ACCESS_TOKEN)/' /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+	@ssh docker-setup \
+		sed -i -E 's/MATRIX_ROOM_ID=/MATRIX_ROOM_ID=$(MATRIX_ROOM_ID)/' /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
 
 .PHONY:
 vm-install-ds: ; $(info $(M) Installing docker-setup...)
