@@ -40,7 +40,10 @@ jobs:
       - name: Build and push
         env:
           DOCKER_BUILDKIT: 1
+          AUTHOR: ${github.event.commits[0].author.name}
         run: |
+          echo "### Running for commit by author: ${AUTHOR}"
+
           make helper/var/lib/docker-setup/manifests/regclient.json
 
           echo "### Fetching manifest for metadata"
