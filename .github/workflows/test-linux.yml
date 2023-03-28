@@ -61,17 +61,11 @@ jobs:
               echo "### Got TOOLS=${TOOLS}"
           fi
           if test -n "${TOOLS}"; then
-              echo "### Building all tools with dependencies"
+              echo "### Building all tools"
               for TOOL in ${TOOLS}; do
-                  echo "### Building ${TOOL} with dependencies"
-                  GIT_BRANCH=test make ${TOOL}--deep
+                  echo "### Building ${TOOL}"
+                  GIT_BRANCH=test make ${TOOL}--push
               done
-              #echo "### Creating metadata"
-              #GIT_BRANCH=test make metadata.json
-              #echo "### Building container image"
-              #tools_version=test \
-              #docker_setup_cache="${HOME}/.cache/docker-setup" \
-              #    ./docker-setup --ignore-conflicts --tools=$(echo "${TOOLS}" | tr ' ' ,) build bar
 
           else
               echo "### Building all container images"

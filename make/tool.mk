@@ -1,6 +1,9 @@
 $(addsuffix --edit,$(ALL_TOOLS_RAW)):%--edit:
 	@code --add $(TOOLS_DIR)/$*
 
+$(addsuffix --logs,$(ALL_TOOLS_RAW)):%--logs:
+	@less $(TOOLS_DIR)/$*/build.log
+
 $(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/yq.json $(TOOLS_DIR)/%/manifest.yaml ; $(info $(M) Creating manifest for $*...)
 	@set -o errexit; \
 	yq --output-format json eval '{"tools":[.]}' $(TOOLS_DIR)/$*/manifest.yaml >$(TOOLS_DIR)/$*/manifest.json
@@ -47,7 +50,7 @@ base: info metadata.json builders ; $(info $(M) Building base image $(REGISTRY)/
 	fi
 
 .PHONY:
-$(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile builders ; $(info $(M) Building image $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)...)
+$(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile builders base ; $(info $(M) Building image $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)...)
 	@set -o errexit; \
 	PUSH=$(or $(PUSH), false); \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' tools/$*/manifest.json)"; \
@@ -100,6 +103,13 @@ push: $(TOOLS_RAW) metadata.json--push
 .PHONY:
 $(addsuffix --push,$(ALL_TOOLS_RAW)): PUSH=true
 $(addsuffix --push,$(ALL_TOOLS_RAW)):%--push: % ; $(info $(M) Pushing image for $*...)
+
+.PHONY:
+promote: $(addsuffix --promote,$(ALL_TOOLS_RAW))
+
+.PHONY:
+$(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Promoting image for $*...)
+	@regctl manifest copy $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
 $(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Inspecting image for $*...)
