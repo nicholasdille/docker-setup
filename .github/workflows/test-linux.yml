@@ -65,7 +65,7 @@ jobs:
               echo "### Building all tools"
               for TOOL in ${TOOLS}; do
                   echo "### Building ${TOOL}"
-                  VERSION=test make ${TOOL}--push
+                  VERSION=test make ${TOOL}--deep PUSH=true
               done
 
           else
