@@ -2,6 +2,7 @@ name: cdxgen
 version: "8.2.1"
 check: ${binary} --version
 build_dependencies:
+- nodejs
 - npm
 runtime_dependencies:
 - nodejs
