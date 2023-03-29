@@ -1,5 +1,5 @@
 name: webhookd
-version: "1.15.1"
+version: "1.16.0"
 check: "" # Enpty version
 tags:
 - category/development
