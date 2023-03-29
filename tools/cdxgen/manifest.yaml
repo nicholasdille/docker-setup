@@ -1,5 +1,5 @@
 name: cdxgen
-version: "8.2.0"
+version: "8.2.1"
 check: ${binary} --version
 build_dependencies:
 - npm
