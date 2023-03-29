@@ -64,12 +64,12 @@ jobs:
               echo "### Building all tools"
               for TOOL in ${TOOLS}; do
                   echo "### Building ${TOOL}"
-                  GIT_BRANCH=test make ${TOOL}--push
+                  VERSION=test make ${TOOL}--push
               done
 
           else
               echo "### Building all container images"
-              GIT_BRANCH=test make
+              VERSION=test make
           fi
 
       - name: Store logs
