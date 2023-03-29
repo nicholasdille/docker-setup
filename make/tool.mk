@@ -105,11 +105,11 @@ $(addsuffix --push,$(ALL_TOOLS_RAW)): PUSH=true
 $(addsuffix --push,$(ALL_TOOLS_RAW)):%--push: % ; $(info $(M) Pushing image for $*...)
 
 .PHONY:
-promote: $(addsuffix --promote,$(ALL_TOOLS_RAW))
+promote: $(addsuffix --promote,$(TOOLS_RAW))
 
 .PHONY:
 $(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Promoting image for $*...)
-	@regctl manifest copy $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
+	@regctl image copy $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
 $(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Inspecting image for $*...)
