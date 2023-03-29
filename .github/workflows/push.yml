@@ -37,7 +37,7 @@ jobs:
           username: nicholasdille
           password: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Build and push
+      - name: Push
         env:
           DOCKER_BUILDKIT: 1
           AUTHOR: ${{ github.event.commits[0].author.name }}
