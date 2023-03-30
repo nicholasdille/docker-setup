@@ -1,5 +1,5 @@
 name: docker-gen
-version: "0.10.2"
+version: "0.10.3"
 check: ${binary} --version
 platforms:
 - linux/amd64
