@@ -1,14 +1,13 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/bom" \
-    "https://github.com/kubernetes-sigs/bom/releases/download/v${version}/bom-amd64-linux_${version}_linux_${alt_arch}"
+    "https://github.com/kubernetes-sigs/bom/releases/download/v0.5.1/bom-amd64-linux"
 chmod +x "${prefix}${target}/bin/bom"
 "${prefix}${target}/bin/bom" completion bash >"${prefix}${target}/share/bash-completion/completions/bom"
 "${prefix}${target}/bin/bom" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/bom.fish"
