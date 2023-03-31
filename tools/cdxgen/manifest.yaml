@@ -1,5 +1,5 @@
 name: cdxgen
-version: "8.2.2"
+version: "8.2.3"
 check: ${binary} --version
 build_dependencies:
 - nodejs
