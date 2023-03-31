@@ -1,5 +1,5 @@
 name: sealer
-version: "0.9.2"
+version: "0.9.3"
 check: ${binary} version | jq --raw-output '.gitVersion' | tr -d v
 platforms:
 - linux/amd64
