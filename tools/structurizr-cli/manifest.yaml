@@ -1,5 +1,5 @@
 name: structurizr-cli
-version: "1.29.0"
+version: "1.30.0"
 check: ""
 runtime_dependencies:
 - openjdk-jre
