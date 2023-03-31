@@ -1,23 +1,44 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/cosign:${ref} AS cosign
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=cosign / /
+COPY --from=go-md2man / /
 ARG name
 ARG version
-
-COPY --from=go-md2man / /
-
 COPY crio.conf ${prefix}/etc/crio.conf
-
 RUN <<EOF
-curl --silent --location --fail "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner \
+echo "### Downloading cri-o ${version}"
+curl --silent --location --fail --remote-name "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz"
+
+echo "### Checking keyless signature for cri-o ${version}"
+curl --silent --location --fail --remote-name "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz.sig"
+curl --silent --location --fail --remote-name "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz.cert"
+SHA="$(
+    git ls-remote --tags https://github.com/cri-o/cri-o "v${version}" \
+    | cut -f1
+)"
+COSIGN_EXPERIMENTAL=1 cosign verify-blob \
+    --cert "cri-o.${alt_arch}.v${version}.tar.gz.cert" \
+    --signature "cri-o.${alt_arch}.v${version}.tar.gz.sig" \
+    --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+    --certificate-identity "https://github.com/cri-o/cri-o/.github/workflows/test.yml@refs/tags/v${version}" \
+    --certificate-github-workflow-name test \
+    --certificate-github-workflow-ref "refs/tags/v${version}" \
+    --certificate-github-workflow-repository "cri-o/cri-o" \
+    --certificate-github-workflow-sha "${SHA}" \
+    --certificate-github-workflow-trigger push \
+    "cri-o.${alt_arch}.v${version}.tar.gz"
+
+echo "### Installing cri-o ${version}"
+tar --file "cri-o.${alt_arch}.v${version}.tar.gz" --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner \
     cri-o/bin/crio \
     cri-o/bin/crio-status
 EOF
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/share/bash-completion/completions/crio" \
     "https://github.com/cri-o/cri-o/raw/v${version}/completions/bash/crio"
@@ -32,7 +53,6 @@ curl --silent --location --fail --output "${prefix}${target}/share/zsh/vendor-co
 curl --silent --location --fail --output "${prefix}${target}/share/zsh/vendor-completions/_crio-status" \
     "https://github.com/cri-o/cri-o/raw/v${version}/completions/zsh/_crio-status"
 EOF
-
 RUN <<EOF
 mkdir -p \
     "${prefix}/etc/sysconfig"
@@ -43,7 +63,6 @@ curl --silent --location --fail --output "${prefix}/etc/systemd/system/crio-wipe
 curl --silent --location --fail --output "${prefix}/etc/sysconfig/crio" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/sysconfig/crio"
 EOF
-
 RUN <<EOF
 mkdir -p \
     "${prefix}/etc/cni/net.d"
@@ -54,7 +73,6 @@ curl --silent --location --fail --output "${prefix}/etc/cni/net.d/11-crio-ipv4-b
 curl --silent --location --fail --output "${prefix}/etc/cni/net.d/99-loopback.conflist" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/99-loopback.conflist"
 EOF
-
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/share/man/man8/crio.8.md" \
     "https://github.com/cri-o/cri-o/raw/v${version}/docs/crio.8.md"

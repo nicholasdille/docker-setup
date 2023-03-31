@@ -3,6 +3,7 @@ version: "1.26.3"
 binary: crio
 check: ${binary} --version | grep ^crio | cut -d' ' -f3
 build_dependencies:
+- cosign
 - go-md2man
 runtime_dependencies:
 - runc
