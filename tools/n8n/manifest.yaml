@@ -1,5 +1,5 @@
 name: n8n
-version: "0.222.0"
+version: "0.222.1"
 check: ${binary} --version
 build_dependencies:
 - nodejs
