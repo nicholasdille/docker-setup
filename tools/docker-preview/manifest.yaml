@@ -1,5 +1,5 @@
 name: docker-preview
-version: "23.0.2"
+version: "23.0.3"
 binary: ${target}/libexec/docker-preview/bin/docker
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 runtime_dependencies:
