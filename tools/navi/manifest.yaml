@@ -1,5 +1,5 @@
 name: navi
-version: "2.20.1"
+version: "2.22.1"
 check: ${binary} --version | cut -d' ' -f2
 runtime_dependencies:
 - fzf
