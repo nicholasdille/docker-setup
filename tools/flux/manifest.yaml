@@ -1,5 +1,5 @@
 name: flux
-version: "0.193.0"
+version: "0.194.0"
 check: "" # No version parameter
 conflicts_with:
 - flux2
