@@ -1,12 +1,39 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
-curl --silent --location --fail "https://github.com/nicholasdille/buildah-static/releases/download/v${version}/buildah-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
+apt-get update
+apt-get -y install --no-install-recommends \
+    git \
+    ca-certificates \
+    make \
+    gcc \
+    bats \
+    btrfs-progs \
+    libapparmor-dev \
+    libdevmapper-dev \
+    libglib2.0-dev \
+    libgpgme11-dev \
+    libseccomp-dev \
+    libselinux1-dev \
+    golang-go \
+    go-md2man
+rm /usr/local/sbin/unminimize
+EOF
+WORKDIR /tmp/buildah
+RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/buildah .
+ENV CFLAGS='-static -pthread' \
+    LDFLAGS='-s -w -static-libgcc -static' \
+    EXTRA_LDFLAGS='-s -w -linkmode external -extldflags "-static -lm"' \
+    BUILDTAGS='static netgo osusergo exclude_graphdriver_btrfs exclude_graphdriver_devicemapper seccomp apparmor selinux' \
+    CGO_ENABLED=1
+RUN <<EOF
+make all
+mkdir -p /usr/local/share/bash-completion/completions
+cp contrib/completions/bash/buildah /usr/local/share/bash-completion/completions/
+make install DESTDIR="${prefix}" PREFIX="${target}"
 EOF
