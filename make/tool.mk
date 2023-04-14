@@ -1,4 +1,7 @@
-$(addsuffix --edit,$(ALL_TOOLS_RAW)):%--edit:
+$(addsuffix --vim,$(ALL_TOOLS_RAW)):%--vim:
+	@vim -o2 $(TOOLS_DIR)/$*/manifest.yaml  $(TOOLS_DIR)/$*/Dockerfile.template
+
+$(addsuffix --vscode,$(ALL_TOOLS_RAW)):%--vscode:
 	@code --add $(TOOLS_DIR)/$*
 
 $(addsuffix --logs,$(ALL_TOOLS_RAW)):%--logs:
