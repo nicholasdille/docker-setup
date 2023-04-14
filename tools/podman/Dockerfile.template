@@ -31,7 +31,6 @@ apt-get -y install --no-install-recommends \
     libsystemd-dev \
     pkg-config \
     uidmap
-rm -f /usr/local/sbin/unminimize
 EOF
 RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/podman .
 RUN make EXTRA_LDFLAGS="-s -w -extldflags=-static"
