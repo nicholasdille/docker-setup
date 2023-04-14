@@ -22,7 +22,6 @@ apt-get -y install --no-install-recommends \
     libselinux1-dev \
     golang-go \
     go-md2man
-rm /usr/local/sbin/unminimize
 EOF
 WORKDIR /tmp/buildah
 RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/buildah .
