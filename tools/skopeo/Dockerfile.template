@@ -2,34 +2,37 @@
 
 ARG ref=main
 
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
 FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
+COPY --link --from=go-md2man / /
 ARG name
 ARG version
-RUN apk add --update-cache --no-cache \
-        git \
-        make \
-        gcc \
-        pkgconf \
-        musl-dev \
-        btrfs-progs \
-        btrfs-progs-dev \
-        libassuan-dev \
-        lvm2-dev \
-        device-mapper \
-        glib-static \
-        libc-dev \
-        gpgme-dev \
-        protobuf-dev \
-        protobuf-c-dev \
-        libseccomp-dev \
-        libseccomp-static \
-        libselinux-dev \
-        ostree-dev \
-        openssl \
-        iptables \
-        bash
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    git \
+    make \
+    gcc \
+    pkgconf \
+    btrfs-progs \
+    libbtrfs-dev \
+    libassuan-dev \
+    lvm2 \
+    libdevmapper-dev \
+    libc-dev \
+    libgpgme-dev \
+    libprotobuf-dev \
+    libprotobuf-c-dev \
+    libseccomp-dev \
+    libselinux-dev \
+    libostree-dev \
+    openssl \
+    iptables \
+    bash
+EOF
 WORKDIR $GOPATH/src/github.com/containers/skopeo
 RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/skopeo.git .
 ENV CGO_ENABLED=0
