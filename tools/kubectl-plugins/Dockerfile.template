@@ -46,6 +46,9 @@ plugins=(
     images
     janitor
     konfig
+    ksniff
+    kubectl-capture
+    kubectl-login
     kubesec-scan
     kurt
     lineage
@@ -53,6 +56,7 @@ plugins=(
     mtail
     neat
     node-shell
+    np-viewer
     outdated
     pexec
     pod-dive
@@ -74,6 +78,7 @@ plugins=(
     sshd
     starboard
     status
+    stern
     strace
     sudo
     support-bundle
@@ -84,6 +89,7 @@ plugins=(
     view-allocations
     view-utilization
     viewnode
+    whisper-secret
     who-can
     whoami
 )
