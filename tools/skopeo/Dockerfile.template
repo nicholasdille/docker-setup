@@ -1,12 +1,42 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
+RUN apk add --update-cache --no-cache \
+        git \
+        make \
+        gcc \
+        pkgconf \
+        musl-dev \
+        btrfs-progs \
+        btrfs-progs-dev \
+        libassuan-dev \
+        lvm2-dev \
+        device-mapper \
+        glib-static \
+        libc-dev \
+        gpgme-dev \
+        protobuf-dev \
+        protobuf-c-dev \
+        libseccomp-dev \
+        libseccomp-static \
+        libselinux-dev \
+        ostree-dev \
+        openssl \
+        iptables \
+        bash
+WORKDIR $GOPATH/src/github.com/containers/skopeo
+RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/skopeo.git .
+ENV CGO_ENABLED=0
 RUN <<EOF
-curl --silent --location --fail "https://github.com/nicholasdille/skopeo-static/releases/download/v${version}/skopeo-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
+mkdir -p "${prefix}${target}/share/man/man1"
+make bin/skopeo EXTRA_LDFLAGS="-s -w -extldflags '-static'" BUILDTAGS=containers_image_openpgp GO_DYN_FLAGS=
+make docs GOMD2MAN=go-md2man
+mv bin/skopeo "${prefix}${target}/bin/"
+mv docs/*.1 "${prefix}${target}/share/man/man1/"
 EOF
