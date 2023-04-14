@@ -1,5 +1,5 @@
 name: cyclonedx-gomod
-version: "1.3.0"
+version: "1.4.0"
 check: ${binary} version | grep ^Version | cut -dv -f2
 platforms:
 - linux/amd64
