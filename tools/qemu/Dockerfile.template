@@ -1,13 +1,30 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
+ENV DEBIAN_FRONTEND=non-interactive
 RUN <<EOF
-curl --silent --location --fail "https://github.com/nicholasdille/qemu-static/releases/download/v${version}/qemu-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}" --strip-components=2 --no-same-owner
-rm /usr/local/man
+apt-get update
+apt-get -y install --no-install-recommends \
+    build-essential \
+    ninja-build \
+    git \
+    ca-certificates \
+    libglib2.0-dev \
+    libfdt-dev \
+    libpixman-1-dev \
+    zlib1g-dev
+rm /usr/local/sbin/unminimize
 EOF
+WORKDIR /tmp/qemu
+ARG TARGETS="aarch64-softmmu x86_64-softmmu"
+RUN git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/qemu/qemu .
+WORKDIR /tmp/qemu/build
+RUN <<EOF
+../configure --prefix="${prefix}${target}" --static --enable-tools --disable-user --target-list="${TARGETS}"
+make
+EOF
+RUN make install

@@ -11,6 +11,6 @@ tags:
 homepage: https://github.com/qemu/qemu
 description: Generic and open source machine & userspace emulator and virtualizer
 renovate:
-  datasource: github-releases
-  package: nicholasdille/qemu-static
+  datasource: github-tags
+  package: qemu/qemu
   extractVersion: ^v(?<version>.+?)$
