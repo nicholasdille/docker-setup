@@ -2,10 +2,10 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+FROM ghcr.io/nicholasdille/docker-setup/tinygo:${ref} AS tinygo
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --link --from=go / /
+COPY --link --from=tinygo / /
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
