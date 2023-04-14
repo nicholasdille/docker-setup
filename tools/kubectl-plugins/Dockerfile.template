@@ -46,8 +46,7 @@ plugins=(
     images
     janitor
     konfig
-    kubectl-capture
-    kubectl-login
+    capture
     kubesec-scan
     kurt
     lineage
