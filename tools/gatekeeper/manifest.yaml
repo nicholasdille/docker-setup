@@ -1,5 +1,5 @@
 name: gatekeeper
-version: "3.11.0"
+version: "3.12.0"
 binary: gator
 check: ${binary} --version | grep "^Gator version" | cut -d' ' -f3 | tr -d v
 tags:
