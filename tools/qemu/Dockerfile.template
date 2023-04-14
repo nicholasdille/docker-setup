@@ -17,7 +17,6 @@ apt-get -y install --no-install-recommends \
     libfdt-dev \
     libpixman-1-dev \
     zlib1g-dev
-rm /usr/local/sbin/unminimize
 EOF
 WORKDIR /tmp/qemu
 ARG TARGETS="aarch64-softmmu x86_64-softmmu"
