@@ -12,5 +12,5 @@ homepage: https://github.com/containers/skopeo
 description: Work with remote images registries
 renovate:
   datasource: github-releases
-  package: nicholasdille/skopeo-static
+  package: containers/skopeo
   extractVersion: ^v(?<version>.+?)$
