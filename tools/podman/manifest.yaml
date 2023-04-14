@@ -20,5 +20,5 @@ homepage: https://github.com/containers/podman
 description: Tool for managing OCI containers and pods
 renovate:
   datasource: github-releases
-  package: nicholasdille/podman-static
+  package: containers/podman
   extractVersion: ^v(?<version>.+?)$
