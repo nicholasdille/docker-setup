@@ -1,6 +1,9 @@
 name: skopeo
 version: "1.11.2"
 check: ${binary} --version | cut -d' ' -f3
+build_dependencies:
+- go
+- go-md2man
 tags:
 - org/redhat
 - standard/oci
