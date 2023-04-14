@@ -2,30 +2,30 @@
 
 ARG ref=main
 
+FROM ghcr.io/nicholasdille/docker-setup/go-md2man:${ref} AS go-md2man
+
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-apk add --update-cache --no-cache \
+apt-get update
+apt-get -y install --no-install-recommends \
     git \
     make \
     gcc \
     pkgconf \
-    musl-dev \
     btrfs-progs \
-    btrfs-progs-dev \
+    libbtrfs-dev \
     libassuan-dev \
-    lvm2-dev \
-    device-mapper \
-    glib-static \
+    lvm2 \
+    libdevmapper-dev \
     libc-dev \
-    gpgme-dev \
-    protobuf-dev \
-    protobuf-c-dev \
+    libgpgme-dev \
+    libprotobuf-dev \
+    libprotobuf-c-dev \
     libseccomp-dev \
-    libseccomp-static \
     libselinux-dev \
-    ostree-dev \
+    libostree-dev \
     openssl \
     iptables \
     bash \
