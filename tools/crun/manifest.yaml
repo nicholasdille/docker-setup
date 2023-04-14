@@ -12,4 +12,4 @@ description: Fast and lightweight fully featured OCI runtime
 renovate:
   datasource: github-releases
   package: containers/crun
-  versioning: loose
+  versioning: regex:^(?<major>\\d+)\\.(?<minor>\\d+)(\\.(?<patch>\\d+))?$

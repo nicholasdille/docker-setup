@@ -1,13 +1,15 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM nixos/nix:2.15.0@sha256:31b808456afccc2a419507ea112e152cf27e9bd2527517b0b6ca8639cc423501 AS prepare
 ARG name
 ARG version
-
+WORKDIR /tmp/crun
+RUN git clone --config advice.detachedHead=false --depth 1 --recursive --branch "${version}" https://github.com/containers/crun.git .
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}${target}/bin/crun" \
-    "https://github.com/containers/crun/releases/download/${version}/crun-${version}-linux-${alt_arch}"
-chmod +x "${prefix}${target}/bin/crun"
+mkdir -p /usr/local/bin/ /usr/local/share/man/man1/
+nix build -f nix --extra-experimental-features nix-command
+cp -rfp ./result/bin/crun "${prefix}${target}/bin/"
+cp *.1 "${prefix}${target}/share/man/man1/"
 EOF
