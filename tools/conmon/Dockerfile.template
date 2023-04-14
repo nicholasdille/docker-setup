@@ -1,18 +1,50 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
+RUN <<EOF
+apk add --update-cache --no-cache \
+    git \
+    make \
+    gcc \
+    pkgconf \
+    musl-dev \
+    btrfs-progs \
+    btrfs-progs-dev \
+    libassuan-dev \
+    lvm2-dev \
+    device-mapper \
+    glib-static \
+    libc-dev \
+    gpgme-dev \
+    protobuf-dev \
+    protobuf-c-dev \
+    libseccomp-dev \
+    libseccomp-static \
+    libselinux-dev \
+    ostree-dev \
+    openssl \
+    iptables \
+    bash \
+    go-md2man
+EOF
+WORKDIR /tmp/conmon
+RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/conmon.git .
+RUN <<EOF
+mkdir -p "${prefix}${target}/share/man/man8"
+make git-vars bin/conmon \
+    PKG_CONFIG='pkg-config --static' \
+    CFLAGS='-std=c99 -Os -Wall -Wextra -Werror -static' \
+    LDFLAGS='-s -w -static'
+make -C docs GOMD2MAN=go-md2man
+mv bin/conmon "${prefix}${target}/bin/conmon"
+mv docs/conmon.8 "${prefix}${target}/share/man/man8"
+EOF
 COPY default.yaml ${prefix}/etc/containers/registries.d/default.yaml
 COPY policy.json ${prefix}/etc/containers/policy.json
 COPY policy.conf ${prefix}/etc/containers/policy.conf
 COPY registry.json ${prefix}/etc/containers/registries.json
 COPY storage.conf ${prefix}/etc/containers/storage.conf
-
-RUN <<EOF
-curl --silent --location --fail "https://github.com/nicholasdille/conmon-static/releases/download/v${version}/conmon-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
-EOF

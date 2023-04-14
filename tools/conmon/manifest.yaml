@@ -13,5 +13,5 @@ homepage: https://github.com/containers/conmon
 description: OCI container runtime monitor
 renovate:
   datasource: github-releases
-  package: nicholasdille/conmon-static
+  package: containers/conmon
   extractVersion: ^v(?<version>.+?)$
