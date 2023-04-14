@@ -11,7 +11,7 @@ apt-get update
 apt-get -y install --no-install-recommends \
     git \
     ca-certificates \
-    gcc \        
+    gcc \
     make \
     btrfs-progs \
     golang-go \
