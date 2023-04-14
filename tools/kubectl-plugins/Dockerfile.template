@@ -46,7 +46,6 @@ plugins=(
     images
     janitor
     konfig
-    ksniff
     kubectl-capture
     kubectl-login
     kubesec-scan
