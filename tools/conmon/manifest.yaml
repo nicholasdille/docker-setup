@@ -1,6 +1,8 @@
 name: conmon
 version: "2.1.7"
 check: ${binary} --version | grep "conmon version" | cut -d' ' -f3
+build_dependencies:
+- go-md2man
 runtime_dependencies:
 - shortnames
 tags:
