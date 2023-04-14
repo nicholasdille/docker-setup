@@ -10,9 +10,9 @@ tags:
 - container/build
 - type/cli
 - lang/go
-homepage: https://github.com/nicholasdille/buildah-static
+homepage: https://github.com/containers/buildah
 description: Tool that facilitates building OCI images
 renovate:
   datasource: github-releases
-  package: nicholasdille/buildah-static
+  package: containers/buildah
   extractVersion: ^v(?<version>.+?)$
