@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM nixos/nix:2.15.0@sha256:31b808456afccc2a419507ea112e152cf27e9bd2527517b0b6ca8639cc423501 AS prepare
+FROM nixos/nix:2.15.0@sha256:31b808456afccc2a419507ea112e152cf27e9bd2527517b0b6ca8639cc423501 AS build
 ARG name
 ARG version
 WORKDIR /tmp/crun
@@ -10,6 +10,10 @@ RUN git clone --config advice.detachedHead=false --depth 1 --recursive --branch 
 RUN <<EOF
 mkdir -p /usr/local/bin/ /usr/local/share/man/man1/
 nix build -f nix --extra-experimental-features nix-command
-cp -rfp ./result/bin/crun "${prefix}${target}/bin/"
-cp *.1 "${prefix}${target}/share/man/man1/"
+cp -rfp ./result/bin/crun /usr/local/bin/
+cp *.1 /usr/local/share/man/man1/
 EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=build /usr/local/bin/ ${prefix}${target}/bin/
+COPY --link --from=build /usr/local/share/man/man1/ ${prefix}${target}/share/man/man1/
