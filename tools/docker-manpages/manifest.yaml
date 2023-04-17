@@ -2,6 +2,9 @@ name: docker-manpages
 version: "23.0.3"
 binary: false
 check: "" # No binary
+build_dependencies:
+- go
+- go-md2man
 platforms:
 - linux/amd64
 - linux/arm64
