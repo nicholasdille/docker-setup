@@ -3,6 +3,7 @@ version: "5.23"
 check: ${binary} version | cut -d' ' -f3
 build_dependencies:
 - python
+- shiv
 runtime_dependencies:
 - python
 platforms:

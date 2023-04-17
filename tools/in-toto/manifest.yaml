@@ -1,6 +1,8 @@
 name: in-toto
 version: "0.5.0"
 check: "" # No version parameter
+build_dependencies:
+- go
 tags:
 - type/cli
 - category/security

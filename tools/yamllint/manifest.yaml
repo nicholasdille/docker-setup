@@ -3,6 +3,7 @@ version: "1.30.0"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
 - python
+- shiv
 runtime_dependencies:
 - python
 platforms:

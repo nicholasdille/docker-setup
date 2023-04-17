@@ -1,6 +1,8 @@
 name: helm-plugins
 version: "0.1.0"
 check: "" # No version
+build_dependencies:
+- helm
 runtime_dependencies:
 - helm
 tags:

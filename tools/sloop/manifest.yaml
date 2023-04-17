@@ -1,6 +1,8 @@
 name: sloop
 version: "1.2"
 check: "" # No version parameter
+build_dependencies:
+- go
 tags:
 - type/cli
 - kubernetes

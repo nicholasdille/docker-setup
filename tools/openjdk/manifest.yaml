@@ -2,7 +2,7 @@ name: openjdk
 version: "19"
 binary: /opt/openjdk/bin/javac
 check: ${binary} -version | cut -d' ' -f2
-runtime_dependencies:
+build_dependencies:
 - jabba
 tags:
 - type/cli

@@ -1,6 +1,8 @@
 name: oci-image-tool
 version: "1.0.0-rc3"
 check: ${binary} --version | cut -d' ' -f3
+build_dependencies:
+- go
 tags:
 - org/oci
 - standard/oci

@@ -1,7 +1,9 @@
 name: youki
 version: 0.0.5
 check: ""
-dependencies:
+build_dependencies:
+- rustr
+runtime_dependencies:
 - docker
 platforms:
 - linux/amd64

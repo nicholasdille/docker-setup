@@ -2,6 +2,7 @@ name: nx
 version: "15.9.2"
 check: ""
 build_dependencies:
+- nodejs
 - npm
 runtime_dependencies:
 - nodejs

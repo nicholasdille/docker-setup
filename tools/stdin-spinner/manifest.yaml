@@ -1,6 +1,8 @@
 name: stdin-spinner
 version: "1.0.6"
 check: ""
+build_dependencies:
+- go
 platforms:
 - linux/amd64
 - linux/arm64

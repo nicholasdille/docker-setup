@@ -1,6 +1,8 @@
 name: melange
 version: "0.3.1"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
+build_dependencies:
+- go
 runtime_dependencies:
 - apk
 tags:

@@ -1,6 +1,8 @@
 name: delta
 version: "0.15.1"
 check: ""
+build_dependencies:
+- rust
 tags:
 - category/operations
 - lang/rust

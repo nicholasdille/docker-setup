@@ -1,6 +1,8 @@
 name: tml
 version: "0.6.0"
 check: ""
+build_dependencies:
+- go
 platforms:
 - linux/amd64
 - linux/arm64

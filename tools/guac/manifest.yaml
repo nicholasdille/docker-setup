@@ -1,6 +1,8 @@
 name: guac
 version: "main"
 check: "" # No version parameter
+build_dependencies:
+- go
 tags:
 - category/security
 - type/cli

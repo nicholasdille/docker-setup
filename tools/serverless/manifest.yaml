@@ -2,6 +2,7 @@ name: serverless
 version: "3.30.1"
 check: ${binary} --version | grep ^Framework | cut -d' ' -f3
 build_dependencies:
+- nodejs
 - npm
 runtime_dependencies:
 - nodejs

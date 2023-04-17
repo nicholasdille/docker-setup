@@ -2,6 +2,7 @@ name: grunt
 version: "1.6.1"
 check: ""
 build_dependencies:
+- nodejs
 - npm
 runtime_dependencies:
 - nodejs

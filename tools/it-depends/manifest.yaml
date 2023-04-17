@@ -3,6 +3,7 @@ version: "0.1.1"
 check: ""
 build_dependencies:
 - python
+- shiv
 runtime_dependencies:
 - python
 platforms:

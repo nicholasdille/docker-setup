@@ -1,6 +1,9 @@
 name: runq
 version: master
 check: "" # No tag/release
+build_dependencies:
+- go
+- tini
 platforms:
 - linux/amd64
 #- linux/arm64
