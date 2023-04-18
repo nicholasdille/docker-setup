@@ -2,10 +2,10 @@ name: n8n
 version: "0.222.3"
 check: ${binary} --version
 build_dependencies:
-- nodejs
+- nodejs-lts
 - npm
 runtime_dependencies:
-- nodejs
+- nodejs-lts
 platforms:
 - linux/amd64
 - linux/arm64

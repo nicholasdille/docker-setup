@@ -8,18 +8,13 @@ ARG version
 RUN <<EOF
 MAJOR_VERSION="$(
     curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
-    | jq -r '
-            to_entries[] |
-            select(.value.maintenance > (now | todate)) |
-            select(.value.lts != null) | select(.value.lts > (now | todate)) |
-            .key
-        ' \
+    | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key' \
     | tr -d v
 )"
 if test "${version%%.*}" == "${MAJOR_VERSION}"; then
-    echo "### Version ${version} matches current ${MAJOR_VERSION}"
+    echo "### Version ${version} matches latest LTS ${MAJOR_VERSION}"
 else
-    echo "### Version ${version} does not match current ${MAJOR_VERSION}"
+    echo "### Version ${version} does not match latest LTS ${MAJOR_VERSION}"
     exit 1
 fi
 EOF

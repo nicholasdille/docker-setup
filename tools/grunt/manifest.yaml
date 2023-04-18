@@ -2,10 +2,10 @@ name: grunt
 version: "1.6.1"
 check: ""
 build_dependencies:
-- nodejs
+- nodejs-lts
 - npm
 runtime_dependencies:
-- nodejs
+- nodejs-lts
 platforms:
 - linux/amd64
 - linux/arm64
