@@ -1,5 +1,5 @@
 name: skopeo
-version: "1.11.2"
+version: "1.12.0"
 check: ${binary} --version | cut -d' ' -f3
 build_dependencies:
 - go
