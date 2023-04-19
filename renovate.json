@@ -1336,17 +1336,6 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "docker/scan-cli-plugin",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "fileMatch": [
-        "^tools/docker-scan/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
-      "datasourceTemplate": "github-releases",
       "depNameTemplate": "slimtoolkit/slim",
       "fileMatch": [
         "^tools/docker-slim/manifest.yaml$"
