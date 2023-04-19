@@ -11,5 +11,5 @@ description: Tools for managing namespaces
 renovate:
   datasource: github-tags
   package: util-linux/util-linux
-  extractVersion: ^v(?<version>.+?)$
+  extractVersion: ^v(?<version>\d+\.\d+(\.\d+)?)$
   versioning: loose
