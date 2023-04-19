@@ -1,0 +1,16 @@
+name: docker-scout
+version: "0.10.0"
+check: ""
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- org/docker
+- category/security
+- lang/go
+- type/cli
+homepage: https://www.docker.com/products/docker-scout/
+description: Secure your supply chain at every layer
+renovate:
+  datasource: docker
+  package: docker/scout-cli

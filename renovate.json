@@ -1335,6 +1335,16 @@
       ]
     },
     {
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "docker/scout-cli",
+      "fileMatch": [
+        "^tools/docker-scout/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "slimtoolkit/slim",
       "fileMatch": [
