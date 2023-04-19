@@ -398,7 +398,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/buildah-static",
+      "depNameTemplate": "containers/buildah",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/buildah/manifest.yaml$"
@@ -779,7 +779,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/conmon-static",
+      "depNameTemplate": "containers/conmon",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/conmon/manifest.yaml$"
@@ -4090,7 +4090,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/podman-static",
+      "depNameTemplate": "containers/podman",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/podman/manifest.yaml$"
@@ -4262,8 +4262,8 @@
       ]
     },
     {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/qemu-static",
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "qemu/qemu",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/qemu/manifest.yaml$"
@@ -4586,7 +4586,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/skopeo-static",
+      "depNameTemplate": "containers/skopeo",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/skopeo/manifest.yaml$"
