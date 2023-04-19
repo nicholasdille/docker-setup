@@ -23,7 +23,7 @@ ARG TARGETS="aarch64-softmmu x86_64-softmmu"
 RUN git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/qemu/qemu .
 WORKDIR /tmp/qemu/build
 RUN <<EOF
-../configure --prefix="${prefix}${target}" --static --enable-tools --disable-user --target-list="${TARGETS}"
+../configure --prefix="${prefix}${target}" --static --enable-tools --disable-user --disable-gio --target-list="${TARGETS}"
 make
 EOF
 RUN make install
