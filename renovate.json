@@ -4929,6 +4929,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cilium/tetragon",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/tetragon/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "jonas/tig",
       "extractVersionTemplate": "^tig-(?<version>.+?)$",
       "fileMatch": [
