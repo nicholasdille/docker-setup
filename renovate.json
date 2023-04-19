@@ -5072,7 +5072,7 @@
     {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "util-linux/util-linux",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+(\\.\\d+)?)$",
       "fileMatch": [
         "^tools/util-linux/manifest.yaml$"
       ],
