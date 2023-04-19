@@ -3769,6 +3769,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "nodejs/node",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/nodejs-lts/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "norouter/norouter",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
