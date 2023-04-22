@@ -1,5 +1,5 @@
 name: checkov
-version: "2.3.183"
+version: "2.3.192"
 check: ""
 build_dependencies:
 - python
