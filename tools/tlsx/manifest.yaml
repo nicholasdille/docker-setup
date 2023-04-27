@@ -1,5 +1,5 @@
 name: tlsx
-version: "1.0.7"
+version: "1.0.8"
 check: ${binary} --version 2>&1 | grep "Current version" | cut -d' ' -f4 | tr -d v
 tags:
 - category/security
