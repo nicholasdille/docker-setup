@@ -1,5 +1,5 @@
 name: rke
-version: "1.4.4"
+version: "1.4.5"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 platforms:
 - linux/amd64
