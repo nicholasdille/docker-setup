@@ -5397,15 +5397,16 @@
       ]
     },
     {
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "freedesktop/xdg-utils",
+      "datasourceTemplate": "gitlab-tags",
+      "depNameTemplate": "xdg/xdg-utils",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/xdg-utils/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
+      ],
+      "packageNameTemplate": "git://gitlab.freedesktop.org/xdg/xdg-utils"
     },
     {
       "datasourceTemplate": "github-releases",

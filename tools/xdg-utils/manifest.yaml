@@ -9,6 +9,7 @@ tags:
 homepage: https://github.com/freedesktop/xdg-utils
 description: Desktop integration utilities
 renovate:
-  datasource: github-tags
-  package: freedesktop/xdg-utils
+  datasource: gitlab-tags
+  package: xdg/xdg-utils
+  url: git://gitlab.freedesktop.org/xdg/xdg-utils
   extractVersion: ^v(?<version>.+?)$
