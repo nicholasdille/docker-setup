@@ -5399,14 +5399,14 @@
     {
       "datasourceTemplate": "gitlab-tags",
       "depNameTemplate": "xdg/xdg-utils",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+\\.\\d+?)$",
       "fileMatch": [
         "^tools/xdg-utils/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "packageNameTemplate": "git://gitlab.freedesktop.org/xdg/xdg-utils"
+      "packageNameTemplate": "git://cgit.freedesktop.org/xdg/xdg-utils/"
     },
     {
       "datasourceTemplate": "github-releases",
