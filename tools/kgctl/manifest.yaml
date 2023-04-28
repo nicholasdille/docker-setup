@@ -1,5 +1,5 @@
 name: kgctl
-version: "0.5.0"
+version: "0.6.0"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
 - linux/amd64
