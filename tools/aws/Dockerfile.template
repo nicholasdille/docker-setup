@@ -8,6 +8,9 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=python / /
 ARG name
 ARG version
+COPY <<EOF ${prefix}/etc/profile.d/aws
+complete -C '/usr/local/bin/aws_completer' aws
+EOF
 RUN <<EOF
 curl --silent --location --fail --remote-name \
     "https://s3.amazonaws.com/aws-cli/awscli-bundle-${version}.zip"

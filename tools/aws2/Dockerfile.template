@@ -5,8 +5,10 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
+COPY <<EOF ${prefix}/etc/profile.d/aws
+complete -C '/usr/local/bin/aws_completer' aws
+EOF
 RUN <<EOF
-set -x
 curl --silent --location --fail --remote-name \
     "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${version}.zip"
 unzip "awscli-exe-linux-x86_64-${version}.zip"
