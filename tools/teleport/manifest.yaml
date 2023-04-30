@@ -1,5 +1,5 @@
 name: teleport
-version: "12.2.4"
+version: "12.2.5"
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 tags:
 - type/cli
