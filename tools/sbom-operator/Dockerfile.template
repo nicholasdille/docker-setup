@@ -22,7 +22,7 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob "sbom-operator_${version}_linux_${alt_a
     --certificate "sbom-operator_${version}_linux_${alt_arch}.tar.gz.pem" \
     --signature "sbom-operator_${version}_linux_${alt_arch}.tar.gz.sig" \
     --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-    --certificate-identity https://github.com/ckotzbauer/actions-toolkit/.github/workflows/toolkit-release-goreleaser.yml@refs/tags/0.33.3 \
+    --certificate-identity https://github.com/ckotzbauer/actions-toolkit/.github/workflows/toolkit-release-goreleaser.yml@refs/tags/0.34.0 \
     --certificate-github-workflow-repository ckotzbauer/sbom-operator \
     --certificate-github-workflow-name create-release \
     --certificate-github-workflow-ref refs/heads/main \
