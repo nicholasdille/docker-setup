@@ -8,5 +8,5 @@ ARG version
 RUN <<EOF
 curl --silent --location --fail "https://github.com/bytecodealliance/wasmtime/releases/download/v${version}/wasmtime-v${version}-${arch}-linux.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
-    "wasmtime-v${version}-${arch}-linux/wasmtime"
+    "./wasmtime-v${version}-${arch}-linux/wasmtime"
 EOF
