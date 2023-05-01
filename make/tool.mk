@@ -88,13 +88,13 @@ $(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR
 
 $(addsuffix --deep,$(ALL_TOOLS_RAW)):%--deep: info metadata.json
 	@set -o errexit; \
-	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd' ')"; \
+	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .build_dependencies[]' tools/$*/manifest.json | paste -sd' ')"; \
 	if test -z "$${DEPS}"; then \
 		echo "No deps for $*"; \
 	else \
 		for DEP in $${DEPS}; do \
 			echo "Making deps: $${DEPS}."; \
-			make $${DEP}; \
+			make $${DEP}--deep; \
 		done; \
 	fi; \
 	make $*
