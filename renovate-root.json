@@ -1,22 +1,26 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    ":dependencyDashboard",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
     ":docker",
     "docker:enableMajor",
     "docker:pinDigests",
-    ":disableRateLimiting",
     ":ignoreUnstable",
     ":pinVersions",
     ":separateMajorReleases",
+    ":separatePatchReleases",
     ":automergePr",
     ":automergeRequireAllStatusChecks",
-    ":automergeDigest",
-    ":automergePatch",
-    ":semanticCommits",
-    ":enableVulnerabilityAlerts",
-    ":enableVulnerabilityAlertsWithLabel(security)"
+    ":semanticCommits"
   ],
+  "timezone": "Europe/Berlin",
+  "schedule":[
+    "before 5am"
+  ],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 10,
   "enabledManagers": [
     "dockerfile",
     "github-actions",
