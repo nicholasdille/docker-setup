@@ -16,11 +16,14 @@
     ":semanticCommits"
   ],
   "timezone": "Europe/Berlin",
-  "schedule":[
+  "schedule": [
     "* */4 * * *"
   ],
+  "automergeSchedule": [
+    "at any time"
+  ],
   "prConcurrentLimit": 10,
-  "prHourlyLimit": 10,
+  "prHourlyLimit": 0,
   "enabledManagers": [
     "dockerfile",
     "github-actions",
