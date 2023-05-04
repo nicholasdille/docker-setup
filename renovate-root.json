@@ -17,7 +17,7 @@
   ],
   "timezone": "Europe/Berlin",
   "schedule":[
-    "every 4 hours"
+    "0 */4 * * *"
   ],
   "prConcurrentLimit": 10,
   "prHourlyLimit": 10,

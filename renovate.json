@@ -5519,7 +5519,7 @@
     }
   ],
   "schedule": [
-    "every 4 hours"
+    "0 */4 * * *"
   ],
   "stopUpdatingLabel": "renovate/stop-updating",
   "timezone": "Europe/Berlin",
