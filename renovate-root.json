@@ -20,10 +20,10 @@
     "* */4 * * *"
   ],
   "automergeSchedule": [
-    "* * * * *"
+    "* */2 * * *"
   ],
   "prConcurrentLimit": 10,
-  "prHourlyLimit": 0,
+  "prHourlyLimit": 10,
   "enabledManagers": [
     "dockerfile",
     "github-actions",
