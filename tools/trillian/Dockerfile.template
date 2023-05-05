@@ -9,9 +9,12 @@ COPY --link --from=go / /
 WORKDIR /go/src/github.com/google/trillian
 ARG name
 ARG version
+COPY trillian_log_server.service ${prefix}/etc/systemd/system/trillian_log_server.service
+COPY trillian_log_signer.service ${prefix}/etc/systemd/system/trillian_log_signer.service
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/trillian .
 export CGO_ENABLED=0
 go build -ldflags "-w -s" -o "${prefix}${target}/bin/trillian_log_server" ./cmd/trillian_log_server
 go build -ldflags "-w -s" -o "${prefix}${target}/bin/trillian_log_signer" ./cmd/trillian_log_signer
+go build -ldflags "-w -s" -o "${prefix}${target}/bin/createtree" ./cmd/createtree
 EOF

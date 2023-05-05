@@ -4,6 +4,9 @@ binary: trillian_log_server
 check: "" # No version parameter
 build_dependencies:
 - go
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/google
 - category/security

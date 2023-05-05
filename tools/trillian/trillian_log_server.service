@@ -1,12 +1,12 @@
 [Unit]
-Description=rekor
+Description=trillian_log_server
 After=network-online.target
 Wants=network-online.target
 StartLimitIntervalSec=600
 StartLimitBurst=5
 
 [Service]
-ExecStart=/usr/local/bin/rekor-server serve --rekor_server.address=0.0.0.0 --trillian_log_server.port=8091
+ExecStart=/usr/local/bin/trillian_log_server -http_endpoint=localhost:8090 -rpc_endpoint=localhost:8091 --logtostderr ...
 Restart=on-failure
 RestartSec=5s
 

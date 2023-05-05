@@ -1,0 +1,19 @@
+name: ct_server
+version: "1.1.5"
+check: ""
+build_dependencies:
+- go
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/google
+- category/security
+- lang/go
+- type/daemon
+homepage: https://github.com/google/certificate-transparency-go
+description: Auditing for TLS certificates
+renovate:
+  datasource: github-releases
+  package: google/certificate-transparency-go
+  extractVersion: ^v(?<version>.+?)$

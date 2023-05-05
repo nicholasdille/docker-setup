@@ -1,0 +1,14 @@
+[Unit]
+Description=trillian_log_signer
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+ExecStart=/usr/local/bin/trillian_log_signer --logtostderr --force_master --http_endpoint=localhost:8190 -rpc_endpoint=localhost:8191  --batch_size=1000 --sequencer_guard_window=0 --sequencer_interval=200ms
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
