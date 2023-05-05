@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "automergeSchedule": [
-    "at any time"
+    "* * * * *"
   ],
   "digest": {
     "labels": [

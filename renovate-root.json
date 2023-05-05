@@ -20,7 +20,7 @@
     "* */4 * * *"
   ],
   "automergeSchedule": [
-    "at any time"
+    "* * * * *"
   ],
   "prConcurrentLimit": 10,
   "prHourlyLimit": 0,
