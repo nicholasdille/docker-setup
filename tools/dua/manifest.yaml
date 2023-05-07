@@ -1,5 +1,5 @@
 name: dua
-version: "2.19.2"
+version: "2.20.1"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64
