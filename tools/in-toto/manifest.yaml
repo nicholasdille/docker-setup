@@ -1,5 +1,5 @@
 name: in-toto
-version: "0.7.1"
+version: "0.9.0"
 check: "" # No version parameter
 build_dependencies:
 - go
