@@ -1,5 +1,5 @@
 name: docker-credential-ecr-login
-version: "0.6.0"
+version: "0.7.0"
 check: ${binary} -v | grep ^Version | tr -s ' ' | cut -d' ' -f2
 runtime_dependencies:
 - docker
