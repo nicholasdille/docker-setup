@@ -1,0 +1,20 @@
+name: gcloud
+version: "429.0.0"
+check: ""
+build_dependencies:
+- python
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- org/google
+- category/development
+- lang/python
+- type/cli
+homepage: https://cloud.google.com/sdk/docs
+description: Set of tools that you can use to manage resources and applications hosted on Google Cloud
+renovate:
+  datasource: github-tags
+  package: twistedpair/google-cloud-sdk

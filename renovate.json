@@ -1844,6 +1844,16 @@
       ]
     },
     {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "twistedpair/google-cloud-sdk",
+      "fileMatch": [
+        "^tools/gcloud/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "cli/cli",
       "extractVersionTemplate": "^v(?<version>.+?)$",
