@@ -37,7 +37,7 @@ EOF
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker.default" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default"
-echo "DOCKER_OPTS=--config-file /etc/${name}/daemon.json" >>"${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker.default"
+echo "DOCKER_OPTS=--config-file=/etc/${name}/daemon.json" >>"${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker.default"
 
 curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker"
