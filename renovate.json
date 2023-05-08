@@ -187,6 +187,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "artifacthub/hub",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/ah/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "gofireflyio/aiac",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
