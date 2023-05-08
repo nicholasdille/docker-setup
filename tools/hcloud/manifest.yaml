@@ -1,5 +1,5 @@
 name: hcloud
-version: "1.33.1"
+version: "1.33.2"
 check: ${binary} version | cut -d' ' -f2
 platforms:
 - linux/amd64
