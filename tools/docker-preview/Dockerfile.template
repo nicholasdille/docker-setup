@@ -20,7 +20,7 @@ COPY --chmod=0755 <<EOF ${prefix}${target}/bin/docker-preview
 #!/bin/bash
 set -o errexit
 
-export DOCKER_HOST=unix:///var/run/docker-preview/docker.sock
+export DOCKER_HOST=unix:///var/run/docker-preview.sock
 ${target}/libexec/${name}/bin/docker "\$@"
 EOF
 
