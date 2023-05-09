@@ -122,6 +122,11 @@ if ! test "$(jq --raw-output '.features.buildkit // false' "/etc/docker-preview/
     # shellcheck disable=SC2094
     cat <<< "$(jq '. * {"features":{"buildkit":true}}' "/etc/docker-preview/daemon.json")" >"/etc/docker-preview/daemon.json"
 fi
+if ! test "$(jq --raw-output '.features."containerd-snapshotter" // false' "/etc/docker-preview/daemon.json")" == true; then
+    echo "Enable ContainerD snapshotter"
+    # shellcheck disable=SC2094
+    cat <<< "$(jq '. * {"features":{"containerd-snapshotter":true}}' "/etc/docker-preview/daemon.json")" >"/etc/docker-preview/daemon.json"
+fi
 echo "Check if daemon.json is valid JSON (@ ${SECONDS} seconds)"
 if ! jq --exit-status '.' "/etc/docker-preview/daemon.json" >/dev/null 2>&1; then
     echo "ERROR /etc/docker-preview/daemon.json is not valid JSON."
