@@ -84,11 +84,11 @@ vm-install-idle-alerter: .env.mk ; $(info $(M) Installing idle alerter...)
 	@ssh docker-setup \
 		chmod 0750 /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
 	@ssh docker-setup \
-		sed -i -E 's/MATRIX_SERVER=/MATRIX_SERVER=$(MATRIX_SERVER)/' /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+		'sed -i -E "s|MATRIX_SERVER=|MATRIX_SERVER=$(MATRIX_SERVER)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
 	@ssh docker-setup \
-		sed -i -E 's/MATRIX_ACCESS_TOKEN=/MATRIX_ACCESS_TOKEN=$(MATRIX_ACCESS_TOKEN)/' /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+		'sed -i -E "s|MATRIX_ACCESS_TOKEN=|MATRIX_ACCESS_TOKEN=$(MATRIX_ACCESS_TOKEN)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
 	@ssh docker-setup \
-		sed -i -E 's/MATRIX_ROOM_ID=/MATRIX_ROOM_ID=$(MATRIX_ROOM_ID)/' /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
+		'sed -i -E "s|MATRIX_ROOM_ID=|MATRIX_ROOM_ID=$(MATRIX_ROOM_ID)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
 
 .PHONY:
 vm-install-ds: ; $(info $(M) Installing docker-setup...)
