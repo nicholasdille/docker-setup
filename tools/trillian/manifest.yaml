@@ -1,5 +1,5 @@
 name: trillian
-version: "1.5.1"
+version: "1.5.2"
 binary: trillian_log_server
 check: "" # No version parameter
 build_dependencies:
