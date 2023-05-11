@@ -1,6 +1,6 @@
 name: docker-scout
 version: "0.11.0"
-check: ""
+check: ${binary} version | grep ^version | cut -d' ' -f2 | tr -d v
 platforms:
 - linux/amd64
 #- linux/arm64

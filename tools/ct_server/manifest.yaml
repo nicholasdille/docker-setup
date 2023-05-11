@@ -1,6 +1,6 @@
 name: ct_server
 version: "1.1.5"
-check: ""
+check: "" # No version parameter
 build_dependencies:
 - go
 platforms:

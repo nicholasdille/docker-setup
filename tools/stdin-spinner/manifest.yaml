@@ -1,6 +1,6 @@
 name: stdin-spinner
 version: "1.0.6"
-check: ""
+check: "" # No version parameter
 build_dependencies:
 - go
 platforms:

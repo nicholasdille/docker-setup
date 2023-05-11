@@ -1,6 +1,6 @@
 name: it-depends
 version: "0.1.1"
-check: ""
+check: ${binary} --version | cut -d' ' -f3
 build_dependencies:
 - python
 - shiv

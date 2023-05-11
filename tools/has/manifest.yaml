@@ -1,6 +1,6 @@
 name: has
 version: "1.4.0"
-check: ""
+check: "" # No version parameter
 platforms:
 - linux/amd64
 - linux/arm64

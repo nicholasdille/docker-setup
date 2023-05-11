@@ -1,6 +1,6 @@
 name: ah
 version: "1.14.0"
-check: ""
+check: ${binary} version | grep ^Version | cut -d' ' -f2
 platforms:
 - linux/amd64
 - linux/arm64
