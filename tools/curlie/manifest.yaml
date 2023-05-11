@@ -1,5 +1,5 @@
 name: curlie
-version: "1.6.9"
+version: "1.7.1"
 check: ${binary} version | cut -d' ' -f2
 tags:
 - category/development
