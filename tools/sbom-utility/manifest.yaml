@@ -1,6 +1,6 @@
 name: sbom-utility
 version: "0.9.2"
-check: ""
+check: ${binary} version | grep ^sbom-utility | cut -d' ' -f3 | tr -d v
 platforms:
 - linux/amd64
 - linux/arm64
