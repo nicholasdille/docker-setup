@@ -1,6 +1,6 @@
 name: grunt
 version: "1.6.1"
-check: ""
+check: ${binary} --version | cut -d' ' -f2 | tr -d v
 build_dependencies:
 - nodejs-lts
 - npm

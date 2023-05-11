@@ -1,6 +1,6 @@
 name: tetragon
 version: "0.9.0"
-check: ""
+check: "" # Wants to connect to server
 platforms:
 - linux/amd64
 - linux/arm64
