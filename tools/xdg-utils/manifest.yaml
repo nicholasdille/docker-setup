@@ -11,5 +11,5 @@ description: Desktop integration utilities
 renovate:
   datasource: gitlab-tags
   package: xdg/xdg-utils
-  url: git://cgit.freedesktop.org/xdg/xdg-utils/
+  url: https://gitlab.freedesktop.org/xdg/xdg-utils
   extractVersion: ^v(?<version>\d+\.\d+\.\d+?)$
