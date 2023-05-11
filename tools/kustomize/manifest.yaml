@@ -1,5 +1,5 @@
 name: kustomize
-version: "5.0.1"
+version: "5.0.3"
 check: ${binary} version --short | tr -s ' ' | cut -d' ' -f1 | cut -d/ -f2 | tr -d v
 platforms:
 - linux/amd64
