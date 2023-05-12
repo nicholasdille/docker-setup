@@ -1,5 +1,5 @@
 name: etcd
-version: "3.5.8"
+version: "3.5.9"
 check: ${binary} --version | grep ^etcd | cut -d' ' -f3
 platforms:
 - linux/amd64
