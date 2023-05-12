@@ -1,5 +1,5 @@
 name: mage
-version: "1.14.0"
+version: "1.15.0"
 check: ${binary} --version | grep ^Mage | cut -d' ' -f4
 platforms:
 - linux/amd64
