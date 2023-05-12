@@ -1,5 +1,5 @@
 name: cni
-version: "1.2.0"
+version: "1.3.0"
 binary: ${target}/libexec/cni/loopback
 check: ${binary} 2>&1 | head -n 1 | cut -d' ' -f4 | tr -d v
 platforms:
