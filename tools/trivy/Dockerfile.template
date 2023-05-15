@@ -56,6 +56,11 @@ tar --extract --gzip --directory="${prefix}${target}/bin" --file "trivy_${versio
     contrib
 rm -f "trivy_${version}_Linux-${alt_arch2}.tar.gz"
 
+echo "### Installing trivy ${version} completion"
+trivy completion bash >"${prefix}${target}/etc/bash_completion.d/trivy"
+trivy completion zsh  >"${prefix}${target}/share/zsh/site-functions/_trivy"
+trivy completion fish >"${prefix}${target}/share/fish/vendor_completions.d/trivy.fish"
+
 echo "### Moving templates for trivy ${version}"
 mkdir -p "${prefix}${target}/share/trivy"
 mv "${prefix}${target}/bin/contrib" "${prefix}${target}/share/trivy/"
