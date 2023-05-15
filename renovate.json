@@ -2254,6 +2254,16 @@
       ]
     },
     {
+      "datasourceTemplate": "gitlab-tags",
+      "depNameTemplate": "graphviz/graphviz",
+      "fileMatch": [
+        "^tools/graphwiz/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "tomnomnom/gron",
       "extractVersionTemplate": "^v(?<version>.+?)$",
