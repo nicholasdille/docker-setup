@@ -98,11 +98,11 @@ RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://gitlab.com/graphviz/graphviz .
 python3 -m pip install --user --requirement requirements.txt
 python3 -m pip install --user --requirement doc/infosrc/requirements.txt
-#./configure --prefix="${prefix}${target}"
-#make LDFLAGS=-static
-#make install
-#rm -f "${prefix}${target}/man"
-#EOF
+./autogen.sh
+./configure --prefix="${prefix}${target}"
+make LDFLAGS=-static
+make install
+EOF
 
 # foo
 RUN <<EOF
