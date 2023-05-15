@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+FROM ghcr.io/nicholasdille/docker-setup/shiv:${ref} AS shiv
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=python / /
+COPY --link --from=shiv / /
+RUN <<EOF
+shiv --output-file "${prefix}${target}/bin/wordcloud_cli" --console-script wordcloud_cli "wordcloud==${version}"
+EOF

@@ -5419,6 +5419,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "amueller/word_cloud",
+      "extractVersionTemplate": "loose",
+      "fileMatch": [
+        "^tools/wordcloud/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "4U6U57/wsl-open",
       "extractVersionTemplate": "^v(?<version>.+?)$",
