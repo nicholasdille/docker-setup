@@ -13,3 +13,11 @@ COPY --link --from=shiv / /
 RUN <<EOF
 shiv --output-file "${prefix}${target}/bin/wordcloud_cli" --console-script wordcloud_cli "wordcloud==${version}"
 EOF
+
+# Alternative
+#RUN <<EOF
+#python -m venv "${prefix}${target}/usr/libexec/${name}"
+#source "${prefix}${target}/usr/libexec/${name}/bin/activate"
+#pip install "wordcloud==${version}"
+#deactivate
+#EOF
