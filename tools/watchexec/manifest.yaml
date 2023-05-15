@@ -1,5 +1,5 @@
 name: watchexec
-version: "1.22.2"
+version: "1.22.3"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64
