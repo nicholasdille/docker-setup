@@ -1012,7 +1012,7 @@
     {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "intel/cve-bin-tool",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+(\\.\\d+)??)$",
       "fileMatch": [
         "^tools/cve-bin-tool/manifest.yaml$"
       ],
@@ -5461,7 +5461,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "packageNameTemplate": "git://cgit.freedesktop.org/xdg/xdg-utils/"
+      "packageNameTemplate": "https://gitlab.freedesktop.org/xdg/xdg-utils"
     },
     {
       "datasourceTemplate": "github-releases",
