@@ -6,8 +6,9 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/loft-sh/devpod/releases/download/v${version}/devpod-linux-${alt_arch}" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+curl --silent --location --fail --output "${prefix}${target}/bin/devpod" \
+    "https://github.com/loft-sh/devpod/releases/download/v${version}/devpod-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/devpod"
 
 "${prefix}${target}/bin/devpod" completion bash >"${prefix}${target}/share/bash-completion/completions/devpod"
 "${prefix}${target}/bin/devpod" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/devpod.fish"
