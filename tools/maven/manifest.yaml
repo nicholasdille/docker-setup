@@ -4,6 +4,9 @@ binary: mvn
 check: ${binary} -version | grep ^Apache | cut -d' ' -f3
 runtime_dependencies:
 - openjdk-jre
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - cicd
