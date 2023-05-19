@@ -146,7 +146,7 @@ if type yq >/dev/null 2>&1; then
 fi
 
 export PATH="${docker_setup_cache}/bin:${PATH}"
-REGCLIENT_VERSION=0.4.8
+REGCLIENT_VERSION=0.4.7
 if ! type regctl >/dev/null 2>&1; then
     debug "Installing regctl"
     mkdir -p "${docker_setup_cache}/bin"
@@ -180,7 +180,10 @@ function update() {
         | tar --extract --gzip --directory="${docker_setup_cache}" --no-same-owner
     done
     METADATA_REVISION="$(jq --raw-output '.revision' "${docker_setup_metadata_file}")"
-    echo "Updated metadata to commit SHA ${METADATA_REVISION}"
+    METADATA_TIMESTAMP="$(git show --no-patch --format=%ci "${METADATA_REVISION}" | date +"%Y%m%d" -f -)"
+    NOW="$(date +"%Y%m%d")"
+    METADATA_AGE=$(( NOW - METADATA_TIMESTAMP ))
+    echo "Updated metadata: commit SHA ${METADATA_REVISION}, ${METADATA_AGE} day(s) old"
 }
 
 docker_setup_metadata_file="${docker_setup_cache}/metadata.json"
