@@ -1,5 +1,5 @@
 name: jaxb
-version: "4.0.1"
+version: "4.0.2"
 binary: false
 check: "" # Requires Java to run
 runtime_dependencies:
