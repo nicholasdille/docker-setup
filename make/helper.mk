@@ -1,5 +1,5 @@
 $(HELPER)/var/lib/docker-setup/manifests/%.json: $(HELPER)/var/lib/docker-setup/manifests/regclient.json
-	@docker_setup_cache="$${PWD}/cache" ./docker-setup --tools=$* --prefix=$(HELPER) install | cat; \
+	@docker_setup_cache="$${PWD}/cache" ./docker-setup.sh --tools=$* --prefix=$(HELPER) install | cat; \
 	touch $(HELPER)/var/lib/docker-setup/manifests/$*.json
 
 $(HELPER)/var/lib/docker-setup/manifests/regclient.json $(HELPER)/var/lib/docker-setup/manifests/jq.json:
