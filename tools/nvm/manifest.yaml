@@ -1,6 +1,6 @@
 name: nvm
 version: "0.39.3"
-check: ""
+check: "" # No version parameter
 platforms:
 - linux/amd64
 - linux/arm64

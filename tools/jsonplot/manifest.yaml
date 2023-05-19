@@ -1,7 +1,7 @@
 name: jsonplot
 version: "1.1.12"
 binary: jp
-check: ""
+check: "" # No version parameter
 build_dependencies:
 - go
 conflicts_with:

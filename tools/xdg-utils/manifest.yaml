@@ -6,9 +6,10 @@ tags:
 - wsl
 - lang/shell
 - state/stale
-homepage: https://github.com/freedesktop/xdg-utils
+homepage: https://www.freedesktop.org/wiki/Software/xdg-utils/
 description: Desktop integration utilities
 renovate:
-  datasource: github-tags
-  package: freedesktop/xdg-utils
-  extractVersion: ^v(?<version>.+?)$
+  datasource: gitlab-tags
+  package: xdg/xdg-utils
+  url: https://gitlab.freedesktop.org/xdg/xdg-utils
+  extractVersion: ^v(?<version>\d+\.\d+\.\d+?)$

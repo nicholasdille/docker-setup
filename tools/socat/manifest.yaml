@@ -11,5 +11,5 @@ renovate:
   datasource: git-tags
   package: socat
   url: git://repo.or.cz/socat.git
-  extractVersion: ^tag-(?<version>.+?)$
+  extractVersion: ^tag-(<version>\d+\.\d+\.\d+(\.\d+)?)$
   versioning: loose

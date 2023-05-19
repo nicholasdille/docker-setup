@@ -1,0 +1,21 @@
+name: wordcloud
+version: "1.9.1.1"
+check: ""
+build_dependencies:
+- python
+- shiv
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/documentation
+- lang/python
+- type/cli
+homepage: https://github.com/amueller/word_cloud
+description: Little word cloud generator in Python
+renovate:
+  datasource: github-releases
+  package: amueller/word_cloud
+  extractVersion: loose

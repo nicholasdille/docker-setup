@@ -5,8 +5,8 @@ ARG ref=main
 FROM --platform=linux/amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS cosign-bootstrap
 ARG TARGETPLATFORM
 # renovate: datasource=github-releases depName=sigstore/cosign
-ARG COSIGN_VERSION=1.13.1
-ARG COSIGN_SHA256=a50651a67b42714d6f1a66eb6773bf214dacae321f04323c0885f6a433051f95
+ARG COSIGN_VERSION=2.0.2
+ARG COSIGN_SHA256=dc641173cbda29ba48580cdde3f80f7a734f3b558a25e5950a4b19f522678c70
 RUN <<EOF
 echo "### Installing cosign ${COSIGN_VERSION} for bootstrapping on ${TARGETPLATFORM} (${alt_arch})"
 curl --silent --location --fail --output "/usr/local/bin/cosign" \
@@ -23,8 +23,8 @@ EOF
 FROM --platform=linux/arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS cosign-bootstrap
 ARG TARGETPLATFORM
 # renovate: datasource=github-releases depName=sigstore/cosign
-ARG COSIGN_VERSION=1.13.1
-ARG COSIGN_SHA256=a7a79a52c7747e2c21554cad4600e6c7130c0429017dd258f9c558d957fa9090
+ARG COSIGN_VERSION=2.0.2
+ARG COSIGN_SHA256=517e96f9d036c4b77db01132cacdbef21e4266e9ad3a93e67773c590ba54e26f
 RUN <<EOF
 echo "### Installing cosign ${COSIGN_VERSION} for bootstrapping on ${TARGETPLATFORM} (${alt_arch})"
 curl --silent --location --fail --output "/usr/local/bin/cosign" \
@@ -75,30 +75,4 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob \
 rm -f "cosign-linux-${alt_arch}-keyless.pem" "cosign-linux-${alt_arch}-keyless.sig"
 
 "${prefix}${target}/bin/cosign" version
-EOF
-RUN <<EOF
-echo "### Installing sget ${version}"
-curl --silent --location --fail --output "${prefix}${target}/bin/sget" \
-    "https://github.com/sigstore/cosign/releases/download/v${version}/sget-linux-${alt_arch}"
-chmod +x "${prefix}${target}/bin/sget"
-
-echo "### Checking PGP signature"
-curl --silent --location --fail --output "sget-linux-${alt_arch}.sig" \
-    "https://github.com/sigstore/cosign/releases/download/v${version}/sget-linux-${alt_arch}.sig"
-COSIGN_PUB_KEY="https://github.com/sigstore/cosign/releases/download/v${version}/release-cosign.pub"
-cosign verify-blob --key "${COSIGN_PUB_KEY}" --signature "sget-linux-${alt_arch}.sig" "${prefix}${target}/bin/sget"
-rm -f "sget-linux-${alt_arch}.sig"
-
-echo "### Checking keyless signature"
-curl --silent --location --fail --output "sget-linux-${alt_arch}-keyless.pem" \
-    "https://github.com/sigstore/cosign/releases/download/v${version}/sget-linux-${alt_arch}-keyless.pem"
-curl --silent --location --fail --output "sget-linux-${alt_arch}-keyless.sig" \
-    "https://github.com/sigstore/cosign/releases/download/v${version}/sget-linux-${alt_arch}-keyless.sig"
-COSIGN_EXPERIMENTAL=1 cosign verify-blob \
-    --cert "sget-linux-${alt_arch}-keyless.pem" \
-    --signature "sget-linux-${alt_arch}-keyless.sig" \
-    --certificate-oidc-issuer https://accounts.google.com \
-    --certificate-identity "keyless@projectsigstore.iam.gserviceaccount.com" \
-    "${prefix}${target}/bin/sget"
-rm -f "sget-linux-${alt_arch}-keyless.pem" "sget-linux-${alt_arch}-keyless.sig"
 EOF

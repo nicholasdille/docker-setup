@@ -1,5 +1,5 @@
 name: yamllint
-version: "1.30.0"
+version: "1.31.0"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
 - python

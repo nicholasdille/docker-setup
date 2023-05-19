@@ -1,11 +1,11 @@
 name: nx
-version: "15.9.2"
-check: ""
+version: "16.1.4"
+check: "" # No version parameter
 build_dependencies:
-- nodejs
+- nodejs-lts
 - npm
 runtime_dependencies:
-- nodejs
+- nodejs-lts
 platforms:
 - linux/amd64
 tags:

@@ -1,6 +1,7 @@
 name: structurizr-cli
 version: "1.30.0"
-check: ""
+binary: structurizr
+check: ${binary} help | grep structurizr-cli | cut -d' ' -f2
 runtime_dependencies:
 - openjdk-jre
 tags:

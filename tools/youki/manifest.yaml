@@ -1,6 +1,6 @@
 name: youki
 version: 0.0.5
-check: ""
+check: ${binary} --version | grep ^youki | cut -d' ' -f3
 build_dependencies:
 - rustr
 runtime_dependencies:

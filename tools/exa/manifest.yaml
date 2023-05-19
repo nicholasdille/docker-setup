@@ -1,6 +1,6 @@
 name: foo
 version: "0.1.2"
-check: ""
+check: ${binary} --version | grep ^v | cut -d' ' -f1 | tr -d v
 platforms:
 - linux/amd64
 tags:

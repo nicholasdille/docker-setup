@@ -1,0 +1,17 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=go / /
+COPY ct_server.service ${prefix}/etc/systemd/system/ct_server.service
+WORKDIR /go/src/github.com/google/certificate-transparency-go
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/certificate-transparency-go .
+export CGO_ENABLED=0
+go build -ldflags "-w -s" -o "${prefix}${target}/bin/ct_server" ./trillian/ctfe/ct_server
+EOF

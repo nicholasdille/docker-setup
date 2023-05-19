@@ -11,7 +11,7 @@ apt-get -y install --no-install-recommends \
     bsdextrautils
 EOF
 
-FROM debian:11.6@sha256:0a78ed641b76252739e28ebbbe8cdbd80dc367fba4502565ca839e5803cfd86e AS debian-11.5
+FROM debian:11.7@sha256:63d62ae233b588d6b426b7b072d79d1306bfd02a72bff1fc045b8511cc89ee09 AS debian-11.5
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
@@ -20,7 +20,7 @@ apt-get -y install --no-install-recommends \
     bsdextrautils
 EOF
 
-FROM alpine:3.17@sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126 AS alpine-3.16
+FROM alpine:3.18@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11 AS alpine-3.16
 RUN <<EOF
 apk update
 apk add \

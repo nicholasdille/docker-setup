@@ -1,6 +1,6 @@
 name: tinygo
 version: "0.27.0"
-check: ""
+check: ${binary} version | cut -d' ' -f3
 platforms:
 - linux/amd64
 - linux/arm64

@@ -1,0 +1,28 @@
+name: nodejs-lts
+# See https://github.com/nodejs/Release
+# Find latest LTS major version:
+#    MAJOR_VERSION="$(
+#        curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
+#        | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key'
+#    )"
+# Find latest version for major version:
+#    git ls-remote https://github.com/nodejs/node "refs/tags/${MAJOR_VERSION}.*" \
+#    | grep -v '\^{}' \
+#    | cut -f2 | cut -d/ -f3 | tr -d v \
+#    | sort -Vr | head -1
+version: "18.16.0"
+binary: node
+check: ${binary} --version | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- type/cli
+- category/development
+- lang/javascript
+homepage: https://github.com/nodejs/node
+description: Node.js JavaScript runtime
+renovate:
+  datasource: github-releases
+  package: nodejs/node
+  extractVersion: ^v(?<version>.+?)$

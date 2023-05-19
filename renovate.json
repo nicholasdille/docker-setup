@@ -1,5 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "automergeSchedule": [
+    "* */2 * * *"
+  ],
   "digest": {
     "labels": [
       "bump/digest",
@@ -12,21 +15,19 @@
     "regex"
   ],
   "extends": [
-    "config:base",
+    ":dependencyDashboard",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
     ":docker",
     "docker:enableMajor",
     "docker:pinDigests",
-    ":disableRateLimiting",
     ":ignoreUnstable",
     ":pinVersions",
     ":separateMajorReleases",
+    ":separatePatchReleases",
     ":automergePr",
     ":automergeRequireAllStatusChecks",
-    ":automergeDigest",
-    ":automergePatch",
-    ":semanticCommits",
-    ":enableVulnerabilityAlerts",
-    ":enableVulnerabilityAlertsWithLabel(security)"
+    ":semanticCommits"
   ],
   "major": {
     "labels": [
@@ -97,6 +98,15 @@
         "minor",
         "major"
       ]
+    },
+    {
+      "ignoreUnstable": true,
+      "matchFiles": [
+        "^tools/docker-preview/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "moby/moby"
+      ]
     }
   ],
   "patch": {
@@ -112,6 +122,8 @@
     ]
   },
   "platformAutomerge": true,
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 10,
   "rebaseLabel": "renovate/rebase",
   "rebaseWhen": "conflicted",
   "recreateClosed": false,
@@ -177,6 +189,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/age/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "artifacthub/hub",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/ah/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -398,7 +421,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/buildah-static",
+      "depNameTemplate": "containers/buildah",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/buildah/manifest.yaml$"
@@ -779,7 +802,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/conmon-static",
+      "depNameTemplate": "containers/conmon",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/conmon/manifest.yaml$"
@@ -918,7 +941,7 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
-      "versioningTemplate": "loose"
+      "versioningTemplate": "regex:^(?<major>\\\\d+)\\\\.(?<minor>\\\\d+)(\\\\.(?<patch>\\\\d+))?$"
     },
     {
       "datasourceTemplate": "github-releases",
@@ -926,6 +949,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/ct/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "google/certificate-transparency-go",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/ct_server/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -978,7 +1012,7 @@
     {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "intel/cve-bin-tool",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+(\\.\\d+)??)$",
       "fileMatch": [
         "^tools/cve-bin-tool/manifest.yaml$"
       ],
@@ -1100,6 +1134,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/depot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "loft-sh/devpod",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/devpod/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -1335,11 +1380,10 @@
       ]
     },
     {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "docker/scan-cli-plugin",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "docker/scout-cli",
       "fileMatch": [
-        "^tools/docker-scan/manifest.yaml$"
+        "^tools/docker-scout/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -1358,7 +1402,7 @@
     {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "moby/moby",
-      "extractVersionTemplate": "^v(?<version>20\\..+?)$",
+      "extractVersionTemplate": "^v(?<version>23\\..+?)$",
       "fileMatch": [
         "^tools/docker-stable/manifest.yaml$"
       ],
@@ -1820,6 +1864,16 @@
       ]
     },
     {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "twistedpair/google-cloud-sdk",
+      "fileMatch": [
+        "^tools/gcloud/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "cli/cli",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -2033,6 +2087,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/goreleaser/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "securego/gosec",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/gosec/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -3780,6 +3845,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "nodejs/node",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/nodejs-lts/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "norouter/norouter",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -4101,7 +4177,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/podman-static",
+      "depNameTemplate": "containers/podman",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/podman/manifest.yaml$"
@@ -4273,8 +4349,8 @@
       ]
     },
     {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/qemu-static",
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "qemu/qemu",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/qemu/manifest.yaml$"
@@ -4597,7 +4673,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nicholasdille/skopeo-static",
+      "depNameTemplate": "containers/skopeo",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/skopeo/manifest.yaml$"
@@ -4654,7 +4730,7 @@
     {
       "datasourceTemplate": "git-tags",
       "depNameTemplate": "socat",
-      "extractVersionTemplate": "^tag-(?<version>.+?)$",
+      "extractVersionTemplate": "^tag-(<version>\\d+\\.\\d+\\.\\d+(\\.\\d+)?)$",
       "fileMatch": [
         "^tools/socat/manifest.yaml$"
       ],
@@ -4919,6 +4995,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cilium/tetragon",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/tetragon/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "jonas/tig",
       "extractVersionTemplate": "^tig-(?<version>.+?)$",
       "fileMatch": [
@@ -5083,7 +5170,7 @@
     {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "util-linux/util-linux",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+(\\.\\d+)?)$",
       "fileMatch": [
         "^tools/util-linux/manifest.yaml$"
       ],
@@ -5354,6 +5441,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "amueller/word_cloud",
+      "extractVersionTemplate": "loose",
+      "fileMatch": [
+        "^tools/wordcloud/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "4U6U57/wsl-open",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -5376,15 +5474,16 @@
       ]
     },
     {
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "freedesktop/xdg-utils",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "datasourceTemplate": "gitlab-tags",
+      "depNameTemplate": "xdg/xdg-utils",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+\\.\\d+?)$",
       "fileMatch": [
         "^tools/xdg-utils/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
+      ],
+      "packageNameTemplate": "https://gitlab.freedesktop.org/xdg/xdg-utils"
     },
     {
       "datasourceTemplate": "github-releases",
@@ -5496,6 +5595,10 @@
       ]
     }
   ],
+  "schedule": [
+    "* */4 * * *"
+  ],
   "stopUpdatingLabel": "renovate/stop-updating",
+  "timezone": "Europe/Berlin",
   "useBaseBranchConfig": "merge"
 }

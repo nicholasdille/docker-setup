@@ -2,10 +2,10 @@ name: keyoxide
 version: "0.4.4"
 check: ${binary} --version
 build_dependencies:
-- nodejs
+- nodejs-lts
 - npm
 runtime_dependencies:
-- nodejs
+- nodejs-lts
 platforms:
 - linux/amd64
 - linux/arm64

@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/cilium/tetragon/releases/download/v${version}/tetra-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+
+"${prefix}${target}/bin/tetra" completion bash >"${prefix}${target}/share/bash-completion/completions/tetra"
+"${prefix}${target}/bin/tetra" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/tetra.fish"
+"${prefix}${target}/bin/tetra" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_tetra"
+EOF

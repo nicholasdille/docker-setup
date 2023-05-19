@@ -1,0 +1,15 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+ARG version
+FROM docker/scout-cli:${version} AS scout
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=scout /docker-scout ${prefix}${target}/libexec/docker/cli-plugins/
+RUN <<EOF
+"${prefix}${target}/libexec/docker/cli-plugins/docker-scout" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-scout"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-scout" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/docker-scout.fish"
+"${prefix}${target}/libexec/docker/cli-plugins/docker-scout" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_docker-scout"
+EOF

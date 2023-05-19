@@ -3,7 +3,6 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --from=openjdk / /
 ARG name
 ARG version
 RUN <<EOF

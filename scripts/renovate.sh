@@ -37,8 +37,26 @@ jq '
             else
                 empty
             end
+        ],
+        "packageRules": [
+            .tools[] |
+            if .renovate != null then
+                if .renovate.allowPrereleases == true then
+                    {
+                        "matchFiles": [ "^tools/" + .name + "/manifest.yaml$" ],
+                        "matchPackageNames": [ .renovate.package ],
+                        "ignoreUnstable": (.renovate.allowPrereleases // false)
+                    }
+                
+                else
+                    empty
+                end
+
+            else
+                empty
+            end
         ]
     }
 ' metadata.json \
-| jq --slurp '.[0].regexManagers += .[1].regexManagers | .[0]' renovate-root.json - \
+| jq --slurp '.[0].regexManagers += .[1].regexManagers | .[0].packageRules += .[1].packageRules | .[0]' renovate-root.json - \
 >renovate.json

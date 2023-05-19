@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+FROM ghcr.io/nicholasdille/docker-setup/shiv:${ref} AS shiv
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+WORKDIR ${prefix}/opt/gcloud
+RUN <<EOF
+curl --silent --location --fail "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${version}-linux-${arch}.tar.gz" \
+| tar --extract --gzip --strip-components=1 --no-same-owner
+ln --symbolic --relative --force "${prefix}/opt/gcloud/bin/gcloud" "${prefix}${target}/bin/gcloud"
+ln --symbolic --relative --force "${prefix}/opt/gcloud/bin/bq" "${prefix}${target}/bin/bq"
+
+cp "${prefix}/opt/gcloud/path.bash.inc" "${prefix}${target}/share/bash-completion/completions/foo"
+cp "${prefix}/opt/gcloud/path.fish.inc" "${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
+cp "${prefix}/opt/gcloud/path.zsh.inc"  "${prefix}${target}/share/zsh/vendor-completions/_foo"
+EOF

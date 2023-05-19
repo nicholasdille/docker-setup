@@ -1,0 +1,16 @@
+name: devpod
+version: "0.1.4"
+check: ${binary} version | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/loft-sh/devpod
+description: Client-only tool to create developer environments based on a devcontainer.json on any backend
+renovate:
+  datasource: github-releases
+  package: loft-sh/devpod
+  extractVersion: ^v(?<version>.+?)$

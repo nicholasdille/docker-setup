@@ -1,6 +1,6 @@
 name: delta
 version: "0.15.1"
-check: ""
+check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
 - rust
 tags:

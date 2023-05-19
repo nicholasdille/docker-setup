@@ -180,5 +180,6 @@ include make/ghcr.mk
 include make/helper.mk
 include make/site.mk
 include make/hcloud.mk
+include make/terraform.mk
 include make/remote.mk
 include make/go.mk

@@ -1,5 +1,5 @@
 name: wasmer
-version: "3.1.1"
+version: "3.3.0"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64

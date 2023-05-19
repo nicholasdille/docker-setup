@@ -1,0 +1,14 @@
+[Unit]
+Description=trillian_log_server
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+ExecStart=/usr/local/bin/trillian_log_server -http_endpoint=localhost:8090 -rpc_endpoint=localhost:8091 --logtostderr ...
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

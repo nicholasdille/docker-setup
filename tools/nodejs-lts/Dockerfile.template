@@ -1,0 +1,40 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+MAJOR_VERSION="$(
+    curl --silent --location --fail https://github.com/nodejs/Release/raw/main/schedule.json \
+    | jq -r 'to_entries[] | select(.value.maintenance > (now | todate)) | select(.value.lts != null) | select(.value.lts < (now | todate)) | .key' \
+    | tr -d v
+)"
+if test "${version%%.*}" == "${MAJOR_VERSION}"; then
+    echo "### Version ${version} matches latest LTS ${MAJOR_VERSION}"
+else
+    echo "### Version ${version} does not match latest LTS ${MAJOR_VERSION}"
+    exit 1
+fi
+EOF
+RUN <<EOF
+case "${alt_arch}" in
+    amd64)
+        export arch_suffix=x64
+        ;;
+    arm64)
+        export arch_suffix=arm64
+        ;;
+    *)
+        echo "ERROR: Unknown architecture (${alt_arch})."
+        exit 1
+        ;;
+esac
+curl --silent --location --fail "https://nodejs.org/dist/v${version}/node-v${version}-linux-${arch_suffix}.tar.xz" \
+| tar --extract --xz --directory="${prefix}${target}" --strip-components=1 --no-same-owner \
+    "node-v${version}-linux-${arch_suffix}/bin" \
+    "node-v${version}-linux-${arch_suffix}/include" \
+    "node-v${version}-linux-${arch_suffix}/lib" \
+    "node-v${version}-linux-${arch_suffix}/share"
+EOF
