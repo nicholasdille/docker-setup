@@ -1,6 +1,6 @@
 .PHONY:
-check: $(HELPER)/var/lib/docker-setup/manifests/shellcheck.json
-	@shellcheck docker-setup
+check: docker-setup.sh $(HELPER)/var/lib/docker-setup/manifests/shellcheck.json
+	@shellcheck docker-setup.sh
 
 .PHONY:
 check-tools: check-tools-homepage check-tools-description check-tools-runtime-deps check-tools-build-deps check-tools-tags check-tools-renovate check-tools-platforms
