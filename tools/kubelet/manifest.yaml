@@ -1,5 +1,5 @@
 name: kubelet
-version: "1.27.1"
+version: "1.27.2"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 build_dependencies:
 - cosign
