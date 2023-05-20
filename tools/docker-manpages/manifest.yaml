@@ -1,5 +1,5 @@
 name: docker-manpages
-version: "24.0.0"
+version: "24.0.1"
 binary: false
 check: "" # No binary
 build_dependencies:
