@@ -1,14 +1,14 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-ARG version
-FROM docker/scout-cli:${version} AS scout
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY --link --from=scout /docker-scout ${prefix}${target}/libexec/docker/cli-plugins/
 RUN <<EOF
+curl --silent --location --fail "https://github.com/docker/scout-cli/releases/download/v${version}/docker-scout_${version}_linux_${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
+
 "${prefix}${target}/libexec/docker/cli-plugins/docker-scout" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-scout"
 "${prefix}${target}/libexec/docker/cli-plugins/docker-scout" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/docker-scout.fish"
 "${prefix}${target}/libexec/docker/cli-plugins/docker-scout" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_docker-scout"
