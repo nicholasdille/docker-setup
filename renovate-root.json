@@ -27,7 +27,8 @@
   "enabledManagers": [
     "dockerfile",
     "github-actions",
-    "regex"
+    "regex",
+    "gomod"
   ],
   "useBaseBranchConfig": "merge",
   "platformAutomerge": true,

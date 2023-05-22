@@ -12,7 +12,8 @@
   "enabledManagers": [
     "dockerfile",
     "github-actions",
-    "regex"
+    "regex",
+    "gomod"
   ],
   "extends": [
     ":dependencyDashboard",
