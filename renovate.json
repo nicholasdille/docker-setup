@@ -1380,8 +1380,9 @@
       ]
     },
     {
-      "datasourceTemplate": "docker",
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "docker/scout-cli",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/docker-scout/manifest.yaml$"
       ],
