@@ -3,13 +3,13 @@ name: Build site
 on:
   push:
     branches:
-      - "main"
+    - "main"
     paths:
-      - site/**
-      - "tools/**"
-      - "scripts/gh-pages.sh"
-      - "make/site.mk"
-      - ".github/workflows/pages.yml"
+    - site/**
+    - "tools/**"
+    - "scripts/gh-pages.sh"
+    - "make/site.mk"
+    - ".github/workflows/pages.yml"
 
 permissions:
   contents: read
@@ -26,31 +26,31 @@ jobs:
       cancel-in-progress: true
     steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Create metadata
-        run: |
-          make metadata.json
+    - name: Create metadata
+      run: |
+        make metadata.json
 
-      - name: Install hugo
-        run: |
-          make site-prerequisites
+    - name: Install hugo
+      run: |
+        make site-prerequisites
 
-      - name: Create pages
-        run: |
-          make -j4 pages
+    - name: Create pages
+      run: |
+        make -j4 pages
 
-      - name: Create site
-        run: |
-          make site
+    - name: Create site
+      run: |
+        make site
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./site/public
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: ./site/public
 
   deploy:
     name: Deploy
@@ -65,6 +65,6 @@ jobs:
       cancel-in-progress: true
     steps:
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2

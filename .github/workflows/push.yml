@@ -3,12 +3,12 @@ name: Build and push
 on:
   push:
     branches:
-      - "main"
+    - "main"
     paths:
-      - "tools/**"
-      - "docker-setup"
-      - "Makefile"
-      - ".github/workflows/push.yml"
+    - "tools/**"
+    - "docker-setup"
+    - "Makefile"
+    - ".github/workflows/push.yml"
   #schedule:
   #  - cron: "*/15 * * * *"
 
@@ -19,81 +19,81 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: nicholasdille
-          password: ${{ secrets.PACKAGES_TOKEN }}
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: nicholasdille
+        password: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Push
-        env:
-          DOCKER_BUILDKIT: 1
-          AUTHOR: ${{ github.event.commits[0].author.name }}
-        run: |
-          echo "### Running for commit by author: ${AUTHOR}"
+    - name: Push
+      env:
+        DOCKER_BUILDKIT: 1
+        AUTHOR: ${{ github.event.commits[0].author.name }}
+      run: |
+        echo "### Running for commit by author: ${AUTHOR}"
 
-          make helper/var/lib/docker-setup/manifests/regclient.json
+        make helper/var/lib/docker-setup/manifests/regclient.json
 
-          echo "### Fetching manifest for metadata"
-          CONFIG_DIGEST="$(
-              helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
-              | helper/usr/local/bin/jq --raw-output '.config.digest'
-          )"
+        echo "### Fetching manifest for metadata"
+        CONFIG_DIGEST="$(
+            helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
+            | helper/usr/local/bin/jq --raw-output '.config.digest'
+        )"
 
-          echo "### Fetching config for metadata"
-          OLD_COMMIT_SHA="$(
-              helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
-              | helper/usr/local/bin/jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
-          )"
+        echo "### Fetching config for metadata"
+        OLD_COMMIT_SHA="$(
+            helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
+            | helper/usr/local/bin/jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
+        )"
 
-          echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
-          git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
-          | sort \
-          | grep -E "^tools/[^/]+/" \
-          | cut -d/ -f2 \
-          | uniq \
-          | xargs
-          CHANGED_TOOLS="$(
-              git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
-              | sort \
-              | grep -E "^tools/[^/]+/" \
-              | cut -d/ -f2 \
-              | uniq \
-              | xargs
-          )"
+        echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
+        git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+        | sort \
+        | grep -E "^tools/[^/]+/" \
+        | cut -d/ -f2 \
+        | uniq \
+        | xargs
+        CHANGED_TOOLS="$(
+            git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+            | sort \
+            | grep -E "^tools/[^/]+/" \
+            | cut -d/ -f2 \
+            | uniq \
+            | xargs
+        )"
 
-          if test -z "${CHANGED_TOOLS}"; then
-              echo "### No tools to make (${CHANGED_TOOLS})"
-              echo "### git log:"
-              git log --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA}
-              exit
-          fi
+        if test -z "${CHANGED_TOOLS}"; then
+            echo "### No tools to make (${CHANGED_TOOLS})"
+            echo "### git log:"
+            git log --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA}
+            exit
+        fi
 
-          PR_AUTHOR="renovate[bot]"
-          if test "${AUTHOR:0:${#PR_AUTHOR}}" == "${PR_AUTHOR}"; then
-              echo "### Tagging tools: ${CHANGED_TOOLS}"
-              TOOLS_RAW="${CHANGED_TOOLS}" make promote metadata.json--push
+        PR_AUTHOR="renovate[bot]"
+        if test "${AUTHOR:0:${#PR_AUTHOR}}" == "${PR_AUTHOR}"; then
+            echo "### Tagging tools: ${CHANGED_TOOLS}"
+            TOOLS_RAW="${CHANGED_TOOLS}" make promote metadata.json--push
 
-          else
-              echo "### Making tools: ${CHANGED_TOOLS}."
-              TOOLS_RAW="${CHANGED_TOOLS}" make push metadata.json--push
-          fi
+        else
+            echo "### Making tools: ${CHANGED_TOOLS}."
+            TOOLS_RAW="${CHANGED_TOOLS}" make push metadata.json--push
+        fi
 
-      - name: Store logs
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: logs.zip
-          path: "**/build.log"
+    - name: Store logs
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: logs.zip
+        path: "**/build.log"
