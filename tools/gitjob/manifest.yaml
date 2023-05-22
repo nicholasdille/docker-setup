@@ -1,5 +1,5 @@
 name: gitjob
-version: "0.1.54"
+version: "0.1.55"
 check: "" # Empty version
 tags:
 - type/daemon
