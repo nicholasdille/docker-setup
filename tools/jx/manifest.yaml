@@ -1,6 +1,6 @@
 name: jx
 version: "3.10.83"
-check: ${binary} version | grep ^version | cut -d' ' -f2
+check: ${binary} version --short
 platforms:
 - linux/amd64
 - linux/arm64
