@@ -1,5 +1,5 @@
 name: docuum
-version: "0.22.1"
+version: "0.22.2"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
 - rust
