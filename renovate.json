@@ -5170,6 +5170,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "upx/upx",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/upx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "util-linux/util-linux",
       "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+(\\.\\d+)?)$",
