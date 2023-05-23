@@ -1,5 +1,5 @@
 name: minio
-version: "2023-05-04T21-44-30Z"
+version: "2023-05-18T00-05-36Z"
 check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
 tags:
 - component/storage
