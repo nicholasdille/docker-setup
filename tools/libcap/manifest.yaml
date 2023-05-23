@@ -1,5 +1,5 @@
 name: libcap
-version: "2.68"
+version: "2.69"
 binary: ${target}/sbin/setcap
 check: "" # No version parameter
 tags:
