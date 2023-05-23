@@ -1141,6 +1141,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "devcontainers/cli",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/devcontainer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "loft-sh/devpod",
       "extractVersionTemplate": "^v(?<version>.+?)$",
