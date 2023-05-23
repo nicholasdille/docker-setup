@@ -1,5 +1,6 @@
+WORKDIR ${prefix}
 RUN <<EOF
-find "${prefix}" -type f \
+find . -type f \
 | grep -v "${prefix}${docker_setup_manifests}/${name}.txt" \
 >"${prefix}${docker_setup_manifests}/${name}.txt"
 EOF
