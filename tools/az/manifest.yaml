@@ -1,5 +1,5 @@
 name: az
-version: "2.48.1"
+version: "2.49.0"
 check: ${binary} version | jq --raw-output '."azure-cli"'
 build_dependencies:
 - python
