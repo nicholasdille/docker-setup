@@ -2,6 +2,9 @@ name: spire
 version: "1.6.4"
 binary: spire-server
 check: ${binary} --version 2>&1
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - type/cli
 - category/security
