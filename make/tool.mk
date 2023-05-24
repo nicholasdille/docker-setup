@@ -7,6 +7,21 @@ $(addsuffix --vscode,$(ALL_TOOLS_RAW)):%--vscode:
 $(addsuffix --logs,$(ALL_TOOLS_RAW)):%--logs:
 	@less $(TOOLS_DIR)/$*/build.log
 
+$(addsuffix --pr,$(ALL_TOOLS_RAW)):%--pr:
+	@set -o errexit; \
+	REPO="$$(jq --raw-output '.tools[].renovate.package' $(TOOLS_DIR)/$*/manifest.json)"; \
+	REPO_SLUG="$${REPO////-}"; \
+	REPO_BRANCH="$$(git for-each-ref --format='%(refname:short)' refs/heads/ | grep "$${REPO_SLUG}")"; \
+	if test -z "$${REPO_BRANCH}"; then \
+		echo "No branch for $${REPO_SLUG}."; \
+		exit 1; \
+	fi; \
+	if test "$$(echo -n "${REPO_BRANCH}" | wc -l)" -gt 1; then \
+		echo "Multiple branches for $${REPO_SLUG}."; \
+		exit 1; \
+	fi; \
+	git checkout "$${REPO_BRANCH}"
+
 $(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/yq.json $(TOOLS_DIR)/%/manifest.yaml ; $(info $(M) Creating manifest for $*...)
 	@set -o errexit; \
 	yq --output-format json eval '{"tools":[.]}' $(TOOLS_DIR)/$*/manifest.yaml >$(TOOLS_DIR)/$*/manifest.json
