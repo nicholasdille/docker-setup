@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM nixos/nix:2.15.0 AS build
+FROM nixos/nix:2.15.1@sha256:cee9f1cda2d794c53ca0db0794ee54cfea32748dddb718beba9bf654416e437a AS build
 ARG name
 ARG version
 WORKDIR /tmp/crun
