@@ -1,6 +1,9 @@
 name: vhs
 version: "0.5.0"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - category/development
 - type/cli
