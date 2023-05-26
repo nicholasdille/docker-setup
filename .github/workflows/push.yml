@@ -6,7 +6,6 @@ on:
     - "main"
     paths:
     - "tools/**"
-    - "docker-setup"
     - "Makefile"
     - ".github/workflows/push.yml"
   #schedule:
