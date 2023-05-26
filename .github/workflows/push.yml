@@ -55,7 +55,7 @@ jobs:
 
         mkdir -p helper helper/var/cache helper/var/lib
         helper/usr/local/bin/docker-setup --prefix "$PWD/helper" update
-        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install regclient
+        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install regclient gojq
 
         echo "### Fetching manifest for metadata"
         CONFIG_DIGEST="$(
