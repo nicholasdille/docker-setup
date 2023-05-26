@@ -32,7 +32,6 @@ jobs:
             --fail \
             --output helper/usr/local/bin/docker-setup
         chmod +x helper/usr/local/bin/docker-setup
-        helper/usr/local/bin/docker-setup update
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
@@ -55,6 +54,7 @@ jobs:
         echo "### Running for commit by author: ${AUTHOR}"
 
         mkdir helper helper/var/cache helper/var/lib
+        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" update
         helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install regclient
 
         echo "### Fetching manifest for metadata"
