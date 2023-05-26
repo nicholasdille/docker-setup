@@ -32,6 +32,7 @@ jobs:
             --location \
             --fail \
             --output helper/usr/local/bin/docker-setup
+        chmod +x helper/usr/local/bin/docker-setup
         helper/usr/local/bin/docker-setup update
 
     - name: Set up QEMU
