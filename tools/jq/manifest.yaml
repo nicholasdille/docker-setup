@@ -1,6 +1,8 @@
 name: jq
 version: "1.6"
 check: ${binary} --version | cut -d- -f2
+conflicts_with:
+- gojq
 tags:
 - type/cli
 - format
