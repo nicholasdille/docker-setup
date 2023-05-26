@@ -9,4 +9,6 @@ RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/docker-compose-switch" \
     "https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/docker-compose-switch"
+
+ln --symbolic --relative --force "${prefix}${target}/bin/docker-compose-switch" "${prefix}${target}/bin/docker-compose"
 EOF
