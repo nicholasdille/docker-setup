@@ -54,7 +54,7 @@ jobs:
       run: |
         echo "### Running for commit by author: ${AUTHOR}"
 
-        mkdir helper
+        mkdir helper helper/var/cache helper/var/lib
         helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install regclient
 
         echo "### Fetching manifest for metadata"
