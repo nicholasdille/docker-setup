@@ -1,5 +1,5 @@
 name: mc
-version: "2023-05-18T16-59-00Z"
+version: "2023-05-26T23-31-54Z"
 check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
 tags:
   - category/terminal
