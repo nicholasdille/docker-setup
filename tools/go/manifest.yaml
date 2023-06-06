@@ -1,5 +1,5 @@
 name: go
-version: "1.20.4"
+version: "1.20.5"
 check: ${binary} version | cut -d' ' -f3 | tr -d go
 platforms:
 - linux/amd64
