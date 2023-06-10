@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/docker-setup" \
+    "https://github.com/nicholasdille/docker-setup/releases/download/v${version}/docker-setup"
+chmod +x "${prefix}${target}/bin/docker-setup"
+
+"${prefix}${target}/bin/docker-setup" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-setup"
+"${prefix}${target}/bin/docker-setup" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/docker-setup.fish"
+"${prefix}${target}/bin/docker-setup" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_docker-setup"
+EOF

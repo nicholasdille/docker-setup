@@ -1,0 +1,16 @@
+name: docker-setup
+version: "2.2.11"
+check: ""
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/nicholasdille/docker-setup
+description: Install, configure and update container tools 
+renovate:
+  datasource: github-releases
+  package: nicholasdille/docker-setup
+  extractVersion: ^v(?<version>.+?)$
