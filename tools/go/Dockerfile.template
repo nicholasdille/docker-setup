@@ -1,11 +1,10 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
 mkdir -p "${prefix}/opt/go"
 curl --silent --location --fail "https://go.dev/dl/go${version}.linux-${alt_arch}.tar.gz" \
