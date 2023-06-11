@@ -10,7 +10,5 @@ tags:
 - type/cli
 homepage: https://github.com/nicholasdille/docker-setup
 description: Install, configure and update container tools 
-renovate:
-  datasource: github-releases
-  package: nicholasdille/docker-setup
-  extractVersion: ^v(?<version>.+?)$
+# No renovate configuration for this repository
+# The container image is rebuild during a CLI release
