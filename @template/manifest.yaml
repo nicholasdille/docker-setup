@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: foo/bar
   extractVersion: ^v(?<version>.+?)$
+  priority: low
