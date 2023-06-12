@@ -1,14 +1,14 @@
 name: docker-setup
-version: "2.2.11"
+version: "2.2.17"
 check: ""
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- category/operations
-- lang/go
-- type/cli
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/nicholasdille/docker-setup
-description: Install, configure and update container tools 
+description: Install, configure and update container tools
 # No renovate configuration for this repository
 # The container image is rebuild during a CLI release
