@@ -1,0 +1,17 @@
+name: fq
+version: "0.6.0"
+check: ${binary} --version | cut -d' ' -f1
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/wader/fq
+description: jq for binary formats
+renovate:
+  datasource: github-releases
+  package: wader/fq
+  extractVersion: ^v(?<version>.+?)$
+  priority: low
