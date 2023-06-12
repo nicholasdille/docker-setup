@@ -1092,6 +1092,17 @@
     },
     {
       "matchFiles": [
+        "^tools/devbox/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "jetpack-io/devbox"
+      ],
+      "schedule": [
+        "* 10,20 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/devcontainer/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -6715,6 +6726,16 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/depot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "jetpack-io/devbox",
+      "fileMatch": [
+        "^tools/devbox/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
