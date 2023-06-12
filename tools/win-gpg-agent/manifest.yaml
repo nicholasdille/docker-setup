@@ -1,7 +1,8 @@
 name: win-gpg-agent
 version: "1.6.3"
 binary: sorelay.exe
-check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1
+#check: ${binary} --version 2>&1 | tail -n 1 | cut -d' ' -f1
+check: "" # Hangs for a long time
 tags:
 - type/cli
 - wsl
