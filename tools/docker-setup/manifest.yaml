@@ -1,5 +1,5 @@
 name: docker-setup
-version: "2.2.20"
+version: "2.2.22"
 check: ""
 platforms:
   - linux/amd64
