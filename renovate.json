@@ -2149,6 +2149,17 @@
     },
     {
       "matchFiles": [
+        "^tools/gron/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "tomnomnom/gron"
+      ],
+      "schedule": [
+        "* 21 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/grunt/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -7766,6 +7777,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/grafana-agent/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tomnomnom/gron",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/gron/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
