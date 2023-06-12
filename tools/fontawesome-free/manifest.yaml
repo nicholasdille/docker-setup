@@ -1,6 +1,6 @@
 name: fontawesome-free
 version: "6.4.0"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
   - slides

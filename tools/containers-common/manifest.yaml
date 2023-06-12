@@ -1,6 +1,6 @@
 name: containers-common
 version: "0.53.0"
-binary: false
+binary: "false"
 check: "" # No binary
 build_dependencies:
   - go-md2man

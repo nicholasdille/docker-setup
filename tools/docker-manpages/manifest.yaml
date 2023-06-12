@@ -1,6 +1,6 @@
 name: docker-manpages
 version: "24.0.2"
-binary: false
+binary: "false"
 check: "" # No binary
 build_dependencies:
 - go

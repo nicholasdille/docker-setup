@@ -1,6 +1,6 @@
 name: cascadia-code
 version: "2111.01"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
   - slides

@@ -1,6 +1,6 @@
 name: jaxb
 version: "4.0.1"
-binary: false
+binary: "false"
 check: "" # Requires Java to run
 runtime_dependencies:
   - openjdk-jre

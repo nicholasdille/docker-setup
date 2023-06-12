@@ -1,6 +1,6 @@
 name: shortnames
 version: "2023.02.20"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
   - org/redhat

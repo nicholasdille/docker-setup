@@ -1,6 +1,6 @@
 name: reveal.js
 version: "4.5.0"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
   - markdown

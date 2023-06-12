@@ -1,6 +1,6 @@
 name: nerd-fonts
 version: "3.0.1"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
   - slides
