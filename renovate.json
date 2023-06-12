@@ -2600,6 +2600,17 @@
     },
     {
       "matchFiles": [
+        "^tools/jqp/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "noahgorstein/jqp"
+      ],
+      "schedule": [
+        "* 21 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/jsonnet/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -8153,6 +8164,17 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "versioningTemplate": "loose"
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "noahgorstein/jqp",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/jqp/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
     },
     {
       "datasourceTemplate": "github-releases",
