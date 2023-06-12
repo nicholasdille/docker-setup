@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: npm/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

@@ -2,18 +2,19 @@ name: kubectl-build
 version: "0.1.6"
 check: "" # No version parameter
 runtime_dependencies:
-- kubectl
+  - kubectl
 tags:
-- org/vmware
-- container/build
-- type/cli
-- type/plugin
-- kubernetes
-- management
-- lang/go
+  - org/vmware
+  - container/build
+  - type/cli
+  - type/plugin
+  - kubernetes
+  - management
+  - lang/go
 homepage: https://github.com/vmware-tanzu/buildkit-cli-for-kubectl
 description: Tool for building container images with your Kubernetes cluster
 renovate:
   datasource: github-releases
   package: vmware-tanzu/buildkit-cli-for-kubectl
   extractVersion: ^v(?<version>.+?)$
+  priority: low

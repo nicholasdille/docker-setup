@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: docker/index-cli-plugin
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

@@ -15,3 +15,4 @@ renovate:
   datasource: github-releases
   package: docker-credential-magic/docker-credential-magic
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

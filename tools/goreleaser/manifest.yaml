@@ -2,19 +2,20 @@ name: goreleaser
 version: "1.18.2"
 check: ${binary} --version | head -1 | cut -d' ' -f3
 build_dependencies:
-- cosign
+  - cosign
 runtime_dependencies:
-- go
+  - go
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- cicd
-- lang/go
+  - category/development
+  - cicd
+  - lang/go
 homepage: https://github.com/goreleaser/goreleaser
 description: Deliver Go binaries as fast and easily as possible
 renovate:
   datasource: github-releases
   package: goreleaser/goreleaser
   extractVersion: ^v(?<version>.+?)$
+  priority: low

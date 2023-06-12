@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: firecracker-microvm/firectl
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

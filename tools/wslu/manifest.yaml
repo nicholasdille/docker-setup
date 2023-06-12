@@ -2,12 +2,13 @@ name: wslu
 version: "4.1.1"
 check: "" # Wrong version
 tags:
-- type/cli
-- wsl
-- lang/shell
+  - type/cli
+  - wsl
+  - lang/shell
 homepage: https://github.com/wslutilities/wslu
 description: Collection of utilities for Windows Subsystem for Linux
 renovate:
   datasource: github-releases
   package: wslutilities/wslu
   extractVersion: ^v(?<version>.+?)$
+  priority: low

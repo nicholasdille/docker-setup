@@ -2,13 +2,14 @@ name: dbui
 version: "0.7.0"
 check: ${binary} -f foo | head -1 | cut -d' ' -f3 | tr -d v
 tags:
-- component/database
-- type/tui
-- lang/go
-- state/stale
+  - component/database
+  - type/tui
+  - lang/go
+  - state/stale
 homepage: https://github.com/KenanBek/dbui
 description: Universal Database CLI for MySQL, PostgreSQL, and SQLite
 renovate:
   datasource: github-releases
   package: KenanBek/dbui
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: cloudflare/cloudflare-go
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

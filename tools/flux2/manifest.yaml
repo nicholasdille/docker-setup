@@ -3,14 +3,15 @@ version: "0.41.2"
 binary: flux
 check: ${binary} --version | cut -d' ' -f3
 conflicts_with:
-- flux
+  - flux
 tags:
-- type/cli
-- gitops
-- lang/go
+  - type/cli
+  - gitops
+  - lang/go
 homepage: https://github.com/fluxcd/flux2
 description: Open and extensible continuous delivery solution for Kubernetes
 renovate:
   datasource: github-releases
   package: fluxcd/flux2
   extractVersion: ^v(?<version>.+?)$
+  priority: low

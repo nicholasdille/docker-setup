@@ -2,12 +2,13 @@ name: paranoia
 version: "0.2.1"
 check: "" # No version parameter
 tags:
-- category/security
-- type/cli
-- lang/go
+  - category/security
+  - type/cli
+  - lang/go
 homepage: https://github.com/jetstack/paranoia
 description: Inspect certificate authorities in container images
 renovate:
   datasource: github-releases
   package: jetstack/paranoia
   extractVersion: ^v(?<version>.+?)$
+  priority: low

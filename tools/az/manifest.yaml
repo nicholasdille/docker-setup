@@ -17,3 +17,4 @@ description: Azure CLI
 renovate:
   datasource: pypi
   package: azure-cli
+  priority: medium

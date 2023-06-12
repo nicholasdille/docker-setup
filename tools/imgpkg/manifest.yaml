@@ -2,14 +2,15 @@ name: imgpkg
 version: "0.36.2"
 check: ${binary} version | head -n 1 | cut -d' ' -f3
 tags:
-- standard/oci
-- container/registry
-- type/cli
-- management
-- lang/go
+  - standard/oci
+  - container/registry
+  - type/cli
+  - management
+  - lang/go
 homepage: https://github.com/carvel-dev/imgpkg
 description: Store application configuration files in Docker/OCI registries
 renovate:
   datasource: github-releases
   package: carvel-dev/imgpkg
   extractVersion: ^v(?<version>.+?)$
+  priority: low

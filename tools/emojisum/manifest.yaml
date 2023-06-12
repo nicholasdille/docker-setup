@@ -2,14 +2,14 @@ name: emojisum
 version: "2"
 check: "" # No version parameter
 build_dependencies:
-- go
+  - go
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/security
-- type/cli
-- lang/go
+  - category/security
+  - type/cli
+  - lang/go
 homepage: https://github.com/emojisum/emojisum
 description: Easier way to compare hashes/fingerprints when dealing human weak link
 renovate:
@@ -17,3 +17,4 @@ renovate:
   package: emojisum/emojisum
   extractVersion: ^draft\+(?<version>.+?)$
   versioning: loose
+  priority: low

@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: crazy-max/diun
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

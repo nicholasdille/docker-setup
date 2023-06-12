@@ -14,3 +14,4 @@ description: Alternative to the existing file store based ACR helper
 renovate:
   datasource: github-releases
   package: chrismellard/docker-credential-acr-env
+  priority: medium

@@ -2,14 +2,15 @@ name: jaq
 version: "0.10.0"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
-- rust
+  - rust
 tags:
-- type/cli
-- format
-- lang/rust
+  - type/cli
+  - format
+  - lang/rust
 homepage: https://github.com/01mf02/jaq
 description: jq clone focussed on correctness, speed, and simplicity
 renovate:
   datasource: github-releases
   package: 01mf02/jaq
   extractVersion: ^v(?<version>.+?)$
+  priority: low

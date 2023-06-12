@@ -2,19 +2,20 @@ name: youki
 version: 0.0.5
 check: ${binary} --version | grep ^youki | cut -d' ' -f3
 build_dependencies:
-- rustr
+  - rustr
 runtime_dependencies:
-- docker
+  - docker
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- org/redhat
-- container/runtime
-- lang/rust
+  - org/redhat
+  - container/runtime
+  - lang/rust
 homepage: https://github.com/containers/youki
 description: Container runtime written in rust
 renovate:
   datasource: github-releases
   package: containers/youki
   extractVersion: ^v(?<version>.+?)$
+  priority: low

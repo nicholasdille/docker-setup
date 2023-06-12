@@ -2,14 +2,15 @@ name: tkn
 version: "0.31.0"
 check: timeout 3 ${binary} version | grep ^Client | cut -d' ' -f3
 tags:
-- type/cli
-- category/development
-- org/cdfoundation
-- cicd
-- lang/go
+  - type/cli
+  - category/development
+  - org/cdfoundation
+  - cicd
+  - lang/go
 homepage: https://github.com/tektoncd/cli
 description: CLI for interacting with Tekton
 renovate:
   datasource: github-releases
   package: tektoncd/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

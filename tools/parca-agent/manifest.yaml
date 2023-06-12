@@ -3,15 +3,16 @@ name: parca-agent
 version: "0.19.0"
 check: "" # No version parameter
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/monitoring
-- type/daemon
-- lang/go
+  - category/monitoring
+  - type/daemon
+  - lang/go
 homepage: https://github.com/parca-dev/parca-agent
 description: eBPF based always-on profiler auto-discovering targets in Kubernetes and systemd, zero code changes or restarts needed!
 renovate:
   datasource: github-releases
   package: parca-dev/parca-agent
   extractVersion: ^v(?<version>.+?)$
+  priority: low

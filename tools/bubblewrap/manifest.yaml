@@ -3,12 +3,13 @@ version: "0.8.0"
 binary: bwrap
 check: ${binary} --version | cut -d' ' -f2
 tags:
-- org/redhat
-- kernel/namespaces
-- lang/c
+  - org/redhat
+  - kernel/namespaces
+  - lang/c
 homepage: https://github.com/containers/bubblewrap
 description: Unprivileged sandboxing tool
 renovate:
   datasource: github-releases
   package: containers/bubblewrap
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,15 +2,16 @@ name: hub
 version: "2.14.2"
 check: ${binary} --version | grep ^hub | cut -d' ' -f3
 tags:
-- org/github
-- type/cli
-- category/development
-- cicd
-- lang/go
-- state/stale
+  - org/github
+  - type/cli
+  - category/development
+  - cicd
+  - lang/go
+  - state/stale
 homepage: https://github.com/github/hub
 description: Command-line tool that makes git easier to use with GitHub
 renovate:
   datasource: github-releases
   package: github/hub
   extractVersion: ^v(?<version>.+?)$
+  priority: low

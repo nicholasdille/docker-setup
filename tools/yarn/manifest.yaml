@@ -2,20 +2,21 @@ name: yarn
 version: "1.22.19"
 check: ${binary} --version
 build_dependencies:
-- nodejs-lts
-- npm
+  - nodejs-lts
+  - npm
 runtime_dependencies:
-- nodejs-lts
+  - nodejs-lts
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/javascript
-- type/cli
+  - category/development
+  - lang/javascript
+  - type/cli
 homepage: https://github.com/yarnpkg/yarn
 description: Fast, reliable, and secure dependency management
 renovate:
   datasource: github-releases
   package: yarnpkg/yarn
   extractVersion: ^v(?<version>.+?)$
+  priority: low

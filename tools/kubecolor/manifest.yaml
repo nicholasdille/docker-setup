@@ -2,12 +2,13 @@ name: kubecolor
 version: "0.0.25"
 check: "" # No dedicated version
 tags:
-- category/operations
-- type/cli
-- lang/go
+  - category/operations
+  - type/cli
+  - lang/go
 homepage: https://github.com/hidetatz/kubecolor
 description: colorizes kubectl output
 renovate:
   datasource: github-releases
   package: hidetatz/kubecolor
   extractVersion: ^v(?<version>.+?)$
+  priority: low

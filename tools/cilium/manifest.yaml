@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: cilium/cilium-cli
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

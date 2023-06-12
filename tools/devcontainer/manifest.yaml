@@ -14,3 +14,4 @@ renovate:
   datasource: github-tags
   package: devcontainers/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

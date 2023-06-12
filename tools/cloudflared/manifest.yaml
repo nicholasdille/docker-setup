@@ -2,12 +2,13 @@ name: cloudflared
 version: "2023.5.1"
 check: ${binary} --version | cut -d' ' -f3
 tags:
-- type/cli
-- category/development
-- tunneling
-- lang/go
+  - type/cli
+  - category/development
+  - tunneling
+  - lang/go
 homepage: https://github.com/cloudflare/cloudflared
 description: Cloudflare Tunnel client (formerly Argo Tunnel)
 renovate:
   datasource: github-releases
   package: cloudflare/cloudflared
+  priority: low

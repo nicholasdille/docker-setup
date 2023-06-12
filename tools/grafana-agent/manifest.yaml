@@ -3,17 +3,18 @@ version: "0.33.2"
 binary: agent
 check: ${binary} --version | head -1 | cut -d' ' -f3 | tr -d v
 tags:
-- org/grafana
-- observability/metrics
-- observability/logs
-- observability/traces
-- o11y
-- category/monitoring
-- lang/go
-- type/daemon
+  - org/grafana
+  - observability/metrics
+  - observability/logs
+  - observability/traces
+  - o11y
+  - category/monitoring
+  - lang/go
+  - type/daemon
 homepage: https://github.com/grafana/agent
 description: Telemetry agent for the LGTM stack
 renovate:
   datasource: github-releases
   package: grafana/agent
   extractVersion: ^v(?<version>.+?)$
+  priority: low

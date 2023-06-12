@@ -2,14 +2,15 @@ name: navi
 version: "2.22.1"
 check: ${binary} --version | cut -d' ' -f2
 runtime_dependencies:
-- fzf
+  - fzf
 tags:
-- category/development
-- lang/rust
-- type/cli
+  - category/development
+  - lang/rust
+  - type/cli
 homepage: https://github.com/denisidoro/navi
 description: Interactive cheatsheet tool for the command-line
 renovate:
   datasource: github-releases
   package: denisidoro/navi
   extractVersion: ^v(?<version>.+?)$
+  priority: low

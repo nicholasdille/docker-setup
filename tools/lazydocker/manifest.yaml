@@ -2,13 +2,13 @@ name: lazydocker
 version: "0.20.0"
 check: ${binary} --version | grep Version | cut -d' ' -f2
 runtime_dependencies:
-- docker
+  - docker
 tags:
-- standard/docker
-- type/tui
-- management
-- troubleshooting
-- lang/go
+  - standard/docker
+  - type/tui
+  - management
+  - troubleshooting
+  - lang/go
 homepage: https://github.com/jesseduffield/lazydocker
 description: The lazier way to manage everything docker
 renovate:
@@ -16,3 +16,4 @@ renovate:
   package: jesseduffield/lazydocker
   extractVersion: ^v(?<version>.+)$
   versioning: loose
+  priority: low

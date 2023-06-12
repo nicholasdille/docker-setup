@@ -2,16 +2,17 @@ name: lima
 version: "0.15.1"
 check: limactl --version | cut -d' ' -f3
 build_dependencies:
-- yasu
+  - yasu
 runtime_dependencies:
-- yasu
+  - yasu
 tags:
-- type/cli
-- category/development
-- lang/go
+  - type/cli
+  - category/development
+  - lang/go
 homepage: https://github.com/lima-vm/lima
 description: Linux virtual machines, typically on macOS, for running containerd
 renovate:
   datasource: github-releases
   package: lima-vm/lima
   extractVersion: ^v(?<version>.+?)$
+  priority: low

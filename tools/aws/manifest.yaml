@@ -17,3 +17,4 @@ description: Universal CLI for Amazon Web Services
 renovate:
   datasource: pypi
   package: awscli
+  priority: medium

@@ -3,19 +3,20 @@ version: "1.12.1"
 binary: kubectl-crossplane
 check: ${binary} --version | tr -d v
 runtime_dependencies:
-- kubectl
+  - kubectl
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- type/plugin
-- management
-- infrastructure
-- lang/go
+  - type/cli
+  - type/plugin
+  - management
+  - infrastructure
+  - lang/go
 homepage: https://github.com/crossplane/crossplane
 description: Cloud Native Control Planes
 renovate:
   datasource: github-releases
   package: crossplane/crossplane
   extractVersion: ^v(?<version>.+?)$
+  priority: low

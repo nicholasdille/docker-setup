@@ -11,3 +11,4 @@ renovate:
   datasource: github-releases
   package: kyverno/kyverno
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

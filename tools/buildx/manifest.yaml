@@ -21,3 +21,4 @@ renovate:
   datasource: github-releases
   package: docker/buildx
   extractVersion: ^v(?<version>.+?)$
+  priority: high

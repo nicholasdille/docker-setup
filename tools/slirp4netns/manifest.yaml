@@ -12,3 +12,4 @@ renovate:
   datasource: github-releases
   package: rootless-containers/slirp4netns
   extractVersion: ^v(?<version>.+?)$
+  priority: high

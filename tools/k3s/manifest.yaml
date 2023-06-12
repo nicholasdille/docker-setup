@@ -14,3 +14,4 @@ renovate:
   package: k3s-io/k3s
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: high

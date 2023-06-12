@@ -2,14 +2,15 @@ name: sonar-scanner
 version: "4.8.0.2856"
 check: ${binary} --version | grep SonarScanner | cut -d' ' -f3
 runtime_dependencies:
-- openjdk-jre
+  - openjdk-jre
 tags:
-- type/cli
-- category/development
-- lang/java
+  - type/cli
+  - category/development
+  - lang/java
 homepage: https://github.com/SonarSource/sonar-scanner-cli
 description: Scanner CLI for SonarQube and SonarCloud
 renovate:
   datasource: github-releases
   package: SonarSource/sonar-scanner-cli
   versioning: loose
+  priority: low

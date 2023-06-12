@@ -2,19 +2,20 @@ name: podman-tui
 version: "0.9.1"
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 build_dependencies:
-- go
+  - go
 runtime_dependencies:
-- podman
+  - podman
 tags:
-- org/redhat
-- standard/oci
-- container/runtime
-- type/tui
-- rootless
-- lang/go
+  - org/redhat
+  - standard/oci
+  - container/runtime
+  - type/tui
+  - rootless
+  - lang/go
 homepage: https://github.com/containers/podman-tui
 description: Podman Terminal UI
 renovate:
   datasource: github-releases
   package: containers/podman-tui
   extractVersion: ^v(?<version>.+?)$
+  priority: low

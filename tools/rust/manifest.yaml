@@ -3,14 +3,15 @@ version: "1.69.0"
 binary: rustc
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- type/cli
-- category/development
-- lang/rust
+  - type/cli
+  - category/development
+  - lang/rust
 homepage: https://github.com/rust-lang/rust
 description: Empowering everyone to build reliable and efficient software
 renovate:
   datasource: github-releases
   package: rust-lang/rust
+  priority: low

@@ -2,15 +2,16 @@ name: scc
 version: "3.1.0"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- type/cli
-- lang/go
+  - category/development
+  - type/cli
+  - lang/go
 homepage: https://github.com/boyter/scc
 description: Sloc, Cloc and Code scc is a very fast accurate code counter with complexity calculations and COCOMO estimates written in pure Go
 renovate:
   datasource: github-releases
   package: boyter/scc
   extractVersion: ^v(?<version>.+?)$
+  priority: low

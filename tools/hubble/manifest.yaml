@@ -13,3 +13,4 @@ renovate:
   datasource: github-releases
   package: cilium/hubble
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

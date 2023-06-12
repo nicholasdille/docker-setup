@@ -2,14 +2,15 @@ name: dua
 version: "2.20.1"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- category/operations
-- type/cli
-- lang/rust
+  - category/operations
+  - type/cli
+  - lang/rust
 homepage: https://github.com/Byron/dua-cli
 description: View disk space usage and delete unwanted data, fast.
 renovate:
   datasource: github-releases
   package: Byron/dua-cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

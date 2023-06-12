@@ -2,20 +2,21 @@ name: newman
 version: "5.3.2"
 check: ${binary} --version
 build_dependencies:
-- nodejs-lts
-- npm
+  - nodejs-lts
+  - npm
 runtime_dependencies:
-- nodejs-lts
+  - nodejs-lts
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/javascript
-- type/cli
+  - category/development
+  - lang/javascript
+  - type/cli
 homepage: https://github.com/postmanlabs/newman
 description: The JavaScript Task Runner
 renovate:
   datasource: github-tags
   package: postmanlabs/newman
   extractVersion: ^v(?<version>.+?)$
+  priority: low

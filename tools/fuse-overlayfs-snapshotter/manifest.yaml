@@ -17,3 +17,4 @@ renovate:
   datasource: github-releases
   package: containerd/fuse-overlayfs-snapshotter
   extractVersion: ^v(?<version>.+?)$
+  priority: high

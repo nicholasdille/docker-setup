@@ -25,3 +25,4 @@ renovate:
   datasource: github-releases
   package: containerd/containerd
   extractVersion: ^v(?<version>.+?)$
+  priority: high

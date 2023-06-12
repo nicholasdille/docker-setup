@@ -2,12 +2,13 @@ name: kmon
 version: "1.6.3"
 check: ${binary} --version | cut -d' ' -f2
 tags:
-- type/tui
-- management
-- lang/rust
+  - type/tui
+  - management
+  - lang/rust
 homepage: https://github.com/orhun/kmon
 description: Linux Kernel Manager and Activity Monitor
 renovate:
   datasource: github-releases
   package: orhun/kmon
   extractVersion: ^v(?<version>.+?)$
+  priority: low

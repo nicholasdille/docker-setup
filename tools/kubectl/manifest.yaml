@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: kubernetes/kubernetes
   extractVersion: ^v(?<version>.+?)$
+  priority: high

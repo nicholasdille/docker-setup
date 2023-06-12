@@ -2,15 +2,17 @@ name: kubectl-plugins
 version: "0.1.0"
 check: "" # No version
 build_dependencies:
-- krew
+  - krew
 runtime_dependencies:
-- kubectl
-- krew
+  - kubectl
+  - krew
 tags:
-- org/cncf
-- org/kubernetes
-- type/plugin
-- kubernetes
-- management
+  - org/cncf
+  - org/kubernetes
+  - type/plugin
+  - kubernetes
+  - management
 homepage: https://github.com/nicholasdille/docker-setup
 description: kubectl plugins
+renovate:
+  priority: low

@@ -22,3 +22,4 @@ renovate:
   datasource: github-releases
   package: containers/podman
   extractVersion: ^v(?<version>.+?)$
+  priority: high

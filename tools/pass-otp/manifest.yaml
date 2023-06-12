@@ -2,15 +2,16 @@ name: pass-otp
 version: "1.2.0"
 check: "" # TODO
 runtime_dependencies:
-- pass
+  - pass
 tags:
-- category/security
-- lang/shell
-- type/cli
-- state/stale
+  - category/security
+  - lang/shell
+  - type/cli
+  - state/stale
 homepage: https://github.com/tadfisher/pass-otp
 description: Pass extension for managing one-time-password (OTP) tokens
 renovate:
   datasource: github-releases
   package: tadfisher/pass-otp
   extractVersion: ^v(?<version>.+?)$
+  priority: low

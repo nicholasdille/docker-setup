@@ -16,3 +16,4 @@ description: Making Docker and Kubernetes management easy
 renovate:
   datasource: github-releases
   package: portainer/portainer
+  priority: medium

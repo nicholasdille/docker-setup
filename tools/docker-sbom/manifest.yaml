@@ -22,3 +22,4 @@ renovate:
   datasource: github-releases
   package: docker/sbom-cli-plugin
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

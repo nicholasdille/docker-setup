@@ -3,11 +3,12 @@ version: "3.22.6.0"
 binary: inotifywait
 check: ${binary} --help | head -1 | cut -d' ' -f2
 tags:
-- component/kernel
-- lang/c
+  - component/kernel
+  - lang/c
 homepage: https://github.com/inotify-tools/inotify-tools
 description: Library and a set of command-line programs providing a simple interface to inotify
 renovate:
   datasource: github-releases
   package: inotify-tools/inotify-tools
   versioning: loose
+  priority: low

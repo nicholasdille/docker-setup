@@ -2,16 +2,17 @@ name: arkade
 version: "0.9.22"
 check: ${binary} version | grep "Version" | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- kubernetes
-- package
-- management
-- lang/go
+  - type/cli
+  - kubernetes
+  - package
+  - management
+  - lang/go
 homepage: https://github.com/alexellis/arkade
 description: Open Source Marketplace For Kubernetes
 renovate:
   package: alexellis/arkade
   datasource: github-releases
+  priority: low

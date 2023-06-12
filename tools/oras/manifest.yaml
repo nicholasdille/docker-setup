@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: oras-project/oras
   extractVersion: ^v(?<version>.+?)$
+  priority: high

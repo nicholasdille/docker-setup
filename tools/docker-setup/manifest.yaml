@@ -12,3 +12,6 @@ homepage: https://github.com/nicholasdille/docker-setup
 description: Install, configure and update container tools
 # No renovate configuration for this repository
 # The container image is rebuild during a CLI release
+
+renovate:
+  priority: low

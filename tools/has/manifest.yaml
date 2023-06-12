@@ -2,15 +2,16 @@ name: has
 version: "1.4.0"
 check: "" # No version parameter
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/shell
-- type/cli
+  - category/development
+  - lang/shell
+  - type/cli
 homepage: https://github.com/kdabir/has
 description: Checks presence of various command line tools and their versions on the path
 renovate:
   datasource: github-releases
   package: kdabir/has
   extractVersion: ^v(?<version>.+?)$
+  priority: low

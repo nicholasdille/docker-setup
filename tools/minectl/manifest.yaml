@@ -2,14 +2,15 @@ name: minectl
 version: "0.29.0"
 check: ${binary} version | grep ^Version | cut -d' ' -f2
 tags:
-- category/games
-- type/cli
-- minecraft
-- management
-- lang/go
+  - category/games
+  - type/cli
+  - minecraft
+  - management
+  - lang/go
 homepage: https://github.com/dirien/minectl
 description: CLI for creating Minecraft server on different cloud provider
 renovate:
   datasource: github-releases
   package: dirien/minectl
   extractVersion: ^v(?<version>.+?)$
+  priority: low

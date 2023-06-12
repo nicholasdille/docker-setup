@@ -15,3 +15,4 @@ renovate:
   datasource: github-releases
   package: etcd-io/etcd
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

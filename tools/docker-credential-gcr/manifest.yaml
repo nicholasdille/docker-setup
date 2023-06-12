@@ -15,3 +15,4 @@ renovate:
   datasource: github-releases
   package: GoogleCloudPlatform/docker-credential-gcr
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

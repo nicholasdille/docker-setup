@@ -2,20 +2,21 @@ name: gsutil
 version: "5.24"
 check: ${binary} version | cut -d' ' -f3
 build_dependencies:
-- python
-- shiv
+  - python
+  - shiv
 runtime_dependencies:
-- python
+  - python
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/google
-- category/development
-- lang/python
-- cloud/google
+  - org/google
+  - category/development
+  - lang/python
+  - cloud/google
 homepage: https://github.com/GoogleCloudPlatform/gsutil
 description: CLI for interacting with cloud storage services
 renovate:
   datasource: pypi
   package: gsutil
+  priority: low

@@ -3,14 +3,15 @@ version: "23.05.0"
 binary: false
 check: "" # No binary
 runtime_dependencies:
-- fzf
+  - fzf
 tags:
-- type/cli
-- category/development
-- lang/shell
+  - type/cli
+  - category/development
+  - lang/shell
 homepage: https://github.com/wfxr/forgit
 description: Utility tool powered by fzf for using git interactively
 renovate:
   datasource: github-releases
   package: wfxr/forgit
   versioning: loose
+  priority: low

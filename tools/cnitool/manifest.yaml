@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: containernetworking/cni
   extractVersion: ^v(?<version>.+?)$
+  priority: high

@@ -14,3 +14,4 @@ description: Universal CLI for Amazon Web Services
 renovate:
   datasource: github-tags
   package: aws/aws-cli
+  priority: medium

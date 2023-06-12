@@ -2,15 +2,16 @@ name: cfssl
 version: "1.6.4"
 check: "" # No version parameter
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- type/cli
-- category/security
-- certificate
-- lang/go
+  - type/cli
+  - category/security
+  - certificate
+  - lang/go
 homepage: https://github.com/cloudflare/cfssl
 description: Cloudflare's PKI and TLS toolkit
 renovate:
   datasource: github-releases
   package: cloudflare/cfssl
   extractVersion: ^v(?<version>.+?)$
+  priority: low

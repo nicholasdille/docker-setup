@@ -11,3 +11,4 @@ renovate:
   datasource: github-releases
   package: ossf/scorecard
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

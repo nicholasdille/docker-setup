@@ -2,12 +2,13 @@ name: kubeconform
 version: "0.6.1"
 check: ${binary} -v | tr -d v
 tags:
-- category/operations
-- type/cli
-- lang/go
+  - category/operations
+  - type/cli
+  - lang/go
 homepage: https://github.com/yannh/kubeconform
 description: A FAST Kubernetes manifests validator, with support for Custom Resources!
 renovate:
   datasource: github-releases
   package: yannh/kubeconform
   extractVersion: ^v(?<version>.+?)$
+  priority: low

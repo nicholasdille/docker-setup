@@ -3,9 +3,9 @@ version: "2.69"
 binary: ${target}/sbin/setcap
 check: "" # No version parameter
 tags:
-- kernel/capabilities
-- type/cli
-- lang/c
+  - kernel/capabilities
+  - type/cli
+  - lang/c
 homepage: https://git.kernel.org/pub/scm/libs/libcap/libcap.git/about/
 description: Library for getting and setting POSIX.1e (formerly POSIX 6) draft 15 capabilities.
 renovate:
@@ -13,3 +13,4 @@ renovate:
   package: git://git.kernel.org/pub/scm/libs/libcap/libcap.git
   extractVersion: ^libcap-(?<version>\d+\.\d+)$
   versioning: loose
+  priority: low

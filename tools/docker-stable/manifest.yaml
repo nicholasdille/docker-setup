@@ -24,3 +24,4 @@ renovate:
   datasource: github-tags
   package: moby/moby
   extractVersion: ^v(?<version>23\..+?)$
+  priority: high

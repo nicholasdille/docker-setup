@@ -2,12 +2,13 @@ name: vcluster
 version: "0.15.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
-- type/cli
-- kubernetes
-- lang/go
+  - type/cli
+  - kubernetes
+  - lang/go
 homepage: https://github.com/loft-sh/vcluster
 description: Create fully functional virtual Kubernetes clusters
 renovate:
   datasource: github-releases
   package: loft-sh/vcluster
   extractVersion: ^v(?<version>.+?)$
+  priority: low

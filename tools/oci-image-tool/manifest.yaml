@@ -2,17 +2,18 @@ name: oci-image-tool
 version: "1.0.0-rc3"
 check: ${binary} --version | cut -d' ' -f3
 build_dependencies:
-- go
+  - go
 tags:
-- org/oci
-- standard/oci
-- container/image
-- type/cli
-- lang/go
-- state/stale
+  - org/oci
+  - standard/oci
+  - container/image
+  - type/cli
+  - lang/go
+  - state/stale
 homepage: https://github.com/opencontainers/image-tools
 description: OCI Image Tooling
 renovate:
   datasource: github-releases
   package: opencontainers/image-tools
   extractVersion: ^v(?<version>.+?)$
+  priority: low

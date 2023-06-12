@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: tinygo-org/tinygo
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

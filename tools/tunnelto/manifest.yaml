@@ -2,13 +2,14 @@ name: tunnelto
 version: "0.1.18"
 check: "" # TODO
 tags:
-- type/cli
-- category/development
-- tunneling
-- lang/rust
-- state/stale
+  - type/cli
+  - category/development
+  - tunneling
+  - lang/rust
+  - state/stale
 homepage: https://github.com/agrinman/tunnelto
 description: Expose your local web server to the internet with a public URL
 renovate:
   datasource: github-releases
   package: agrinman/tunnelto
+  priority: low

@@ -2,12 +2,12 @@ name: pass-update
 version: "2.1"
 check: "" # TODO
 runtime_dependencies:
-- pass
+  - pass
 tags:
-- category/security
-- lang/shell
-- type/cli
-- state/stale
+  - category/security
+  - lang/shell
+  - type/cli
+  - state/stale
 homepage: https://github.com/roddhjav/pass-update
 description: Pass extension that provides an easy flow for updating passwords
 renovate:
@@ -15,3 +15,4 @@ renovate:
   package: roddhjav/pass-update
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: low

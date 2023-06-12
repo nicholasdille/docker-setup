@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: kubernetes-sigs/kind
   extractVersion: ^v(?<version>.+?)$
+  priority: high

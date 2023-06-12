@@ -2,11 +2,12 @@ name: jabba
 version: "0.12.2"
 check: ${binary} --version
 tags:
-- type/cli
-- category/development
-- lang/go
+  - type/cli
+  - category/development
+  - lang/go
 homepage: https://github.com/Jabba-Team/jabba
 description: Java Version Manager
 renovate:
   datasource: github-releases
   package: Jabba-Team/jabba
+  priority: low

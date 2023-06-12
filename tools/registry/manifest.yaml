@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: distribution/distribution
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

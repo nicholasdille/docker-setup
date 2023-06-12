@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: kubernetes-sigs/krew
   extractVersion: ^v(?<version>.+?)$
+  priority: high

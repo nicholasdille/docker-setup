@@ -2,15 +2,16 @@ name: vgrep
 version: "2.6.1"
 check: ${binary} --version
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- category/operations
-- lang/go
-- type/cli
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/vrothberg/vgrep
 description: User-friendly pager for grep
 renovate:
   datasource: github-releases
   package: vrothberg/vgrep
   extractVersion: ^v(?<version>.+?)$
+  priority: low

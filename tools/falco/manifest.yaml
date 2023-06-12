@@ -13,3 +13,4 @@ description: Cloud Native Runtime Security
 renovate:
   datasource: github-releases
   package: falcosecurity/falco
+  priority: medium

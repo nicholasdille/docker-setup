@@ -2,13 +2,14 @@ name: ktunnel
 version: "1.5.3"
 check: ${binary} version
 tags:
-- type/cli
-- category/security
-- tunneling
-- lang/go
+  - type/cli
+  - category/security
+  - tunneling
+  - lang/go
 homepage: https://github.com/omrikiei/ktunnel
 description: CLI that exposes your local resources to kubernetes
 renovate:
   datasource: github-releases
   package: omrikiei/ktunnel
   extractVersion: ^v(?<version>.+?)$
+  priority: low

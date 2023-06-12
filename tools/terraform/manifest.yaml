@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: hashicorp/terraform
   extractVersion: ^v(?<version>.+?)$
+  priority: high

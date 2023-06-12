@@ -2,11 +2,12 @@ name: fx
 version: "24.1.0"
 check: ${binary} | grep "fx" | head -n 1 | tr -s ' ' | cut -d' ' -f3
 tags:
-- type/cli
-- format
-- lang/go
+  - type/cli
+  - format
+  - lang/go
 homepage: https://github.com/antonmedv/fx
 description: Terminal JSON viewer
 renovate:
   datasource: github-releases
   package: antonmedv/fx
+  priority: low

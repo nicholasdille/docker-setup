@@ -2,14 +2,15 @@ name: docker-gen
 version: "0.10.4"
 check: ${binary} --version
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/go
-- type/daemon
+  - category/operations
+  - lang/go
+  - type/daemon
 homepage: https://github.com/nginx-proxy/docker-gen
 description: Generate files from docker container meta-data
 renovate:
   datasource: github-releases
   package: nginx-proxy/docker-gen
+  priority: low

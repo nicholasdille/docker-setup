@@ -12,3 +12,4 @@ description: Bootstrap Kubernetes with k3s over SSH
 renovate:
   datasource: github-releases
   package: alexellis/k3sup
+  priority: medium

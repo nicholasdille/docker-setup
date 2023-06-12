@@ -2,12 +2,13 @@ name: promql-cli
 version: "0.3.0"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
-- standard/prometheus
-- category/monitoring
-- lang/go
+  - standard/prometheus
+  - category/monitoring
+  - lang/go
 homepage: https://github.com/nalbury/promql-cli
 description: Prometheus Query CLI
 renovate:
   datasource: github-releases
   package: nalbury/promql-cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

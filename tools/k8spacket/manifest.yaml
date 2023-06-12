@@ -2,17 +2,18 @@ name: k8spacket
 version: "1.1.1"
 check: "" # No version parameter
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- troubleshooting
-- component/network
-- lang/go
-- type/daemon
-- state/onemanshow
+  - troubleshooting
+  - component/network
+  - lang/go
+  - type/daemon
+  - state/onemanshow
 homepage: https://github.com/k8spacket/k8spacket
 description: Traffic visualization for kubernetes
 renovate:
   datasource: github-releases
   package: k8spacket/k8spacket
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: itchyny/gojq
   extractVersion: ^v(?<version>.+?)$
+  priority: high

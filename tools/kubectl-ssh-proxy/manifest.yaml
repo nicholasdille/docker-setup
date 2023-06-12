@@ -3,14 +3,15 @@ version: "0.0.2"
 binary: kubectl-ssh_proxy
 check: "" # No version parameter
 tags:
-- type/cli
-- category/security
-- kubernetes
-- lang/go
-- state/stale
-- state/onemanshow
+  - type/cli
+  - category/security
+  - kubernetes
+  - lang/go
+  - state/stale
+  - state/onemanshow
 homepage: https://github.com/little-angry-clouds/kubectl-ssh-proxy
 description: Kubectl plugin to launch a ssh socks proxy and use it
 renovate:
   datasource: github-releases
   package: little-angry-clouds/kubectl-ssh-proxy
+  priority: low

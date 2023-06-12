@@ -3,8 +3,8 @@ version: "2023.02.20"
 binary: false
 check: "" # No binary
 tags:
-- org/redhat
-- type/configuration
+  - org/redhat
+  - type/configuration
 homepage: https://github.com/containers/shortnames
 description: Collecting registry alias names for shortnames to fully specified container image names
 renovate:
@@ -12,3 +12,4 @@ renovate:
   package: containers/shortnames
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: low

@@ -3,15 +3,16 @@ version: "7.3.4"
 binary: pwsh
 check: ${binary} -Version | cut -d' ' -f2
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- org/microsoft
-- category/operations
-- lang/c
-- type/cli
+  - org/microsoft
+  - category/operations
+  - lang/c
+  - type/cli
 homepage: https://github.com/PowerShell/PowerShell
 description: PowerShell for every system
 renovate:
   datasource: github-releases
   package: PowerShell/PowerShell
   extractVersion: ^v(?<version>.+?)$
+  priority: low

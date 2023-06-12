@@ -2,13 +2,14 @@ name: mitmproxy
 version: "8.1.1"
 check: ${binary} --version | grep ^Mitmproxy | cut -d' ' -f2
 tags:
-- component/network
-- type/cli
-- troubleshooting
-- lang/python
+  - component/network
+  - type/cli
+  - troubleshooting
+  - lang/python
 homepage: https://github.com/mitmproxy/mitmproxy
 description: Interactive TLS-capable intercepting HTTP proxy for penetration testers and software developers
 renovate:
   datasource: github-releases
   package: mitmproxy/mitmproxy
   extractVersion: ^v(?<version>.+?)$
+  priority: low

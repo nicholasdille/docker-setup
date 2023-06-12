@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: containerd/nerdctl
   extractVersion: ^v(?<version>.+?)$
+  priority: high

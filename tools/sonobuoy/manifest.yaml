@@ -2,16 +2,17 @@ name: sonobuoy
 version: "0.56.16"
 check: ${binary} version | grep ^Sonobuoy | cut -d' ' -f3 | tr -d v
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/vmware
-- category/operations
-- lang/go
-- type/cli
+  - org/vmware
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/vmware-tanzu/sonobuoy
 description: Sonobuoy is a diagnostic tool that makes it easier to understand the state of a Kubernetes cluster
 renovate:
   datasource: github-releases
   package: vmware-tanzu/sonobuoy
   extractVersion: ^v(?<version>.+?)$
+  priority: low

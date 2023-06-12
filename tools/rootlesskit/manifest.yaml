@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: rootless-containers/rootlesskit
   extractVersion: ^v(?<version>.+?)$
+  priority: high

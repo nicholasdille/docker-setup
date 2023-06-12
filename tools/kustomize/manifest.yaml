@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: kubernetes-sigs/kustomize
   extractVersion: ^kustomize/v(?<version>.+)$
+  priority: medium

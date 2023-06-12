@@ -2,12 +2,13 @@ name: ketch
 version: "0.7.0"
 check: "" # No version parameter
 tags:
-- type/cli
-- cicd
-- lang/go
+  - type/cli
+  - cicd
+  - lang/go
 homepage: https://github.com/theketchio/ketch
 description: Application delivery framework that facilitates the deployment and management of applications on Kubernetes using a simple command line interface
 renovate:
   datasource: github-releases
   package: theketchio/ketch
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,13 +2,14 @@ name: footloose
 version: "0.6.3"
 check: ${binary} version | cut -d' ' -f2
 tags:
-- type/cli
-- vm
-- emulation
-- lang/go
-- state/stale
+  - type/cli
+  - vm
+  - emulation
+  - lang/go
+  - state/stale
 homepage: https://github.com/weaveworks/footloose
 description: Containers that look like Virtual Machines
 renovate:
   datasource: github-releases
   package: weaveworks/footloose
+  priority: low

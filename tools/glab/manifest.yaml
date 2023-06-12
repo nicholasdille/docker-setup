@@ -13,3 +13,4 @@ renovate:
   datasource: gitlab-releases
   package: gitlab-org/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

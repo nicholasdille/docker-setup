@@ -2,17 +2,18 @@ name: wasmer
 version: "3.3.0"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/rust
-- type/cli
-- webassembly
-- wasm
+  - category/development
+  - lang/rust
+  - type/cli
+  - webassembly
+  - wasm
 homepage: https://github.com/wasmerio/wasmer
 description: Leading WebAssembly Runtime supporting WASI and Emscripten
 renovate:
   datasource: github-releases
   package: wasmerio/wasmer
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: hetznercloud/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: high

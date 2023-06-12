@@ -2,12 +2,12 @@ name: ncdu
 version: "2.2.1"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/zig
-- type/cli
+  - category/operations
+  - lang/zig
+  - type/cli
 homepage: https://dev.yorhel.nl/ncdu
 description: Disk usage analyzer with an ncurses interface
 renovate:
@@ -15,3 +15,4 @@ renovate:
   package: ncdu
   url: git://g.blicky.net/ncdu.git
   extractVersion: ^v(?<version>\\d+\.\\d+\.\\d+?)$
+  priority: low

@@ -2,15 +2,16 @@ name: kcount
 version: "0.5.3"
 check: "" # No version argument
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- category/operations
-- lang/go
-- type/cli
-- state/onemanshow
+  - category/operations
+  - lang/go
+  - type/cli
+  - state/onemanshow
 homepage: https://github.com/pan-net-security/kcount
 description: Count Kubernetes objects across namespaces and clusters
 renovate:
   datasource: github-releases
   package: pan-net-security/kcount
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,13 +2,14 @@ name: kube-psp-advisor
 version: "3.0.1"
 check: "" # No version parameter
 tags:
-- type/cli
-- category/security
-- kubernetes
-- lang/go
+  - type/cli
+  - category/security
+  - kubernetes
+  - lang/go
 homepage: https://github.com/sysdiglabs/kube-psp-advisor
 description: Help building an adaptive and fine-grained pod security policy
 renovate:
   datasource: github-releases
   package: sysdiglabs/kube-psp-advisor
   extractVersion: ^v(?<version>.+?)$
+  priority: low

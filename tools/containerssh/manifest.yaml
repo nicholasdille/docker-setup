@@ -2,14 +2,15 @@ name: containerssh
 version: "0.4.1"
 check: "" # No version parameter
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- type/daemon
-- category/security
-- lang/go
+  - type/daemon
+  - category/security
+  - lang/go
 homepage: https://github.com/ContainerSSH/ContainerSSH
 description: Launch containers on demand
 renovate:
   datasource: github-releases
   package: ContainerSSH/ContainerSSH
   extractVersion: ^v(?<version>.+?)$
+  priority: low

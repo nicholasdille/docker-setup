@@ -2,12 +2,13 @@ name: godotenv
 version: "1.5.1"
 check: "" # No version parameter
 tags:
-- category/development
-- type/cli
-- lang/go
+  - category/development
+  - type/cli
+  - lang/go
 homepage: https://github.com/joho/godotenv
 description: A Go port of Ruby's dotenv library (Loads environment variables from `.env`.)
 renovate:
   datasource: github-releases
   package: joho/godotenv
   extractVersion: ^v(?<version>.+?)$
+  priority: low

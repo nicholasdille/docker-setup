@@ -2,14 +2,16 @@ name: runq
 version: master
 check: "" # No tag/release
 build_dependencies:
-- go
-- tini
+  - go
+  - tini
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- container/runtime
-- standard/oci
-- lang/go
+  - container/runtime
+  - standard/oci
+  - lang/go
 homepage: https://github.com/gotoz/runq
 description: Run regular Docker images in KVM/Qemu
+renovate:
+  priority: low

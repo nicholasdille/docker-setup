@@ -3,11 +3,11 @@ version: "20"
 binary: /opt/openjdk/bin/java
 check: ${binary} -version 2>&1 | grep ^openjdk | cut -d' ' -f3 | tr -d '"'
 build_dependencies:
-- openjdk
+  - openjdk
 tags:
-- type/cli
-- category/development
-- lang/java
+  - type/cli
+  - category/development
+  - lang/java
 homepage: https://github.com/openjdk
 description: OpenJDK
 renovate:
@@ -15,3 +15,4 @@ renovate:
   package: openjdk/jdk
   extractVersion: ^jdk-(?<version>.+?)-ga$
   versioning: loose
+  priority: low

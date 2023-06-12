@@ -2,11 +2,12 @@ name: cheat
 version: "4.4.0"
 check: ${binary} --version
 tags:
-- type/cli
-- terminal
-- lang/go
+  - type/cli
+  - terminal
+  - lang/go
 homepage: https://github.com/cheat/cheat
 description: Interactive cheatsheets on the command-line
 renovate:
   datasource: github-releases
   package: cheat/cheat
+  priority: low

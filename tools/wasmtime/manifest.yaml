@@ -2,17 +2,18 @@ name: wasmtime
 version: "9.0.2"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/rust
-- type/cli
-- webassembly
-- wasm
+  - category/development
+  - lang/rust
+  - type/cli
+  - webassembly
+  - wasm
 homepage: https://github.com/bytecodealliance/wasmtime
 description: Fast and secure runtime for WebAssembly
 renovate:
   datasource: github-releases
   package: bytecodealliance/wasmtime
   extractVersion: ^v(?<version>.+?)$
+  priority: low

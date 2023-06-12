@@ -15,3 +15,4 @@ renovate:
   package: stedolan/jq
   extractVersion: ^jq-(?<version>.+?)$
   versioning: loose
+  priority: low

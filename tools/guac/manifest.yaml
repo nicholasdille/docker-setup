@@ -2,10 +2,12 @@ name: guac
 version: "main"
 check: "" # No version parameter
 build_dependencies:
-- go
+  - go
 tags:
-- category/security
-- type/cli
-- lang/go
+  - category/security
+  - type/cli
+  - lang/go
 homepage: https://github.com/guacsec/guac
 description: Aggregate software security metadata into a high fidelity graph database
+renovate:
+  priority: low

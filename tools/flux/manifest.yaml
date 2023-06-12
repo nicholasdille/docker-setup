@@ -2,17 +2,18 @@ name: flux
 version: "0.194.3"
 check: "" # No version parameter
 conflicts_with:
-- flux2
+  - flux2
 tags:
-- org/influxdata
-- observability/metrics
-- o11y
-- category/monitoring
-- lang/go
-- type/cli
+  - org/influxdata
+  - observability/metrics
+  - o11y
+  - category/monitoring
+  - lang/go
+  - type/cli
 homepage: https://github.com/influxdata/flux
 description: Lightweight scripting language for querying databases (like InfluxDB)
 renovate:
   datasource: github-releases
   package: influxdata/flux
   extractVersion: ^v(?<version>.+?)$
+  priority: low

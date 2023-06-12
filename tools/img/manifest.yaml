@@ -2,14 +2,15 @@ name: img
 version: "0.5.11"
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3 | tr -d v
 tags:
-- standard/oci
-- container/build
-- type/cli
-- lang/go
-- state/stale
+  - standard/oci
+  - container/build
+  - type/cli
+  - lang/go
+  - state/stale
 homepage: https://github.com/genuinetools/img
 description: Standalone, daemon-less, unprivileged Dockerfile and OCI compatible container image builder
 renovate:
   datasource: github-releases
   package: genuinetools/img
   extractVersion: ^v(?<version>.+?)$
+  priority: low

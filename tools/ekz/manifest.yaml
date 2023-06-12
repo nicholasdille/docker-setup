@@ -2,13 +2,14 @@ name: ekz
 version: "0.8.0"
 check: ${binary} --version | cut -d' ' -f3
 tags:
-- cloud/aws
-- type/cli
-- kubernetes
-- lang/go
-- state/stale
+  - cloud/aws
+  - type/cli
+  - kubernetes
+  - lang/go
+  - state/stale
 homepage: https://github.com/chanwit/ekz
 description: EKS-D Kubernetes distribution for desktop
 renovate:
   datasource: github-releases
   package: chanwit/ekz
+  priority: low

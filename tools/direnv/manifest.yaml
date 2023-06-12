@@ -11,3 +11,4 @@ renovate:
   datasource: github-releases
   package: direnv/direnv
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

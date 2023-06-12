@@ -2,15 +2,16 @@ name: cyclonedx-cli
 version: "0.24.2"
 check: ${binary} --version
 tags:
-- type/cli
-- category/security
-- sbom
-- cicd
-- lang/c
-- lang/csharp
+  - type/cli
+  - category/security
+  - sbom
+  - cicd
+  - lang/c
+  - lang/csharp
 homepage: https://github.com/CycloneDX/cyclonedx-cli
 description: CycloneDX CLI tool for SBOM analysis, merging, diffs and format conversions
 renovate:
   datasource: github-releases
   package: CycloneDX/cyclonedx-cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

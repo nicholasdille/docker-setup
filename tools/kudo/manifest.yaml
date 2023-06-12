@@ -3,17 +3,18 @@ version: "0.19.0"
 binary: kubectl-kudo
 check: ${binary} --version | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/go
-- type/cli
-- type/plugin
-- state/stale
+  - category/development
+  - lang/go
+  - type/cli
+  - type/plugin
+  - state/stale
 homepage: https://github.com/kudobuilder/kudo
 description: Kubernetes Universal Declarative Operator
 renovate:
   datasource: github-releases
   package: kudobuilder/kudo
   extractVersion: ^v(?<version>.+?)$
+  priority: low

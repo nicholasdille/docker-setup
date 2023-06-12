@@ -2,15 +2,16 @@ name: pv
 version: "1.6.20"
 check: ${binary} --version | grep ^pv | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/c
-- type/cli
+  - category/operations
+  - lang/c
+  - type/cli
 homepage: https://github.com/a-j-wood/pv
 description: Monitor the progress of data through a pipe
 renovate:
   datasource: github-releases
   package: a-j-wood/pv
   extractVersion: ^v(?<version>.+?)$
+  priority: low

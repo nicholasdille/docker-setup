@@ -17,3 +17,4 @@ renovate:
   datasource: github-releases
   package: anchore/grype
   extractVersion: ^v(?<version>.+?)$
+  priority: high

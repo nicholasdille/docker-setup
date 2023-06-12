@@ -2,14 +2,15 @@ name: sbom-operator
 version: "0.26.1"
 check: "" # No version parameter
 build_dependencies:
-- cosign
+  - cosign
 tags:
-- type/daemon
-- category/security
-- sbom
-- lang/go
+  - type/daemon
+  - category/security
+  - sbom
+  - lang/go
 homepage: https://github.com/ckotzbauer/sbom-operator
 description: Catalogue all images of a Kubernetes cluster to multiple targets with Syft
 renovate:
   datasource: github-releases
   package: ckotzbauer/sbom-operator
+  priority: low

@@ -20,3 +20,4 @@ renovate:
   datasource: github-releases
   package: sigstore/gitsign
   extractVersion: ^v(?<version>.+?)$
+  priority: high

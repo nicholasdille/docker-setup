@@ -2,15 +2,16 @@ name: upx
 version: "4.0.2"
 check: ""
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/c
-- type/cli
+  - category/development
+  - lang/c
+  - type/cli
 homepage: https://github.com/upx/upx
 description: The Ultimate Packer for eXecutables
 renovate:
   datasource: github-releases
   package: upx/upx
   extractVersion: ^v(?<version>.+?)$
+  priority: low

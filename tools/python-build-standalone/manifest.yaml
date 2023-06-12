@@ -2,11 +2,12 @@ name: python-build-standalone
 version: "20230116"
 check: ""
 tags:
-- category/development
-- lang/python
-- type/cli
+  - category/development
+  - lang/python
+  - type/cli
 homepage: https://github.com/indygreg/python-build-standalone
 description: Redistributable builds of Python
 renovate:
   datasource: github-releases
   package: indygreg/python-build-standalone
+  priority: low

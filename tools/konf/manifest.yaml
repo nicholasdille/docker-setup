@@ -2,15 +2,16 @@ name: konf
 version: "0.5.1"
 check: ${binary} version | jq --raw-output '.GitVersion'
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/go
-- type/cli
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/SimonTheLeg/konf-go
 description: Lightweight kubeconfig manager
 renovate:
   datasource: github-releases
   package: SimonTheLeg/konf-go
   extractVersion: ^v(?<version>.+?)$
+  priority: low

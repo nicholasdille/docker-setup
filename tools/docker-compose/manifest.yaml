@@ -22,3 +22,4 @@ renovate:
   datasource: github-releases
   package: docker/compose
   extractVersion: ^v(?<version>.+?)$
+  priority: high

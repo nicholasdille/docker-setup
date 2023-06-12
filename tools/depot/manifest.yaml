@@ -2,15 +2,16 @@ name: depot
 version: "2.17.2"
 check: ${binary} --version | grep ^depot | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/go
-- type/cli
+  - category/development
+  - lang/go
+  - type/cli
 homepage: https://github.com/depot/cli
 description: Build your Docker images in the cloud
 renovate:
   datasource: github-releases
   package: depot/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

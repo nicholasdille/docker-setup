@@ -13,3 +13,4 @@ description: Lightweight & portable faas engine
 renovate:
   datasource: github-releases
   package: openfaas/faasd
+  priority: medium

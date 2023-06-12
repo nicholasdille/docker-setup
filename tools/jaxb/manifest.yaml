@@ -3,18 +3,19 @@ version: "4.0.1"
 binary: false
 check: "" # Requires Java to run
 runtime_dependencies:
-- openjdk-jre
+  - openjdk-jre
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/eclipse
-- category/development
-- lang/java
-- type/cli
+  - org/eclipse
+  - category/development
+  - lang/java
+  - type/cli
 homepage: https://github.com/eclipse-ee4j/jaxb-ri
 description: Jakarta XML Binding - an efficient and standard way of mapping between XML and Java code
 renovate:
   datasource: github-releases
   package: eclipse-ee4j/jaxb-ri
   extractVersion: ^(?<version>.+?)-RI$
+  priority: low
