@@ -13,5 +13,3 @@ tags:
   - management
 homepage: https://github.com/nicholasdille/docker-setup
 description: Helm plugins
-renovate:
-  priority: low

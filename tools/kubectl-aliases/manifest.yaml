@@ -10,5 +10,3 @@ tags:
   - type/cli
 homepage: https://github.com/ahmetb/kubectl-aliases
 description: Programmatically generated handy kubectl aliases
-renovate:
-  priority: low

@@ -1368,17 +1368,6 @@
     },
     {
       "matchFiles": [
-        "^tools/docker-setup/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
         "^tools/docker-slim/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -2193,17 +2182,6 @@
     },
     {
       "matchFiles": [
-        "^tools/guac/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
         "^tools/gvisor/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -2266,17 +2244,6 @@
       ],
       "schedule": [
         "* */4 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
-        "^tools/helm-plugins/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
       ]
     },
     {
@@ -3205,17 +3172,6 @@
     },
     {
       "matchFiles": [
-        "^tools/kubectl-aliases/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
         "^tools/kubectl-build/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -3231,17 +3187,6 @@
       ],
       "matchPackageNames": [
         "makocchi-git/kubectl-free"
-      ],
-      "schedule": [
-        "* 21 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
-        "^tools/kubectl-plugins/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
       ],
       "schedule": [
         "* 21 * * *"
@@ -4195,17 +4140,6 @@
     },
     {
       "matchFiles": [
-        "^tools/passage/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
         "^tools/passh/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -4257,17 +4191,6 @@
       ],
       "schedule": [
         "* */4 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
-        "^tools/podman-docker-shim/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
       ]
     },
     {
@@ -4554,17 +4477,6 @@
       ],
       "schedule": [
         "* */4 * * *"
-      ]
-    },
-    {
-      "matchFiles": [
-        "^tools/runq/manifest.yaml$"
-      ],
-      "matchPackageNames": [
-        null
-      ],
-      "schedule": [
-        "* 21 * * *"
       ]
     },
     {
@@ -7015,16 +6927,6 @@
       ]
     },
     {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/docker-setup/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "slimtoolkit/slim",
       "fileMatch": [
@@ -7826,16 +7728,6 @@
       ]
     },
     {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/guac/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "google/gvisor",
       "extractVersionTemplate": "^release-(?<version>.+?)\\.0$",
@@ -7897,16 +7789,6 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/helm/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/helm-plugins/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -8826,16 +8708,6 @@
       ]
     },
     {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/kubectl-aliases/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "vmware-tanzu/buildkit-cli-for-kubectl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -8852,16 +8724,6 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/kubectl-free/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/kubectl-plugins/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -9817,16 +9679,6 @@
       "versioningTemplate": "loose"
     },
     {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/passage/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "clarkwang/passh",
       "extractVersionTemplate": "^v(?<version>.+?)$",
@@ -9877,16 +9729,6 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/podman/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/podman-docker-shim/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -10169,16 +10011,6 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/runc/manifest.yaml$"
-      ],
-      "matchStrings": [
-        "version: \"?(?<currentValue>.*?)\"?\\n"
-      ]
-    },
-    {
-      "datasourceTemplate": null,
-      "depNameTemplate": null,
-      "fileMatch": [
-        "^tools/runq/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"

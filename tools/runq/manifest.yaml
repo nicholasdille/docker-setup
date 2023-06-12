@@ -13,5 +13,3 @@ tags:
   - lang/go
 homepage: https://github.com/gotoz/runq
 description: Run regular Docker images in KVM/Qemu
-renovate:
-  priority: low

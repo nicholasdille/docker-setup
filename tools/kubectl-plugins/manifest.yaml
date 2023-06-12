@@ -14,5 +14,3 @@ tags:
   - management
 homepage: https://github.com/nicholasdille/docker-setup
 description: kubectl plugins
-renovate:
-  priority: low

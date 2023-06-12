@@ -9,5 +9,3 @@ tags:
   - type/cli
 homepage: https://github.com/FiloSottile/passage
 description: Fork of password-store that uses age as backend
-renovate:
-  priority: low
