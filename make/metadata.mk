@@ -1,4 +1,4 @@
-metadata.json: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(addsuffix /manifest.json,$(ALL_TOOLS)) ; $(info $(M) Creating $@...)
+metadata.json: helper--gojq $(addsuffix /manifest.json,$(ALL_TOOLS)) ; $(info $(M) Creating $@...)
 	@jq --slurp --arg revision "$(GIT_COMMIT_SHA)" '{"revision": $$revision, "tools": map(.tools[])}' $(addsuffix /manifest.json,$(ALL_TOOLS)) >metadata.json
 
 .PHONY:
@@ -26,12 +26,12 @@ metadata.json--push: PUSH=true
 metadata.json--push: metadata.json--build ; $(info $(M) Pushing metadata image...)
 
 .PHONY:
-metadata.json--sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json cosign.key ; $(info $(M) Signing metadata image...)
+metadata.json--sign: helper--cosign cosign.key ; $(info $(M) Signing metadata image...)
 	@set -o errexit; \
 	source .env; \
 	cosign sign --key cosign.key $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG)
 
 .PHONY:
-metadata.json--keyless-sign: $(HELPER)/var/lib/docker-setup/manifests/cosign.json ; $(info $(M) Keyless signing metadata image...)
+metadata.json--keyless-sign: helper--cosign ; $(info $(M) Keyless signing metadata image...)
 	@set -o errexit; \
 	COSIGN_EXPERIMENTAL=1 cosign sign $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG)

@@ -2,7 +2,7 @@
 pages: $(addprefix site/content/tools/,$(addsuffix .md,$(ALL_TOOLS_RAW)))
 
 .PHONY:
-site-prerequisites: $(HELPER)/var/lib/docker-setup/manifests/hugo.json
+site-prerequisites: helper--hugo
 
 .PHONY:
 site: metadata.json site-prerequisites pages

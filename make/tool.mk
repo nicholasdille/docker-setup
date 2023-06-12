@@ -22,7 +22,7 @@ $(addsuffix --pr,$(ALL_TOOLS_RAW)):%--pr:
 	fi; \
 	git checkout "$${REPO_BRANCH}"
 
-$(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/yq.json $(TOOLS_DIR)/%/manifest.yaml ; $(info $(M) Creating manifest for $*...)
+$(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: helper--gojq helper--yq $(TOOLS_DIR)/%/manifest.yaml ; $(info $(M) Creating manifest for $*...)
 	@set -o errexit; \
 	yq --output-format json eval '{"tools":[.]}' $(TOOLS_DIR)/$*/manifest.yaml >$(TOOLS_DIR)/$*/manifest.json
 
@@ -68,7 +68,7 @@ base: info metadata.json builders ; $(info $(M) Building base image $(REGISTRY)/
 	fi
 
 .PHONY:
-$(ALL_TOOLS_RAW):%: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile builders base ; $(info $(M) Building image $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)...)
+$(ALL_TOOLS_RAW):%: helper--gojq $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile builders base ; $(info $(M) Building image $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)...)
 	@set -o errexit; \
 	PUSH=$(or $(PUSH), false); \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' tools/$*/manifest.json)"; \
@@ -126,18 +126,18 @@ $(addsuffix --push,$(ALL_TOOLS_RAW)):%--push: % ; $(info $(M) Pushing image for 
 promote: $(addsuffix --promote,$(TOOLS_RAW))
 
 .PHONY:
-$(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Promoting image for $*...)
+$(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: helper--regclient ; $(info $(M) Promoting image for $*...)
 	@regctl image copy $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
-$(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: $(HELPER)/var/lib/docker-setup/manifests/regclient.json ; $(info $(M) Inspecting image for $*...)
+$(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: helper--regclient ; $(info $(M) Inspecting image for $*...)
 	@regctl manifest get $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
 $(addsuffix --install,$(ALL_TOOLS_RAW)):%--install: %--push %--sign %--attest
 
 .PHONY:
-$(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Debugging image for $*...)
+$(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: helper--gojq $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Debugging image for $*...)
 	@set -o errexit; \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' $(TOOLS_DIR)/$*/manifest.json)"; \
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
@@ -171,7 +171,7 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: $(HELPER)/var/lib/docker-setup/m
 			bash
 
 .PHONY:
-$(addsuffix --buildg,$(ALL_TOOLS_RAW)):%--buildg: $(HELPER)/var/lib/docker-setup/manifests/jq.json $(HELPER)/var/lib/docker-setup/manifests/buildg.json $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Interactively debugging image for $*...)
+$(addsuffix --buildg,$(ALL_TOOLS_RAW)):%--buildg: helper--gojq helper--buildg $(TOOLS_DIR)/%/manifest.json $(TOOLS_DIR)/%/Dockerfile ; $(info $(M) Interactively debugging image for $*...)
 	@set -o errexit; \
 	TOOL_VERSION="$$(jq --raw-output '.tools[].version' $(TOOLS_DIR)/$*/manifest.json)"; \
 	DEPS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) |.build_dependencies[]' tools/$*/manifest.json | paste -sd,)"; \
