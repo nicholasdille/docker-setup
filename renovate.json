@@ -2215,6 +2215,17 @@
     },
     {
       "matchFiles": [
+        "^tools/guac/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "guacsec/guac"
+      ],
+      "schedule": [
+        "* 10,20 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/gvisor/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -7799,6 +7810,17 @@
       "depNameTemplate": "gsutil",
       "fileMatch": [
         "^tools/gsutil/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "guacsec/guac",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/guac/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
