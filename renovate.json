@@ -1896,6 +1896,17 @@
     },
     {
       "matchFiles": [
+        "^tools/git-credential-gopass/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "gopasspw/git-credential-gopass"
+      ],
+      "schedule": [
+        "* 21 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/git-graph/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -7471,6 +7482,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/ghostunnel/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gopasspw/git-credential-gopass",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/git-credential-gopass/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
