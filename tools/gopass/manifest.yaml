@@ -1,0 +1,17 @@
+name: gopass
+version: "1.15.5"
+check: ${binary} version | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/gopasspw/gopass
+description: Slightly more awesome standard unix password manager for teams
+renovate:
+  datasource: github-releases
+  package: gopasspw/gopass
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

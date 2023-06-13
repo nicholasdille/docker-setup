@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/gopasspw/gopass/releases/download/v${version}/gopass-${version}-linux-${alt_arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
+    gopass
+
+"${prefix}${target}/bin/gopass" completion bash >"${prefix}${target}/share/bash-completion/completions/gopass"
+"${prefix}${target}/bin/gopass" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/gopass.fish"
+"${prefix}${target}/bin/gopass" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_gopass"
+EOF

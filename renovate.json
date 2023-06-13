@@ -2083,6 +2083,17 @@
     },
     {
       "matchFiles": [
+        "^tools/gopass/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "gopasspw/gopass"
+      ],
+      "schedule": [
+        "* 10,20 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/goreleaser/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -7646,6 +7657,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/gojq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gopasspw/gopass",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/gopass/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
