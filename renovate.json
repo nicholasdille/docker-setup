@@ -1136,6 +1136,17 @@
     },
     {
       "matchFiles": [
+        "^tools/distrobox/manifest.yaml$"
+      ],
+      "matchPackageNames": [
+        "89luca89/distrobox"
+      ],
+      "schedule": [
+        "* 10,20 * * *"
+      ]
+    },
+    {
+      "matchFiles": [
         "^tools/diun/manifest.yaml$"
       ],
       "matchPackageNames": [
@@ -6751,6 +6762,17 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "89luca89/distrobox",
+      "fileMatch": [
+        "^tools/distrobox/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "versioningTemplate": "loose"
     },
     {
       "datasourceTemplate": "github-releases",

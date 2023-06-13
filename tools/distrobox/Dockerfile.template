@@ -1,0 +1,23 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/89luca89/distrobox/archive/refs/tags/${version}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner --strip-components=1 --wildcards \
+    "distrobox-${version}/distrobox-*" \
+    "distrobox-${version}/man" \
+    "distrobox-${version}/completions" \
+    "distrobox-${version}/terminal-distrobox-icon.png"
+
+mv "${prefix}${target}/bin/man/man1" "${prefix}${target}/share/man/"
+rm -rf "${prefix}${target}/bin/man/"
+
+mv "${prefix}${target}/bin/completions" "${prefix}${target}/share/bash-completion/"
+
+mkdir -p "${prefix}${target}/share/icons/"
+mv "${prefix}${target}/bin/terminal-distrobox-icon.png" "${prefix}${target}/share/icons/"
+EOF
