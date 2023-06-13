@@ -8,7 +8,7 @@ ARG version
 
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/mc" \
-    "https://dl.min.io/client/mc/release/linux-amd64/mc.RELEASE.${version}"
+    "https://dl.min.io/client/mc/release/linux-${alt_arch}/mc.RELEASE.${version}"
 chmod +x "${prefix}${target}/bin/mc"
 EOF
 
@@ -25,6 +25,3 @@ function __complete_mc
 end
 complete -f -c mc -a "(__complete_mc)"
 EOF
-
-#COPY <<EOF ${prefix}${target}/share/zsh/vendor-completions/_mc
-#EOF

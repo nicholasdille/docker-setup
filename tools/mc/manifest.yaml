@@ -1,6 +1,9 @@
 name: mc
 version: "2023-06-06T13-48-56Z"
 check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
   - category/terminal
   - component/storage

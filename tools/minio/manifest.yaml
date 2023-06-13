@@ -1,6 +1,9 @@
 name: minio
 version: "2023-06-09T07-32-12Z"
 check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
   - component/storage
   - lang/go
