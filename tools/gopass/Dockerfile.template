@@ -10,6 +10,9 @@ curl --silent --location --fail "https://github.com/gopasspw/gopass/releases/dow
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     gopass
 
+curl --silent --location --fail --output "${prefix}${target}/share/man/man1/gopass.1" \
+    "https://github.com/gopasspw/gopass/raw/v${version}/gopass.1"
+
 "${prefix}${target}/bin/gopass" completion bash >"${prefix}${target}/share/bash-completion/completions/gopass"
 "${prefix}${target}/bin/gopass" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/gopass.fish"
 "${prefix}${target}/bin/gopass" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_gopass"
