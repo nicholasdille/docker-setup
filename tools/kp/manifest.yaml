@@ -1,5 +1,5 @@
 name: kp
-version: "0.10.0"
+version: "0.11.0"
 check: ${binary} version | cut -d- -f1
 tags:
   - type/cli
