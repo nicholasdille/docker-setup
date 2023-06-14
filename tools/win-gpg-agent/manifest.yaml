@@ -7,6 +7,7 @@ tags:
   - type/cli
   - wsl
   - lang/go
+  - state/stale
   - state/deprecated
 homepage: https://github.com/rupor-github/win-gpg-agent
 description: Windows helpers for GnuPG tools suite

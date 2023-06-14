@@ -9,6 +9,7 @@ tags:
 - category/security
 - cloud/azure
 - lang/go
+- state/stale
 homepage: https://github.com/chrismellard/docker-credential-acr-env
 description: Alternative to the existing file store based ACR helper
 renovate:

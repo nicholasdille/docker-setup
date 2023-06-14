@@ -8,6 +8,7 @@ tags:
   - type/cli
   - troubleshooting
   - lang/rust
+  - state/stale
 homepage: https://github.com/Mic92/cntr
 description: Container debugging tool based on FUSE
 renovate:

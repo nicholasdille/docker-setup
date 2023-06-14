@@ -4,6 +4,7 @@ tags:
   - type/cli
   - fun
   - lang/go
+  - state/stale
 homepage: https://github.com/UltiRequiem/chigo
 description: Lolcat in Go - Rainbows and Unicorns
 renovate:

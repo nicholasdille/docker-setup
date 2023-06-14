@@ -13,6 +13,7 @@ tags:
   - category/operations
   - lang/go
   - type/cli
+  - state/stale
 homepage: https://github.com/sgreben/jp
 description: Dead simple terminal plots from JSON data
 renovate:

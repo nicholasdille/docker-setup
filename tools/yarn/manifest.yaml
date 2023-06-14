@@ -13,6 +13,7 @@ tags:
   - category/development
   - lang/javascript
   - type/cli
+  - state/deprecated
 homepage: https://github.com/yarnpkg/yarn
 description: Fast, reliable, and secure dependency management
 renovate:

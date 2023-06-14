@@ -8,6 +8,7 @@ tags:
 - category/development
 - lang/c
 - type/cli
+- state/stale
 homepage: https://github.com/tomnomnom/gron
 description: Some description
 renovate:

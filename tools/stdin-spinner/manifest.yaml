@@ -10,6 +10,8 @@ tags:
   - category/operations
   - lang/go
   - type/cli
+  - state/stale
+  - state/onemanshow
 homepage: https://github.com/sgreben/stdin-spinner
 description: Terminal spinner indicating whether data is coming in on stdin
 renovate:

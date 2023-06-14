@@ -6,6 +6,7 @@ tags:
   - kubernetes
   - templating
   - lang/go
+  - state/stale
 homepage: https://github.com/roboll/helmfile
 description: Deploy Kubernetes Helm Charts
 renovate:
