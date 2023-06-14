@@ -1,5 +1,5 @@
 name: pandoc
-version: "3.1.2"
+version: "3.1.3"
 check: ${binary} --version | grep ^pandoc | cut -d' ' -f2
 tags:
   - type/cli
