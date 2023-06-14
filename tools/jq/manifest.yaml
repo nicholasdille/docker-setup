@@ -8,11 +8,11 @@ tags:
 - format
 - lang/c
 - state/stale
-homepage: https://github.com/stedolan/jq
+homepage: https://github.com/jqlang/jq
 description: Command-line JSON processor
 renovate:
   datasource: github-releases
-  package: stedolan/jq
+  package: jqlang/jq
   extractVersion: ^jq-(?<version>.+?)$
   versioning: loose
   priority: low

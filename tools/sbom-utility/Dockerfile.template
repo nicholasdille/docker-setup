@@ -7,7 +7,7 @@ ARG name
 ARG version
 RUN <<EOF
 set -x
-curl --silent --location --fail "https://github.com/IBM/sbom-utility/releases/download/v${version}/sbom-utility-v${version}-linux-${alt_arch}.tar.gz" \
+curl --silent --location --fail "https://github.com/CycloneDX/sbom-utility/releases/download/v${version}/sbom-utility-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     sbom-utility \
     config.json \

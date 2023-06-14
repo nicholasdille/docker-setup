@@ -8,10 +8,10 @@ tags:
   - cicd
   - lang/go
   - state/stale
-homepage: https://github.com/github/hub
+homepage: https://github.com/GrantBirki/hub
 description: Command-line tool that makes git easier to use with GitHub
 renovate:
   datasource: github-releases
-  package: github/hub
+  package: GrantBirki/hub
   extractVersion: ^v(?<version>.+?)$
   priority: low
