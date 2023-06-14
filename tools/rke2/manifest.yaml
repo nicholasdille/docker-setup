@@ -1,5 +1,5 @@
 name: rke2
-version: "1.27.1+rke2r1"
+version: "1.27.2+rke2r1"
 check: ${binary} --version | grep ^rke2 | cut -d' ' -f3 | tr -d v
 platforms:
   - linux/amd64
