@@ -1,4 +1,4 @@
-name: foo
+name: exa
 version: "0.1.2"
 check: ${binary} --version | grep ^v | cut -d' ' -f1 | tr -d v
 platforms:
