@@ -1,5 +1,5 @@
 name: hyperfine
-version: "1.16.1"
+version: "1.17.0"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
   - linux/amd64
