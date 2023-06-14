@@ -11173,8 +11173,7 @@
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "packageNameTemplate": "https://gitlab.freedesktop.org/xdg/xdg-utils"
+      ]
     },
     {
       "datasourceTemplate": "github-releases",
