@@ -1,5 +1,5 @@
 name: dependency-check
-version: "8.2.1"
+version: "8.3.1"
 binary: dependency-check.sh
 check: ${binary} --version | grep "^Dependency-Check Core version" | cut -d' ' -f4
 runtime_dependencies:
