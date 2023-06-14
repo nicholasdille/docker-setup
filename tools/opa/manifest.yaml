@@ -1,5 +1,5 @@
 name: opa
-version: "0.52.0"
+version: "0.53.1"
 check: ${binary} version | grep ^Version | cut -d' ' -f2
 platforms:
   - linux/amd64
