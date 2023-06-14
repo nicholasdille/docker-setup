@@ -16,12 +16,6 @@
     ":semanticCommits"
   ],
   "timezone": "Europe/Berlin",
-  "schedule": [
-    "* */4 * * *"
-  ],
-  "automergeSchedule": [
-    "* */2 * * *"
-  ],
   "prConcurrentLimit": 10,
   "prHourlyLimit": 10,
   "enabledManagers": [
