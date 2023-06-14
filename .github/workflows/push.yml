@@ -54,20 +54,16 @@ jobs:
 
         mkdir -p helper helper/var/cache helper/var/lib
         helper/usr/local/bin/docker-setup --prefix "$PWD/helper" update
-        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install regclient gojq
+        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install gojq
         # TODO: Remove workaround for gojq once post_install is implemented in go-based CLI
         ln -sfr helper/usr/local/bin/gojq helper/usr/local/bin/jq
 
-        echo "### Fetching manifest for metadata"
-        CONFIG_DIGEST="$(
-            helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
-            | helper/usr/local/bin/jq --raw-output '.config.digest'
-        )"
-
         echo "### Fetching config for metadata"
         OLD_COMMIT_SHA="$(
-            helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
-            | helper/usr/local/bin/jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
+            helper/usr/local/bin/jq \
+                --raw-output \
+                '.config.Labels."org.opencontainers.image.revision"' \
+                helper/var/cache/docker-setup/metadata.json
         )"
 
         echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
