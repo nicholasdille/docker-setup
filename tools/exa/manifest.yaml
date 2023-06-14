@@ -1,5 +1,5 @@
 name: exa
-version: "0.1.2"
+version: "0.10.1"
 check: ${binary} --version | grep ^v | cut -d' ' -f1 | tr -d v
 platforms:
   - linux/amd64
