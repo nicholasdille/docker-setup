@@ -9,6 +9,7 @@ on:
     paths:
     - scripts/report.sh
     - .github/workflows/report.yml
+  workflow_dispatch:
 
 jobs:
 

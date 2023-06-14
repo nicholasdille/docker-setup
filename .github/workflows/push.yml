@@ -8,8 +8,7 @@ on:
     - "tools/**"
     - "Makefile"
     - ".github/workflows/push.yml"
-  #schedule:
-  #  - cron: "*/15 * * * *"
+  workflow_dispatch:
 
 jobs:
 
