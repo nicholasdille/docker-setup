@@ -120,8 +120,8 @@
     ]
   },
   "platformAutomerge": true,
-  "prConcurrentLimit": 10,
-  "prHourlyLimit": 10,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
   "rebaseLabel": "renovate/rebase",
   "rebaseWhen": "conflicted",
   "recreateClosed": false,
