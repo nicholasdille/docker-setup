@@ -1,5 +1,5 @@
 .PHONY:
-clean-registry-untagged: helper--yq helper--gh helper--gojq helper--curl
+clean-registry-untagged: helper--gh helper--gojq
 	@set -o errexit; \
 	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
 		echo "### Error: Need GH_TOKEN or configured gh."; \
@@ -18,31 +18,29 @@ clean-registry-untagged: helper--yq helper--gh helper--gojq helper--curl
 	done
 
 .PHONY:
-clean-registry-untagged--%: helper--yq helper--gh helper--gojq helper--curl
+clean-registry-untagged--%: helper--gh helper--gojq
 	@set -o errexit; \
-	TOKEN="$$(yq '."github.com".oauth_token' "$${HOME}/.config/gh/hosts.yml")"; \
-	test -n "$${TOKEN}"; \
-	test "$${TOKEN}" != "null"; \
+	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
+		echo "### Error: Need GH_TOKEN or configured gh."; \
+		exit 1; \
+	fi; \
 	NAME="docker-setup/$*"; \
 	echo "### Package $${NAME}"; \
 	gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
 	| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
 	| while read -r ID; do \
 		echo "    Removing ID $${ID}"; \
-		curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/$${ID}" \
-			--silent \
-			--header "Authorization: Bearer $${TOKEN}" \
-			--request DELETE \
-			--header "Accept: application/vnd.github+json"; \
+		gh api --method DELETE "users/$(OWNER)/packages/container/$${NAME////%2F}/versions/$${ID}" \; \
 	done
 
 .PHONY:
-clean-ghcr-unused--%: helper--yq helper--gh helper--gojq helper--curl
+clean-ghcr-unused--%: helper--gh helper--gojq
 	@set -o errexit; \
+	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
+		echo "### Error: Need GH_TOKEN or configured gh."; \
+		exit 1; \
+	fi; \
 	echo "Removing tag $*"; \
-	TOKEN="$$(yq '."github.com".oauth_token' "$${HOME}/.config/gh/hosts.yml")"; \
-	test -n "$${TOKEN}"; \
-	test "$${TOKEN}" != "null"; \
 	gh api --paginate /user/packages?package_type=container | jq --raw-output '.[].name' \
 	| while read NAME; do \
 		echo "### Package $${NAME}"; \
@@ -50,11 +48,7 @@ clean-ghcr-unused--%: helper--yq helper--gh helper--gojq helper--curl
 		| jq --raw-output --arg tag "$*" '.[] | select(.metadata.container.tags[] | contains($$tag)) | .id' \
 		| while read -r ID; do \
 			echo "    Removing tag $${ID}"; \
-			curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/{}" \
-				--silent \
-				--header "Authorization: Bearer $${TOKEN}" \
-				--request DELETE \
-				--header "Accept: application/vnd.github+json"; \
+			gh api --method DELETE "users/$(OWNER)/packages/container/$${NAME////%2F}/versions/{}"; \
 		done; \
 	done
 
@@ -111,11 +105,12 @@ $(addsuffix --ghcr-delete-test,$(ALL_TOOLS_RAW)):%--ghcr-delete-test: helper--gh
 		helper/usr/local/bin/gh api --method DELETE "user/packages/container/docker-setup%2f$*/versions/{}"
 
 .PHONY:
-delete-ghcr--%: helper--yq helper--gh helper--gojq helper--curl
+delete-ghcr--%: helper--gh helper--gojq
 	@set -o errexit; \
-	TOKEN="$$(yq '."github.com".oauth_token' "$${HOME}/.config/gh/hosts.yml")"; \
-	test -n "$${TOKEN}"; \
-	test "$${TOKEN}" != "null"; \
+	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
+		echo "### Error: Need GH_TOKEN or configured gh."; \
+		exit 1; \
+	fi; \
 	PARAM=$*; \
 	NAME="$${PARAM%%:*}"; \
 	TAG="$${PARAM#*:}"; \
@@ -123,11 +118,7 @@ delete-ghcr--%: helper--yq helper--gh helper--gojq helper--curl
 	gh api --paginate "user/packages/container/docker-setup%2F$${NAME}/versions" \
 	| jq --raw-output --arg tag "$${TAG}" '.[] | select(.metadata.container.tags[] | contains($$tag)) | .id' \
 	| xargs -I{} \
-		curl "https://api.github.com/users/nicholasdille/packages/container/docker-setup%2F$${NAME}/versions/{}" \
-			--silent \
-			--header "Authorization: Bearer $${TOKEN}" \
-			--request DELETE \
-			--header "Accept: application/vnd.github+json"
+		gh api --method DELETE "users/$(OWNER)/packages/container/docker-setup%2F$${NAME}/versions/{}"
 
 .PHONY:
 ghcr-private: helper--gh helper--gojq
