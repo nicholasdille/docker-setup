@@ -1,0 +1,25 @@
+name: GHCR cleanup
+
+on:
+  schedule:
+  - cron: "34 3 * * *"
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    name: GHCR cleanup
+    runs-on: ubuntu-20.04
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Cleanup
+      env:
+        GH_TOKEN: ${{ secrets.BOT_PACKAGES_TOKEN }}
+      run: |
+        gh auth login
+        clean-registry-untagged
