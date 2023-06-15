@@ -1,21 +1,19 @@
 .PHONY:
 clean-registry-untagged: helper--yq helper--gh helper--gojq helper--curl
 	@set -o errexit; \
-	TOKEN="$$(yq '."github.com".oauth_token' "$${HOME}/.config/gh/hosts.yml")"; \
-	test -n "$${TOKEN}"; \
-	test "$${TOKEN}" != "null"; \
-	gh api --paginate /user/packages?package_type=container | jq --raw-output '.[].name' \
+	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
+		echo "### Error: Need GH_TOKEN or configured gh."; \
+		exit 1; \
+	fi; \
+	gh api --paginate /user/packages?package_type=container \
+	| jq --raw-output '.[].name' \
 	| while read NAME; do \
 		echo "### Package $${NAME}"; \
 		gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
 		| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
 		| while read -r ID; do \
 			echo "    Removing ID $${ID}"; \
-			curl "https://api.github.com/users/nicholasdille/packages/container/$${NAME////%2F}/versions/$${ID}" \
-				--silent \
-				--header "Authorization: Bearer $${TOKEN}" \
-				--request DELETE \
-				--header "Accept: application/vnd.github+json"; \
+			gh api --method DELETE "users/nicholasdille/packages/container/$${NAME////%2F}/versions/$${ID}"; \
 		done; \
 	done
 
