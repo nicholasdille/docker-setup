@@ -105,6 +105,14 @@ $(addsuffix --ghcr-inspect,$(ALL_TOOLS_RAW)):%--ghcr-inspect: helper--gh helper-
 	| yq --prettyPrint
 
 .PHONY:
+$(addsuffix --ghcr-delete-test,$(ALL_TOOLS_RAW)):%--ghcr-delete-test: helper--gh helper--yq
+	@\
+	helper/usr/local/bin/gh api --paginate "user/packages/container/docker-setup%2f$*/versions" \
+	| jq --raw-output '.[] | select(.metadata.container.tags[] | contains("test")) | .id' \
+	| xargs -I{} \
+		helper/usr/local/bin/gh api --method DELETE "user/packages/container/docker-setup%2f$*/versions/{}"
+
+.PHONY:
 delete-ghcr--%: helper--yq helper--gh helper--gojq helper--curl
 	@set -o errexit; \
 	TOKEN="$$(yq '."github.com".oauth_token' "$${HOME}/.config/gh/hosts.yml")"; \

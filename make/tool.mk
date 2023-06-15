@@ -126,8 +126,12 @@ $(addsuffix --push,$(ALL_TOOLS_RAW)):%--push: % ; $(info $(M) Pushing image for 
 promote: $(addsuffix --promote,$(TOOLS_RAW))
 
 .PHONY:
-$(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: helper--regclient ; $(info $(M) Promoting image for $*...)
+$(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: helper--regclient %--docker-promote %--ghcr-delete-test ; $(info $(M) Promoting image for $*...)
+
+.PHONY:
+$(addsuffix --docker-promote,$(ALL_TOOLS_RAW)):%--docker-promote: helper--regclient ; $(info $(M) Promoting image for $* using Registry API...)
 	@regctl image copy $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
+
 
 .PHONY:
 $(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: helper--regclient ; $(info $(M) Inspecting image for $*...)
