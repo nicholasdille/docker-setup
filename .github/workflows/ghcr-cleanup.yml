@@ -34,6 +34,6 @@ jobs:
 
     - name: Cleanup
       env:
-        GH_TOKEN: ${{ secrets.BOT_PACKAGES_TOKEN }}
+        GH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
       run: |
         make clean-registry-untagged
