@@ -62,7 +62,7 @@ jobs:
         OLD_COMMIT_SHA="$(
             helper/usr/local/bin/jq \
                 --raw-output \
-                '.config.Labels."org.opencontainers.image.revision"' \
+                '.revision' \
                 helper/var/cache/docker-setup/metadata.json
         )"
 
