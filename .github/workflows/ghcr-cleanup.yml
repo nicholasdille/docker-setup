@@ -23,6 +23,7 @@ jobs:
         fetch-depth: 0
 
     - name: Cleanup
+      env:
+        GH_TOKEN: ${{ secrets.BOT_PACKAGES_TOKEN }}
       run: |
-        gh auth login --with-token <<<$(echo "${{ secrets.BOT_PACKAGES_TOKEN }}")
         make clean-registry-untagged
