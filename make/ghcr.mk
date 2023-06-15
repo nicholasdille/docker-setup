@@ -8,11 +8,10 @@ clean-registry-untagged: helper--gh helper--gojq
 	gh api --paginate users/$(OWNER)/packages?package_type=container \
 	| jq --raw-output '.[].name' \
 	| while read NAME; do \
-		echo "### Package $${NAME}"; \
 		gh api --paginate "users/$(OWNER)/packages/container/$${NAME////%2F}/versions" \
 		| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
 		| while read -r ID; do \
-			echo "    Removing ID $${ID}"; \
+			echo "Removing package $${NAME} version ID $${ID}"; \
 			gh api --method DELETE "users/$(OWNER)/packages/container/$${NAME////%2F}/versions/$${ID}"; \
 		done; \
 	done
@@ -25,11 +24,10 @@ clean-registry-untagged--%: helper--gh helper--gojq
 		exit 1; \
 	fi; \
 	NAME="docker-setup/$*"; \
-	echo "### Package $${NAME}"; \
 	gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
 	| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
 	| while read -r ID; do \
-		echo "    Removing ID $${ID}"; \
+		echo "Removing package $${NAME} version ID $${ID}"; \
 		gh api --method DELETE "users/$(OWNER)/packages/container/$${NAME////%2F}/versions/$${ID}" \; \
 	done
 
@@ -43,11 +41,10 @@ clean-ghcr-unused--%: helper--gh helper--gojq
 	echo "Removing tag $*"; \
 	gh api --paginate /user/packages?package_type=container | jq --raw-output '.[].name' \
 	| while read NAME; do \
-		echo "### Package $${NAME}"; \
 		gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
 		| jq --raw-output --arg tag "$*" '.[] | select(.metadata.container.tags[] | contains($$tag)) | .id' \
 		| while read -r ID; do \
-			echo "    Removing tag $${ID}"; \
+			echo "Removing package $${NAME} tag $${ID}"; \
 			gh api --method DELETE "users/$(OWNER)/packages/container/$${NAME////%2F}/versions/{}"; \
 		done; \
 	done
