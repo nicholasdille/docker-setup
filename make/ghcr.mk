@@ -1,7 +1,6 @@
 .PHONY:
 clean-registry-untagged: helper--yq helper--gh helper--gojq helper--curl
 	@set -o errexit; \
-	set -x; \
 	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
 		echo "### Error: Need GH_TOKEN or configured gh."; \
 		exit 1; \
