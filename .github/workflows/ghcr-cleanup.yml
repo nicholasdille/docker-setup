@@ -26,5 +26,4 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.BOT_PACKAGES_TOKEN }}
       run: |
-        gh auth login
         clean-registry-untagged
