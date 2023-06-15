@@ -16,6 +16,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Install docker-setup
+      run: |
+        mkdir -p helper/usr/local/bin
+        curl --url "https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup" \
+            --silent \
+            --location \
+            --fail \
+            --output helper/usr/local/bin/docker-setup
+        chmod +x helper/usr/local/bin/docker-setup
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
 
