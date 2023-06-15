@@ -54,7 +54,7 @@ jobs:
 
         mkdir -p helper helper/var/cache helper/var/lib
         helper/usr/local/bin/docker-setup --prefix "$PWD/helper" update
-        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install gojq
+        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install gojq regclient
         # TODO: Remove workaround for gojq once post_install is implemented in go-based CLI
         ln -sfr helper/usr/local/bin/gojq helper/usr/local/bin/jq
 
