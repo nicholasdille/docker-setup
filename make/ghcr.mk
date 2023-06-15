@@ -6,15 +6,15 @@ clean-registry-untagged: helper--yq helper--gh helper--gojq helper--curl
 		echo "### Error: Need GH_TOKEN or configured gh."; \
 		exit 1; \
 	fi; \
-	gh api --paginate /user/packages?package_type=container \
+	gh api --paginate users/$(OWNER)/packages?package_type=container \
 	| jq --raw-output '.[].name' \
 	| while read NAME; do \
 		echo "### Package $${NAME}"; \
-		gh api --paginate "user/packages/container/$${NAME////%2F}/versions" \
+		gh api --paginate "users/$(OWNER)/packages/container/$${NAME////%2F}/versions" \
 		| jq --raw-output '.[] | select(.metadata.container.tags | length == 0) | .id' \
 		| while read -r ID; do \
 			echo "    Removing ID $${ID}"; \
-			gh api --method DELETE "users/nicholasdille/packages/container/$${NAME////%2F}/versions/$${ID}"; \
+			gh api --method DELETE "users/$(OWNER)/packages/container/$${NAME////%2F}/versions/$${ID}"; \
 		done; \
 	done
 
