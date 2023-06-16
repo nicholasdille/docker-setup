@@ -8,8 +8,7 @@ on:
     - "tools/**"
     - "Makefile"
     - ".github/workflows/push.yml"
-  #schedule:
-  #  - cron: "*/15 * * * *"
+  workflow_dispatch:
 
 jobs:
 
@@ -24,14 +23,10 @@ jobs:
         fetch-depth: 0
 
     - name: Install docker-setup
-      run: |
-        mkdir -p helper/usr/local/bin
-        curl --url "https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup" \
-            --silent \
-            --location \
-            --fail \
-            --output helper/usr/local/bin/docker-setup
-        chmod +x helper/usr/local/bin/docker-setup
+      uses: nicholasdille/docker-setup-action@main
+      with:
+        prefix: helper
+        tools: gojq regclient
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
@@ -53,22 +48,12 @@ jobs:
       run: |
         echo "### Running for commit by author: ${AUTHOR}"
 
-        mkdir -p helper helper/var/cache helper/var/lib
-        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" update
-        helper/usr/local/bin/docker-setup --prefix "$PWD/helper" install regclient gojq
-        # TODO: Remove workaround for gojq once post_install is implemented in go-based CLI
-        ln -sfr helper/usr/local/bin/gojq helper/usr/local/bin/jq
-
-        echo "### Fetching manifest for metadata"
-        CONFIG_DIGEST="$(
-            helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
-            | helper/usr/local/bin/jq --raw-output '.config.digest'
-        )"
-
         echo "### Fetching config for metadata"
         OLD_COMMIT_SHA="$(
-            helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
-            | helper/usr/local/bin/jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
+            helper/usr/local/bin/jq \
+                --raw-output \
+                '.revision' \
+                helper/var/cache/docker-setup/metadata.json
         )"
 
         echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
@@ -94,15 +79,15 @@ jobs:
             exit
         fi
 
-        PR_AUTHOR="renovate[bot]"
-        if test "${AUTHOR:0:${#PR_AUTHOR}}" == "${PR_AUTHOR}"; then
-            echo "### Tagging tools: ${CHANGED_TOOLS}"
-            TOOLS_RAW="${CHANGED_TOOLS}" make promote metadata.json--push
+        for TOOL in ${CHANGED_TOOLS}; do
+            if regctl tag ls "ghcr.io/nicholasdille/docker-setup/${TOOL}" | grep -q test; then
+                make "${TOOL}--promote"
 
-        else
-            echo "### Making tools: ${CHANGED_TOOLS}."
-            TOOLS_RAW="${CHANGED_TOOLS}" make push metadata.json--push
-        fi
+            else
+                make "${TOOL}--push"
+            fi
+        done
+        make metadata.json--push
 
     - name: Store logs
       uses: actions/upload-artifact@v3

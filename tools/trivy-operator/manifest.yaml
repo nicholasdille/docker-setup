@@ -1,5 +1,5 @@
 name: trivy-operator
-version: "0.13.2"
+version: "0.14.1"
 check: OPERATOR_NAMESPACE="" ${binary} --version 2>&1 | head -1 | jq --raw-output '.buildInfo.Version'
 tags:
   - type/daemon

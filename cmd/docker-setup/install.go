@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/fs"
-	"os"
-	"os/exec"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -16,6 +13,7 @@ import (
 var defaultMode bool
 var tagsMode bool
 var installedMode bool
+var skipDependencies bool
 var skipConflicts bool
 var check bool
 var plan bool
@@ -30,6 +28,7 @@ func initInstallCmd() {
 	installCmd.Flags().BoolVar(&tagsMode, "tags", false, "Install tool(s) matching tag")
 	installCmd.Flags().BoolVarP(&installedMode, "installed", "i", false, "Update installed tool(s)")
 	installCmd.Flags().BoolVar(&plan, "plan", false, "Show tool(s) planned installation")
+	installCmd.Flags().BoolVar(&skipDependencies, "skip-deps", false, "Skip dependencies")
 	installCmd.Flags().BoolVar(&skipConflicts, "skip-conflicts", false, "Skip conflicting tools")
 	installCmd.Flags().BoolVarP(&check, "check", "c", false, "Abort after checking versions")
 	installCmd.Flags().BoolVarP(&reinstall, "reinstall", "r", false, "Reinstall tool(s)")
@@ -45,12 +44,7 @@ var installCmd = &cobra.Command{
 	Args:      cobra.OnlyValidArgs,
 	ValidArgs: tools.GetNames(),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if fileExists(prefix + "/" + metadataFile) {
-			log.Tracef("Loaded metadata file from %s", prefix+"/"+metadataFile)
-			loadMetadata()
-		}
-
-		return nil
+		return loadMetadata()
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// TODO: Introduce --user and adjust libRoot and cacheRoot when set
@@ -207,6 +201,10 @@ var installCmd = &cobra.Command{
 				fmt.Printf("Skipping %s because it conflicts with another tool.\n", tool.Name)
 				continue
 			}
+			if skipDependencies && tool.Status.IsDependency {
+				fmt.Printf("Skipping %s because it is a dependency (--skip-deps was specified)\n", tool.Name)
+				continue
+			}
 
 			fmt.Printf("%s Installing %s %s", emojiTool, tool.Name, tool.Version)
 			err := tool.Install(registryImagePrefix, prefix+"/", altArch)
@@ -217,46 +215,6 @@ var installCmd = &cobra.Command{
 			tool.CreateMarkerFile(prefix + "/" + cacheDirectory)
 		}
 
-		// Call post_install.sh scripts
-		if directoryExists(prefix + "/" + libDirectory + "/post_install") {
-			entries, err := os.ReadDir(prefix + "/" + libDirectory + "/post_install")
-			if err != nil {
-				return fmt.Errorf("unable to read post_install directory: %s", err)
-			}
-			infos := make([]fs.FileInfo, 0, len(entries))
-			for _, entry := range entries {
-				info, err := entry.Info()
-				if err != nil {
-					return fmt.Errorf("unable to get info for %s: %s", entry.Name(), err)
-				}
-				infos = append(infos, info)
-			}
-			for _, file := range infos {
-				if !file.IsDir() && strings.HasSuffix(file.Name(), ".sh") {
-					fmt.Printf("Running post_install script %s\n", file.Name())
-
-					log.Tracef("Running post_install script %s", prefix+"/"+libDirectory+"/post_install/"+file.Name())
-					cmd := exec.Command("/bin/bash", prefix+"/"+libDirectory+"/post_install/"+file.Name())
-					cmd.Env = append(os.Environ(),
-						"prefix="+prefix,
-						"target="+target,
-						"arch="+arch,
-						"altArch="+altArch,
-					)
-					output, err := cmd.CombinedOutput()
-					if err != nil {
-						return fmt.Errorf("unable to execute post_install script %s: %s", file.Name(), err)
-					}
-					fmt.Printf("%s\n", output)
-
-					err = os.Remove(prefix + "/" + libDirectory + "/post_install/" + file.Name())
-					if err != nil {
-						return fmt.Errorf("unable to remove post_install script %s: %s", file.Name(), err)
-					}
-				}
-			}
-		}
-
-		return nil
+		return postinstall()
 	},
 }

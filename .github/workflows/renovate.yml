@@ -1,0 +1,30 @@
+name: Renovate
+on:
+  schedule:
+  - cron: '13 */2 * * *'
+  push:
+    branches:
+    - main
+    paths:
+    - .github/workflows/renovate.yml
+  workflow_dispatch:
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3.3.0
+
+    - name: Self-hosted Renovate
+      env:
+        LOG_LEVEL: debug
+        RENOVATE_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+      run: |
+        docker run --interactive --rm \
+            --env LOG_LEVEL \
+            --env RENOVATE_TOKEN \
+            renovate/renovate:slim \
+                ${GITHUB_REPOSITORY}

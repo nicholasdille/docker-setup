@@ -1,7 +1,14 @@
 .PHONY:
+assert-docker-setup:
+	@if ! type docker-setup >/dev/null 2>&1; then \
+		echo "Please install docker-setup"; \
+		exit 1; \
+	fi
+
+.PHONY:
 $(addprefix helper--,$(ALL_TOOLS_RAW)):helper--%: $(HELPER)/var/lib/docker-setup/manifests/%.json
 
-$(HELPER)/var/lib/docker-setup/manifests/%.json: bin/docker-setup
+$(HELPER)/var/lib/docker-setup/manifests/%.json: assert-docker-setup
 	@set -o errexit; \
-	./bin/docker-setup --prefix=$$PWD/$(HELPER) update; \
-	./bin/docker-setup --prefix=$$PWD/$(HELPER) install $*
+	docker-setup --prefix=$$PWD/$(HELPER) update; \
+	docker-setup --prefix=$$PWD/$(HELPER) install $*
