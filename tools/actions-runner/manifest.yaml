@@ -1,5 +1,5 @@
 name: actions-runner
-version: "2.304.0"
+version: "2.305.0"
 check: ""
 tags:
   - org/github
