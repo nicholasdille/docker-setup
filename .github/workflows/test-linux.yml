@@ -25,6 +25,7 @@ jobs:
       uses: nicholasdille/docker-setup-action@main
       with:
         prefix: helper
+        tools: gojq regclient
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
