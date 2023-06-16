@@ -22,7 +22,7 @@ $(addsuffix --pr,$(ALL_TOOLS_RAW)):%--pr:
 	fi; \
 	git checkout "$${REPO_BRANCH}"
 
-$(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: helper--gojq helper--yq $(TOOLS_DIR)/%/manifest.yaml ; $(info $(M) Creating manifest for $*...)
+$(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: helper--gojq helper--yq $(TOOLS_DIR)/%/manifest.yaml #; $(info $(M) Creating manifest for $*...)
 	@set -o errexit; \
 	yq --output-format json eval '{"tools":[.]}' $(TOOLS_DIR)/$*/manifest.yaml >$(TOOLS_DIR)/$*/manifest.json
 
