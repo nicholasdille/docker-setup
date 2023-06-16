@@ -17,7 +17,7 @@
   ],
   "timezone": "Europe/Berlin",
   "prConcurrentLimit": 0,
-  "prHourlyLimit": 10,
+  "prHourlyLimit": 5,
   "enabledManagers": [
     "dockerfile",
     "github-actions",
