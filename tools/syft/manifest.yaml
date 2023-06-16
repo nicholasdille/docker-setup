@@ -1,5 +1,5 @@
 name: syft
-version: "0.82.0"
+version: "0.83.1"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64
