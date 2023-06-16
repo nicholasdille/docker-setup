@@ -1,5 +1,5 @@
 name: serverless
-version: "3.31.0"
+version: "3.32.2"
 check: ${binary} --version | grep ^Framework | cut -d' ' -f3
 build_dependencies:
   - nodejs-lts

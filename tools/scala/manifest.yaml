@@ -1,5 +1,5 @@
 name: scala
-version: "2.13.10"
+version: "2.13.11"
 check: ${binary} -version 2>&1 | cut -d' ' -f5
 platforms:
   - linux/amd64

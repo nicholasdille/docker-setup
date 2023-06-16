@@ -1,5 +1,5 @@
 name: kube-apiserver
-version: "1.27.2"
+version: "1.27.3"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 build_dependencies:
 - cosign
