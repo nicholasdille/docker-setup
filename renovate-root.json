@@ -77,9 +77,8 @@
     {
       "fileMatch":          [ "(^|/|\\.)Dockerfile[^/]*$" ],
       "matchStrings":       [ "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n" ],
-      "datasourceTemplate":   "github-releases",
-      "depNameTemplate":      "moby/buildkit",
-      "extractVersionTemplate": "^dockerfile/(?<version>.+?)$"
+      "datasourceTemplate":   "docker",
+      "depNameTemplate":      "docker/dockerfile"
     }
   ]
 }

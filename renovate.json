@@ -149,9 +149,8 @@
       ]
     },
     {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "moby/buildkit",
-      "extractVersionTemplate": "^dockerfile/(?<version>.+?)$",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "docker/dockerfile",
       "fileMatch": [
         "(^|/|\\.)Dockerfile[^/]*$"
       ],
