@@ -1,5 +1,5 @@
 name: aws2
-version: "2.11.27"
+version: "2.12.1"
 binary: aws
 check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
 conflicts_with:
