@@ -14,7 +14,7 @@ jobs:
 
   collect:
     name: Collect changed tools
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Checkout code
@@ -69,7 +69,7 @@ jobs:
 
   push:
     name: Build and push
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
     - collect
     if: ${{ needs.collect.outputs.tools != '[]' && needs.collect.outputs.tools != '' }}
@@ -126,7 +126,7 @@ jobs:
 
   metadata:
     name: Metadata
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
     - push
     steps:
