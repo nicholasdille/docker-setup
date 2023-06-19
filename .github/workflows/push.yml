@@ -15,6 +15,8 @@ jobs:
   collect:
     name: Collect changed tools
     runs-on: ubuntu-22.04
+    outputs:
+      tag: ${{ steps.collect.output.tools }}
     steps:
 
     - name: Checkout code
@@ -28,7 +30,8 @@ jobs:
         prefix: helper
         tools: gojq
 
-    - name: Push
+    - name: Collect
+      id: collect
       env:
         DOCKER_BUILDKIT: 1
         AUTHOR: ${{ github.event.commits[0].author.name }}
