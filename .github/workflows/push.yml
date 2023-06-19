@@ -80,10 +80,13 @@ jobs:
         fi
 
         for TOOL in ${CHANGED_TOOLS}; do
+            echo "### Processing ${TOOL}"
             if regctl tag ls "ghcr.io/nicholasdille/docker-setup/${TOOL}" | grep -q test; then
+                echo "### Promoting ${TOOL}"
                 make "${TOOL}--promote"
 
             else
+                echo "### Building ${TOOL}"
                 make "${TOOL}--push"
             fi
         done
