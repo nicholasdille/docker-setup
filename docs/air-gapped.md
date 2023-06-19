@@ -1,3 +1,3 @@
 # Air-gapped installation
 
-`docker-setup` downloads several file during the installation. Therefore, an air-gapped installation is not possible.
+`docker-setup` downloads container images from a publicly available registry. Therefore, an air-gapped installation is currently not possible.

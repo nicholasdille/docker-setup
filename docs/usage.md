@@ -1,116 +1,72 @@
 # Usage
 
-`docker-setup` supports several sub-commands:
-
-| Subcommand               | Alias(es)    | Description                                                 |
-| ------------------------ | ------------ | ----------------------------------------------------------- |
-| update                   |              | Download the latest metadata                                |
-| upgrade                  |              | Replace `docker-setup` with the latest version              |
-| debug                    |              | Display debugging information                               |
-| list                     | ls, l        | List all tools or those selected by `--tools` and `--tags`  |
-| info                     |              | Display manifest for selected tools                         |
-| tags                     | t            | Display tags                                                |
-| plan                     | p, status, s | Display how and why to proceed with selected tools          |
-| dependencies             | deps, d      | Display dependencies for a tool recursively                 |
-| inspect                  |              | Display contents of container image for selected tools      |
-| search                   | find         | Search for term in name, tags, description and dependencies |
-| generate                 | gen, g       | Generate a Dockerfile for the selected tools    |
-| build                    | b            | Build a container image with the selected tools |
-| install                  | i            | Install the selected tools natively             |
-| install-from-registry    |              | Install the selected tools natively by building a container image with local output |
-| install-from-image       |              | Install the selected tools natively by pullin the image and unpacking it |
-| build-flat               |              | Build a container image using docker create/commit |
-| install-from-image-build |              | Install the selected tools natively by building the individual container images with local output |
-
-You can tweak the behaviour of `docker-setup` by passing parameters:
-
-| Parameter           | Variable                 | Meaning |
-| ------------------- | ------------------------ | ------- |
-| `--version`         | n/a                      | Display version and exit |
-| `--debug`           | n/a                      | Display debug output |
-| `--trace`           | n/a                      | Display trace output (more verbose than debug) |
-| `--profile`         | n/a                      | Display timing information |
-| `--help`            | n/a                      | Display help for parameters and environment variables |
-| `--prefix`          | n/a                      | Set installation prefix |
-| `--tools`           | n/a                      | Select tools to install (see below for [tools selection](#tool-selection)) |
-| `--tags`            | n/a                      | Select tools to install using tags (see below for [tools selection](#tool-selection)) |
-| `--all`             | n/a                      | Shortcut for `--tools=all` |
-| `--default`         | n/a                      | Shortcut for `--tags=category/default` |
-| `--installed`       | n/a                      | Shortcut for `--tools=installed` |
-| `--deps`            | n/a                      | Ignore dependencies |
-| `--no-cron`         | n/a                      | Do not create weekly cronjob |
-| `--reinstall`       | `reinstall`              | Install all tools again |
-
-## Tool selection
-
-XXX
+The `docker-setup` CLI comes with help included. The following scenarios are meant as quickstart tutorials.
 
 ## Scenario 1: You want the default set of tools
 
 By default, `docker-setup` will only install a small set of tools.
 
 ```bash
-docker-setup install
+docker-setup install --default
 ```
 
-This default set includes `docker`, Docker `compose` v2 and `buildx`.
+This default set includes [basic tools for containerization with Docker](https://docker-setup.dille.io/tags/category/default/).
 
-## Scenario 2: You want all tools
+## Scenario 2: You want to investigate which tools are available
 
-Install tools for the first time:
+List which tools are available in `docker-setup`:
 
 ```bash
-docker-setup --all install
+docker-setup list
 ```
 
-The same command updates outdated tools.
+You can also [check the website](https://docker-setup.dille.io).
 
-Check if tools are outdated. `docker-setup` will return with exit code 1 if one or more tools are outdated:
+## Scenario 3: You want to install a specific tool
+
+It is possible to install individual tools:
 
 ```bash
-docker-setup --all plan
+docker-setup install gojq
+docker-setup install kubectl helm
 ```
 
-## Scenario 3: You want some tools
+## Scenario 4: You want to search for tools
 
-Install or update selected tools, e.g. `docker`:
+You can search for the specified term in names, tags and dependencies:
 
 ```bash
-docker-setup --tools=docker,yq install
+docker-setup search jq
 ```
 
-Check if tools are outdated:
+## Scenario 5: You want to update installed tools
+
+Updated tools which are already installed:
 
 ```bash
-docker-setup --tools=docker,yq plan
+docker-setup install --installed
 ```
 
-## Scenario 4: Reinstall all or some tools
+## Scenario 6: You want to see what will happen
+
+Show which tools will be processed and updated:
+
+```bash
+docker-setup install --installed --plan
+```
+
+## Scenario 7: You want to script around it
+
+Using `--check` instead of `--plan` will terminate with exit code 1 if outdated tools are present:
+
+```bash
+docker-setup install --installed --check
+```
+
+## Scenario 8: Reinstall tool(s)
 
 By adding the `--reinstall` parameter, the selected tools can be reinstalled regardless if they are outdated:
 
 ```bash
-docker-setup --reinstall install
-```
-
-The same applies when combining `--reinstall` with `--tools`:
-
-```bash
-docker-setup --tools=docker --reinstall install
-```
-
-## Scenario 5: You only want to process installed tools
-
-If you have previously installed tools using `docker-setup`, you can choose to update only installed tools:
-
-```bash
-docker-setup --tools=installed install
-```
-
-## Scenario 6: Plan installation of all or some tools
-
-Specifying `--check` will display outdated tools and return with exit code 1 if any tools are outdated. `--plan` will do neither and stop execution before any installation takes place:
-
-```bash
-docker-setup --tools=docker plan
+docker-setup install gojq --reinstall
 ```

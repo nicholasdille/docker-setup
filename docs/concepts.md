@@ -2,4 +2,6 @@
 
 XXX
 
-XXX `docker-setup` works standalone (no libraries as in v1)
+XXX `docker-setup` works standalone
+
+XXX image: repo, workflows, images, metadata, installation
