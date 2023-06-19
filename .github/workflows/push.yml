@@ -122,7 +122,7 @@ jobs:
         DOCKER_BUILDKIT: 1
       run: |
         echo "### Processing ${{ matrix.tool }}"
-        if regctl tag ls "ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}" | grep -q test; then
+        if helper/usr/local/bin/regctl tag ls "ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}" | grep -q test; then
             echo "### Promoting ${{ matrix.tool }}"
             make "${{ matrix.tool }}--promote"
 
