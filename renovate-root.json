@@ -61,20 +61,6 @@
   ],
   "regexManagers": [
     {
-      "fileMatch":            [ "^docker-setup$" ],
-      "matchStrings":         [ "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
-      "depNameTemplate":        "regclient/regclient",
-      "datasourceTemplate":     "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch":            [ "^docker-setup$" ],
-      "matchStrings":         [ "GOJQ_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate":        "itchyny/gojq",
-      "datasourceTemplate":     "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
       "fileMatch":          [ "(^|/|\\.)Dockerfile[^/]*$" ],
       "matchStrings":       [ "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n" ],
       "datasourceTemplate":   "docker",

@@ -127,28 +127,6 @@
   "recreateClosed": false,
   "regexManagers": [
     {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "regclient/regclient",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "fileMatch": [
-        "^docker-setup$"
-      ],
-      "matchStrings": [
-        "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
-      ]
-    },
-    {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "itchyny/gojq",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "fileMatch": [
-        "^docker-setup$"
-      ],
-      "matchStrings": [
-        "GOJQ_VERSION=(?<currentValue>.*?)\n"
-      ]
-    },
-    {
       "datasourceTemplate": "docker",
       "depNameTemplate": "docker/dockerfile",
       "fileMatch": [
