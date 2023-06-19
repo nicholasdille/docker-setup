@@ -9,6 +9,14 @@ on:
     - "Makefile"
     - ".github/workflows/push.yml"
   workflow_dispatch:
+    inputs:
+      tools:
+        description: 'Tools to build/promote'
+        type: string
+        default: ''
+
+concurrency:
+  group: push
 
 jobs:
 
@@ -34,33 +42,34 @@ jobs:
       id: collect
       env:
         DOCKER_BUILDKIT: 1
-        AUTHOR: ${{ github.event.commits[0].author.name }}
       run: |
-        echo "### Running for commit by author: ${AUTHOR}"
+        CHANGED_TOOLS="${{ inputs.tools }}"
 
-        echo "### Fetching config for metadata"
-        OLD_COMMIT_SHA="$(
-            helper/usr/local/bin/jq \
-                --raw-output \
-                '.revision' \
-                helper/var/cache/docker-setup/metadata.json
-        )"
+        if test -z "${CHANGED_TOOLS}"; then
+            echo "### Fetching config for metadata"
+            OLD_COMMIT_SHA="$(
+                helper/usr/local/bin/jq \
+                    --raw-output \
+                    '.revision' \
+                    helper/var/cache/docker-setup/metadata.json
+            )"
 
-        echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
-        git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
-        | sort \
-        | grep -E "^tools/[^/]+/" \
-        | cut -d/ -f2 \
-        | uniq \
-        | xargs
-        CHANGED_TOOLS="$(
+            echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
             git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
             | sort \
             | grep -E "^tools/[^/]+/" \
             | cut -d/ -f2 \
             | uniq \
             | xargs
-        )"
+            CHANGED_TOOLS="$(
+                git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+                | sort \
+                | grep -E "^tools/[^/]+/" \
+                | cut -d/ -f2 \
+                | uniq \
+                | xargs
+            )"
+        fi
 
         echo "### Tools to process: ${CHANGED_TOOLS}."
         CHANGED_TOOLS_JSON="$(
