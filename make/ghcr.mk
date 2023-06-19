@@ -94,7 +94,7 @@ $(addsuffix --ghcr-inspect,$(ALL_TOOLS_RAW)):%--ghcr-inspect: helper--gh helper-
 	| yq --prettyPrint
 
 .PHONY:
-$(addsuffix --ghcr-delete-test,$(ALL_TOOLS_RAW)):%--ghcr-delete-test: helper--gh helper--yq
+$(addsuffix --ghcr-delete-test,$(ALL_TOOLS_RAW)):%--ghcr-delete-test: helper--gh helper--yq ; $(info $(M) Removing tag test from tool $*...)
 	@\
 	helper/usr/local/bin/gh api --paginate "user/packages/container/docker-setup%2f$*/versions" \
 	| jq --raw-output '.[] | select(.metadata.container.tags[] | contains("test")) | .id' \
