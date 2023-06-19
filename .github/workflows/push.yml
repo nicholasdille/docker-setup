@@ -128,6 +128,8 @@ jobs:
         sha_test="$(
             helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:test
         )"
+        echo "    SHA of tag main: ${sha_main}"
+        echo "    SHA of tag test: ${sha_test}"
 
         tool_needs_rebuild=false
         if test -z "${sha_test}"; then
