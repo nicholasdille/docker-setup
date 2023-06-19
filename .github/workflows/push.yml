@@ -65,7 +65,7 @@ jobs:
             | jq --raw-input '.' | jq --slurp --compact-output '.'
         )"
         echo "    JSON: ${CHANGED_TOOLS_JSON}"
-        echo "::set-output name=tools::${CHANGED_TOOLS_JSON}"
+        echo "tools=${CHANGED_TOOLS_JSON}" >"${GITHUB_OUTPUT}"
 
   push:
     name: Build and push
