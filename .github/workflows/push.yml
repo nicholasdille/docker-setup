@@ -65,6 +65,7 @@ jobs:
         echo "### Tools to process: ${CHANGED_TOOLS}."
         CHANGED_TOOLS_JSON="$(
             echo -n "${CHANGED_TOOLS}" \
+            | tr ' ' '\n' \
             | jq --raw-input '.' | jq --slurp --compact-output '.'
         )"
         echo "    JSON: ${CHANGED_TOOLS_JSON}"
