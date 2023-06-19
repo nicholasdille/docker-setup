@@ -6,7 +6,6 @@ on:
     - "main"
     paths:
     - "tools/**"
-    - "Makefile"
     - ".github/workflows/push.yml"
   workflow_dispatch:
     inputs:
@@ -123,10 +122,10 @@ jobs:
       run: |
         echo "### Processing ${{ matrix.tool }}"
         sha_main="$(
-            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:main
+            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:main || true
         )"
         sha_test="$(
-            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:test
+            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:test || true
         )"
         echo "    SHA of tag main: ${sha_main}"
         echo "    SHA of tag test: ${sha_test}"
