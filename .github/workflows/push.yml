@@ -12,8 +12,8 @@ on:
 
 jobs:
 
-  test:
-    name: Build and push
+  collect:
+    name: Collect changed tools
     runs-on: ubuntu-20.04
     steps:
 
@@ -26,20 +26,7 @@ jobs:
       uses: nicholasdille/docker-setup-action@main
       with:
         prefix: helper
-        tools: gojq regclient
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: nicholasdille
-        password: ${{ secrets.PACKAGES_TOKEN }}
+        tools: gojq
 
     - name: Push
       env:
@@ -72,25 +59,62 @@ jobs:
             | xargs
         )"
 
-        if test -z "${CHANGED_TOOLS}"; then
-            echo "### No tools to make (${CHANGED_TOOLS})"
-            echo "### git log:"
-            git log --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA}
-            exit
+        echo "### Tools to process: ${CHANGED_TOOLS}."
+        CHANGED_TOOLS_JSON="$(
+            echo "${CHANGED_TOOLS}" \
+            | jq --raw-input '.' | jq --slurp --compact-output '.'
+        )"
+        echo "    JSON: ${CHANGED_TOOLS_JSON}"
+        echo "::set-output name=tools::${CHANGED_TOOLS_JSON}"
+
+  push:
+    name: Build and push
+    runs-on: ubuntu-20.04
+    needs:
+    - collect
+    strategy:
+      fail-fast: false
+      matrix:
+        tool: ${{ fromJSON(needs.collect.outputs.tools) }}
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install docker-setup
+      uses: nicholasdille/docker-setup-action@main
+      with:
+        prefix: helper
+        tools: gojq regclient yq
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: nicholasdille
+        password: ${{ secrets.PACKAGES_TOKEN }}
+
+    - name: Push
+      env:
+        DOCKER_BUILDKIT: 1
+      run: |
+        echo "### Processing ${{ matrix.tool }}"
+        if regctl tag ls "ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}" | grep -q test; then
+            echo "### Promoting ${{ matrix.tool }}"
+            make "${{ matrix.tool }}--promote"
+
+        else
+            echo "### Building ${{ matrix.tool }}"
+            make "${{ matrix.tool }}--push"
         fi
-
-        for TOOL in ${CHANGED_TOOLS}; do
-            echo "### Processing ${TOOL}"
-            if regctl tag ls "ghcr.io/nicholasdille/docker-setup/${TOOL}" | grep -q test; then
-                echo "### Promoting ${TOOL}"
-                make "${TOOL}--promote"
-
-            else
-                echo "### Building ${TOOL}"
-                make "${TOOL}--push"
-            fi
-        done
-        make metadata.json--push
 
     - name: Store logs
       uses: actions/upload-artifact@v3
@@ -98,3 +122,38 @@ jobs:
       with:
         name: logs.zip
         path: "**/build.log"
+
+  metadata:
+    name: Metadata
+    runs-on: ubuntu-20.04
+    needs:
+    - push
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install docker-setup
+      uses: nicholasdille/docker-setup-action@main
+      with:
+        prefix: helper
+        tools: gojq regclient yq
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: nicholasdille
+        password: ${{ secrets.PACKAGES_TOKEN }}
+
+    - name: Update metadata
+      run: |
+        make metadata.json--push
