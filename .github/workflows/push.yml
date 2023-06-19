@@ -122,13 +122,28 @@ jobs:
         DOCKER_BUILDKIT: 1
       run: |
         echo "### Processing ${{ matrix.tool }}"
-        if helper/usr/local/bin/regctl tag ls "ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}" | grep -q test; then
-            echo "### Promoting ${{ matrix.tool }}"
-            make "${{ matrix.tool }}--promote"
+        sha_main="$(
+            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:main
+        )"
+        sha_test="$(
+            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:test
+        )"
 
-        else
+        tool_needs_rebuild=false
+        if test -z "${sha_test}"; then
+            tool_needs_rebuild=true
+        
+        elif test "${sha_test}" == "${sha_main}"; then
+            tool_needs_rebuild=true
+        fi
+
+        if "${tool_needs_rebuild}"; then
             echo "### Building ${{ matrix.tool }}"
             make "${{ matrix.tool }}--push"
+
+        else
+            echo "### Promoting ${{ matrix.tool }}"
+            make "${{ matrix.tool }}--promote"
         fi
 
     - name: Store logs
