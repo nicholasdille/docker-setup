@@ -72,6 +72,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs:
     - collect
+    if: ${{ needs.collect.outputs.tools != '[]' && needs.collect.outputs.tools != '' }}
     strategy:
       fail-fast: false
       matrix:
