@@ -16,7 +16,7 @@ jobs:
     name: Collect changed tools
     runs-on: ubuntu-22.04
     outputs:
-      tag: ${{ steps.collect.outputs.tools }}
+      tools: ${{ steps.collect.outputs.tools }}
     steps:
 
     - name: Checkout code
