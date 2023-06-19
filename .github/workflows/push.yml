@@ -71,16 +71,6 @@ jobs:
         echo "    JSON: ${CHANGED_TOOLS_JSON}"
         echo "tools=${CHANGED_TOOLS_JSON}" >>"${GITHUB_OUTPUT}"
 
-  debug:
-    name: Debug GITHUB_OUTPUT
-    runs-on: ubuntu-22.04
-    needs:
-    - collect
-    steps:
-    - name: Debug
-      run: |
-        echo "Tools=${{ needs.collect.outputs.tools }}."
-
   push:
     name: Build and push
     runs-on: ubuntu-22.04
