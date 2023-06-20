@@ -10,7 +10,7 @@ name: nodejs-lts
 #    | grep -v '\^{}' \
 #    | cut -f2 | cut -d/ -f3 | tr -d v \
 #    | sort -Vr | head -1
-version: "18.16.0"
+version: "18.16.1"
 binary: node
 check: ${binary} --version | tr -d v
 platforms:
