@@ -1,5 +1,5 @@
 name: wasmtime
-version: "9.0.4"
+version: "10.0.0"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
   - linux/amd64
