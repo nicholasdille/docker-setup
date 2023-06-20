@@ -1,5 +1,5 @@
 name: distrobox
-version: "1.5.0"
+version: "1.5.0.1"
 check: ""
 platforms:
 - linux/amd64
