@@ -1,5 +1,5 @@
 name: checkov
-version: "2.3.294"
+version: "2.3.296"
 check: "" # Expect to reach local server
 build_dependencies:
   - python
