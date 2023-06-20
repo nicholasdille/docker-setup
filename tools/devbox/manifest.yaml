@@ -1,5 +1,5 @@
 name: devbox
-version: "0.5.4"
+version: "0.5.5"
 check: ${binary} version
 platforms:
 - linux/amd64
