@@ -1,5 +1,5 @@
 name: youki
-version: 0.0.5
+version: 0.1.0
 check: ${binary} --version | grep ^youki | cut -d' ' -f3
 build_dependencies:
   - rust
