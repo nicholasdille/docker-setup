@@ -1,5 +1,5 @@
 .PHONY:
-$(addprefix helper--,$(ALL_TOOLS_RAW)):helper--%:.json \
+$(addprefix helper--,$(ALL_TOOLS_RAW)):helper--%: \
 		$(HELPER)/var/lib/docker-setup/manifests/%.json
 
 $(HELPER)/var/lib/docker-setup/manifests/%.json:
