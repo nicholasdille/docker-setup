@@ -46,6 +46,11 @@ jobs:
       run: |
         make site-prerequisites
 
+    - name: Fix for hugo >=0.114.0
+      run: |
+        curl --silent --location --fail https://github.com/gohugoio/hugo/releases/download/v0.113.0/hugo_0.113.0_linux-amd64.tar.gz \
+        | tar --extract --gzip --directory=helper/usr/local/bin/ hugo
+
     - name: Create pages
       run: |
         make -j4 pages

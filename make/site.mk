@@ -8,9 +8,10 @@ site-prerequisites: \
 
 .PHONY:
 site: \
+		$(HELPER)/var/lib/docker-setup/manifests/hugo.json \
 		metadata.json \
 		site-prerequisites \
-		pages
+		$(addprefix site/content/tools/,$(addsuffix .md,$(ALL_TOOLS_RAW)))
 	@hugo --source site --minify
 
 $(addprefix site/content/tools/,$(addsuffix .md,$(ALL_TOOLS_RAW))):site/content/tools/%.md: \
