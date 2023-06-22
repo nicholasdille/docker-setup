@@ -6,20 +6,38 @@ HCLOUD_SERVER_TYPE ?= cx41
 DOCKER_CONFIG      ?= $(HOME)/.docker
 
 .PHONY:
-deploy-hcloud: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-idle-alerter vm-install-ds vm-install-docker vm-install-creds
+deploy-hcloud: \
+		vm-hcloud \
+		vm-wait-ready \
+		~/.ssh/config.d/docker-setup \
+		vm-install-idle-alerter \
+		vm-install-ds \
+		vm-install-docker \
+		vm-install-creds
 
 .PHONY:
-deploy-hcloud-only: vm-hcloud vm-wait-ready ~/.ssh/config.d/docker-setup vm-install-idle-alerter vm-install-ds
+deploy-hcloud-only: \
+		vm-hcloud \
+		vm-wait-ready \
+		~/.ssh/config.d/docker-setup \
+		vm-install-idle-alerter \
+		vm-install-ds
 
 .PHONY:
-remove-hcloud: helper--hcloud helper--gojq ; $(info $(M) Removing VM...)
+remove-hcloud: \
+		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		; $(info $(M) Removing VM...)
 	@\
 	hcloud server list --selector purpose=docker-setup --output json \
 	| jq --raw-output '.[].id' \
 	| xargs hcloud server delete
 
 .PHONY:
-vm-hcloud: helper--hcloud helper--gojq ; $(info $(M) Creating VM...)
+vm-hcloud: \
+		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		; $(info $(M) Creating VM...)
 	@\
 	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=docker-setup --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
 	if test -z "$${HCLOUD_VM_IP}"; then \
@@ -35,13 +53,19 @@ vm-hcloud: helper--hcloud helper--gojq ; $(info $(M) Creating VM...)
 	fi
 
 .PHONY:
-vm-wait-ready: ~/.ssh/config.d/docker-setup ; $(info $(M) Waiting for VM to be ready...)
+vm-wait-ready: \
+		~/.ssh/config.d/docker-setup \
+		; $(info $(M) Waiting for VM to be ready...)
 	@\
 	while ! ssh docker-setup -- true; do \
 		sleep 10; \
 	done
 
-~/.ssh/config.d/docker-setup: ~/.ssh/id_ed25519_hetzner helper--hcloud helper--gojq ; $(info $(M) Creating SSH config for VM...)
+~/.ssh/config.d/docker-setup: \
+		~/.ssh/id_ed25519_hetzner \
+		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		; $(info $(M) Creating SSH config for VM...)
 	@\
 	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=docker-setup --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
 	echo -n >$@; \
@@ -61,7 +85,9 @@ vm-wait-ready: ~/.ssh/config.d/docker-setup ; $(info $(M) Waiting for VM to be r
 	@exit 1
 
 .PHONY:
-vm-install-idle-alerter: .env.mk ; $(info $(M) Installing idle alerter...)
+vm-install-idle-alerter: \
+		.env.mk \
+		; $(info $(M) Installing idle alerter...)
 	$(call check_defined, MATRIX_SERVER, Variable must be defined)
 	$(call check_defined, MATRIX_ACCESS_TOKEN, Variable must be defined)
 	$(call check_defined, MATRIX_ROOM_ID, Variable must be defined)
@@ -91,17 +117,20 @@ vm-install-idle-alerter: .env.mk ; $(info $(M) Installing idle alerter...)
 		'sed -i -E "s|MATRIX_ROOM_ID=|MATRIX_ROOM_ID=$(MATRIX_ROOM_ID)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
 
 .PHONY:
-vm-install-ds: ; $(info $(M) Installing docker-setup...)
+vm-install-ds: \
+		; $(info $(M) Installing docker-setup...)
 	@\
 	scp docker-setup docker-setup:/usr/local/bin/docker-setup
 
 .PHONY:
-vm-install-docker: ; $(info $(M) Installing default tools...)
+vm-install-docker: \
+		; $(info $(M) Installing default tools...)
 	@\
 	ssh docker-setup docker-setup --default install
 
 .PHONY:
-vm-install-creds: ; $(info $(M) Transferring Docker credentials...)
+vm-install-creds: \
+		; $(info $(M) Transferring Docker credentials...)
 	@\
 	ssh docker-setup docker-setup --tools=gojq install; \
 	ssh docker-setup mkdir -p /root/.docker; \

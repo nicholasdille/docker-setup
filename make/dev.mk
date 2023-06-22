@@ -1,4 +1,8 @@
-renovate.json: scripts/renovate.sh renovate-root.json metadata.json ; $(info $(M) Updating $@...)
+renovate.json: \
+		scripts/renovate.sh \
+		renovate-root.json \
+		metadata.json \
+		; $(info $(M) Updating $@...)
 	@bash scripts/renovate.sh
 
 .PHONY:
@@ -8,7 +12,8 @@ size:
 	bash scripts/usage.sh $(TOOLS_RAW)
 
 .PHONY:
-recent: recent-days--3
+recent: \
+		recent-days--3
 
 .PHONY:
 recent-days--%:
@@ -25,7 +30,8 @@ recent-days--%:
 	make $${CHANGED_TOOLS}
 
 .PHONY:
-push-new: helper--regclient
+push-new: \
+		$(HELPER)/var/lib/docker-setup/manifests/regclient.json
 	@ \
 	CONFIG_DIGEST="$$( \
 		regctl manifest get $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG) --format raw-body \
