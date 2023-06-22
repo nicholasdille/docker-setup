@@ -4981,6 +4981,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "nestybox/sysbox",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/sysbox/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "go-task/task",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

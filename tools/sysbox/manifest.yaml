@@ -1,0 +1,19 @@
+name: sysbox
+version: "0.6.2"
+check: ${binary} --version | grep version | cut -f3
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/docker
+- standard/oci
+- container/runtime
+- type/cli
+- lang/go
+homepage: https://github.com/nestybox/sysbox
+description: Some description
+renovate:
+  datasource: github-releases
+  package: nestybox/sysbox
+  extractVersion: ^v(?<version>.+?)$
+  priority: high
