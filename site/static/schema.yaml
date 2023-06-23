@@ -1,60 +1,65 @@
+# yaml-language-server: $schema=http://json-schema.org/draft-07/schema#
 $schema: http://json-schema.org/draft-07/schema#
-$id: https://docker-setup.dille.io/schema.yaml
+$id: https://docker-setup.dille.io/schemas/manifest
 title: Docker Setup Tool
 description: Schema for manifest.yaml
 type: object
 properties:
   name:
-    type: string
     description: Name of the tool
+    type: string
   version:
-    type: string
     description: Version of the tool
+    type: string
+    pattern: "^\\d+\\.\\d+(\\.\\d+(\\.\\d+)?)?(-\\w+)?$"
   binary:
-    type: string
     description: Name - and optionally the path - to the installed binary
+    type: string
   check:
-    type: string
     description: Command to determine the version
+    type: string
   build_dependencies:
-    type: array
     description: List of build dependencies
+    type: array
     items:
       type: string
+    uniqueItems: true
   runtime_dependencies:
-    type: array
     description: List of runtime dependencies
-    items:
-      type: string
-  tags:
     type: array
-    description: List of tags
     items:
       type: string
+    uniqueItems: true
+  tags:
+    description: List of tags
+    type: array
+    items:
+      type: string
+    uniqueItems: true
   homepage:
-    type: string
     description: Homepage of the tool
-  description:
     type: string
+  description:
     description: Description of the tool
+    type: string
   renovate:
     type: object
     properties:
       datasource:
+        description: Renovate datasource
         type: string
-        description: "Renovate datasource"
       package:
+        description: Package name for the specified datasource
         type: string
-        description: "Package name for the specified datasource"
       extractVersion:
+        description: Command to extract version from output of datasource
         type: string
-        description: "Command to extract version from output of datasource"
       versioning:
+        description: Versioning strategy
         type: string
-        description: "Versioning strategy"
       priority:
+        description: Priority of the tool
         type: string
-        description: "Priority of the tool"
         oneOf:
           - const: low
           - const: medium
