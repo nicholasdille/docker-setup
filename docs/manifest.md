@@ -9,6 +9,8 @@ Template files are located in `@template/`.
 The manifest file contains all information about a tool except for the installation instructions.
 
 ```yaml
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
 name: foo
 version: 1.2.3
 binary: fooctl
