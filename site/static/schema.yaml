@@ -1,0 +1,70 @@
+$schema: http://json-schema.org/draft-07/schema#
+$id: https://docker-setup.dille.io/schema.yaml
+title: Docker Setup Tool
+description: Schema for manifest.yaml
+type: object
+properties:
+  name:
+    type: string
+    description: Name of the tool
+  version:
+    type: string
+    description: Version of the tool
+  binary:
+    type: string
+    description: Name - and optionally the path - to the installed binary
+  check:
+    type: string
+    description: Command to determine the version
+  build_dependencies:
+    type: array
+    description: List of build dependencies
+    items:
+      type: string
+  runtime_dependencies:
+    type: array
+    description: List of runtime dependencies
+    items:
+      type: string
+  tags:
+    type: array
+    description: List of tags
+    items:
+      type: string
+  homepage:
+    type: string
+    description: Homepage of the tool
+  description:
+    type: string
+    description: Description of the tool
+  renovate:
+    type: object
+    properties:
+      datasource:
+        type: string
+        description: "Renovate datasource"
+      package:
+        type: string
+        description: "Package name for the specified datasource"
+      extractVersion:
+        type: string
+        description: "Command to extract version from output of datasource"
+      versioning:
+        type: string
+        description: "Versioning strategy"
+      priority:
+        type: string
+        description: "Priority of the tool"
+        oneOf:
+          - const: low
+          - const: medium
+          - const: high
+    required:
+    - datasource
+    - package
+required:
+- name
+- version
+- tags
+- homepage
+- description
