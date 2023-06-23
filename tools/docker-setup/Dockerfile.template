@@ -6,8 +6,10 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}${target}/bin/docker-setup" \
-    "https://github.com/nicholasdille/docker-setup/releases/download/v${version}/docker-setup"
+curl --silent --location --fail \
+    "https://github.com/nicholasdille/docker-setup/releases/download/v${version}/docker-setup_Linux_${arch}.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
+    docker-setup
 chmod +x "${prefix}${target}/bin/docker-setup"
 
 "${prefix}${target}/bin/docker-setup" completion bash >"${prefix}${target}/share/bash-completion/completions/docker-setup"
