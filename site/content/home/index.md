@@ -25,6 +25,5 @@ Tools are downloaded, installed and updated automatically.
 ## Installation instructions
 
 ```
-curl --silent --location https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup | sudo tee /usr/local/bin/docker-setup >/dev/null
-sudo chmod +x /usr/local/bin/docker-setup
+curl -sLf https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup_linux_$(uname -m).tar.gz | sudo tar -xzC /usr/local/bin docker-setup
 ```
