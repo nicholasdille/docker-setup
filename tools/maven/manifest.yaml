@@ -1,5 +1,5 @@
 name: maven
-version: "3.9.2"
+version: "3.9.3"
 binary: mvn
 check: ${binary} -version | grep ^Apache | cut -d' ' -f3
 runtime_dependencies:
