@@ -1,5 +1,5 @@
 name: sbt
-version: "1.9.0"
+version: "1.9.1"
 check: cat ${binary} | grep "declare init_sbt_version" | cut -d= -f2
 platforms:
   - linux/amd64
