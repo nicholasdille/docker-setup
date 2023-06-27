@@ -1,5 +1,5 @@
 name: chart-releaser
-version: "1.5.0"
+version: "1.6.0"
 binary: cr
 check: ${binary} version | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
