@@ -1,5 +1,5 @@
 name: osv-scanner
-version: "1.3.4"
+version: "1.3.5"
 check: ${binary} --version | head -1 | cut -d' ' -f3
 tags:
   - org/google
