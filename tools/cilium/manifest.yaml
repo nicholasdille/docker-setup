@@ -1,5 +1,5 @@
 name: cilium
-version: "0.14.8"
+version: "0.15.0"
 check: timeout 3 ${binary} version 2>/dev/null | grep ^cilium-cli | cut -d' ' -f2 | tr -d v
 platforms:
 - linux/amd64
