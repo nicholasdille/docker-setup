@@ -2,22 +2,27 @@
 
 ARG ref=main
 
-FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-set -x
-curl --silent --verbose --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
-    duf
-EOF
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix="${arch}"
+        ;;
+    aarch64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
 
-FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-ARG name
-ARG version
-RUN <<EOF
-set -x
-curl --silent --verbose --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${alt_arch}.tar.gz" \
+echo "### Downloading duf ${version}"
+curl --silent --verbose --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     duf
 EOF

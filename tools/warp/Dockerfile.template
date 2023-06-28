@@ -2,20 +2,27 @@
 
 ARG ref=main
 
-FROM --platform=amd64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail "https://github.com/minio/warp/releases/download/v${version}/warp_Linux_${arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
-    warp
-EOF
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix="${arch}"
+        ;;
+    aarch64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
 
-FROM --platform=arm64 ghcr.io/nicholasdille/docker-setup/base:${ref} AS download
-ARG name
-ARG version
-RUN <<EOF
-curl --silent --location --fail "https://github.com/minio/warp/releases/download/v${version}/warp_Linux_${alt_arch}.tar.gz" \
+echo "### Downloading warp ${version}"
+curl --silent --location --fail "https://github.com/minio/warp/releases/download/v${version}/warp_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     warp
 EOF
