@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: vland
+version: "0.22.2"
+check: ${binary} --version | tr -s ' ' | cut -d' ' -f3
+runtime_dependencies:
+- lxroot
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/shell
+- type/cli
+homepage: https://github.com/parke/vland
+description: Virtual userland manager for lxroot
+renovate:
+  datasource: github-releases
+  package: parke/vland
+  priority: low

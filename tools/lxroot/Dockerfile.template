@@ -1,0 +1,22 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM alpine:3.18 AS build
+ARG name
+ARG version
+RUN <<EOF
+apk update
+apk add \
+    git \
+    build-base \
+    wget
+EOF
+WORKDIR /usr/src/lxroot
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://github.com/parke/lxroot .
+g++ lxroot.cpp -o lxroot-static -s -Os -fomit-frame-pointer -fno-stack-protector -ffunction-sections -fdata-sections -Wl,--gc-sections -fno-unroll-loops -fmerge-all-constants -fno-ident -Wl,-z,norelro -Wl,--build-id=none -fno-exceptions -fno-rtti -static
+EOF
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --from=build /usr/src/lxroot/lxroot-static ${prefix}/usr/local/bin/lxroot

@@ -3687,6 +3687,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "parke/lxroot",
+      "fileMatch": [
+        "^tools/lxroot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "magefile/mage",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -5411,6 +5421,16 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/vhs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "parke/vland",
+      "fileMatch": [
+        "^tools/vland/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"

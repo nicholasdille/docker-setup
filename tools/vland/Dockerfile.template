@@ -1,0 +1,12 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail --output "${prefix}${target}/bin/vland" \
+    "https://github.com/parke/vland/raw/${version}/vland"
+chmod +x "${prefix}${target}/bin/vland"
+EOF
