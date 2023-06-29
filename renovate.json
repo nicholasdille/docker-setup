@@ -2962,6 +2962,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "senges/kitt",
+      "fileMatch": [
+        "^tools/kitt/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "kluctl/kluctl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
