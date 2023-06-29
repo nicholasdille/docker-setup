@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: dockerfilegraph
+version: "0.17.0"
+check: ${binary} --version | jq --raw-output '.GitVersion'
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/patrickhoefler/dockerfilegraph
+description: Visualize your multi-stage Dockerfiles
+renovate:
+  datasource: github-releases
+  package: patrickhoefler/dockerfilegraph
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

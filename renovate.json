@@ -1431,6 +1431,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "patrickhoefler/dockerfilegraph",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/dockerfilegraph/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "goodwithtech/dockle",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
