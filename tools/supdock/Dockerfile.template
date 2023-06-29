@@ -6,14 +6,22 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    aarch64)
+        export arch_suffix="${arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
+
 curl --silent --location --fail --output "${prefix}${target}/bin/supdock" \
-    "https://github.com/segersniels/supdock/releases/download/${version}/supdock-${alt_arch}-linux"
+    "https://github.com/segersniels/supdock/releases/download/${version}/supdock-${arch_suffix}-linux"
 chmod +x "${prefix}${target}/bin/supdock"
 EOF
-
-# completion
-#RUN <<EOF
-#"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
-#"${prefix}${target}/bin/foo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
-#"${prefix}${target}/bin/foo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_foo"
-#EOF
