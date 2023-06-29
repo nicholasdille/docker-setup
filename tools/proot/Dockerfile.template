@@ -1,0 +1,21 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    git \
+    build-essential \
+    pkg-config \
+    libtalloc-dev
+EOF
+WORKDIR /tmp/proot
+RUN <<EOF
+git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/proot-me/proot .
+make -C src
+cp src/proot "${prefix}${target}/bin/"
+EOF

@@ -4424,6 +4424,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "proot-me/proot",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/proot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "projectdiscovery/proxify",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
