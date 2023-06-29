@@ -3654,6 +3654,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "ivanilves/lstags",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/lstags/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "magefile/mage",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
