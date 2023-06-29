@@ -484,6 +484,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tetratelabs/car",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/car/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "codenotary/cas",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
