@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: runlike
+version: "1.4.2"
+check: "" # No version parameter
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/python
+- type/cli
+homepage: https://github.com/lavie/runlike
+description: Given an existing docker container, prints the command line necessary to run a copy of it
+renovate:
+  datasource: github-releases
+  package: lavie/runlike
+  priority: low

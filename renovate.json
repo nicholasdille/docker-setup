@@ -4566,6 +4566,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "lavie/runlike",
+      "fileMatch": [
+        "^tools/runlike/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "rust-lang/rust",
       "fileMatch": [
         "^tools/rust/manifest.yaml$"
