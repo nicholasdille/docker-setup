@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: runtainer
+version: "0.2.0"
+check: ${binary} version | cut -d= -f2 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/c
+- type/cli
+homepage: https://github.com/plumber-cd/runtainer
+description: Run anything as a container
+renovate:
+  datasource: github-releases
+  package: plumber-cd/runtainer
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

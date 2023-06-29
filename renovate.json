@@ -4608,6 +4608,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "plumber-cd/runtainer",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/runtainer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "rust-lang/rust",
       "fileMatch": [
         "^tools/rust/manifest.yaml$"
