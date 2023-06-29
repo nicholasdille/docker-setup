@@ -755,6 +755,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "magicmark/composerize",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/composerize/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "concourse/concourse",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
