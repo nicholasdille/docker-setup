@@ -4971,6 +4971,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "segersniels/supdock",
+      "fileMatch": [
+        "^tools/supdock/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "danielfoehrKn/kubeswitch",
       "fileMatch": [
         "^tools/switcher/manifest.yaml$"
