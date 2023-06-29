@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: kitt
+version: "0.8.1"
+check: ""
+build_dependencies:
+- python
+- shiv
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/python
+- type/cli
+homepage: https://github.com/senges/kitt
+description: Container based portable shell environment
+renovate:
+  datasource: github-releases
+  package: senges/kitt
+  priority: low
