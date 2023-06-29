@@ -115,6 +115,7 @@ $(ALL_TOOLS_RAW):%: \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 			--attest=type=provenance \
 			--attest=type=sbom \
+			--metadata-file $(TOOLS_DIR)/$@/build-metadata.json \
 			--push="$${PUSH}" \
 			--progress plain \
 			>$(TOOLS_DIR)/$@/build.log 2>&1; then \
