@@ -1,5 +1,5 @@
 name: mutagen-compose
-version: "0.17.1"
+version: "0.17.2"
 check: ${binary} version | grep ^Mutagen | cut -d' ' -f3
 runtime_dependencies:
   - mutagen
