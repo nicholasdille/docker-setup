@@ -28,3 +28,13 @@ Tools are downloaded, installed and updated automatically.
 curl -sLf https://github.com/nicholasdille/docker-setup/releases/latest/download/docker-setup_linux_$(uname -m).tar.gz | \
 sudo tar -xzC /usr/local/bin docker-setup
 ```
+
+## More informaton
+
+The project is [hosted on GitHub](https://github.com/nicholasdille/docker-setup). Also checkout the [documentation](https://github.com/nicholasdille/docker-setup/tree/main/docs).
+
+Also checkout the [cheats](https://github.com/nicholasdille/docker-setup/blob/main/docker-setup.cheat) avaulable for [navi](https://github.com/denisidoro/navi). Import them with the following commands:
+
+```
+navi repo add https://github.com/nicholasdille/docker-setup
+```
