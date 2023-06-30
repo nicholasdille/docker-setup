@@ -35,7 +35,7 @@ ${homepage}
 
 ## Install
 
-\`docker-setup --tools=${tool} install\`
+\`docker-setup install ${tool}\`
 
 ## Dependencies
 
@@ -43,10 +43,10 @@ EOF
 
 if test -n "${build_deps}" || test -n "${runtime_deps}"; then
     for DEP in ${build_deps}; do
-        echo "Build: [${DEP}](/tools/${DEP}/) "
+        echo "- Build: [${DEP}](/tools/${DEP}/) "
     done
     for DEP in ${runtime_deps}; do
-        echo "Runtime: [${DEP}](/tools/${DEP}/) "
+        echo "- Runtime: [${DEP}](/tools/${DEP}/) "
     done
 else
     echo "None"
@@ -89,14 +89,20 @@ cat <<EOF
 
 EOF
 PLATFORMS="$(
-    jq --raw-output 'select(.platforms != null) | .platforms[]' <<<"${TOOL_JSON}" \
-    | paste -sd,
+    jq --raw-output 'select(.platforms != null) | .platforms[] | "- \(.)"' <<<"${TOOL_JSON}"
 )"
 if test -z "${PLATFORMS}"; then
-    echo 'linux/amd64'
+    echo '- linux/amd64'
 else
     echo "${PLATFORMS}"
 fi
+
+cat <<EOF
+
+## Messages
+
+EOF
+jq --raw-output 'select(.messages != null) | .messages | to_entries[] | "### \(.key)\n\n\(.value)"' <<<"${TOOL_JSON}"
 
 cat <<EOF
 
