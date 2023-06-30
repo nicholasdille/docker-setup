@@ -42,6 +42,16 @@ properties:
   description:
     description: Description of the tool
     type: string
+  messages:
+    description: Messages for the tool
+    type: object
+    properties:
+      internals:
+        description: Internals
+        type: string
+      usage:
+        description: Usage message
+        type: string
   renovate:
     type: object
     properties:
