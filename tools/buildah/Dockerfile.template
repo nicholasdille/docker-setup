@@ -19,6 +19,7 @@ apk add \
     gpg \
     gpgme-dev \
     libseccomp-dev \
+    libseccomp-static \
     libselinux-dev \
     make \
     skopeo \
