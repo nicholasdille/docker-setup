@@ -17,6 +17,7 @@ apk add \
     libapparmor-dev \
     glib-dev \
     gpg \
+    gogme-dev \
     libseccomp-dev \
     libselinux-dev \
     make \
