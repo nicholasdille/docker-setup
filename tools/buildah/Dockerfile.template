@@ -26,7 +26,8 @@ apk add \
     make \
     skopeo \
     build-base \
-    device-mapper
+    device-mapper \
+    libassuan-dev
 EOF
 WORKDIR /tmp/buildah
 RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/buildah .
