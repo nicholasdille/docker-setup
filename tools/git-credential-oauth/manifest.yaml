@@ -2,7 +2,7 @@
 $schema: https://docker-setup.dille.io/schema.yaml
 name: git-credential-oauth
 version: "0.8.0"
-check: ""
+check: "" # No version parameter
 platforms:
 - linux/amd64
 - linux/arm64
