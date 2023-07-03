@@ -17,6 +17,8 @@ apk add \
     libapparmor-dev \
     glib-dev \
     gpg \
+    libgpg-error-dev \
+    libgpg-error-static \
     gpgme-dev \
     libseccomp-dev \
     libseccomp-static \
