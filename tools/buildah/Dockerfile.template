@@ -21,6 +21,7 @@ apk add \
     libselinux-dev \
     make \
     skopeo \
+    build-base \
     device-mapper
 EOF
 WORKDIR /tmp/buildah
