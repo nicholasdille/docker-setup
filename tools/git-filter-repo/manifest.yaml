@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: git-filter-repo
+version: "2.28.0"
+check: "" # No version parameter
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/python
+- type/cli
+homepage: https://github.com/newren/git-filter-repo
+description: Quickly rewrite git repository history
+renovate:
+  datasource: github-releases
+  package: newren/git-filter-repo
+  extractVersion: ^v(?<version>.+?)$
+  priority: low

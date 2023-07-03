@@ -1971,6 +1971,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "newren/git-filter-repo",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/git-filter-repo/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "mlange-42/git-graph",
       "fileMatch": [
         "^tools/git-graph/manifest.yaml$"
