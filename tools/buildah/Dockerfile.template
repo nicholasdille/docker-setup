@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM golang:1.19.10 AS prepare
 ARG name
 ARG version
 RUN <<EOF
@@ -20,7 +20,6 @@ apt-get -y install --no-install-recommends \
     libgpgme11-dev \
     libseccomp-dev \
     libselinux1-dev \
-    golang-go \
     go-md2man
 EOF
 WORKDIR /tmp/buildah
