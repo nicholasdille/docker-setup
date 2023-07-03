@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: git-credential-oauth
+version: "0.8.0"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/security
+- lang/go
+- type/cli
+homepage: https://github.com/hickford/git-credential-oauth
+description: Git credential helper that securely authenticates to GitHub, GitLab and BitBucket using OAuth
+renovate:
+  datasource: github-releases
+  package: hickford/git-credential-oauth
+  extractVersion: ^v(?<version>.+?)$
+  priority: low

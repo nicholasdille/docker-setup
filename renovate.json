@@ -1960,6 +1960,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "hickford/git-credential-oauth",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/git-credential-oauth/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "mlange-42/git-graph",
       "fileMatch": [
         "^tools/git-graph/manifest.yaml$"
