@@ -15,7 +15,7 @@ apk add \
     git \
     go-md2man \
     libapparmor-dev \
-    libglib-dev \
+    glib-dev \
     gpg \
     libseccomp-dev \
     libselinux-dev \
