@@ -2,25 +2,26 @@
 
 ARG ref=main
 
-FROM golang:1.19.10 AS prepare
+FROM golang:1.19.10-alpine AS prepare
 ARG name
 ARG version
 RUN <<EOF
-apt-get update
-apt-get -y install --no-install-recommends \
+apk update
+apk add \
+    bash \
     git \
     ca-certificates \
-    make \
-    gcc \
     bats \
-    btrfs-progs \
+    git \
+    go-md2man \
     libapparmor-dev \
-    libdevmapper-dev \
-    libglib2.0-dev \
-    libgpgme11-dev \
+    libglib-dev \
+    gpg \
     libseccomp-dev \
-    libselinux1-dev \
-    go-md2man
+    libselinux-dev \
+    make \
+    skopeo \
+    device-mapper
 EOF
 WORKDIR /tmp/buildah
 RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/buildah .
