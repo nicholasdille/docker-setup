@@ -2100,6 +2100,16 @@
       ]
     },
     {
+      "datasourceTemplate": "git-tags",
+      "depNameTemplate": "https://git.code.sf.net/p/gnuplot/gnuplot-main.git",
+      "fileMatch": [
+        "^tools/gnuplot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "golang/go",
       "extractVersionTemplate": "^go(?<version>.+?)$",

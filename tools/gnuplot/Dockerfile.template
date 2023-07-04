@@ -1,0 +1,32 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    autogen \
+    autoconf \
+    automake \
+    libtool \
+    build-essential
+EOF
+WORKDIR /tmp/gnuplot
+RUN <<EOF
+curl --silent --location --fail "https://downloads.sourceforge.net/project/gnuplot/gnuplot/${version}/gnuplot-${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1
+./configure --prefix="${prefix}${target}" \
+    --disable-dependency-tracking \
+    --disable-silent-rules \
+    --without-tutorial \
+    --disable-wxwidgets \
+    --without-qt \
+    --without-x \
+    --without-latex \
+    --disable-plugins
+make LDFLAGS=-static
+make install
+EOF
