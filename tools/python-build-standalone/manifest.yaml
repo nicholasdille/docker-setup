@@ -1,5 +1,5 @@
 name: python-build-standalone
-version: "20230116"
+version: "20230507"
 check: ""
 tags:
   - category/development
