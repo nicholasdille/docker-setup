@@ -1,0 +1,47 @@
+version: '3'
+
+vars:
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
+  IMAGE_NAME: "build:{{.GIT_COMMIT}}"
+
+tasks:
+
+  prompt:
+    prompt: Do you want to continue?
+
+  clean:
+    desc: Remove container image
+    summary: |
+      FOO
+    cmds:
+      - task: prompt
+      - docker image rm -f {{.IMAGE_NAME}}
+      - rm docker-setup
+
+  image:
+    desc: Build container image
+    summary: |
+      BAR
+    sources:
+      - Dockerfile
+    status:
+      - |
+        docker image ls "{{.IMAGE_NAME}}" \
+        | tr -s ' ' \
+        | tr ' ' ':' \
+        | grep "^{{.IMAGE_NAME}}:"
+    cmds:
+      - docker build --target build --tag {{.IMAGE_NAME}} .
+
+  binary:
+    desc: Build binary
+    summary: |
+      BAZ
+    sources:
+      - Dockerfile
+      - docker-bake.hcl
+    generates:
+      - docker-setup
+    cmds:
+      - docker buildx bake binary
