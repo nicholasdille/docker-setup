@@ -1,5 +1,5 @@
 name: act
-version: "0.2.45"
+version: "0.2.46"
 check: ${binary} --version | cut -d' ' -f3
 runtime_dependencies:
 - docker
@@ -15,3 +15,4 @@ renovate:
   datasource: github-releases
   package: nektos/act
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

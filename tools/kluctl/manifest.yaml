@@ -1,14 +1,15 @@
 name: kluctl
-version: "2.19.4"
+version: "2.20.7"
 check: ${binary} version 2>/dev/null
 tags:
-- type/cli
-- category/development
-- management
-- lang/go
+  - type/cli
+  - category/development
+  - management
+  - lang/go
 homepage: https://github.com/kluctl/kluctl
 description: Missing glue to put together large Kubernetes deployments, composed of multiple smaller parts in a manageable and unified way
 renovate:
   datasource: github-releases
   package: kluctl/kluctl
   extractVersion: ^v(?<version>.+?)$
+  priority: low

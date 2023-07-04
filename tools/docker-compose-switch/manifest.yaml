@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: docker/compose-switch
   extractVersion: ^v(?<version>.+?)$
+  priority: high

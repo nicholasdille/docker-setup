@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: docker/base-cli-plugin
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

@@ -2,12 +2,13 @@ name: cowsay
 version: "2.0.4"
 check: "" # No version parameter
 tags:
-- type/cli
-- fun
-- lang/go
+  - type/cli
+  - fun
+  - lang/go
 homepage: https://github.com/Code-Hex/Neo-cowsay
 description: Cowsay is reborn
 renovate:
   datasource: github-releases
   package: Code-Hex/Neo-cowsay
   extractVersion: ^v(?<version>.+?)$
+  priority: low

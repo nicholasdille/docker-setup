@@ -9,6 +9,7 @@ on:
     paths:
     - scripts/report.sh
     - .github/workflows/report.yml
+  workflow_dispatch:
 
 jobs:
 
@@ -43,11 +44,11 @@ jobs:
             --location \
             --fail \
         | jq --raw-output '
-            .jobs[] | 
-            select(.workflow_name == "Report") | 
+            .jobs[] |
+            select(.workflow_name == "Report") |
             .html_url
         ' >>${GITHUB_ENV}
 
     - name: Send report
       run: |
-        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"New report available for $(date -d "yesterday" +%Y-%m-%d): ${{ env.report_url }}\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"
+        curl --silent --fail --request POST --data "{\"msgtype\":\"m.text\",\"body\":\"New report available for $(date -d "34 hours ago" +%Y-%m-%d): ${{ env.report_url }}\"}" "https://${{ secrets.MATRIX_SERVER }}/_matrix/client/r0/rooms/${{ secrets.MATRIX_ROOM_ID }}/send/m.room.message?access_token=${{ secrets.MATRIX_ACCESS_TOKEN }}"

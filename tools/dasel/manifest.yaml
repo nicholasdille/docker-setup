@@ -1,13 +1,14 @@
 name: dasel
-version: "2.2.0"
+version: "2.3.4"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 tags:
-- type/cli
-- format
-- lang/go
+  - type/cli
+  - format
+  - lang/go
 homepage: https://github.com/TomWright/dasel
 description: Select, put and delete data from JSON, TOML, YAML, XML and CSV files
 renovate:
   datasource: github-releases
   package: TomWright/dasel
   extractVersion: ^v(?<version>.+?)$
+  priority: low

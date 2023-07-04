@@ -2,15 +2,16 @@ name: in-toto
 version: "0.9.0"
 check: "" # No version parameter
 build_dependencies:
-- go
+  - go
 tags:
-- type/cli
-- category/security
-- sbom
-- lang/go
+  - type/cli
+  - category/security
+  - sbom
+  - lang/go
 homepage: https://github.com/in-toto/in-toto-golang
 description: Framework to protect software supply chain integrity
 renovate:
   datasource: github-tags
   package: in-toto/in-toto-golang
   extractVersion: ^v(?<version>.+?)$
+  priority: low

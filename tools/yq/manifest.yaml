@@ -1,6 +1,6 @@
 name: yq
-version: "4.33.3"
-check: ${binary} --version | cut -d' ' -f4
+version: "4.34.1"
+check: ${binary} --version | cut -d' ' -f4 | tr -d v
 platforms:
 - linux/amd64
 - linux/arm64
@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: mikefarah/yq
   extractVersion: ^v(?<version>.+?)$
+  priority: high

@@ -16,18 +16,13 @@
     ":semanticCommits"
   ],
   "timezone": "Europe/Berlin",
-  "schedule": [
-    "* */4 * * *"
-  ],
-  "automergeSchedule": [
-    "* */2 * * *"
-  ],
-  "prConcurrentLimit": 10,
-  "prHourlyLimit": 10,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 5,
   "enabledManagers": [
     "dockerfile",
     "github-actions",
-    "regex"
+    "regex",
+    "gomod"
   ],
   "useBaseBranchConfig": "merge",
   "platformAutomerge": true,
@@ -66,25 +61,10 @@
   ],
   "regexManagers": [
     {
-      "fileMatch":            [ "^docker-setup$" ],
-      "matchStrings":         [ "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n" ],
-      "depNameTemplate":        "regclient/regclient",
-      "datasourceTemplate":     "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
-      "fileMatch":            [ "^docker-setup$" ],
-      "matchStrings":         [ "GOJQ_VERSION=(?<currentValue>.*?)\n" ],
-      "depNameTemplate":        "itchyny/gojq",
-      "datasourceTemplate":     "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+?)$"
-    },
-    {
       "fileMatch":          [ "(^|/|\\.)Dockerfile[^/]*$" ],
       "matchStrings":       [ "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n" ],
-      "datasourceTemplate":   "github-releases",
-      "depNameTemplate":      "moby/buildkit",
-      "extractVersionTemplate": "^dockerfile/(?<version>.+?)$"
+      "datasourceTemplate":   "docker",
+      "depNameTemplate":      "docker/dockerfile"
     }
   ]
 }

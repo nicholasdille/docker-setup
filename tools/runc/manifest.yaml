@@ -13,8 +13,9 @@ tags:
 - type/cli
 - lang/go
 homepage: https://github.com/opencontainers/runc
-description: CLI tool for spawning and running containers according to the OCI specification 
+description: CLI tool for spawning and running containers according to the OCI specification
 renovate:
   datasource: github-releases
   package: opencontainers/runc
   extractVersion: ^v(?<version>.+?)$
+  priority: high

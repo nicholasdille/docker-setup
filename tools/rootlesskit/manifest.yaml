@@ -1,5 +1,5 @@
 name: rootlesskit
-version: "1.1.0"
+version: "1.1.1"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
 - linux/amd64
@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: rootless-containers/rootlesskit
   extractVersion: ^v(?<version>.+?)$
+  priority: high

@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://docker-setup.dille.io/schemas/manifest
+title: Docker Setup Tool
+description: Schema for manifest.yaml
+type: object
+properties:
+  name:
+    description: Name of the tool
+    type: string
+  version:
+    description: Version of the tool
+    type: string
+    pattern: "^\\d+\\.\\d+(\\.\\d+(\\.\\d+)?)?(-\\w+)?$"
+  binary:
+    description: Name - and optionally the path - to the installed binary
+    type: string
+  check:
+    description: Command to determine the version
+    type: string
+  build_dependencies:
+    description: List of build dependencies
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  runtime_dependencies:
+    description: List of runtime dependencies
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  tags:
+    description: List of tags
+    type: array
+    items:
+      type: string
+    uniqueItems: true
+  homepage:
+    description: Homepage of the tool
+    type: string
+  description:
+    description: Description of the tool
+    type: string
+  messages:
+    description: Messages for the tool
+    type: object
+    properties:
+      internals:
+        description: Internals
+        type: string
+      usage:
+        description: Usage message
+        type: string
+  renovate:
+    type: object
+    properties:
+      datasource:
+        description: Renovate datasource
+        type: string
+      package:
+        description: Package name for the specified datasource
+        type: string
+      extractVersion:
+        description: Command to extract version from output of datasource
+        type: string
+      versioning:
+        description: Versioning strategy
+        type: string
+      priority:
+        description: Priority of the tool
+        type: string
+        oneOf:
+          - const: low
+          - const: medium
+          - const: high
+    required:
+    - datasource
+    - package
+required:
+- name
+- version
+- tags
+- homepage
+- description

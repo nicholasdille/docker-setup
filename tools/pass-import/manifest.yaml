@@ -2,16 +2,17 @@ name: pass-import
 version: "3.4"
 check: "" # TODO
 build_dependencies:
-- python
+  - python
 runtime_dependencies:
-- pass
-- python
+  - pass
+  - python
 tags:
-- category/security
-- lang/python
-- type/cli
+  - category/security
+  - lang/python
+  - type/cli
 homepage: https://github.com/roddhjav/pass-import
 description: Pass extension for importing data from most existing password managers
 renovate:
   datasource: pypi
   package: pass-import
+  priority: low

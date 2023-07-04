@@ -1,5 +1,5 @@
 name: gitlab-runner
-version: "15.11.0"
+version: "16.1.0"
 check: ${binary} --version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 platforms:
 - linux/amd64
@@ -16,3 +16,4 @@ renovate:
   datasource: gitlab-releases
   package: gitlab-org/gitlab-runner
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

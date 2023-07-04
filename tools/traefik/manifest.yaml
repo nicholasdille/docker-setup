@@ -1,5 +1,5 @@
 name: traefik
-version: "2.10.1"
+version: "2.10.3"
 check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2
 platforms:
 - linux/amd64
@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: traefik/traefik
   extractVersion: ^v(?<version>.+?)$
+  priority: high

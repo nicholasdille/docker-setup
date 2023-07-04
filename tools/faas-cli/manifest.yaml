@@ -1,5 +1,5 @@
 name: faas-cli
-version: "0.16.3"
+version: "0.16.10"
 check: ${binary} version | grep "version:" | cut -d' ' -f3
 tags:
 - category/serverless
@@ -10,3 +10,4 @@ description: Official CLI for OpenFaaS
 renovate:
   datasource: github-releases
   package: openfaas/faas-cli
+  priority: medium

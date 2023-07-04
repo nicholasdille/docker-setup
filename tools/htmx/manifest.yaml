@@ -1,12 +1,13 @@
 name: htmx
 version: "1.9.2"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
-- lang/javascript
+  - lang/javascript
 homepage: https://github.com/bigskysoftware/htmx
 description: High power tools for HTML
 renovate:
   datasource: github-releases
   package: bigskysoftware/htmx
   extractVersion: ^v(?<version>.+?)$
+  priority: low

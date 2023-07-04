@@ -12,10 +12,10 @@ tags:
 - kubernetes
 - management
 - lang/go
-- state/stale
 homepage: https://github.com/kubernetes-sigs/krew
 description: Find and install kubectl plugins
 renovate:
   datasource: github-releases
   package: kubernetes-sigs/krew
   extractVersion: ^v(?<version>.+?)$
+  priority: high

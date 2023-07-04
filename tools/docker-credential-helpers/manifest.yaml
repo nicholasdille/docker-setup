@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: docker/docker-credential-helpers
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

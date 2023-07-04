@@ -1,15 +1,15 @@
 name: mutagen-compose
-version: "0.17.1"
+version: "0.17.2"
 check: ${binary} version | grep ^Mutagen | cut -d' ' -f3
 runtime_dependencies:
-- mutagen
+  - mutagen
 tags:
-- component/network
-- component/storage
-- category/development
-- container/compose
-- type/cli
-- lang/go
+  - component/network
+  - component/storage
+  - category/development
+  - container/compose
+  - type/cli
+  - lang/go
 homepage: https://github.com/mutagen-io/mutagen-compose
 description: Compose with Mutagen integration
 renovate:
@@ -17,3 +17,4 @@ renovate:
   package: mutagen-io/mutagen-compose
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: low

@@ -1,15 +1,16 @@
 name: kbld
-version: "0.37.1"
+version: "0.37.4"
 check: ${binary} version | head -n 1 | cut -d' ' -f3
 tags:
-- org/vmware
-- type/cli
-- container/build
-- kubernetes
-- lang/go
+  - org/vmware
+  - type/cli
+  - container/build
+  - kubernetes
+  - lang/go
 homepage: https://github.com/carvel-dev/kbld
 description: Seamlessly incorporates image building and image pushing into your development and deployment workflows
 renovate:
   datasource: github-releases
   package: carvel-dev/kbld
   extractVersion: ^v(?<version>.+?)$
+  priority: low

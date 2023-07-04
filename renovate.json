@@ -1,8 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "automergeSchedule": [
-    "* */2 * * *"
-  ],
   "digest": {
     "labels": [
       "bump/digest",
@@ -12,7 +9,8 @@
   "enabledManagers": [
     "dockerfile",
     "github-actions",
-    "regex"
+    "regex",
+    "gomod"
   ],
   "extends": [
     ":dependencyDashboard",
@@ -122,38 +120,15 @@
     ]
   },
   "platformAutomerge": true,
-  "prConcurrentLimit": 10,
-  "prHourlyLimit": 10,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 5,
   "rebaseLabel": "renovate/rebase",
   "rebaseWhen": "conflicted",
   "recreateClosed": false,
   "regexManagers": [
     {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "regclient/regclient",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "fileMatch": [
-        "^docker-setup$"
-      ],
-      "matchStrings": [
-        "REGCLIENT_VERSION\\s*\\??=\\s*(?<currentValue>.*?)\n"
-      ]
-    },
-    {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "itchyny/gojq",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
-      "fileMatch": [
-        "^docker-setup$"
-      ],
-      "matchStrings": [
-        "GOJQ_VERSION=(?<currentValue>.*?)\n"
-      ]
-    },
-    {
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "moby/buildkit",
-      "extractVersionTemplate": "^dockerfile/(?<version>.+?)$",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "docker/dockerfile",
       "fileMatch": [
         "(^|/|\\.)Dockerfile[^/]*$"
       ],
@@ -509,6 +484,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tetratelabs/car",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/car/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "codenotary/cas",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -773,6 +759,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/colima/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "magicmark/composerize",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/composerize/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -1141,6 +1138,38 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "jetpack-io/devbox",
+      "fileMatch": [
+        "^tools/devbox/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "devcontainers/cli",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/devcontainer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "loft-sh/devpod",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/devpod/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "direnv/direnv",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -1149,6 +1178,17 @@
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "89luca89/distrobox",
+      "fileMatch": [
+        "^tools/distrobox/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ],
+      "versioningTemplate": "loose"
     },
     {
       "datasourceTemplate": "github-releases",
@@ -1369,8 +1409,9 @@
       ]
     },
     {
-      "datasourceTemplate": "docker",
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "docker/scout-cli",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/docker-scout/manifest.yaml$"
       ],
@@ -1394,6 +1435,17 @@
       "extractVersionTemplate": "^v(?<version>23\\..+?)$",
       "fileMatch": [
         "^tools/docker-stable/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "patrickhoefler/dockerfilegraph",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/dockerfilegraph/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -1578,7 +1630,7 @@
       "depNameTemplate": "ogham/exa",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
-        "^tools/foo/manifest.yaml$"
+        "^tools/exa/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -1778,6 +1830,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "wader/fq",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/fq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "fugue/fregot",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -1879,6 +1942,39 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/ghostunnel/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gopasspw/git-credential-gopass",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/git-credential-gopass/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "hickford/git-credential-oauth",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/git-credential-oauth/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "newren/git-filter-repo",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/git-filter-repo/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -2004,6 +2100,16 @@
       ]
     },
     {
+      "datasourceTemplate": "git-tags",
+      "depNameTemplate": "https://git.code.sf.net/p/gnuplot/gnuplot-main.git",
+      "fileMatch": [
+        "^tools/gnuplot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "golang/go",
       "extractVersionTemplate": "^go(?<version>.+?)$",
@@ -2065,6 +2171,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/gojq/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gopasspw/gopass",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/gopass/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -2148,6 +2265,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tomnomnom/gron",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/gron/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "gruntjs/grunt",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -2173,6 +2301,17 @@
       "depNameTemplate": "gsutil",
       "fileMatch": [
         "^tools/gsutil/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "guacsec/guac",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/guac/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -2302,7 +2441,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "github/hub",
+      "depNameTemplate": "GrantBirki/hub",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/hub/manifest.yaml$"
@@ -2573,7 +2712,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "stedolan/jq",
+      "depNameTemplate": "jqlang/jq",
       "extractVersionTemplate": "^jq-(?<version>.+?)$",
       "fileMatch": [
         "^tools/jq/manifest.yaml$"
@@ -2582,6 +2721,17 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ],
       "versioningTemplate": "loose"
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "noahgorstein/jqp",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/jqp/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
     },
     {
       "datasourceTemplate": "github-releases",
@@ -3568,6 +3718,27 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "ivanilves/lstags",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/lstags/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "parke/lxroot",
+      "fileMatch": [
+        "^tools/lxroot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "magefile/mage",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -4295,6 +4466,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "proot-me/proot",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/proot/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "projectdiscovery/proxify",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
@@ -4469,6 +4651,27 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "lavie/runlike",
+      "fileMatch": [
+        "^tools/runlike/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "plumber-cd/runtainer",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/runtainer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "rust-lang/rust",
       "fileMatch": [
         "^tools/rust/manifest.yaml$"
@@ -4500,7 +4703,7 @@
     },
     {
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "IBM/sbom-utility",
+      "depNameTemplate": "CycloneDX/sbom-utility",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/sbom-utility/manifest.yaml$"
@@ -4885,6 +5088,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "segersniels/supdock",
+      "fileMatch": [
+        "^tools/supdock/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "danielfoehrKn/kubeswitch",
       "fileMatch": [
         "^tools/switcher/manifest.yaml$"
@@ -4899,6 +5112,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/syft/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "nestybox/sysbox",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/sysbox/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -4955,6 +5179,17 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/teller/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mkaz/termgraph",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/termgraph/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -5167,6 +5402,17 @@
       ]
     },
     {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "upx/upx",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/upx/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "util-linux/util-linux",
       "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+(\\.\\d+)?)$",
@@ -5250,6 +5496,16 @@
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
         "^tools/vhs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "parke/vland",
+      "fileMatch": [
+        "^tools/vland/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
@@ -5481,8 +5737,7 @@
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
-      ],
-      "packageNameTemplate": "https://gitlab.freedesktop.org/xdg/xdg-utils"
+      ]
     },
     {
       "datasourceTemplate": "github-releases",
@@ -5593,9 +5848,6 @@
         "version: \"?(?<currentValue>.*?)\"?\\n"
       ]
     }
-  ],
-  "schedule": [
-    "* */4 * * *"
   ],
   "stopUpdatingLabel": "renovate/stop-updating",
   "timezone": "Europe/Berlin",

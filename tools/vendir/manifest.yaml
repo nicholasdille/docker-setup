@@ -1,15 +1,16 @@
 name: vendir
-version: "0.33.2"
+version: "0.34.3"
 check: ${binary} version | head -n 1 | cut -d' ' -f3
 tags:
-- org/vmware
-- category/development
-- type/cli
-- cicd
-- lang/go
+  - org/vmware
+  - category/development
+  - type/cli
+  - cicd
+  - lang/go
 homepage: https://github.com/carvel-dev/vendir
 description: Easy way to vendor declaratively
 renovate:
   datasource: github-releases
   package: carvel-dev/vendir
   extractVersion: ^v(?<version>.+?)$
+  priority: low

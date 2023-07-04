@@ -3,17 +3,18 @@ version: "0.9.4"
 binary: flatcar-ct
 check: ${binary} -version | cut -d' ' -f2 | tr -d v
 build_dependencies:
-- go
+  - go
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- management
-- lang/go
+  - type/cli
+  - management
+  - lang/go
 homepage: https://github.com/flatcar/container-linux-config-transpiler
 description: Utility for Flatcar Container Linux
 renovate:
   datasource: github-releases
   package: flatcar/container-linux-config-transpiler
   extractVersion: ^v(?<version>.+?)$
+  priority: low

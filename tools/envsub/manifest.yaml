@@ -2,16 +2,17 @@ name: envsub
 version: "0.1.3"
 check: ${binary} --version
 build_dependencies:
-- rust
+  - rust
 tags:
-- type/cli
-- category/development
-- management
-- lang/rust
-- state/stale
-- state/onemanshow
+  - type/cli
+  - category/development
+  - management
+  - lang/rust
+  - state/stale
+  - state/onemanshow
 homepage: https://github.com/stephenc/envsub
 description: alternative envsubst that allows for ${foo:-default} expansion too
 renovate:
   datasource: github-releases
   package: stephenc/envsub
+  priority: low

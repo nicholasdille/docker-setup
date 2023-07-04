@@ -1,12 +1,14 @@
 name: chigo
 version: "1.4.0"
 tags:
-- type/cli
-- fun
-- lang/go
+  - type/cli
+  - fun
+  - lang/go
+  - state/stale
 homepage: https://github.com/UltiRequiem/chigo
 description: Lolcat in Go - Rainbows and Unicorns
 renovate:
   datasource: github-releases
   package: UltiRequiem/chigo
   extractVersion: ^v(?<version>.+?)$
+  priority: low

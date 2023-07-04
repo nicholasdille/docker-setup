@@ -2,14 +2,15 @@ name: kink
 version: "0.2.1"
 check: ${binary} version | grep GitVersion | tr -s ' ' | cut -d' ' -f2
 tags:
-- type/cli
-- kubernetes
-- management
-- lang/go
-- state/stale
+  - type/cli
+  - kubernetes
+  - management
+  - lang/go
+  - state/stale
 homepage: https://github.com/Trendyol/kink
 description: CLI to manage KinD clusters as Kubernetes pods
 renovate:
   datasource: github-releases
   package: Trendyol/kink
   extractVersion: ^v(?<version>.+?)$
+  priority: low

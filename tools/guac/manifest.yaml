@@ -1,5 +1,5 @@
 name: guac
-version: "main"
+version: "0.1.0"
 check: "" # No version parameter
 build_dependencies:
 - go
@@ -9,3 +9,8 @@ tags:
 - lang/go
 homepage: https://github.com/guacsec/guac
 description: Aggregate software security metadata into a high fidelity graph database
+renovate:
+  datasource: github-tags
+  package: guacsec/guac
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

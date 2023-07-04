@@ -1,11 +1,14 @@
 name: mc
-version: "2023-05-04T18-10-16Z"
+version: "2023-06-28T21-54-17Z"
 check: ${binary} --version | head -1 | cut -d' ' -f3 | cut -d. -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
-- category/terminal
-- component/storage
-- lang/go
-- type/cli
+  - category/terminal
+  - component/storage
+  - lang/go
+  - type/cli
 homepage: https://github.com/minio/mc
 description: Simple | Fast tool to manage MinIO clusters ☁️
 renovate:
@@ -13,3 +16,4 @@ renovate:
   package: minio/mc
   extractVersion: ^RELEASE.(?<version>.+?)$
   versioning: loose
+  priority: low

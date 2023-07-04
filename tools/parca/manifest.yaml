@@ -1,18 +1,19 @@
 name: parca
-version: "0.17.0"
+version: "0.18.0"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/monitoring
-- type/cli
-- type/daemon
-- lang/go
-- lang/javascript
+  - category/monitoring
+  - type/cli
+  - type/daemon
+  - lang/go
+  - lang/javascript
 homepage: https://github.com/parca-dev/parca
 description: Continuous profiling for analysis of CPU and memory usage, down to the line number and throughout time. Saving infrastructure cost, improving performance, and increasing reliability.
 renovate:
   datasource: github-releases
   package: parca-dev/parca
   extractVersion: ^v(?<version>.+?)$
+  priority: low

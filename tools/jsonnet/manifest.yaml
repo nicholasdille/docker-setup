@@ -2,12 +2,13 @@ name: jsonnet
 version: "0.20.0"
 check: ${binary} --version | cut -d' ' -f6 | tr -d v
 tags:
-- org/google
-- templating
-- langgo
+  - org/google
+  - templating
+  - langgo
 homepage: https://github.com/google/go-jsonnet
 description: Data templating language. Implementation of Jsonnet in pure Go
 renovate:
   datasource: github-releases
   package: google/go-jsonnet
   extractVersion: ^v(?<version>.+?)$
+  priority: low

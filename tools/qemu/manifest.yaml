@@ -1,16 +1,17 @@
 name: qemu
-version: "8.0.0"
+version: "8.0.2"
 binary: qemu-img
 check: ${binary} --version | grep qemu-img | cut -d' ' -f3
 tags:
-- type/cli
-- type/daemon
-- vm
-- emulation
-- lang/c
+  - type/cli
+  - type/daemon
+  - vm
+  - emulation
+  - lang/c
 homepage: https://github.com/qemu/qemu
 description: Generic and open source machine & userspace emulator and virtualizer
 renovate:
   datasource: github-tags
   package: qemu/qemu
   extractVersion: ^v(?<version>.+?)$
+  priority: low

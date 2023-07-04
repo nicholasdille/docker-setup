@@ -3,12 +3,13 @@ version: "0.0.14"
 binary: bee
 check: ${binary} version
 tags:
-- type/cli
-- ebpf
-- lang/c
+  - type/cli
+  - ebpf
+  - lang/c
 homepage: https://github.com/solo-io/bumblebee
 description: Get eBPF programs running from the cloud to the kernel
 renovate:
   datasource: github-releases
   package: solo-io/bumblebee
   extractVersion: ^v(?<version>.+?)$
+  priority: low

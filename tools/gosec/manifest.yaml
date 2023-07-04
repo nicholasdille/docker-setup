@@ -1,16 +1,17 @@
 name: gosec
-version: "2.15.0"
+version: "2.16.0"
 check: ""
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/security
-- lang/go
-- type/cli
+  - category/security
+  - lang/go
+  - type/cli
 homepage: https://github.com/securego/gosec
 description: Golang security checker
 renovate:
   datasource: github-releases
   package: securego/gosec
   extractVersion: ^v(?<version>.+?)$
+  priority: low

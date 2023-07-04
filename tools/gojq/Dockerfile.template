@@ -9,4 +9,6 @@ RUN <<EOF
 curl --silent --location --fail "https://github.com/itchyny/gojq/releases/download/v${version}/gojq_v${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     "gojq_v${version}_linux_${alt_arch}/gojq"
+
+ln --symbolic --relative --force "${prefix}${target}/bin/gojq" "${prefix}${target}/bin/jq"
 EOF

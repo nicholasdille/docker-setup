@@ -2,15 +2,16 @@ name: ah
 version: "1.14.0"
 check: ${binary} version | grep ^Version | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/go
-- type/cli
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/artifacthub/hub
 description: Find, install and publish Kubernetes packages
 renovate:
   datasource: github-releases
   package: artifacthub/hub
   extractVersion: ^v(?<version>.+?)$
+  priority: low

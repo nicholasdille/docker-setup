@@ -2,16 +2,16 @@ name: podman-docker-shim
 version: "0.1.0"
 check: "" # No version parameter
 runtime_dependencies:
-- podman
+  - podman
 conflicts_with:
-- docker
+  - docker
 tags:
-- org/redhat
-- standard/oci
-- container/runtime
-- type/cli
-- type/daemon
-- rootless
-- lang/shell
+  - org/redhat
+  - standard/oci
+  - container/runtime
+  - type/cli
+  - type/daemon
+  - rootless
+  - lang/shell
 homepage: https://github.com/containers/podman
 description: Shim to call Podman instead of Docker

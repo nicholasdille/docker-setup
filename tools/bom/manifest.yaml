@@ -13,3 +13,4 @@ renovate:
   datasource: github-releases
   package: kubernetes-sigs/bom
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

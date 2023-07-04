@@ -22,3 +22,4 @@ renovate:
   datasource: github-releases
   package: cri-o/cri-o
   extractVersion: ^v(?<version>.+?)$
+  priority: high

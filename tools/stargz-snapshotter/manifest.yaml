@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: containerd/stargz-snapshotter
   extractVersion: ^v(?<version>.+?)$
+  priority: high

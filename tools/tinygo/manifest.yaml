@@ -1,5 +1,5 @@
 name: tinygo
-version: "0.27.0"
+version: "0.28.1"
 check: ${binary} version | cut -d' ' -f3
 platforms:
 - linux/amd64
@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: tinygo-org/tinygo
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

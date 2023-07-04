@@ -1,15 +1,17 @@
-name: foo
-version: "0.1.2"
+name: exa
+version: "0.10.1"
 check: ${binary} --version | grep ^v | cut -d' ' -f1 | tr -d v
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- category/development
-- lang/rust
-- type/cli
+  - category/development
+  - lang/rust
+  - type/cli
+  - state/stale
 homepage: https://github.com/ogham/exa
 description: Modern replacement for 'ls'
 renovate:
   datasource: github-releases
   package: ogham/exa
   extractVersion: ^v(?<version>.+?)$
+  priority: low

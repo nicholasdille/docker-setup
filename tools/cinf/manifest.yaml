@@ -2,14 +2,15 @@ name: cinf
 version: "0.6.0"
 check: ${binary} -version | grep "version" | cut -d' ' -f6
 tags:
-- kernel/cgroups
-- kernel/capabilities
-- type/cli
-- lang/go
-- state/stale
+  - kernel/cgroups
+  - kernel/capabilities
+  - type/cli
+  - lang/go
+  - state/stale
 homepage: https://github.com/mhausenblas/cinf
 description: Command line tool to view namespaces and cgroups
 renovate:
   datasource: github-releases
   package: mhausenblas/cinf
   extractVersion: ^v(?<version>.+?)$
+  priority: low

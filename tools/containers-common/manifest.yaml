@@ -1,18 +1,19 @@
 name: containers-common
-version: "0.53.0"
-binary: false
+version: "0.55.1"
+binary: "false"
 check: "" # No binary
 build_dependencies:
-- go-md2man
+  - go-md2man
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/redhat
-- type/configuration
+  - org/redhat
+  - type/configuration
 homepage: https://github.com/containers/common
 description: Location for shared common files in github.com/containers repos
 renovate:
   datasource: github-releases
   package: containers/common
   extractVersion: ^v(?<version>.+?)$
+  priority: low

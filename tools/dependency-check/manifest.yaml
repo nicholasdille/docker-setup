@@ -1,16 +1,17 @@
 name: dependency-check
-version: "8.2.1"
+version: "8.3.1"
 binary: dependency-check.sh
 check: ${binary} --version | grep "^Dependency-Check Core version" | cut -d' ' -f4
 runtime_dependencies:
-- openjdk-jre
+  - openjdk-jre
 tags:
-- org/owasp
-- category/security
-- lang/java
+  - org/owasp
+  - category/security
+  - lang/java
 homepage: https://github.com/jeremylong/DependencyCheck
 description: software composition analysis utility that detects publicly disclosed vulnerabilities in application dependencies
 renovate:
   datasource: github-releases
   package: jeremylong/DependencyCheck
   extractVersion: ^v(?<version>.+?)$
+  priority: low

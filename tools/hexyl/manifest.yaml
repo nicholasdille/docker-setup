@@ -1,16 +1,17 @@
 name: hexyl
-version: "0.12.0"
+version: "0.13.0"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/rust
-- type/cli
+  - category/operations
+  - lang/rust
+  - type/cli
 homepage: https://github.com/sharkdp/hexyl
-description: Command-line hex viewer 
+description: Command-line hex viewer
 renovate:
   datasource: github-releases
   package: sharkdp/hexyl
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: PaulJuliusMartinez/jless
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

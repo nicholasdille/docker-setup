@@ -1,0 +1,17 @@
+name: devcontainer
+version: "0.48.0"
+check: ""
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/development
+- lang/javascript
+- type/cli
+homepage: https://github.com/devcontainers/cli
+description: Reference implementation for the specification that can create and configure a dev container from a devcontainer.json
+renovate:
+  datasource: github-tags
+  package: devcontainers/cli
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

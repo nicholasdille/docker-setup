@@ -1,5 +1,5 @@
 name: hcloud
-version: "1.33.2"
+version: "1.36.0"
 check: ${binary} version | cut -d' ' -f2
 platforms:
 - linux/amd64
@@ -16,3 +16,4 @@ renovate:
   datasource: github-releases
   package: hetznercloud/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: high

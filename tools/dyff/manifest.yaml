@@ -1,13 +1,14 @@
 name: dyff
-version: "1.5.7"
+version: "1.5.8"
 check: ${binary} version | cut -d' ' -f3
 tags:
-- category/development
-- type/cli
-- lang/go
+  - category/development
+  - type/cli
+  - lang/go
 homepage: https://github.com/homeport/dyff
 description: Diff tool for YAML files
 renovate:
   datasource: github-releases
   package: homeport/dyff
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,19 +2,20 @@ name: kubebox
 version: "0.10.0"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
-- nodejs-lts
-- npm
+  - nodejs-lts
+  - npm
 runtime_dependencies:
-- nodejs-lts
+  - nodejs-lts
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/javascript
-- type/cli
+  - category/operations
+  - lang/javascript
+  - type/cli
 homepage: https://github.com/astefanutti/kubebox
 description: Terminal and Web console for Kubernetes
 renovate:
   datasource: npm
   package: kubebox
+  priority: low

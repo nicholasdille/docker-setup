@@ -1,0 +1,27 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix="${alt_arch}"
+        ;;
+    aarch64)
+        export arch_suffix="${arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
+
+curl --silent --location --fail --output "${prefix}${target}/bin/supdock" \
+    "https://github.com/segersniels/supdock/releases/download/${version}/supdock-${arch_suffix}-linux"
+chmod +x "${prefix}${target}/bin/supdock"
+EOF

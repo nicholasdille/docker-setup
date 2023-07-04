@@ -15,3 +15,4 @@ renovate:
   package: cyberark/kubeletctl
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: high

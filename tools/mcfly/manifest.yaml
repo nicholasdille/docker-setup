@@ -1,13 +1,14 @@
 name: mcfly
-version: "0.8.0"
+version: "0.8.1"
 check: ${binary} --version | cut -d' ' -f2
 tags:
-- type/cli
-- terminal
-- lang/rust
+  - type/cli
+  - terminal
+  - lang/rust
 homepage: https://github.com/cantino/mcfly
 description: Fly through your shell history
 renovate:
   datasource: github-releases
   package: cantino/mcfly
   extractVersion: ^v(?<version>.+?)$
+  priority: low

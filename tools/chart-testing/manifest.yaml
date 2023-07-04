@@ -3,14 +3,15 @@ version: "3.8.0"
 binary: ct
 check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
-- category/operations
-- type/cli
-- lang/go
-- package
-- manager
+  - category/operations
+  - type/cli
+  - lang/go
+  - package
+  - manager
 homepage: https://github.com/helm/chart-testing
 description: CLI tool for linting and testing Helm charts
 renovate:
   datasource: github-releases
   package: helm/chart-testing
   extractVersion: ^v(?<version>.+?)$
+  priority: low

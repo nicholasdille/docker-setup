@@ -2,17 +2,18 @@ name: go-md2man
 version: "2.0.2"
 check: "" # No version parameter
 build_dependencies:
-- go
+  - go
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- markdown
-- lang/go
+  - type/cli
+  - markdown
+  - lang/go
 homepage: https://github.com/cpuguy83/go-md2man
 description: Converts markdown into roff (man pages)
 renovate:
   datasource: github-releases
   package: cpuguy83/go-md2man
   extractVersion: ^v(?<version>.+?)$
+  priority: low

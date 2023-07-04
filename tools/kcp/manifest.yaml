@@ -1,15 +1,16 @@
 name: kcp
-version: "0.11.0"
+version: "0.20.0"
 check: ${binary} --version | cut -d' ' -f3 | cut -dv -f3
 tags:
-- type/cli
-- type/daemon
-- type/plugin
-- kubernetes
-- lang/go
+  - type/cli
+  - type/daemon
+  - type/plugin
+  - kubernetes
+  - lang/go
 homepage: https://github.com/kcp-dev/kcp
 description: Prototype of a multi-tenant Kubernetes control plane
 renovate:
   datasource: github-releases
   package: kcp-dev/kcp
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,12 +2,12 @@ name: tasker
 version: "0.9"
 check: ${binary} --version
 tags:
-- type/cli
-- management
-- cicd
-- lang/c
-- state/stale
-- state/onemanshow
+  - type/cli
+  - management
+  - cicd
+  - lang/c
+  - state/stale
+  - state/onemanshow
 homepage: https://github.com/stevegrubb/tasker
 description: Parallelizes tasks from a list on stdin
 renovate:
@@ -15,3 +15,4 @@ renovate:
   package: stevegrubb/tasker
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: low

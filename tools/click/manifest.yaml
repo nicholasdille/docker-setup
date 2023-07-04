@@ -2,14 +2,15 @@ name: click
 version: "0.6.2"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- category/operations
-- lang/rust
-- type/cli
+  - category/operations
+  - lang/rust
+  - type/cli
 homepage: https://github.com/databricks/click
 description: Command Line Interactive Controller for Kubernetes
 renovate:
   datasource: github-releases
   package: databricks/click
   extractVersion: ^v(?<version>.+?)$
+  priority: low

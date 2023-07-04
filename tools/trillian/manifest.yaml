@@ -3,18 +3,19 @@ version: "1.5.2"
 binary: trillian_log_server
 check: "" # No version parameter
 build_dependencies:
-- go
+  - go
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/google
-- category/security
-- type/daemon
-- lang/go
+  - org/google
+  - category/security
+  - type/daemon
+  - lang/go
 homepage: https://github.com/google/trillian
 description: Transparent, highly scalable and cryptographically verifiable data store
 renovate:
   datasource: github-releases
   package: google/trillian
   extractVersion: ^v(?<version>.+?)$
+  priority: low

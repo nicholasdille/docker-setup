@@ -2,15 +2,16 @@ name: bin
 version: "0.16.2"
 check: ${binary} --version | grep ^bin | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- management
-- lang/go
+  - type/cli
+  - management
+  - lang/go
 homepage: https://github.com/marcosnils/bin
 description: Effortless binary manager
 renovate:
   datasource: github-releases
   package: marcosnils/bin
   extractVersion: ^v(?<version>.+?)$
+  priority: low

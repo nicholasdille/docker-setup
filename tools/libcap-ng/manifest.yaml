@@ -3,12 +3,13 @@ version: "0.8.3"
 binary: captest
 check: "" # No version parameter
 tags:
-- kernel/capabilities
-- type/cli
-- lang/c
+  - kernel/capabilities
+  - type/cli
+  - lang/c
 homepage: https://github.com/stevegrubb/libcap-ng
 description: Library for Linux that makes using posix capabilities easy
 renovate:
   datasource: github-releases
   package: stevegrubb/libcap-ng
   extractVersion: ^v(?<version>.+)$
+  priority: low

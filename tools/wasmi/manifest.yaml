@@ -1,20 +1,21 @@
 name: wasmi
-version: "0.29.0"
+version: "0.30.0"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
-- rust
+  - rust
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- category/development
-- lang/rust
-- type/cli
-- webassembly
-- wasm
+  - category/development
+  - lang/rust
+  - type/cli
+  - webassembly
+  - wasm
 homepage: https://github.com/paritytech/wasmi
 description: WebAssembly (Wasm) interpreter
 renovate:
   datasource: github-releases
   package: paritytech/wasmi
   extractVersion: ^v(?<version>.+?)$
+  priority: low

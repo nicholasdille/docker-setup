@@ -1,11 +1,11 @@
 name: cascadia-code
 version: "2111.01"
-binary: false
+binary: "false"
 check: "" # No binary
 tags:
-- slides
-- presentation
-- state/stale
+  - slides
+  - presentation
+  - state/stale
 homepage: https://github.com/microsoft/cascadia-code
 description: Monospaced font that includes programming ligatures
 renovate:
@@ -13,3 +13,4 @@ renovate:
   package: microsoft/cascadia-code
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: low

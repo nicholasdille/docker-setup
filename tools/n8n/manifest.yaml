@@ -1,21 +1,22 @@
 name: n8n
-version: "0.225.2"
+version: "0.234.0"
 check: ${binary} --version
 build_dependencies:
-- nodejs-lts
-- npm
+  - nodejs-lts
+  - npm
 runtime_dependencies:
-- nodejs-lts
+  - nodejs-lts
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+#- linux/arm64
 tags:
-- category/operations
-- lang/javascript
-- type/cli
-- type/daemon
+  - category/operations
+  - lang/javascript
+  - type/cli
+  - type/daemon
 homepage: https://github.com/n8n-io/n8n
 description: Free and source-available fair-code licensed workflow automation tool. Easily automate tasks across different services
 renovate:
   datasource: npm
   package: n8n
+  priority: low

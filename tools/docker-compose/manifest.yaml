@@ -1,7 +1,7 @@
 name: docker-compose
-version: "2.17.3"
+version: "2.19.1"
 binary: ${target}/libexec/docker/cli-plugins/docker-compose
-check: ${binary} compose version --short
+check: ${binary} version --short
 runtime_dependencies:
 - docker
 - docker-compose-switch
@@ -22,3 +22,4 @@ renovate:
   datasource: github-releases
   package: docker/compose
   extractVersion: ^v(?<version>.+?)$
+  priority: high

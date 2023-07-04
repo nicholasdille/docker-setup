@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: moby/buildkit
   extractVersion: ^v(?<version>.+?)$
+  priority: high

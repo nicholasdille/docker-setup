@@ -2,9 +2,9 @@ name: socat
 version: "1.7.4.4"
 check: ${binary} -V | grep "^socat version" | cut -d' ' -f3
 tags:
-- type/cli
-- component/network
-- lang/c
+  - type/cli
+  - component/network
+  - lang/c
 homepage: http://www.dest-unreach.org/socat/
 description: Multipurpose relay
 renovate:
@@ -13,3 +13,4 @@ renovate:
   url: git://repo.or.cz/socat.git
   extractVersion: ^tag-(<version>\d+\.\d+\.\d+(\.\d+)?)$
   versioning: loose
+  priority: low

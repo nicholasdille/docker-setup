@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: lstags
+version: "1.2.23"
+check: ${binary} --version | cut -d' ' -f2
+platforms:
+- linux/amd64
+tags:
+- category/operations
+- lang/go
+- type/cli
+homepage: https://github.com/ivanilves/lstags
+description: Explore Docker registries and manipulate Docker images
+renovate:
+  datasource: github-releases
+  package: ivanilves/lstags
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

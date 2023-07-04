@@ -2,18 +2,19 @@ name: kubectl-resources
 version: "0.2.0"
 check: "" # No version parameter
 runtime_dependencies:
-- kubectl
+  - kubectl
 tags:
-- type/cli
-- type/plugin
-- kubernetes
-- management
-- troubleshooting
-- lang/go
-- state/stale
+  - type/cli
+  - type/plugin
+  - kubernetes
+  - management
+  - troubleshooting
+  - lang/go
+  - state/stale
 homepage: https://github.com/howardjohn/kubectl-resources
 description: Access Kubernetes resource requests, limits, and usage
 renovate:
   datasource: github-releases
   package: howardjohn/kubectl-resources
   extractVersion: ^v(?<version>.+?)$
+  priority: low

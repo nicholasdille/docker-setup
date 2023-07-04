@@ -1,13 +1,14 @@
 name: kp
-version: "0.10.0"
+version: "0.11.0"
 check: ${binary} version | cut -d- -f1
 tags:
-- type/cli
-- container/build
-- lang/go
+  - type/cli
+  - container/build
+  - lang/go
 homepage: https://github.com/vmware-tanzu/kpack-cli
 description: Command line interface for interacting with kpack
 renovate:
   datasource: github-releases
   package: vmware-tanzu/kpack-cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

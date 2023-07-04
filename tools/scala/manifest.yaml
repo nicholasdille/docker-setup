@@ -1,16 +1,17 @@
 name: scala
-version: "2.13.10"
+version: "2.13.11"
 check: ${binary} -version 2>&1 | cut -d' ' -f5
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/scala
-- type/cli
+  - category/development
+  - lang/scala
+  - type/cli
 homepage: https://github.com/scala/scala
 description: Compiler and standard library
 renovate:
   datasource: github-releases
   package: scala/scala
   extractVersion: ^v(?<version>.+?)$
+  priority: low

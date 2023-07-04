@@ -1,5 +1,5 @@
 name: kubectl
-version: "1.27.1"
+version: "1.27.3"
 check: ${binary} version --client --short 2>/dev/null | grep ^Client | cut -d' ' -f3 | tr -d v
 build_dependencies:
 - cosign
@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: kubernetes/kubernetes
   extractVersion: ^v(?<version>.+?)$
+  priority: high

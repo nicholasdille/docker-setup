@@ -1,16 +1,17 @@
 name: flyctl
-version: "0.0.558"
+version: "0.1.48"
 check: ${binary} version 2>/dev/null | cut -d' ' -f2 | tr -d v
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- cicd
-- lang/go
+  - type/cli
+  - cicd
+  - lang/go
 homepage: https://github.com/superfly/flyctl
 description: Command line tools for fly.io services
 renovate:
   datasource: github-releases
   package: superfly/flyctl
   extractVersion: ^v(?<version>.+?)$
+  priority: low

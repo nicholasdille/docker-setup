@@ -1,16 +1,17 @@
 name: mutagen
-version: "0.17.1"
+version: "0.17.2"
 check: ${binary} version
 tags:
-- component/network
-- component/storage
-- category/development
-- type/cli
-- type/daemon
-- lang/go
+  - component/network
+  - component/storage
+  - category/development
+  - type/cli
+  - type/daemon
+  - lang/go
 homepage: https://github.com/mutagen-io/mutagen
 description: Fast file synchronization and network forwarding for remote development
 renovate:
   datasource: github-releases
   package: mutagen-io/mutagen
   extractVersion: ^v(?<version>.+?)$
+  priority: low

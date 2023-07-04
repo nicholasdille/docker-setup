@@ -1,0 +1,36 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+FROM ghcr.io/nicholasdille/docker-setup/nodejs:${ref} AS nodejs
+FROM ghcr.io/nicholasdille/docker-setup/npm:${ref} AS npm
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+COPY --link --from=python / /
+COPY --link --from=nodejs / /
+COPY --link --from=npm / /
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    make \
+    build-essential
+EOF
+WORKDIR ${prefix}${target}/libexec/devcontainer
+ARG name
+ARG version
+RUN <<EOF
+npm install \
+    --omit=dev \
+    "@devcontainers/cli@${version}"
+ln --symbolic --relative --force "${prefix}${target}/libexec/devcontainer/node_modules/.bin/devcontainer" "${prefix}${target}/bin/"
+EOF
+
+# completion
+#RUN <<EOF
+#"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
+#"${prefix}${target}/bin/foo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
+#"${prefix}${target}/bin/foo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_foo"
+#EOF

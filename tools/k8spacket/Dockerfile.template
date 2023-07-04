@@ -1,8 +1,8 @@
-#syntax=docker/dockerfile:1.4.3
+#syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
 
-FROM golang:1.20.4@sha256:685a22e459f9516f27d975c5cc6accc11223ee81fdfbbae60e39cc3b87357306 AS build
+FROM golang:1.20.5@sha256:344193a70dc3588452ea39b4a1e465a8d3c91f788ae053f7ee168cebf18e0a50 AS build
 RUN <<EOF
 apt-get update
 apt-get -y install \

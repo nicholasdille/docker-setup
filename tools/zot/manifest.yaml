@@ -2,14 +2,15 @@ name: zot
 version: "1.4.3"
 check: ${binary} --version 2>&1 | jq --raw-output '.commit' | cut -d- -f1 | tr -d v
 tags:
-- standard/oci
-- container/registry
-- container/image
-- type/daemon
-- lang/go
+  - standard/oci
+  - container/registry
+  - container/image
+  - type/daemon
+  - lang/go
 homepage: https://github.com/project-zot/zot
 description: Production-ready vendor-neutral OCI image registry server purely based on OCI Distribution Specification
 renovate:
   datasource: github-releases
   package: project-zot/zot
   extractVersion: ^v(?<version>.+?)$
+  priority: low

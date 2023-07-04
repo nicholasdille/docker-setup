@@ -2,17 +2,18 @@ name: tetragon
 version: "0.9.0"
 check: "" # Wants to connect to server
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/cilium
-- category/security
-- lang/c
-- lang/go
-- type/cli
+  - org/cilium
+  - category/security
+  - lang/c
+  - lang/go
+  - type/cli
 homepage: https://github.com/cilium/tetragon
 description: eBPF-based Security Observability and Runtime Enforcement
 renovate:
   datasource: github-releases
   package: cilium/tetragon
   extractVersion: ^v(?<version>.+?)$
+  priority: low

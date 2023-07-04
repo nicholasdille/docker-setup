@@ -2,14 +2,15 @@ name: huber
 version: "0.3.11"
 check: "" # TODO
 build_dependencies:
-- rust
+  - rust
 tags:
-- type/cli
-- category/development
-- lang/rust
+  - type/cli
+  - category/development
+  - lang/rust
 homepage: https://github.com/innobead/huber
 description: Package Manager for GitHub repos
 renovate:
   datasource: github-releases
   package: innobead/huber
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -3,12 +3,13 @@ version: "2.0.3"
 binary: ${target}/bin/lscgroup
 check: "" # No version parameter
 tags:
-- kernel/cgroups
-- type/cli
-- lang/c
+  - kernel/cgroups
+  - type/cli
+  - lang/c
 homepage: https://github.com/libcgroup/libcgroup
 description: Library and tools to manage cgroups
 renovate:
   datasource: github-releases
   package: libcgroup/libcgroup
   extractVersion: ^v(?<version>.+)$
+  priority: low

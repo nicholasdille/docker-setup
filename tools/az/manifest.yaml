@@ -1,5 +1,5 @@
 name: az
-version: "2.48.1"
+version: "2.50.0"
 check: ${binary} version | jq --raw-output '."azure-cli"'
 build_dependencies:
 - python
@@ -17,3 +17,4 @@ description: Azure CLI
 renovate:
   datasource: pypi
   package: azure-cli
+  priority: medium

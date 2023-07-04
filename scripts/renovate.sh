@@ -47,7 +47,7 @@ jq '
                         "matchPackageNames": [ .renovate.package ],
                         "ignoreUnstable": (.renovate.allowPrereleases // false)
                     }
-                
+
                 else
                     empty
                 end

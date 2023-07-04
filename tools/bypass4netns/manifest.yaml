@@ -20,3 +20,4 @@ renovate:
   datasource: github-tags
   package: rootless-containers/bypass4netns
   extractVersion: ^v(?<version>.+?)$
+  priority: high

@@ -13,3 +13,4 @@ renovate:
   datasource: github-releases
   package: koalaman/shellcheck
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

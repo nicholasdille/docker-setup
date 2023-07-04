@@ -26,3 +26,4 @@ renovate:
   datasource: github-releases
   package: nodejs/node
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

@@ -2,11 +2,11 @@ name: kubectl-aliases
 version: "1.0.0"
 check: "" # No executables
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/shell
-- type/cli
+  - category/operations
+  - lang/shell
+  - type/cli
 homepage: https://github.com/ahmetb/kubectl-aliases
 description: Programmatically generated handy kubectl aliases

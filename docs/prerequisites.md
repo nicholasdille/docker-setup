@@ -1,8 +1,3 @@
 # Dependencies
 
-`docker-setup` requires a few tools to work:
-
-- regclient
-- jq
-
-These will be installed automatically to `/var/lib/docker-setup`.
+`docker-setup` ships as a statically linked binary and does not require any additional tools to be installed.

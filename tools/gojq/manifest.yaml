@@ -1,6 +1,10 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
 name: gojq
-version: "0.12.12"
+version: "0.12.13"
 check: ${binary} --version | cut -d' ' -f2
+conflicts_with:
+- jq
 platforms:
 - linux/amd64
 - linux/arm64
@@ -10,7 +14,11 @@ tags:
 - format
 homepage: https://github.com/itchyny/gojq
 description: Pure Go implementation of jq
+messages:
+  usage: |
+    Symlink to jq included
 renovate:
   datasource: github-releases
   package: itchyny/gojq
   extractVersion: ^v(?<version>.+?)$
+  priority: high

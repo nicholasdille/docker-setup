@@ -1,14 +1,15 @@
 name: jwt
-version: "5.0.3"
+version: "6.0.0"
 check: ${binary} --version | cut -d' ' -f2
 build_dependencies:
-- rust
+  - rust
 tags:
-- category/security
-- type/cli
-- lang/rust
+  - category/security
+  - type/cli
+  - lang/rust
 homepage: https://github.com/mike-engel/jwt-cli
 description: Super fast CLI tool to decode and encode JWTs
 renovate:
   datasource: github-releases
   package: mike-engel/jwt-cli
+  priority: low

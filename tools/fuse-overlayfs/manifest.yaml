@@ -17,3 +17,4 @@ renovate:
   package: containers/fuse-overlayfs
   extractVersion: ^v(?<version>.+?)$
   versioning: loose
+  priority: high

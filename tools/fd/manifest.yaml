@@ -2,15 +2,16 @@ name: fd
 version: "8.7.0"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/rust
-- type/cli
+  - category/operations
+  - lang/rust
+  - type/cli
 homepage: https://github.com/sharkdp/fd
 description: Simple, fast and user-friendly alternative to 'find'
 renovate:
   datasource: github-releases
   package: sharkdp/fd
   extractVersion: ^v(?<version>.+?)$
+  priority: low

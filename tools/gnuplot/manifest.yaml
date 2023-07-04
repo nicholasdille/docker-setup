@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: gnuplot
+version: "5.4.8"
+check: ""
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/development
+- lang/c
+- type/cli
+homepage: http://www.gnuplot.info
+description: Command-driven, interactive function plotting
+renovate:
+  datasource: git-tags
+  package: https://git.code.sf.net/p/gnuplot/gnuplot-main.git
+  priority: low

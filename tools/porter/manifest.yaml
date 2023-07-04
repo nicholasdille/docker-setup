@@ -2,12 +2,13 @@ name: porter
 version: "1.0.14"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 tags:
-- type/cli
-- cnab
-- lang/go
+  - type/cli
+  - cnab
+  - lang/go
 homepage: https://github.com/getporter/porter
 description: Package your application artifact, client tools, configuration and deployment logic
 renovate:
   datasource: github-releases
   package: getporter/porter
   extractVersion: ^v(?<version>.+?)$
+  priority: low

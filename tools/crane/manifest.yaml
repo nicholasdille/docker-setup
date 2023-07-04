@@ -1,5 +1,5 @@
 name: crane
-version: "0.14.0"
+version: "0.15.2"
 check: ${binary} version
 platforms:
 - linux/amd64
@@ -17,3 +17,4 @@ renovate:
   datasource: github-releases
   package: google/go-containerregistry
   extractVersion: ^v(?<version>.+?)$
+  priority: high

@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: wagoodman/dive
   extractVersion: ^v(?<version>.+?)$
+  priority: high

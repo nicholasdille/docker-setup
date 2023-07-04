@@ -1,5 +1,5 @@
 name: nerdctl
-version: "1.3.1"
+version: "1.4.0"
 check: XDG_RUNTIME_DIR=foo ${binary} --version | cut -d' ' -f3
 runtime_dependencies:
 - containerd
@@ -19,3 +19,4 @@ renovate:
   datasource: github-releases
   package: containerd/nerdctl
   extractVersion: ^v(?<version>.+?)$
+  priority: high

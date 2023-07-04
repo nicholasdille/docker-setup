@@ -1,13 +1,14 @@
 name: pandoc
-version: "3.1.2"
+version: "3.1.4"
 check: ${binary} --version | grep ^pandoc | cut -d' ' -f2
 tags:
-- type/cli
-- format
-- markdown
-- lang/haskell
+  - type/cli
+  - format
+  - markdown
+  - lang/haskell
 homepage: https://github.com/jgm/pandoc
 description: Universal markup converter
 renovate:
   datasource: github-releases
   package: jgm/pandoc
+  priority: low

@@ -1,5 +1,5 @@
 name: dagger
-version: "0.5.2"
+version: "0.6.2"
 check: ${binary} version | cut -d' ' -f2
 platforms:
 - linux/amd64
@@ -17,3 +17,4 @@ renovate:
   datasource: github-releases
   package: dagger/dagger
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

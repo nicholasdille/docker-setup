@@ -2,11 +2,12 @@ name: lsd
 version: "0.23.1"
 check: ${binary} --version | cut -d' ' -f2
 tags:
-- type/cli
-- terminal
-- lang/rust
+  - type/cli
+  - terminal
+  - lang/rust
 homepage: https://github.com/lsd-rs/lsd
 description: Next gen ls command
 renovate:
   datasource: github-releases
   package: lsd-rs/lsd
+  priority: low

@@ -1,5 +1,5 @@
 name: podman
-version: "4.5.0"
+version: "4.5.1"
 check: ${binary} --version | cut -d' ' -f3
 runtime_dependencies:
 - conmon
@@ -22,3 +22,4 @@ renovate:
   datasource: github-releases
   package: containers/podman
   extractVersion: ^v(?<version>.+?)$
+  priority: high

@@ -2,12 +2,13 @@ name: witness
 version: "0.1.13"
 check: ${binary} version | cut -d' ' -f2 | cut -d- -f1 | tr -d v
 tags:
-- type/cli
-- category/security
-- lang/go
+  - type/cli
+  - category/security
+  - lang/go
 homepage: https://github.com/testifysec/witness
 description: Pluggable framework for software supply chain risk management
 renovate:
   datasource: github-releases
   package: testifysec/witness
   extractVersion: ^v(?<version>.+?)$
+  priority: low

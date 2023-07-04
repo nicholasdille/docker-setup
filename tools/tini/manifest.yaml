@@ -2,15 +2,17 @@ name: tini
 version: "0.19.0"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- container/init
-- type/cli
-- lang/c
+  - container/init
+  - type/cli
+  - lang/c
+  - state/stale
 homepage: https://github.com/krallin/tini
 description: Tiny but valid init for containers
 renovate:
   datasource: github-releases
   package: krallin/tini
   extractVersion: ^v(?<version>.+?)$
+  priority: low

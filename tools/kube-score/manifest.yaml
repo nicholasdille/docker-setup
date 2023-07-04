@@ -2,12 +2,13 @@ name: kube-score
 version: "1.16.1"
 check: ${binary} version | cut -d' ' -f3 | tr -d ,
 tags:
-- type/cli
-- kubernetes
-- lang/go
+  - type/cli
+  - kubernetes
+  - lang/go
 homepage: https://github.com/zegl/kube-score
 description: Kubernetes object analysis with recommendations for improved reliability and security
 renovate:
   datasource: github-releases
   package: zegl/kube-score
   extractVersion: ^v(?<version>.+?)$
+  priority: low

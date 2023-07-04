@@ -1,14 +1,15 @@
 name: datree
-version: "1.8.67"
+version: "1.9.10"
 check: ${binary} version
 tags:
-- category/security
-- type/cli
-- kubernetes
-- cicd
-- lang/go
+  - category/security
+  - type/cli
+  - kubernetes
+  - cicd
+  - lang/go
 homepage: https://github.com/datreeio/datree
 description: Prevent Kubernetes misconfigurations from reaching production
 renovate:
   datasource: github-releases
   package: datreeio/datree
+  priority: low

@@ -1,0 +1,17 @@
+name: jqp
+version: "0.4.0"
+check: ${binary} --version | cut -d' ' -f3
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/go
+- type/tui
+homepage: https://github.com/noahgorstein/jqp
+description: TUI playground to experiment with jq
+renovate:
+  datasource: github-releases
+  package: noahgorstein/jqp
+  extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -1,17 +1,18 @@
 name: k6
-version: "0.44.1"
+version: "0.45.0"
 check: ${binary} version | cut -d' ' -f2 | tr -d v
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- org/grafana
-- category/operations
-- lang/go
-- type/cli
+  - org/grafana
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/grafana/k6
 description: Some description
 renovate:
   datasource: github-releases
   package: grafana/k6
   extractVersion: ^v(?<version>.+?)$
+  priority: low

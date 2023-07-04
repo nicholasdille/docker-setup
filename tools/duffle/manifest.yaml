@@ -2,13 +2,14 @@ name: duffle
 version: "0.3.5-beta.1"
 check: ${binary} version
 tags:
-- type/cli
-- cnab
-- lang/go
-- state/stale
-- state/deprecated
+  - type/cli
+  - cnab
+  - lang/go
+  - state/stale
+  - state/deprecated
 homepage: https://github.com/cnabio/duffle
 description: CNAB installer
 renovate:
   datasource: github-releases
   package: cnabio/duffle
+  priority: low

@@ -1,30 +1,12 @@
-#syntax=docker/dockerfile:1.4.3
+#syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/rust:${ref} AS rust
-
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --from=rust / /
-ARG CARGO_HOME="/opt/cargo" \
-    RUSTUP_HOME="/opt/rustup"
-ARG DEBIAN_FRONTEND=noninteractive
-RUN <<EOF
-apt-get update
-apt-get -y install --no-install-recommends \
-    pkg-config \
-    libsystemd-dev \
-    libdbus-glib-1-dev \
-    build-essential \
-    libelf-dev \
-    libseccomp-dev
-EOF
-WORKDIR /tmp/github.com/containers/youki
 ARG name
 ARG version
-SHELL [ "/bin/bash", "--login", "-ec" ]
 RUN <<EOF
-git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/youki .
-make youki-release
-cp youki "${prefix}${target}/bin/"
+curl --silent --location --fail "https://github.com/containers/youki/releases/download/v${version}/youki_${version//./_}_linux.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=2 --no-same-owner \
+    "youki_${version//./_}_linux/youki-${version}/youki"
 EOF

@@ -2,17 +2,18 @@ name: tml
 version: "0.6.0"
 check: "" # No version parameter
 build_dependencies:
-- go
+  - go
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/development
-- lang/go
-- type/cli
+  - category/development
+  - lang/go
+  - type/cli
 homepage: https://github.com/liamg/tml
 description: Tiny markup language for terminal output
 renovate:
   datasource: github-releases
   package: liamg/tml
   extractVersion: ^v(?<version>.+?)$
+  priority: low

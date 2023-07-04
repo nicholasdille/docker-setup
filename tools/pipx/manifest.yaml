@@ -18,3 +18,4 @@ description: Install and Run Python Applications in Isolated Environments
 renovate:
   datasource: pypi
   package: pipx
+  priority: medium

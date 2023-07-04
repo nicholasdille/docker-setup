@@ -1,5 +1,7 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
 name: docker
-version: "23.0.6"
+version: "24.0.2"
 binary: dockerd
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 runtime_dependencies:
@@ -22,7 +24,16 @@ tags:
 - lang/go
 homepage: https://www.docker.com/
 description: The Docker CLI
+messages:
+  internals: |
+    - Binaries (except docker) are installed into ${prefix}${target}/libexec/docker/bin
+    - Systemd units and init scripts are modified to perfer binaries from this directory
+    - The BuildKit builder is enabled by default
+    - The containerd image store is enabled by default
+  update: |
+    You need to restart the Docker daemon to apply the update
 renovate:
   datasource: github-tags
   package: moby/moby
   extractVersion: ^v(?<version>.+?)$
+  priority: high

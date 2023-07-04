@@ -1,5 +1,5 @@
 name: gitlab-ci-pipelines-exporter
-version: "0.5.4"
+version: "0.5.5"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
 - linux/amd64
@@ -14,3 +14,4 @@ renovate:
   datasource: github-releases
   package: mvisonneau/gitlab-ci-pipelines-exporter
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

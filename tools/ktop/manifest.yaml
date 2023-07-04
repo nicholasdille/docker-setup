@@ -2,14 +2,15 @@ name: ktop
 version: "0.3.5"
 check: "" # No version parameter
 tags:
-- type/tui
-- kubernetes
-- management
-- troubleshooting
-- lang/go
+  - type/tui
+  - kubernetes
+  - management
+  - troubleshooting
+  - lang/go
 homepage: https://github.com/vladimirvivien/ktop
 description: top-like tool for your Kubernetes clusters
 renovate:
   datasource: github-releases
   package: vladimirvivien/ktop
   extractVersion: ^v(?<version>.+?)$
+  priority: low

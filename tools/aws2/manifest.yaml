@@ -1,5 +1,5 @@
 name: aws2
-version: "2.11.20"
+version: "2.12.6"
 binary: aws
 check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
 conflicts_with:
@@ -14,3 +14,4 @@ description: Universal CLI for Amazon Web Services
 renovate:
   datasource: github-tags
   package: aws/aws-cli
+  priority: medium

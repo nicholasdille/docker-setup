@@ -1,14 +1,15 @@
 name: actions-runner
-version: "2.304.0"
+version: "2.305.0"
 check: ""
 tags:
-- org/github
-- category/development
-- lang/csharp
-- type/daemon
+  - org/github
+  - category/development
+  - lang/csharp
+  - type/daemon
 homepage: https://github.com/actions/runner
 description: Runner for GitHub Actions
 renovate:
   datasource: github-releases
   package: actions/runner
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -15,3 +15,4 @@ renovate:
   datasource: github-releases
   package: derailed/k9s
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

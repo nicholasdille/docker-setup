@@ -1,16 +1,17 @@
 name: jx
 version: "3.10.83"
-check: ${binary} version | grep ^version | cut -d' ' -f2
+check: ${binary} version --short
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- type/cli
-- cicd
-- lang/go
+  - type/cli
+  - cicd
+  - lang/go
 homepage: https://github.com/jenkins-x/jx
 description: Automated CI+CD for Kubernetes with Preview Environments on Pull Requests using Cloud Native pipelines from Tekton
 renovate:
   datasource: github-releases
   package: jenkins-x/jx
   extractVersion: ^v(?<version>.+?)$
+  priority: low

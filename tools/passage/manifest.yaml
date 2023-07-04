@@ -2,10 +2,10 @@ name: passage
 version: "master"
 check: ${binary} version 2>/dev/null | tr -s ' ' | grep "^= v" | cut -d' ' -f2 | tr -d v
 runtime_dependencies:
-- age
+  - age
 tags:
-- category/security
-- lang/shell
-- type/cli
+  - category/security
+  - lang/shell
+  - type/cli
 homepage: https://github.com/FiloSottile/passage
 description: Fork of password-store that uses age as backend

@@ -1,16 +1,17 @@
 name: warp
-version: "0.6.8"
+version: "0.7.4"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- category/operations
-- lang/go
-- type/cli
+  - category/operations
+  - lang/go
+  - type/cli
 homepage: https://github.com/minio/warp
 description: S3 benchmarking tool
 renovate:
   datasource: github-releases
   package: minio/warp
   extractVersion: ^v(?<version>.+?)$
+  priority: low

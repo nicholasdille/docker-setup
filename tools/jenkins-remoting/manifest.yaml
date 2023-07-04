@@ -1,19 +1,20 @@
 name: jenkins-remoting
-version: "3107.v665000b_51092"
-binary: false
+version: "3131.vf2b_b_798b_ce99"
+binary: "false"
 check: "" # Requires Java to run
 runtime_dependencies:
-- openjdk-jre
+  - openjdk-jre
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- org/jenkins
-- category/operations
-- lang/java
-- type/daemon
+  - org/jenkins
+  - category/operations
+  - lang/java
+  - type/daemon
 homepage: https://github.com/jenkinsci/remoting
 description: Jenkins Remoting module
 renovate:
   datasource: github-releases
   package: jenkinsci/remoting
   versioning: loose
+  priority: low

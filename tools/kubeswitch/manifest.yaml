@@ -12,3 +12,4 @@ renovate:
   datasource: github-releases
   package: danielb42/kubeswitch
   extractVersion: ^v(?<version>.+?)$
+  priority: high

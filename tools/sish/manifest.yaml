@@ -2,13 +2,14 @@ name: sish
 version: "2.9.2"
 check: ${binary} --version | grep ^Version | cut -d' ' -f2
 tags:
-- type/cli
-- category/development
-- tunneling
-- lang/go
+  - type/cli
+  - category/development
+  - tunneling
+  - lang/go
 homepage: https://github.com/antoniomika/sish
 description: HTTP(S)/WS(S)/TCP Tunnels to localhost using only SSH
 renovate:
   datasource: github-releases
   package: antoniomika/sish
   extractVersion: ^v(?<version>.+?)$
+  priority: low

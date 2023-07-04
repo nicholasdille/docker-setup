@@ -1,5 +1,5 @@
 name: npm
-version: "9.6.6"
+version: "9.7.2"
 check: ${binary} --version
 build_dependencies:
 - nodejs-lts
@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: npm/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

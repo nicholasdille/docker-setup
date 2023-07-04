@@ -2,15 +2,16 @@ name: curl
 version: "7.87.0"
 check: ${binary} --version | grep ^curl | cut -d' ' -f2
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+#- linux/arm64
 tags:
-- type/cli
-- component/network
-- lang/c
+  - type/cli
+  - component/network
+  - lang/c
 homepage: https://github.com/curl/curl
 description: Tool and library for transferring data with URL syntax
 renovate:
   datasource: github-releases
   package: curl/curl
   extractVersion: regex:^curl-(?<major>\d+?)_(?<minor>\d+?)_(?<patch>\d+?)$
+  priority: low

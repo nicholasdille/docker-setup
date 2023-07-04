@@ -1,5 +1,5 @@
 name: direnv
-version: "2.32.2"
+version: "2.32.3"
 check: ${binary} version
 tags:
 - type/cli
@@ -11,3 +11,4 @@ renovate:
   datasource: github-releases
   package: direnv/direnv
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

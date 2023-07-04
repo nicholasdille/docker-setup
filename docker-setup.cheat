@@ -1,12 +1,19 @@
 % docker-setup
 
-$ tool: docker-setup --all list --- --column 1 --delimiter ' '
+$ tool: docker-setup list --- --column 2 --delimiter '\s+'
+$ tag: docker-setup tags --- column 2 --delimiter '\s+'
+
+# Show available tools
+sudo docker-setup list
+
+# Show information about a specific tool
+sudo docker-setup describe <tool>
 
 # Install default tools
-sudo docker-setup --default install
-
-# Install all tools
-sudo docker-setup --all install
+sudo docker-setup install --default
 
 # Install specific tool
-sudo docker-setup --tools=<tool> install
+sudo docker-setup install <tool>
+
+# Show status of installed tools
+sudo docker-setup install --installed --plan

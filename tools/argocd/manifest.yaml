@@ -1,14 +1,15 @@
 name: argocd
-version: "2.7.2"
+version: "2.7.6"
 check: ${binary} version 2>/dev/null | grep ^argocd | cut -d' ' -f2 | cut -d+ -f1 | tr -d v
 tags:
-- type/cli
-- category/operations
-- gitops
-- lang/go
+  - type/cli
+  - category/operations
+  - gitops
+  - lang/go
 homepage: https://github.com/argoproj/argo-cd
 description: Declarative continuous deployment for Kubernetes
 renovate:
   datasource: github-releases
   package: argoproj/argo-cd
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: proot
+version: "5.4.0"
+check: "" # Too complicated to parse ASCII art
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/c
+- type/cli
+homepage: https://github.com/proot-me/proot
+description: chroot, mount --bind, and binfmt_misc without privilege/setup for Linux
+renovate:
+  datasource: github-releases
+  package: proot-me/proot
+  extractVersion: ^v(?<version>.+?)$
+  priority: high

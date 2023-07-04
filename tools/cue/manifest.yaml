@@ -12,3 +12,4 @@ renovate:
   datasource: github-releases
   package: cue-lang/cue
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

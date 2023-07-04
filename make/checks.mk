@@ -1,12 +1,17 @@
 .PHONY:
-check: $(HELPER)/var/lib/docker-setup/manifests/shellcheck.json
-	@shellcheck docker-setup
+check-tools: \
+		check-tools-homepage \
+		check-tools-description \
+		check-tools-runtime-deps \
+		check-tools-build-deps \
+		check-tools-tags \
+		check-tools-renovate \
+		check-tools-platforms
 
 .PHONY:
-check-tools: check-tools-homepage check-tools-description check-tools-runtime-deps check-tools-build-deps check-tools-tags check-tools-renovate check-tools-platforms
-
-.PHONY:
-check-tools-homepage: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
+check-tools-homepage: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.homepage == null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -19,7 +24,9 @@ check-tools-homepage: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.
 	fi
 
 .PHONY:
-check-tools-description: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
+check-tools-description: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.description == null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -31,7 +38,8 @@ check-tools-description: $(HELPER)/var/lib/docker-setup/manifests/jq.json metada
 	fi
 
 .PHONY:
-check-tools-build-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
+check-tools-build-deps: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -46,7 +54,8 @@ check-tools-build-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
 	fi
 
 .PHONY:
-check-tools-runtime-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
+check-tools-runtime-deps: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.runtime_dependencies != null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -61,7 +70,9 @@ check-tools-runtime-deps: $(HELPER)/var/lib/docker-setup/manifests/jq.json
 	fi
 
 .PHONY:
-check-tools-tags: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
+check-tools-tags: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.tags == null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -81,7 +92,8 @@ check-tools-tags: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
 	fi
 
 .PHONY:
-tag-usage: $(HELPER)/var/lib/docker-setup/manifests/jq.json
+tag-usage: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
 	@\
 	jq --raw-output '.tools[] | .tags[]' metadata.json \
 	| sort \
@@ -91,7 +103,9 @@ tag-usage: $(HELPER)/var/lib/docker-setup/manifests/jq.json
 	done
 
 .PHONY:
-check-tools-renovate: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
+check-tools-renovate: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.renovate == null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -112,7 +126,9 @@ assert-no-hardcoded-version:
 	| grep -v "127.0.0.1"
 
 .PHONY:
-check-tools-platforms: $(HELPER)/var/lib/docker-setup/manifests/jq.json metadata.json
+check-tools-platforms: \
+		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.platforms == null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \

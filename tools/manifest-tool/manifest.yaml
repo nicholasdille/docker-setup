@@ -2,16 +2,17 @@ name: manifest-tool
 version: "2.0.8"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
-- linux/amd64
-- linux/arm64
+  - linux/amd64
+  - linux/arm64
 tags:
-- standard/oci
-- container/registry
-- type/cli
-- lang/go
+  - standard/oci
+  - container/registry
+  - type/cli
+  - lang/go
 homepage: https://github.com/estesp/manifest-tool
 description: Command line tool to create and query container image manifest list/indexes
 renovate:
   datasource: github-releases
   package: estesp/manifest-tool
   extractVersion: ^v(?<version>.+?)$
+  priority: low

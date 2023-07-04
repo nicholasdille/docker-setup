@@ -1,5 +1,5 @@
 name: portainer
-version: "2.18.2"
+version: "2.18.3"
 check: ${binary} --version 2>&1
 build_dependencies:
 - docker-compose-v1
@@ -16,3 +16,4 @@ description: Making Docker and Kubernetes management easy
 renovate:
   datasource: github-releases
   package: portainer/portainer
+  priority: medium

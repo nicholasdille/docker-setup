@@ -6,9 +6,9 @@ check: ${binary} version | tr -s ' ' | grep '= v' | cut -d' ' -f2 | tr -d v
 #- git
 #- bash
 tags:
-- category/security
-- lang/shell
-- type/cli
+  - category/security
+  - lang/shell
+  - type/cli
 homepage: https://www.passwordstore.org/
 description: The standard unix password manager
 renovate:
@@ -16,3 +16,4 @@ renovate:
   package: pass
   url: https://git.zx2c4.com/password-store
   versioning: loose
+  priority: low

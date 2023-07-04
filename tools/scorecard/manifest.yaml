@@ -1,5 +1,5 @@
 name: scorecard
-version: "4.10.5"
+version: "4.11.0"
 check: ${binary} version 2>&1 | grep "GitVersion" | cut -dv -f2
 tags:
 - category/security
@@ -11,3 +11,4 @@ renovate:
   datasource: github-releases
   package: ossf/scorecard
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

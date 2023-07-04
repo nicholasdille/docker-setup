@@ -1,13 +1,14 @@
 name: gitleaks
-version: "8.16.3"
+version: "8.17.0"
 check: ${binary} version
 tags:
-- type/cli
-- category/security
-- lang/go
+  - type/cli
+  - category/security
+  - lang/go
 homepage: https://github.com/gitleaks/gitleaks
 description: Protect and discover secrets using Gitleaks
 renovate:
   datasource: github-releases
   package: gitleaks/gitleaks
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -13,3 +13,4 @@ description: Don't change anything in your container image and minify it by up t
 renovate:
   datasource: github-releases
   package: slimtoolkit/slim
+  priority: medium

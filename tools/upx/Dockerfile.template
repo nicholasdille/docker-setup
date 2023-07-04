@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+curl --silent --location --fail "https://github.com/upx/upx/releases/download/v${version}/upx-${version}-${alt_arch}_linux.tar.xz" \
+| tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "upx-${version}-${alt_arch}_linux/upx" \
+    "upx-${version}-${alt_arch}_linux/upx.1"
+mv "${prefix}${target}/bin/upx.1" "${prefix}${target}/share/man/man1/"
+EOF

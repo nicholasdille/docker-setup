@@ -3,14 +3,15 @@ version: "1.30.0"
 binary: structurizr
 check: ${binary} help | grep structurizr-cli | cut -d' ' -f2
 runtime_dependencies:
-- openjdk-jre
+  - openjdk-jre
 tags:
-- category/development
-- langjava
-- type/cli
+  - category/development
+  - langjava
+  - type/cli
 homepage: https://github.com/structurizr/cli
 description: CLI for Structurizr
 renovate:
   datasource: github-releases
   package: structurizr/cli
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,12 +2,13 @@ name: kn
 version: "1.7.0"
 check: "" # No version parameter
 tags:
-- type/cli
-- category/development
-- lang/go
+  - type/cli
+  - category/development
+  - lang/go
 homepage: https://github.com/knative/client
 description: Knative developer experience, docs, reference Knative CLI implementation
 renovate:
   datasource: github-releases
   package: knative/client
   extractVersion: ^v(?<version>.+?)$
+  priority: low

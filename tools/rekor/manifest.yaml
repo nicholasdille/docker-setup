@@ -1,20 +1,21 @@
 name: rekor
-version: "1.1.1"
+version: "1.2.2"
 binary: rekor-cli
 check: ${binary} version 2>&1 | grep ^GitVersion | cut -dv -f2
 build_dependencies:
-- cosign
+  - cosign
 runtime_dependencies:
-- trillian
+  - trillian
 tags:
-- category/security
-- type/cli
-- type/daemon
-- container/sign
-- lang/go
+  - category/security
+  - type/cli
+  - type/daemon
+  - container/sign
+  - lang/go
 homepage: https://github.com/sigstore/rekor
 description: Software Supply Chain Transparency Log
 renovate:
   datasource: github-releases
   package: sigstore/rekor
   extractVersion: ^v(?<version>.+?)$
+  priority: low

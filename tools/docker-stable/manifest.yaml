@@ -1,5 +1,5 @@
 name: docker-stable
-version: "20.10.24"
+version: "23.0.6"
 binary: dockerd
 check: "" # Empty because of parallel install with "docker"
 runtime_dependencies:
@@ -24,3 +24,4 @@ renovate:
   datasource: github-tags
   package: moby/moby
   extractVersion: ^v(?<version>23\..+?)$
+  priority: high

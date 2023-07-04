@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: supdock
+version: "3.1.0"
+check: ${binary} --version | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/rust
+- type/cli
+homepage: https://github.com/segersniels/supdock
+description: Slightly more visual way to interact with the docker daemon
+usage: |
+  supdock is a wrapper around docker that provides a more visual way to interact with the docker daemon:
+
+    alias docker=supdock
+renovate:
+  datasource: github-releases
+  package: segersniels/supdock
+  priority: medium

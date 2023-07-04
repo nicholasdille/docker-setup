@@ -1,5 +1,5 @@
 name: aws
-version: "1.27.133"
+version: "1.28.0"
 check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
 build_dependencies:
 - python
@@ -17,3 +17,4 @@ description: Universal CLI for Amazon Web Services
 renovate:
   datasource: pypi
   package: awscli
+  priority: medium

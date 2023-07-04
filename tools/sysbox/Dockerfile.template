@@ -1,0 +1,24 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+WORKDIR /tmp/sysbox
+RUN <<EOF
+curl --silent --location --fail --remote-name \
+    "https://downloads.nestybox.com/sysbox/releases/v${version}/sysbox-ce_${version}-0.linux_${alt_arch}.deb"
+ar x "sysbox-ce_${version}-0.linux_${alt_arch}.deb"
+tar --extract --xz --file data.tar.xz
+
+for type in fs runc mgr; do
+    mv "usr/bin/sysbox-${type}" "${prefix}${target}/bin/"
+    test -f "lib/systemd/system/sysbox-${type}.service" \
+    && mv "lib/systemd/system/sysbox-${type}.service" "${prefix}/etc/systemd/system/"
+done
+mv "lib/systemd/system/sysbox.service" "${prefix}/etc/systemd/system/"
+
+mkdir -p "${prefix}/etc/sysctl.d"
+mv "lib/sysctl.d/99-sysbox-sysctl.conf" "${prefix}/etc/sysctl.d/"
+EOF

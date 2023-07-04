@@ -1,16 +1,17 @@
 name: telegraf
-version: "1.26.2"
+version: "1.27.1"
 check: ${binary} --version | cut -d' ' -f2
 tags:
-- org/influxdata
-- observability/metrics
-- o11y
-- category/monitoring
-- lang/go
-- type/cli
+  - org/influxdata
+  - observability/metrics
+  - o11y
+  - category/monitoring
+  - lang/go
+  - type/cli
 homepage: https://github.com/influxdata/telegraf
 description: Plugin-driven server agent for collecting & reporting metrics
 renovate:
   datasource: github-releases
   package: influxdata/telegraf
   extractVersion: ^v(?<version>.+?)$
+  priority: low

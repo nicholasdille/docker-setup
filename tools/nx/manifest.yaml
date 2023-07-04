@@ -1,19 +1,20 @@
 name: nx
-version: "16.1.4"
+version: "16.4.3"
 check: "" # No version parameter
 build_dependencies:
-- nodejs-lts
-- npm
+  - nodejs-lts
+  - npm
 runtime_dependencies:
-- nodejs-lts
+  - nodejs-lts
 platforms:
-- linux/amd64
+  - linux/amd64
 tags:
-- category/development
-- lang/javascript
-- type/cli
+  - category/development
+  - lang/javascript
+  - type/cli
 homepage: https://github.com/nrwl/nx
 description: Smart, Fast and Extensible Build System
 renovate:
   datasource: github-releases
   package: nrwl/nx
+  priority: low

@@ -7,3 +7,6 @@ ARG name
 ARG version
 
 COPY docker ${prefix}${target}/libexec/podman/
+RUN <<EOF
+ln --symbolic --relative --force "${prefix}${target}/libexec/podman/docker" "${target}/bin/docker"
+EOF

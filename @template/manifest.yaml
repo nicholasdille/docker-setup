@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
 name: foo
 version: "0.1.2"
 check: ""
@@ -19,3 +21,4 @@ renovate:
   datasource: github-releases
   package: foo/bar
   extractVersion: ^v(?<version>.+?)$
+  priority: low

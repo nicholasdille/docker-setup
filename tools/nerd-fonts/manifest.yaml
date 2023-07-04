@@ -1,13 +1,14 @@
 name: nerd-fonts
-version: "3.0.0"
-binary: false
+version: "3.0.2"
+binary: "false"
 check: "" # No binary
 tags:
-- slides
-- presentation
+  - slides
+  - presentation
 homepage: https://github.com/ryanoasis/nerd-fonts
 description: Iconic font aggregator, collection, and patcher
 renovate:
   datasource: github-releases
   package: ryanoasis/nerd-fonts
   extractVersion: ^v(?<version>.+?)$
+  priority: low

@@ -2,13 +2,14 @@ name: kubent
 version: "0.7.0"
 check: ${binary} --version 2>&1 | cut -d' ' -f4
 tags:
-- type/cli
-- kubernetes
-- management
-- cicd
-- lang/go
+  - type/cli
+  - kubernetes
+  - management
+  - cicd
+  - lang/go
 homepage: https://github.com/doitintl/kube-no-trouble
 description: Easily check your clusters for use of deprecated APIs
 renovate:
   datasource: github-releases
   package: doitintl/kube-no-trouble
+  priority: low

@@ -1,20 +1,21 @@
 name: gcloud
-version: "430.0.0"
+version: "437.0.1"
 check: ${binary} --version | head -n 1 | cut -d' ' -f4
 build_dependencies:
-- python
+  - python
 runtime_dependencies:
-- python
+  - python
 platforms:
-- linux/amd64
+  - linux/amd64
 #- linux/arm64
 tags:
-- org/google
-- category/development
-- lang/python
-- type/cli
+  - org/google
+  - category/development
+  - lang/python
+  - type/cli
 homepage: https://cloud.google.com/sdk/docs
 description: Set of tools that you can use to manage resources and applications hosted on Google Cloud
 renovate:
   datasource: github-tags
   package: twistedpair/google-cloud-sdk
+  priority: low

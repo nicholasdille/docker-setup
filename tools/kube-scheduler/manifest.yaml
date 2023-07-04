@@ -1,5 +1,5 @@
 name: kube-scheduler
-version: "1.27.1"
+version: "1.27.3"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 build_dependencies:
 - cosign
@@ -18,3 +18,4 @@ renovate:
   datasource: github-releases
   package: kubernetes/kubernetes
   extractVersion: ^v(?<version>.+?)$
+  priority: medium

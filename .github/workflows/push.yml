@@ -3,97 +3,188 @@ name: Build and push
 on:
   push:
     branches:
-      - "main"
+    - "main"
     paths:
-      - "tools/**"
-      - "docker-setup"
-      - "Makefile"
-      - ".github/workflows/push.yml"
-  #schedule:
-  #  - cron: "*/15 * * * *"
+    - "tools/**"
+    - ".github/workflows/push.yml"
+  workflow_dispatch:
+    inputs:
+      tools:
+        description: 'Tools to build/promote'
+        type: string
+        default: ''
+
+concurrency:
+  group: push
 
 jobs:
 
-  test:
-    name: Build and push
-    runs-on: ubuntu-20.04
+  collect:
+    name: Collect changed tools
+    runs-on: ubuntu-22.04
+    outputs:
+      tools: ${{ steps.collect.outputs.tools }}
     steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+    - name: Install docker-setup
+      uses: nicholasdille/docker-setup-action@main
+      with:
+        prefix: helper
+        tools: gojq
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    - name: Collect
+      id: collect
+      env:
+        DOCKER_BUILDKIT: 1
+      run: |
+        CHANGED_TOOLS="${{ inputs.tools }}"
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: nicholasdille
-          password: ${{ secrets.PACKAGES_TOKEN }}
+        if test -z "${CHANGED_TOOLS}"; then
+            echo "### Fetching config for metadata"
+            OLD_COMMIT_SHA="$(
+                helper/usr/local/bin/jq \
+                    --raw-output \
+                    '.revision' \
+                    helper/var/cache/docker-setup/metadata.json
+            )"
 
-      - name: Push
-        env:
-          DOCKER_BUILDKIT: 1
-          AUTHOR: ${{ github.event.commits[0].author.name }}
-        run: |
-          echo "### Running for commit by author: ${AUTHOR}"
+            echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
+            git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+            | sort \
+            | grep -E "^tools/[^/]+/" \
+            | cut -d/ -f2 \
+            | uniq \
+            | xargs
+            CHANGED_TOOLS="$(
+                git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
+                | sort \
+                | grep -E "^tools/[^/]+/" \
+                | cut -d/ -f2 \
+                | uniq \
+                | xargs
+            )"
+        fi
 
-          make helper/var/lib/docker-setup/manifests/regclient.json
+        echo "### Tools to process: ${CHANGED_TOOLS}."
+        CHANGED_TOOLS_JSON="$(
+            echo -n "${CHANGED_TOOLS}" \
+            | tr ' ' '\n' \
+            | jq --raw-input '.' | jq --slurp --compact-output '.'
+        )"
+        echo "    JSON: ${CHANGED_TOOLS_JSON}"
+        echo "tools=${CHANGED_TOOLS_JSON}" >>"${GITHUB_OUTPUT}"
 
-          echo "### Fetching manifest for metadata"
-          CONFIG_DIGEST="$(
-              helper/usr/local/bin/regctl manifest get ghcr.io/nicholasdille/docker-setup/metadata:main --format raw-body \
-              | helper/usr/local/bin/jq --raw-output '.config.digest'
-          )"
+  push:
+    name: Build and push
+    runs-on: ubuntu-22.04
+    needs:
+    - collect
+    if: ${{ needs.collect.outputs.tools != '[]' && needs.collect.outputs.tools != '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        tool: ${{ fromJSON(needs.collect.outputs.tools) }}
+    steps:
 
-          echo "### Fetching config for metadata"
-          OLD_COMMIT_SHA="$(
-              helper/usr/local/bin/regctl blob get ghcr.io/nicholasdille/docker-setup/metadata:main ${CONFIG_DIGEST} \
-              | helper/usr/local/bin/jq --raw-output '.config.Labels."org.opencontainers.image.revision"'
-          )"
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-          echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
-          git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
-          | sort \
-          | grep -E "^tools/[^/]+/" \
-          | cut -d/ -f2 \
-          | uniq \
-          | xargs
-          CHANGED_TOOLS="$(
-              git log --pretty=format: --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA} \
-              | sort \
-              | grep -E "^tools/[^/]+/" \
-              | cut -d/ -f2 \
-              | uniq \
-              | xargs
-          )"
+    - name: Install docker-setup
+      uses: nicholasdille/docker-setup-action@main
+      with:
+        prefix: helper
+        tools: gojq regclient yq
 
-          if test -z "${CHANGED_TOOLS}"; then
-              echo "### No tools to make (${CHANGED_TOOLS})"
-              echo "### git log:"
-              git log --name-only ${OLD_COMMIT_SHA}..${GITHUB_SHA}
-              exit
-          fi
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
 
-          PR_AUTHOR="renovate[bot]"
-          if test "${AUTHOR:0:${#PR_AUTHOR}}" == "${PR_AUTHOR}"; then
-              echo "### Tagging tools: ${CHANGED_TOOLS}"
-              TOOLS_RAW="${CHANGED_TOOLS}" make promote metadata.json--push
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-          else
-              echo "### Making tools: ${CHANGED_TOOLS}."
-              TOOLS_RAW="${CHANGED_TOOLS}" make push metadata.json--push
-          fi
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: nicholasdille
+        password: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: Store logs
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: logs.zip
-          path: "**/build.log"
+    - name: Push
+      env:
+        GH_TOKEN: ${{ secrets.BOT_PACKAGES_TOKEN }}
+        DOCKER_BUILDKIT: 1
+      run: |
+        echo "### Processing ${{ matrix.tool }}"
+        sha_main="$(
+            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:main || true
+        )"
+        sha_test="$(
+            helper/usr/local/bin/regctl manifest head ghcr.io/nicholasdille/docker-setup/${{ matrix.tool }}:test || true
+        )"
+        echo "    SHA of tag main: ${sha_main}"
+        echo "    SHA of tag test: ${sha_test}"
+
+        tool_needs_rebuild=false
+        if test -z "${sha_test}"; then
+            tool_needs_rebuild=true
+        
+        elif test "${sha_test}" == "${sha_main}"; then
+            tool_needs_rebuild=true
+        fi
+
+        if "${tool_needs_rebuild}"; then
+            echo "### Building ${{ matrix.tool }}"
+            make "${{ matrix.tool }}--push"
+
+        else
+            echo "### Promoting ${{ matrix.tool }}"
+            make "${{ matrix.tool }}--promote"
+        fi
+
+    - name: Store logs
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: logs.zip
+        path: "**/build.log"
+
+  metadata:
+    name: Metadata
+    runs-on: ubuntu-22.04
+    needs:
+    - push
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install docker-setup
+      uses: nicholasdille/docker-setup-action@main
+      with:
+        prefix: helper
+        tools: gojq regclient yq
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: nicholasdille
+        password: ${{ secrets.PACKAGES_TOKEN }}
+
+    - name: Update metadata
+      run: |
+        make metadata.json--push
