@@ -1,5 +1,5 @@
 name: libcgroup
-version: "2.0.3"
+version: "3.0"
 binary: ${target}/bin/lscgroup
 check: "" # No version parameter
 tags:
