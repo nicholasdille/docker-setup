@@ -6,7 +6,14 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}${target}/bin/git-filter-repo" \
-    "https://github.com/newren/git-filter-repo/raw/v${version}/git-filter-repo"
-chmod +x "${prefix}${target}/bin/git-filter-repo"
+curl --silent --location --fail "https://github.com/newren/git-filter-repo/releases/download/v${version}/git-filter-repo-${version}.tar.xz" \
+| tar --extract --xz --directory="/tmp/" --strip-components=1 --no-same-owner \
+    "git-filter-repo-${version}/git-filter-repo" \
+    "git-filter-repo-${version}/Documentation/man1/git-filter-repo.1" \
+    "git-filter-repo-${version}/Documentation/html/git-filter-repo.html"
+
+mkdir -p "${prefix}${target}/share/doc/git/html/"
+mv /tmp/git-filter-repo "${prefix}${target}/bin/"
+mv /tmp/Documentation/man1/git-filter-repo.1 "${prefix}${target}/share/man/man1/"
+mv /tmp/Documentation/html/git-filter-repo.html "${prefix}${target}/share/doc/git/html/"
 EOF
