@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: gnuplot
-version: "5.4.8"
+version: "5.5"
 check: ""
 platforms:
 - linux/amd64
