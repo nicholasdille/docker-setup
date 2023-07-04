@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: lstags
-version: "1.2.23"
+version: "51"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64
