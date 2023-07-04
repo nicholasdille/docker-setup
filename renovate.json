@@ -2257,7 +2257,7 @@
       "datasourceTemplate": "gitlab-tags",
       "depNameTemplate": "graphviz/graphviz",
       "fileMatch": [
-        "^tools/graphwiz/manifest.yaml$"
+        "^tools/graphviz/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
