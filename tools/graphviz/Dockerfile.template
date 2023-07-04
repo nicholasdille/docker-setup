@@ -19,13 +19,14 @@ apt-get -y install --no-install-recommends \
     m4 \
     libtool \
     build-essential \
-    bison
+    bison \
+    flex
 EOF
 WORKDIR /tmp/graphviz
 RUN <<EOF
-git clone -q --config advice.detachedHead=false --depth 1 --branch "${version}" https://gitlab.com/graphviz/graphviz .
+curl --silent --location --fail "https://gitlab.com/graphviz/graphviz/-/archive/${version}/graphviz-${version}.tar.gz" \
+| tar --extract --gzip --strip-components=1
 ./autogen.sh
-export LDFLAGS=-static
 ./configure \
     --prefix="${prefix}${target}" \
     --enable-static=yes \
@@ -57,12 +58,8 @@ export LDFLAGS=-static
     --with-ann=no \
     --with-glade=no \
     --with-qt=no \
-    --with-x=nomake \
-    LDFLAGS=-static
-#make install
-EOF
-
-# foo
-RUN <<EOF
-touch "${prefix}${target}/foo"
+    --with-x=nomake
+make -j 4
+make install
+mv "${prefix}${target}/bin/dot_static" "${prefix}${target}/bin/dot"
 EOF
