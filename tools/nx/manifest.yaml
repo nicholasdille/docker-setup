@@ -1,5 +1,5 @@
 name: nx
-version: "16.4.2"
+version: "16.4.3"
 check: "" # No version parameter
 build_dependencies:
   - nodejs-lts
