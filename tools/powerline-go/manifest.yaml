@@ -1,5 +1,5 @@
 name: powerline-go
-version: "1.22.1"
+version: "1.24"
 check: "" # No version parameter
 platforms:
 - linux/amd64
