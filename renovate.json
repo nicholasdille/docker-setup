@@ -3719,7 +3719,7 @@
     {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "ivanilves/lstags",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+\\.\\d+?)$",
       "fileMatch": [
         "^tools/lstags/manifest.yaml$"
       ],
