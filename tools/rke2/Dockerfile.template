@@ -15,5 +15,5 @@ mv \
     "${prefix}${target}/lib/systemd/system/rke2-server.env" \
     "${prefix}${target}/lib/systemd/system/rke2-agent.service" \
     "${prefix}${target}/lib/systemd/system/rke2-agent.env" \
-    "${prefix}/etc/systemd/system/"
+    "${prefix}${target}/etc/systemd/system/"
 EOF

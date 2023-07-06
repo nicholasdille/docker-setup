@@ -6,6 +6,6 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}/etc/profile.d/kubectl-aliases" \
+curl --silent --location --fail --output "${prefix}${target}/etc/profile.d/kubectl-aliases" \
     "https://github.com/ahmetb/kubectl-aliases/raw/master/.kubectl_aliases"
 EOF

@@ -5,8 +5,8 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY gitlab-runner.service ${prefix}/etc/systemd/system/
-COPY config.toml ${prefix}/etc/gitlab-runner/
+COPY gitlab-runner.service ${prefix}${target}/etc/systemd/system/
+COPY config.toml ${prefix}${target}/etc/gitlab-runner/
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/gitlab-runner" \
     "https://gitlab-runner-downloads.s3.amazonaws.com/v${version}/binaries/gitlab-runner-linux-${alt_arch}"

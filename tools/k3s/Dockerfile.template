@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
-COPY k3s.service ${prefix}/etc/systemd/system/
+COPY k3s.service ${prefix}${target}/etc/systemd/system/
 
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/k3s" \

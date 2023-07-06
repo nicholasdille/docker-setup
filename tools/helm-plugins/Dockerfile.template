@@ -9,7 +9,7 @@ ARG name
 ARG version
 COPY --link --from=helm / /
 RUN <<EOF
-echo "export HELM_PLUGINS=${target}/share/helm/plugins" >${prefix}/etc/profile.d/helm-plugins.sh
+echo "export HELM_PLUGINS=${target}/share/helm/plugins" >"${prefix}${target}/etc/profile.d/helm-plugins.sh"
 
 export HELM_PLUGINS=${prefix}${target}/share/helm/plugins
 

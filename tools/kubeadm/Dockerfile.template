@@ -8,7 +8,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --from=cosign / /
 ARG name
 ARG version
-COPY kubelet.service ${prefix}/etc/systemd/system/
+COPY kubelet.service ${prefix}${target}/etc/systemd/system/
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/kubeadm" \
     "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/linux/${alt_arch}/kubeadm"

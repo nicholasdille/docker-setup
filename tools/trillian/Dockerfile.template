@@ -9,8 +9,8 @@ COPY --link --from=go / /
 WORKDIR /go/src/github.com/google/trillian
 ARG name
 ARG version
-COPY trillian_log_server.service ${prefix}/etc/systemd/system/trillian_log_server.service
-COPY trillian_log_signer.service ${prefix}/etc/systemd/system/trillian_log_signer.service
+COPY trillian_log_server.service ${prefix}${target}/etc/systemd/system/trillian_log_server.service
+COPY trillian_log_signer.service ${prefix}${target}/etc/systemd/system/trillian_log_signer.service
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/trillian .
 export CGO_ENABLED=0

@@ -62,8 +62,10 @@ function is_alpine() {
     esac
 }
 
-echo "Patch paths in systemd unit files (@ ${SECONDS} seconds)"
-sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "/etc/systemd/system/docker.service"
+echo "Install systemd unit (@ ${SECONDS} seconds)"
+cat "${target}/etc/systemd/system/docker.service" \
+| sed -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" \
+>"/etc/systemd/system/docker.service"
 
 echo "Patch paths in init scripts (@ ${SECONDS} seconds)"
 sed -i -E "s|^DOCKERD=/usr/local/bin/dockerd|DOCKERD=${target}/bin/dockerd|" "${docker_setup_contrib}/docker/sysvinit/debian/docker"

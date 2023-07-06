@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
-COPY stargz-snapshotter.service ${prefix}/etc/systemd/system/
+COPY stargz-snapshotter.service ${prefix}${target}/etc/systemd/system/
 
 RUN <<EOF
 curl --silent --location --fail "https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz" \

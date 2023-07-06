@@ -10,7 +10,7 @@ COPY --link --from=cosign / /
 COPY --from=go-md2man / /
 ARG name
 ARG version
-COPY crio.conf ${prefix}/etc/crio.conf
+COPY crio.conf ${prefix}${target}/etc/crio.conf
 RUN <<EOF
 echo "### Downloading cri-o ${version}"
 curl --silent --location --fail --remote-name "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz"
@@ -55,22 +55,22 @@ curl --silent --location --fail --output "${prefix}${target}/share/zsh/vendor-co
 EOF
 RUN <<EOF
 mkdir -p \
-    "${prefix}/etc/sysconfig"
-curl --silent --location --fail --output "${prefix}/etc/systemd/system/crio.service" \
+    "${prefix}${target}/etc/sysconfig"
+curl --silent --location --fail --output "${prefix}${target}/etc/systemd/system/crio.service" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/systemd/crio.service"
-curl --silent --location --fail --output "${prefix}/etc/systemd/system/crio-wipe.service" \
+curl --silent --location --fail --output "${prefix}${target}/etc/systemd/system/crio-wipe.service" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/systemd/crio-wipe.service"
-curl --silent --location --fail --output "${prefix}/etc/sysconfig/crio" \
+curl --silent --location --fail --output "${prefix}${target}/etc/sysconfig/crio" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/sysconfig/crio"
 EOF
 RUN <<EOF
 mkdir -p \
-    "${prefix}/etc/cni/net.d"
-curl --silent --location --fail --output "${prefix}/etc/cni/net.d/10-crio-bridge.conflist" \
+    "${prefix}${target}/etc/cni/net.d"
+curl --silent --location --fail --output "${prefix}${target}/etc/cni/net.d/10-crio-bridge.conflist" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/10-crio-bridge.conflist"
-curl --silent --location --fail --output "${prefix}/etc/cni/net.d/11-crio-ipv4-bridge.conflist" \
+curl --silent --location --fail --output "${prefix}${target}/etc/cni/net.d/11-crio-ipv4-bridge.conflist" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/11-crio-ipv4-bridge.conflist"
-curl --silent --location --fail --output "${prefix}/etc/cni/net.d/99-loopback.conflist" \
+curl --silent --location --fail --output "${prefix}${target}/etc/cni/net.d/99-loopback.conflist" \
     "https://github.com/cri-o/cri-o/raw/v${version}/contrib/cni/99-loopback.conflist"
 EOF
 RUN <<EOF

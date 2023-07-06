@@ -8,7 +8,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=cosign / /
 ARG name
 ARG version
-COPY rekor.service ${prefix}/etc/systemd/system/
+COPY rekor.service ${prefix}${target}/etc/systemd/system/
 RUN <<EOF
 set -x
 echo "### Installing rekor-cli ${version}"

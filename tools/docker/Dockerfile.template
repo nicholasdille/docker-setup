@@ -9,7 +9,6 @@ ARG version
 RUN <<EOF
 mkdir -p \
     "${prefix}${target}/libexec/${name}/bin" \
-    "${prefix}/etc/systemd/system" \
     "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian" \
     "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat" \
     "${prefix}${docker_setup_contrib}/${name}/openrc"
@@ -34,12 +33,12 @@ RUN <<EOF
 EOF
 
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}/etc/systemd/system/docker.service" \
+curl --silent --location --fail --output "${prefix}${target}/etc/systemd/system/docker.service" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/systemd/docker.service"
-sed -i "/^\[Service\]/a Environment=PATH=${target}/libexec/${name}/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}/etc/systemd/system/docker.service"
-sed -i -E "s|^(ExecStart=)/usr/bin/dockerd(.+)$|\1${target}/bin/dockerd|" "${prefix}/etc/systemd/system/docker.service"
-sed -i -n '/Type=notify/!p' "${prefix}/etc/systemd/system/docker.service"
-sed -i -n '/Requires=docker.socket/!p' "${prefix}/etc/systemd/system/docker.service"
+sed -i "/^\[Service\]/a Environment=PATH=${target}/libexec/${name}/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin" "${prefix}${target}/etc/systemd/system/docker.service"
+sed -i -E "s|^(ExecStart=)/usr/bin/dockerd(.+)$|\1${target}/bin/dockerd|" "${prefix}${target}/etc/systemd/system/docker.service"
+sed -i -n '/Type=notify/!p' "${prefix}${target}/etc/systemd/system/docker.service"
+sed -i -n '/Requires=docker.socket/!p' "${prefix}${target}/etc/systemd/system/docker.service"
 EOF
 
 RUN <<EOF

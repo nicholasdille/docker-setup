@@ -8,7 +8,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 COPY --from=cosign / /
-COPY kubectl.sh ${prefix}/etc/profile.d/
+COPY kubectl.sh ${prefix}${target}/etc/profile.d/
 RUN <<EOF
 curl --silent --location --fail --output "${prefix}${target}/bin/kubectl" \
     "https://dl.k8s.io/release/v${version}/bin/linux/${alt_arch}/kubectl"

@@ -5,10 +5,10 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+COPY --link --from=go / /
 ARG name
 ARG version
-COPY --link --from=go / /
-COPY ct_server.service ${prefix}/etc/systemd/system/ct_server.service
+COPY ct_server.service ${prefix}${target}/etc/systemd/system/ct_server.service
 WORKDIR /go/src/github.com/google/certificate-transparency-go
 RUN <<EOF
 git clone -q --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/google/certificate-transparency-go .

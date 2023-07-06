@@ -14,7 +14,7 @@ apt-get -y install --no-install-recommends \
     bison \
     flex
 EOF
-COPY <<EOF >${prefix}/etc/ld.so.conf.d/libcgroup.conf
+COPY <<EOF >${prefix}${target}/etc/ld.so.conf.d/libcgroup.conf
 ${target}/lib
 EOF
 WORKDIR /tmp/libcgroup

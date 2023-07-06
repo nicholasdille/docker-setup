@@ -29,5 +29,5 @@ make -C cmd/proxy install
 make -C cmd/runq install
 make -C cmd/runq-exec install
 install -m 0444 -D version /var/lib/runq/version
-mv /var/lib/runq/ "${prefix}/var/lib/"
+mv /var/lib/runq/ "${prefix}${target}/var/lib/"
 EOF

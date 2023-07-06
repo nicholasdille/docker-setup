@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+cp -r "${target}/var/lib/" "/var/lib/"
+
 if ! test -f "/etc/docker/daemon.json" || ! test "$(jq --raw-output '.runtimes | keys | any(. == "crun")' "/etc/docker/daemon.json")" == "true"; then
     echo "Add runtime to Docker"
     cat <<< "$(

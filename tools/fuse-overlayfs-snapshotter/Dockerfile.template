@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
-COPY fuse-overlayfs-snapshotter.service ${prefix}/etc/systemd/system/
+COPY fuse-overlayfs-snapshotter.service ${prefix}${target}/etc/systemd/system/
 
 RUN <<EOF
 curl --silent --location --fail "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz" \

@@ -8,7 +8,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=cosign / /
 ARG name
 ARG version
-COPY gitsign-credential-cache.sh ${prefix}/etc/profile.d/
+COPY gitsign-credential-cache.sh ${prefix}${target}/etc/profile.d/
 RUN <<EOF
 echo "### Installing gitsign ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/gitsign" \
