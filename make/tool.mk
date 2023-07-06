@@ -102,6 +102,9 @@ $(ALL_TOOLS_RAW):%: \
 	echo "Build deps:   $${DEPS}"; \
 	echo "Platforms:    $${ARCHS}"; \
 	echo "Push:         $${PUSH}"; \
+	if test "$(DOCKER_TAG)" == "main"; then \
+		EXTRA_DOCKER_TAG="--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test"; \
+	fi; \
 	if ! docker buildx build $(TOOLS_DIR)/$@ \
 			--builder docker-setup \
 			--build-arg branch=$(DOCKER_TAG) \
@@ -113,6 +116,7 @@ $(ALL_TOOLS_RAW):%: \
 			--platform $${ARCHS} \
 			--cache-from $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
 			--tag $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) \
+			$${EXTRA_DOCKER_TAG} \
 			--attest=type=provenance \
 			--attest=type=sbom \
 			--metadata-file $(TOOLS_DIR)/$@/build-metadata.json \
