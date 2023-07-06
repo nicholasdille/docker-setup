@@ -15,7 +15,7 @@ fi
 if test -f "/etc/crictl.yaml"; then
     echo "Fixing configuration for cticrl"
     ENDPOINT=unix:///run/containerd/containerd.sock
-    cat "${target}/etc/crictl.yaml" \
+    cat "/etc/crictl.yaml" \
     | sed "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
     >"/etc/crictl.yaml"
 fi

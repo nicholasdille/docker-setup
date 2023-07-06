@@ -5,7 +5,7 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY <<EOF ${prefix}/etc/profile.d/konf.sh
+COPY <<EOF ${prefix}${target}/etc/profile.d/konf.sh
 case "\$(basename "\${SHELL}")" in
     bash)
         source <(konf-go shellwrapper bash)

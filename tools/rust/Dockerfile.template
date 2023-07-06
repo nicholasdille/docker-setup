@@ -5,7 +5,7 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY <<EOF ${prefix}/etc/profile.d/cargo.sh
+COPY <<EOF ${prefix}${target}/etc/profile.d/cargo.sh
 #!/bin/bash
 export CARGO_HOME=/opt/cargo
 export RUSTUP_HOME=/opt/rustup

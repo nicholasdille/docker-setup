@@ -5,7 +5,7 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-COPY <<EOF ${prefix}/etc/profile.d/aws
+COPY <<EOF ${prefix}${target}/etc/profile.d/aws
 complete -C '/usr/local/bin/aws_completer' aws
 EOF
 RUN <<EOF

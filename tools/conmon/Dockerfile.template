@@ -43,8 +43,8 @@ make -C docs GOMD2MAN=go-md2man
 mv bin/conmon "${prefix}${target}/bin/conmon"
 mv docs/conmon.8 "${prefix}${target}/share/man/man8"
 EOF
-COPY default.yaml ${prefix}/etc/containers/registries.d/default.yaml
-COPY policy.json ${prefix}/etc/containers/policy.json
-COPY policy.conf ${prefix}/etc/containers/policy.conf
-COPY registry.json ${prefix}/etc/containers/registries.json
-COPY storage.conf ${prefix}/etc/containers/storage.conf
+COPY default.yaml ${prefix}${target}/etc/containers/registries.d/default.yaml
+COPY policy.json ${prefix}${target}/etc/containers/policy.json
+COPY policy.conf ${prefix}${target}/etc/containers/policy.conf
+COPY registry.json ${prefix}${target}/etc/containers/registries.json
+COPY storage.conf ${prefix}${target}/etc/containers/storage.conf

@@ -14,7 +14,7 @@ mkdir -p \
     "${prefix}${docker_setup_contrib}/${name}/openrc"
 EOF
 
-COPY daemon.json ${prefix}/etc/docker-preview/
+COPY daemon.json ${prefix}${target}/etc/docker-preview/
 COPY --chmod=0755 <<EOF ${prefix}${target}/bin/docker-preview
 #!/bin/bash
 set -o errexit
