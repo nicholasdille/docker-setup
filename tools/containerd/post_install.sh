@@ -1,6 +1,7 @@
 #!/bin/bash
 set -o errexit
 
+mkdir -p /etc/containerd
 if ! test -f "/etc/containerd/config.toml"; then
     echo "Adding default configuration"
     mkdir -p "/etc/containerd/conf.d" "/etc/containerd/certs.d"
@@ -15,9 +16,7 @@ fi
 if test -f "/etc/crictl.yaml"; then
     echo "Fixing configuration for cticrl"
     ENDPOINT=unix:///run/containerd/containerd.sock
-    cat "/etc/crictl.yaml" \
-    | sed "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" \
-    >"/etc/crictl.yaml"
+    sed -i "s|#runtime-endpoint: YOUR-CHOICE|runtime-endpoint: ${ENDPOINT}|; s|#image-endpoint: YOUR-CHOICE|image-endpoint: ${ENDPOINT}|" "/etc/crictl.yaml"
 fi
 
 if test -n "${docker_hub_mirror}"; then

@@ -2,7 +2,7 @@
 set -o errexit
 
 echo "Install systemd units"
-cat "${target}/etc/systemd/system/ipfs.service" }\
+cat "${target}/etc/systemd/system/ipfs.service" \
 | sed "s|ExecStart=/usr/local/bin/ipfs|ExecStart=${target}/bin/ipfs|" \
 >"/etc/systemd/system/ipfs.service"
 
