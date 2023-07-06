@@ -1,5 +1,5 @@
 name: croc
-version: "9.6.4"
+version: "9.6.5"
 check: ${binary} --version | cut -d' ' -f3 | cut -d- -f1 | tr -d v
 platforms:
   - linux/amd64
