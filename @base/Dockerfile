@@ -32,14 +32,12 @@ EOF
 SHELL [ "bash", "-clo", "errexit"]
 RUN <<EOF
 mkdir -p \
-    "${prefix}/etc/profile.d" \
-    "${prefix}/etc/systemd/system" \
-    "${prefix}${target}/etc/profile.d" \
-    "${prefix}${target}/etc/systemd/system" \
     "${prefix}${docker_setup_cache}" \
     "${prefix}${docker_setup_contrib}" \
     "${prefix}${docker_setup_manifests}" \
     "${prefix}${docker_setup_post_install}" \
+    "${prefix}${target}/etc/profile.d" \
+    "${prefix}${target}/etc/systemd/system" \
     "${prefix}${target}/bin" \
     "${prefix}${target}/etc" \
     "${prefix}${target}/include" \
