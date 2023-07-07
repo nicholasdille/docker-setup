@@ -158,12 +158,6 @@ fi
 if systemctl >/dev/null 2>&1; then
     echo "Reload systemd (@ ${SECONDS} seconds)"
     systemctl daemon-reload
-
-    if ! systemctl is-active --quiet docker; then
-        echo "Start dockerd (@ ${SECONDS} seconds)"
-        systemctl enable docker
-        systemctl start docker
-    fi
 fi
 
 echo "Finished after ${SECONDS} seconds."
