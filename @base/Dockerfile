@@ -43,6 +43,7 @@ mkdir -p \
     "${prefix}${target}/include" \
     "${prefix}${target}/lib" \
     "${prefix}${target}/libexec/docker/cli-plugins" \
+    "${prefix}${target}/opt" \
     "${prefix}${target}/sbin" \
     "${prefix}${target}/var" \
     "${prefix}${target}/share/man/man1" \
