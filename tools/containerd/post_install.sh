@@ -1,12 +1,13 @@
 #!/bin/bash
 set -o errexit
 
-mkdir -p /etc/containerd
+mkdir -p \
+    /etc/containerd/conf.d \
+    /etc/containerd/certs.d
+
 if ! test -f "/etc/containerd/config.toml"; then
     echo "Adding default configuration"
-    mkdir -p "/etc/containerd/conf.d" "/etc/containerd/certs.d"
-    "${target}/bin/containerd" config default >"/etc/containerd/config.toml"
-    cat "${target}/etc/containerd/config.toml" \
+    "${target}/bin/containerd" config default \
     | sed "s|/opt/cni/bin|${target}/libexec/cni|" \
     | sed -i 's|imports = \[\]|imports = ["/etc/containerd/conf.d/*.toml"]|' \
     | sed -i 's|config_path = ""|config_path = "/etc/containerd/certs.d"|' \
