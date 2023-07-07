@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tool:
-        description: 'The name of the tool to rebuild'
+        description: 'Space separated list of tools to rebuild'
         required: true
 
 jobs:
@@ -40,4 +40,4 @@ jobs:
         DOCKER_BUILDKIT: 1
       run: |
         set -o errexit
-        make ${{ inputs.tool }}--push
+        make TOOLS_RAW="${{ inputs.tool }}" push
