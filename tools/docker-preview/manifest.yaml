@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: docker-preview
-version: "24.0.3"
+version: "24.0.4"
 binary: ${target}/libexec/docker-preview/bin/docker
 check: ${binary} --version | cut -d, -f1 | cut -d' ' -f3
 runtime_dependencies:
