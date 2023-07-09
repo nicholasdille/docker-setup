@@ -1,5 +1,5 @@
 name: qemu
-version: "8.0.2"
+version: "8.0.3"
 binary: qemu-img
 check: ${binary} --version | grep qemu-img | cut -d' ' -f3
 tags:
