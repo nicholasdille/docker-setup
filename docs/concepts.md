@@ -1,6 +1,6 @@
 # Concepts
 
-`docker-setup` packages tools into dedicated container images. These images are created `FROM scratch` and contain only one tool without dependencies.
+`uniget` packages tools into dedicated container images. These images are created `FROM scratch` and contain only one tool without dependencies.
 
 The CLI is a statically linked Go binary and is used to discover, install and update tools.
 

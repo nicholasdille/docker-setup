@@ -1,13 +1,13 @@
 WORKDIR ${prefix}
 RUN <<EOF
 find . -type f,l \
-| grep -v "${prefix}${docker_setup_manifests}/${name}.txt" \
->"${prefix}${docker_setup_manifests}/${name}.txt"
+| grep -v "${prefix}${uniget_manifests}/${name}.txt" \
+>"${prefix}${uniget_manifests}/${name}.txt"
 EOF
 #RUN <<EOF
 #find "${prefix}" -type f -executable -exec strip --verbose --strip-all --preserve-dates {} \;
 #EOF
-COPY manifest.json "${prefix}${docker_setup_manifests}/${name}.json"
+COPY manifest.json "${prefix}${uniget_manifests}/${name}.json"
 
 FROM scratch
 ARG ref
@@ -15,15 +15,15 @@ ARG name
 ARG version
 ARG deps
 ARG tags
-ARG prefix_override=/docker_setup_install
+ARG prefix_override=/bootstrap
 ENV prefix=${prefix_override}
 COPY --from=prepare ${prefix} /
-LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
+LABEL org.opencontainers.image.source="https://github.com/uniget-org/uniget" \
       org.opencontainers.image.ref.name="${ref}" \
       org.opencontainers.image.title="${name}" \
       org.opencontainers.image.description="${name} packaged for installation" \
       org.opencontainers.image.version="${version}" \
-      io.dille.docker-setup.name="${name}" \
-      io.dille.docker-setup.version="${version}" \
-      io.dille.docker-setup.needs="${deps}" \
-      io.dille.docker-setup.tags="${tags}"
+      dev.uniget.name="${name}" \
+      dev.uniget.version="${version}" \
+      dev.uniget.needs="${deps}" \
+      dev.uniget.tags="${tags}"

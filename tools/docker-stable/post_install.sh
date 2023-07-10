@@ -70,10 +70,10 @@ cat "${target}/etc/systemd/system/docker.service" \
 >"/etc/systemd/system/docker.service"
 
 echo "Patch paths in init scripts (@ ${SECONDS} seconds)"
-sed -i -E "s|^DOCKERD=/usr/local/bin/dockerd|DOCKERD=${target}/bin/dockerd|" "${docker_setup_contrib}/${name}/sysvinit/debian/docker"
-sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/${name}/sysvinit/redhat/docker"
-sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/${name}/openrc/docker.initd"
-sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${docker_setup_contrib}/${name}/openrc/docker.confd"
+sed -i -E "s|^DOCKERD=/usr/local/bin/dockerd|DOCKERD=${target}/bin/dockerd|" "${uniget_contrib}/${name}/sysvinit/debian/docker"
+sed -i -E "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${uniget_contrib}/${name}/sysvinit/redhat/docker"
+sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${uniget_contrib}/${name}/openrc/docker.initd"
+sed -i "s|/usr/local/bin/dockerd|${target}/bin/dockerd|" "${uniget_contrib}/${name}/openrc/docker.confd"
 
 if test -f "/etc/group"; then
     echo "Create group (@ ${SECONDS} seconds)"
@@ -144,20 +144,20 @@ fi
 if is_debian || is_clearlinux; then
     echo "Install init script for debian"
     mkdir -p "/etc/default" "/etc/init.d"
-    cp "${docker_setup_contrib}/${name}/sysvinit/debian/docker.default" "/etc/default/docker"
-    cp "${docker_setup_contrib}/${name}/sysvinit/debian/docker" "/etc/init.d/docker"
+    cp "${uniget_contrib}/${name}/sysvinit/debian/docker.default" "/etc/default/docker"
+    cp "${uniget_contrib}/${name}/sysvinit/debian/docker" "/etc/init.d/docker"
     
 elif is_redhat; then
     echo "Install init script for redhat"
     mkdir -p "/etc/sysconfig" "/etc/init.d"
-    cp "${docker_setup_contrib}/${name}/sysvinit/redhat/docker.sysconfig" "/etc/sysconfig/docker"
-    cp "${docker_setup_contrib}/${name}/sysvinit/redhat/docker" "/etc/init.d/docker"
+    cp "${uniget_contrib}/${name}/sysvinit/redhat/docker.sysconfig" "/etc/sysconfig/docker"
+    cp "${uniget_contrib}/${name}/sysvinit/redhat/docker" "/etc/init.d/docker"
     
 elif is_alpine; then
     echo "Install openrc script for alpine"
     mkdir -p "/etc/conf.d" "/etc/init.d"
-    cp "${docker_setup_contrib}/${name}/openrc/docker.confd" "/etc/conf.d/docker"
-    cp "${docker_setup_contrib}/${name}/openrc/docker.initd" "/etc/init.d/docker"
+    cp "${uniget_contrib}/${name}/openrc/docker.confd" "/etc/conf.d/docker"
+    cp "${uniget_contrib}/${name}/openrc/docker.initd" "/etc/init.d/docker"
     openrc
 else
     echo "Unable to install init script because the distributon is unknown."

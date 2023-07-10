@@ -2,12 +2,12 @@
 
 FROM nicholasdille/ubuntu:22.04 AS base
 
-ARG prefix_override=/docker_setup_install
+ARG prefix_override=/bootstrap
 ARG target_override=/usr/local
-ENV docker_setup_cache=/var/cache/docker-setup \
-    docker_setup_contrib=/var/lib/docker-setup/contrib \
-    docker_setup_manifests=/var/lib/docker-setup/manifests \
-    docker_setup_post_install=/var/lib/docker-setup/post_install \
+ENV uniget_cache=/var/cache/uniget \
+    uniget_contrib=/var/lib/uniget/contrib \
+    uniget_manifests=/var/lib/uniget/manifests \
+    uniget_post_install=/var/lib/uniget/post_install \
     prefix=${prefix_override} \
     target=${target_override}
 ARG TARGETPLATFORM
@@ -32,10 +32,10 @@ EOF
 SHELL [ "bash", "-clo", "errexit"]
 RUN <<EOF
 mkdir -p \
-    "${prefix}${docker_setup_cache}" \
-    "${prefix}${docker_setup_contrib}" \
-    "${prefix}${docker_setup_manifests}" \
-    "${prefix}${docker_setup_post_install}" \
+    "${prefix}${uniget_cache}" \
+    "${prefix}${uniget_contrib}" \
+    "${prefix}${uniget_manifests}" \
+    "${prefix}${uniget_post_install}" \
     "${prefix}${target}/etc/profile.d" \
     "${prefix}${target}/etc/systemd/system" \
     "${prefix}${target}/bin" \
@@ -60,7 +60,7 @@ mkdir -p \
     "${prefix}${target}/share/zsh/vendor-completions"
 EOF
 
-LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
+LABEL org.opencontainers.image.source="https://github.com/uniget-org/uniget" \
       org.opencontainers.image.ref.name="main" \
       org.opencontainers.image.description="Base image for building tools images" \
       org.opencontainers.image.version="main"

@@ -136,20 +136,20 @@ fi
 if is_debian || is_clearlinux; then
     echo "Install init script for debian"
     mkdir -p "/etc/default" "/etc/init.d"
-    cp "${docker_setup_contrib}/docker-preview/sysvinit/debian/docker.default" "/etc/default/docker-preview"
-    cp "${docker_setup_contrib}/docker-preview/sysvinit/debian/docker" "/etc/init.d/docker-preview"
+    cp "${uniget_contrib}/docker-preview/sysvinit/debian/docker.default" "/etc/default/docker-preview"
+    cp "${uniget_contrib}/docker-preview/sysvinit/debian/docker" "/etc/init.d/docker-preview"
     
 elif is_redhat; then
     echo "Install init script for redhat"
     mkdir -p "/etc/sysconfig" "/etc/init.d"
-    cp "${docker_setup_contrib}/docker-preview/sysvinit/redhat/docker.sysconfig" "/etc/sysconfig/docker-preview"
-    cp "${docker_setup_contrib}/docker-preview/sysvinit/redhat/docker" "/etc/init.d/docker-preview"
+    cp "${uniget_contrib}/docker-preview/sysvinit/redhat/docker.sysconfig" "/etc/sysconfig/docker-preview"
+    cp "${uniget_contrib}/docker-preview/sysvinit/redhat/docker" "/etc/init.d/docker-preview"
     
 elif is_alpine; then
     echo "Install openrc script for alpine"
     mkdir -p "/etc/conf.d" "/etc/init.d"
-    cp "${docker_setup_contrib}/docker-preview/openrc/docker.confd" "/etc/conf.d/docker-preview"
-    cp "${docker_setup_contrib}/docker-preview/openrc/docker.initd" "/etc/init.d/docker-preview"
+    cp "${uniget_contrib}/docker-preview/openrc/docker.confd" "/etc/conf.d/docker-preview"
+    cp "${uniget_contrib}/docker-preview/openrc/docker.initd" "/etc/init.d/docker-preview"
     openrc
 else
     echo "Unable to install init script because the distributon is unknown."

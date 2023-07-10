@@ -3,7 +3,7 @@ COPY metadata.json /
 
 ARG ref=main
 ARG commit=UNKNOWN
-LABEL org.opencontainers.image.source="https://github.com/nicholasdille/docker-setup" \
+LABEL org.opencontainers.image.source="https://github.com/uniget-org/uniget" \
       org.opencontainers.image.ref.name="${ref}" \
       org.opencontainers.image.title="Metadata" \
       org.opencontainers.image.description="Metadata about published tools" \

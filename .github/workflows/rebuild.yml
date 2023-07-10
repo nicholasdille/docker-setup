@@ -16,8 +16,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: gojq regclient

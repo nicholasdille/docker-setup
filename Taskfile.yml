@@ -18,7 +18,7 @@ tasks:
     cmds:
       - task: prompt
       - docker image rm -f {{.IMAGE_NAME}}
-      - rm docker-setup
+      - rm uniget
 
   image:
     desc: Build container image
@@ -43,6 +43,6 @@ tasks:
       - Dockerfile
       - docker-bake.hcl
     generates:
-      - docker-setup
+      - uniget
     cmds:
       - docker buildx bake binary

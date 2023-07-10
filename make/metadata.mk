@@ -1,5 +1,5 @@
 metadata.json: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		$(addsuffix /manifest.json,$(ALL_TOOLS)) \
 		; $(info $(M) Creating $@...)
 	@jq --slurp --arg revision "$(GIT_COMMIT_SHA)" '{"revision": $$revision, "tools": map(.tools[])}' $(addsuffix /manifest.json,$(ALL_TOOLS)) >metadata.json
@@ -36,7 +36,7 @@ metadata.json--push: \
 
 .PHONY:
 metadata.json--sign: \
-		$(HELPER)/var/lib/docker-setup/manifests/cosign.json \
+		$(HELPER)/var/lib/uniget/manifests/cosign.json \
 		cosign.key \
 		; $(info $(M) Signing metadata image...)
 	@set -o errexit; \
@@ -45,7 +45,7 @@ metadata.json--sign: \
 
 .PHONY:
 metadata.json--keyless-sign: \
-		$(HELPER)/var/lib/docker-setup/manifests/cosign.json \
+		$(HELPER)/var/lib/uniget/manifests/cosign.json \
 		; $(info $(M) Keyless signing metadata image...)
 	@set -o errexit; \
 	COSIGN_EXPERIMENTAL=1 cosign sign $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG)

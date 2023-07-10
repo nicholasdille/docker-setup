@@ -8,7 +8,7 @@ import (
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 
-	"github.com/nicholasdille/docker-setup/pkg/tool"
+	"github.com/uniget-org/uniget/pkg/tool"
 )
 
 var defaultMode bool
@@ -306,7 +306,7 @@ func installTools(requestedTools tool.Tools, check bool, plan bool, reinstall bo
 
 	if len(prefix) > 0 {
 		pterm.Warning.Printfln("Post installation skipped because prefix is set to %s", prefix)
-		pterm.Warning.Printfln("Please run 'docker-setup postinstall' in the context of %s to complete the installation", prefix)
+		pterm.Warning.Printfln("Please run 'uniget postinstall' in the context of %s to complete the installation", prefix)
 		return nil
 	}
 

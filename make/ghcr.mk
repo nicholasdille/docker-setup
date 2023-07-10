@@ -1,7 +1,7 @@
 .PHONY:
 clean-registry-untagged: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
 		echo "### Error: Need GH_TOKEN or configured gh."; \
@@ -20,8 +20,8 @@ clean-registry-untagged: \
 
 .PHONY:
 clean-registry-untagged--%: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
 		echo "### Error: Need GH_TOKEN or configured gh."; \
@@ -37,8 +37,8 @@ clean-registry-untagged--%: \
 
 .PHONY:
 clean-ghcr-unused--%: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
 		echo "### Error: Need GH_TOKEN or configured gh."; \
@@ -57,8 +57,8 @@ clean-ghcr-unused--%: \
 
 .PHONY:
 ghcr-orphaned: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	gh api --paginate /users/$(OWNER)/packages?package_type=container | jq --raw-output '.[].name' \
 	| cut -d/ -f2 \
@@ -73,7 +73,7 @@ ghcr-orphaned: \
 
 .PHONY:
 ghcr-exists--%: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json
 	@gh api --paginate "users/$(OWNER)/packages/container/docker-setup%2F$*" >/dev/null 2>&1
 
 .PHONY:
@@ -82,8 +82,8 @@ ghcr-exists: \
 
 .PHONY:
 ghcr-inspect: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	gh api --paginate /users/$(OWNER)/packages?package_type=container | jq --raw-output '.[].name' \
 	| while read NAME; do \
@@ -94,8 +94,8 @@ ghcr-inspect: \
 
 .PHONY:
 $(addsuffix --ghcr-tags,$(ALL_TOOLS_RAW)):%--ghcr-tags: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	gh api --paginate "users/$(OWNER)/packages/container/docker-setup%2F$*/versions" \
 	| jq --raw-output '.[] | "\(.metadata.container.tags[]);\(.name);\(.id)"' \
@@ -103,16 +103,16 @@ $(addsuffix --ghcr-tags,$(ALL_TOOLS_RAW)):%--ghcr-tags: \
 
 .PHONY:
 $(addsuffix --ghcr-inspect,$(ALL_TOOLS_RAW)):%--ghcr-inspect: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/yq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/yq.json
 	@set -o errexit; \
 	gh api --paginate "users/$(OWNER)/packages/container/docker-setup%2F$*" \
 	| yq --prettyPrint
 
 .PHONY:
 $(addsuffix --ghcr-delete-test,$(ALL_TOOLS_RAW)):%--ghcr-delete-test: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/yq.json \
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/yq.json \
 		; $(info $(M) Removing tag test from tool $*...)
 	@\
 	helper/usr/local/bin/gh api --paginate "users/$(OWNER)/packages/container/docker-setup%2f$*/versions" \
@@ -122,8 +122,8 @@ $(addsuffix --ghcr-delete-test,$(ALL_TOOLS_RAW)):%--ghcr-delete-test: \
 
 .PHONY:
 delete-ghcr--%: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	if test -z "$${GH_TOKEN}" && ! test -f "$${HOME}/.config/gh/hosts.yml"; then \
 		echo "### Error: Need GH_TOKEN or configured gh."; \
@@ -140,8 +140,8 @@ delete-ghcr--%: \
 
 .PHONY:
 ghcr-private: \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@set -o errexit; \
 	gh api --paginate "users/$(OWNER)/packages?package_type=container&visibility=private" \
 	| jq '.[] | "\(.name);\(.html_url)"' \
@@ -149,8 +149,8 @@ ghcr-private: \
 
 .PHONY:
 $(addsuffix --ghcr-private,$(ALL_TOOLS_RAW)): \
-		$(HELPER)/var/lib/docker-setup/manifests/gh.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gh.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Testing that $* is publicly visible...)
 	@gh api "users/$(OWNER)/packages/container/docker-setup%2F$*" \
 	| jq --exit-status 'select(.visibility == "public")' >/dev/null 2>&1

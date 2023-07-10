@@ -32,8 +32,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: hugo regclient gojq

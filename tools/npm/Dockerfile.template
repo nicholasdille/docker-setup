@@ -3,4 +3,4 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY <<EOF ${prefix}${target}/var/cache/docker-setup/npm-is-included-in-prebuilt-binaries-of-nodejs
+COPY <<EOF ${prefix}${target}/var/cache/uniget/npm-is-included-in-prebuilt-binaries-of-nodejs

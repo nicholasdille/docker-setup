@@ -9,7 +9,7 @@ DOCKER_CONFIG      ?= $(HOME)/.docker
 deploy-hcloud: \
 		vm-hcloud \
 		vm-wait-ready \
-		~/.ssh/config.d/docker-setup \
+		~/.ssh/config.d/uniget \
 		vm-install-idle-alerter \
 		vm-install-ds \
 		vm-install-docker \
@@ -19,27 +19,27 @@ deploy-hcloud: \
 deploy-hcloud-only: \
 		vm-hcloud \
 		vm-wait-ready \
-		~/.ssh/config.d/docker-setup \
+		~/.ssh/config.d/uniget \
 		vm-install-idle-alerter \
 		vm-install-ds
 
 .PHONY:
 remove-hcloud: \
-		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/hcloud.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Removing VM...)
 	@\
-	hcloud server list --selector purpose=docker-setup --output json \
+	hcloud server list --selector purpose=uniget --output json \
 	| jq --raw-output '.[].id' \
 	| xargs hcloud server delete
 
 .PHONY:
 vm-hcloud: \
-		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/hcloud.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Creating VM...)
 	@\
-	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=docker-setup --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
+	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=uniget --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
 	if test -z "$${HCLOUD_VM_IP}"; then \
 		HCLOUD_VM_NAME="$(VM_BASE_NAME)-$$(date +%Y%m%d%H%M)"; \
 		hcloud server create \
@@ -48,28 +48,28 @@ vm-hcloud: \
 			--name $${HCLOUD_VM_NAME} \
 			--ssh-key $(HCLOUD_SSH_KEY_ID) \
 			--type $(HCLOUD_SERVER_TYPE) \
-			--label purpose=docker-setup \
+			--label purpose=uniget \
 			--user-data-from-file contrib/cloud-init.yaml; \
 	fi
 
 .PHONY:
 vm-wait-ready: \
-		~/.ssh/config.d/docker-setup \
+		~/.ssh/config.d/uniget \
 		; $(info $(M) Waiting for VM to be ready...)
 	@\
-	while ! ssh docker-setup -- true; do \
+	while ! ssh uniget -- true; do \
 		sleep 10; \
 	done
 
-~/.ssh/config.d/docker-setup: \
+~/.ssh/config.d/uniget: \
 		~/.ssh/id_ed25519_hetzner \
-		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/hcloud.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Creating SSH config for VM...)
 	@\
-	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=docker-setup --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
+	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=uniget --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
 	echo -n >$@; \
-	echo "Host docker-setup $${HCLOUD_VM_IP}" >>$@; \
+	echo "Host uniget $${HCLOUD_VM_IP}" >>$@; \
 	echo "    HostName $${HCLOUD_VM_IP}" >>$@; \
 	echo "    User root" >>$@; \
 	echo "    IdentityFile ~/.ssh/id_ed25519_hetzner" >>$@; \
@@ -91,49 +91,49 @@ vm-install-idle-alerter: \
 	$(call check_defined, MATRIX_SERVER, Variable must be defined)
 	$(call check_defined, MATRIX_ACCESS_TOKEN, Variable must be defined)
 	$(call check_defined, MATRIX_ROOM_ID, Variable must be defined)
-	@ssh docker-setup \
+	@ssh uniget \
 		curl \
 			--url https://github.com/nicholasdille/hcloud-uptime-alerter/raw/main/hcloud-uptime-alerter.sh \
 			--silent \
 			--location \
 			--fail \
 			--output /usr/local/bin/hcloud-uptime-alerter.sh
-	@ssh docker-setup \
+	@ssh uniget \
 		curl \
 			--url https://github.com/nicholasdille/hcloud-uptime-alerter/raw/main/hcloud-uptime-alerter-cron.sh \
 			--silent \
 			--location \
 			--fail \
 			--output /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
-	@ssh docker-setup \
+	@ssh uniget \
 		chmod 0755 /usr/local/bin/hcloud-uptime-alerter.sh
-	@ssh docker-setup \
+	@ssh uniget \
 		chmod 0750 /etc/cron.hourly/hcloud-uptime-alerter-cron.sh
-	@ssh docker-setup \
+	@ssh uniget \
 		'sed -i -E "s|MATRIX_SERVER=|MATRIX_SERVER=$(MATRIX_SERVER)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
-	@ssh docker-setup \
+	@ssh uniget \
 		'sed -i -E "s|MATRIX_ACCESS_TOKEN=|MATRIX_ACCESS_TOKEN=$(MATRIX_ACCESS_TOKEN)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
-	@ssh docker-setup \
+	@ssh uniget \
 		'sed -i -E "s|MATRIX_ROOM_ID=|MATRIX_ROOM_ID=$(MATRIX_ROOM_ID)|" /etc/cron.hourly/hcloud-uptime-alerter-cron.sh'
 
 .PHONY:
 vm-install-ds: \
-		; $(info $(M) Installing docker-setup...)
+		; $(info $(M) Installing uniget...)
 	@\
-	scp docker-setup docker-setup:/usr/local/bin/docker-setup
+	scp uniget uniget:/usr/local/bin/uniget
 
 .PHONY:
 vm-install-docker: \
 		; $(info $(M) Installing default tools...)
 	@\
-	ssh docker-setup docker-setup --default install
+	ssh uniget uniget --default install
 
 .PHONY:
 vm-install-creds: \
 		; $(info $(M) Transferring Docker credentials...)
 	@\
-	ssh docker-setup docker-setup --tools=gojq install; \
-	ssh docker-setup mkdir -p /root/.docker; \
+	ssh uniget uniget --tools=gojq install; \
+	ssh uniget mkdir -p /root/.docker; \
 	jq --raw-output '.auths."ghcr.io"' $(DOCKER_CONFIG)/config.json \
 	| gojq '{"auths":{"ghcr.io": .}}' - \
-	| ssh docker-setup "cat >/root/.docker/config.json"
+	| ssh uniget "cat >/root/.docker/config.json"

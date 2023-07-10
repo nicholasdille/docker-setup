@@ -1,8 +1,8 @@
 .PHONY:
 $(addprefix helper--,$(ALL_TOOLS_RAW)):helper--%: \
-		$(HELPER)/var/lib/docker-setup/manifests/%.json
+		$(HELPER)/var/lib/uniget/manifests/%.json
 
-$(HELPER)/var/lib/docker-setup/manifests/%.json:
+$(HELPER)/var/lib/uniget/manifests/%.json:
 	@if ! type docker-setup >/dev/null 2>&1; then \
 		echo "Please install docker-setup"; \
 		exit 1; \

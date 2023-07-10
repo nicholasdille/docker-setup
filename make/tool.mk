@@ -23,8 +23,8 @@ $(addsuffix --pr,$(ALL_TOOLS_RAW)):%--pr:
 	git checkout "$${REPO_BRANCH}"
 
 $(addsuffix /manifest.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/manifest.json: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
-		$(HELPER)/var/lib/docker-setup/manifests/yq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/yq.json \
 		$(TOOLS_DIR)/%/manifest.yaml \
 		; $(info $(M) Creating manifest for $*...)
 	@set -o errexit; \
@@ -38,7 +38,7 @@ $(addsuffix /Dockerfile,$(ALL_TOOLS)):$(TOOLS_DIR)/%/Dockerfile: \
 	cat $@.template >$@; \
 	echo >>$@; \
 	echo >>$@; \
-	if test -f $(TOOLS_DIR)/$*/post_install.sh; then echo 'COPY post_install.sh $${prefix}$${docker_setup_post_install}/$${name}.sh' >>$@; fi; \
+	if test -f $(TOOLS_DIR)/$*/post_install.sh; then echo 'COPY post_install.sh $${prefix}$${uniget_post_install}/$${name}.sh' >>$@; fi; \
 	cat $(TOOLS_DIR)/Dockerfile.tail >>$@
 
 .PHONY:
@@ -84,7 +84,7 @@ base: \
 
 .PHONY:
 $(ALL_TOOLS_RAW):%: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		$(TOOLS_DIR)/%/manifest.json \
 		$(TOOLS_DIR)/%/Dockerfile \
 		builders \
@@ -162,13 +162,13 @@ promote: \
 
 .PHONY:
 $(addsuffix --promote,$(ALL_TOOLS_RAW)):%--promote: \
-		$(HELPER)/var/lib/docker-setup/manifests/regclient.json \
+		$(HELPER)/var/lib/uniget/manifests/regclient.json \
 		; $(info $(M) Promoting image for $*...)
 	@regctl image copy $(REGISTRY)/$(REPOSITORY_PREFIX)$*:test $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
 .PHONY:
 $(addsuffix --inspect,$(ALL_TOOLS_RAW)):%--inspect: \
-		$(HELPER)/var/lib/docker-setup/manifests/regclient.json \
+		$(HELPER)/var/lib/uniget/manifests/regclient.json \
 		; $(info $(M) Inspecting image for $*...)
 	@regctl manifest get $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG)
 
@@ -180,7 +180,7 @@ $(addsuffix --install,$(ALL_TOOLS_RAW)):%--install: \
 
 .PHONY:
 $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		$(TOOLS_DIR)/%/manifest.json \
 		$(TOOLS_DIR)/%/Dockerfile \
 		; $(info $(M) Debugging image for $*...)
@@ -218,8 +218,8 @@ $(addsuffix --debug,$(ALL_TOOLS_RAW)):%--debug: \
 
 .PHONY:
 $(addsuffix --buildg,$(ALL_TOOLS_RAW)):%--buildg: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
-		$(HELPER)/var/lib/docker-setup/manifests/buildg.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/buildg.json \
 		$(TOOLS_DIR)/%/manifest.json \
 		$(TOOLS_DIR)/%/Dockerfile \
 		; $(info $(M) Interactively debugging image for $*...)

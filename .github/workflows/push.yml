@@ -31,8 +31,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: gojq
@@ -50,7 +50,7 @@ jobs:
                 helper/usr/local/bin/jq \
                     --raw-output \
                     '.revision' \
-                    helper/var/cache/docker-setup/metadata.json
+                    helper/var/cache/uniget/metadata.json
             )"
 
             echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
@@ -96,8 +96,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: gojq regclient yq
@@ -166,8 +166,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: gojq regclient yq

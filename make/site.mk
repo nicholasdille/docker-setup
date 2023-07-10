@@ -4,11 +4,11 @@ pages: \
 
 .PHONY:
 site-prerequisites: \
-		$(HELPER)/var/lib/docker-setup/manifests/hugo.json
+		$(HELPER)/var/lib/uniget/manifests/hugo.json
 
 .PHONY:
 site: \
-		$(HELPER)/var/lib/docker-setup/manifests/hugo.json \
+		$(HELPER)/var/lib/uniget/manifests/hugo.json \
 		metadata.json \
 		site-prerequisites \
 		$(addprefix site/content/tools/,$(addsuffix .md,$(ALL_TOOLS_RAW)))
@@ -16,8 +16,8 @@ site: \
 
 $(addprefix site/content/tools/,$(addsuffix .md,$(ALL_TOOLS_RAW))):site/content/tools/%.md: \
 		scripts/gh-pages.sh \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
-		$(HELPER)/var/lib/docker-setup/manifests/regclient.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/regclient.json \
 		tools/%/manifest.json \
 		; $(info $(M) Generating static page for $*...)
 	@\

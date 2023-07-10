@@ -10,15 +10,15 @@ ALL_TOOLS           = $(shell find tools -type f -wholename \*/manifest.yaml | c
 ALL_TOOLS_RAW       = $(subst tools/,,$(ALL_TOOLS))
 TOOLS              ?= $(shell find tools -type f -wholename \*/manifest.yaml | cut -d/ -f1-2 | sort)
 TOOLS_RAW          ?= $(subst tools/,,$(TOOLS))
-PREFIX             ?= /docker_setup_install
+PREFIX             ?= /bootstrap
 TARGET             ?= /usr/local
 
 # Pre-defined colors: https://github.com/moby/buildkit/blob/master/util/progress/progressui/colors.go
 BUILDKIT_COLORS    ?= run=light-blue:warning=yellow:error=red:cancel=255,165,0
 NO_COLOR           ?= ""
 
-OWNER              ?= nicholasdille
-PROJECT            ?= docker-setup
+OWNER              ?= uniget-org
+PROJECT            ?= uniget
 REGISTRY           ?= ghcr.io
 REPOSITORY_PREFIX  ?= $(OWNER)/$(PROJECT)/
 
@@ -90,7 +90,6 @@ help:
 	@echo "    <tool>--show                 Display directory contents"
 	@echo
 	@echo "Building:"
-	@echo "    check                        Run shellcheck on docker-setup"
 	@echo "    tools/<tool>/Dockerfile      Generate from tools/*/Dockerfile.template"
 	@echo "    base                         Build base container image for all tool installations"
 	@echo "    <tool>                       Build container image for specific tool"
@@ -129,7 +128,7 @@ help:
 	@echo "    recent-days--<N>             Show tools changed in the last <N> days"
 	@echo
 	@echo "Helper tools:"
-	@echo "    $(HELPER)/var/lib/docker-setup/manifests/<tool>.json"
+	@echo "    $(HELPER)/var/lib/uniget/manifests/<tool>.json"
 	@echo "                                 Install specified tool to helper/"
 	@echo
 	@echo "GHCR:"

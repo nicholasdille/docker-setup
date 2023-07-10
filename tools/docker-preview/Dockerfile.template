@@ -9,9 +9,9 @@ ARG version
 RUN <<EOF
 mkdir -p \
     "${prefix}${target}/libexec/${name}/bin" \
-    "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian" \
-    "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat" \
-    "${prefix}${docker_setup_contrib}/${name}/openrc"
+    "${prefix}${uniget_contrib}/${name}/sysvinit/debian" \
+    "${prefix}${uniget_contrib}/${name}/sysvinit/redhat" \
+    "${prefix}${uniget_contrib}/${name}/openrc"
 EOF
 
 COPY daemon.json ${prefix}${target}/etc/docker-preview/
@@ -39,32 +39,32 @@ sed -i -n '/Requires=docker.socket/!p' "${prefix}${target}/etc/systemd/system/do
 EOF
 
 RUN <<EOF
-curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker.default" \
+curl --silent --location --fail --output "${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker.default" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker.default"
-echo "DOCKER_OPTS=--config-file=/etc/${name}/daemon.json" >>"${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker.default"
+echo "DOCKER_OPTS=--config-file=/etc/${name}/daemon.json" >>"${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker.default"
 
-curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker" \
+curl --silent --location --fail --output "${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-debian/docker"
-sed -i -E "s|^(export PATH=)|\1${target}/libexec/${name}/bin:|" "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker"
-sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${target}/libexec/${name}/bin/dockerd|" "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker"
-sed -i -E "s|^BASE=docker|BASE=${name}|" "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker"
-chmod +x "${prefix}${docker_setup_contrib}/${name}/sysvinit/debian/docker"
+sed -i -E "s|^(export PATH=)|\1${target}/libexec/${name}/bin:|" "${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker"
+sed -i -E "s|^DOCKERD=/usr/bin/dockerd|DOCKERD=${target}/libexec/${name}/bin/dockerd|" "${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker"
+sed -i -E "s|^BASE=docker|BASE=${name}|" "${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker"
+chmod +x "${prefix}${uniget_contrib}/${name}/sysvinit/debian/docker"
 
-curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat/docker.sysconfig" \
+curl --silent --location --fail --output "${prefix}${uniget_contrib}/${name}/sysvinit/redhat/docker.sysconfig" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker.sysconfig"
 
-curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat/docker" \
+curl --silent --location --fail --output "${prefix}${uniget_contrib}/${name}/sysvinit/redhat/docker" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/sysvinit-redhat/docker"
-sed -i -E "s|(^prog=)|export PATH="${target}/libexec/${name}/bin:${target}/sbin:${target}/bin:\${PATH}"\n\n\1|" "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat/docker"
-sed -i -E "s|/usr/bin/dockerd|${target}/libexec/${name}/bin/dockerd|" "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat/docker"
-chmod +x "${prefix}${docker_setup_contrib}/${name}/sysvinit/redhat/docker"
+sed -i -E "s|(^prog=)|export PATH="${target}/libexec/${name}/bin:${target}/sbin:${target}/bin:\${PATH}"\n\n\1|" "${prefix}${uniget_contrib}/${name}/sysvinit/redhat/docker"
+sed -i -E "s|/usr/bin/dockerd|${target}/libexec/${name}/bin/dockerd|" "${prefix}${uniget_contrib}/${name}/sysvinit/redhat/docker"
+chmod +x "${prefix}${uniget_contrib}/${name}/sysvinit/redhat/docker"
 
-curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/openrc/docker.confd" \
+curl --silent --location --fail --output "${prefix}${uniget_contrib}/${name}/openrc/docker.confd" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.confd"
-sed -i "s|/usr/bin/dockerd|${target}/libexec/${name}/bin/dockerd|" "${prefix}${docker_setup_contrib}/${name}/openrc/docker.confd"
+sed -i "s|/usr/bin/dockerd|${target}/libexec/${name}/bin/dockerd|" "${prefix}${uniget_contrib}/${name}/openrc/docker.confd"
 
-curl --silent --location --fail --output "${prefix}${docker_setup_contrib}/${name}/openrc/docker.initd" \
+curl --silent --location --fail --output "${prefix}${uniget_contrib}/${name}/openrc/docker.initd" \
     "https://github.com/moby/moby/raw/v${version}/contrib/init/openrc/docker.initd"
-sed -i -E "s|^(command=)|export PATH="${target}/libexec/${name}/bin:\${PATH}"\n\n\1|" "${prefix}${docker_setup_contrib}/${name}/openrc/docker.initd"
-sed -i "s|/usr/bin/dockerd|${target}/libexec/${name}/bin/dockerd|" "${prefix}${docker_setup_contrib}/${name}/openrc/docker.initd"
+sed -i -E "s|^(command=)|export PATH="${target}/libexec/${name}/bin:\${PATH}"\n\n\1|" "${prefix}${uniget_contrib}/${name}/openrc/docker.initd"
+sed -i "s|/usr/bin/dockerd|${target}/libexec/${name}/bin/dockerd|" "${prefix}${uniget_contrib}/${name}/openrc/docker.initd"
 EOF

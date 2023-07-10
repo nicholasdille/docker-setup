@@ -43,8 +43,8 @@ jobs:
       with:
         ref: ${{ needs.prepare.outputs.tag }}
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: go goreleaser syft
@@ -81,8 +81,8 @@ jobs:
         username: nicholasdille
         password: ${{ secrets.PACKAGES_TOKEN }}
 
-    - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+    - name: Install uniget
+      uses: uniget-org/uniget-action@main
       with:
         prefix: helper
         tools: gojq regclient yq
@@ -92,16 +92,16 @@ jobs:
     - name: Update manifest
       run: |
         VERSION=${{ needs.prepare.outputs.version }} \
-            helper/usr/local/bin/yq eval --inplace '.version = env(VERSION)' tools/docker-setup/manifest.yaml
+            helper/usr/local/bin/yq eval --inplace '.version = env(VERSION)' tools/uniget/manifest.yaml
 
     - name: Build and push
       run: |
-        make docker-setup--push metadata.json--push
+        make uniget--push metadata.json--push
 
     - name: Commit updated manifest
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         branch: main
         create_branch: false
-        file_pattern: tools/docker-setup/manifest.yaml
-        commit_message: "Version bump for docker-setup"
+        file_pattern: tools/uniget/manifest.yaml
+        commit_message: "Version bump for uniget"
