@@ -1,5 +1,5 @@
 name: chart-testing
-version: "3.8.0"
+version: "3.9.0"
 binary: ct
 check: ${binary} version | grep ^Version | tr -s ' ' | cut -d' ' -f2 | tr -d v
 tags:
