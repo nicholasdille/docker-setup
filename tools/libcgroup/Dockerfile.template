@@ -17,7 +17,7 @@ EOF
 RUN <<EOF
 mkdir -p "${prefix}${target}/etc/ld.so.conf.d"
 EOF
-COPY <<EOF >${prefix}${target}/etc/ld.so.conf.d/libcgroup.conf
+COPY <<EOF ${prefix}${target}/etc/ld.so.conf.d/libcgroup.conf
 ${target}/lib
 EOF
 WORKDIR /tmp/libcgroup
