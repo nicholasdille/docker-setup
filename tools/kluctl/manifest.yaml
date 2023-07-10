@@ -1,5 +1,5 @@
 name: kluctl
-version: "2.20.7"
+version: "2.20.8"
 check: ${binary} version 2>/dev/null
 tags:
   - type/cli
