@@ -1,4 +1,4 @@
-name: falso
+name: falco
 version: "0.34.1"
 check: ${binary} --version | grep ^Falco | cut -d' ' -f3
 platforms:

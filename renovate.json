@@ -1660,7 +1660,7 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "falcosecurity/falco",
       "fileMatch": [
-        "^tools/falso/manifest.yaml$"
+        "^tools/falco/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
