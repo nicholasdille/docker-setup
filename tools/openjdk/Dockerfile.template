@@ -9,10 +9,10 @@ COPY --from=jabba / /
 ARG name
 ARG version
 RUN <<EOF
-jabba install --output "${prefix}/opt/openjdk/" openjdk@1.${version}
-cd "${prefix}/opt/openjdk/bin"
+jabba install --output "${prefix}${target}/opt/openjdk/" openjdk@1.${version}
+cd "${prefix}${target}/opt/openjdk/bin"
 find . -type f -executable \
 | while read -r BINARY; do
-    ln --symbolic --relative --force "${prefix}/opt/openjdk/bin/${BINARY:2}" "${prefix}${target}/bin/${BINARY:2}"
+    ln --symbolic --relative --force "${prefix}${target}/opt/openjdk/bin/${BINARY:2}" "${prefix}${target}/bin/${BINARY:2}"
 done
 EOF

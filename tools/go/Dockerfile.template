@@ -6,9 +6,9 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-mkdir -p "${prefix}/opt/go"
+mkdir -p "${prefix}${target}/opt/go"
 curl --silent --location --fail "https://go.dev/dl/go${version}.linux-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}/opt/go" --strip-components=1 --no-same-owner
-ln --symbolic --relative --force "${prefix}/opt/go/bin/go" "${prefix}${target}/bin/go"
-ln --symbolic --relative --force "${prefix}/opt/go/bin/gofmt" "${prefix}${target}/bin/gofmt"
+| tar --extract --gzip --directory="${prefix}${target}/opt/go" --strip-components=1 --no-same-owner
+ln --symbolic --relative --force "${prefix}${target}/opt/go/bin/go" "${prefix}${target}/bin/go"
+ln --symbolic --relative --force "${prefix}${target}/opt/go/bin/gofmt" "${prefix}${target}/bin/gofmt"
 EOF

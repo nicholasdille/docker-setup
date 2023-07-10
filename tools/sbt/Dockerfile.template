@@ -7,11 +7,11 @@ ARG name
 ARG version
 RUN <<EOF
 set -x
-mkdir -p "${prefix}/opt/sbt"
+mkdir -p "${prefix}${target}/opt/sbt"
 curl --silent --location --fail "https://github.com/sbt/sbt/releases/download/v${version}/sbt-${version}.tgz" \
-| tar --extract --gzip --directory="${prefix}/opt/sbt" --strip-components=1 --no-same-owner \
+| tar --extract --gzip --directory="${prefix}${target}/opt/sbt" --strip-components=1 --no-same-owner \
     sbt/bin/sbt \
     sbt/bin/sbt-launch.jar \
     sbt/bin/sbtn-x86_64-pc-linux
-ln --symbolic --relative --force "${prefix}/opt/sbt/bin/sbt" "${prefix}${target}/bin/sbt"
+ln --symbolic --relative --force "${prefix}${target}/opt/sbt/bin/sbt" "${prefix}${target}/bin/sbt"
 EOF

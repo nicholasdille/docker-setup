@@ -1,17 +1,16 @@
 #syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
-mkdir -p "${prefix}/opt"
+mkdir -p "${prefix}${target}/opt"
 url="https://dist.neo4j.org/cypher-shell/cypher-shell-${version}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"
-unzip -q -o -d "${prefix}/opt/" "${filename}"
-mv "${prefix}/opt/cypher-shell-${version}" "${prefix}/opt/cypher-shell"
-ln --symbolic --relative --force "/opt/cypher-shell/bin/cypher-shell" "${prefix}${target}/bin/"
+unzip -q -o -d "${prefix}${target}/opt/" "${filename}"
+mv "${prefix}${target}/opt/cypher-shell-${version}" "${prefix}${target}/opt/cypher-shell"
+ln --symbolic --relative --force "${target}/opt/cypher-shell/bin/cypher-shell" "${prefix}${target}/bin/"
 EOF

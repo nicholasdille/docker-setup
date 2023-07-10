@@ -7,6 +7,6 @@ ARG name
 ARG version
 RUN <<EOF
 curl --silent --location --fail --remote-name https://dot.net/v1/dotnet-install.sh
-bash dotnet-install.sh --channel STS --version ${version} --install-dir "${prefix}/opt/dotnet"
-ln --symbolic --relative --force "${prefix}/opt/dotnet/dotnet" "${prefix}${target}/bin/dotnet"
+bash dotnet-install.sh --channel STS --version ${version} --install-dir "${prefix}${target}/opt/dotnet"
+ln --symbolic --relative --force "${prefix}${target}/opt/dotnet/dotnet" "${prefix}${target}/bin/dotnet"
 EOF

@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-export NVM_DIR="${prefix}/opt/nvm"
+export NVM_DIR="${prefix}${target}/opt/nvm"
 mkdir -p "${NVM_DIR}"
 curl --silent --location --fail https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 EOF

@@ -9,9 +9,9 @@ RUN <<EOF
 url="https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-ri/${version}/jaxb-ri-${version}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"
-unzip -q -o -d "${prefix}/opt/" "${filename}"
+unzip -q -o -d "${prefix}${target}/opt/" "${filename}"
 rm -rf \
-    "${prefix}/opt/jaxb-ri/docs" \
-    "${prefix}/opt/jaxb-ri/samples"
-ln --symbolic --relative --force "${prefix}/opt/jaxb-ri/bin/xjc.sh" "${prefix}${target}/bin/xjc"
+    "${prefix}${target}/opt/jaxb-ri/docs" \
+    "${prefix}${target}/opt/jaxb-ri/samples"
+ln --symbolic --relative --force "${prefix}${target}/opt/jaxb-ri/bin/xjc.sh" "${prefix}${target}/bin/xjc"
 EOF

@@ -3,7 +3,7 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-WORKDIR ${prefix}/opt/actions-runner
+WORKDIR ${prefix}${target}/opt/actions-runner
 ARG name
 ARG version
 RUN <<EOF

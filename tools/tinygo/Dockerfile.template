@@ -6,8 +6,8 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-mkdir -p "${prefix}/opt"
+mkdir -p "${prefix}${target}/opt"
 curl --silent --location --fail "https://github.com/tinygo-org/tinygo/releases/download/v${version}/tinygo${version}.linux-${alt_arch}.tar.gz" \
-| tar --extract --gzip --directory="${prefix}/opt/" --no-same-owner
-ln --symbolic --relative --force "${prefix}/opt/tinygo/bin/tinygo" "${prefix}${target}/bin/tinygo"
+| tar --extract --gzip --directory="${prefix}${target}/opt/" --no-same-owner
+ln --symbolic --relative --force "${prefix}${target}/opt/tinygo/bin/tinygo" "${prefix}${target}/bin/tinygo"
 EOF
