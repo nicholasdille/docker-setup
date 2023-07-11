@@ -15,12 +15,12 @@ The container tools installer and updater
 
 `docker-setup` is in the process of being renamed to [`uniget`](https://github.com/uniget-org/uniget). The following table will document the progress:
 
-| Component     | Migration status | Support status |
-| ------------- | ---------------- | ----- |
-| CLI           | In progress      | `docker-setup` CLI is fully supported |
-| Tools         | Not started      | `docker-setup` tools are fully supported |
-| Documentation | Not started      | `docker-setup` documentation is fully supported |
-| Site          | Not started      | `docker-setup` site is fully supported |
+| Component     | Migration status | Support status | Notes |
+| ------------- | ---------------- | ----- | --- |
+| CLI           | Completed        | `docker-setup` will soon enter maintenance mode | `uniget` is a drop-in replacement with data migration | - |
+| Tools         | Not started      | `docker-setup` tools are fully supported | - |
+| Documentation | Not started      | `docker-setup` documentation is fully supported | - |
+| Site          | Not started      | `docker-setup` site is fully supported | - |
 
 While the migration is in progress, the components from both projects will interoperate until the migration is complete.
 
