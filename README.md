@@ -11,6 +11,19 @@
 
 The container tools installer and updater
 
+## (Partial) deprecation notice
+
+`docker-setup` is in the process of being renamed to [`uniget`](https://github.com/uniget-org/uniget). The following table will document the progress:
+
+| Component     | Migration status | Support status |
+| ------------- | ---------------- | ----- |
+| CLI           | In progress      | `docker-setup` CLI is fully supported |
+| Tools         | Not started      | `docker-setup` tools are fully supported |
+| Documentation | Not started      | `docker-setup` documentation is fully supported |
+| Site          | Not started      | `docker-setup` site is fully supported |
+
+While the migration is in progress, the components from both projects will interoperate until the migration is complete.
+
 ## Purpose
 
 `docker-setup` is inspired by the [convenience script](https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script) to install the Docker daemon. But the scope is much larger.
