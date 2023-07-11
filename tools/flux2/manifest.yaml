@@ -1,5 +1,5 @@
 name: flux2
-version: "2.0.0"
+version: "2.0.1"
 binary: flux
 check: ${binary} --version | cut -d' ' -f3
 conflicts_with:
