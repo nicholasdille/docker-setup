@@ -1,5 +1,5 @@
 name: crictl
-version: "1.27.0"
+version: "1.27.1"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 platforms:
 - linux/amd64
