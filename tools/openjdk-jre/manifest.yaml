@@ -1,6 +1,6 @@
 name: openjdk-jre
 version: "20"
-binary: /opt/openjdk/bin/java
+binary: java
 check: ${binary} -version 2>&1 | grep ^openjdk | cut -d' ' -f3 | tr -d '"'
 build_dependencies:
   - openjdk

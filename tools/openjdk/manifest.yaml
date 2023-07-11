@@ -1,6 +1,6 @@
 name: openjdk
 version: "20"
-binary: /opt/openjdk/bin/javac
+binary: javac
 check: ${binary} -version | cut -d' ' -f2
 build_dependencies:
   - jabba
