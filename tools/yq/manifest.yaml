@@ -1,5 +1,5 @@
 name: yq
-version: "4.34.1"
+version: "4.34.2"
 check: ${binary} --version | cut -d' ' -f4 | tr -d v
 platforms:
 - linux/amd64
