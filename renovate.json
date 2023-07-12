@@ -3817,6 +3817,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mermaid-js/mermaid-cli",
+      "fileMatch": [
+        "^tools/mermaid-cli/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "dirien/minectl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
