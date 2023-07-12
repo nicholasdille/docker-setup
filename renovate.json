@@ -3894,6 +3894,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mkdocs/mkdocs",
+      "fileMatch": [
+        "^tools/mkdocs/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "crra/mp3binder",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

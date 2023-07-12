@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: mkdocs
+version: "1.4.3"
+check: ""
+build_dependencies:
+- python
+- shiv
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+#- linux/arm64
+tags:
+- category/development
+- lang/python
+- type/cli
+homepage: https://github.com/mkdocs/mkdocs
+description: Some description
+renovate:
+  datasource: github-releases
+  package: mkdocs/mkdocs
+  priority: low
