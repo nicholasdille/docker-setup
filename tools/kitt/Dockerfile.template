@@ -11,12 +11,9 @@ ARG version
 COPY --link --from=python / /
 COPY --link --from=shiv / /
 RUN <<EOF
-shiv --output-file "${prefix}${target}/bin/kitt" --console-script kitt "kitt-shell==${version}"
-EOF
+shiv --output-file "${prefix}${target}/bin/kitt" --console-script kitt "kitt-shell==${version}" cryptography
 
-# completion
-#RUN <<EOF
-#"${prefix}${target}/bin/foo" completion bash >"${prefix}${target}/share/bash-completion/completions/foo"
-#"${prefix}${target}/bin/foo" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/foo.fish"
-#"${prefix}${target}/bin/foo" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_foo"
-#EOF
+"${prefix}${target}/bin/kitt" completion bash >"${prefix}${target}/share/bash-completion/completions/kitt"
+"${prefix}${target}/bin/kitt" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/kitt.fish"
+"${prefix}${target}/bin/kitt" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_kitt"
+EOF
