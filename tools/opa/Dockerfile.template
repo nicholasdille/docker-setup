@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "open-policy-agent/opa" "v${version}" "opa_linux_${alt_arch}_static"
 curl --silent --location --fail --output "${prefix}${target}/bin/opa" \
     "https://github.com/open-policy-agent/opa/releases/download/v${version}/opa_linux_${alt_arch}_static"
 chmod +x "${prefix}${target}/bin/opa"

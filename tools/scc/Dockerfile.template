@@ -21,6 +21,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "boyter/scc" "v${version}" "scc_${version}_Linux_${arch_suffix}.tar.gz"
+
 echo "### Downloading scc ${version}"
 curl --silent --location --fail "https://github.com/boyter/scc/releases/download/v${version}/scc_${version}_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \

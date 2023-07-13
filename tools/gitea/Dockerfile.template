@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "go-gitea/gitea" "v${version}" "gitea-${version}-linux-${alt_arch}.xz"
 curl --silent --location --fail "https://github.com/go-gitea/gitea/releases/download/v${version}/gitea-${version}-linux-${alt_arch}.xz" \
 | xz --decompress >"${prefix}${target}/bin/gitea"
 chmod +x "${prefix}${target}/bin/gitea"

@@ -7,6 +7,7 @@ WORKDIR /tmp/lsd
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "Peltoche/lsd" "${version}" "lsd-${version}-${arch}-unknown-linux-gnu.tar.gz"
 curl --silent --location --fail "https://github.com/Peltoche/lsd/releases/download/${version}/lsd-${version}-${arch}-unknown-linux-gnu.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
 mv lsd "${prefix}${target}/bin/"

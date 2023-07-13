@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "rancher/rke2" "v${version}" "rke2.linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/rancher/rke2/releases/download/v${version}/rke2.linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --no-same-owner \
     bin/rke2 \

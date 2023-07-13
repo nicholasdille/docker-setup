@@ -18,11 +18,16 @@ case "${alt_arch}" in
         exit 1
         ;;
 esac
+
+check-github-release-asset "sharkdp/hyperfine" "v${version}" "hyperfine-v${version}-${arch}-unknown-linux-${suffix}.tar.gz"
+
+echo "### Downloading hyperfine ${version}"
 curl --silent --location --fail "https://github.com/sharkdp/hyperfine/releases/download/v${version}/hyperfine-v${version}-${arch}-unknown-linux-${suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     "hyperfine-v${version}-${arch}-unknown-linux-${suffix}/hyperfine" \
     "hyperfine-v${version}-${arch}-unknown-linux-${suffix}/autocomplete"
 
+echo "### Installing completion"
 cp "${prefix}${target}/bin/autocomplete/hyperfine.bash" "${prefix}${target}/share/bash-completion/completions/hyperfine"
 cp "${prefix}${target}/bin/autocomplete/hyperfine.fish" "${prefix}${target}/share/fish/vendor_completions.d/hyperfine.fish"
 cp "${prefix}${target}/bin/autocomplete/_hyperfine" "${prefix}${target}/share/zsh/vendor-completions/_hyperfine"

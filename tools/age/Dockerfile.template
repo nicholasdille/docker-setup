@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "FiloSottile/age" "v${version}" "age-v${version}-linux-amd64.tar.gz"
 curl --silent --location --fail "https://github.com/FiloSottile/age/releases/download/v${version}/age-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     age/age \

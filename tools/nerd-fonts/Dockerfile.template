@@ -10,7 +10,8 @@ RUN <<EOF
 mkdir -p "${prefix}${target}/share/fonts/NerdFonts"
 
 for font in CascadiaCode; do
-    curl --silent --location --fail --remote-name "https://github.com/ryanoasis/nerd-fonts/releases/download/v${version}/${font}.zip"
+    check-github-release-asset "ryanoasis/nerd-fonts" "v${version}" "${font}.zip"
+    curl --silent --location --fail --remote-name "https://github.com/ryanoasis/nrd-fonts/releases/download/v${version}/${font}.zip"
     unzip -q -o "${font}.zip"
     mv *.ttf "${prefix}${target}/share/fonts/NerdFonts"
 done

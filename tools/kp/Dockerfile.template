@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "vmware-tanzu/kpack-cli" "v${version}" "kp-linux-amd64-${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/kp" \
     "https://github.com/vmware-tanzu/kpack-cli/releases/download/v${version}/kp-linux-amd64-${version}"
 chmod +x "${prefix}${target}/bin/kp"

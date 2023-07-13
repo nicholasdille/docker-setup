@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "abiosoft/colima" "${version}" "colima-Linux-${arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/colima" \
     "https://github.com/abiosoft/colima/releases/download/v${version}/colima-Linux-${arch}"
 chmod +x "${prefix}${target}/bin/colima"

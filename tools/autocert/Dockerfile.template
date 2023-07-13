@@ -9,6 +9,7 @@ COPY --link --from=cosign / /
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "smallstep/autocert" "v${version}" "autocert_linux_${version}_amd64.tar.gz"
 echo "### Downloading autocert ${version}"
 curl --silent --location --fail --remote-name \
     "https://github.com/smallstep/autocert/releases/download/v${version}/autocert_linux_${version}_amd64.tar.gz"

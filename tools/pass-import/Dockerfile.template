@@ -17,6 +17,7 @@ sed -i "s|#\!${prefix}/|#\!/|" "${prefix}${target}/libexec/pipx/venvs/pass-impor
 EOF
 WORKDIR /tmp
 RUN <<EOF
+check-github-release-asset "roddhjav/pass-import" "v${version}" "pass-import-${version}.tar.gz"
 curl --silent --location --fail "https://github.com/roddhjav/pass-import/releases/download/v${version}/pass-import-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1 \
     pass-import-${version}/import.bash \

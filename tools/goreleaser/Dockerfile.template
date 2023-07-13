@@ -25,6 +25,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "goreleaser/goreleaser" "v${version}" "goreleaser_Linux_${arch_suffix}.tar.gz"
+
 echo "### Downloading goreleaser ${version}"
 curl --silent --location --fail --remote-name "https://github.com/goreleaser/goreleaser/releases/download/v${version}/goreleaser_Linux_${arch_suffix}.tar.gz"
 

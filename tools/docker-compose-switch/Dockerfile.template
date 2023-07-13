@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "docker/compose-switch" "v${version}" "docker-compose-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/docker-compose-switch" \
     "https://github.com/docker/compose-switch/releases/download/v${version}/docker-compose-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/docker-compose-switch"

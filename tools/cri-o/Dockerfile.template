@@ -12,6 +12,8 @@ ARG name
 ARG version
 COPY crio.conf ${prefix}${target}/etc/crio.conf
 RUN <<EOF
+check-github-release-asset "cri-o/cri-o" "v${version}" "crio_${version}_linux_${alt_arch}.tar.gz"
+
 echo "### Downloading cri-o ${version}"
 curl --silent --location --fail --remote-name "https://storage.googleapis.com/cri-o/artifacts/cri-o.${alt_arch}.v${version}.tar.gz"
 

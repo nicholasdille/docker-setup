@@ -6,12 +6,16 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "cert-manager/cert-manager" "v${version}" "cmctl-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/cert-manager/cert-manager/releases/download/v${version}/cmctl-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     cmctl
+
+check-github-release-asset "cert-manager/cert-manager" "v${version}" "kubectl-cert_manager-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/cert-manager/cert-manager/releases/download/v${version}/kubectl-cert_manager-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     kubectl-cert_manager
+
 "${prefix}${target}/bin/cmctl" completion bash >"${prefix}${target}/share/bash-completion/completions/cmctl"
 "${prefix}${target}/bin/cmctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/cmctl.fish"
 "${prefix}${target}/bin/cmctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_cmctl"

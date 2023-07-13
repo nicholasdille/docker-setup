@@ -21,6 +21,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "safe-waters/docker-lock" "v${version}" "docker-lock_${version}_Linux_${arch_suffix}.tar.gz"
+
 echo "### Downloading docker-lock ${version}"
 curl --silent --location --fail "https://github.com/safe-waters/docker-lock/releases/download/v${version}/docker-lock_${version}_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \

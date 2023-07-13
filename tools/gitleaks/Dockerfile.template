@@ -1,13 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
-# tarball
 RUN <<EOF
+check-github-release-asset "zricethezav/gitleaks" "v${version}" "gitleaks_${version}_linux_x64.tar.gz"
 curl --silent --location --fail "https://github.com/zricethezav/gitleaks/releases/download/v${version}/gitleaks_${version}_linux_x64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     gitleaks

@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "codenotary/cas" "v${version}" "cas-v${version}-linux-${alt_arch}-static"
 curl --silent --location --fail --output "${prefix}${target}/bin/cas" \
     "https://github.com/codenotary/cas/releases/download/v${version}/cas-v${version}-linux-${alt_arch}-static"
 chmod +x "${prefix}${target}/bin/cas"

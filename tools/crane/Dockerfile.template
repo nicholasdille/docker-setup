@@ -21,6 +21,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "google/go-containerregistry" "v${version}" "go-containerregistry_Linux_${arch_suffix}.tar.gz"
+
 echo "### Downloading crane ${version}"
 curl --silent --location --fail "https://github.com/google/go-containerregistry/releases/download/v${version}/go-containerregistry_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \

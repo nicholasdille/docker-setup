@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "norouter/norouter" "v${version}" "norouter-Linux-${arch}.tgz"
 curl --silent --location --fail "https://github.com/norouter/norouter/releases/download/v${version}/norouter-Linux-${arch}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     norouter

@@ -7,6 +7,7 @@ ARG name
 ARG version
 COPY init-buildkit "${prefix}${target}/etc/init.d/buildkit"
 RUN <<EOF
+check-github-release-asset "moby/buildkit" "v${version}" "buildkit-v${version}.linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner
 

@@ -18,6 +18,10 @@ case "${alt_arch}" in
         exit 1
         ;;
 esac
+
+check-github-release-asset "extrawurst/gitui" "v${version}" "gitui-linux-${arch_suffix}.tar.gz"
+
+echo "### Downloading gitui ${version}"
 curl --silent --location --fail "https://github.com/extrawurst/gitui/releases/download/v${version}/gitui-linux-${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 EOF

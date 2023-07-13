@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "armosec/kubescape" "v${version}" "kubescape-ubuntu-latest.tar.gz"
 curl --silent --location --fail "https://github.com/armosec/kubescape/releases/download/v${version}/kubescape-ubuntu-latest.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 "${prefix}${target}/bin/kubescape" completion bash >"${prefix}${target}/share/bash-completion/completions/kubescape"

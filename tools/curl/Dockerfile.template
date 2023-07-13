@@ -24,6 +24,7 @@ apk add \
     bash
 EOF
 RUN <<EOF
+check-github-release-asset "curl/curl" "curl-${version//./_}" "curl-${version}.tar.gz"
 curl --silent --location --fail "https://github.com/curl/curl/releases/download/curl-${version//./_}/curl-${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1
 LDFLAGS="-static" \

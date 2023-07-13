@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "tomnomnom/gron" "v${version}" "gron-linux-${alt_arch}-${version}.tgz"
 curl --silent --location --fail "https://github.com/tomnomnom/gron/releases/download/v${version}/gron-linux-${alt_arch}-${version}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 

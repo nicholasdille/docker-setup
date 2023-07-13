@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "openfaas/faasd" "${version}" "faasd"
 curl --silent --location --fail --output "${prefix}${target}/bin/faasd" \
     "https://github.com/openfaas/faasd/releases/download/${version}/faasd"
 chmod +x "${prefix}${target}/bin/faasd"

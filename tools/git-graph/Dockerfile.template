@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "mlange-42/git-graph" "${version}" "git-graph-${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/mlange-42/git-graph/releases/download/${version}/git-graph-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 EOF

@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "kubernetes-sigs/etcdadm" "v${version}" "etcdadm-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/etcdadm" \
     "https://github.com/kubernetes-sigs/etcdadm/releases/download/v${version}/etcdadm-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/etcdadm"

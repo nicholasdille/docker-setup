@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "docker/compose" "v${version}" "docker-compose-linux-${arch}"
 curl --silent --location --fail --output "${prefix}${target}/libexec/docker/cli-plugins/docker-compose" \
     "https://github.com/docker/compose/releases/download/v${version}/docker-compose-linux-${arch}"
 chmod +x "${prefix}${target}/libexec/docker/cli-plugins/docker-compose"

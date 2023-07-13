@@ -18,6 +18,7 @@ case "${alt_arch}" in
         exit 1
         ;;
 esac
+check-github-release-asset "vrothberg/vgrep" "v${version}" "vgrep_${version}_Linux_${arch_suffix}"
 curl --silent --location --fail --output "${prefix}${target}/bin/vgrep" \
     "https://github.com/vrothberg/vgrep/releases/download/v${version}/vgrep_${version}_Linux_${arch_suffix}"
 chmod +x "${prefix}${target}/bin/vgrep"

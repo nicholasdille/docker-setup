@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "kubeshark/kubeshark" "${version}" "kubeshark_linux_${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/kubeshark" \
     "https://github.com/kubeshark/kubeshark/releases/download/${version}/kubeshark_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/kubeshark"

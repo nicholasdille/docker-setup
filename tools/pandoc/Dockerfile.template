@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "jgm/pandoc" "${version}" "pandoc-${version}-linux-amd64.tar.gz"
 curl --silent --location --fail "https://github.com/jgm/pandoc/releases/download/${version}/pandoc-${version}-linux-amd64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --strip-components=1 --no-same-owner
 EOF

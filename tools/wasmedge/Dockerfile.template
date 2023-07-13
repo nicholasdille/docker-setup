@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "WasmEdge/WasmEdge" "${version}" "WasmEdge-${version}-manylinux2014_${arch}.tar.xz"
 curl --silent --location --fail "https://github.com/WasmEdge/WasmEdge/releases/download/${version}/WasmEdge-${version}-manylinux2014_${arch}.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}" --strip-components=1 --no-same-owner
 EOF

@@ -21,6 +21,9 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "arttor/helmify" "v${version}" "helmify_Linux_${arch_suffix}.tar.gz"
+
+echo "### Downloading helmify ${version}"
 curl --silent --location --fail "https://github.com/arttor/helmify/releases/download/v${version}/helmify_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF

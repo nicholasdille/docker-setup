@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "projectdiscovery/httpx" "v${version}" "httpx_${version}_linux_${alt_arch}.zip"
 url="https://github.com/projectdiscovery/httpx/releases/download/v${version}/httpx_${version}_linux_${alt_arch}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"

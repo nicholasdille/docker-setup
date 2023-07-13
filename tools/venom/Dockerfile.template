@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "ovh/venom" "v${version}" "venom.linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/venom" \
     "https://github.com/ovh/venom/releases/download/v${version}/venom.linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/venom"

@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "rootless-containers/slirp4netns" "${version}" "slirp4netns-${arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/slirp4netns" \
     "https://github.com/rootless-containers/slirp4netns/releases/download/v${version}/slirp4netns-${arch}"
 chmod +x "${prefix}${target}/bin/slirp4netns"

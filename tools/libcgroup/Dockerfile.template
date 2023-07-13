@@ -25,8 +25,8 @@ ARG name
 ARG version
 # Unable to build statically linked tools
 RUN <<EOF
-curl -sL https://github.com/libcgroup/libcgroup/releases/download/v${version}/libcgroup-${version}.tar.gz \
-| tar -xz --strip-components 1
+curl --silent --location --fail "https://github.com/libcgroup/libcgroup/releases/download/v${version}/libcgroup-${version}.tar.gz" \
+| tar --extract --gzip --strip-components 1
 ./configure --prefix="${prefix}${target}" --disable-pam --disable-daemon
 make
 make install

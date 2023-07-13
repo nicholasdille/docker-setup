@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "google/cadvisor" "v${version}" "cadvisor-v${version}-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/cadvisor" \
     "https://github.com/google/cadvisor/releases/download/v${version}/cadvisor-v${version}-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/cadvisor"

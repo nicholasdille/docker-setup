@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "denisidoro/navi" "v${version}" "navi-v${version}-${arch}-unknown-linux-musl.tar.gz"
 curl --silent --location --fail "https://github.com/denisidoro/navi/releases/download/v${version}/navi-v${version}-${arch}-unknown-linux-musl.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 EOF

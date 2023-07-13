@@ -25,6 +25,8 @@ case "${arch}" in
 esac
 echo "    Using ${alt_arch2}"
 
+check-github-release-asset "aquasecurity/trivy" "v${version}" "trivy_${version}_Linux-${alt_arch2}.tar.gz"
+
 echo "### Downloading trivy ${version}"
 curl --silent --location --fail --remote-name \
       "https://github.com/aquasecurity/trivy/releases/download/v${version}/trivy_${version}_Linux-${alt_arch2}.tar.gz"

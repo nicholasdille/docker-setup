@@ -1,11 +1,13 @@
 name: ghostunnel
 version: "1.7.1"
 check: "" # No version parameter
+platforms:
+- linux/amd64
 tags:
-  - type/cli
-  - category/security
-  - tunneling
-  - lang/go
+- type/cli
+- category/security
+- tunneling
+- lang/go
 homepage: https://github.com/ghostunnel/ghostunnel
 description: Simple SSL/TLS proxy with mutual authentication for securing non-TLS services
 renovate:

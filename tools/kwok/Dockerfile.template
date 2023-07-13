@@ -6,10 +6,12 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "kubernetes-sigs/kwok" "v${version}" "kwok-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/kwok" \
     "https://github.com/kubernetes-sigs/kwok/releases/download/v${version}/kwok-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/kwok"
 
+check-github-release-asset "kubernetes-sigs/kwok" "v${version}" "kwokctl-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/kwokctl" \
     "https://github.com/kubernetes-sigs/kwok/releases/download/v${version}/kwokctl-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/kwokctl"

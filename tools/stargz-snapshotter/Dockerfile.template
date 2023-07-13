@@ -1,14 +1,13 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY stargz-snapshotter.service ${prefix}${target}/etc/systemd/system/
-
 RUN <<EOF
+check-github-release-asset "containerd/stargz-snapshotter" "${version}" "stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/containerd/stargz-snapshotter/releases/download/v${version}/stargz-snapshotter-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF

@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "depot/cli" "v${version}" "depot_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/depot/cli/releases/download/v${version}/depot_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     bin/depot

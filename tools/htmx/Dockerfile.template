@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "bigskysoftware/htmx" "v${version}" "htmx.min.js"
 mkdir -p "${prefix}${target}/share/htmx"
 curl --silent --location --fail --output "${prefix}${target}/share/htmx/htmx.min.js" \
     "https://github.com/bigskysoftware/htmx/releases/download/v${version}/htmx.min.js"

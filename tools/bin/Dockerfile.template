@@ -21,6 +21,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "marcosnils/bin" "v${version}" "bin_${version}_Linux_${arch_suffix}"
+
 echo "### Downloading bin ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/bin" \
     "https://github.com/marcosnils/bin/releases/download/v${version}/bin_${version}_Linux_${arch_suffix}"

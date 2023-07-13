@@ -1,18 +1,20 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "innobead/kubefire" "v${version}" "kubefire-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/kubefire" \
     "https://github.com/innobead/kubefire/releases/download/v${version}/kubefire-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/kubefire"
 EOF
 
 RUN <<EOF
+check-github-release-asset "innobead/kubefire" "v${version}" "kubefire-linux-${alt_arch}"
 mkdir -p "${prefix}${target}/libexec/cni"
 curl --silent --location --fail --output "${prefix}${target}/libexec/cni/host-local-rev" \
     "https://github.com/innobead/kubefire/releases/download/v${version}/host-local-rev-linux-${alt_arch}"

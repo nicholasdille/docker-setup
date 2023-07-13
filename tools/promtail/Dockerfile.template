@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "grafana/loki" "v${version}" "promtail-linux-${alt_arch}.zip"
 url="https://github.com/grafana/loki/releases/download/v${version}/promtail-linux-${alt_arch}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"

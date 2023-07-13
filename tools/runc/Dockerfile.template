@@ -9,6 +9,7 @@ ARG name
 ARG version
 COPY --link --from=go-md2man / /
 RUN <<EOF
+check-github-release-asset "opencontainers/runc" "v${version}" "runc.${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/runc" \
     "https://github.com/opencontainers/runc/releases/download/v${version}/runc.${alt_arch}"
 chmod +x "${prefix}${target}/bin/runc"

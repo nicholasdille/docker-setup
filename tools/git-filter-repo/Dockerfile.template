@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "newren/git-filter-repo" "v${version}" "git-filter-repo-${version}.tar.xz"
 curl --silent --location --fail "https://github.com/newren/git-filter-repo/releases/download/v${version}/git-filter-repo-${version}.tar.xz" \
 | tar --extract --xz --directory="/tmp/" --strip-components=1 --no-same-owner \
     "git-filter-repo-${version}/git-filter-repo" \

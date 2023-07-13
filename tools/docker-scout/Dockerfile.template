@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "docker/scout-cli" "v${version}" "docker-scout_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/docker/scout-cli/releases/download/v${version}/docker-scout_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/libexec/docker/cli-plugins/" --no-same-owner \
     docker-scout

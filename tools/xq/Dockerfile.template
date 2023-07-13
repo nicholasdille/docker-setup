@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "sibprogrammer/xq" "v${version}" "xq_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/sibprogrammer/xq/releases/download/v${version}/xq_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     xq

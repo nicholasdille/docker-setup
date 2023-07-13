@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "nicholasdille/docker-setup" "v${version}" "docker-setup_Linux_${arch}.tar.gz"
 curl --silent --location --fail \
     "https://github.com/nicholasdille/docker-setup/releases/download/v${version}/docker-setup_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \

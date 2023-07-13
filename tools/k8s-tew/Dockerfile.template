@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "darxkies/k8s-tew" "${version}" "k8s-tew"
 curl --silent --location --fail --output "${prefix}${target}/bin/k8s-tew" \
     "https://github.com/darxkies/k8s-tew/releases/download/${version}/k8s-tew"
 chmod +x "${prefix}${target}/bin/k8s-tew"

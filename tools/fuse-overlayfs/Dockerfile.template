@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "containers/fuse-overlayfs" "v${version}" "fuse-overlayfs-${arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/${name}" \
     "https://github.com/containers/fuse-overlayfs/releases/download/v${version}/fuse-overlayfs-${arch}"
 chmod +x "${prefix}${target}/bin/${name}"

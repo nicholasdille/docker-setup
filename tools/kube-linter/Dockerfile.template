@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "stackrox/kube-linter" "${version}" "kube-linter-linux"
 curl --silent --location --fail --output "${prefix}${target}/bin/kube-linter" \
     "https://github.com/stackrox/kube-linter/releases/download/${version}/kube-linter-linux"
 chmod +x "${prefix}${target}/bin/kube-linter"

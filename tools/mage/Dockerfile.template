@@ -18,6 +18,11 @@ case "${alt_arch}" in
         exit 1
         ;;
 esac
+echo "    Using ${arch_suffix}"
+
+check-github-release-asset "magefile/mage" "v${version}" "mage_${version}_Linux-${arch_suffix}.tar.gz"
+
+echo "### Downloading mage ${version}"
 curl --silent --location --fail "https://github.com/magefile/mage/releases/download/v${version}/mage_${version}_Linux-${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     mage
