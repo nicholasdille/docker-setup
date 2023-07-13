@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.5.2
+#syntax=docker/dockerfile:1.6.0
 
 ARG image=ubuntu:22.04@sha256:0bced47fffa3361afa981854fcabcd4577cd43cebbb808cea2b1f33a3dd7f508
 ARG ref=main
