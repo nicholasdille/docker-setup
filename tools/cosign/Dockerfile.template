@@ -5,20 +5,19 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS cosign-bootstrap
 ARG TARGETPLATFORM
 # renovate: datasource=github-releases depName=sigstore/cosign
-ARG COSIGN_VERSION=2.0.2
-ARG COSIGN_SHA256=517e96f9d036c4b77db01132cacdbef21e4266e9ad3a93e67773c590ba54e26f
+ARG COSIGN_VERSION=2.1.1
+COPY checksums.txt .
 RUN <<EOF
 check-github-release-asset "sigstore/cosign" "v${COSIGN_VERSION}" "cosign-linux-${alt_arch}"
 echo "### Installing cosign ${COSIGN_VERSION} for bootstrapping on ${TARGETPLATFORM} (${alt_arch})"
 curl --silent --location --fail --remote-name \
     "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-${alt_arch}"
-chmod +x "/usr/local/bin/cosign-linux-${alt_arch}"
+chmod +x "cosign-linux-${alt_arch}"
 
 echo "### Checking cosign ${COSIGN_VERSION} for bootstrapping"
-echo "${COSIGN_SHA256} /usr/local/bin/cosign-linux-${alt_arch}" \
-| sha256sum --check -
+sha256sum --check --ignore-missing checksums.txt
 
-mv "/usr/local/bin/cosign-linux-${alt_arch}" /usr/local/bin/cosign
+mv "cosign-linux-${alt_arch}" /usr/local/bin/cosign
 cosign version
 EOF
 
