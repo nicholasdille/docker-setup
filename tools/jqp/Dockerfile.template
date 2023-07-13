@@ -21,6 +21,9 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "noahgorstein/jqp" "v${version}" "jqp_${version}_Linux_${arch_suffix}.tar.gz"
+
+echo "### Downloading jqp ${version}"
 curl --silent --location --fail "https://github.com/noahgorstein/jqp/releases/download/v${version}/jqp_${version}_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     jqp

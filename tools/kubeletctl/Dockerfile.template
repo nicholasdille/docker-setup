@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "cyberark/kubeletctl" "v${version}" "kubeletctl_linux_${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/kubeletctl" \
     "https://github.com/cyberark/kubeletctl/releases/download/v${version}/kubeletctl_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/kubeletctl"

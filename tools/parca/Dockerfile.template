@@ -18,6 +18,8 @@ case "${alt_arch}" in
         exit 1
         ;;
 esac
+
+check-github-release-asset "parca-dev/parca" "v${version}" "parca_${version}_Linux_${arch_suffix}.tar.gz"
 curl --silent --location --fail "https://github.com/parca-dev/parca/releases/download/v${version}/parca_${version}_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     parca

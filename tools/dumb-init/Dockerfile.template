@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "Yelp/dumb-init" "v${version}" "dumb-init_${version}_${arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/dumb-init" \
     "https://github.com/Yelp/dumb-init/releases/download/v${version}/dumb-init_${version}_${arch}"
 chmod +x "${prefix}${target}/bin/dumb-init"

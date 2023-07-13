@@ -10,6 +10,7 @@ ARG version
 COPY portainer.service ${prefix}${target}/etc/systemd/system/
 COPY init-portainer ${prefix}${target}/etc/init.d/portainer
 RUN <<EOF
+check-github-release-asset "portainer/portainer" "${version}" "portainer-${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/portainer/portainer/releases/download/${version}/portainer-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     portainer/portainer

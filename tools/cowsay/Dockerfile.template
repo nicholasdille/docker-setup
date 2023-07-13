@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "Code-Hex/Neo-cowsay" "v${version}" "cowsay_${version}_Linux_x86_64.tar.gz"
 curl --silent --location --fail "https://github.com/Code-Hex/Neo-cowsay/releases/download/v${version}/cowsay_${version}_Linux_x86_64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     cowsay \

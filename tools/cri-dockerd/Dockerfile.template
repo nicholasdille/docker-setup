@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "Mirantis/cri-dockerd" "v${version}" "cri-dockerd-${version}.${alt_arch}.tgz"
 curl --silent --location --fail "https://github.com/Mirantis/cri-dockerd/releases/download/v${version}/cri-dockerd-${version}.${alt_arch}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     cri-dockerd

@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "open-policy-agent/conftest" "v${version}" "conftest_${version}_Linux_${arch}.tar.gz"
 curl --silent --location --fail "https://github.com/open-policy-agent/conftest/releases/download/v${version}/conftest_${version}_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     conftest

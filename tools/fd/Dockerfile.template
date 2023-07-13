@@ -8,21 +8,26 @@ ARG version
 RUN <<EOF
 case "${alt_arch}" in
     amd64)
-        export suffix="musl"
+        export arch_suffix="musl"
         ;;
     arm64)
-        export suffix="gnu"
+        export arch_suffix="gnu"
         ;;
     *)
         echo "ERROR: Unsupported architecture (${alt_arch})."
         exit 1
         ;;
 esac
-curl --silent --location --fail "https://github.com/sharkdp/fd/releases/download/v${version}/fd-v${version}-${arch}-unknown-linux-${suffix}.tar.gz" \
+echo "    Using ${arch_suffix}"
+
+check-github-release-asset "sharkdp/fd" "v${version}" "fd-v${version}-${arch}-unknown-linux-${arch_suffix}.tar.gz"
+
+echo "### Downloading fd ${version}"
+curl --silent --location --fail "https://github.com/sharkdp/fd/releases/download/v${version}/fd-v${version}-${arch}-unknown-linux-${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
-    "fd-v${version}-${arch}-unknown-linux-${suffix}/fd" \
-    "fd-v${version}-${arch}-unknown-linux-${suffix}/fd.1" \
-    "fd-v${version}-${arch}-unknown-linux-${suffix}/autocomplete"
+    "fd-v${version}-${arch}-unknown-linux-${arch_suffix}/fd" \
+    "fd-v${version}-${arch}-unknown-linux-${arch_suffix}/fd.1" \
+    "fd-v${version}-${arch}-unknown-linux-${arch_suffix}/autocomplete"
 
 mv "${prefix}${target}/bin/fd.1" "${prefix}${target}/share/man/man1/"
 

@@ -1,11 +1,14 @@
 name: gitjob
 version: "0.1.65"
 check: "" # Empty version
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
-  - type/daemon
-  - category/development
-  - kubernetes
-  - lang/go
+- type/daemon
+- category/development
+- kubernetes
+- lang/go
 homepage: https://github.com/rancher/gitjob
 description: Job controller to launch kubernetes jobs based on git event
 renovate:

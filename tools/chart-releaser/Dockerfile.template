@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "helm/chart-releaser" "v${version}" "chart-releaser_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/helm/chart-releaser/releases/download/v${version}/chart-releaser_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     cr

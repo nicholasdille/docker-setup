@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "theketchio/ketch" "${version}" "ketch-linux-amd64"
 curl --silent --location --fail --output "${prefix}${target}/bin/ketch" \
     "https://github.com/theketchio/ketch/releases/download/v${version}/ketch-linux-amd64"
 chmod +x "${prefix}${target}/bin/ketch"

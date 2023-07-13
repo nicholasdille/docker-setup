@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "jetpack-io/devbox" "${version}" "devbox_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/jetpack-io/devbox/releases/download/${version}/devbox_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 

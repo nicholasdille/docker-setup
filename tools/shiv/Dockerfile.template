@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "linkedin/shiv" "${version}" "shiv"
 curl --silent --location --fail --output "${prefix}${target}/bin/shiv" \
     "https://github.com/linkedin/shiv/releases/download/${version}/shiv"
 chmod +x "${prefix}${target}/bin/shiv"

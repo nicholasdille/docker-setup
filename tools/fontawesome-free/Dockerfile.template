@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "FortAwesome/Font-Awesome" "${version}" "fontawesome-free-${version}-web.zip"
 url="https://github.com/FortAwesome/Font-Awesome/releases/download/${version}/fontawesome-free-${version}-web.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"

@@ -21,6 +21,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "minio/warp" "v${version}" "warp_Linux_${arch_suffix}.tar.gz"
+
 echo "### Downloading warp ${version}"
 curl --silent --location --fail "https://github.com/minio/warp/releases/download/v${version}/warp_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \

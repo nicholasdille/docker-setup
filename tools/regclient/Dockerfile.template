@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "regclient/regclient" "v${version}" "regctl-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/regctl" \
     "https://github.com/regclient/regclient/releases/download/v${version}/regctl-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/regctl"
@@ -14,6 +15,7 @@ chmod +x "${prefix}${target}/bin/regctl"
 "${prefix}${target}/bin/regctl" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/regctl.fish"
 "${prefix}${target}/bin/regctl" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_regctl"
 
+check-github-release-asset "regclient/regclient" "v${version}" "regbot-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/regbot" \
     "https://github.com/regclient/regclient/releases/download/v${version}/regbot-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/regbot"
@@ -21,6 +23,7 @@ chmod +x "${prefix}${target}/bin/regbot"
 "${prefix}${target}/bin/regbot" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/regbot.fish"
 "${prefix}${target}/bin/regbot" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_regbot"
 
+check-github-release-asset "regclient/regclient" "v${version}" "regsync-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/regsync" \
     "https://github.com/regclient/regclient/releases/download/v${version}/regsync-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/regsync"

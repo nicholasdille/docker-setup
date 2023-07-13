@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-set -x
+check-github-release-asset "CycloneDX/sbom-utility" "${version}" "sbom-utility-v${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/CycloneDX/sbom-utility/releases/download/v${version}/sbom-utility-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     sbom-utility \

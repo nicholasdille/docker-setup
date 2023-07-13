@@ -6,8 +6,6 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-set -x
-
 echo "### Setting architecture string for ${TARGETPLATFORM}"
 case "${arch}" in
     x86_64)
@@ -22,6 +20,8 @@ case "${arch}" in
         ;;
 esac
 echo "    Using ${arch_suffix}"
+
+check-github-release-asset "charmbracelet/vhs" "v${version}" "vhs_Linux_${arch_suffix}.tar.gz"
 
 echo "### Downloading and installing vhs ${version}"
 curl --silent --location --fail "https://github.com/charmbracelet/vhs/releases/download/v${version}/vhs_Linux_${arch_suffix}.tar.gz" \

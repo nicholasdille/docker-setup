@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "TomWright/dasel" "v${version}" "dasel_linux_${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/dasel" \
     "https://github.com/TomWright/dasel/releases/download/v${version}/dasel_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/dasel"

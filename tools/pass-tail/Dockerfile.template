@@ -12,6 +12,7 @@ WORKDIR /tmp/pass-tail
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "palortoff/pass-extension-tail" "v${version}" "pass-extension-tail-${version}.tar.gz"
 curl --silent --location --fail "https://github.com/palortoff/pass-extension-tail/archive/refs/tags/v${version}.tar.gz" \
 | tar --extract --gzip --strip-components=1 --no-same-owner
 make install \

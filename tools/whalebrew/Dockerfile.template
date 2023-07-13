@@ -1,15 +1,16 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "whalebrew/whalebrew" "${version}" "whalebrew-Linux-x86_64"
 curl --silent --location --fail --output "${prefix}${target}/bin/whalebrew" \
     "https://github.com/whalebrew/whalebrew/releases/download/${version}/whalebrew-Linux-x86_64"
 chmod +x "${prefix}${target}/bin/whalebrew"
+
 "${prefix}${target}/bin/whalebrew" completion bash >"${prefix}${target}/share/bash-completion/completions/whalebrew"
 "${prefix}${target}/bin/whalebrew" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/whalebrew.fish"
 "${prefix}${target}/bin/whalebrew" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_whalebrew"

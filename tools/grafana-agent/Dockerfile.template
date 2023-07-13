@@ -7,6 +7,7 @@ ARG name
 ARG version
 # agent
 RUN <<EOF
+check-github-release-asset "grafana/agent" "v${version}" "grafana-agent-linux-${alt_arch}.zip"
 url="https://github.com/grafana/agent/releases/download/v${version}/grafana-agent-linux-${alt_arch}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"
@@ -16,6 +17,7 @@ mv "${prefix}${target}/bin/grafana-agent-linux-${alt_arch}" "${prefix}${target}/
 EOF
 # agentctl
 RUN <<EOF
+check-github-release-asset "grafana/agent" "v${version}" "grafana-agentctl-linux-${alt_arch}.zip"
 url="https://github.com/grafana/agent/releases/download/v${version}/grafana-agentctl-linux-${alt_arch}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"

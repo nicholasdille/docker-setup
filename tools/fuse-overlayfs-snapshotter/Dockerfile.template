@@ -1,14 +1,13 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 COPY fuse-overlayfs-snapshotter.service ${prefix}${target}/etc/systemd/system/
-
 RUN <<EOF
+check-github-release-asset "containerd/fuse-overlayfs-snapshotter" "v${version}" "containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/containerd/fuse-overlayfs-snapshotter/releases/download/v${version}/containerd-fuse-overlayfs-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 EOF

@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "docker/index-cli-plugin" "v${version}" "docker-index_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/docker/index-cli-plugin/releases/download/v${version}/docker-index_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/libexec/docker/cli-plugins" --no-same-owner \
     docker-index

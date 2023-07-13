@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-set -x
+check-github-release-asset "sbt/sbt" "v${version}" "sbt-${version}.tgz"
 mkdir -p "${prefix}${target}/opt/sbt"
 curl --silent --location --fail "https://github.com/sbt/sbt/releases/download/v${version}/sbt-${version}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/opt/sbt" --strip-components=1 --no-same-owner \

@@ -7,6 +7,7 @@ ARG name
 ARG version
 COPY nerdctl.toml ${prefix}${target}/etc/nerdctl/
 RUN <<EOF
+check-github-release-asset "containerd/nerdctl" "v${version}" "nerdctl-${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner
 "${prefix}${target}/bin/nerdctl" completion bash >"${prefix}${target}/share/bash-completion/completions/nerdctl"

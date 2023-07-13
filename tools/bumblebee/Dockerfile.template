@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "solo-io/bumblebee" "v${version}" "bee-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/bee" \
     "https://github.com/solo-io/bumblebee/releases/download/v${version}/bee-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/bee"

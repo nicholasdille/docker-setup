@@ -1,10 +1,12 @@
 name: gocryptfs
 version: "2.4.0"
 check: ${binary} -version | cut -d' ' -f2 | tr -d v
+platforms:
+- linux/amd64
 tags:
-  - type/cli
-  - category/security
-  - lang/go
+- type/cli
+- category/security
+- lang/go
 homepage: https://github.com/rfjakob/gocryptfs
 description: Encrypted overlay filesystem written in Go
 renovate:

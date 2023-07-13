@@ -18,6 +18,10 @@ case "${alt_arch}" in
         exit 1
         ;;
 esac
+
+check-github-release-asset "sharkdp/hexyl" "v${version}" "hexyl-v${version}-${arch}-unknown-linux-${suffix}.tar.gz"
+
+echo "### Downloading hexyl ${version}"
 curl --silent --location --fail "https://github.com/sharkdp/hexyl/releases/download/v${version}/hexyl-v${version}-${arch}-unknown-linux-${suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     "hexyl-v${version}-${arch}-unknown-linux-${suffix}/hexyl" \

@@ -13,6 +13,7 @@ COPY runtimes.toml "${prefix}${target}/etc/containerd/conf.d/runtimes.toml"
 COPY snapshotters.toml "${prefix}${target}/etc/containerd/conf.d/snapshotters.toml"
 COPY init-containerd "${prefix}${target}/etc/init.d/containerd"
 RUN <<EOF
+check-github-release-asset "containerd/containerd" "v${version}" "containerd-${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}" --no-same-owner
 

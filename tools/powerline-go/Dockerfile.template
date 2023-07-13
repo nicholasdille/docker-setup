@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "justjanne/powerline-go" "v${version}" "powerline-go-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/powerline-go" \
     "https://github.com/justjanne/powerline-go/releases/download/v${version}/powerline-go-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/powerline-go"

@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "watchexec/watchexec" "${version}" "watchexec-${version}-${arch}-unknown-linux-musl.tar.xz"
 curl --silent --location --fail "https://github.com/watchexec/watchexec/releases/download/v${version}/watchexec-${version}-${arch}-unknown-linux-musl.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     "watchexec-${version}-${arch}-unknown-linux-musl/watchexec" \

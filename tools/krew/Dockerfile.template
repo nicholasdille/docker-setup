@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "kubernetes-sigs/krew" "v${version}" "krew-linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/kubernetes-sigs/krew/releases/download/v${version}/krew-linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     ./krew-linux_${alt_arch}

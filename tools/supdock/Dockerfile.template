@@ -21,6 +21,9 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "segersniels/supdock" "${version}" "supdock-${arch_suffix}-linux"
+
+echo "### Downloading supdock"
 curl --silent --location --fail --output "${prefix}${target}/bin/supdock" \
     "https://github.com/segersniels/supdock/releases/download/${version}/supdock-${arch_suffix}-linux"
 chmod +x "${prefix}${target}/bin/supdock"

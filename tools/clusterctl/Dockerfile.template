@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "kubernetes-sigs/cluster-api" "v${version}" "clusterctl-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/clusterctl" \
     "https://github.com/kubernetes-sigs/cluster-api/releases/download/v${version}/clusterctl-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/clusterctl"

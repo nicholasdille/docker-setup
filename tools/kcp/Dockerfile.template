@@ -1,18 +1,20 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "kcp-dev/kcp" "v${version}" "kcp_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/kcp-dev/kcp/releases/download/v${version}/kcp_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     bin/kcp
 EOF
 
 RUN <<EOF
+check-github-release-asset "kcp-dev/kcp" "v${version}" "kubectl-kcp-plugin_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/kcp-dev/kcp/releases/download/v${version}/kubectl-kcp-plugin_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --strip-components=1 --no-same-owner \
     bin/kubectl-kcp \

@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "rancher/k3d" "v${version}" "k3d-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/k3d" \
     "https://github.com/rancher/k3d/releases/download/v${version}/k3d-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/k3d"

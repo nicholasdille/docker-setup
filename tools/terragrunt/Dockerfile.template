@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "gruntwork-io/terragrunt" "v${version}" "terragrunt_linux_${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/terragrunt" \
     "https://github.com/gruntwork-io/terragrunt/releases/download/v${version}/terragrunt_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/terragrunt"

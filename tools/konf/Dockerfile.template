@@ -16,6 +16,7 @@ case "\$(basename "\${SHELL}")" in
 esac
 EOF
 RUN <<EOF
+check-github-release-asset "SimonTheLeg/konf-go" "v${version}" "konf-go_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/SimonTheLeg/konf-go/releases/download/v${version}/konf-go_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     konf-go

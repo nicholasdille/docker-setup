@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "ContainerSSH/ContainerSSH" "v${version}" "containerssh_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/ContainerSSH/ContainerSSH/releases/download/v${version}/containerssh_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     containerssh \

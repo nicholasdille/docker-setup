@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "docker/docker-credential-helpers" "v${version}" "docker-credential-pass-v${version}.linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/docker-credential-pass" \
     "https://github.com/docker/docker-credential-helpers/releases/download/v${version}/docker-credential-pass-v${version}.linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/docker-credential-pass"

@@ -18,6 +18,7 @@ WORKDIR /tmp/bwrap
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "containers/bubblewrap" "v${version}" "bubblewrap-${version}.tar.xz"
 curl --silent --location --fail "https://github.com/containers/bubblewrap/releases/download/v${version}/bubblewrap-${version}.tar.xz" \
 | tar --extract --xz --strip-components=1
 ./configure --prefix="${prefix}${target}"

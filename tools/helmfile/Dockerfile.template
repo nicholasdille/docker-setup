@@ -7,6 +7,7 @@ ARG name
 ARG version
 
 RUN <<EOF
+check-github-release-asset "roboll/helmfile" "v${version}" "helmfile_linux_${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/helmfile" \
     "https://github.com/roboll/helmfile/releases/download/v${version}/helmfile_linux_${alt_arch}"
 chmod +x "${prefix}${target}/bin/helmfile"

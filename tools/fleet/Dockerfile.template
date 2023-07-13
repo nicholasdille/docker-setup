@@ -6,14 +6,17 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "rancher/fleet" "v${version}" "fleet-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/fleet" \
     "https://github.com/rancher/fleet/releases/download/v${version}/fleet-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/fleet"
 
+check-github-release-asset "rancher/fleet" "v${version}" "fleetagent-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/fleetagent" \
     "https://github.com/rancher/fleet/releases/download/v${version}/fleetagent-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/fleetagent"
 
+check-github-release-asset "rancher/fleet" "v${version}" "fleetcontroller-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/fleetcontroller" \
     "https://github.com/rancher/fleet/releases/download/v${version}/fleetcontroller-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/fleetcontroller"

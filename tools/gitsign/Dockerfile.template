@@ -10,6 +10,8 @@ ARG name
 ARG version
 COPY gitsign-credential-cache.sh ${prefix}${target}/etc/profile.d/
 RUN <<EOF
+check-github-release-asset "sigstore/gitsign" "v${version}" "gitsign_${version}_linux_${alt_arch}"
+
 echo "### Installing gitsign ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/gitsign" \
     "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign_${version}_linux_${alt_arch}"
@@ -38,6 +40,8 @@ COSIGN_EXPERIMENTAL=1 cosign verify-blob \
 rm -f "gitsign_${version}_linux_${alt_arch}.pem" "gitsign_${version}_linux_${alt_arch}.sig"
 EOF
 RUN <<EOF
+check-github-release-asset "sigstore/gitsign" "v${version}" "gitsign-credential-cache_${version}_linux_${alt_arch}"
+
 echo "### Installing gitsign-credential-cache ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/gitsign-credential-cache" \
     "https://github.com/sigstore/gitsign/releases/download/v${version}/gitsign-credential-cache_${version}_linux_${alt_arch}"

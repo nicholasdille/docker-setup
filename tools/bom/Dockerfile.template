@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "kubernetes-sigs/bom" "v${version}" "bom-amd64-linux"
 curl --silent --location --fail --output "${prefix}${target}/bin/bom" \
     "https://github.com/kubernetes-sigs/bom/releases/download/v0.5.1/bom-amd64-linux"
 chmod +x "${prefix}${target}/bin/bom"

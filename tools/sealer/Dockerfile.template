@@ -6,9 +6,11 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "sealerio/sealer" "v${version}" "sealer-v${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/sealerio/sealer/releases/download/v${version}/sealer-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 
+check-github-release-asset "sealerio/sealer" "v${version}" "seautil-v${version}-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/sealerio/sealer/releases/download/v${version}/seautil-v${version}-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 

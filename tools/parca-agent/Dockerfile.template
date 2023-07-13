@@ -6,6 +6,8 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "parca-dev/parca-agent" "v${version}" "parca-agent_${version}_Linux_${arch}.tar.gz"
+
 echo "### Downloading parca-agent ${version}"
 curl --silent --location --fail "https://github.com/parca-dev/parca-agent/releases/download/v${version}/parca-agent_${version}_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \

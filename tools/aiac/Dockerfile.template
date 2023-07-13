@@ -22,6 +22,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+echo "### Downloading aiac ${version}"
+check-github-release-asset "gofireflyio/aiac" "v${version}" "aiac_${version}_Linux-${arch_suffix}.tar.gz"
 curl --silent --location --fail "https://github.com/gofireflyio/aiac/releases/download/v${version}/aiac_${version}_Linux-${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner
 EOF

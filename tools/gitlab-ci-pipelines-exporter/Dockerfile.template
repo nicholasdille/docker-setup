@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "mvisonneau/gitlab-ci-pipelines-exporter" "v${version}" "gitlab-ci-pipelines-exporter-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/mvisonneau/gitlab-ci-pipelines-exporter/releases/download/v${version}/gitlab-ci-pipelines-exporter_v${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     gitlab-ci-pipelines-exporter \

@@ -1,12 +1,12 @@
 #syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-
 RUN <<EOF
+check-github-release-asset "UKHomeOffice/kd" "v${version}" "kd_linux_amd64"
 curl --silent --location --fail --output "${prefix}${target}/bin/kd" \
     "https://github.com/UKHomeOffice/kd/releases/download/v${version}/kd_linux_amd64"
 chmod +x "${prefix}${target}/bin/kd"

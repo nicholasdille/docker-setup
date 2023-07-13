@@ -21,6 +21,8 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
+check-github-release-asset "muesli/duf" "v${version}" "duf_${version}_linux_${arch_suffix}.tar.gz"
+
 echo "### Downloading duf ${version}"
 curl --silent --verbose --location --fail "https://github.com/muesli/duf/releases/download/v${version}/duf_${version}_linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \

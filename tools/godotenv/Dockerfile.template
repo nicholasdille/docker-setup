@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "joho/godotenv" "v${version}" "godotenv-linux-${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/joho/godotenv/releases/download/v${version}/godotenv-linux-${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     godotenv

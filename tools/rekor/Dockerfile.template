@@ -10,7 +10,8 @@ ARG name
 ARG version
 COPY rekor.service ${prefix}${target}/etc/systemd/system/
 RUN <<EOF
-set -x
+check-github-release-asset "sigstore/rekor" "v${version}" "rekor-cli-linux-${alt_arch}"
+
 echo "### Installing rekor-cli ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/rekor-cli" \
     "https://github.com/sigstore/rekor/releases/download/v${version}/rekor-cli-linux-${alt_arch}"
