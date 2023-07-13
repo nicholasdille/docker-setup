@@ -13,6 +13,9 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 
+# check
+# check-github-release-asset "foo/bar" "${version}" "foo-${version}-linux-amd64.tar.gz"
+
 # tarball
 #RUN <<EOF
 #curl --silent --location --fail "" \
