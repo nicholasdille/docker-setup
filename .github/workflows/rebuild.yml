@@ -13,10 +13,11 @@ jobs:
     runs-on: ubuntu-22.04
     if: ${{ inputs.tool != '[]' && inputs.tool != '' }}
     outputs:
-      tools: ${{ steps.collect.outputs.tools }}
+      tools: ${{ steps.prepare.outputs.tools }}
     steps:
 
     - name: Prepare tools
+      id: prepare
       env:
         REBUILD_TOOLS: ${{ inputs.tool }}
       run: |
