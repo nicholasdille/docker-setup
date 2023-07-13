@@ -4,7 +4,7 @@ name: kitt
 version: "0.8.1"
 check: ""
 build_dependencies:
-- python
+- python-build-standalone
 - shiv
 runtime_dependencies:
 - python
