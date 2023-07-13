@@ -34,7 +34,7 @@ function check-github-release-asset() {
     echo "### Fetching release assets for ${repo} ${version}"
     local id
     local url="https://api.github.com/repos/${repo}/releases/tags/${version}"
-    if ! id="$(curl --silent --location --fail "${url}" | jq --raw-output '.id')"; then
+    if ! id="$(curl --silent --location --fail "${url}" | jq --raw-output '.id')" || test -z "${id}"; then
         echo "    ERROR: Failed to fetch release id for ${repo} ${version}"
         echo "           at ${url}"
     fi
