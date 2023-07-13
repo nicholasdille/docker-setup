@@ -1,0 +1,14 @@
+#syntax=docker/dockerfile:1.5.2
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+url="https://releases.hashicorp.com/packer/${version}/packer_${version}_linux_${alt_arch}.zip"
+filename="$(basename "${url}")"
+curl --silent --location --fail --remote-name "${url}"
+unzip -q -o -d "${prefix}${target}/bin" "${filename}"
+echo "complete -C ${target}/bin/packer packer" >"${prefix}${target}/etc/profile.d/packer.sh"
+EOF

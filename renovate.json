@@ -4202,6 +4202,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "hashicorp/packer",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/packer/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "jgm/pandoc",
       "fileMatch": [
         "^tools/pandoc/manifest.yaml$"

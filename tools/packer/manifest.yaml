@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: packer
+version: "1.9.1"
+check: ""
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/hashicorp
+- category/development
+- lang/go
+- type/cli
+homepage: https://github.com/hashicorp/packer
+description: Tool for creating identical machine images for multiple platforms from a single source configuration
+renovate:
+  datasource: github-releases
+  package: hashicorp/packer
+  extractVersion: ^v(?<version>.+?)$
+  priority: low
