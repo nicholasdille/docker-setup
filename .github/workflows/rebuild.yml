@@ -11,7 +11,7 @@ jobs:
 
   rebuild:
     runs-on: ubuntu-22.04
-    if: ${{ needs.collect.outputs.tools != '[]' && needs.collect.outputs.tools != '' }}
+    if: ${{ inputs.tool != '[]' && inputs.tool != '' }}
     strategy:
       fail-fast: false
       matrix:
