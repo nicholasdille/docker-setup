@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "lima-vm/sshocker" "${version}" "sshocker-Linux-${arch}"
+check-github-release-asset "lima-vm/sshocker" "v${version}" "sshocker-Linux-${arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/sshocker" \
     "https://github.com/lima-vm/sshocker/releases/download/v${version}/sshocker-Linux-${arch}"
 chmod +x "${prefix}${target}/bin/sshocker"

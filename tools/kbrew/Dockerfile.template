@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "kbrew-dev/kbrew" "${version}" "kbrew_${version}_Linux_${alt_arch}.tar.gz"
+check-github-release-asset "kbrew-dev/kbrew" "v${version}" "kbrew_${version}_Linux_${arch}.tar.gz"
 curl --silent --location --fail "https://github.com/kbrew-dev/kbrew/releases/download/v${version}/kbrew_${version}_Linux_${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     kbrew

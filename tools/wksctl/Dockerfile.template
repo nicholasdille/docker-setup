@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "weaveworks/wksctl" "${version}" "wksctl-${version}-linux-x86_64.tar.gz"
+check-github-release-asset "weaveworks/wksctl" "v${version}" "wksctl-${version}-linux-x86_64.tar.gz"
 curl --silent --location --fail "https://github.com/weaveworks/wksctl/releases/download/v${version}/wksctl-${version}-linux-x86_64.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/" --no-same-owner
 mv "${prefix}${target}/share/wksctl" "${prefix}${target}/bin/"

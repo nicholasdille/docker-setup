@@ -6,7 +6,6 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "parke/vland" "${version}" "vland"
 curl --silent --location --fail --output "${prefix}${target}/bin/vland" \
     "https://github.com/parke/vland/raw/${version}/vland"
 chmod +x "${prefix}${target}/bin/vland"

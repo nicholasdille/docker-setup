@@ -9,7 +9,7 @@ COPY --from=go-md2man / /
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "koalaman/shellcheck" "${version}" "shellcheck-v${version}.linux.${arch}.tar.xz"
+check-github-release-asset "koalaman/shellcheck" "v${version}" "shellcheck-v${version}.linux.${arch}.tar.xz"
 curl --silent --location --fail "https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.${arch}.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     shellcheck-v${version}/shellcheck

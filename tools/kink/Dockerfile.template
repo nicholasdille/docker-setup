@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "Trendyol/kink" "${version}" "kink_${version}_Linux-${arch}.tar.gz"
+check-github-release-asset "Trendyol/kink" "v${version}" "kink_${version}_Linux-${arch}.tar.gz"
 curl --silent --location --fail "https://github.com/Trendyol/kink/releases/download/v${version}/kink_${version}_Linux-${arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     kink

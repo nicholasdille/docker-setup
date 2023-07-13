@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "benjojo/ssh-key-confirmer" "${version}" "ssh-key-confirmer-${alt_arch}"
+check-github-release-asset "benjojo/ssh-key-confirmer" "v${version}" "ssh-key-confirmer-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/ssh-key-confirmer" \
     "https://github.com/benjojo/ssh-key-confirmer/releases/download/v${version}/ssh-key-confirmer-${alt_arch}"
 chmod +x "${prefix}${target}/bin/ssh-key-confirmer"
