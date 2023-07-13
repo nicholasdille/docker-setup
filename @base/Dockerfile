@@ -29,6 +29,7 @@ esac
 echo "export arch=${arch}" >/etc/profile.d/arch.sh
 echo "export alt_arch=${alt_arch}" >/etc/profile.d/alt_arch.sh
 EOF
+COPY --chmod=0755 check-github-release-asset.sh /etc/profile.d/
 SHELL [ "bash", "-clo", "errexit"]
 RUN <<EOF
 mkdir -p \

@@ -6,6 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
+check-github-release-asset "indygreg/python-build-standalone" "${version}" "cpython-3.10.11+${version}-x86_64-unknown-linux-musl-install_only.tar.gz"
 curl --silent --location --fail "https://github.com/indygreg/python-build-standalone/releases/download/${version}/cpython-3.10.11+${version}-x86_64-unknown-linux-musl-install_only.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/" --strip-components=1 --no-same-owner
 EOF
