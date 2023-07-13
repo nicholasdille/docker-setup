@@ -11,6 +11,11 @@ jobs:
 
   rebuild:
     runs-on: ubuntu-22.04
+    if: ${{ needs.collect.outputs.tools != '[]' && needs.collect.outputs.tools != '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        tool: ${{ fromJSON(inputs.tool) }}
     steps:
 
     - name: Checkout code
@@ -40,4 +45,4 @@ jobs:
         DOCKER_BUILDKIT: 1
       run: |
         set -o errexit
-        make TOOLS_RAW="${{ inputs.tool }}" push
+        make ${{ matrix.tool }}--push
