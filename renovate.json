@@ -2419,6 +2419,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "vitobotta/hetzner-k3s",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/hetzner-k3s/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "sharkdp/hexyl",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
