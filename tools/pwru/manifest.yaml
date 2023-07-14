@@ -1,5 +1,5 @@
 name: pwru
-version: "0.0.9"
+version: "1.0.0"
 check: ${binary} --version | cut -d' ' -f2 | tr -d v
 tags:
   - type/cli
