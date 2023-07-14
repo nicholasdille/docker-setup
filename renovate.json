@@ -2896,6 +2896,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "ksoclabs/kbom",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/kbom/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "kbrew-dev/kbrew",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
