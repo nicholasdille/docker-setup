@@ -5,10 +5,14 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
+ARG PYTHON_VERSION=3.11.3
 RUN <<EOF
-check-github-release-asset "indygreg/python-build-standalone" "${version}" "cpython-3.10.11+${version}-x86_64-unknown-linux-musl-install_only.tar.gz"
+check-github-release-asset \
+    "indygreg/python-build-standalone" \
+    "${version}" \
+    "cpython-${PYTHON_VERSION}+${version}-${arch}-unknown-linux-musl-install_only.tar.gz"
 EOF
 RUN <<EOF
-curl --silent --location --fail "https://github.com/indygreg/python-build-standalone/releases/download/${version}/cpython-3.10.11+${version}-x86_64-unknown-linux-musl-install_only.tar.gz" \
+curl --silent --location --fail "https://github.com/indygreg/python-build-standalone/releases/download/${version}/cpython-${PYTHON_VERSION}+${version}-${arch}-unknown-linux-musl-install_only.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/" --strip-components=1 --no-same-owner
 EOF
