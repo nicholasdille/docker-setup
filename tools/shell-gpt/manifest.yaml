@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: shell-gpt
+version: "0.9.3"
+check: ""
+build_dependencies:
+- python
+- shiv
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/operations
+- lang/python
+- type/cli
+homepage: https://github.com/TheR1D/shell_gpt
+description: Command-line productivity tool powered by GPT-3 and GPT-4, will help you accomplish your tasks faster and more efficiently
+renovate:
+  datasource: github-releases
+  package: TheR1D/shell_gpt
+  priority: low

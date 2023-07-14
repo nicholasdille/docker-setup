@@ -4894,6 +4894,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "TheR1D/shell_gpt",
+      "fileMatch": [
+        "^tools/shell-gpt/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "koalaman/shellcheck",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
