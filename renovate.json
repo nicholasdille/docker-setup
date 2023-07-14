@@ -352,6 +352,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "FairwindsOps/bif",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/bif/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "marcosnils/bin",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
