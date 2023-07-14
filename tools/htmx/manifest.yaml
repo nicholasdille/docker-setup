@@ -1,5 +1,5 @@
 name: htmx
-version: "1.9.2"
+version: "1.9.3"
 binary: "false"
 check: "" # No binary
 tags:
