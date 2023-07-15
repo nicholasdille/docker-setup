@@ -1,5 +1,5 @@
 name: warp
-version: "0.7.4"
+version: "0.7.5"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
   - linux/amd64
