@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "aquasecurity/aqua-cli" "v${version}" "aqua_linux_${alt_arch}.tar.gz"
+check-github-release-asset "aquaproj/aqua" "v${version}" "aqua_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/aquaproj/aqua/releases/download/v${version}/aqua_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     aqua
