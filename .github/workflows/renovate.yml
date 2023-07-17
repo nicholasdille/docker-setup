@@ -41,11 +41,18 @@ jobs:
         RESET="$(echo ${JSON} | jq --raw-output '.rate.reset')"
         echo "Rate limit: ${REMAINING}/${LIMIT} (reset: $(date --date=@${RESET}))"
         echo "name=remaining::$(echo ${JSON} | jq --raw-output '.rate.remaining')" >>"${GITHUB_OUTPUT}"
+        if [ "${REMAINING}" -lt 1000 ]; then
+            echo "Rate limit exceeded"
+            echo "renovate=false" >>"${GITHUB_OUTPUT}"
+        else
+            echo "Rate limit sufficient"
+            echo "renovate=true" >>"${GITHUB_OUTPUT}"
+        fi
 
   renovate:
     runs-on: ubuntu-22.04
     needs: prepare
-    if: ${{ needs.prepare.outputs.remaining >= 1000 }}
+    if: ${{ needs.prepare.outputs.renovate == 'true' }}
     permissions: write-all
     steps:
 
