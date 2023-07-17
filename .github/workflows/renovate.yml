@@ -27,7 +27,9 @@ jobs:
   prepare:
     runs-on: ubuntu-22.04
     outputs:
+      limit: ${{ steps.rate-limit.outputs.limit }}
       remaining: ${{ steps.rate-limit.outputs.remaining }}
+      renovate: ${{ steps.rate-limit.outputs.renovate }}
     env:
         GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
     steps:
@@ -40,7 +42,11 @@ jobs:
         REMAINING="$(echo ${JSON} | jq --raw-output '.rate.remaining')"
         RESET="$(echo ${JSON} | jq --raw-output '.rate.reset')"
         echo "Rate limit: ${REMAINING}/${LIMIT} (reset: $(date --date=@${RESET}))"
-        echo "name=remaining::$(echo ${JSON} | jq --raw-output '.rate.remaining')" >>"${GITHUB_OUTPUT}"
+
+        echo "limit=${LIMIT}" >>"${GITHUB_OUTPUT}"
+        echo "remaining=${REMAINING}" >>"${GITHUB_OUTPUT}"
+        echo "reset=${RESET}" >>"${GITHUB_OUTPUT}"
+
         if [ "${REMAINING}" -lt 1000 ]; then
             echo "Rate limit exceeded"
             echo "renovate=false" >>"${GITHUB_OUTPUT}"
