@@ -2,7 +2,7 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python-build-standalone
+FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
 FROM ghcr.io/nicholasdille/docker-setup/shiv:${ref} AS shiv
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
