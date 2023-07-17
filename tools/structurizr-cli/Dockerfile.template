@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "structurizr/cli" "${version}" "structurizr-cli-${version}.zip"
+check-github-release-asset "structurizr/cli" "v${version}" "structurizr-cli-${version}.zip"
 url="https://github.com/structurizr/cli/releases/download/v${version}/structurizr-cli-${version}.zip"
 filename="$(basename "${url}")"
 curl --silent --location --fail --remote-name "${url}"
