@@ -1,18 +1,58 @@
-#syntax=docker/dockerfile:1.6.0
+#syntax=docker/dockerfile:1.5.2
 
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG DEBIAN_FRONTEND=noninteractive
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    xz-utils \
+    make \
+    build-essential \
+    gdb \
+    lcov \
+    pkg-config \
+    libbz2-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libgdbm-compat-dev \
+    liblzma-dev \
+    libncurses5-dev \
+    libreadline6-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    lzma \
+    lzma-dev \
+    tk-dev \
+    uuid-dev \
+    zlib1g-dev \
+    llvm \
+    libcrypt-dev
+EOF
+WORKDIR /tmp/python
 ARG name
 ARG version
-ARG PYTHON_VERSION=3.11.3
 RUN <<EOF
-check-github-release-asset \
-    "indygreg/python-build-standalone" \
-    "${version}" \
-    "cpython-${PYTHON_VERSION}+${version}-${arch}-unknown-linux-musl-install_only.tar.gz"
+curl --silent --location "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz" \
+| tar --extract --xz --strip-components=1
 EOF
 RUN <<EOF
-curl --silent --location --fail "https://github.com/indygreg/python-build-standalone/releases/download/${version}/cpython-${PYTHON_VERSION}+${version}-${arch}-unknown-linux-musl-install_only.tar.gz" \
-| tar --extract --gzip --directory="${prefix}${target}/" --strip-components=1 --no-same-owner
+./configure --prefix="${prefix}${target}"
+make -j4
+make install -j4
+ln --symbolic --relative --force "${prefix}${target}/bin/python3" "${prefix}${target}/bin/python"
+ln --symbolic --relative --force "${prefix}${target}/bin/pip3" "${prefix}${target}/bin/pip"
+EOF
+RUN <<EOF
+"${prefix}${target}/bin/pip" completion --bash >"${prefix}${target}/share/bash-completion/completions/pip"
+"${prefix}${target}/bin/pip" completion --fish >"${prefix}${target}/share/fish/vendor_completions.d/pip.fish"
+"${prefix}${target}/bin/pip" completion --zsh  >"${prefix}${target}/share/zsh/vendor-completions/_pip"
+EOF
+RUN <<EOF
+"${prefix}${target}/bin/pip" install \
+    pipx
+"${prefix}${target}/bin/register-python-argcomplete" pipx >"${prefix}${target}/share/bash-completion/completions/pipx"
+"${prefix}${target}/bin/register-python-argcomplete" --shell fish pipx >"${prefix}${target}/share/fish/vendor_completions.d/pipx.fish"
+find "${prefix}${target}/bin/" -type f -executable -exec sed -i "s|#\!${prefix}/|#\!/|" {} \;
 EOF

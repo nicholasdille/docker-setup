@@ -1,10 +1,13 @@
-name: python-build-standalone
+name: python-static
 version: "20230507"
 check: ""
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
-  - category/development
-  - lang/python
-  - type/cli
+- category/development
+- lang/python
+- type/cli
 homepage: https://github.com/indygreg/python-build-standalone
 description: Redistributable builds of Python
 renovate:
