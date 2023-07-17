@@ -28,17 +28,19 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       remaining: ${{ steps.rate-limit.outputs.remaining }}
+    env:
+        GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
     steps:
 
     - name: Check rate limit
       id: rate-limit
       run: |
-        JSON="$(curl -s https://api.github.com/rate_limit)"
+        JSON="$(curl --silent --header "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/rate_limit)"
         LIMIT="$(echo ${JSON} | jq --raw-output '.rate.limit')"
         REMAINING="$(echo ${JSON} | jq --raw-output '.rate.remaining')"
         RESET="$(echo ${JSON} | jq --raw-output '.rate.reset')"
         echo "Rate limit: ${REMAINING}/${LIMIT} (reset: $(date --date=@${RESET}))"
-        echo "::set-output name=remaining::$(echo ${JSON} | jq --raw-output '.rate.remaining')"
+        echo "name=remaining::$(echo ${JSON} | jq --raw-output '.rate.remaining')" >>"${GITHUB_OUTPUT}"
 
   renovate:
     runs-on: ubuntu-22.04
