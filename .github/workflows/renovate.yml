@@ -23,8 +23,27 @@ concurrency:
   group: renovate
 
 jobs:
+
+  prepare:
+    runs-on: ubuntu-22.04
+    outputs:
+      remaining: ${{ steps.rate-limit.outputs.remaining }}
+    steps:
+
+    - name: Check rate limit
+      id: rate-limit
+      run: |
+        JSON="$(curl -s https://api.github.com/rate_limit)"
+        LIMIT="$(echo ${JSON} | jq --raw-output '.rate.limit')"
+        REMAINING="$(echo ${JSON} | jq --raw-output '.rate.remaining')"
+        RESET="$(echo ${JSON} | jq --raw-output '.rate.reset')"
+        echo "Rate limit: ${REMAINING}/${LIMIT} (reset: $(date --date=@${RESET}))"
+        echo "::set-output name=remaining::$(echo ${JSON} | jq --raw-output '.rate.remaining')"
+
   renovate:
     runs-on: ubuntu-22.04
+    needs: prepare
+    if: ${{ steps.prepare.outputs.remaining >= 1000 }}
     permissions: write-all
     steps:
 
