@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: kbom
-version: "0.2.0"
+version: "0.2.1"
 check: ""
 platforms:
 - linux/amd64
