@@ -1,5 +1,5 @@
 name: earthly
-version: "0.7.11"
+version: "0.7.12"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 runtime_dependencies:
 - docker
