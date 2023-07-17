@@ -1,5 +1,5 @@
 name: pv
-version: "1.6.20"
+version: "1.7.0"
 check: ${binary} --version | grep ^pv | cut -d' ' -f2
 platforms:
   - linux/amd64
