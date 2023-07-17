@@ -6,8 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "gravitational/teleport" "v${version}" "teleport-v${version}-linux-${alt_arch}-bin.tar.gz"
-curl --silent --location --fail "https://get.gravitational.com/teleport-v${version}-linux-${alt_arch}-bin.tar.gz" \
+curl --silent --location --fail "https://cdn.teleport.dev/teleport-v${version}-linux-${alt_arch}-bin.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
     teleport/tctl \
     teleport/teleport \
