@@ -43,7 +43,7 @@ jobs:
   renovate:
     runs-on: ubuntu-22.04
     needs: prepare
-    if: ${{ steps.prepare.outputs.remaining >= 1000 }}
+    if: ${{ needs.prepare.outputs.remaining >= 1000 }}
     permissions: write-all
     steps:
 
