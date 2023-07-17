@@ -13,6 +13,7 @@ UBUNTU_RELEASE="$(lsb_release -rs)"
 curl --silent --remote-name "https://packages.microsoft.com/config/ubuntu/${UBUNTU_RELEASE}/packages-microsoft-prod.deb"
 dpkg -i packages-microsoft-prod.deb
 apt-get update
+apt-cache madison powershell
 apt-get -y install --no-install-recommends \
     powershell=${version}-*
 mkdir -p "${prefix}${target}/opt/microsoft"
