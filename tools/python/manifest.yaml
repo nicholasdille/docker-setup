@@ -1,13 +1,17 @@
-name: python-build-standalone
-version: "20230507"
-check: ""
+name: python
+version: "3.11.4"
+check: ${binary} --version | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
-  - category/development
-  - lang/python
-  - type/cli
-homepage: https://github.com/indygreg/python-build-standalone
-description: Redistributable builds of Python
+- type/cli
+- category/development
+- lang/javascript
+homepage: https://github.com/python/cpython
+description: Python programming language
 renovate:
-  datasource: github-releases
-  package: indygreg/python-build-standalone
-  priority: low
+  datasource: github-tags
+  package: python/cpython
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium

@@ -1,0 +1,32 @@
+#syntax=docker/dockerfile:1.6.0
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+ARG PYTHON_VERSION=3.11.3
+RUN <<EOF
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix="${arch}-unknown-linux-musl"
+        ;;
+    aarch64)
+        export arch_suffix="${arch}-unknown-linux-gnu"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
+
+check-github-release-asset \
+    "indygreg/python-build-standalone" \
+    "${version}" \
+    "cpython-${PYTHON_VERSION}+${version}-${arch_suffix}-install_only.tar.gz"
+
+curl --silent --location --fail "https://github.com/indygreg/python-build-standalone/releases/download/${version}/cpython-${PYTHON_VERSION}+${version}-${arch_suffix}-install_only.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/" --strip-components=1 --no-same-owner
+EOF
