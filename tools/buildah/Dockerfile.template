@@ -3,16 +3,18 @@
 ARG ref=main
 
 FROM nixos/nix:2.16.1@sha256:f41a29be267750fdbbeb3d46c5b8899149ac92fb390cee74ab7c0a2487dce5b2 AS prepare
-RUN <<EOF
-nix-shell -p gnumake
-EOF
 ARG name
 ARG version
 WORKDIR /tmp/buildah
 RUN git clone --config advice.detachedHead=false --depth 1 --recursive --branch "v${version}" https://github.com/containers/buildah.git .
 RUN <<EOF
-make static
+nix build -f nix/
+mkdir -p ./bin
+cp -rfp ./result/bin/* ./bin/
 find . -type f
-make install DESTDIR="${prefix}${target}"
+
+cp ./bin/buildah "${prefix}${target}/bin/"
+cp docs/buildah*.1 "${prefix}${target}/share/man/man1/"
+cp docs/links/buildah*.1 "${prefix}${target}/share/man/man1/"
 find "${prefix}${target}" -type f
 EOF
