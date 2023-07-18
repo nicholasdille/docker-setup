@@ -17,7 +17,7 @@ on:
       dry-run:
         description: 'Dry run'
         required: false
-        default: false
+        default: 'false'
 
 concurrency:
   group: renovate
