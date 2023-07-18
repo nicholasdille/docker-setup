@@ -1,5 +1,5 @@
 name: python
-version: 3.11.4
+version: "3.11.4"
 check: ${binary} --version | cut -d' ' -f2
 platforms:
 - linux/amd64

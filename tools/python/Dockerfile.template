@@ -1,12 +1,17 @@
-#syntax=docker/dockerfile:1.5.2
+#syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+WORKDIR /tmp/python
 ARG DEBIAN_FRONTEND=noninteractive
+ARG name
+ARG version
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
+    curl \
+    ca-certificates \
     xz-utils \
     make \
     build-essential \
@@ -29,27 +34,20 @@ apt-get -y install --no-install-recommends \
     zlib1g-dev \
     llvm \
     libcrypt-dev
-EOF
-WORKDIR /tmp/python
-ARG name
-ARG version
-RUN <<EOF
+
 curl --silent --location "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz" \
 | tar --extract --xz --strip-components=1
-EOF
-RUN <<EOF
+
 ./configure --prefix="${prefix}${target}"
 make -j4
 make install -j4
 ln --symbolic --relative --force "${prefix}${target}/bin/python3" "${prefix}${target}/bin/python"
 ln --symbolic --relative --force "${prefix}${target}/bin/pip3" "${prefix}${target}/bin/pip"
-EOF
-RUN <<EOF
+
 "${prefix}${target}/bin/pip" completion --bash >"${prefix}${target}/share/bash-completion/completions/pip"
 "${prefix}${target}/bin/pip" completion --fish >"${prefix}${target}/share/fish/vendor_completions.d/pip.fish"
 "${prefix}${target}/bin/pip" completion --zsh  >"${prefix}${target}/share/zsh/vendor-completions/_pip"
-EOF
-RUN <<EOF
+
 "${prefix}${target}/bin/pip" install \
     pipx
 "${prefix}${target}/bin/register-python-argcomplete" pipx >"${prefix}${target}/share/bash-completion/completions/pipx"
