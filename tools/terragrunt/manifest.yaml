@@ -1,5 +1,5 @@
 name: terragrunt
-version: "0.48.2"
+version: "0.48.3"
 check: ${binary} --version | cut -d' ' -f3 | tr -d v
 platforms:
   - linux/amd64
