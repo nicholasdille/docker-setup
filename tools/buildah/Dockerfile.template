@@ -1,44 +1,15 @@
-#syntax=docker/dockerfile:1.5.2
+#syntax=docker/dockerfile:1.6.0
 
 ARG ref=main
 
-FROM golang:1.19.10-alpine AS prepare
+FROM nixos/nix:2.16.1@sha256:f41a29be267750fdbbeb3d46c5b8899149ac92fb390cee74ab7c0a2487dce5b2 AS prepare
 ARG name
 ARG version
-RUN <<EOF
-apk update
-apk add \
-    bash \
-    git \
-    ca-certificates \
-    bats \
-    git \
-    go-md2man \
-    libapparmor-dev \
-    glib-dev \
-    gpg \
-    libgpg-error-dev \
-    libgpg-error-static \
-    gpgme-dev \
-    libseccomp-dev \
-    libseccomp-static \
-    libselinux-dev \
-    make \
-    skopeo \
-    build-base \
-    device-mapper \
-    libassuan-dev
-EOF
 WORKDIR /tmp/buildah
-RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/buildah .
-ENV CFLAGS='-static -pthread' \
-    LDFLAGS='-s -w -static-libgcc -static' \
-    EXTRA_LDFLAGS='-s -w -linkmode external -extldflags "-static -lm"' \
-    BUILDTAGS='static netgo osusergo exclude_graphdriver_btrfs exclude_graphdriver_devicemapper seccomp apparmor selinux' \
-    CGO_ENABLED=1
+RUN git clone --config advice.detachedHead=false --depth 1 --recursive --branch "v${version}" https://github.com/containers/buildah.git .
 RUN <<EOF
-make all
-mkdir -p /usr/local/share/bash-completion/completions
-cp contrib/completions/bash/buildah /usr/local/share/bash-completion/completions/
-make install DESTDIR="${prefix}" PREFIX="${target}"
+make static
+find . -type f
+make install DESTDIR="${prefix}${target}"
+find "${prefix}${target}" -type f
 EOF
