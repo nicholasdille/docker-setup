@@ -1,5 +1,5 @@
 name: melange
-version: "0.3.2"
+version: "0.4.0"
 check: ${binary} version 2>&1 | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2 | tr -d v
 build_dependencies:
   - go
