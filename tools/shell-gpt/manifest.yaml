@@ -4,10 +4,10 @@ name: shell-gpt
 version: "0.9.4"
 check: ""
 build_dependencies:
-- python
+#- python
 - shiv
-runtime_dependencies:
-- python
+#runtime_dependencies:
+#- python
 platforms:
 - linux/amd64
 - linux/arm64
