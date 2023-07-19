@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: shell-gpt
-version: "0.9.3"
+version: "0.9.4"
 check: ""
 build_dependencies:
 - python
