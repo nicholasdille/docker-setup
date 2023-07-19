@@ -8,7 +8,7 @@ ARG version
 WORKDIR /tmp/buildah
 RUN git clone --config advice.detachedHead=false --depth 1 --recursive --branch "v${version}" https://github.com/containers/buildah.git .
 RUN <<EOF
-nix build -f nix/
+nix build --extra-experimental-features nix-command -f nix/
 mkdir -p ./bin
 cp -rfp ./result/bin/* ./bin/
 find . -type f
