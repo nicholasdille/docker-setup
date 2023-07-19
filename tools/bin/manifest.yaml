@@ -1,5 +1,5 @@
 name: bin
-version: "0.16.2"
+version: "0.17.0"
 check: ${binary} --version | grep ^bin | cut -d' ' -f3
 platforms:
   - linux/amd64
