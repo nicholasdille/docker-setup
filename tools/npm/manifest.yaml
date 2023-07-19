@@ -1,5 +1,5 @@
 name: npm
-version: "9.8.0"
+version: "9.8.1"
 check: ${binary} --version
 build_dependencies:
 - nodejs-lts
