@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: packer
-version: "1.9.1"
+version: "1.9.2"
 check: ""
 platforms:
 - linux/amd64
