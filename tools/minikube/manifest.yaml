@@ -1,5 +1,5 @@
 name: minikube
-version: "1.31.0"
+version: "1.31.1"
 check: ${binary} version | grep "minikube version" | cut -d' ' -f3 | tr -d v
 platforms:
 - linux/amd64
