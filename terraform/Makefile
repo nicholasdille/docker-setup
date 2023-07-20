@@ -1,5 +1,7 @@
 -include ../.env.mk
 
+TERRAFORM_BACKEND="terraform-backend-git git --repository https://github.com/nicholasdille/terraform-state --ref main --state docker-setup/state.json"
+
 .PHONY:
 clean:
 	@rm -rf plan.out terraform.tfstate* ssh*
@@ -16,7 +18,8 @@ output:
 init: .terraform.lock.hcl
 
 .terraform.lock.hcl:
-	@terraform init
+	@$(TERRAFORM_BACKEND) \
+		terraform init
 
 ssh:
 	@ssh-keygen -t ed25519 -f ssh -N ''
