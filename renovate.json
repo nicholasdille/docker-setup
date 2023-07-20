@@ -4583,11 +4583,10 @@
       ]
     },
     {
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "python/cpython",
-      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "indygreg/python-build-standalone",
       "fileMatch": [
-        "^tools/python/manifest.yaml$"
+        "^tools/python-build-standalone/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
