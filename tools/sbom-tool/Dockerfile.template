@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "microsoft/sbom-tool" "${version}" "sbom-tool-linux-x64"
+check-github-release-asset "microsoft/sbom-tool" "v${version}" "sbom-tool-linux-x64"
 curl --silent --location --fail --output "${prefix}${target}/bin/sbom-tool" \
     "https://github.com/microsoft/sbom-tool/releases/download/v${version}/sbom-tool-linux-x64"
 chmod +x "${prefix}${target}/bin/sbom-tool"
