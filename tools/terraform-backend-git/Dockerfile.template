@@ -1,0 +1,18 @@
+#syntax=docker/dockerfile:1.6.0
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+
+RUN <<EOF
+check-github-release-asset "plumber-cd/terraform-backend-git" "v${version}" "terraform-backend-git-linux-${alt_arch}"
+curl --silent --location --fail --output "${prefix}${target}/bin/terraform-backend-git" \
+    "https://github.com/plumber-cd/terraform-backend-git/releases/download/v${version}/terraform-backend-git-linux-${alt_arch}"
+chmod +x "${prefix}${target}/bin/terraform-backend-git"
+
+"${prefix}${target}/bin/terraform-backend-git" completion bash >"${prefix}${target}/share/bash-completion/completions/terraform-backend-git"
+"${prefix}${target}/bin/terraform-backend-git" completion fish >"${prefix}${target}/share/fish/vendor_completions.d/terraform-backend-git.fish"
+"${prefix}${target}/bin/terraform-backend-git" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_terraform-backend-git"
+EOF

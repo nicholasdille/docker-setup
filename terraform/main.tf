@@ -43,7 +43,7 @@ resource "hetznerdns_record" "docker-setup" {
 resource "hetznerdns_record" "wildcard-docker-setup" {
   zone_id = data.hetznerdns_zone.inmylab.id
   name = "*.docker-setup"
-  value = "docker-setup"
+  value = hetznerdns_record.docker-setup.name
   type = "CNAME"
   ttl= 120
 }

@@ -5301,6 +5301,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "plumber-cd/terraform-backend-git",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/terraform-backend-git/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "gruntwork-io/terragrunt",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

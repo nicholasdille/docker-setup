@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: terraform-backend-git
+version: "0.1.5"
+check: ""
+runtime_dependencies:
+- terraform
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- org/?
+- category/?
+- lang/?
+- type/?
+homepage: https://github.com/plumber-cd/terraform-backend-git
+description: Terraform HTTP Backend implementation that uses Git repository as storage
+renovate:
+  datasource: github-releases
+  package: plumber-cd/terraform-backend-git
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium
