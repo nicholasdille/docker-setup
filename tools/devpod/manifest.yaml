@@ -1,5 +1,5 @@
 name: devpod
-version: "0.3.0"
+version: "0.3.1"
 check: ${binary} version | tr -d v
 platforms:
 - linux/amd64
