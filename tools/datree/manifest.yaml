@@ -1,5 +1,5 @@
 name: datree
-version: "1.9.17"
+version: "1.9.19"
 check: ${binary} version
 tags:
   - category/security
