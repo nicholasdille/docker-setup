@@ -17,7 +17,8 @@ The container tools installer and updater
 
 | Component     | Migration status | Support status | Notes |
 | ------------- | ---------------- | ----- | --- |
-| CLI           | Completed        | `docker-setup` will soon enter maintenance mode | `uniget` is a drop-in replacement with data migration | - |
+| CLI           | Completed        | `docker-setup` will only receive security updates | `uniget` is a drop-in replacement with data migration | - |
+| GitHub Action | Completed        | `docker-setup-action` will only receive security updates | `uniget-action` is a dop-in replacement using `uniget` |
 | Tools         | Not started      | `docker-setup` tools are fully supported | - |
 | Documentation | Not started      | `docker-setup` documentation is fully supported | - |
 | Site          | Not started      | `docker-setup` site is fully supported | - |

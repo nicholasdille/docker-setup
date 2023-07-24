@@ -54,6 +54,9 @@ func init() {
 }
 
 func main() {
+	fmt.Println("docker-setup is deprecated. Please use uniget instead: https://github.com/uniget-org/cli")
+	os.Exit(1)
+
 	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
 		pterm.Error.Writer = os.Stderr
 		pterm.Warning.Writer = os.Stderr
