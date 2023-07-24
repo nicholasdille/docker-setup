@@ -4,10 +4,10 @@ name: mkdocs
 version: "1.4.3"
 check: ""
 build_dependencies:
-- python
+#- python
 - shiv
-runtime_dependencies:
-- python
+#runtime_dependencies:
+#- python
 platforms:
 - linux/amd64
 #- linux/arm64
