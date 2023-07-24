@@ -129,7 +129,7 @@ help:
 	@echo "    recent-days--<N>             Show tools changed in the last <N> days"
 	@echo
 	@echo "Helper tools:"
-	@echo "    $(HELPER)/var/lib/docker-setup/manifests/<tool>.json"
+	@echo "    $(HELPER)/var/lib/uniget/manifests/<tool>.json"
 	@echo "                                 Install specified tool to helper/"
 	@echo
 	@echo "GHCR:"

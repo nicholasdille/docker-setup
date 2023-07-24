@@ -50,7 +50,7 @@ jobs:
                 helper/usr/local/bin/jq \
                     --raw-output \
                     '.revision' \
-                    helper/var/cache/docker-setup/metadata.json
+                    helper/var/cache/uniget/metadata.json
             )"
 
             echo "### Fetching changed tools for ${OLD_COMMIT_SHA}..${GITHUB_SHA}"
