@@ -14,5 +14,6 @@ RUN <<EOF
 shiv --output-file "${prefix}${target}/bin/mkdocs" --console-script mkdocs \
     "mkdocs==${version}" \
     mkdocs-material \
-    mkdocs-minify-plugin
+    mkdocs-minify-plugin \
+    regex
 EOF
