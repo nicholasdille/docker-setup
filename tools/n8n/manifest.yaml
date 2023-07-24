@@ -1,5 +1,5 @@
 name: n8n
-version: "0.236.3"
+version: "1.0.5"
 check: ${binary} --version
 build_dependencies:
   - nodejs-lts
