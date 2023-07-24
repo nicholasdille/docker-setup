@@ -1,4 +1,4 @@
-name: python-build-standalone
+name: python
 version: "20230507"
 check: ""
 tags:
