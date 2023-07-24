@@ -21,10 +21,10 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
-check-github-release-asset "charmbracelet/vhs" "v${version}" "vhs_Linux_${arch_suffix}.tar.gz"
+check-github-release-asset "charmbracelet/vhs" "v${version}" "vhs_${version}_Linux_${arch_suffix}.tar.gz"
 
 echo "### Downloading and installing vhs ${version}"
-curl --silent --location --fail "https://github.com/charmbracelet/vhs/releases/download/v${version}/vhs_Linux_${arch_suffix}.tar.gz" \
+curl --silent --location --fail "https://github.com/charmbracelet/vhs/releases/download/v${version}/vhs_${version}_Linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     vhs \
     manpages \
