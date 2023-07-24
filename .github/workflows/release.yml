@@ -44,7 +44,7 @@ jobs:
         ref: ${{ needs.prepare.outputs.tag }}
 
     - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+      uses: nicholasdille/uniget-action@main
       with:
         prefix: helper
         tools: go goreleaser syft
@@ -82,7 +82,7 @@ jobs:
         password: ${{ secrets.PACKAGES_TOKEN }}
 
     - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+      uses: nicholasdille/uniget-action@main
       with:
         prefix: helper
         tools: gojq regclient yq

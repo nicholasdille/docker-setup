@@ -33,7 +33,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install docker-setup
-      uses: nicholasdille/docker-setup-action@main
+      uses: nicholasdille/uniget-action@main
       with:
         prefix: helper
         tools: hugo regclient gojq
