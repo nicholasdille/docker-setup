@@ -33,8 +33,6 @@ case "${alt_arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
-check-github-release-asset "nodejs/node" "v${version}" "node-v${version}-linux-${arch_suffix}.tar.xz"
-
 echo "### Downloading node.js ${version}"
 curl --silent --location --fail "https://nodejs.org/dist/v${version}/node-v${version}-linux-${arch_suffix}.tar.xz" \
 | tar --extract --xz --directory="${prefix}${target}" --strip-components=1 --no-same-owner \
