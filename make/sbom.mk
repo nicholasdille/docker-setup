@@ -1,5 +1,5 @@
 cosign.key: \
-		$(HELPER)/var/lib/docker-setup/manifests/cosign.json \
+		$(HELPER)/var/lib/uniget/manifests/cosign.json \
 		; $(info $(M) Creating key pair for cosign...)
 	@set -o errexit; \
 	source .env; \
@@ -15,7 +15,7 @@ keyless-sign: \
 
 .PHONY:
 $(addsuffix --sign,$(ALL_TOOLS_RAW)):%--sign: \
-		$(HELPER)/var/lib/docker-setup/manifests/cosign.json \
+		$(HELPER)/var/lib/uniget/manifests/cosign.json \
 		cosign.key \
 		; $(info $(M) Signing image for $*...)
 	@set -o errexit; \
@@ -24,7 +24,7 @@ $(addsuffix --sign,$(ALL_TOOLS_RAW)):%--sign: \
 
 .PHONY:
 $(addsuffix --keyless-sign,$(ALL_TOOLS_RAW)):%--keyless-sign: \
-		$(HELPER)/var/lib/docker-setup/manifests/cosign.json \
+		$(HELPER)/var/lib/uniget/manifests/cosign.json \
 		; $(info $(M) Keyless signing image for $*...)
 	@set -o errexit; \
 	COSIGN_EXPERIMENTAL=1 cosign sign $(REGISTRY)/$(REPOSITORY_PREFIX)$*:$(DOCKER_TAG) --yes
@@ -38,7 +38,7 @@ $(addsuffix --sbom,$(ALL_TOOLS_RAW)):%--sbom: \
 		$(TOOLS_DIR)/%/sbom.json
 
 $(addsuffix /sbom.json,$(ALL_TOOLS)):$(TOOLS_DIR)/%/sbom.json: \
-		$(HELPER)/var/lib/docker-setup/manifests/syft.json \
+		$(HELPER)/var/lib/uniget/manifests/syft.json \
 		$(TOOLS_DIR)/%/manifest.json \
 		$(TOOLS_DIR)/%/Dockerfile \
 		; $(info $(M) Creating sbom for $*...)
@@ -55,7 +55,7 @@ attest: \
 
 .PHONY:
 $(addsuffix --scan,$(ALL_TOOLS_RAW)):%--scan: \
-		$(HELPER)/var/lib/docker-setup/manifests/grype.json \
+		$(HELPER)/var/lib/uniget/manifests/grype.json \
 		$(TOOLS_DIR)/%/sbom.json \
 		; $(info $(M) Scanning sbom for $*...)
 	@set -o errexit; \
@@ -63,7 +63,7 @@ $(addsuffix --scan,$(ALL_TOOLS_RAW)):%--scan: \
 
 .PHONY:
 $(addsuffix --attest,$(ALL_TOOLS_RAW)):%--attest: \
-		$(HELPER)/var/lib/docker-setup/manifests/cosign.json \
+		$(HELPER)/var/lib/uniget/manifests/cosign.json \
 		sbom/%.json \
 		cosign.key \
 		; $(info $(M) Attesting sbom for $*...)

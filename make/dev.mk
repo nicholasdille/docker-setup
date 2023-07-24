@@ -31,7 +31,7 @@ recent-days--%:
 
 .PHONY:
 push-new: \
-		$(HELPER)/var/lib/docker-setup/manifests/regclient.json
+		$(HELPER)/var/lib/uniget/manifests/regclient.json
 	@ \
 	CONFIG_DIGEST="$$( \
 		regctl manifest get $(REGISTRY)/$(REPOSITORY_PREFIX)metadata:$(DOCKER_TAG) --format raw-body \

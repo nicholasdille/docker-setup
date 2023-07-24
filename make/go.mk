@@ -32,9 +32,9 @@ snapshot: \
 	@docker buildx bake binary --set binary.args.version=$(GO_VERSION)-dev
 
 release: \
-		$(HELPER)/var/lib/docker-setup/manifests/go.json \
-		$(HELPER)/var/lib/docker-setup/manifests/goreleaser.json \
-		$(HELPER)/var/lib/docker-setup/manifests/syft.json \
+		$(HELPER)/var/lib/uniget/manifests/go.json \
+		$(HELPER)/var/lib/uniget/manifests/goreleaser.json \
+		$(HELPER)/var/lib/uniget/manifests/syft.json \
 		; $(info $(M) Building docker-setup...)
 	@helper/usr/local/bin/goreleaser release --clean --snapshot --skip-sbom --skip-publish
 	@cp dist/docker-setup_$$(go env GOOS)_$$(go env GOARCH)/docker-setup docker-setup

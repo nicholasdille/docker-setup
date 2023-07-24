@@ -25,8 +25,8 @@ deploy-hcloud-only: \
 
 .PHONY:
 remove-hcloud: \
-		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/hcloud.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Removing VM...)
 	@\
 	hcloud server list --selector purpose=docker-setup --output json \
@@ -35,8 +35,8 @@ remove-hcloud: \
 
 .PHONY:
 vm-hcloud: \
-		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/hcloud.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Creating VM...)
 	@\
 	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=docker-setup --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \
@@ -63,8 +63,8 @@ vm-wait-ready: \
 
 ~/.ssh/config.d/docker-setup: \
 		~/.ssh/id_ed25519_hetzner \
-		$(HELPER)/var/lib/docker-setup/manifests/hcloud.json \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/hcloud.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		; $(info $(M) Creating SSH config for VM...)
 	@\
 	HCLOUD_VM_IP=$$(hcloud server list --selector purpose=docker-setup --output json | jq --raw-output 'select(. != null) |.[].public_net.ipv4.ip'); \

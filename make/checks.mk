@@ -10,7 +10,7 @@ check-tools: \
 
 .PHONY:
 check-tools-homepage: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.homepage == null) | .name' metadata.json)"; \
@@ -25,7 +25,7 @@ check-tools-homepage: \
 
 .PHONY:
 check-tools-description: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.description == null) | .name' metadata.json)"; \
@@ -39,7 +39,7 @@ check-tools-description: \
 
 .PHONY:
 check-tools-build-deps: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.build_dependencies != null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -55,7 +55,7 @@ check-tools-build-deps: \
 
 .PHONY:
 check-tools-runtime-deps: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.runtime_dependencies != null) | .name' metadata.json)"; \
 	if test -n "$${TOOLS}"; then \
@@ -71,7 +71,7 @@ check-tools-runtime-deps: \
 
 .PHONY:
 check-tools-tags: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.tags == null) | .name' metadata.json)"; \
@@ -93,7 +93,7 @@ check-tools-tags: \
 
 .PHONY:
 tag-usage: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json
+		$(HELPER)/var/lib/uniget/manifests/gojq.json
 	@\
 	jq --raw-output '.tools[] | .tags[]' metadata.json \
 	| sort \
@@ -104,7 +104,7 @@ tag-usage: \
 
 .PHONY:
 check-tools-renovate: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.renovate == null) | .name' metadata.json)"; \
@@ -127,7 +127,7 @@ assert-no-hardcoded-version:
 
 .PHONY:
 check-tools-platforms: \
-		$(HELPER)/var/lib/docker-setup/manifests/gojq.json \
+		$(HELPER)/var/lib/uniget/manifests/gojq.json \
 		metadata.json
 	@\
 	TOOLS="$$(jq --raw-output '.tools[] | select(.platforms == null) | .name' metadata.json)"; \
