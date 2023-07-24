@@ -6,8 +6,24 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "aquasecurity/trivy-operator" "v${version}" "trivy-operator_linux_${alt_arch}.tar.gz"
-curl --silent --location --fail "https://github.com/aquasecurity/trivy-operator/releases/download/v${version}/trivy-operator_linux_x86_64.tar.gz" \
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix="${arch}"
+        ;;
+    aarch64)
+        export arch_suffix=ARM64
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
+
+check-github-release-asset "aquasecurity/trivy-operator" "v${version}" "trivy-operator_linux_${arch_suffix}.tar.gz"
+
+curl --silent --location --fail "https://github.com/aquasecurity/trivy-operator/releases/download/v${version}/trivy-operator_linux_${arch_suffix}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin/" --no-same-owner \
     trivy-operator
 EOF
