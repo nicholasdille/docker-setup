@@ -1,5 +1,5 @@
 name: guac
-version: "0.1.0"
+version: "0.1.1"
 check: "" # No version parameter
 build_dependencies:
 - go
