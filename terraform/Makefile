@@ -31,9 +31,7 @@ plan.out: *.tf ssh .terraform.lock.hcl
 	@terraform plan -out=plan.out -var="hcloud_token=$(HCLOUD_TOKEN)" -var="hetznerdns_token=$(HETZNERDNS_TOKEN)"
 
 .PHONY:
-apply: terraform.tfstate
-
-terraform.tfstate: plan.out
+apply: plan.out
 	@terraform apply -auto-approve -state=terraform.tfstate plan.out
 	@rm -f plan.out
 
@@ -41,8 +39,3 @@ terraform.tfstate: plan.out
 destroy: terraform.tfstate
 	@terraform destroy -auto-approve -state=terraform.tfstate -var="hcloud_token=$(HCLOUD_TOKEN)" -var="hetznerdns_token=$(HETZNERDNS_TOKEN)"
 	@rm -f terraform.tfstate*
-
-# State management
-# https://github.com/plumber-cd/terraform-backend-git
-#tfstate:
-#	@terraform state pull
