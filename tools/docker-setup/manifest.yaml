@@ -2,12 +2,13 @@ name: docker-setup
 version: "2.2.69"
 check: ""
 platforms:
-  - linux/amd64
+- linux/amd64
 #- linux/arm64
 tags:
-  - category/operations
-  - lang/go
-  - type/cli
+- category/operations
+- lang/go
+- type/cli
+- state/deprecated
 homepage: https://github.com/nicholasdille/docker-setup
 description: Install, configure and update container tools
 # No renovate configuration for this repository

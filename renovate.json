@@ -5497,6 +5497,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "uniget-org/cli",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/uniget/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "upx/upx",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [
