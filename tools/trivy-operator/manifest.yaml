@@ -1,10 +1,13 @@
 name: trivy-operator
 version: "0.15.0"
 check: OPERATOR_NAMESPACE="" ${binary} --version 2>&1 | head -1 | jq --raw-output '.buildInfo.Version'
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
-  - type/daemon
-  - category/security
-  - lang/go
+- type/daemon
+- category/security
+- lang/go
 homepage: https://github.com/aquasecurity/trivy-operator
 description: Kubernetes-native security toolkit
 renovate:
