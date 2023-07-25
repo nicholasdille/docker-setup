@@ -1,5 +1,5 @@
 name: kube-bench
-version: "0.6.16"
+version: "0.6.17"
 check: ${binary} version
 tags:
   - type/cli
