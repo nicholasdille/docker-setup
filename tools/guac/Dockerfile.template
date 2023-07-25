@@ -3,9 +3,11 @@
 ARG ref=main
 
 FROM ghcr.io/nicholasdille/docker-setup/go:${ref} AS go
+FROM ghcr.io/nicholasdille/docker-setup/goreleaser:${ref} AS goreleaser
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --link --from=go / /
+COPY --link --from=goreleaser / /
 RUN <<EOF
 apt-get update
 apt-get -y install --no-install-recommends \
