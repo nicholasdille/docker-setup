@@ -2,12 +2,18 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
+#FROM ghcr.io/nicholasdille/docker-setup/python:${ref} AS python
 FROM ghcr.io/nicholasdille/docker-setup/shiv:${ref} AS shiv
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
-COPY --link --from=python / /
+#COPY --link --from=python / /
 COPY --link --from=shiv / /
+RUN <<EOF
+apt-get update
+apt-get -y install --no-install-recommends \
+    python3-pip \
+    python-is-python3
+EOF
 ARG name
 ARG version
 RUN <<EOF

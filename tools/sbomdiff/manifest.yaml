@@ -2,18 +2,18 @@ name: sbomdiff
 version: "0.5.1"
 check: ${binary} --version
 build_dependencies:
-  - python
-  - shiv
-runtime_dependencies:
-  - python
+#- python
+- shiv
+#runtime_dependencies:
+#- python
 platforms:
-  - linux/amd64
-  - linux/arm64
+- linux/amd64
+- linux/arm64
 tags:
-  - category/security
-  - lang/python
-  - type/cli
-  - sbom
+- category/security
+- lang/python
+- type/cli
+- sbom
 homepage: https://github.com/anthonyharrison/sbomdiff
 description: Compares two Software Bill of Materials (SBOMs) and reports the differences
 renovate:
