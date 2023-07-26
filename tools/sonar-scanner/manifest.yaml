@@ -1,5 +1,5 @@
 name: sonar-scanner
-version: "4.8.0.2856"
+version: "5.0.0.2966"
 check: ${binary} --version | grep SonarScanner | cut -d' ' -f3
 runtime_dependencies:
   - openjdk-jre
