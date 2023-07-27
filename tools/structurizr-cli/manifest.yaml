@@ -1,5 +1,5 @@
 name: structurizr-cli
-version: "1.32.0"
+version: "1.32.1"
 binary: structurizr
 check: ${binary} help | grep structurizr-cli | cut -d' ' -f2
 runtime_dependencies:
