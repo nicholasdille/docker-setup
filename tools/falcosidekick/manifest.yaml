@@ -1,5 +1,5 @@
 name: falcosidekick
-version: "2.27.0"
+version: "2.28.0"
 check: ${binary} --version | grep ^GitVersion | tr -s ' ' | cut -d' ' -f2
 tags:
   - category/security
