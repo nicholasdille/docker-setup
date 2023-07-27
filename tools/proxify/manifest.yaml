@@ -1,5 +1,5 @@
 name: proxify
-version: "0.0.10"
+version: "0.0.11"
 check: ${binary} --version 2>&1 | cut -d' ' -f4
 tags:
   - category/security
