@@ -5,7 +5,7 @@ ARG ref=main
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
-ARG PYTHON_VERSION=3.11.3
+ARG PYTHON_VERSION=3.11.4
 RUN <<EOF
 check-github-release-asset \
     "indygreg/python-build-standalone" \
