@@ -13,7 +13,7 @@ check-github-release-asset "spiffe/spire" "v${version}" "spire-${version}-linux-
 curl --silent --location --fail "https://github.com/spiffe/spire/releases/download/v${version}/spire-${version}-linux-${alt_arch}-glibc.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/spire/" --strip-components=1 --no-same-owner
 
-check-github-release-asset "spiffe/spire" "${version}" "spire-extras-${version}-linux-${alt_arch}-glibc.tar.gz"
+check-github-release-asset "spiffe/spire" "v${version}" "spire-extras-${version}-linux-${alt_arch}-glibc.tar.gz"
 curl --silent --location --fail "https://github.com/spiffe/spire/releases/download/v${version}/spire-extras-${version}-linux-${alt_arch}-glibc.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/share/spire/" --strip-components=1 --no-same-owner
 
