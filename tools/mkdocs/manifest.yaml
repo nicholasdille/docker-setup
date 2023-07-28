@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: mkdocs
-version: "1.5.0"
+version: "1.5.1"
 check: ""
 build_dependencies:
 #- python
