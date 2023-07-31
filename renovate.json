@@ -4597,7 +4597,7 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "indygreg/python-build-standalone",
       "fileMatch": [
-        "^tools/python-build-standalone/manifest.yaml$"
+        "^tools/python/manifest.yaml$"
       ],
       "matchStrings": [
         "version: \"?(?<currentValue>.*?)\"?\\n"
