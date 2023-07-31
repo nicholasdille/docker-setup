@@ -3440,6 +3440,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes/kubernetes",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/kubernetes-json-schema/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "kubescape/kubescape",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

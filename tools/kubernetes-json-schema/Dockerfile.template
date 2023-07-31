@@ -1,0 +1,13 @@
+#syntax=docker/dockerfile:1.6.0
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+mkdir -p "${prefix}${target}/share/kubernetes/${version}"
+curl --silent --location --fail "https://github.com/yannh/kubernetes-json-schema/archive/refs/heads/master.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/share/kubernetes/${version}" --strip-components=2 --no-same-owner \
+    "kubernetes-json-schema-master/v${version}-standalone-strict"
+EOF
