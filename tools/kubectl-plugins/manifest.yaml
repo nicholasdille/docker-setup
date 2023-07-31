@@ -1,16 +1,26 @@
 name: kubectl-plugins
 version: "0.1.0"
 check: "" # No version
+platforms:
+- linux/amd64
 build_dependencies:
-  - krew
+- krew
 runtime_dependencies:
-  - kubectl
-  - krew
+- kubectl
+- krew
 tags:
-  - org/cncf
-  - org/kubernetes
-  - type/plugin
-  - kubernetes
-  - management
+- org/cncf
+- org/kubernetes
+- type/plugin
+- kubernetes
+- management
+messages:
+  internals: |
+    - Plugins are installed to ${prefix}${target}/libexec/krew
+    - Binaries are symlinked to ${prefix}${target}/bin
+    - krew-uniget managed globally installed plugins
+  usage: |
+    Installed plugins are available as subcommands of kubectl. Use
+    krew-uniget to manage globally installed plugins
 homepage: https://github.com/nicholasdille/docker-setup
 description: kubectl plugins

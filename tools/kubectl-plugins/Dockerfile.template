@@ -2,14 +2,32 @@
 
 ARG ref=main
 
+# krew internals:
+# - KREW_ROOT defaults to ~/.krew
+# - Add KREW_ROOT/bin to PATH
+# - KREW_ROOT/receipts/<name>.yaml describes plugin (required for `krew list`)
+# - KREW_ROOT/store/<name>/<version>/<binary>
+# - KREW_ROOT/bin/<binary> links to binary in store
+
 FROM ghcr.io/nicholasdille/docker-setup/krew:${ref} AS krew
 
 FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 COPY --from=krew / /
 ARG name
 ARG version
+COPY --chmod=755 <<EOF ${prefix}${target}/bin/krew-uniget
+#!/bin/bash
+set -o errexit
+
+export KREW_ROOT="${target}/libexec/krew"
+krew "\$@"
+EOF
+COPY <<EOF ${prefix}${target}/etc/profile.d/krew.sh
+export PATH="${target}/libexec/krew/bin:${PATH}"
+EOF
 RUN <<EOF
-export KREW_ROOT="/opt/krew"
+export KREW_ROOT="${prefix}${target}/libexec/krew"
+mkdir -p "${KREW_ROOT}"
 krew update
 krew install krew
 plugins=(
@@ -95,5 +113,5 @@ for plugin in "${plugins[@]}"; do
     echo "Processing ${plugin}"
     krew install "${plugin}"
 done
-find "${KREW_ROOT}/bin" -type l -exec cp {} "${prefix}${target}/bin/" \;
+find "${KREW_ROOT}/bin" -type l -exec ln --symbolic --relative --force {} "${prefix}${target}/bin/" \;
 EOF
