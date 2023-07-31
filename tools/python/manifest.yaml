@@ -1,5 +1,5 @@
 name: python
-version: "20230507"
+version: "20230726"
 check: ""
 tags:
   - category/development
