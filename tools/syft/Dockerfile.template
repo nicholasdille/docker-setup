@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "anchore/syft" "${version}" "syft_${version}_linux_${alt_arch}.tar.gz"
+check-github-release-asset "anchore/syft" "v${version}" "syft_${version}_linux_${alt_arch}.tar.gz"
 curl --silent --location --fail "https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_linux_${alt_arch}.tar.gz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     syft
