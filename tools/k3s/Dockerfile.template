@@ -22,7 +22,7 @@ case "${arch}" in
 esac
 echo "    Using ${arch_suffix}"
 
-check-github-release-asset "k3s-io/k3s" "v${version}" "k3s${arch_suffix}
+check-github-release-asset "k3s-io/k3s" "v${version}" "k3s${arch_suffix}"
 
 echo "### Downloading ${name} ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/k3s" \
