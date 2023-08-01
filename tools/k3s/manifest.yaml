@@ -1,6 +1,9 @@
 name: k3s
 version: "1.27.4+k3s1"
 check: ${binary} --version | head -n 1 | cut -d' ' -f3 | tr -d v
+platforms:
+- linux/amd64
+- linux/arm64
 tags:
 - org/cncf
 - type/cli

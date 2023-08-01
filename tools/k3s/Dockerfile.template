@@ -7,9 +7,26 @@ ARG name
 ARG version
 COPY k3s.service ${prefix}${target}/etc/systemd/system/
 RUN <<EOF
-check-github-release-asset "k3s-io/k3s" "${version}" "k3s"
+echo "### Setting architecture string for ${TARGETPLATFORM}"
+case "${arch}" in
+    x86_64)
+        export arch_suffix=""
+        ;;
+    aarch64)
+        export arch_suffix="-${alt_arch}"
+        ;;
+    *)
+        echo "ERROR: Unsupported architecture ${arch}."
+        exit 1
+        ;;
+esac
+echo "    Using ${arch_suffix}"
+
+check-github-release-asset "k3s-io/k3s" "v${version}" "k3s${arch_suffix}
+
+echo "### Downloading ${name} ${version}"
 curl --silent --location --fail --output "${prefix}${target}/bin/k3s" \
-    "https://github.com/k3s-io/k3s/releases/download/v${version}/k3s"
+    "https://github.com/k3s-io/k3s/releases/download/v${version}/k3s${arch_suffix}"
 chmod +x "${prefix}${target}/bin/k3s"
 "${prefix}${target}/bin/k3s" completion bash >"${prefix}${target}/share/bash-completion/completions/k3s"
 "${prefix}${target}/bin/k3s" completion zsh >"${prefix}${target}/share/zsh/vendor-completions/_k3s"
