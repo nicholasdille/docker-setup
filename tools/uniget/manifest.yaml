@@ -1,5 +1,5 @@
 name: uniget
-version: "0.2.0"
+version: "0.2.3"
 check: ${binary} --version | cut -d' ' -f3
 platforms:
 - linux/amd64
