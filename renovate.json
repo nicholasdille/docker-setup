@@ -1180,6 +1180,17 @@
       ]
     },
     {
+      "datasourceTemplate": "gitlab-releases",
+      "depNameTemplate": "tozd/dinit",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/dinit/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "direnv/direnv",
       "extractVersionTemplate": "^v(?<version>.+?)$",

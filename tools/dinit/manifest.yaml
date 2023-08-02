@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: dinit
+version: "0.2.0"
+check: "" # Does not show version without services
+platforms:
+- linux/amd64
+tags:
+- category/operations
+- lang/go
+- type/cli
+homepage: https://gitlab.com/tozd/dinit
+description: Specialized init for Docker containers
+renovate:
+  datasource: gitlab-releases
+  package: tozd/dinit
+  extractVersion: ^v(?<version>.+?)$
+  priority: low
