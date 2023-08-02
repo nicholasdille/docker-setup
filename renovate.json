@@ -2452,6 +2452,16 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "httpie/cli",
+      "fileMatch": [
+        "^tools/httpie/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "projectdiscovery/httpx",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

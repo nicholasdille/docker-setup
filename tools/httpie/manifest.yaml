@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: httpie
+version: "3.2.2"
+check: ${binary}--version
+build_dependencies:
+- python
+- shiv
+runtime_dependencies:
+- python
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/python
+- type/cli
+homepage: https://github.com/httpie/cli
+description: Modern, user-friendly command-line HTTP client for the API era
+renovate:
+  datasource: github-releases
+  package: httpie/cli
+  priority: medium
