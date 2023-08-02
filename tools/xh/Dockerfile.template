@@ -1,0 +1,22 @@
+#syntax=docker/dockerfile:1.6.0
+
+ARG ref=main
+
+FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+ARG name
+ARG version
+RUN <<EOF
+check-github-release-asset "ducaale/xh" "v${version}" "xh-v${version}-${arch}-unknown-linux-musl.tar.gz"
+curl --silent --location --fail "https://github.com/ducaale/xh/releases/download/v${version}/xh-v${version}-${arch}-unknown-linux-musl.tar.gz" \
+| tar --extract --gzip --directory="${prefix}${target}/bin/" --strip-components=1 --no-same-owner \
+    "xh-v${version}-${arch}-unknown-linux-musl/xh" \
+    "xh-v${version}-${arch}-unknown-linux-musl/completions" \
+    "xh-v${version}-${arch}-unknown-linux-musl/doc/xh.1"
+mv "${prefix}${target}/bin/completions/xh.bash" "${prefix}${target}/share/bash-completion/completions/xh"
+mv "${prefix}${target}/bin/completions/xh.fish" "${prefix}${target}/share/fish/vendor_completions.d/xh.fish"
+mv "${prefix}${target}/bin/completions/_xh"     "${prefix}${target}/share/zsh/vendor-completions/_xh"
+mv "${prefix}${target}/bin/doc/xh.1" "${prefix}${target}/share/man/man1/"
+rm -rf \
+    "${prefix}${target}/bin/completions" \
+    "${prefix}${target}/bin/doc"
+EOF

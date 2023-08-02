@@ -5867,6 +5867,17 @@
     },
     {
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "ducaale/xh",
+      "extractVersionTemplate": "^v(?<version>.+?)$",
+      "fileMatch": [
+        "^tools/xh/manifest.yaml$"
+      ],
+      "matchStrings": [
+        "version: \"?(?<currentValue>.*?)\"?\\n"
+      ]
+    },
+    {
+      "datasourceTemplate": "github-releases",
       "depNameTemplate": "sibprogrammer/xq",
       "extractVersionTemplate": "^v(?<version>.+?)$",
       "fileMatch": [

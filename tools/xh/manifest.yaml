@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
+$schema: https://docker-setup.dille.io/schema.yaml
+name: xh
+version: "0.18.0"
+check: ${binary} --version | grep ^xh | cut -d' ' -f2
+platforms:
+- linux/amd64
+- linux/arm64
+tags:
+- category/development
+- lang/rust
+- type/cli
+homepage: https://github.com/ducaale/xh
+description: Friendly and fast tool for sending HTTP requests
+renovate:
+  datasource: github-releases
+  package: ducaale/xh
+  extractVersion: ^v(?<version>.+?)$
+  priority: medium
