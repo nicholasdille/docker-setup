@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "ncarlier/webhookd" "${version}" "webhookd-linux-${alt_arch}.tgz"
+check-github-release-asset "ncarlier/webhookd" "v${version}" "webhookd-linux-${alt_arch}.tgz"
 curl --silent --location --fail "https://github.com/ncarlier/webhookd/releases/download/v${version}/webhookd-linux-${alt_arch}.tgz" \
 | tar --extract --gzip --directory="${prefix}${target}/bin" --no-same-owner \
     webhookd

@@ -6,7 +6,7 @@ FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "orhun/kmon" "${version}" "kmon-${version}-x86_64-unknown-linux-gnu.tar.gz"
+check-github-release-asset "orhun/kmon" "v${version}" "kmon-${version}-x86_64-unknown-linux-gnu.tar.gz"
 curl --silent --location --fail "https://github.com/orhun/kmon/releases/download/v${version}/kmon-${version}-x86_64-unknown-linux-gnu.tar.gz" \
 | tar --extract --gzip --directory="/tmp" --no-same-owner
 find /tmp

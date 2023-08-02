@@ -11,7 +11,7 @@ EOF
 ARG name
 ARG version
 RUN <<EOF
-check-github-release-asset "earthly/earthly" "v${version}" "earthly-linux-amd64"
+check-github-release-asset "earthly/earthly" "v${version}" "earthly-linux-${alt_arch}"
 curl --silent --location --fail --output "${prefix}${target}/bin/earthly" \
     "https://github.com/earthly/earthly/releases/download/v${version}/earthly-linux-${alt_arch}"
 chmod +x "${prefix}${target}/bin/earthly"
