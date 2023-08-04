@@ -1,5 +1,5 @@
 name: lima
-version: "0.16.0"
+version: "0.17.0"
 check: limactl --version | cut -d' ' -f3
 build_dependencies:
   - yasu
