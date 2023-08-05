@@ -1,5 +1,5 @@
 name: gopass
-version: "1.15.6"
+version: "1.15.7"
 check: ${binary} version | cut -d' ' -f2
 platforms:
 - linux/amd64
