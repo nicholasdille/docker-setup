@@ -2,37 +2,19 @@
 
 ARG ref=main
 
-FROM ghcr.io/nicholasdille/docker-setup/base:${ref} AS prepare
+FROM nixos/nix:2.16.1@sha256:f41a29be267750fdbbeb3d46c5b8899149ac92fb390cee74ab7c0a2487dce5b2 AS prepare
 ARG name
 ARG version
-RUN <<EOF
-apt-get update
-apt-get -y install --no-install-recommends \
-    git \
-    ca-certificates \
-    make \
-    gcc \
-    bats \
-    btrfs-progs \
-    libapparmor-dev \
-    libdevmapper-dev \
-    libglib2.0-dev \
-    libgpgme11-dev \
-    libseccomp-dev \
-    libselinux1-dev \
-    golang-go \
-    go-md2man
-EOF
 WORKDIR /tmp/buildah
-RUN git clone --config advice.detachedHead=false --depth 1 --branch "v${version}" https://github.com/containers/buildah .
-ENV CFLAGS='-static -pthread' \
-    LDFLAGS='-s -w -static-libgcc -static' \
-    EXTRA_LDFLAGS='-s -w -linkmode external -extldflags "-static -lm"' \
-    BUILDTAGS='static netgo osusergo exclude_graphdriver_btrfs exclude_graphdriver_devicemapper seccomp apparmor selinux' \
-    CGO_ENABLED=1
+RUN git clone --config advice.detachedHead=false --depth 1 --recursive --branch "v${version}" https://github.com/containers/buildah.git .
 RUN <<EOF
-make all
-mkdir -p /usr/local/share/bash-completion/completions
-cp contrib/completions/bash/buildah /usr/local/share/bash-completion/completions/
-make install DESTDIR="${prefix}" PREFIX="${target}"
+nix build --extra-experimental-features nix-command -f nix/
+mkdir -p ./bin
+cp -rfp ./result/bin/* ./bin/
+find . -type f
+
+cp ./bin/buildah "${prefix}${target}/bin/"
+cp docs/buildah*.1 "${prefix}${target}/share/man/man1/"
+cp docs/links/buildah*.1 "${prefix}${target}/share/man/man1/"
+find "${prefix}${target}" -type f
 EOF
