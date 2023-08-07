@@ -1,5 +1,5 @@
 name: oras
-version: "1.0.0"
+version: "1.0.1"
 check: ${binary} version | head -n 1 | tr -s ' ' | cut -d' ' -f2
 platforms:
 - linux/amd64
