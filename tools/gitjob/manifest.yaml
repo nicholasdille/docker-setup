@@ -1,5 +1,5 @@
 name: gitjob
-version: "0.1.73"
+version: "0.1.74"
 check: "" # Empty version
 platforms:
 - linux/amd64
