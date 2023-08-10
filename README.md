@@ -11,19 +11,17 @@
 
 The container tools installer and updater
 
-## (Partial) deprecation notice
+## Deprecation notice
 
-`docker-setup` is in the process of being renamed to [`uniget`](https://github.com/uniget-org/uniget). The following table will document the progress:
+`docker-setup` is deprecated and replaced by [`uniget`](https://github.com/uniget-org/uniget). The following table will document the progress:
 
 | Component     | Migration status | Support status | Notes |
-| ------------- | ---------------- | ----- | --- |
-| CLI           | Completed        | `docker-setup` will only receive security updates | `uniget` is a drop-in replacement with data migration | - |
+| ------------- | ---------------- | -------------- | ----- |
+| CLI           | Completed        | `docker-setup` will not receive any updates | `uniget` is a drop-in replacement with data migration | - |
 | GitHub Action | Completed        | `docker-setup-action` will only receive security updates | `uniget-action` is a dop-in replacement using `uniget` |
-| Tools         | In progress      | `docker-setup` tools are fully supported | `uniget` tools being created |
-| Documentation | Not started      | `docker-setup` documentation is fully supported | - |
-| Site          | Not started      | `docker-setup` site is fully supported | - |
-
-While the migration is in progress, the components from both projects will interoperate until the migration is complete.
+| Tools         | Completed        | `docker-setup` tools is deprecated | `uniget` tools are fully functional |
+| Documentation | In progress      | `docker-setup` documentation is fully supported | - |
+| Site          | Completed        | `docker-setup` site will only receive security updates | - |
 
 ## Purpose
 
