@@ -1,5 +1,5 @@
 name: grafana-agent
-version: "0.35.3"
+version: "0.35.4"
 binary: agent
 check: ${binary} --version | head -1 | cut -d' ' -f3 | tr -d v
 tags:
