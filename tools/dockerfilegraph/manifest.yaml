@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://docker-setup.dille.io/schema.yaml
 $schema: https://docker-setup.dille.io/schema.yaml
 name: dockerfilegraph
-version: "0.17.0"
+version: "0.17.1"
 check: ${binary} --version | jq --raw-output '.GitVersion'
 platforms:
 - linux/amd64
