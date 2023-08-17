@@ -1,5 +1,5 @@
 name: aws
-version: "1.29.28"
+version: "1.29.29"
 check: ${binary} --version | cut -d' ' -f1 | cut -d/ -f2
 #build_dependencies:
 #- python
