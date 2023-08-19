@@ -1,5 +1,5 @@
 name: chisel
-version: "1.8.1"
+version: "1.9.0"
 check: ${binary} | grep Version | tr -s ' ' | cut -d' ' -f3
 tags:
   - type/cli
